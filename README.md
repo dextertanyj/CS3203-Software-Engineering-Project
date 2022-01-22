@@ -1,4 +1,4 @@
-# Team 00
+# Team 32
 
 > Please fill in this Readme with the required information, and delete this box.
 > 
@@ -17,8 +17,8 @@
 
 Item | Version
 -|-
-OS | Windows 10
-Toolchain | Microsoft Visual Studio Enterprise 2019 Version 16.11.0
+OS | macOS
+Toolchain | CMake 3.22.1, GNU Make 3.81, Apple Clang 13.0.0
 C++ Standard | C++17
 
 ### Additional Build Instructions
