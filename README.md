@@ -30,3 +30,4 @@ No additional instructions required.
 Name | Mobile | Email | Development OS/Toolchain
 -:|:-:|:-|-|
 Dexter Tan | Redacted | Redacted | macOS/CMake, GNU Make, Apple Clang
+Samantha Low | Redacted | Redacted | macOS/CMake, GNU Make, Apple Clang
