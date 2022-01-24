@@ -32,3 +32,4 @@ Name | Mobile | Email | Development OS/Toolchain
 Dexter Tan | Redacted | Redacted | macOS/CMake, GNU Make, Apple Clang
 Samantha Low | Redacted | Redacted | macOS/CMake, GNU Make, Apple Clang
 Yen Pin Hsuan | Redacted | Redacted | Windows 10/CMake
+Wei kit Khoong | Redacted | Redacted | Windows 10/CMake
