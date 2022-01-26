@@ -11,11 +11,6 @@
 
 using namespace std;
 
-#ifndef INC_21S2_CP_SPA_TEAM_32_UTIL_H
-#define INC_21S2_CP_SPA_TEAM_32_UTIL_H
-
-#endif //INC_21S2_CP_SPA_TEAM_32_UTIL_H
-
 typedef int StmtRef;
 typedef std::string VarRef;
 typedef std::string ProcRef;
