@@ -17,6 +17,6 @@ typedef struct StmtInfo {
 typedef vector<StmtInfo> StmtInfoList;
 typedef vector<VarRef> VarRefList;
 
-#endif INC_21S2_CP_SPA_TEAM_32_TYPEDEFS_H
+#endif
 
 
