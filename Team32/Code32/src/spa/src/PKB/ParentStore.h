@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include <unordered_set>
 
 using namespace std;
@@ -22,6 +22,7 @@ struct ParentRelation {
     std::unordered_set<int> childSet;
     std::unordered_set<int> parentStarSet;
     std::unordered_set<int> childStarSet;
+    int parent;
 };
 
 class ParentStore {
@@ -32,7 +33,12 @@ public:
     int getParent(int stmt);
     unordered_set<int> getChildren(int stmt);
     void clear();
+    void populateParentStar();
+    void setNumStatements(int size);
 private:
     // key is parent stmtNo, value is list of children
-    std::unordered_map<int, ParentRelation> parentMap;
+    std::map<int, ParentRelation> parentMap;
+    void populateParentStarSet(int StmtNo);
+    void recursivelyAddParent(int stmtNo, unordered_set<int>& parentStarSet);
+    int numStatements;
 };

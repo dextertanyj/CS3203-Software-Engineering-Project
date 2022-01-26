@@ -107,6 +107,14 @@ void PKB::setStmtType(int stmtNo, stmtType type) {
     }
 }
 
+void PKB::setUses(int stmtNo, std::string var_name) {
+    useStore.setUses(stmtNo, var_name);
+}
+
+void PKB::setModifies(int stmtNo, std::string var_name) {
+    modifyStore.setModify(stmtNo, var_name);
+}
+
 void PKB::clear() {
     parentStore.clear();
     followStore.clear();
@@ -114,4 +122,11 @@ void PKB::clear() {
     typeMap.clear();
 }
 
+void PKB::setNumStatements(int size) {
+    parentStore.setNumStatements(size);
+}
+
+void PKB::populateComplexRelations() {
+    parentStore.populateParentStar();
+}
 

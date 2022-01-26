@@ -18,23 +18,29 @@ void ParentStore::setParent(int parentStmt, int childStmt) {
     auto keyItr = parentMap.find(parentStmt);
     if (keyItr == parentMap.end()) {
         // parent does not exist as key
-        ParentRelation parentRelation = { {childStmt}, {}, {} };
+        ParentRelation parentRelation = { {childStmt}, {}, {}, -1 };
         parentMap.insert(std::make_pair(parentStmt, parentRelation));
     } else {
         // parent exists as key, add childStmtNo to vector of children
         ParentRelation parentRelation = keyItr->second;
         parentRelation.childSet.insert(childStmt);
     }
+    auto keyItr2 = parentMap.find(childStmt);
+    if (keyItr2 == parentMap.end()) {
+        ParentRelation parentRelation = { {}, {}, {}, parentStmt };
+        parentMap.insert(std::make_pair(childStmt, parentRelation));
+    } else {
+        keyItr2->second.parent = parentStmt;
+    }
 }
 
 bool ParentStore::isParentChild(int parentStmt, int childStmt) {
-    auto keyItr = parentMap.find(parentStmt);
+    auto keyItr = parentMap.find(childStmt);
     if (keyItr == parentMap.end()) {
         return false;
     }
-    unordered_set<int> childSet = keyItr->second.childSet;
-    if (childSet.find(childStmt) != childSet.end()) {
-        // child exists in parent's childList
+    int parent = keyItr->second.parent;
+    if (parent == parentStmt) {
         return true;
     } else {
         return false;
@@ -42,14 +48,11 @@ bool ParentStore::isParentChild(int parentStmt, int childStmt) {
 }
 
 int ParentStore::getParent(int stmt) {
-    for(auto& itr : parentMap) {
-        unordered_set<int> childSet = itr.second.childSet;
-        if (childSet.find(stmt) != childSet.end()) {
-            // child exists in parent's childList
-            return itr.first;
-        }
+    auto keyItr = parentMap.find(stmt);
+    if (keyItr == parentMap.end()) {
+        return -1;
     }
-    return -1;
+    return keyItr->second.parent;
 }
 
 unordered_set<int> ParentStore::getChildren(int stmt) {
@@ -59,6 +62,40 @@ unordered_set<int> ParentStore::getChildren(int stmt) {
         }
     }
     return unordered_set<int>{};
+}
+
+void ParentStore::populateParentStar() {
+    if (numStatements >= 2) {
+        for (int i = 2; i < numStatements; i++) {
+            populateParentStarSet(i);
+        }
+    }
+}
+
+void ParentStore::populateParentStarSet(int stmtNo) {
+    auto keyItr = parentMap.find(stmtNo);
+    recursivelyAddParent(stmtNo, keyItr->second.parentStarSet);
+}
+
+void ParentStore::recursivelyAddParent(int stmtNo, unordered_set<int> &parentStarSet) {
+    auto keyItr = parentMap.find(stmtNo);
+    int parent = keyItr->second.parent;
+    if (parent == -1) {
+        return;
+    }
+    unordered_set<int> parentOfParentSet = parentMap.find(parent)->second.parentStarSet;
+    if (parentOfParentSet.empty()) {
+        parentStarSet.insert(parent);
+        recursivelyAddParent(parent, parentStarSet);
+    } else {
+        parentStarSet.insert(parent);
+        parentStarSet.insert(parentOfParentSet.begin(), parentOfParentSet.end());
+        return;
+    }
+}
+
+void ParentStore::setNumStatements(int size) {
+    numStatements = size;
 }
 
 void ParentStore::clear() {

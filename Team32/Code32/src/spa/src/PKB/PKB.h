@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include "ParentStore.h"
 #include "FollowStore.h"
+#include "UseStore.h"
+#include "ModifyStore.h"
 
 using namespace std;
 typedef short PROC;
@@ -31,8 +33,8 @@ public:
     bool setParent(int stmtNo1, int stmtNo2);
     void setProc(std::string proc_name, vector<int> idxList);
     void setStmtType(int stmtNo, stmtType type);
-    // void setUses(int stmtNo, std::string var_name);
-    // void setModifies(int stmtNo, std::string var_name);
+    void setUses(int stmtNo, std::string var_name);
+    void setModifies(int stmtNo, std::string var_name);
 
     // Get methods called by PQL
     // Parent get methods
@@ -47,10 +49,14 @@ public:
 
     // Others
     void clear();
+    void setNumStatements(int size);
+    void populateComplexRelations();
 
 private:
     static ParentStore parentStore;
     static FollowStore followStore;
+    static UseStore useStore;
+    static ModifyStore modifyStore;
     bool checkInvalidStmts(int stmtNo1, int stmtNo2);
     static std::unordered_map<std::string, vector<int>> procMap;
     static std::unordered_map<int, stmtType> typeMap;
