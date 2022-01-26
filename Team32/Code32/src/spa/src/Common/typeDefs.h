@@ -32,7 +32,7 @@ typedef struct Synonym {
 
 typedef struct SuchThatClause {
     Relationship relation;
-    Pair<Synonym, Pair<StmtRef, VarRef> lhs;
+    Pair<Synonym, Pair<StmtRef, VarRef>> lhs;
 } SuchThatClause;
 
 typedef struct PatternClause {
