@@ -2,10 +2,10 @@
 // Created by Yanzieee on 26/1/2022.
 //
 
-#ifndef INC_21S2_CP_SPA_TEAM_32_UTIL_H
-#define INC_21S2_CP_SPA_TEAM_32_UTIL_H
+#ifndef INC_21S2_CP_SPA_TEAM_32_TYPEDEFS_H
+#define INC_21S2_CP_SPA_TEAM_32_TYPEDEFS_H
 
-#endif //INC_21S2_CP_SPA_TEAM_32_UTIL_H
+#endif //INC_21S2_CP_SPA_TEAM_32_TYPEDEFS_H
 
 #include <string>
 
