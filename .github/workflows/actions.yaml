@@ -2,7 +2,7 @@ name: Compile and Test - Self Hosted
 on: [push, pull_request]
 
 env:
-  BUILD_TYPE: Debug
+  BUILD_TYPE: Coverage
 
 jobs:
   runner-job:
@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Cleanup workspace
         shell: bash
-        run: rm -rf ${{github.workspace}}/* && rm -rf {{runner.workspace}}/build
+        run: rm -rf ${{github.workspace}}/* && rm -rf ${{runner.workspace}}/build
 
       - name: Checkout repository code
         uses: actions/checkout@v2
