@@ -13,8 +13,14 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
+if (CMAKE_BUILD_TYPE MATCHES Coverage)
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+    set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
+endif()
+
 if(NOT MSVC)
   set(CMAKE_CXX_FLAGS_DEBUG "-g")
+  set(CMAKE_CXX_FLAGS_COVERAGE "-g --coverage")
   set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif()
 
