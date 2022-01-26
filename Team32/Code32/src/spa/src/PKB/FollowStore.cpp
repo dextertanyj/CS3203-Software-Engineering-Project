@@ -14,7 +14,7 @@ void FollowStore::setFollows(int stmtNo1, int stmtNo2) {
     auto keyItr = followMap.find(stmtNo1);
     if (keyItr == followMap.end()) {
         // does not exist in map
-        FollowRelation followRelation = { {stmtNo2}, {}, {} };
+        FollowRelation followRelation = { stmtNo2, {}, {} };
         followMap.insert(std::make_pair(stmtNo1, followRelation));
     } else {
         keyItr->second.follower = stmtNo2;

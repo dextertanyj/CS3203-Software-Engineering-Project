@@ -5,7 +5,7 @@ using namespace std;
 
 #include "PKB.h"
 #include "ParentStore.h"
-#include "../TNode.h"
+#include "../Common/TNode.h"
 
 /*
 int PKB::setProcToAST(PROC p, TNode* r) {
@@ -17,8 +17,6 @@ TNode* PKB::getRootAST (PROC p){
 }
  */
 
-ParentStore PKB::parentStore;
-FollowStore PKB::followStore;
 
 PKB::PKB() {}
 
