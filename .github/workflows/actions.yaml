@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Cleanup workspace
         shell: bash
-        run: rm -rf ${{github.workspace}}/* && rm -rf {{runner.workspace}}/build
+        run: rm -rf ${{github.workspace}}/* && rm -rf ${{runner.workspace}}/build
 
       - name: Checkout repository code
         uses: actions/checkout@v2
