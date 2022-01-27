@@ -61,8 +61,8 @@ jobs:
         working-directory: ${{runner.workspace}}
         run: |
           lcov -c -d ./build/src/spa/CMakeFiles/spa.dir/src -o ./coverage/coverage.info
-          lcov -a ./coverage/coverage.info -a ./coverage/coverage.info -o ./coverage/coverage_total.info
-          lcov -r ./coverage/coverage.info '/Library/Developer/CommandLineTools/SDKs/*' -o ./coverage/coverage_filtered.info
+          lcov -a ./coverage/coverage_base.info -a ./coverage/coverage.info -o ./coverage/coverage_total.info
+          lcov -r ./coverage/coverage_total.info '/Library/Developer/CommandLineTools/SDKs/*' -o ./coverage/coverage_filtered.info
 
       - name: Upload coverage
         uses: codecov/codecov-action@v2
