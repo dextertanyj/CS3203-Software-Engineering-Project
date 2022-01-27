@@ -1,13 +1,7 @@
-//
-// Created by Yanzieee on 26/1/2022.
-//
-
 #pragma once
 
 #include<stdio.h>
 #include <iostream>
-#include <string>
-#include <vector>
 #include <map>
 #include <unordered_set>
 
@@ -16,12 +10,10 @@ using namespace std;
 #ifndef INC_21S2_CP_SPA_TEAM_32_PARENTSTORE_H
 #define INC_21S2_CP_SPA_TEAM_32_PARENTSTORE_H
 
-#endif
-
 struct ParentRelation {
-    std::unordered_set<int> childSet;
-    std::unordered_set<int> parentStarSet;
-    std::unordered_set<int> childStarSet;
+    unordered_set<int> childSet;
+    unordered_set<int> parentStarSet;
+    unordered_set<int> childStarSet;
     int parent;
 };
 
@@ -37,8 +29,10 @@ public:
     void setNumStatements(int size);
 private:
     // key is parent stmtNo, value is list of children
-    std::map<int, ParentRelation> parentMap;
+    map<int, ParentRelation> parentMap;
     void populateParentStarSet(int StmtNo);
     void recursivelyAddParent(int stmtNo, unordered_set<int>& parentStarSet);
     int numStatements;
 };
+
+#endif

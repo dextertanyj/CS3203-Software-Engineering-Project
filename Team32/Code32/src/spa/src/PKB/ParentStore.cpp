@@ -1,14 +1,4 @@
-//
-// Created by Yanzieee on 26/1/2022.
-//
-
 #include "ParentStore.h"
-#include <unordered_map>
-#include <unordered_set>
-#include<stdio.h>
-#include <iostream>
-#include <string>
-#include <vector>
 
 using namespace std;
 
@@ -19,7 +9,7 @@ void ParentStore::setParent(int parentStmt, int childStmt) {
     if (keyItr == parentMap.end()) {
         // parent does not exist as key
         ParentRelation parentRelation = { {childStmt}, {}, {}, -1 };
-        parentMap.insert(std::make_pair(parentStmt, parentRelation));
+        parentMap.insert(make_pair(parentStmt, parentRelation));
     } else {
         // parent exists as key, add childStmtNo to vector of children
         ParentRelation parentRelation = keyItr->second;
@@ -28,7 +18,7 @@ void ParentStore::setParent(int parentStmt, int childStmt) {
     auto keyItr2 = parentMap.find(childStmt);
     if (keyItr2 == parentMap.end()) {
         ParentRelation parentRelation = { {}, {}, {}, parentStmt };
-        parentMap.insert(std::make_pair(childStmt, parentRelation));
+        parentMap.insert(make_pair(childStmt, parentRelation));
     } else {
         keyItr2->second.parent = parentStmt;
     }

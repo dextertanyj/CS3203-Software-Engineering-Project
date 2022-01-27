@@ -1,9 +1,4 @@
-//
-// Created by Yanzieee on 26/1/2022.
-//
-
 #include "FollowStore.h"
-#include <unordered_map>
 
 using namespace std;
 
@@ -15,7 +10,7 @@ void FollowStore::setFollows(int stmtNo1, int stmtNo2) {
     if (keyItr == followMap.end()) {
         // does not exist in map
         FollowRelation followRelation = { stmtNo2, {}, {} };
-        followMap.insert(std::make_pair(stmtNo1, followRelation));
+        followMap.insert(make_pair(stmtNo1, followRelation));
     } else {
         keyItr->second.follower = stmtNo2;
     }

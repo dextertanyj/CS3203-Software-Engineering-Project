@@ -1,7 +1,3 @@
-//
-// Created by Yanzieee on 26/1/2022.
-//
-
 #include<stdio.h>
 #include <iostream>
 #include <string>
@@ -13,8 +9,6 @@ using namespace std;
 
 #ifndef INC_21S2_CP_SPA_TEAM_32_FOLLOWSTORE_H
 #define INC_21S2_CP_SPA_TEAM_32_FOLLOWSTORE_H
-
-#endif
 
 struct FollowRelation {
     int follower;
@@ -31,5 +25,7 @@ public:
     int getFollower(int stmt);
     void clear();
 private:
-    std::unordered_map<int, FollowRelation> followMap;
+    unordered_map<int, FollowRelation> followMap;
 };
+
+#endif
