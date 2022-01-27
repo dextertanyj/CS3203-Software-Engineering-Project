@@ -1,10 +1,11 @@
+#include "QueryFormatter.h"
+
 #include <string>
 
-using namespace std;
-
-#include "QueryFormatter.h"
 #include "QueryProperties.h"
 #include "QueryResult.h"
+
+using namespace std;
 
 string QueryFormatter::formatQuery(QueryProperties* queryProperties, QueryResult* queryResult) {
 	return "Invalid";

@@ -1,5 +1,6 @@
-#include "Common/TypeDefs.h"
 #include "QueryResult.h"
+
+#include "Common/TypeDefs.h"
 
 QueryResult::QueryResult() {}
 
