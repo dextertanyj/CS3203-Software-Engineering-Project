@@ -66,9 +66,7 @@ jobs:
           lcov -r ./coverage/coverage.info '/Library/Developer/CommandLineTools/SDKs/*' -o ./coverage/coverage_filtered.info
 
       - name: Upload coverage
-        shell: bash
-        working-directory: ${{runner.workspace}}/coverage
-        run: |
-          curl -Os https://uploader.codecov.io/latest/macos/codecov
-          chmod +x codecov
-          ./codecov -t $CODECOV_TOKEN -f ./coverage_filtered.info
+        uses: codecov/codecov-action@v2
+        with:
+          token: d5afce92-dfc9-486a-8744-97db7b0baf4e
+          files: ${{runner.workspace}}/coverage/coverage_filtered.info
