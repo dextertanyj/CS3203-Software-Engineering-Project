@@ -79,7 +79,7 @@ void PKB::setProc(std::string proc_name, vector<int> idxList) {
     }
 }
 
-void PKB::setStmtType(int stmtNo, stmtType type) {
+void PKB::setStmtType(int stmtNo, StmtType type) {
     auto keyItr = typeMap.find(stmtNo);
     if (keyItr == typeMap.end()) {
         typeMap.insert(std::make_pair(stmtNo, type));

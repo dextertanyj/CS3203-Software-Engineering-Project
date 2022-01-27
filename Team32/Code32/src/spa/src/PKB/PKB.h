@@ -12,8 +12,6 @@
 
 using namespace std;
 
-enum stmtType { assign, print, call, read, whileStmt, ifStmt, standard };
-
 class PKB {
 public:
     /*
@@ -27,7 +25,7 @@ public:
     bool setFollows(int stmtNo1, int stmtNo2);
     bool setParent(int stmtNo1, int stmtNo2);
     void setProc(string proc_name, vector<int> idxList);
-    void setStmtType(int stmtNo, stmtType type);
+    void setStmtType(int stmtNo, StmtType type);
     void setUses(int stmtNo, string var_name);
     void setModifies(int stmtNo, string var_name);
 

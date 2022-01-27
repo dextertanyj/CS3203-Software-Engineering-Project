@@ -1,6 +1,9 @@
 #ifndef INC_21S2_CP_SPA_TEAM_32_TYPEDEFS_H
 #define INC_21S2_CP_SPA_TEAM_32_TYPEDEFS_H
 
+#include <string>
+#include <vector>
+
 using namespace std;
 
 typedef int StmtRef;
