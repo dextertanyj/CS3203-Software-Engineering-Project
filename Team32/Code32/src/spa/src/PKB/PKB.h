@@ -9,36 +9,35 @@
 #include "FollowStore.h"
 #include "UseStore.h"
 #include "ModifyStore.h"
+#include "../Common/TypeDefs.h"
 
+typedef int StmtRef;
+typedef string VarRef;
+typedef int StmtRef;
 using namespace std;
 
 class PKB {
 public:
-    /*
-	static VarTable* varTable; 
-	static int setProcToAST(PROC p, TNode* r);
-	static TNode* getRootAST (PROC p);
-     */
     PKB();
 
     // Set methods called by Source processor
-    bool setFollows(int stmtNo1, int stmtNo2);
-    bool setParent(int stmtNo1, int stmtNo2);
-    void setProc(string proc_name, vector<int> idxList);
-    void setStmtType(int stmtNo, StmtType type);
-    void setUses(int stmtNo, string var_name);
-    void setModifies(int stmtNo, string var_name);
+    bool setFollows(StmtRef stmtNo1, StmtRef stmtNo2);
+    bool setParent(StmtRef stmtNo1, StmtRef stmtNo2);
+    void setProc(ProcRef proc_name, vector<StmtRef> idxList);
+    void setStmtType(StmtRef stmtNo, StmtType type);
+    void setUses(StmtRef stmtNo, VarRef var_name);
+    void setModifies(StmtRef stmtNo, VarRef var_name);
 
     // Get methods called by PQL
     // Parent get methods
-    int getParent(int stmtNo);
-    unordered_set<int> getChildren(int stmtNo);
-    bool checkParents(int stmtNo1, int stmtNo2);
+    StmtRef getParent(StmtRef stmtNo);
+    unordered_set<StmtRef> getChildren(StmtRef stmtNo);
+    bool checkParents(StmtRef stmtNo1, StmtRef stmtNo2);
 
     // Follow get methods
-    int getFollowee(int stmtNo);
-    int getFollower(int stmtNo);
-    bool checkFollows(int stmtNo1, int stmtNo2);
+    StmtRef getFollowee(StmtRef stmtNo);
+    StmtRef getFollower(StmtRef stmtNo);
+    bool checkFollows(StmtRef stmtNo1, StmtRef stmtNo2);
 
     // Others
     void clear();
@@ -50,7 +49,7 @@ private:
     static FollowStore followStore;
     static UseStore useStore;
     static ModifyStore modifyStore;
-    bool checkInvalidStmts(int stmtNo1, int stmtNo2);
-    static unordered_map<string, vector<int>> procMap;
-    static unordered_map<int, stmtType> typeMap;
+    bool checkInvalidStmts(StmtRef stmtNo1, StmtRef stmtNo2);
+    static unordered_map<ProcRef, vector<StmtRef>> procMap;
+    static unordered_map<StmtRef, StmtType> typeMap;
 };

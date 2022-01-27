@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include "../Common/TypeDefs.h"
 
 using namespace std;
 
@@ -12,20 +13,20 @@ using namespace std;
 
 struct FollowRelation {
     int follower;
-    unordered_set<int> followers;
-    unordered_set<int> followees;
+    unordered_set<StmtRef> followers;
+    unordered_set<StmtRef> followees;
 };
 
 class FollowStore {
 public:
     FollowStore();
-    void setFollows(int stmtNo1, int stmtNo2);
-    bool checkFollows(int stmtNo1, int stmtNo2);
-    int getFollowee(int stmt);
-    int getFollower(int stmt);
+    void setFollows(StmtRef stmtNo1, StmtRef stmtNo2);
+    bool checkFollows(StmtRef stmtNo1, StmtRef stmtNo2);
+    StmtRef getFollowee(StmtRef stmt);
+    StmtRef getFollower(StmtRef stmt);
     void clear();
 private:
-    unordered_map<int, FollowRelation> followMap;
+    unordered_map<StmtRef, FollowRelation> followMap;
 };
 
 #endif

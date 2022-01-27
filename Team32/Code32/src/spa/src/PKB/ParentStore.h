@@ -4,34 +4,37 @@
 #include <iostream>
 #include <map>
 #include <unordered_set>
+#include "../Common/TypeDefs.h"
 
 using namespace std;
 
 #ifndef INC_21S2_CP_SPA_TEAM_32_PARENTSTORE_H
 #define INC_21S2_CP_SPA_TEAM_32_PARENTSTORE_H
 
+typedef int StmtRef;
+typedef int StmtRef;
 struct ParentRelation {
-    unordered_set<int> childSet;
-    unordered_set<int> parentStarSet;
-    unordered_set<int> childStarSet;
-    int parent;
+    unordered_set<StmtRef> childSet;
+    unordered_set<StmtRef> parentStarSet;
+    unordered_set<StmtRef> childStarSet;
+    StmtRef parent;
 };
 
 class ParentStore {
 public:
     ParentStore();
-    void setParent(int parentStmt, int childStmt);
-    bool isParentChild(int parentStmt, int childStmt);
-    int getParent(int stmt);
-    unordered_set<int> getChildren(int stmt);
+    void setParent(StmtRef parentStmt, StmtRef childStmt);
+    bool isParentChild(StmtRef parentStmt, StmtRef childStmt);
+    StmtRef getParent(StmtRef stmt);
+    unordered_set<StmtRef> getChildren(StmtRef stmt);
     void clear();
     void populateParentStar();
     void setNumStatements(int size);
 private:
     // key is parent stmtNo, value is list of children
-    map<int, ParentRelation> parentMap;
-    void populateParentStarSet(int StmtNo);
-    void recursivelyAddParent(int stmtNo, unordered_set<int>& parentStarSet);
+    map<StmtRef, ParentRelation> parentMap;
+    void populateParentStarSet(StmtRef StmtNo);
+    void recursivelyAddParent(StmtRef stmtNo, unordered_set<StmtRef>& parentStarSet);
     int numStatements;
 };
 

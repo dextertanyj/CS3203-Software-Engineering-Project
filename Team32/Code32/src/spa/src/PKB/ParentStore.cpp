@@ -4,7 +4,7 @@ using namespace std;
 
 ParentStore::ParentStore() {}
 
-void ParentStore::setParent(int parentStmt, int childStmt) {
+void ParentStore::setParent(StmtRef parentStmt, StmtRef childStmt) {
     auto keyItr = parentMap.find(parentStmt);
     if (keyItr == parentMap.end()) {
         // parent does not exist as key
@@ -24,12 +24,12 @@ void ParentStore::setParent(int parentStmt, int childStmt) {
     }
 }
 
-bool ParentStore::isParentChild(int parentStmt, int childStmt) {
+bool ParentStore::isParentChild(StmtRef parentStmt, StmtRef childStmt) {
     auto keyItr = parentMap.find(childStmt);
     if (keyItr == parentMap.end()) {
         return false;
     }
-    int parent = keyItr->second.parent;
+    StmtRef parent = keyItr->second.parent;
     if (parent == parentStmt) {
         return true;
     } else {
@@ -37,7 +37,7 @@ bool ParentStore::isParentChild(int parentStmt, int childStmt) {
     }
 }
 
-int ParentStore::getParent(int stmt) {
+StmtRef ParentStore::getParent(StmtRef stmt) {
     auto keyItr = parentMap.find(stmt);
     if (keyItr == parentMap.end()) {
         return -1;
@@ -45,35 +45,35 @@ int ParentStore::getParent(int stmt) {
     return keyItr->second.parent;
 }
 
-unordered_set<int> ParentStore::getChildren(int stmt) {
+unordered_set<StmtRef> ParentStore::getChildren(StmtRef stmt) {
     for(auto& itr : parentMap) {
         if (itr.first == stmt) {
             return itr.second.childSet;
         }
     }
-    return unordered_set<int>{};
+    return unordered_set<StmtRef>{};
 }
 
 void ParentStore::populateParentStar() {
     if (numStatements >= 2) {
-        for (int i = 2; i < numStatements; i++) {
+        for (StmtRef i = 2; i < numStatements; i++) {
             populateParentStarSet(i);
         }
     }
 }
 
-void ParentStore::populateParentStarSet(int stmtNo) {
+void ParentStore::populateParentStarSet(StmtRef stmtNo) {
     auto keyItr = parentMap.find(stmtNo);
     recursivelyAddParent(stmtNo, keyItr->second.parentStarSet);
 }
 
-void ParentStore::recursivelyAddParent(int stmtNo, unordered_set<int> &parentStarSet) {
+void ParentStore::recursivelyAddParent(StmtRef stmtNo, unordered_set<StmtRef> &parentStarSet) {
     auto keyItr = parentMap.find(stmtNo);
-    int parent = keyItr->second.parent;
+    StmtRef parent = keyItr->second.parent;
     if (parent == -1) {
         return;
     }
-    unordered_set<int> parentOfParentSet = parentMap.find(parent)->second.parentStarSet;
+    unordered_set<StmtRef> parentOfParentSet = parentMap.find(parent)->second.parentStarSet;
     if (parentOfParentSet.empty()) {
         parentStarSet.insert(parent);
         recursivelyAddParent(parent, parentStarSet);

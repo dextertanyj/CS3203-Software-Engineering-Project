@@ -5,7 +5,7 @@ using namespace std;
 FollowStore::FollowStore() {}
 
 // need to add checks that stmtno 2 doesnt follow another other stmt and stmt no 1 isnt followed by other stmts
-void FollowStore::setFollows(int stmtNo1, int stmtNo2) {
+void FollowStore::setFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
     auto keyItr = followMap.find(stmtNo1);
     if (keyItr == followMap.end()) {
         // does not exist in map
@@ -16,7 +16,7 @@ void FollowStore::setFollows(int stmtNo1, int stmtNo2) {
     }
 }
 
-bool FollowStore::checkFollows(int stmtNo1, int stmtNo2) {
+bool FollowStore::checkFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
     for(auto& itr : followMap) {
         if (itr.first == stmtNo1) {
             return itr.second.follower == stmtNo2;
@@ -25,7 +25,7 @@ bool FollowStore::checkFollows(int stmtNo1, int stmtNo2) {
     return false;
 }
 
-int FollowStore::getFollower(int stmt) {
+StmtRef FollowStore::getFollower(StmtRef stmt) {
     for(auto& itr : followMap) {
         if (itr.first == stmt) {
             return itr.second.follower;
@@ -34,7 +34,7 @@ int FollowStore::getFollower(int stmt) {
     return -1;
 }
 
-int FollowStore::getFollowee(int stmt) {
+StmtRef FollowStore::getFollowee(StmtRef stmt) {
     for(auto& itr : followMap) {
         if (itr.second.follower == stmt) {
             return itr.first;

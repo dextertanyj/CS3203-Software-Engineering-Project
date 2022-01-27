@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include "../Common/TypeDefs.h"
 
 using namespace std;
 
@@ -13,10 +14,10 @@ using namespace std;
 class ModifyStore {
 public:
     ModifyStore();
-    void setModify(int stmtNo, string var_name);
+    void setModify(StmtRef stmtNo, VarRef var_name);
 private:
-    unordered_map<int, unordered_set<string>> stmtToVarMap;
-    unordered_map<string, unordered_set<int>> varToStmtMap;
+    unordered_map<StmtRef, unordered_set<VarRef>> stmtToVarMap;
+    unordered_map<VarRef, unordered_set<StmtRef>> varToStmtMap;
 };
 
 #endif //INC_21S2_CP_SPA_TEAM_32_MODIFYSTORE_H
