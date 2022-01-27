@@ -1,6 +1,9 @@
 #ifndef INC_21S2_CP_SPA_TEAM_32_TYPEDEFS_H
 #define INC_21S2_CP_SPA_TEAM_32_TYPEDEFS_H
 
+#include <string>
+#include <vector>
+
 using namespace std;
 
 typedef int StmtRef;
@@ -16,6 +19,9 @@ typedef struct StmtInfo {
 
 typedef vector<StmtInfo> StmtInfoList;
 typedef vector<VarRef> VarRefList;
+
+enum class ArithmeticOperator { Plus, Minus, Times, Divide, Modulo };
+enum class RelationalOperator { EQ, NEQ, LT, LTE, GT, GTE };
 
 #endif
 
