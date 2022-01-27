@@ -1,5 +1,5 @@
-#ifndef QUERY_RESULT_H
-#define QUERY_RESULT_H
+#ifndef QUERY_RESULT_H_
+#define QUERY_RESULT_H_
 
 #include "Common/TypeDefs.h"
 
@@ -12,4 +12,4 @@ public:
 	VarRefList varList;
 };
 
-#endif /* QUERY_RESULT_H */
+#endif // QUERY_RESULT_H_

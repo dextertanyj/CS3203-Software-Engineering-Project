@@ -1,4 +1,5 @@
 #include "QueryEvaluator.h"
+
 #include "QueryProperties.h"
 #include "QueryResult.h"
 
