@@ -5,6 +5,6 @@ using namespace std;
 
 ProgramNode::ProgramNode() = default;
 
-void ProgramNode::addProcedureNode(ProcedureNode procNode) {
-    procedures.push_back(make_unique<ProcedureNode>(procNode));
+void ProgramNode::addProcedureNode(unique_ptr<ProcedureNode>  procNode) {
+    procedures.push_back(move(procNode));
 }

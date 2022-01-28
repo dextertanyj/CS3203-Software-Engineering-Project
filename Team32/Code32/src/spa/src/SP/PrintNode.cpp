@@ -1,6 +1,8 @@
 #include "PrintNode.h"
 
-PrintNode::PrintNode(StmtRef stmtNo, VarNode varName):
+using namespace std;
+
+PrintNode::PrintNode(StmtRef stmtNo, unique_ptr<VarNode> varName):
         StatementNode(stmtNo),
-        varName(varName) {
+        varName(move(varName)) {
 }

@@ -1,7 +1,7 @@
 #include "WhileNode.h"
 
-WhileNode::WhileNode(StmtRef stmtNo, CondExpr condExpr, StatementListNode stmtLst):
+WhileNode::WhileNode(StmtRef stmtNo, unique_ptr<CondExpr> condExpr, unique_ptr<StatementListNode> stmtLst):
         StatementNode(stmtNo),
-        condExpr(condExpr),
-        stmtLst(stmtLst){
+        condExpr(move(condExpr)),
+        stmtLst(move(stmtLst)){
 }

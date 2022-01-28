@@ -8,9 +8,9 @@ using namespace std;
 class StatementListNode {
 public:
     StatementListNode();
-    void addStatementNode(StatementNode stmtNode);
+    void addStatementNode(unique_ptr<StatementNode> stmtNode);
 private:
-    vector<unique_ptr<StatementNode>> stmtList;
+    vector<shared_ptr<StatementNode>> stmtList;
 };
 
 #endif //SPA_STATEMENTLISTNODE_H

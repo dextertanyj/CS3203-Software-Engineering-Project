@@ -5,6 +5,6 @@ using namespace std;
 
 StatementListNode::StatementListNode() = default;
 
-void StatementListNode::addStatementNode(StatementNode stmtNode) {
-    stmtList.push_back(make_unique<StatementNode>(stmtNode));
+void StatementListNode::addStatementNode(unique_ptr<StatementNode> stmtNode) {
+    stmtList.push_back(move(stmtNode));
 }

@@ -11,10 +11,10 @@ typedef string CondExpr;
 
 class WhileNode : public StatementNode {
 public:
-    WhileNode(StmtRef stmtNo, CondExpr condExpr, StatementListNode stmtLst);
+    WhileNode(StmtRef stmtNo, unique_ptr<CondExpr> condExpr, unique_ptr<StatementListNode> stmtLst);
 private:
-    CondExpr condExpr;
-    StatementListNode stmtLst;
+    unique_ptr<CondExpr> condExpr;
+    unique_ptr<StatementListNode> stmtLst;
 };
 
 #endif //SPA_WHILENODE_H

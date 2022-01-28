@@ -10,9 +10,9 @@ typedef string VarNode;
 
 class ReadNode : public StatementNode {
 public:
-    ReadNode(StmtRef stmtNo, VarNode varName);
+    ReadNode(StmtRef stmtNo, unique_ptr<VarNode> varName);
 private:
-    VarNode varName;
+    unique_ptr<VarNode> varName;
 };
 
 #endif //SPA_READNODE_H
