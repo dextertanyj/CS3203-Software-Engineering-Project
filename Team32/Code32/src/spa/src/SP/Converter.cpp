@@ -1,6 +1,11 @@
-#include "Converter.h"
+#include <string>
 
-ArithmeticOperator Converter::convertArithmetic(string op) {
+#include "Converter.h"
+#include "Validator.h"
+
+using namespace std;
+
+ArithmeticOperator Converter::convertArithmetic(const string& op) {
 	if (op == "+") {
 		return ArithmeticOperator::Plus;
 	}
@@ -19,7 +24,7 @@ ArithmeticOperator Converter::convertArithmetic(string op) {
 	throw ConversionException("Expected arithmetic symbol, got " + op + " instead.");
 }
 
-RelationalOperator Converter::convertRelational(string op) {
+RelationalOperator Converter::convertRelational(const string& op) {
 	if (op == ">") {
 		return RelationalOperator::GT;
 	}
@@ -39,4 +44,17 @@ RelationalOperator Converter::convertRelational(string op) {
 		return RelationalOperator::NEQ;
 	}
 	throw ConversionException("Expected relational symbol, got " + op + " instead.");
+}
+
+int Converter::convertInteger(const string& integer) {
+	if (!Validator::validateInteger(integer)) {
+		throw ConversionException("Invalid argument");
+	}
+	try {
+		return stoi(integer);
+	} catch (invalid_argument&) {
+		throw ConversionException("Invalid argument");
+	} catch (out_of_range&) {
+		throw ConversionException("Integer out of range");
+	}
 }

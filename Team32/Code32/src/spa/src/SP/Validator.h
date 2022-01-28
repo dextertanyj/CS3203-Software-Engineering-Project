@@ -6,8 +6,8 @@
 using namespace std;
 
 namespace Validator {
-	bool validateName(string name);
-	bool validateInteger(string integer);
+	bool validateName(const string& name);
+	bool validateInteger(const string& integer);
 }
 
 #endif //SPA_VALIDATOR_H

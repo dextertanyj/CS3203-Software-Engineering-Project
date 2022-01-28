@@ -12,8 +12,9 @@ struct ConversionException : public runtime_error {
 };
 
 namespace Converter {
-	ArithmeticOperator convertArithmetic(string op);
-	RelationalOperator convertRelational(string op);
+	ArithmeticOperator convertArithmetic(const string& op);
+	RelationalOperator convertRelational(const string& op);
+	int convertInteger(const string& integer);
 }
 
 #endif //SPA_CONVERTER_H
