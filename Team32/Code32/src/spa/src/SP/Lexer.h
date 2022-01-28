@@ -14,7 +14,9 @@ class Lexer {
 public:
 	void initialize(string);
 	bool next_token();
-	string get_token();
+	string read_token();
+	string peek_token();
+	bool next_if(string&&);
 
 private:
 	static regex validation_regex;

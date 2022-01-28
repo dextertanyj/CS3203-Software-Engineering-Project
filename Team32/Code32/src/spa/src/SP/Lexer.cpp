@@ -27,6 +27,19 @@ bool Lexer::next_token() {
     return false;
 }
 
-string Lexer::get_token() {
-    return this->iterator->str();
+string Lexer::read_token() {
+	string token = this->iterator->str();
+	next_token();
+	return token;
+}
+
+string Lexer::peek_token() {
+	return this->iterator->str();
+}
+
+bool Lexer::next_if(string&& token) {
+	if (this->iterator->str() == token) {
+		return next_token();
+	}
+	throw TokenizationException("");
 }
