@@ -1,8 +1,11 @@
 #include "IfNode.h"
 
-IfNode::IfNode(StmtRef stmtNo, CondExpr condExpr, StatementListNode ifStmtLst, StatementListNode elseStmtLst):
+using namespace std;
+
+IfNode::IfNode(StmtRef stmtNo, unique_ptr<CondExpr> condExpr, unique_ptr<StatementListNode> ifStmtLst
+               , unique_ptr<StatementListNode> elseStmtLst):
         StatementNode(stmtNo),
-        condExpr(condExpr),
-        ifStmtLst(ifStmtLst),
-        elseStmtLst(elseStmtLst){
+        condExpr(move(condExpr)),
+        ifStmtLst(move(ifStmtLst)),
+        elseStmtLst(move(elseStmtLst)){
 }

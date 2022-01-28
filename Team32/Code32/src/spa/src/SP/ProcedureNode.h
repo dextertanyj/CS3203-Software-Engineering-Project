@@ -8,11 +8,10 @@ using namespace std;
 
 class ProcedureNode {
 public:
-    ProcedureNode(string name, StatementListNode stmtLst);
+    ProcedureNode(string name, unique_ptr<StatementListNode> stmtLst);
 private:
     string name;
-    StatementListNode stmtLst;
+    unique_ptr<StatementListNode> stmtLst;
 };
-
 
 #endif //SPA_PROCEDURENODE_H

@@ -11,11 +11,11 @@ typedef string CondExpr;
 
 class IfNode : public StatementNode {
 public:
-    IfNode(StmtRef stmtNo, CondExpr condExpr, StatementListNode ifStmtLst, StatementListNode elseStmtLst);
+    IfNode(StmtRef stmtNo, unique_ptr<CondExpr> condExpr, unique_ptr<StatementListNode> ifStmtLst, unique_ptr<StatementListNode> elseStmtLst);
 private:
-    CondExpr condExpr;
-    StatementListNode ifStmtLst;
-    StatementListNode elseStmtLst;
+    unique_ptr<CondExpr> condExpr;
+    unique_ptr<StatementListNode> ifStmtLst;
+    unique_ptr<StatementListNode> elseStmtLst;
 };
 
 #endif //SPA_IFNODE_H

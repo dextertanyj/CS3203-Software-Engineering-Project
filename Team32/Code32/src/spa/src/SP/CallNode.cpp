@@ -1,6 +1,8 @@
 #include "CallNode.h"
 
-CallNode::CallNode(StmtRef stmtNo, ProcedureNode& procNode):
+using namespace std;
+
+CallNode::CallNode(StmtRef stmtNo, unique_ptr<ProcedureNode> procNode):
         StatementNode(stmtNo),
-        procNode(procNode) {
+        procNode(move(procNode)) {
 }

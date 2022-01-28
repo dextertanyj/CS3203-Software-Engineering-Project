@@ -6,9 +6,9 @@
 
 class CallNode : public StatementNode {
 public:
-    CallNode(StmtRef stmtNo, ProcedureNode& procNode);
+    CallNode(StmtRef stmtNo, unique_ptr<ProcedureNode> procNode);
 private:
-    ProcedureNode& procNode;
+    unique_ptr<ProcedureNode> procNode;
 };
 
 #endif //SPA_CALLNODE_H

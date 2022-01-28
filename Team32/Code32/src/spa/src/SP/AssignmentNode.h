@@ -11,10 +11,10 @@ typedef string ArithmeticExpressionNode;
 
 class AssignmentNode : public StatementNode {
 public:
-    AssignmentNode(StmtRef stmtNo, VarNode varName, ArithmeticExpressionNode expr);
+    AssignmentNode(StmtRef stmtNo, unique_ptr<VarNode> varName, unique_ptr<ArithmeticExpressionNode> expr);
 private:
-    VarNode varName;
-    ArithmeticExpressionNode expr;
+    unique_ptr<VarNode> varName;
+    unique_ptr<ArithmeticExpressionNode> expr;
 };
 
 #endif //SPA_ASSIGNMENTNODE_H

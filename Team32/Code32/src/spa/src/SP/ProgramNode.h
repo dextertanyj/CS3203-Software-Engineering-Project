@@ -8,9 +8,9 @@ using namespace std;
 class ProgramNode {
 public:
     ProgramNode();
-    void addProcedureNode(ProcedureNode procNode);
+    void addProcedureNode(unique_ptr<ProcedureNode> procNode);
 private:
-    vector<unique_ptr<ProcedureNode>> procedures;
+    vector<shared_ptr<ProcedureNode>> procedures;
 };
 
 #endif //SPA_PROGRAMNODE_H

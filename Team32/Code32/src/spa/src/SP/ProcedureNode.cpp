@@ -1,6 +1,10 @@
 #include "ProcedureNode.h"
 
-ProcedureNode::ProcedureNode(string name, StatementListNode stmtLst):
-        name(name),
-        stmtLst(stmtLst) {
+#include <utility>
+
+using namespace std;
+
+ProcedureNode::ProcedureNode(string name, unique_ptr<StatementListNode> stmtLst):
+        name(move(name)),
+        stmtLst(move(stmtLst)) {
 }
