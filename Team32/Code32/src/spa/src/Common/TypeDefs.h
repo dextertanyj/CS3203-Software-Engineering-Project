@@ -20,6 +20,9 @@ typedef struct StmtInfo {
 typedef vector<StmtInfo> StmtInfoList;
 typedef vector<VarRef> VarRefList;
 
+enum class ArithmeticOperator { Plus, Minus, Times, Divide, Modulo };
+enum class RelationalOperator { EQ, NEQ, LT, LTE, GT, GTE };
+
 #endif
 
 
