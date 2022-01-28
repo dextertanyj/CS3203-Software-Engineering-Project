@@ -3,14 +3,14 @@
 
 #include <string>
 
-using namespace std;
+#include "QueryProperties.h"
+#include "QueryResult.h"
 
-class QueryProperties;
-class QueryResult;
+using namespace std;
 
 class QueryFormatter {
 public:
-	static string formatQuery(QueryProperties* queryProperties, QueryResult* queryResult);
+	static string formatQuery(const QueryProperties& queryProperties, const QueryResult& queryResult);
 };
 
 #endif // QUERY_FORMATTER_H_
