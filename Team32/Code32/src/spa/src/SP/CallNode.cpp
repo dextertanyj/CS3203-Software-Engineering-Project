@@ -2,7 +2,7 @@
 
 using namespace std;
 
-CallNode::CallNode(StmtRef stmtNo, unique_ptr<ProcedureNode> procedure):
+CallNode::CallNode(StmtRef stmtNo, ProcRef procedure):
         StatementNode(stmtNo),
         procedure(move(procedure)) {
 }
