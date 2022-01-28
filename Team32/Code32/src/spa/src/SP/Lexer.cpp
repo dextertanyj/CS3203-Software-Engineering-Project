@@ -1,5 +1,7 @@
-#include "Lexer.h"
+#include <string>
 #include <regex>
+
+#include "Lexer.h"
 
 using namespace std;
 
@@ -37,9 +39,20 @@ string Lexer::peek_token() {
 	return this->iterator->str();
 }
 
-bool Lexer::next_if(string&& token) {
+bool Lexer::next_if(const string& token) {
 	if (this->iterator->str() == token) {
 		return next_token();
 	}
 	throw TokenizationException("");
+}
+
+bool Lexer::next_if(initializer_list<string> tokens) {
+	bool last;
+	for (const string& token : tokens) {
+		if (this->iterator->str() != token) {
+			throw TokenizationException("");
+		}
+		last = next_token();
+	}
+	return last;
 }

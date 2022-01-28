@@ -88,3 +88,21 @@ TEST_CASE("Lexer::peek_token Repeat Test") {
 	REQUIRE_EQUALS(lex.peek_token(), "One");
 	REQUIRE_EQUALS(lex.peek_token(), "One");
 }
+
+TEST_CASE("Lexer::next_if Test") {
+	Lexer lex;
+	lex.initialize("{ One }");
+	REQUIRE(lex.next_if("{"));
+	REQUIRE(lex.next_if("One"));
+	REQUIRE_THROWS_AS(lex.next_if("Three"), TokenizationException);
+	REQUIRE_FALSE(lex.next_if("}"));
+}
+
+TEST_CASE("Lexer::next_if List Test") {
+	Lexer lex;
+	lex.initialize("{ One Two Three Four }");
+	REQUIRE(lex.next_if({"{"}));
+	REQUIRE(lex.next_if({"One", "Two"}));
+	REQUIRE_THROWS_AS(lex.next_if({"Three", "Five"}), TokenizationException);
+	REQUIRE_FALSE(lex.next_if({"Four", "}"}));
+}
