@@ -10,7 +10,7 @@ using namespace std;
 
 class ArithmeticNode : public ArithmeticExpressionNode {
 public:
-	ArithmeticNode(ArithmeticOperator, unique_ptr<ArithmeticExpressionNode>, unique_ptr<ArithmeticExpressionNode>);
+	ArithmeticNode(ArithmeticOperator op, unique_ptr<ArithmeticExpressionNode> lhs, unique_ptr<ArithmeticExpressionNode> rhs);
 
 private:
 	ArithmeticOperator op;

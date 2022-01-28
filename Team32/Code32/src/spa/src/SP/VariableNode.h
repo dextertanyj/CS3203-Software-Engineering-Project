@@ -6,7 +6,7 @@
 
 class VariableNode : public ReferenceNode {
 public:
-	VariableNode(VarRef);
+	VariableNode(VarRef name);
 
 private:
 	VarRef name;

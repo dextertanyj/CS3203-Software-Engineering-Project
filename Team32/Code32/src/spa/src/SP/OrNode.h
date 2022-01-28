@@ -9,7 +9,7 @@ using namespace std;
 
 class OrNode : public ConditionalExpressionNode {
 public:
-	OrNode(unique_ptr<ConditionalExpressionNode>, unique_ptr<ConditionalExpressionNode>);
+	OrNode(unique_ptr<ConditionalExpressionNode> lhs, unique_ptr<ConditionalExpressionNode> rhs);
 
 private:
 	unique_ptr<ConditionalExpressionNode> lhs;

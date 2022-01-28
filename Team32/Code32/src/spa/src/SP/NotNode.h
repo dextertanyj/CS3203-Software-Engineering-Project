@@ -9,7 +9,7 @@ using namespace std;
 
 class NotNode : public ConditionalExpressionNode {
 public:
-	NotNode(unique_ptr<ConditionalExpressionNode>);
+	NotNode(unique_ptr<ConditionalExpressionNode> expression);
 
 private:
 	unique_ptr<ConditionalExpressionNode> expression;
