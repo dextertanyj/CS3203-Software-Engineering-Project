@@ -4,11 +4,12 @@
 #include <memory>
 
 #include "Common/TypeDefs.h"
+#include "SP/ConditionalExpressionNode.h"
 #include "SP/RelationalFactorNode.h"
 
 using namespace std;
 
-class RelationalExpressionNode {
+class RelationalExpressionNode : public ConditionalExpressionNode {
 public:
 	RelationalExpressionNode(RelationalOperator, unique_ptr<RelationalFactorNode>, unique_ptr<RelationalFactorNode>);
 
