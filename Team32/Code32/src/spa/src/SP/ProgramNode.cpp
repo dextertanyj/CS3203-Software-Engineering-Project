@@ -1,10 +1,11 @@
-#include "ProgramNode.h"
 #include <vector>
+
+#include "SP/ProgramNode.h"
 
 using namespace std;
 
 ProgramNode::ProgramNode() = default;
 
-void ProgramNode::addProcedureNode(unique_ptr<ProcedureNode>  procNode) {
-    procedures.push_back(move(procNode));
+void ProgramNode::addProcedureNode(unique_ptr<ProcedureNode> procedure) {
+    procedures.push_back(move(procedure));
 }

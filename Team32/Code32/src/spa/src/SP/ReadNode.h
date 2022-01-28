@@ -1,18 +1,18 @@
 #ifndef SPA_READNODE_H
 #define SPA_READNODE_H
 
-#include "StatementNode.h"
 #include <string>
+
+#include "StatementNode.h"
+#include "VariableNode.h"
 
 using namespace std;
 
-typedef string VarNode;
-
 class ReadNode : public StatementNode {
 public:
-    ReadNode(StmtRef stmtNo, unique_ptr<VarNode> varName);
+    ReadNode(StmtRef stmtNo, unique_ptr<VariableNode> variable);
 private:
-    unique_ptr<VarNode> varName;
+    unique_ptr<VariableNode> variable;
 };
 
 #endif //SPA_READNODE_H

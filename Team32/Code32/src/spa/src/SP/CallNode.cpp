@@ -1,8 +1,8 @@
-#include "CallNode.h"
+#include "SP/CallNode.h"
 
 using namespace std;
 
-CallNode::CallNode(StmtRef stmtNo, unique_ptr<ProcedureNode> procNode):
+CallNode::CallNode(StmtRef stmtNo, unique_ptr<ProcedureNode> procedure):
         StatementNode(stmtNo),
-        procNode(move(procNode)) {
+        procedure(move(procedure)) {
 }

@@ -1,20 +1,20 @@
 #ifndef SPA_ASSIGNMENTNODE_H
 #define SPA_ASSIGNMENTNODE_H
 
-#include "StatementNode.h"
 #include <string>
+
+#include "SP/ArithmeticExpressionNode.h"
+#include "SP/StatementNode.h"
+#include "SP/VariableNode.h"
 
 using namespace std;
 
-typedef string VarNode;
-typedef string ArithmeticExpressionNode;
-
 class AssignmentNode : public StatementNode {
 public:
-    AssignmentNode(StmtRef stmtNo, unique_ptr<VarNode> varName, unique_ptr<ArithmeticExpressionNode> expr);
+    AssignmentNode(StmtRef stmtNo, unique_ptr<VariableNode> assignee, unique_ptr<ArithmeticExpressionNode> expression);
 private:
-    unique_ptr<VarNode> varName;
-    unique_ptr<ArithmeticExpressionNode> expr;
+    unique_ptr<VariableNode> assignee;
+    unique_ptr<ArithmeticExpressionNode> expression;
 };
 
 #endif //SPA_ASSIGNMENTNODE_H

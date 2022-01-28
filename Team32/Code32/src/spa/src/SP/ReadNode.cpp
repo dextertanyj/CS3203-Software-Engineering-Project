@@ -1,6 +1,6 @@
-#include "ReadNode.h"
+#include "SP/ReadNode.h"
 
-ReadNode::ReadNode(StmtRef stmtNo, unique_ptr<VarNode> varName):
+ReadNode::ReadNode(StmtRef stmtNo, unique_ptr<VariableNode> variable):
         StatementNode(stmtNo),
-        varName(move(varName)) {
+        variable(move(variable)) {
 }

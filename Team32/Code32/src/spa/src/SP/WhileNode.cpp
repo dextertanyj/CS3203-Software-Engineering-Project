@@ -1,6 +1,6 @@
-#include "WhileNode.h"
+#include "SP/WhileNode.h"
 
-WhileNode::WhileNode(StmtRef stmtNo, unique_ptr<CondExpr> condExpr, unique_ptr<StatementListNode> stmtLst):
+WhileNode::WhileNode(StmtRef stmtNo, unique_ptr<ConditionalExpressionNode> condExpr, unique_ptr<StatementListNode> stmtLst):
         StatementNode(stmtNo),
         condExpr(move(condExpr)),
         stmtLst(move(stmtLst)){

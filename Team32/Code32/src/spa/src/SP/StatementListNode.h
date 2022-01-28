@@ -1,14 +1,14 @@
 #ifndef SPA_STATEMENTLISTNODE_H
 #define SPA_STATEMENTLISTNODE_H
 
-#include "StatementNode.h"
+#include "SP/StatementNode.h"
 
 using namespace std;
 
 class StatementListNode {
 public:
     StatementListNode();
-    void addStatementNode(unique_ptr<StatementNode> stmtNode);
+    void addStatementNode(unique_ptr<StatementNode> statement);
 private:
     vector<shared_ptr<StatementNode>> stmtList;
 };

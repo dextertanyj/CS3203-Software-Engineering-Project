@@ -1,14 +1,14 @@
 #ifndef SPA_PROGRAMNODE_H
 #define SPA_PROGRAMNODE_H
 
-#include "ProcedureNode.h"
+#include "SP/ProcedureNode.h"
 
 using namespace std;
 
 class ProgramNode {
 public:
     ProgramNode();
-    void addProcedureNode(unique_ptr<ProcedureNode> procNode);
+    void addProcedureNode(unique_ptr<ProcedureNode> procedure);
 private:
     vector<shared_ptr<ProcedureNode>> procedures;
 };

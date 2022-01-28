@@ -1,9 +1,9 @@
-#include "AssignmentNode.h"
+#include "SP/AssignmentNode.h"
 
 using namespace std;
 
-AssignmentNode::AssignmentNode(StmtRef stmtNo, unique_ptr<VarNode> varName, unique_ptr<ArithmeticExpressionNode> expr):
+AssignmentNode::AssignmentNode(StmtRef stmtNo, unique_ptr<VariableNode> assignee, unique_ptr<ArithmeticExpressionNode> expression):
         StatementNode(stmtNo),
-        varName(move(varName)),
-        expr(move(expr)){
+        assignee(move(assignee)),
+        expression(move(expression)){
 }

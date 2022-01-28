@@ -1,8 +1,9 @@
 #ifndef SPA_PROCEDURENODE_H
 #define SPA_PROCEDURENODE_H
 
-#include "StatementListNode.h"
 #include <string>
+
+#include "StatementListNode.h"
 
 using namespace std;
 
