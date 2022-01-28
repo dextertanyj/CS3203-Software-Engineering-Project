@@ -1,17 +1,21 @@
 #ifndef SPA_RELATIONALEXPRESSIONNODE_H
 #define SPA_RELATIONALEXPRESSIONNODE_H
 
+#include <memory>
+
 #include "Common/TypeDefs.h"
 #include "SP/RelationalFactorNode.h"
 
+using namespace std;
+
 class RelationalExpressionNode {
 public:
-	RelationalExpressionNode(RelationalOperator, RelationalFactorNode, RelationalFactorNode);
+	RelationalExpressionNode(RelationalOperator, unique_ptr<RelationalFactorNode>, unique_ptr<RelationalFactorNode>);
 
 private:
 	RelationalOperator op;
-	RelationalFactorNode lhs;
-	RelationalFactorNode rhs;
+	unique_ptr<RelationalFactorNode> lhs;
+	unique_ptr<RelationalFactorNode> rhs;
 };
 
 

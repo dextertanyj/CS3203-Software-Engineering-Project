@@ -1,14 +1,18 @@
 #ifndef SPA_NOTNODE_H
 #define SPA_NOTNODE_H
 
+#include <memory>
+
 #include "SP/ConditionalExpressionNode.h"
+
+using namespace std;
 
 class NotNode : public ConditionalExpressionNode {
 public:
-	NotNode(ConditionalExpressionNode);
+	NotNode(unique_ptr<ConditionalExpressionNode>);
 
 private:
-	ConditionalExpressionNode expression;
+	unique_ptr<ConditionalExpressionNode> expression;
 };
 
 
