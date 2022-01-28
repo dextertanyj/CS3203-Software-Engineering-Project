@@ -1,9 +1,12 @@
+#include "SP/AndNode.h"
+#include "SP/CallNode.h"
 #include "SP/Converter.h"
+#include "SP/NotNode.h"
+#include "SP/OrNode.h"
 #include "SP/Parser.h"
+#include "SP/PrintNode.h"
+#include "SP/ReadNode.h"
 #include "SP/Validator.h"
-#include "CallNode.h"
-#include "PrintNode.h"
-#include "ReadNode.h"
 
 using namespace std;
 
@@ -119,4 +122,56 @@ unique_ptr<WhileNode> Parser::parseWhileStatement() {
 	unique_ptr<StatementListNode> statements = this->parseStatementList();
 	this->lex.next_if("}");
 	return make_unique<WhileNode>(statement_index, move(condition), move(statements));
+}
+
+unique_ptr<ConditionalExpressionNode> Parser::parseConditionalExpression() {
+	string token = this->lex.peek_token();
+	if (token == "!") {
+		this->lex.next_if("(");
+		unique_ptr<ConditionalExpressionNode> expression = this->parseConditionalExpression();
+		this->lex.next_if(")");
+		return make_unique<NotNode>(move(expression));
+	}
+	if (token == "(") {
+		unique_ptr<ConditionalExpressionNode> lhs = this->parseConditionalExpression();
+		this->lex.next_if(")");
+		string op = this->lex.read_token();
+		if (op != "&&" && op != "||") {
+			throw ParseException("Invalid logical operator");
+		}
+		this->lex.next_if("(");
+		unique_ptr<ConditionalExpressionNode> rhs = this->parseConditionalExpression();
+		this->lex.next_if(")");
+		if (op == "&&") {
+			return make_unique<AndNode>(move(lhs), move(rhs));
+		} else {
+			return make_unique<OrNode>(move(lhs), move(rhs));
+		}
+	}
+	return this->parseRelationalExpression();
+}
+
+unique_ptr<RelationalExpressionNode> Parser::parseRelationalExpression() {
+	unique_ptr<RelationalFactorNode> lhs = this->parseArithmeticExpression();
+	RelationalOperator op = Converter::convertRelational(this->lex.read_token());
+	unique_ptr<RelationalFactorNode> rhs = this->parseArithmeticExpression();
+	return make_unique<RelationalExpressionNode>(op, move(lhs), move(rhs));
+}
+
+unique_ptr<VariableNode> Parser::parseVariable() {
+	VarRef name = this->lex.read_token();
+	if (!Validator::validateName(name)) {
+		throw ParseException("Invalid variable name");
+	}
+	return make_unique<VariableNode>(name);
+}
+
+unique_ptr<ConstantNode> Parser::parseConstant() {
+	string token = this->lex.read_token();
+	try {
+		int value = Converter::convertInteger(token);
+		return make_unique<ConstantNode>(value);
+	} catch (ConversionException& e) {
+		throw ParseException("Invalid constant value");
+	}
 }
