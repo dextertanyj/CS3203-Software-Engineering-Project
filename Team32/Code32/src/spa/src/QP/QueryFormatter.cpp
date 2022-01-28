@@ -7,6 +7,6 @@
 
 using namespace std;
 
-string QueryFormatter::formatQuery(QueryProperties* queryProperties, QueryResult* queryResult) {
+string QueryFormatter::formatQuery(const QueryProperties& queryProperties, const QueryResult& queryResult) {
 	return "Invalid";
 }

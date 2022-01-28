@@ -1,16 +1,12 @@
 #ifndef QUERY_EVALUATOR_H_
 #define QUERY_EVALUATOR_H_
 
-#include <memory>
-
-using namespace std;
-
-class QueryProperties;
-class QueryResult;
+#include "QueryProperties.h"
+#include "QueryResult.h"
 
 class QueryEvaluator {
 public:
-	static unique_ptr<QueryResult> executeQuery(QueryProperties* queryProperties);
+	static QueryResult executeQuery(const QueryProperties& queryProperties);
 };
 
 #endif // QUERY_EVALUATOR_H_
