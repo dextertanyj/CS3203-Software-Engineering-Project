@@ -1,0 +1,15 @@
+#ifndef SPA_VARIABLENODE_H
+#define SPA_VARIABLENODE_H
+
+#include "Common/TypeDefs.h"
+#include "SP/ReferenceNode.h"
+
+class VariableNode : public ReferenceNode {
+public:
+	VariableNode(VarRef);
+
+private:
+	VarRef name;
+};
+
+#endif //SPA_VARIABLENODE_H
