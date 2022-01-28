@@ -2,7 +2,6 @@
 #define SPA_CALLNODE_H
 
 #include "Common/TypeDefs.h"
-#include "SP/ProcedureNode.h"
 #include "SP/StatementNode.h"
 
 class CallNode : public StatementNode {
