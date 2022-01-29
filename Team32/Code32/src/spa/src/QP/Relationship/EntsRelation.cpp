@@ -1,20 +1,21 @@
 #include "EntsRelation.h"
 
-#include <stdexcept> 
+#include <stdexcept>
 
-using namespace std;
+using std::invalid_argument;
 
-EntsRelation::EntsRelation(Relationship relationship, QueryEntRef entOne, QueryEntRef entTwo) :
-	Relation(validateRelationship(relationship)),
-	entOne(entOne),
-	entTwo(entTwo) {
+EntsRelation::EntsRelation(Relationship relationship, QueryEntRef entOne,
+                           QueryEntRef entTwo)
+    : Relation(validateRelationship(relationship)),
+      entOne(entOne),
+      entTwo(entTwo) {
 }
 
 Relationship EntsRelation::validateRelationship(Relationship relationship) {
-	if (relationship == Relationship::UsesP ||
-		relationship == Relationship::ModifiesP) {
-		return relationship;
-	}
+  if (relationship == Relationship::UsesP ||
+      relationship == Relationship::ModifiesP) {
+    return relationship;
+    }
 
-	throw invalid_argument("Invalid relationship");
+  throw invalid_argument("Invalid relationship");
 }
