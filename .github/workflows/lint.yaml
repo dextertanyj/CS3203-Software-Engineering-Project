@@ -1,0 +1,29 @@
+name: Lint - Manual Trigger
+on: [workflow_dispatch]
+
+env:
+  BUILD_TYPE: Coverage
+
+jobs:
+  runner-job:
+    runs-on: [self-hosted, macOS, x64]
+    steps:
+      - name: Cleanup workspace
+        shell: bash
+        run: rm -rf ${{github.workspace}}/* && rm -rf ${{runner.workspace}}/build
+
+      - name: Checkout repository code
+        uses: actions/checkout@v2
+
+      - name: Create build environment
+        run: cmake -E make_directory ${{runner.workspace}}/build
+
+      - name: Configure CMake
+        shell: bash
+        working-directory: ${{runner.workspace}}/build
+        run: cmake ${{github.workspace}}/Team32/Code32/ -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+      - name: Run lint
+        shell: bash
+        working-directory: ${{github.workspace}}/Team32/Code32
+        run: clang-tidy -p ${{runner.workspace}}/build ./src/spa/src/**/*.cpp ./src/spa/src/**/*.h
