@@ -1,4 +1,4 @@
-#include "IfNode.h"
+#include "SP/Node/IfNode.h"
 
 using namespace std;
 

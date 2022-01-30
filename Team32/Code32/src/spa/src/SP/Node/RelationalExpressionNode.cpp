@@ -1,4 +1,4 @@
-#include "RelationalExpressionNode.h"
+#include "SP/Node/RelationalExpressionNode.h"
 
 RelationalExpressionNode::RelationalExpressionNode(RelationalOperator op, unique_ptr<RelationalFactorNode> lhs,
                                                    unique_ptr<RelationalFactorNode> rhs):

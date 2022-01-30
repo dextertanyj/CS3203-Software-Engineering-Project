@@ -1,7 +1,7 @@
 #ifndef SPA_STATEMENTLISTNODE_H
 #define SPA_STATEMENTLISTNODE_H
 
-#include "StatementNode.h"
+#include "SP/Node/StatementNode.h"
 
 using namespace std;
 

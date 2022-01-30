@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "ConditionalExpressionNode.h"
+#include "SP/Node/ConditionalExpressionNode.h"
 
 using namespace std;
 

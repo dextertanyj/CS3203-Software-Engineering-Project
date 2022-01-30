@@ -4,8 +4,8 @@
 #include <string>
 
 #include "SP/Node/ConditionalExpressionNode.h"
-#include "StatementListNode.h"
-#include "StatementNode.h"
+#include "SP/Node/StatementListNode.h"
+#include "SP/Node/StatementNode.h"
 
 using namespace std;
 

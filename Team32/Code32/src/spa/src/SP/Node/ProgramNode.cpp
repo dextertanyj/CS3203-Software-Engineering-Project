@@ -1,6 +1,6 @@
 #include <vector>
 
-#include "ProgramNode.h"
+#include "SP/Node/ProgramNode.h"
 
 using namespace std;
 

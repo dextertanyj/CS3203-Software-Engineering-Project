@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "StatementNode.h"
-#include "VariableNode.h"
+#include "SP/Node/StatementNode.h"
+#include "SP/Node/VariableNode.h"
 
 using namespace std;
 

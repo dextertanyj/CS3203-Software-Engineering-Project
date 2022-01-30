@@ -1,6 +1,6 @@
 #include <utility>
 
-#include "ProcedureNode.h"
+#include "SP/Node/ProcedureNode.h"
 
 using namespace std;
 

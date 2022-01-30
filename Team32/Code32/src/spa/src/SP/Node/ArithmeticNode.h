@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "Common/TypeDefs.h"
-#include "ArithmeticExpressionNode.h"
+#include "SP/Node/ArithmeticExpressionNode.h"
 
 using namespace std;
 

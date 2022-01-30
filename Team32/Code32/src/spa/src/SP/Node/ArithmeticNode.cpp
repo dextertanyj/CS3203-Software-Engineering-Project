@@ -1,4 +1,4 @@
-#include "ArithmeticNode.h"
+#include "SP/Node/ArithmeticNode.h"
 
 ArithmeticNode::ArithmeticNode(ArithmeticOperator op, unique_ptr<ArithmeticExpressionNode> lhs,
                                unique_ptr<ArithmeticExpressionNode> rhs):

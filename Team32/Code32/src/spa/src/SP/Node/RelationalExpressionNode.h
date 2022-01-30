@@ -5,7 +5,7 @@
 
 #include "Common/TypeDefs.h"
 #include "SP/Node/ConditionalExpressionNode.h"
-#include "RelationalFactorNode.h"
+#include "SP/Node/RelationalFactorNode.h"
 
 using namespace std;
 

@@ -1,7 +1,7 @@
 #ifndef SPA_CONSTANTNODE_H
 #define SPA_CONSTANTNODE_H
 
-#include "ReferenceNode.h"
+#include "SP/Node/ReferenceNode.h"
 
 class ConstantNode : public ReferenceNode {
 public:

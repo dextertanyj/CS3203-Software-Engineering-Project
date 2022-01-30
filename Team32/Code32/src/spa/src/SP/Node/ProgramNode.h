@@ -1,7 +1,7 @@
 #ifndef SPA_PROGRAMNODE_H
 #define SPA_PROGRAMNODE_H
 
-#include "ProcedureNode.h"
+#include "SP/Node/ProcedureNode.h"
 
 using namespace std;
 
