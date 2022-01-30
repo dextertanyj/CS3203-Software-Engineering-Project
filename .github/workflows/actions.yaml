@@ -23,6 +23,11 @@ jobs:
         working-directory: ${{runner.workspace}}/build
         run: cmake ${{github.workspace}}/Team32/Code32/ -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
+#      - name: Run lint
+#        shell: bash
+#        working-directory: ${{github.workspace}}/Team32/Code32
+#        run: clang-tidy -p ${{runner.workspace}}/build ./src/spa/src/**/*.cpp ./src/spa/src/**/*.h
+
       - name: Build project
         working-directory: ${{runner.workspace}}/build
         shell: bash
