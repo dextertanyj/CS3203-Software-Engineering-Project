@@ -5,7 +5,7 @@
 
 class ConstantNode : public ReferenceNode {
 public:
-	ConstantNode(int value);
+	explicit ConstantNode(int value);
 private:
 	int value;
 };
