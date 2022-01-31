@@ -1,16 +1,20 @@
+#include "SP/Parser.h"
+
+#include <memory>
+
 #include "SP/AndNode.h"
 #include "SP/CallNode.h"
 #include "SP/Converter.h"
 #include "SP/NotNode.h"
 #include "SP/OrNode.h"
-#include "SP/Parser.h"
 #include "SP/PrintNode.h"
 #include "SP/ReadNode.h"
 #include "SP/Validator.h"
 
 using namespace std;
 
-Parser::Parser() = default;
+Parser::Parser() : statement_count(1) {
+}
 
 bool Parser::parse(string source) {
 	try {
@@ -56,42 +60,40 @@ unique_ptr<StatementListNode> Parser::parseStatementList() {
 }
 
 unique_ptr<StatementNode> Parser::parseStatement() {
-	string keyword = this->lex.peek_token();
-	if (keyword == "read") {
+	string token = this->lex.read_token();
+        string lookahead = this->lex.peek_token();
+        if (lookahead == "=") {
+          return this->parseAssignmentStatement(token);
+        }
+	if (token == "read") {
 		// Should we abstract this at this cost of an additional function call?
-		// If we do, next_token() should be called by the function instead.
-		this->lex.next_token();
 		unique_ptr<VariableNode> variable = this->parseVariable();
 		this->lex.next_if(";");
 		return make_unique<ReadNode>(statement_count++, move(variable));
 	}
-	if (keyword == "print") {
-		this->lex.next_token();
+	if (token == "print") {
 		unique_ptr<VariableNode> variable = this->parseVariable();
 		this->lex.next_if(";");
 		return make_unique<PrintNode>(statement_count++, move(variable));
 	}
-	if (keyword == "call") {
-		this->lex.next_token();
+	if (token == "call") {
 		ProcRef name = this->lex.read_token();
 		if (!Validator::validateName(name)) {
 			throw ParseException("Invalid procedure name");
 		}
 		return make_unique<CallNode>(statement_count++, name);
 	}
-	if (keyword == "while") {
-		this->lex.next_token();
+	if (token == "while") {
 		return this->parseWhileStatement();
 	}
-	if (keyword == "if") {
-		this->lex.next_token();
+	if (token == "if") {
 		return this->parseIfStatement();
 	}
-	return this->parseAssignmentStatement();
+	throw ParseException("Unknown statement type encountered");
 }
 
-unique_ptr<AssignmentNode> Parser::parseAssignmentStatement() {
-	unique_ptr<VariableNode> variable = this->parseVariable();
+unique_ptr<AssignmentNode> Parser::parseAssignmentStatement(string token) {
+	unique_ptr<VariableNode> variable = this->parseVariable(std::move(token));
 	this->lex.next_if("=");
 	unique_ptr<ArithmeticExpressionNode> expression = this->parseArithmeticExpression();
 	return make_unique<AssignmentNode>(statement_count++, move(variable), move(expression));
@@ -160,6 +162,14 @@ unique_ptr<RelationalExpressionNode> Parser::parseRelationalExpression() {
 
 unique_ptr<VariableNode> Parser::parseVariable() {
 	VarRef name = this->lex.read_token();
+	if (!Validator::validateName(name)) {
+		throw ParseException("Invalid variable name");
+	}
+	return make_unique<VariableNode>(name);
+}
+
+unique_ptr<VariableNode> Parser::parseVariable(string token) {  // NOLINT: Retain as non-static method for consistency
+	VarRef name = std::move(token);
 	if (!Validator::validateName(name)) {
 		throw ParseException("Invalid variable name");
 	}

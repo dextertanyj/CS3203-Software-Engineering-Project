@@ -35,12 +35,13 @@ private:
 	unique_ptr<ProcedureNode> parseProcedure();
 	unique_ptr<StatementListNode> parseStatementList();
 	unique_ptr<StatementNode> parseStatement();
-	unique_ptr<AssignmentNode> parseAssignmentStatement();
+	unique_ptr<AssignmentNode> parseAssignmentStatement(string token);
 	unique_ptr<IfNode> parseIfStatement();
 	unique_ptr<WhileNode> parseWhileStatement();
 	unique_ptr<ConditionalExpressionNode> parseConditionalExpression();
 	unique_ptr<RelationalExpressionNode> parseRelationalExpression();
 	unique_ptr<ArithmeticExpressionNode> parseArithmeticExpression();
 	unique_ptr<VariableNode> parseVariable();
+        unique_ptr<VariableNode> parseVariable(string token);
 	unique_ptr<ConstantNode> parseConstant();
 };
