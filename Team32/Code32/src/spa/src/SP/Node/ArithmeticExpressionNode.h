@@ -1,7 +1,9 @@
 #ifndef SPA_ARITHMETICEXPRESSIONNODE_H
 #define SPA_ARITHMETICEXPRESSIONNODE_H
 
-class ArithmeticExpressionNode {
+#include "SP/Node/RelationalFactorNode.h"
+
+class ArithmeticExpressionNode : public RelationalFactorNode {
 };
 
 #endif //SPA_ARITHMETICEXPRESSIONNODE_H
