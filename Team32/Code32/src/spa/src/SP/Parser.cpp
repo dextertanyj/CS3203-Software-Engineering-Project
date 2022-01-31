@@ -2,14 +2,14 @@
 
 #include <memory>
 
-#include "SP/AndNode.h"
-#include "SP/CallNode.h"
 #include "SP/Converter.h"
-#include "SP/NotNode.h"
-#include "SP/OrNode.h"
-#include "SP/PrintNode.h"
-#include "SP/ReadNode.h"
 #include "SP/Validator.h"
+#include "SP/Node/AndNode.h"
+#include "SP/Node/CallNode.h"
+#include "SP/Node/NotNode.h"
+#include "SP/Node/OrNode.h"
+#include "SP/Node/PrintNode.h"
+#include "SP/Node/ReadNode.h"
 
 using namespace std;
 

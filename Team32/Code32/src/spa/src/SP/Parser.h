@@ -2,18 +2,18 @@
 
 #include <string>
 
-#include "SP/AssignmentNode.h"
-#include "SP/ConditionalExpressionNode.h"
-#include "SP/ConstantNode.h"
-#include "SP/IfNode.h"
 #include "SP/Lexer.h"
-#include "SP/ProcedureNode.h"
-#include "SP/ProgramNode.h"
-#include "SP/RelationalExpressionNode.h"
-#include "SP/StatementListNode.h"
-#include "SP/StatementNode.h"
-#include "SP/VariableNode.h"
-#include "SP/WhileNode.h"
+#include "SP/Node/AssignmentNode.h"
+#include "SP/Node/ConditionalExpressionNode.h"
+#include "SP/Node/ConstantNode.h"
+#include "SP/Node/IfNode.h"
+#include "SP/Node/ProcedureNode.h"
+#include "SP/Node/ProgramNode.h"
+#include "SP/Node/RelationalExpressionNode.h"
+#include "SP/Node/StatementListNode.h"
+#include "SP/Node/StatementNode.h"
+#include "SP/Node/VariableNode.h"
+#include "SP/Node/WhileNode.h"
 
 
 using namespace std;
