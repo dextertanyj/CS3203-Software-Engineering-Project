@@ -29,8 +29,8 @@ TEST_CASE("ArithmeticExpression::parse Bracketing Condition Test") {
 	MockLexer lex = MockLexer(vector<string>({"(", "(", "1", ")", ")", ")"}));
 	ArithmeticExpression expression = ArithmeticExpression::parse(lex);
 	shared_ptr<ExpressionNode> root = make_shared<ConstantNode>("1");
-	std::unordered_set<VarRef> variables = std::unordered_set<VarRef>();
-	std::unordered_set<int> constants = std::unordered_set<int>({1});
+	unordered_set<VarRef> variables = unordered_set<VarRef>();
+	unordered_set<int> constants = unordered_set<int>({1});
 	ArithmeticExpression expected = ArithmeticExpression(root, variables, constants);
 	REQUIRE(expression.equals(expected));
 	REQUIRE_EQUALS(expression.getConstants(), constants);
@@ -47,8 +47,8 @@ TEST_CASE("ArithmeticExpression::parse Precedence Test") {
 	shared_ptr<ExpressionNode> divide =
 		make_shared<OperatorNode>(ArithmeticOperator::Divide, make_shared<ConstantNode>("2"), make_shared<ConstantNode>("3"));
 	shared_ptr<ExpressionNode> root = make_shared<OperatorNode>(ArithmeticOperator::Plus, times, divide);
-	std::unordered_set<VarRef> variables = std::unordered_set<VarRef>({"A", "B"});
-	std::unordered_set<int> constants = std::unordered_set<int>({1, 2, 3});
+	unordered_set<VarRef> variables = unordered_set<VarRef>({"A", "B"});
+	unordered_set<int> constants = unordered_set<int>({1, 2, 3});
 	ArithmeticExpression expected = ArithmeticExpression(root, variables, constants);
 	REQUIRE(expression.equals(expected));
 	REQUIRE_EQUALS(expression.getConstants(), constants);
