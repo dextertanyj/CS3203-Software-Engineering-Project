@@ -18,6 +18,10 @@ using std::runtime_error;
 //};
 
 struct QueryException : public runtime_error {
+  using runtime_error::runtime_error;
+};
+
+struct TokenizationException : public runtime_error {
 	using runtime_error::runtime_error;
 };
 

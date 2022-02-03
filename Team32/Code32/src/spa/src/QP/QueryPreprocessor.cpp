@@ -1,8 +1,10 @@
 #include "QueryPreprocessor.h"
-
+#include <iostream>
 #include <regex>
 
 #include "QueryTypeDefs.h"
+#include "Relationship/StmtEntRelation.h"
+#include "Relationship/StmtsRelation.h"
 
 QueryProperties QueryPreprocessor::parseQuery(string query) {
 
@@ -16,7 +18,7 @@ void QueryPreprocessor::tokenizeQuery(string query) {
 	regex queryTokenRegex = regex(R"((Follows|Parents)\*|such that|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\\+|-|\*|\/|%|_|,|\")");
 
 	if (regex_search(query, invalidCharsRegex)) {
-		throw QueryException("Query included invalid characters");
+		throw TokenizationException("Query included invalid characters");
 	}
 
 	auto words_begin = sregex_iterator(
@@ -41,8 +43,8 @@ QueryProperties QueryPreprocessor::parseQuery() {
 	while (tokenIndex < this->queryTokens.size()) {
 		if (this->declarationList.empty() && this->queryTokens[tokenIndex] != "Select") {
 			parseDeclaration(tokenIndex);
-		}
-		else if (select.symbol == "") {
+		} 
+		else if (this->select.symbol == "") {
 			if (this->queryTokens[tokenIndex] == "Select") {
 				parseSelect(++tokenIndex);
 			}
@@ -60,6 +62,10 @@ QueryProperties QueryPreprocessor::parseQuery() {
 			throw QueryException("Unexpected token");
 		}
 	}
+
+    if (this->select.symbol == "") {
+          throw QueryException("Missing Select statement");
+    }
 
 	return QueryProperties::QueryProperties(
 		this->declarationList,
@@ -85,6 +91,7 @@ void QueryPreprocessor::parseDeclaration(int& tokenIndex) {
 		}
 		// if token satisfies "synonym : IDENT"
 		else if (isIdentOrName(this->queryTokens[tokenIndex])) {
+			throw QueryException(this->queryTokens[tokenIndex]);
 			declaration.symbol = this->queryTokens[tokenIndex];
 			for (Declaration existingDeclaration : this->declarationList) {
 				if (existingDeclaration.symbol == declaration.symbol) {
@@ -94,7 +101,7 @@ void QueryPreprocessor::parseDeclaration(int& tokenIndex) {
 			this->declarationList.push_back(declaration);
 		}
 		else {
-			throw QueryException("Unexpected query token");
+			throw QueryException("Unexpected query token" + declaration.symbol + this->queryTokens[tokenIndex]);
 		}
 	}
 	throw QueryException("Unexpected end of query");
@@ -184,29 +191,56 @@ Relation QueryPreprocessor::parseRelation(int& tokenIndex) {
 
 	if (this->queryTokens[tokenIndex] == "Follows") {
 		relationship = Relationship::Follows;
+        return StmtsRelation(
+			relationship, 
+			parseQueryStmtRef(tokenIndex), 
+			parseQueryStmtRef(tokenIndex)
+		);
 	}
 	else if (this->queryTokens[tokenIndex] == "Follows*") {
 		relationship = Relationship::FollowsT;
+        return StmtsRelation(
+			relationship, 
+			parseQueryStmtRef(tokenIndex), 
+			parseQueryStmtRef(tokenIndex)
+		);
 	}
 	else if (this->queryTokens[tokenIndex] == "Parent") {
 		relationship = Relationship::Parent;
+        return StmtsRelation(
+			relationship, 
+			parseQueryStmtRef(tokenIndex), 
+			parseQueryStmtRef(tokenIndex)
+		);
 	}
 	else if (this->queryTokens[tokenIndex] == "Parent*") {
 		relationship = Relationship::ParentT;
+        return StmtsRelation(
+			relationship, 
+			parseQueryStmtRef(tokenIndex), 
+			parseQueryStmtRef(tokenIndex)
+		);
 	}
 	else if (this->queryTokens[tokenIndex] == "Uses") {
 		relationship = Relationship::UsesS;
+        return StmtEntRelation(
+			relationship, 
+			parseQueryStmtRef(tokenIndex), 
+			parseQueryEntRef(tokenIndex)
+		);
 	}
 	else if (this->queryTokens[tokenIndex] == "Modifies") {
 		relationship = Relationship::ModifiesS;
+        return StmtEntRelation(
+			relationship, 
+			parseQueryStmtRef(tokenIndex), 
+			parseQueryEntRef(tokenIndex)
+		);
 	}
 	else {
 		throw QueryException("Unexpected query token");
 	}
 
-	Relation relation = Relation::Relation(Relationship::Follows);
-	tokenIndex++;
-	return relation;
 }
 
 QueryEntRef QueryPreprocessor::parseQueryEntRef(int& tokenIndex) {
@@ -293,5 +327,5 @@ string QueryPreprocessor::parseExpression(int& tokenIndex) {
 }
 
 bool QueryPreprocessor::isIdentOrName(string token) {
-	return regex_search(token, regex("^[a-zA-Z][a-zA-Z0-9]*$"));
+	return regex_match(token, regex("^[a-zA-Z][a-zA-Z0-9]*$"));
 }
