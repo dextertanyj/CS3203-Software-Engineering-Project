@@ -21,6 +21,8 @@ TEST_CASE("ArithmeticExpression::parse Basic Test") {
 	unordered_set<int> constants = unordered_set<int>({1, 2});
 	ArithmeticExpression expected = ArithmeticExpression(root, variables, constants);
 	REQUIRE(expression.equals(expected));
+	REQUIRE_EQUALS(expression.getConstants(), constants);
+	REQUIRE_EQUALS(expression.getVariables(), variables);
 }
 
 TEST_CASE("ArithmeticExpression::parse Bracketing Condition Test") {
@@ -31,6 +33,8 @@ TEST_CASE("ArithmeticExpression::parse Bracketing Condition Test") {
 	std::unordered_set<int> constants = std::unordered_set<int>({1});
 	ArithmeticExpression expected = ArithmeticExpression(root, variables, constants);
 	REQUIRE(expression.equals(expected));
+	REQUIRE_EQUALS(expression.getConstants(), constants);
+	REQUIRE_EQUALS(expression.getVariables(), variables);
 	REQUIRE_EQUALS(lex.readToken(), ")");
 }
 
@@ -47,5 +51,7 @@ TEST_CASE("ArithmeticExpression::parse Precedence Test") {
 	std::unordered_set<int> constants = std::unordered_set<int>({1, 2, 3});
 	ArithmeticExpression expected = ArithmeticExpression(root, variables, constants);
 	REQUIRE(expression.equals(expected));
+	REQUIRE_EQUALS(expression.getConstants(), constants);
+	REQUIRE_EQUALS(expression.getVariables(), variables);
 	REQUIRE_EQUALS(lex.readToken(), ")");
 }
