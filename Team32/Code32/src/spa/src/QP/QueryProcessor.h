@@ -13,8 +13,12 @@ using std::string;
 using std::vector;
 using std::runtime_error;
 
-struct QuerySyntaxException : public runtime_error {
-    using runtime_error::runtime_error;
+//struct QuerySyntaxException : public runtime_error {
+//    using runtime_error::runtime_error;
+//};
+
+struct QueryException : public runtime_error {
+	using runtime_error::runtime_error;
 };
 
 class QueryProcessor {
@@ -23,14 +27,24 @@ public:
 
 private:
 	void tokenizeQuery(string query);
-	void parseQuery();
-	int parseDeclaration(int tokenIndex);
-	int parseSuchThat(int tokenIndex);
-	int parsePattern(int tokenIndex);
+	QueryProperties parseQuery();
+	void parseDeclaration(int& tokenIndex);
+	void parseSelect(int& tokenIndex);
+	void parseSuchThat(int& tokenIndex);
+	void parsePattern(int& tokenIndex);
+	DesignEntity parseDesignEntity(int& tokenIndex);
+	Relation parseRelation(int& tokenIndex);
+	QueryEntRef parseQueryEntRef(int& tokenIndex);
+	QueryStmtRef parseQueryStmtRef(int& tokenIndex);
+	string parseExpression(int& tokenIndex);
+	bool isIdentOrName(string token);
 	string formatResult();
 
 	vector<string> queryTokens;
-	QueryProperties queryProperties;
+	DeclarationList declarationList;
+	Declaration select;
+	SuchThatClauseList suchThatClauseList;
+	PatternClauseList patternClauseList;
 	QueryResult queryResult;
 };
 
