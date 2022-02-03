@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "SP/ParseException.h"
-#include "SP/Validator.h"
+#include "Common/Validator.h"
 
 using namespace std;
 

@@ -1,7 +1,7 @@
 #include "SP/Node/VariableNode.h"
 
 #include "SP/ParseException.h"
-#include "SP/Validator.h"
+#include "Common/Validator.h"
 
 VariableNode::VariableNode(VarRef name) : name(move(name)) {}
 

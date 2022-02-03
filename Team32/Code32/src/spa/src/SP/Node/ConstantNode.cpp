@@ -1,6 +1,6 @@
 #include "SP/Node/ConstantNode.h"
 
-#include "SP/Converter.h"
+#include "Common/Converter.h"
 #include "SP/ParseException.h"
 
 ConstantNode::ConstantNode(int value) : value(value) {}
@@ -10,7 +10,7 @@ unique_ptr<ConstantNode> ConstantNode::parseConstant(Lexer& lex) {
 	try {
 		int value = Converter::convertInteger(token);
 		return make_unique<ConstantNode>(value);
-	} catch (ConversionException& e) {
+	} catch (Converter::ConversionException& e) {
 		throw ParseException("Invalid constant value");
 	}
 }

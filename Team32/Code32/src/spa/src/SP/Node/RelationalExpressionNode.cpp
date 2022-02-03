@@ -1,7 +1,7 @@
 #include "SP/Node/RelationalExpressionNode.h"
 
 #include "ArithmeticExpressionNode.h"
-#include "SP/Converter.h"
+#include "Common/Converter.h"
 
 RelationalExpressionNode::RelationalExpressionNode(RelationalOperator op, unique_ptr<RelationalFactorNode> lhs,
                                                    unique_ptr<RelationalFactorNode> rhs)

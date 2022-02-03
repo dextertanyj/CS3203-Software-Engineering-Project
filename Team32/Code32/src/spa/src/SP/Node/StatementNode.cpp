@@ -9,7 +9,7 @@
 #include "SP/Node/VariableNode.h"
 #include "SP/Node/WhileNode.h"
 #include "SP/ParseException.h"
-#include "SP/Validator.h"
+#include "Common/Validator.h"
 
 StatementNode::StatementNode(StmtRef stmtNo) : stmtNo(stmtNo) {}
 
