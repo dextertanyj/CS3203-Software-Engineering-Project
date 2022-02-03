@@ -69,11 +69,6 @@ QueryProperties QueryPreprocessor::parseQuery() {
 	);
 }
 
-string QueryPreprocessor::formatResult() {
-	return "";
-}
-
-
 void QueryPreprocessor::parseDeclaration(int& tokenIndex) {
 	Declaration declaration;
 	declaration.symbol = "";
@@ -294,6 +289,7 @@ string QueryPreprocessor::parseExpression(int& tokenIndex) {
 			return joinedExpression;
 		}
 	}
+	throw QueryException("Unexpected query token");
 }
 
 bool QueryPreprocessor::isIdentOrName(string token) {

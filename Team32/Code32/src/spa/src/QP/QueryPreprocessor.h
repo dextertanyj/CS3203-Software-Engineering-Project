@@ -26,6 +26,7 @@ public:
 	QueryProperties parseQuery(string query);
 
 private:
+    QueryProperties parseQuery();
 	void tokenizeQuery(string query);
 	void parseDeclaration(int& tokenIndex);
 	void parseSelect(int& tokenIndex);
