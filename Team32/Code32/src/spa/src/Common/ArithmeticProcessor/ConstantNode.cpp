@@ -17,6 +17,4 @@ bool ArithmeticProcessor::ConstantNode::equals(shared_ptr<ExpressionNode> object
 	return other->value == this->value;
 }
 
-bool ArithmeticProcessor::ConstantNode::contains(shared_ptr<ExpressionNode> object) {
-	return equals(object);
-}
+bool ArithmeticProcessor::ConstantNode::contains(shared_ptr<ExpressionNode> object) { return equals(object); }

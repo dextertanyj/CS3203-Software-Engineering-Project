@@ -1,7 +1,6 @@
 #include "VariableNode.h"
 
 #include <memory>
-#include <utility>
 
 using namespace std;
 

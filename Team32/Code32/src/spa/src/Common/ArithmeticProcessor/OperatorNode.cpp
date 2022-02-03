@@ -1,10 +1,6 @@
-//
-// Created by Dexter on 3/2/22.
-//
-
 #include "OperatorNode.h"
 
-#include <utility>
+#include <memory>
 
 ArithmeticProcessor::OperatorNode::OperatorNode(ArithmeticOperator op, shared_ptr<ExpressionNode> lhs, shared_ptr<ExpressionNode> rhs)
 	: op(op), lhs(std::move(lhs)), rhs(std::move(rhs)) {}
