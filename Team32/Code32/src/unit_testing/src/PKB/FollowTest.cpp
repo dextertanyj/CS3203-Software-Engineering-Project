@@ -3,11 +3,10 @@
 #include "../../../spa/src/PKB/FollowStore.cpp"
 #include "../../../spa/src/Common/TypeDefs.h"
 
-StmtRef s1 = 1;
-StmtRef s2 = 2;
-StmtRef s3 = 3;
-
 TEST_CASE("Set Follows") {
+  StmtRef s1 = 1;
+  StmtRef s2 = 2;
+  StmtRef s3 = 3;
   FollowStore fs = FollowStore();
 
   // Verify that normal setting works.  
@@ -24,6 +23,9 @@ TEST_CASE("Set Follows") {
 }
 
 TEST_CASE( "Basic Follows Set and Get") {
+  StmtRef s1 = 1;
+  StmtRef s2 = 2;
+  StmtRef s3 = 3;
   FollowStore fs = FollowStore();
   
   fs.setFollows(s1, s2);
