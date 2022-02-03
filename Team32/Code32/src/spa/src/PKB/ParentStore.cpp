@@ -5,6 +5,9 @@ using namespace std;
 ParentStore::ParentStore() {}
 
 void ParentStore::setParent(StmtRef parentStmt, StmtRef childStmt) {
+    if (parentStmt <= 0 || childStmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
+    if (parentStmt >= childStmt) throw invalid_argument("Second statement must come after the first statement.");
+        
     auto keyItr = parentMap.find(parentStmt);
     if (keyItr == parentMap.end()) {
         // parent does not exist as key
