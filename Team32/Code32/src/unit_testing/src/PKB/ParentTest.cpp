@@ -4,6 +4,9 @@
 #include "../../../spa/src/Common/TypeDefs.h"
 
 TEST_CASE("Set Parent") {
+  StmtRef s1 = 1;
+  StmtRef s2 = 2;
+  StmtRef s3 = 3;
   ParentStore ps = ParentStore();
 
   // Verify that normal setting works.  
