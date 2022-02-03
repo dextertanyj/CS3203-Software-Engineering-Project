@@ -3,10 +3,6 @@
 #include "../../../spa/src/PKB/ParentStore.cpp"
 #include "../../../spa/src/Common/TypeDefs.h"
 
-StmtRef s1 = 1;
-StmtRef s2 = 2;
-StmtRef s3 = 3;
-
 TEST_CASE("Set Parent") {
   ParentStore ps = ParentStore();
 
@@ -24,6 +20,9 @@ TEST_CASE("Set Parent") {
 }
 
 TEST_CASE( "Basic Parent Set and Get") {
+  StmtRef s1 = 1;
+  StmtRef s2 = 2;
+  StmtRef s3 = 3;
   ParentStore ps = ParentStore();
   
   ps.setParent(s1, s2);
@@ -42,6 +41,9 @@ TEST_CASE( "Basic Parent Set and Get") {
 }
 
 TEST_CASE("Get Parent") {
+  StmtRef s1 = 1;
+  StmtRef s2 = 2;
+  StmtRef s3 = 3;
   ParentStore ps = ParentStore();
 
   ps.setParent(s1, s2);
