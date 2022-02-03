@@ -12,6 +12,7 @@ using namespace std;
 class RelationalExpressionNode : public ConditionalExpressionNode {
 public:
 	RelationalExpressionNode(RelationalOperator op, unique_ptr<RelationalFactorNode> lhs, unique_ptr<RelationalFactorNode> rhs);
+	static unique_ptr<RelationalExpressionNode> parseRelationalExpression(Lexer& lex);
 
 private:
 	RelationalOperator op;
@@ -19,5 +20,4 @@ private:
 	unique_ptr<RelationalFactorNode> rhs;
 };
 
-
-#endif //SPA_RELATIONALEXPRESSIONNODE_H
+#endif  // SPA_RELATIONALEXPRESSIONNODE_H

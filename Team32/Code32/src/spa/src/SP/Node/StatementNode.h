@@ -2,12 +2,15 @@
 #define SPA_STATEMENTNODE_H
 
 #include "Common/TypeDefs.h"
+#include "SP/Lexer.h"
 
 class StatementNode {
 public:
-    StatementNode(StmtRef stmtNo);
+	explicit StatementNode(StmtRef stmtNo);
+	static unique_ptr<StatementNode> parseStatement(Lexer& lex, int& statement_count);
+
 private:
-    StmtRef stmtNo;
+	StmtRef stmtNo;
 };
 
-#endif //SPA_STATEMENTNODE_H
+#endif  // SPA_STATEMENTNODE_H

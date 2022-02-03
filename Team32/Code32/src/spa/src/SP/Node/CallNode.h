@@ -6,9 +6,10 @@
 
 class CallNode : public StatementNode {
 public:
-    CallNode(StmtRef stmtNo, ProcRef procedure);
+	CallNode(StmtRef stmtNo, ProcRef procedure);
+
 private:
-    ProcRef procedure;
+	ProcRef procedure;
 };
 
-#endif //SPA_CALLNODE_H
+#endif  // SPA_CALLNODE_H

@@ -16,5 +16,4 @@ private:
 	unique_ptr<ConditionalExpressionNode> rhs;
 };
 
-
-#endif //SPA_ANDNODE_H
+#endif  // SPA_ANDNODE_H

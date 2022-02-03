@@ -15,5 +15,4 @@ private:
 	unique_ptr<ConditionalExpressionNode> expression;
 };
 
-
-#endif //SPA_NOTNODE_H
+#endif  // SPA_NOTNODE_H

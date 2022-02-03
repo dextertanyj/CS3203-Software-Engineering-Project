@@ -1,7 +1,6 @@
 #ifndef SPA_RELATIONALFACTORNODE_H
 #define SPA_RELATIONALFACTORNODE_H
 
-class RelationalFactorNode {
-};
+class RelationalFactorNode {};
 
-#endif //SPA_RELATIONALFACTORNODE_H
+#endif  // SPA_RELATIONALFACTORNODE_H

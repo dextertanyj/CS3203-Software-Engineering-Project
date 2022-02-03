@@ -3,8 +3,6 @@
 
 #include "SP/Node/ArithmeticExpressionNode.h"
 
-class ReferenceNode : public ArithmeticExpressionNode {
-};
+class ReferenceNode : public ArithmeticExpressionNode {};
 
-
-#endif //SPA_REFERENCENODE_H
+#endif  // SPA_REFERENCENODE_H

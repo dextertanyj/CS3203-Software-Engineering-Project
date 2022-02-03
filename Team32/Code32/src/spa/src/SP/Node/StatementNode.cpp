@@ -1,6 +1,47 @@
-#include "Common/TypeDefs.h"
 #include "SP/Node/StatementNode.h"
 
-StatementNode::StatementNode(StmtRef stmtNo):
-        stmtNo(stmtNo) {
+#include "Common/TypeDefs.h"
+#include "SP/Node/AssignmentNode.h"
+#include "SP/Node/CallNode.h"
+#include "SP/Node/IfNode.h"
+#include "SP/Node/PrintNode.h"
+#include "SP/Node/ReadNode.h"
+#include "SP/Node/VariableNode.h"
+#include "SP/Node/WhileNode.h"
+#include "SP/ParseException.h"
+#include "SP/Validator.h"
+
+StatementNode::StatementNode(StmtRef stmtNo) : stmtNo(stmtNo) {}
+
+unique_ptr<StatementNode> StatementNode::parseStatement(Lexer& lex, int& statement_count) {
+	string token = lex.read_token();
+	string lookahead = lex.peek_token();
+	if (lookahead == "=") {
+		return AssignmentNode::parseAssignmentStatement(lex, statement_count, token);
+	}
+	if (token == "read") {
+		// Should we abstract this at this cost of an additional function call?
+		unique_ptr<VariableNode> variable = VariableNode::parseVariable(lex);
+		lex.next_if(";");
+		return make_unique<ReadNode>(statement_count++, move(variable));
+	}
+	if (token == "print") {
+		unique_ptr<VariableNode> variable = VariableNode::parseVariable(lex);
+		lex.next_if(";");
+		return make_unique<PrintNode>(statement_count++, move(variable));
+	}
+	if (token == "call") {
+		ProcRef name = lex.read_token();
+		if (!Validator::validateName(name)) {
+			throw ParseException("Invalid procedure name");
+		}
+		return make_unique<CallNode>(statement_count++, name);
+	}
+	if (token == "while") {
+		return WhileNode::parseWhileStatement(lex, statement_count);
+	}
+	if (token == "if") {
+		return IfNode::parseIfStatement(lex, statement_count);
+	}
+	throw ParseException("Unknown statement type encountered");
 }

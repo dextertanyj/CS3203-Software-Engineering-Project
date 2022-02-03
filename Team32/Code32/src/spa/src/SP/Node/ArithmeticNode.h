@@ -18,4 +18,4 @@ private:
 	unique_ptr<ArithmeticExpressionNode> rhs;
 };
 
-#endif //SPA_ARITHMETICNODE_H
+#endif  // SPA_ARITHMETICNODE_H
