@@ -45,3 +45,5 @@ TEST_CASE( "Basic Follows Set and Get") {
   CHECK_FALSE(fs.checkFollows(s3, s2));
   
 }
+
+// TODO: Test Follow* functionality.

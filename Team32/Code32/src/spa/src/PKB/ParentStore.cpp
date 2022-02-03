@@ -10,11 +10,11 @@ void ParentStore::setParent(StmtRef parentStmt, StmtRef childStmt) {
         
     auto keyItr = parentMap.find(parentStmt);
     if (keyItr == parentMap.end()) {
-        // parent does not exist as key
+        // If parent does not exist as key, create and store into parentMap.
         ParentRelation parentRelation = { {childStmt}, {}, {}, -1 };
         parentMap.insert(make_pair(parentStmt, parentRelation));
     } else {
-        // parent exists as key, add childStmtNo to vector of children
+        // If parent already exists as key, add childStmtNo to vector of children
         ParentRelation parentRelation = keyItr->second;
         parentRelation.childSet.insert(childStmt);
     }
@@ -32,12 +32,8 @@ bool ParentStore::isParentChild(StmtRef parentStmt, StmtRef childStmt) {
     if (keyItr == parentMap.end()) {
         return false;
     }
-    StmtRef parent = keyItr->second.parent;
-    if (parent == parentStmt) {
-        return true;
-    } else {
-        return false;
-    }
+    StmtRef parentStmtInStore = keyItr->second.parent;
+    return parentStmtInStore == parentStmt;
 }
 
 StmtRef ParentStore::getParent(StmtRef stmt) {
