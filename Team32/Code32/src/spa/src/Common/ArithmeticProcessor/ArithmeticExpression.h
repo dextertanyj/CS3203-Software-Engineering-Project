@@ -12,13 +12,12 @@ using namespace std;
 class ArithmeticProcessor::ArithmeticExpression {
 public:
 	static ArithmeticExpression parse(ArithmeticProcessor::Lexer& lex);
+	explicit ArithmeticExpression(shared_ptr<ExpressionNode> root);
 	bool equals(const ArithmeticExpression& other);
 	bool contains(const ArithmeticExpression& other);
 
 private:
 	shared_ptr<ExpressionNode> root;
-
-	explicit ArithmeticExpression(shared_ptr<ExpressionNode> root);
 	static shared_ptr<ExpressionNode> construct(Lexer& lex, shared_ptr<ExpressionNode> lhs, int precedence);
 	static shared_ptr<ExpressionNode> parseTerminal(Lexer& lex);
 	static int getPrecedence(ArithmeticOperator op);

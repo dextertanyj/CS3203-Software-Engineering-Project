@@ -4,8 +4,10 @@
 
 #include "OperatorNode.h"
 
+#include <utility>
+
 ArithmeticProcessor::OperatorNode::OperatorNode(ArithmeticOperator op, shared_ptr<ExpressionNode> lhs, shared_ptr<ExpressionNode> rhs)
-	: op(op), lhs(lhs), rhs(rhs) {}
+	: op(op), lhs(std::move(lhs)), rhs(std::move(rhs)) {}
 
 bool ArithmeticProcessor::OperatorNode::equals(shared_ptr<ExpressionNode> object) {
 	std::shared_ptr<OperatorNode> other = dynamic_pointer_cast<OperatorNode>(object);
