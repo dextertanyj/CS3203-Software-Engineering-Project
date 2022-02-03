@@ -63,11 +63,7 @@ StmtRef PKB::getFollowee(StmtRef stmtNo) {
 }
 
 bool PKB::checkInvalidStmts(StmtRef stmtNo1, StmtRef stmtNo2) {
-    if (stmtNo1 > stmtNo2 || stmtNo1 < 0 || stmtNo2 < 0) {
-        return true;
-    } else {
-        return false;
-    }
+    return (stmtNo1 >= stmtNo2 || stmtNo1 < 0 || stmtNo2 < 0);
 }
 
 void PKB::setProc(ProcRef proc_name, vector<StmtRef> idxList) {
