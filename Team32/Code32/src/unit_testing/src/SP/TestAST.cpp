@@ -1,4 +1,4 @@
-
+/*
 #include "Common/TNode.h"
 
 #include "catch.hpp"
@@ -15,5 +15,6 @@ TEST_CASE("1st Test") {
 	
     require(1 == 1);
 }
+ */
 
 
