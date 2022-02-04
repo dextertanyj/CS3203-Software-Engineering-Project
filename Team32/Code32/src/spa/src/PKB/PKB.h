@@ -9,11 +9,9 @@
 #include "FollowStore.h"
 #include "UseStore.h"
 #include "ModifyStore.h"
+#include "AssignStore.h"
 #include "../Common/TypeDefs.h"
 
-typedef int StmtRef;
-typedef string VarRef;
-typedef int StmtRef;
 using namespace std;
 
 class PKB {
@@ -21,12 +19,13 @@ public:
     PKB();
 
     // Set methods called by Source processor
-    bool setFollows(StmtRef stmtNo1, StmtRef stmtNo2);
-    bool setParent(StmtRef stmtNo1, StmtRef stmtNo2);
+    void setFollows(StmtRef stmtNo1, StmtRef stmtNo2);
+    void setParent(StmtRef stmtNo1, StmtRef stmtNo2);
     void setProc(ProcRef proc_name, vector<StmtRef> idxList);
     void setStmtType(StmtRef stmtNo, StmtType type);
     void setUses(StmtRef stmtNo, VarRef var_name);
     void setModifies(StmtRef stmtNo, VarRef var_name);
+    void setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree);
 
     // Get methods called by PQL
     // Parent get methods
@@ -45,11 +44,14 @@ public:
     void populateComplexRelations();
 
 private:
-    static ParentStore parentStore;
-    static FollowStore followStore;
-    static UseStore useStore;
-    static ModifyStore modifyStore;
-    bool checkInvalidStmts(StmtRef stmtNo1, StmtRef stmtNo2);
-    static unordered_map<ProcRef, vector<StmtRef>> procMap;
-    static unordered_map<StmtRef, StmtType> typeMap;
+    ParentStore parentStore;
+    FollowStore followStore;
+    UseStore useStore;
+    ModifyStore modifyStore;
+    AssignStore assignStore;
+    unordered_map<ProcRef, vector<StmtRef>> procMap;
+    unordered_map<StmtRef, StmtType> typeMap;
+    int numStatements;
+    void checkInvalidStmts(StmtRef stmtNo1, StmtRef stmtNo2);
+    void checkInvalidStmt(StmtRef stmtNo1);
 };

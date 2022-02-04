@@ -5,18 +5,17 @@ using namespace std;
 ParentStore::ParentStore() {}
 
 void ParentStore::setParent(StmtRef parentStmt, StmtRef childStmt) {
-    if (parentStmt <= 0 || childStmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
-    if (parentStmt >= childStmt) throw invalid_argument("Second statement must come after the first statement.");
+    assert(parentStmt > 0 && childStmt > 0);
+    assert(parentStmt < childStmt);
         
     auto keyItr = parentMap.find(parentStmt);
     if (keyItr == parentMap.end()) {
         // If parent does not exist as key, create and store into parentMap.
-        ParentRelation parentRelation = { {childStmt}, {}, {}, -1 };
+        ParentRelation parentRelation = {{childStmt}, {}, {}, -1};
         parentMap.insert(make_pair(parentStmt, parentRelation));
     } else {
         // If parent already exists as key, add childStmtNo to vector of children
-        ParentRelation parentRelation = keyItr->second;
-        parentRelation.childSet.insert(childStmt);
+        keyItr->second.childSet.insert(childStmt);
     }
     auto keyItr2 = parentMap.find(childStmt);
     if (keyItr2 == parentMap.end()) {
@@ -28,6 +27,9 @@ void ParentStore::setParent(StmtRef parentStmt, StmtRef childStmt) {
 }
 
 bool ParentStore::isParentChild(StmtRef parentStmt, StmtRef childStmt) {
+    assert(parentStmt > 0 && childStmt > 0);
+    assert(parentStmt < childStmt);
+
     auto keyItr = parentMap.find(childStmt);
     if (keyItr == parentMap.end()) {
         return false;
@@ -37,6 +39,8 @@ bool ParentStore::isParentChild(StmtRef parentStmt, StmtRef childStmt) {
 }
 
 StmtRef ParentStore::getParent(StmtRef stmt) {
+    assert(stmt > 0);
+
     auto keyItr = parentMap.find(stmt);
     if (keyItr == parentMap.end()) {
         return -1;
@@ -45,6 +49,8 @@ StmtRef ParentStore::getParent(StmtRef stmt) {
 }
 
 unordered_set<StmtRef> ParentStore::getChildren(StmtRef stmt) {
+    assert(stmt > 0);
+
     for(auto& itr : parentMap) {
         if (itr.first == stmt) {
             return itr.second.childSet;
@@ -53,7 +59,7 @@ unordered_set<StmtRef> ParentStore::getChildren(StmtRef stmt) {
     return unordered_set<StmtRef>{};
 }
 
-void ParentStore::populateParentStar() {
+void ParentStore::populateParentStar(int numStatements) {
     if (numStatements >= 2) {
         for (StmtRef i = 2; i < numStatements; i++) {
             populateParentStarSet(i);
@@ -81,10 +87,6 @@ void ParentStore::recursivelyAddParent(StmtRef stmtNo, unordered_set<StmtRef> &p
         parentStarSet.insert(parentOfParentSet.begin(), parentOfParentSet.end());
         return;
     }
-}
-
-void ParentStore::setNumStatements(int size) {
-    numStatements = size;
 }
 
 void ParentStore::clear() {

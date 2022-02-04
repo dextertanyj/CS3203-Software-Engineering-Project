@@ -5,6 +5,8 @@ using namespace std;
 AssignStore::AssignStore() {}
 
 void AssignStore::setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree) {
+    assert(stmtNo > 0);
+
     auto keyItr = assignMap.find(stmtNo);
     AssignRelation assignRelation = { variableLHS, opTree };
     if (keyItr == assignMap.end()) {
@@ -18,9 +20,10 @@ StmtRefList AssignStore::getPatternMatch(StmtInfoList stmtNoList, VarRef variabl
                                          bool isRHSExactMatchNeeded) {
     StmtRefList stmtRefList;
     for (auto& stmtInfo : stmtNoList) {
-        assert(stmtInfo.type == StmtType::Assign);
-
         StmtRef stmtNo = stmtInfo.reference;
+        assert(stmtInfo.type == StmtType::Assign);
+        assert(stmtNo > 0);
+
         auto keyItr = assignMap.find(stmtNo);
         if (keyItr == assignMap.end()) {
             continue;
@@ -58,5 +61,8 @@ bool AssignStore::compareOpTreeAndVar(AssignRelation assignRelation, VarRef vari
     }
 }
 
+void AssignStore::clear() {
+    assignMap.clear();
+}
 
 

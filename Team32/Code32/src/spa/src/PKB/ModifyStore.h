@@ -15,6 +15,7 @@ class ModifyStore {
 public:
     ModifyStore();
     void setModify(StmtRef stmtNo, VarRef var_name);
+    void clear();
 private:
     unordered_map<StmtRef, unordered_set<VarRef>> stmtToVarMap;
     unordered_map<VarRef, unordered_set<StmtRef>> varToStmtMap;

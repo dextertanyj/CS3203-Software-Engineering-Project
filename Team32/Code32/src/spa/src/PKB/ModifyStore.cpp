@@ -5,6 +5,8 @@ using namespace std;
 ModifyStore::ModifyStore() {}
 
 void ModifyStore::setModify(StmtRef stmtNo, VarRef var_name) {
+    assert(stmtNo > 0);
+
     auto keyItr = varToStmtMap.find(var_name);
     if (keyItr == varToStmtMap.end()) {
         varToStmtMap.insert(make_pair(var_name, unordered_set<StmtRef>{stmtNo}));
@@ -17,5 +19,10 @@ void ModifyStore::setModify(StmtRef stmtNo, VarRef var_name) {
     } else {
         keyItr2->second.insert(var_name);
     }
+}
+
+void ModifyStore::clear() {
+    varToStmtMap.clear();
+    stmtToVarMap.clear();
 }
 

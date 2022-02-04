@@ -28,6 +28,7 @@ public:
      * Matches LHS variable and RHS operation for all assign statements. Used for single pattern clause queries.
      */
     StmtRefList getAllPatternMatch(VarRef variableLHS, string opTree, bool isRHSExactMatchNeeded);
+    void clear();
 private:
     bool compareOpTreeAndVar(AssignRelation assignRelation, VarRef variableLHS, string opTree, bool isRHSExactMatchNeeded);
     unordered_map<StmtRef, AssignRelation> assignMap;

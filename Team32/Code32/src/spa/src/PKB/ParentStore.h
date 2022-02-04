@@ -32,14 +32,12 @@ public:
     // Get set of all child statements to stmt.
     unordered_set<StmtRef> getChildren(StmtRef stmt);
     void clear();
-    void populateParentStar();
-    void setNumStatements(int size);
+    void populateParentStar(int numStatements);
 private:
     // key is parent stmtNo, value is a ParentRelation which contains information related to this statement.
     map<StmtRef, ParentRelation> parentMap;
     void populateParentStarSet(StmtRef StmtNo);
     void recursivelyAddParent(StmtRef stmtNo, unordered_set<StmtRef>& parentStarSet);
-    int numStatements;
 };
 
 #endif
