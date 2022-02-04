@@ -1,9 +1,8 @@
 #include "QueryPreprocessor.h"
+
 #include <regex>
 
 #include "QueryTypeDefs.h"
-#include "Relationship/StmtEntRelation.h"
-#include "Relationship/StmtsRelation.h"
 
 QueryProperties QueryPreprocessor::parseQuery(string query) {
 
@@ -14,7 +13,7 @@ QueryProperties QueryPreprocessor::parseQuery(string query) {
 void QueryPreprocessor::tokenizeQuery(string query) {
 
 	regex invalidCharsRegex = regex(R"([^a-zA-Z0-9 ,"_\(\);\+\-\*\/%\n])");
-	regex queryTokenRegex = regex(R"((Follows|Parent)\*|such that|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\\+|-|\*|\/|%|_|,|\")");
+	regex queryTokenRegex = regex(R"(such that|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\\+|-|\*|\/|%|_|,|\")");
 
 	if (regex_search(query, invalidCharsRegex)) {
 		throw TokenizationException("Query included invalid characters");
@@ -93,14 +92,14 @@ void QueryPreprocessor::parseDeclaration(int& tokenIndex) {
 			declaration.symbol = this->queryTokens[tokenIndex];
 			for (Declaration existingDeclaration : this->declarationList) {
 				if (existingDeclaration.symbol == declaration.symbol) {
-					throw QueryException("Duplicate synonym symbol");
+					throw QueryException("Duplicate synonym symbol in declarations");
 				}
 			}
 			tokenIndex++;
 			this->declarationList.push_back(declaration);
 		}
 		else {
-			throw QueryException("Unexpected query token design entity" + this->queryTokens[tokenIndex]);
+			throw QueryException("Unexpected query token design entity: " + this->queryTokens[tokenIndex]);
 		}
 		
 	}
@@ -185,109 +184,114 @@ DesignEntity QueryPreprocessor::parseDesignEntity(int& tokenIndex) {
 		designEntity = DesignEntity::procedure;
 	}
 	else {
-		throw QueryException("Unexpected query design entity");
+		throw QueryException("Unexpected query design entity: " + this->queryTokens[tokenIndex]);
 	}
 	tokenIndex++;
 	return designEntity;
 
 }
 
-Relation QueryPreprocessor::parseRelation(int& tokenIndex) {
-	Relationship relationship;
+Relation* QueryPreprocessor::parseRelation(int& tokenIndex) {
 	if (this->queryTokens[tokenIndex] == "Follows") {
 		tokenIndex++;
 		return parseFollows(tokenIndex);
 	}
-	else if (this->queryTokens[tokenIndex] == "Follows*") {
+	else if (this->queryTokens[tokenIndex] == "Modifies") {
 		tokenIndex++;
-		return parseFollowsT(tokenIndex);
+		try {
+			int tempTokenIndex = tokenIndex;
+			Relation* relation = parseModifiesP(tempTokenIndex);
+			tokenIndex = tempTokenIndex;
+			return relation;
+		}
+		catch (QueryException e) {
+			return parseModifiesS(tokenIndex);
+		}
 	}
 	else if (this->queryTokens[tokenIndex] == "Parent") {
 		tokenIndex++;
 		return parseParent(tokenIndex);
 	}
-	else if (this->queryTokens[tokenIndex] == "Parent*") {
-		tokenIndex++;
-		return parseParentT(tokenIndex);
-	}
 	else if (this->queryTokens[tokenIndex] == "Uses") {
 		tokenIndex++;
-		return parseUses(tokenIndex);
-	}
-	else if (this->queryTokens[tokenIndex] == "Modifies") {
-		tokenIndex++;
-		return parseModifies(tokenIndex);
+		try {
+			int tempTokenIndex = tokenIndex;
+			Relation* relation = parseUsesP(tempTokenIndex);
+			tokenIndex = tempTokenIndex;
+			return relation;
+		}
+		catch (QueryException e) {
+			return parseUsesS(tokenIndex);
+		}
 	}
 	else {
-		throw QueryException("Unexpected query token relation " + this->queryTokens[tokenIndex]);
+		throw QueryException("Unexpected query token relation: " + this->queryTokens[tokenIndex]);
 	}
 
 }
 
-Relation QueryPreprocessor::parseFollows(int& tokenIndex) {
-	Relationship relationship = Relationship::Follows;
+Follows* QueryPreprocessor::parseFollows(int& tokenIndex) {
+	bool isStar = false;
+	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "*") {
+		isStar = true;
+		tokenIndex++; // Skip * token
+	}
 	matchTokenOrThrow("(", tokenIndex);
 	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
 	matchTokenOrThrow(",", tokenIndex);
 	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex);
 	matchTokenOrThrow(")", tokenIndex);
-	Relation relation = StmtsRelation(relationship, ref1, ref2);
-	return relation;
+	return new Follows(isStar, ref1, ref2);
 }
 
-Relation QueryPreprocessor::parseFollowsT(int& tokenIndex) {
-	Relationship relationship = Relationship::FollowsT;
+Parent* QueryPreprocessor::parseParent(int& tokenIndex) {
+	bool isStar = false;
+	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "*") {
+		isStar = true;
+		tokenIndex++; // Skip * token
+	}
 	matchTokenOrThrow("(", tokenIndex);
 	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
 	matchTokenOrThrow(",", tokenIndex);
 	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex);
 	matchTokenOrThrow(")", tokenIndex);
-	Relation relation = StmtsRelation(relationship, ref1, ref2);
-	return relation;
+	return new Parent(isStar, ref1, ref2);
 }
 
-Relation QueryPreprocessor::parseParent(int& tokenIndex) {
-	Relationship relationship = Relationship::Parent;
+UsesP* QueryPreprocessor::parseUsesP(int& tokenIndex) {
 	matchTokenOrThrow("(", tokenIndex);
-	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
+	QueryEntRef ref1 = parseQueryEntRef(tokenIndex);
 	matchTokenOrThrow(",", tokenIndex);
-	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex);
+	QueryEntRef ref2 = parseQueryEntRef(tokenIndex);
 	matchTokenOrThrow(")", tokenIndex);
-	Relation relation = StmtsRelation(relationship, ref1, ref2);
-	return relation;
+	return new UsesP(ref1, ref2);
 }
 
-Relation QueryPreprocessor::parseParentT(int& tokenIndex) {
-	Relationship relationship = Relationship::ParentT;
-	matchTokenOrThrow("(", tokenIndex);
-	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
-	matchTokenOrThrow(",", tokenIndex);
-	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex);
-	matchTokenOrThrow(")", tokenIndex);
-	Relation relation = StmtsRelation(relationship, ref1, ref2);
-	return relation;
-}
-
-Relation QueryPreprocessor::parseUses(int& tokenIndex) {
-	Relationship relationship = Relationship::UsesS;
+UsesS* QueryPreprocessor::parseUsesS(int& tokenIndex) {
 	matchTokenOrThrow("(", tokenIndex);
 	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
 	matchTokenOrThrow(",", tokenIndex);
 	QueryEntRef ref2 = parseQueryEntRef(tokenIndex);
 	matchTokenOrThrow(")", tokenIndex);
-	Relation relation = StmtEntRelation(relationship, ref1, ref2);
-	return relation;
+	return new UsesS(ref1, ref2);
 }
 
-Relation QueryPreprocessor::parseModifies(int& tokenIndex) {
-	Relationship relationship = Relationship::ModifiesS;
+ModifiesP* QueryPreprocessor::parseModifiesP(int& tokenIndex) {
+	matchTokenOrThrow("(", tokenIndex);
+	QueryEntRef ref1 = parseQueryEntRef(tokenIndex);
+	matchTokenOrThrow(",", tokenIndex);
+	QueryEntRef ref2 = parseQueryEntRef(tokenIndex);
+	matchTokenOrThrow(")", tokenIndex);
+	return new ModifiesP(ref1, ref2);
+}
+
+ModifiesS* QueryPreprocessor::parseModifiesS(int& tokenIndex) {
 	matchTokenOrThrow("(", tokenIndex);
 	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
 	matchTokenOrThrow(",", tokenIndex);
 	QueryEntRef ref2 = parseQueryEntRef(tokenIndex);
 	matchTokenOrThrow(")", tokenIndex);
-	Relation relation = StmtEntRelation(relationship, ref1, ref2);
-	return relation;
+	return new ModifiesS(ref1, ref2);
 }
 
 QueryEntRef QueryPreprocessor::parseQueryEntRef(int& tokenIndex) {
