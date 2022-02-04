@@ -16,6 +16,20 @@ unique_ptr<StatementListNode> StatementListNode::parseStatementList(Lexer& lex, 
 	return statement_list;
 }
 
+StmtInfoList StatementListNode::extract(PKB& pkb) {
+	StmtInfoList children;
+	for (auto iter = stmtList.begin(); iter < stmtList.end(); ++iter) {
+		children.push_back(iter->get()->extract(pkb));
+	}
+	StmtInfo previous = children.at(0);
+	for (auto iter = ++children.begin(); iter < children.end(); ++iter) {
+		pkb.setFollows(previous.reference, iter->reference);
+		previous = *iter;
+	}
+	return children;
+}
+
+
 bool StatementListNode::equals(shared_ptr<StatementListNode> object) {
     if (this->stmtList.size() != object->stmtList.size()) {
         return false;

@@ -1,6 +1,7 @@
 #ifndef SPA_PROGRAMNODE_H
 #define SPA_PROGRAMNODE_H
 
+#include "PKB/PKB.h"
 #include "SP/Lexer.h"
 #include "SP/Node/ProcedureNode.h"
 
@@ -12,6 +13,7 @@ public:
 	ProgramNode();
 	void addProcedureNode(unique_ptr<ProcedureNode> procedure);
 	static unique_ptr<ProgramNode> parseProgram(Lexer& lex, int& statement_count);
+	bool extract(PKB& pkb);
     bool equals(shared_ptr<ProgramNode> object);
     vector<shared_ptr<ProcedureNode>> getProcedures();
 

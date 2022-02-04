@@ -23,6 +23,22 @@ unique_ptr<IfNode> IfNode::parseIfStatement(Lexer& lex, int& statement_count) {
 	return make_unique<IfNode>(statement_index, move(condition), move(then_statements), move(else_statements));
 }
 
+StmtInfo IfNode::extract(PKB& pkb) {
+	StmtRef stmt_ref = getStmtRef();
+	pkb.setStmtType(stmt_ref, StmtType::IfStmt);
+	StmtInfoList then_children = elseStmtLst->extract(pkb);
+	StmtInfoList else_children = ifStmtLst->extract(pkb);
+	for (auto iter = then_children.begin(); iter < then_children.end(); ++iter) {
+		pkb.setParent(stmt_ref, iter->reference);
+	}
+	for (auto iter = else_children.begin(); iter < else_children.end(); ++iter) {
+		pkb.setParent(stmt_ref, iter->reference);
+	}
+	// TODO: Set uses for conditional expression
+	return {stmt_ref, StmtType::IfStmt};
+}
+
+
 bool IfNode::equals(shared_ptr<StatementNode> object) {
     shared_ptr<IfNode> other = dynamic_pointer_cast<IfNode>(object);
     if (other == nullptr) {

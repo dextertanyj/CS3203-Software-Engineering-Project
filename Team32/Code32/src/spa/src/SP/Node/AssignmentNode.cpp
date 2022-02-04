@@ -13,6 +13,13 @@ unique_ptr<AssignmentNode> AssignmentNode::parseAssignmentStatement(Lexer& lex, 
 	return make_unique<AssignmentNode>(statement_count++, move(variable), move(expression));
 }
 
+StmtInfo AssignmentNode::extract(PKB& pkb) {
+  StmtRef stmt_ref = getStmtRef();
+  pkb.setStmtType(stmt_ref, StmtType::Assign);
+  // TODO: Set uses and modifies
+  return {stmt_ref, StmtType::Assign};
+}
+
 bool AssignmentNode::equals(shared_ptr<StatementNode> object) {
     shared_ptr<AssignmentNode> other = dynamic_pointer_cast<AssignmentNode>(object);
     if (other == nullptr) {

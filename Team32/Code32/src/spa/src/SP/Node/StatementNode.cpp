@@ -48,3 +48,5 @@ unique_ptr<StatementNode> StatementNode::parseStatement(Lexer& lex, int& stateme
 	}
 	throw SP::ParseException("Unknown statement type encountered");
 }
+
+StmtRef StatementNode::getStmtRef() { return stmtNo; }

@@ -11,6 +11,8 @@ using namespace std;
 class PrintNode : public StatementNode {
 public:
 	PrintNode(StmtRef stmtNo, unique_ptr<VariableNode> variable);
+	StmtInfo extract(PKB& pkb) override;
+
     bool equals(shared_ptr<StatementNode> object) override;
 private:
 	unique_ptr<VariableNode> variable;
