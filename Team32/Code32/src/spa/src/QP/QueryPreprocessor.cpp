@@ -363,14 +363,26 @@ QueryStmtRef QueryPreprocessor::parseQueryStmtRef(int& tokenIndex) {
 }
 
 string QueryPreprocessor::parseExpression(int& tokenIndex) {
-	if (tokenIndex + 4 < this->queryTokens.size()) {
+	if (this->queryTokens[tokenIndex] == "\"" || 
+		(this->queryTokens[tokenIndex] == "_" && 
+			this->queryTokens[tokenIndex+1] == "\"")) {
 		string joinedExpression;
+		while (!(this->queryTokens[tokenIndex] == "\"")) {
+			joinedExpression += this->queryTokens[tokenIndex];
+			tokenIndex++;
+		}
+		if (this->queryTokens[tokenIndex] == "_") {
+			joinedExpression += this->queryTokens[tokenIndex];
+			tokenIndex++;
+		}
 		for (int i = 0; i <= 4; ++i) {
 			joinedExpression += this->queryTokens[tokenIndex + i];
 		}
-		if (regex_match(joinedExpression, regex("^_\"([a-zA-Z][a-zA-Z0-9]*|[0-9]+)\"_"))) {
-			tokenIndex+=5;
+		if (regex_match(joinedExpression, regex("^_?\"(a-zA-z0-9+-\*\/%\(\))\"_?"))) {
 			return joinedExpression;
+		}
+		else {
+			throw QueryException("Unexpected query token expression: " + joinedExpression);
 		}
 	}
 	if (this->queryTokens[tokenIndex] == "_") {
