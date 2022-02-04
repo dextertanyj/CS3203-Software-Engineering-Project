@@ -17,7 +17,7 @@ typedef struct PatternClause {
 } PatternClause;
 
 typedef struct SuchThatClause {
-	Relation relation;
+	Relation* relation;
 } SuchThatClause;
 
 typedef vector<Declaration> DeclarationList;
@@ -30,6 +30,11 @@ public:
   	              Declaration select,
   	              SuchThatClauseList suchThatClauseList,
   	              PatternClauseList patternClauseList);
+
+	DeclarationList getDeclarationList();
+	Declaration getSelect();
+	SuchThatClauseList getSuchThatClauseList();
+	PatternClauseList getPatternClauseList();
 
 private:
 	DeclarationList declarationList;
