@@ -378,7 +378,7 @@ string QueryPreprocessor::parseExpression(int& tokenIndex) {
 		for (int i = 0; i <= 4; ++i) {
 			joinedExpression += this->queryTokens[tokenIndex + i];
 		}
-		if (regex_match(joinedExpression, regex("^_?\"(a-zA-z0-9+-\*\/%\(\))\"_?"))) {
+		if (regex_match(joinedExpression, regex("^_?\"(a-zA-z0-9+-\\*\\/%\\(\\))\"_?"))) {
 			return joinedExpression;
 		}
 		else {
