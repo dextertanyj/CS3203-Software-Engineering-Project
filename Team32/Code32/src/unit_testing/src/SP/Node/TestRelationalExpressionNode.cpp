@@ -1,8 +1,8 @@
-#include "SP/Node/RelationalExpressionNode.h"
-#include "../Node/MockArithmeticNode.h"
+#include "Common/Converter.h"
 #include "SP/Lexer.h"
 #include "Common/ArithmeticProcessor/ArithmeticProcessor.h"
-#include "Common/Converter.h"
+#include "SP/Node/RelationalExpressionNode.h"
+#include "../Node/MockArithmeticNode.h"
 
 #include "catch.hpp"
 #include "catch_tools.h"

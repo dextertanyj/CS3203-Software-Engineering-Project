@@ -1,10 +1,10 @@
 #include "Common/Converter.h"
 #include "SP/Lexer.h"
 #include "SP/SP.h"
+#include "SP/Node/AndNode.h"
 #include "SP/Node/ConditionalExpressionNode.h"
 #include "SP/Node/NotNode.h"
 #include "SP/Node/OrNode.h"
-#include "SP/Node/AndNode.h"
 #include "SP/Node/RelationalExpressionNode.h"
 #include "../Node/MockArithmeticNode.h"
 

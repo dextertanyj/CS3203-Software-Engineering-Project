@@ -1,8 +1,8 @@
+#include "SP/SP.h"
+#include "Common/ArithmeticProcessor/ArithmeticProcessor.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/IfNode.h"
 #include "../Node/MockArithmeticNode.h"
-#include "Common/ArithmeticProcessor/ArithmeticProcessor.h"
-#include "SP/SP.h"
 
 #include "catch.hpp"
 #include "catch_tools.h"

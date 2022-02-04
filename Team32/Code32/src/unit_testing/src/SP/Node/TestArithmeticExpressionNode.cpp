@@ -1,6 +1,6 @@
 #include "SP/Node/ArithmeticExpressionNode.h"
-#include "../../Common/ArithmeticProcessor/MockLexer.h"
 #include "../Node/MockArithmeticNode.h"
+#include "../../Common/ArithmeticProcessor/MockLexer.h"
 
 #include "catch.hpp"
 #include "catch_tools.h"
@@ -21,7 +21,7 @@ TEST_CASE("SP::Node::ArithmeticExpressionNode::equals Same Node Test") {
     REQUIRE(node->equals(other));
 }
 
-TEST_CASE("SP::Node::ArithmeticExpressionNode::equals Same Node Test with Brackets") {
+TEST_CASE("SP::Node::ArithmeticExpressionNode::equals Same Node Test With Brackets") {
     shared_ptr<ArithmeticExpressionNode> node =
             make_shared<ArithmeticExpressionNode>(getArithmeticExpression(vector<string>({"A", ";"})));
     shared_ptr<ArithmeticExpressionNode> other =
