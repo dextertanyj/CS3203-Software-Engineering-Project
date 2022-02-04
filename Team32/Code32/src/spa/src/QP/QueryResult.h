@@ -15,7 +15,7 @@ public:
 	* Returns false if the resulting list is empty.
 	*/
 	bool updateStmtList(StmtRefList newStmtList);
-	bool updateRefList(VarRefList newVarList);
+	bool updateVarList(VarRefList newVarList);
 
 private:
 	StmtRefList stmtList;

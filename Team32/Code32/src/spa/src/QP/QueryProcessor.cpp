@@ -7,9 +7,5 @@ string QueryProcessor::processQuery(string query) {
 	QueryPreprocessor queryPrepro;
 	QueryProperties queryProperties = queryPrepro.parseQuery(query);
 	this->queryResult = QueryEvaluator::executeQuery(queryProperties);
-	return formatResult();
-}
-
-string QueryProcessor::formatResult() {
-	return "";
+	return QueryFormatter::formatResult(queryProperties, this->queryResult);
 }

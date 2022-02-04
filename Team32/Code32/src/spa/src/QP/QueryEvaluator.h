@@ -12,7 +12,6 @@ public:
 private:
 	static PKB pkb;
 	static QueryResult evaluateSuchThatClauses(SuchThatClauseList& suchThatClauseList);
-	static void joinResult(QueryResult& currentResult, QueryResult& newResult);
 };
 
 #endif // QUERY_EVALUATOR_H_
