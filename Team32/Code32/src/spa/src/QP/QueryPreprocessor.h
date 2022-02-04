@@ -36,12 +36,22 @@ private:
 	void parseSelect(int& tokenIndex);
 	void parseSuchThat(int& tokenIndex);
 	void parsePattern(int& tokenIndex);
+
 	DesignEntity parseDesignEntity(int& tokenIndex);
 	Relation parseRelation(int& tokenIndex);
+	Relation parseFollows(int& tokenIndex);
+	Relation parseFollowsT(int& tokenIndex);
+	Relation parseParent(int& tokenIndex);
+	Relation parseParentT(int& tokenIndex);
+	Relation parseUses(int& tokenIndex);
+	Relation parseModifies(int& tokenIndex);
+
 	QueryEntRef parseQueryEntRef(int& tokenIndex);
 	QueryStmtRef parseQueryStmtRef(int& tokenIndex);
 	string parseExpression(int& tokenIndex);
+
 	bool isIdentOrName(string token);
+	void matchTokenOrThrow(string token, int& tokenIndex);
 
 	vector<string> queryTokens;
 	DeclarationList declarationList;

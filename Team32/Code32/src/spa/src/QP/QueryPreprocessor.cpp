@@ -1,5 +1,4 @@
 #include "QueryPreprocessor.h"
-#include <iostream>
 #include <regex>
 
 #include "QueryTypeDefs.h"
@@ -14,8 +13,8 @@ QueryProperties QueryPreprocessor::parseQuery(string query) {
 
 void QueryPreprocessor::tokenizeQuery(string query) {
 
-	regex invalidCharsRegex = regex(R"([^a-zA-Z0-9 ,\(\);\+\-\*\/%\n])");
-	regex queryTokenRegex = regex(R"((Follows|Parents)\*|such that|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\\+|-|\*|\/|%|_|,|\")");
+	regex invalidCharsRegex = regex(R"([^a-zA-Z0-9 ,"_\(\);\+\-\*\/%\n])");
+	regex queryTokenRegex = regex(R"((Follows|Parent)\*|such that|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\\+|-|\*|\/|%|_|,|\")");
 
 	if (regex_search(query, invalidCharsRegex)) {
 		throw TokenizationException("Query included invalid characters");
@@ -39,12 +38,12 @@ QueryProperties QueryPreprocessor::parseQuery() {
 
 	// Used to check if synonyms for "Select" has been parsed
 	this->select.symbol = "";
-
 	while (tokenIndex < this->queryTokens.size()) {
 		if (this->declarationList.empty() && this->queryTokens[tokenIndex] != "Select") {
 			parseDeclaration(tokenIndex);
 		} 
 		else if (this->select.symbol == "") {
+			
 			if (this->queryTokens[tokenIndex] == "Select") {
 				parseSelect(++tokenIndex);
 			}
@@ -59,15 +58,14 @@ QueryProperties QueryPreprocessor::parseQuery() {
 			parsePattern(++tokenIndex);
 		}
 		else {
-			throw QueryException("Unexpected token");
+			throw QueryException("Unexpected token: " + this->queryTokens[tokenIndex]);
 		}
 	}
 
     if (this->select.symbol == "") {
           throw QueryException("Missing Select statement");
     }
-
-	return QueryProperties::QueryProperties(
+	return QueryProperties(
 		this->declarationList,
 		this->select,
 		this->suchThatClauseList,
@@ -78,31 +76,33 @@ QueryProperties QueryPreprocessor::parseQuery() {
 void QueryPreprocessor::parseDeclaration(int& tokenIndex) {
 	Declaration declaration;
 	declaration.symbol = "";
-
+	
 	declaration.type = parseDesignEntity(tokenIndex);
-
-	while (++tokenIndex < this->queryTokens.size()) {
+	while (tokenIndex < this->queryTokens.size()) {
 		if (this->queryTokens[tokenIndex] == ";" && declaration.symbol != "") {
 			tokenIndex++;
+			return;
 		}
 		else if (this->queryTokens[tokenIndex] == "," && declaration.symbol != "") {
 			Declaration declaration;
 			declaration.symbol = "";
+			tokenIndex++;
 		}
 		// if token satisfies "synonym : IDENT"
 		else if (isIdentOrName(this->queryTokens[tokenIndex])) {
-			throw QueryException(this->queryTokens[tokenIndex]);
 			declaration.symbol = this->queryTokens[tokenIndex];
 			for (Declaration existingDeclaration : this->declarationList) {
 				if (existingDeclaration.symbol == declaration.symbol) {
 					throw QueryException("Duplicate synonym symbol");
 				}
 			}
+			tokenIndex++;
 			this->declarationList.push_back(declaration);
 		}
 		else {
-			throw QueryException("Unexpected query token" + declaration.symbol + this->queryTokens[tokenIndex]);
+			throw QueryException("Unexpected query token design entity" + this->queryTokens[tokenIndex]);
 		}
+		
 	}
 	throw QueryException("Unexpected end of query");
 }
@@ -116,6 +116,7 @@ void QueryPreprocessor::parseSelect(int& tokenIndex) {
 			this->select.type = declaration.type;
 			this->select.symbol = this->queryTokens[tokenIndex];
 			tokenIndex++;
+			return;
 		}
 	}
 	throw QueryException("Undeclared query synonym");
@@ -140,15 +141,20 @@ void QueryPreprocessor::parsePattern(int& tokenIndex) {
 		}
 	}
 	if (!hasSynonym) {
-		throw QueryException("Missing query synonym");
-	}
+		throw QueryException("Missing query synonym: " + this->queryTokens[tokenIndex]);
+	} else { tokenIndex++; }
+
+	matchTokenOrThrow("(", tokenIndex);
 	patternClause.entRef = parseQueryEntRef(tokenIndex);
+	matchTokenOrThrow(",", tokenIndex);
 	patternClause.expression = parseExpression(tokenIndex);
+	matchTokenOrThrow(")", tokenIndex);
 
 	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "and") {
 		parsePattern(++tokenIndex);
 	}
-	tokenIndex++;
+
+	this->patternClauseList.push_back(patternClause);
 }
 
 DesignEntity QueryPreprocessor::parseDesignEntity(int& tokenIndex) {
@@ -179,7 +185,7 @@ DesignEntity QueryPreprocessor::parseDesignEntity(int& tokenIndex) {
 		designEntity = DesignEntity::procedure;
 	}
 	else {
-		throw QueryException("Unexpected query token");
+		throw QueryException("Unexpected query design entity");
 	}
 	tokenIndex++;
 	return designEntity;
@@ -188,59 +194,100 @@ DesignEntity QueryPreprocessor::parseDesignEntity(int& tokenIndex) {
 
 Relation QueryPreprocessor::parseRelation(int& tokenIndex) {
 	Relationship relationship;
-
 	if (this->queryTokens[tokenIndex] == "Follows") {
-		relationship = Relationship::Follows;
-        return StmtsRelation(
-			relationship, 
-			parseQueryStmtRef(tokenIndex), 
-			parseQueryStmtRef(tokenIndex)
-		);
+		tokenIndex++;
+		return parseFollows(tokenIndex);
 	}
 	else if (this->queryTokens[tokenIndex] == "Follows*") {
-		relationship = Relationship::FollowsT;
-        return StmtsRelation(
-			relationship, 
-			parseQueryStmtRef(tokenIndex), 
-			parseQueryStmtRef(tokenIndex)
-		);
+		tokenIndex++;
+		return parseFollowsT(tokenIndex);
 	}
 	else if (this->queryTokens[tokenIndex] == "Parent") {
-		relationship = Relationship::Parent;
-        return StmtsRelation(
-			relationship, 
-			parseQueryStmtRef(tokenIndex), 
-			parseQueryStmtRef(tokenIndex)
-		);
+		tokenIndex++;
+		return parseParent(tokenIndex);
 	}
 	else if (this->queryTokens[tokenIndex] == "Parent*") {
-		relationship = Relationship::ParentT;
-        return StmtsRelation(
-			relationship, 
-			parseQueryStmtRef(tokenIndex), 
-			parseQueryStmtRef(tokenIndex)
-		);
+		tokenIndex++;
+		return parseParentT(tokenIndex);
 	}
 	else if (this->queryTokens[tokenIndex] == "Uses") {
-		relationship = Relationship::UsesS;
-        return StmtEntRelation(
-			relationship, 
-			parseQueryStmtRef(tokenIndex), 
-			parseQueryEntRef(tokenIndex)
-		);
+		tokenIndex++;
+		return parseUses(tokenIndex);
 	}
 	else if (this->queryTokens[tokenIndex] == "Modifies") {
-		relationship = Relationship::ModifiesS;
-        return StmtEntRelation(
-			relationship, 
-			parseQueryStmtRef(tokenIndex), 
-			parseQueryEntRef(tokenIndex)
-		);
+		tokenIndex++;
+		return parseModifies(tokenIndex);
 	}
 	else {
-		throw QueryException("Unexpected query token");
+		throw QueryException("Unexpected query token relation " + this->queryTokens[tokenIndex]);
 	}
 
+}
+
+Relation QueryPreprocessor::parseFollows(int& tokenIndex) {
+	Relationship relationship = Relationship::Follows;
+	matchTokenOrThrow("(", tokenIndex);
+	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
+	matchTokenOrThrow(",", tokenIndex);
+	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex);
+	matchTokenOrThrow(")", tokenIndex);
+	Relation relation = StmtsRelation(relationship, ref1, ref2);
+	return relation;
+}
+
+Relation QueryPreprocessor::parseFollowsT(int& tokenIndex) {
+	Relationship relationship = Relationship::FollowsT;
+	matchTokenOrThrow("(", tokenIndex);
+	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
+	matchTokenOrThrow(",", tokenIndex);
+	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex);
+	matchTokenOrThrow(")", tokenIndex);
+	Relation relation = StmtsRelation(relationship, ref1, ref2);
+	return relation;
+}
+
+Relation QueryPreprocessor::parseParent(int& tokenIndex) {
+	Relationship relationship = Relationship::Parent;
+	matchTokenOrThrow("(", tokenIndex);
+	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
+	matchTokenOrThrow(",", tokenIndex);
+	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex);
+	matchTokenOrThrow(")", tokenIndex);
+	Relation relation = StmtsRelation(relationship, ref1, ref2);
+	return relation;
+}
+
+Relation QueryPreprocessor::parseParentT(int& tokenIndex) {
+	Relationship relationship = Relationship::ParentT;
+	matchTokenOrThrow("(", tokenIndex);
+	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
+	matchTokenOrThrow(",", tokenIndex);
+	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex);
+	matchTokenOrThrow(")", tokenIndex);
+	Relation relation = StmtsRelation(relationship, ref1, ref2);
+	return relation;
+}
+
+Relation QueryPreprocessor::parseUses(int& tokenIndex) {
+	Relationship relationship = Relationship::UsesS;
+	matchTokenOrThrow("(", tokenIndex);
+	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
+	matchTokenOrThrow(",", tokenIndex);
+	QueryEntRef ref2 = parseQueryEntRef(tokenIndex);
+	matchTokenOrThrow(")", tokenIndex);
+	Relation relation = StmtEntRelation(relationship, ref1, ref2);
+	return relation;
+}
+
+Relation QueryPreprocessor::parseModifies(int& tokenIndex) {
+	Relationship relationship = Relationship::ModifiesS;
+	matchTokenOrThrow("(", tokenIndex);
+	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
+	matchTokenOrThrow(",", tokenIndex);
+	QueryEntRef ref2 = parseQueryEntRef(tokenIndex);
+	matchTokenOrThrow(")", tokenIndex);
+	Relation relation = StmtEntRelation(relationship, ref1, ref2);
+	return relation;
 }
 
 QueryEntRef QueryPreprocessor::parseQueryEntRef(int& tokenIndex) {
@@ -257,7 +304,6 @@ QueryEntRef QueryPreprocessor::parseQueryEntRef(int& tokenIndex) {
 		entRef.type = EntRefType::varName;
 		entRef.entRef = this->queryTokens[tokenIndex + 1];
 		tokenIndex += 2;
-
 	}
 	else {
 		bool hasSynonym = false;
@@ -270,7 +316,7 @@ QueryEntRef QueryPreprocessor::parseQueryEntRef(int& tokenIndex) {
 			}
 		}
 		if (!hasSynonym) {
-			throw QueryException("Unexpected query token");
+			throw QueryException("Unexpected query token entref " + this->queryTokens[tokenIndex]);
 		}
 	}
 
@@ -287,7 +333,7 @@ QueryStmtRef QueryPreprocessor::parseQueryStmtRef(int& tokenIndex) {
 	else if (regex_match(this->queryTokens[tokenIndex], regex("^[0-9]+$"))) {
 
 		stmtRef.type = StmtRefType::stmtNumber;
-		stmtRef.stmtRef = this->queryTokens[tokenIndex + 1];
+		stmtRef.stmtRef = this->queryTokens[tokenIndex];
 	}
 	else {
 		bool hasSynonym = false;
@@ -298,34 +344,40 @@ QueryStmtRef QueryPreprocessor::parseQueryStmtRef(int& tokenIndex) {
 				hasSynonym = true;
 				break;
 			}
-			if (!hasSynonym) {
-				throw QueryException("Unexpected query token");
-			}
+		}
+		if (!hasSynonym) {
+			throw QueryException("Unexpected query token stmtref " + this->queryTokens[tokenIndex]);
 		}
 	}
 	tokenIndex++;
 	return stmtRef;
 }
 
-
 string QueryPreprocessor::parseExpression(int& tokenIndex) {
-	if (this->queryTokens[tokenIndex] == "_") {
-		tokenIndex++;
-		return "_";
-	}
 	if (tokenIndex + 4 < this->queryTokens.size()) {
 		string joinedExpression;
 		for (int i = 0; i <= 4; ++i) {
 			joinedExpression += this->queryTokens[tokenIndex + i];
 		}
 		if (regex_match(joinedExpression, regex("^_\"([a-zA-Z][a-zA-Z0-9]*|[0-9]+)\"_"))) {
-			tokenIndex++;
+			tokenIndex+=5;
 			return joinedExpression;
 		}
 	}
-	throw QueryException("Unexpected query token");
+	if (this->queryTokens[tokenIndex] == "_") {
+		tokenIndex++;
+		return "_";
+	}
+	throw QueryException("Unexpected query token expression" + this->queryTokens[tokenIndex]);
 }
 
 bool QueryPreprocessor::isIdentOrName(string token) {
 	return regex_match(token, regex("^[a-zA-Z][a-zA-Z0-9]*$"));
+}
+
+void QueryPreprocessor::matchTokenOrThrow(string token, int& tokenIndex) {
+	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == token) {
+		tokenIndex++; // Skip token
+	}
+	else { throw QueryException("Missing token " + token + std::to_string(tokenIndex)); }
 }
