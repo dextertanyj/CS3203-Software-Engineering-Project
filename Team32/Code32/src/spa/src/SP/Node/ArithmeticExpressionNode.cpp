@@ -12,6 +12,10 @@ unique_ptr<ArithmeticExpressionNode> ArithmeticExpressionNode::parseArithmeticEx
 	return make_unique<ArithmeticExpressionNode>(expression);
 }
 
+ArithmeticProcessor::ArithmeticExpression ArithmeticExpressionNode::extract() {
+	return expression;
+}
+
 bool ArithmeticExpressionNode::equals(shared_ptr<ArithmeticExpressionNode> object) {
     return this->expression.equals(object->expression);
 }

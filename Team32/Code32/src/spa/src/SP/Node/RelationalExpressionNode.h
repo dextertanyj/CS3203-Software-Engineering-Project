@@ -13,6 +13,7 @@ class RelationalExpressionNode : public ConditionalExpressionNode {
 public:
 	RelationalExpressionNode(RelationalOperator op, unique_ptr<ArithmeticExpressionNode> lhs, unique_ptr<ArithmeticExpressionNode> rhs);
 	static unique_ptr<RelationalExpressionNode> parseRelationalExpression(Lexer& lex);
+	UsageInfo extract();
     bool equals(shared_ptr<ConditionalExpressionNode> object) override;
 
 private:

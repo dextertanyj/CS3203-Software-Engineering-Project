@@ -15,12 +15,16 @@ unique_ptr<WhileNode> WhileNode::parseWhileStatement(Lexer& lex, int& statement_
 }
 
 StmtInfo WhileNode::extract(PKB& pkb) {
-  StmtInfoList children = stmtLst->extract(pkb);
-  StmtRef stmtRef = getStmtRef();
-  for (auto iter = children.begin(); iter < children.end(); ++iter) {
-    pkb.setParent(stmtRef, iter->reference);
-  }
-  return { stmtRef, StmtType::WhileStmt };
+	StmtRef stmt_ref = getStmtRef();
+	UsageInfo usage = condExpr->extract();
+	for (auto iter = usage.variables.begin(); iter < usage.variables.end(); ++iter) {
+		pkb.setUses(stmt_ref, *iter);
+	}
+	StmtInfoList children = stmtLst->extract(pkb);
+	for (auto iter = children.begin(); iter < children.end(); ++iter) {
+		pkb.setParent(stmt_ref, iter->reference);
+	}
+	return {stmt_ref, StmtType::WhileStmt};
 }
 
 bool WhileNode::equals(shared_ptr<StatementNode> object) {

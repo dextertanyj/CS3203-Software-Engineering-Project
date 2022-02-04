@@ -10,6 +10,7 @@ using namespace std;
 class OrNode : public ConditionalExpressionNode {
 public:
 	OrNode(unique_ptr<ConditionalExpressionNode> lhs, unique_ptr<ConditionalExpressionNode> rhs);
+	UsageInfo extract() override;
     bool equals(shared_ptr<ConditionalExpressionNode> object) override;
 
 private:

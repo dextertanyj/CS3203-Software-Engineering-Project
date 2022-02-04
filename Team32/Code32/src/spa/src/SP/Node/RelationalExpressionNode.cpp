@@ -2,7 +2,6 @@
 
 #include "ArithmeticExpressionNode.h"
 #include "Common/Converter.h"
-#include <iostream>
 
 RelationalExpressionNode::RelationalExpressionNode(RelationalOperator op, unique_ptr<ArithmeticExpressionNode> lhs,
                                                    unique_ptr<ArithmeticExpressionNode> rhs)
@@ -13,6 +12,21 @@ unique_ptr<RelationalExpressionNode> RelationalExpressionNode::parseRelationalEx
 	RelationalOperator op = Converter::convertRelational(lex.readToken());
 	unique_ptr<ArithmeticExpressionNode> rhs = ArithmeticExpressionNode::parseArithmeticExpression(lex);
 	return make_unique<RelationalExpressionNode>(op, move(lhs), move(rhs));
+}
+
+UsageInfo RelationalExpressionNode::extract() {
+	UsageInfo usage;
+	ArithmeticProcessor::ArithmeticExpression lhs_expression = lhs->extract();
+	ArithmeticProcessor::ArithmeticExpression rhs_expression = rhs->extract();
+	unordered_set<VarRef> lhs_variables = lhs_expression.getVariables();
+	unordered_set<int> lhs_constants = lhs_expression.getConstants();
+	unordered_set<VarRef> rhs_variables = lhs_expression.getVariables();
+	unordered_set<int> rhs_constants = lhs_expression.getConstants();
+	usage.variables.insert(end(usage.variables), lhs_variables.begin(), lhs_variables.end());
+	usage.variables.insert(end(usage.variables), rhs_variables.begin(), rhs_variables.end());
+	usage.constants.insert(end(usage.constants), lhs_constants.begin(), lhs_constants.end());
+	usage.constants.insert(end(usage.constants), rhs_constants.begin(), rhs_constants.end());
+	return usage;
 }
 
 bool RelationalExpressionNode::equals(shared_ptr<ConditionalExpressionNode> object) {

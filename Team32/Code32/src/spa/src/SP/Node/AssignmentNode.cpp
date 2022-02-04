@@ -14,10 +14,16 @@ unique_ptr<AssignmentNode> AssignmentNode::parseAssignmentStatement(Lexer& lex, 
 }
 
 StmtInfo AssignmentNode::extract(PKB& pkb) {
-  StmtRef stmt_ref = getStmtRef();
-  pkb.setStmtType(stmt_ref, StmtType::Assign);
-  // TODO: Set uses and modifies
-  return {stmt_ref, StmtType::Assign};
+	StmtRef stmt_ref = getStmtRef();
+	pkb.setStmtType(stmt_ref, StmtType::Assign);
+	// TODO: Set arithmetic expression for pattern matching
+	ArithmeticProcessor::ArithmeticExpression rhs = expression->extract();
+	pkb.setModifies(stmt_ref, assignee->extract());
+	unordered_set<VarRef> variables = rhs.getVariables();
+	for (const auto& variable : variables) {
+		pkb.setUses(stmt_ref, variable);
+	}
+	return {stmt_ref, StmtType::Assign};
 }
 
 bool AssignmentNode::equals(shared_ptr<StatementNode> object) {

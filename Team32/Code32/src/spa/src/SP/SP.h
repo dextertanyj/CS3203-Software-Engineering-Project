@@ -2,6 +2,8 @@
 #define SPA_SP_H
 
 #include <stdexcept>
+#include <vector>
+#include "Common/TypeDefs.h"
 
 using namespace std;
 
@@ -15,6 +17,10 @@ struct TokenizationException : public runtime_error {
 class Lexer;
 class Parser;
 class DesignExtractor;
+struct UsageInfo {
+	vector<VarRef> variables;
+	vector<int> constants;
+};
 }  // namespace SP
 
 #endif  // SPA_SP_H

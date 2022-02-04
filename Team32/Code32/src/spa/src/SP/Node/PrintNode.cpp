@@ -5,6 +5,7 @@ using namespace std;
 PrintNode::PrintNode(StmtRef stmtNo, unique_ptr<VariableNode> variable) : StatementNode(stmtNo), variable(move(variable)) {}
 StmtInfo PrintNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
+	pkb.setUses(stmt_ref, variable->extract());
 	pkb.setStmtType(stmt_ref, StmtType::Print);
 	return {stmt_ref, StmtType::Print};
 }
