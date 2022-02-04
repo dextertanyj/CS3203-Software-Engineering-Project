@@ -11,12 +11,11 @@ void ParentStore::setParent(StmtRef parentStmt, StmtRef childStmt) {
     auto keyItr = parentMap.find(parentStmt);
     if (keyItr == parentMap.end()) {
         // If parent does not exist as key, create and store into parentMap.
-        ParentRelation parentRelation = { {childStmt}, {}, {}, -1 };
+        ParentRelation parentRelation = {{childStmt}, {}, {}, -1};
         parentMap.insert(make_pair(parentStmt, parentRelation));
     } else {
         // If parent already exists as key, add childStmtNo to vector of children
-        ParentRelation parentRelation = keyItr->second;
-        parentRelation.childSet.insert(childStmt);
+        keyItr->second.childSet.insert(childStmt);
     }
     auto keyItr2 = parentMap.find(childStmt);
     if (keyItr2 == parentMap.end()) {

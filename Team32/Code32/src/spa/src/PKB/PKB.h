@@ -44,14 +44,14 @@ public:
     void populateComplexRelations();
 
 private:
-    static ParentStore parentStore;
-    static FollowStore followStore;
-    static UseStore useStore;
-    static ModifyStore modifyStore;
-    static AssignStore assignStore;
-    static unordered_map<ProcRef, vector<StmtRef>> procMap;
-    static unordered_map<StmtRef, StmtType> typeMap;
-    static int numStatements;
+    ParentStore parentStore;
+    FollowStore followStore;
+    UseStore useStore;
+    ModifyStore modifyStore;
+    AssignStore assignStore;
+    unordered_map<ProcRef, vector<StmtRef>> procMap;
+    unordered_map<StmtRef, StmtType> typeMap;
+    int numStatements;
     void checkInvalidStmts(StmtRef stmtNo1, StmtRef stmtNo2);
     void checkInvalidStmt(StmtRef stmtNo1);
 };

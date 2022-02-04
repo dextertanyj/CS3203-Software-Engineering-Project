@@ -115,5 +115,5 @@ void PKB::checkInvalidStmts(StmtRef stmtNo1, StmtRef stmtNo2) {
 }
 
 void PKB::checkInvalidStmt(StmtRef stmtNo1) {
-    if (stmtNo1 < 0) throw invalid_argument("Statement number must be a positive integer.");
+    if (stmtNo1 <= 0) throw invalid_argument("Statement number must be a positive integer.");
 }
