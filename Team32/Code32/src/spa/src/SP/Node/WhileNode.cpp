@@ -5,11 +5,11 @@ WhileNode::WhileNode(StmtRef stmtNo, unique_ptr<ConditionalExpressionNode> condE
 
 unique_ptr<WhileNode> WhileNode::parseWhileStatement(Lexer& lex, int& statement_count) {
 	StmtRef statement_index = statement_count++;
-	lex.next_if("(");
+	lex.nextIf("(");
 	unique_ptr<ConditionalExpressionNode> condition = ConditionalExpressionNode::parseConditionalExpression(lex);
-	lex.next_if(")");
-	lex.next_if("{");
+	lex.nextIf(")");
+	lex.nextIf("{");
 	unique_ptr<StatementListNode> statements = StatementListNode::parseStatementList(lex, statement_count);
-	lex.next_if("}");
+	lex.nextIf("}");
 	return make_unique<WhileNode>(statement_index, move(condition), move(statements));
 }

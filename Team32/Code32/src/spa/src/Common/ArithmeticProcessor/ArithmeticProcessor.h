@@ -9,7 +9,7 @@ namespace ArithmeticProcessor {
 struct ArithmeticProcessorException : public runtime_error {
 	using runtime_error::runtime_error;
 };
-class Lexer;
+class LexerInterface;
 class ArithmeticExpression;
 class ExpressionNode;
 class OperatorNode;

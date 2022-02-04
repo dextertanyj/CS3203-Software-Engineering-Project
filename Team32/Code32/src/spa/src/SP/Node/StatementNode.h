@@ -4,6 +4,8 @@
 #include "Common/TypeDefs.h"
 #include "SP/Lexer.h"
 
+using namespace SP;
+
 class StatementNode {
 public:
 	explicit StatementNode(StmtRef stmtNo);

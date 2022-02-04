@@ -6,6 +6,7 @@
 #include "SP/Lexer.h"
 
 using namespace std;
+using namespace SP;
 
 class ConditionalExpressionNode {
 public:

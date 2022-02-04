@@ -8,8 +8,8 @@ RelationalExpressionNode::RelationalExpressionNode(RelationalOperator op, unique
 	: op(op), lhs(move(lhs)), rhs(move(rhs)) {}
 
 unique_ptr<RelationalExpressionNode> RelationalExpressionNode::parseRelationalExpression(Lexer& lex) {
-	unique_ptr<RelationalFactorNode> lhs = ArithmeticExpressionNode::parseArithmeticExpression();
-	RelationalOperator op = Converter::convertRelational(lex.read_token());
-	unique_ptr<RelationalFactorNode> rhs = ArithmeticExpressionNode::parseArithmeticExpression();
+	unique_ptr<RelationalFactorNode> lhs = ArithmeticExpressionNode::parseArithmeticExpression(lex);
+	RelationalOperator op = Converter::convertRelational(lex.readToken());
+	unique_ptr<RelationalFactorNode> rhs = ArithmeticExpressionNode::parseArithmeticExpression(lex);
 	return make_unique<RelationalExpressionNode>(op, move(lhs), move(rhs));
 }

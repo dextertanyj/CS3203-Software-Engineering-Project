@@ -7,6 +7,7 @@
 #include "SP/Node/StatementListNode.h"
 
 using namespace std;
+using namespace SP;
 
 class ProcedureNode {
 public:

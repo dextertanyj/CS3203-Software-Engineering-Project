@@ -3,11 +3,11 @@
 
 #include "Common/TypeDefs.h"
 #include "SP/Lexer.h"
-#include "SP/Node/ReferenceNode.h"
 
 using namespace std;
+using namespace SP;
 
-class VariableNode : public ReferenceNode {
+class VariableNode {
 public:
 	explicit VariableNode(VarRef name);
 	static unique_ptr<VariableNode> parseVariable(Lexer& lex);

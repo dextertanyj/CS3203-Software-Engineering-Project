@@ -1,5 +1,5 @@
-#ifndef SPA_LEXER_H
-#define SPA_LEXER_H
+#ifndef SPA_LEXERINTERFACE_H
+#define SPA_LEXERINTERFACE_H
 
 #include <string>
 
@@ -7,10 +7,10 @@
 
 using namespace std;
 
-class ArithmeticProcessor::Lexer {
+class ArithmeticProcessor::LexerInterface {
 public:
 	virtual string readToken() = 0;
 	virtual string peekToken() = 0;
 };
 
-#endif  // SPA_LEXER_H
+#endif  // SPA_LEXERINTERFACE_H

@@ -12,6 +12,6 @@ unique_ptr<StatementListNode> StatementListNode::parseStatementList(Lexer& lex, 
 	unique_ptr<StatementListNode> statement_list = make_unique<StatementListNode>();
 	do {
 		statement_list->addStatementNode(StatementNode::parseStatement(lex, statement_count));
-	} while (lex.peek_token() != "}");
+	} while (lex.peekToken() != "}");
 	return statement_list;
 }

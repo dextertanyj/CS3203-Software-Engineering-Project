@@ -3,6 +3,7 @@
 #include <vector>
 
 using namespace std;
+using namespace SP;
 
 ProgramNode::ProgramNode() = default;
 
@@ -12,6 +13,6 @@ unique_ptr<ProgramNode> ProgramNode::parseProgram(Lexer& lex, int& statement_cou
 	unique_ptr<ProgramNode> program = make_unique<ProgramNode>();
 	do {
 		program->addProcedureNode(ProcedureNode::parseProcedure(lex, statement_count));
-	} while (!lex.peek_token().empty());
+	} while (!lex.peekToken().empty());
 	return program;
 }

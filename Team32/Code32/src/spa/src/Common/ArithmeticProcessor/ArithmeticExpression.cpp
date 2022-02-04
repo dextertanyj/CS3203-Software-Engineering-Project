@@ -19,7 +19,7 @@ using namespace Validator;
 ArithmeticExpression::ArithmeticExpression(shared_ptr<ExpressionNode> root, unordered_set<VarRef> variables, unordered_set<int> constants)
 	: root(std::move(root)), variables(std::move(variables)), constants(std::move(constants)) {}
 
-ArithmeticExpression ArithmeticExpression::parse(Lexer& lex) {
+ArithmeticExpression ArithmeticExpression::parse(LexerInterface& lex) {
 	unordered_set<VarRef> variables;
 	unordered_set<int> constants;
 	shared_ptr<ExpressionNode> expression =
@@ -27,7 +27,7 @@ ArithmeticExpression ArithmeticExpression::parse(Lexer& lex) {
 	return ArithmeticExpression(expression, variables, constants);
 }
 
-shared_ptr<ExpressionNode> ArithmeticExpression::construct(Lexer& lex, unordered_set<VarRef>& variables, unordered_set<int>& constants,
+shared_ptr<ExpressionNode> ArithmeticExpression::construct(LexerInterface& lex, unordered_set<VarRef>& variables, unordered_set<int>& constants,
                                                            shared_ptr<ExpressionNode> lhs, int precedence) {
 	string lookahead = lex.peekToken();
 	while (validateArithmeticOperator(lookahead) && getPrecedence(convertArithmetic(lookahead)) >= precedence) {
@@ -43,7 +43,7 @@ shared_ptr<ExpressionNode> ArithmeticExpression::construct(Lexer& lex, unordered
 	return lhs;
 }
 
-shared_ptr<ExpressionNode> ArithmeticExpression::parseTerminal(Lexer& lex, unordered_set<VarRef>& variables,
+shared_ptr<ExpressionNode> ArithmeticExpression::parseTerminal(LexerInterface& lex, unordered_set<VarRef>& variables,
                                                                unordered_set<int>& constants) {
 	string token = lex.readToken();
 	if (token == "(") {

@@ -5,14 +5,14 @@
 #include <unordered_set>
 
 #include "Common/ArithmeticProcessor/ArithmeticProcessor.h"
-#include "Common/ArithmeticProcessor/Lexer.h"
+#include "Common/ArithmeticProcessor/LexerInterface.h"
 #include "Common/TypeDefs.h"
 
 using namespace std;
 
 class ArithmeticProcessor::ArithmeticExpression {
 public:
-	static ArithmeticExpression parse(ArithmeticProcessor::Lexer& lex);
+	static ArithmeticExpression parse(LexerInterface& lex);
 	ArithmeticExpression(shared_ptr<ExpressionNode> root, unordered_set<VarRef> variables, unordered_set<int> constants);
 	bool equals(const ArithmeticExpression& other);
 	bool contains(const ArithmeticExpression& other);
@@ -25,8 +25,8 @@ private:
 	unordered_set<VarRef> variables;
 	unordered_set<int> constants;
 
-	static shared_ptr<ExpressionNode> construct(Lexer& lex, unordered_set<VarRef>& variables, unordered_set<int>& constants, shared_ptr<ExpressionNode> lhs, int precedence);
-	static shared_ptr<ExpressionNode> parseTerminal(Lexer& lex, unordered_set<VarRef>& variables, unordered_set<int>& constants);
+	static shared_ptr<ExpressionNode> construct(LexerInterface& lex, unordered_set<VarRef>& variables, unordered_set<int>& constants, shared_ptr<ExpressionNode> lhs, int precedence);
+	static shared_ptr<ExpressionNode> parseTerminal(LexerInterface& lex, unordered_set<VarRef>& variables, unordered_set<int>& constants);
 	static int getPrecedence(ArithmeticOperator op);
 };
 

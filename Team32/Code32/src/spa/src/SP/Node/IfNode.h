@@ -8,6 +8,7 @@
 #include "SP/Node/StatementNode.h"
 
 using namespace std;
+using namespace SP;
 
 class IfNode : public StatementNode {
 public:

@@ -1,14 +1,14 @@
 #ifndef SPA_MOCKLEXER_H
 #define SPA_MOCKLEXER_H
 
-#include "Common/ArithmeticProcessor/Lexer.h"
+#include "Common/ArithmeticProcessor/LexerInterface.h"
 
 #include <string>
 #include <vector>
 
 using namespace std;
 
-class MockLexer : public ArithmeticProcessor::Lexer {
+class MockLexer : public ArithmeticProcessor::LexerInterface {
 public:
 	MockLexer(vector<string> tokens);
 	string readToken() override;

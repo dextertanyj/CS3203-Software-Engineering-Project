@@ -1,6 +1,7 @@
 #include "SP/Node/IfNode.h"
 
 using namespace std;
+using namespace SP;
 
 IfNode::IfNode(StmtRef stmtNo, unique_ptr<ConditionalExpressionNode> condExpr, unique_ptr<StatementListNode> ifStmtLst,
                unique_ptr<StatementListNode> elseStmtLst)
@@ -8,16 +9,16 @@ IfNode::IfNode(StmtRef stmtNo, unique_ptr<ConditionalExpressionNode> condExpr, u
 
 unique_ptr<IfNode> IfNode::parseIfStatement(Lexer& lex, int& statement_count) {
 	StmtRef statement_index = statement_count++;
-	lex.next_if("(");
+	lex.nextIf("(");
 	unique_ptr<ConditionalExpressionNode> condition = ConditionalExpressionNode::parseConditionalExpression(lex);
-	lex.next_if("(");
-	lex.next_if("then");
-	lex.next_if("{");
+	lex.nextIf("(");
+	lex.nextIf("then");
+	lex.nextIf("{");
 	unique_ptr<StatementListNode> then_statements = StatementListNode::parseStatementList(lex, statement_count);
-	lex.next_if("}");
-	lex.next_if("else");
-	lex.next_if("{");
+	lex.nextIf("}");
+	lex.nextIf("else");
+	lex.nextIf("{");
 	unique_ptr<StatementListNode> else_statements = StatementListNode::parseStatementList(lex, statement_count);
-	lex.next_if("}");
+	lex.nextIf("}");
 	return make_unique<IfNode>(statement_index, move(condition), move(then_statements), move(else_statements));
 }

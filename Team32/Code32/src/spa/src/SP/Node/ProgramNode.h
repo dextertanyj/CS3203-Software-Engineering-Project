@@ -5,6 +5,7 @@
 #include "SP/Node/ProcedureNode.h"
 
 using namespace std;
+using namespace SP;
 
 class ProgramNode {
 public:

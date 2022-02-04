@@ -10,6 +10,7 @@
 #include "SP/Node/VariableNode.h"
 
 using namespace std;
+using namespace SP;
 
 class AssignmentNode : public StatementNode {
 public:
