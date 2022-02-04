@@ -17,6 +17,7 @@ struct TokenizationException : public runtime_error {
 class Lexer;
 class Parser;
 class DesignExtractor;
+class Processor;
 struct UsageInfo {
 	vector<VarRef> variables;
 	vector<int> constants;
