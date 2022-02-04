@@ -13,3 +13,12 @@ unique_ptr<WhileNode> WhileNode::parseWhileStatement(Lexer& lex, int& statement_
 	lex.nextIf("}");
 	return make_unique<WhileNode>(statement_index, move(condition), move(statements));
 }
+
+bool WhileNode::equals(shared_ptr<StatementNode> object) {
+    shared_ptr<WhileNode> other = dynamic_pointer_cast<WhileNode>(object);
+    if (other == nullptr) {
+        return false;
+    }
+    return this->stmtNo == other->stmtNo && this->condExpr->equals(move(other->condExpr))
+           && this->stmtLst->equals(move(other->stmtLst));
+}

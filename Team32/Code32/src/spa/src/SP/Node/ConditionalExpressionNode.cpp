@@ -14,12 +14,14 @@ using namespace SP;
 unique_ptr<ConditionalExpressionNode> ConditionalExpressionNode::parseConditionalExpression(Lexer& lex) {
 	string token = lex.peekToken();
 	if (token == "!") {
+        lex.readToken();
 		lex.nextIf("(");
 		unique_ptr<ConditionalExpressionNode> expression = ConditionalExpressionNode::parseConditionalExpression(lex);
 		lex.nextIf(")");
 		return make_unique<NotNode>(move(expression));
 	}
 	if (token == "(") {
+        lex.readToken();
 		unique_ptr<ConditionalExpressionNode> lhs = ConditionalExpressionNode::parseConditionalExpression(lex);
 		lex.nextIf(")");
 		string op = lex.readToken();
@@ -37,4 +39,8 @@ unique_ptr<ConditionalExpressionNode> ConditionalExpressionNode::parseConditiona
 		}
 	}
 	return RelationalExpressionNode::parseRelationalExpression(lex);
+}
+
+bool ConditionalExpressionNode::equals(shared_ptr<ConditionalExpressionNode> object) {
+    return false;
 }

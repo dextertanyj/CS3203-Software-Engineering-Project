@@ -21,3 +21,7 @@ unique_ptr<ProcedureNode> ProcedureNode::parseProcedure(Lexer& lex, int& stateme
 	lex.nextIf("}");
 	return make_unique<ProcedureNode>(name, std::move(statement_list));
 }
+
+bool ProcedureNode::equals(shared_ptr<ProcedureNode> object) {
+    return this->name == object->name && this->stmtLst->equals(move(object->stmtLst));
+}

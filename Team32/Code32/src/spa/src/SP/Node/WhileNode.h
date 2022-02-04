@@ -13,6 +13,7 @@ class WhileNode : public StatementNode {
 public:
 	WhileNode(StmtRef stmtNo, unique_ptr<ConditionalExpressionNode> condExpr, unique_ptr<StatementListNode> stmtLst);
 	static unique_ptr<WhileNode> parseWhileStatement(Lexer& lex, int& statement_count);
+    bool equals(shared_ptr<StatementNode> object) override;
 
 private:
 	unique_ptr<ConditionalExpressionNode> condExpr;

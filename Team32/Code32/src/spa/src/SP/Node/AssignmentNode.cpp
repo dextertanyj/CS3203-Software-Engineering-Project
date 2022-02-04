@@ -12,3 +12,12 @@ unique_ptr<AssignmentNode> AssignmentNode::parseAssignmentStatement(Lexer& lex, 
 	unique_ptr<ArithmeticExpressionNode> expression = ArithmeticExpressionNode::parseArithmeticExpression(lex);
 	return make_unique<AssignmentNode>(statement_count++, move(variable), move(expression));
 }
+
+bool AssignmentNode::equals(shared_ptr<StatementNode> object) {
+    shared_ptr<AssignmentNode> other = dynamic_pointer_cast<AssignmentNode>(object);
+    if (other == nullptr) {
+        return false;
+    }
+    return this->stmtNo == other->stmtNo && this->assignee->equals(move(other->assignee))
+        && this->expression->equals(move(other->expression));
+}

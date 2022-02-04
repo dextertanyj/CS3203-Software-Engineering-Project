@@ -13,6 +13,7 @@ class ProcedureNode {
 public:
 	ProcedureNode(string name, unique_ptr<StatementListNode> stmtLst);
 	static unique_ptr<ProcedureNode> parseProcedure(Lexer& lex, int& statement_count);
+    bool equals(shared_ptr<ProcedureNode> object);
 
 private:
 	string name;

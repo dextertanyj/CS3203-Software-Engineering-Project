@@ -11,13 +11,17 @@
 #include "SP/Node/WhileNode.h"
 #include "SP/SP.h"
 
+#include <iostream>
+
 StatementNode::StatementNode(StmtRef stmtNo) : stmtNo(stmtNo) {}
 
 unique_ptr<StatementNode> StatementNode::parseStatement(Lexer& lex, int& statement_count) {
 	string token = lex.readToken();
 	string lookahead = lex.peekToken();
 	if (lookahead == "=") {
-		return AssignmentNode::parseAssignmentStatement(lex, statement_count, token);
+        unique_ptr<AssignmentNode> node = AssignmentNode::parseAssignmentStatement(lex, statement_count, token);
+        lex.nextIf(";");
+		return node;
 	}
 	if (token == "read") {
 		// Should we abstract this at this cost of an additional function call?
@@ -35,6 +39,7 @@ unique_ptr<StatementNode> StatementNode::parseStatement(Lexer& lex, int& stateme
 		if (!Validator::validateName(name)) {
 			throw SP::ParseException("Invalid procedure name");
 		}
+        lex.nextIf(";");
 		return make_unique<CallNode>(statement_count++, name);
 	}
 	if (token == "while") {
@@ -44,4 +49,8 @@ unique_ptr<StatementNode> StatementNode::parseStatement(Lexer& lex, int& stateme
 		return IfNode::parseIfStatement(lex, statement_count);
 	}
 	throw SP::ParseException("Unknown statement type encountered");
+}
+
+bool StatementNode::equals(shared_ptr<StatementNode> object) {
+    return false;
 }

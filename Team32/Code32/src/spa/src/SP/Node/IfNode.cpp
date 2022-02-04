@@ -1,5 +1,7 @@
 #include "SP/Node/IfNode.h"
 
+#include <iostream>
+
 using namespace std;
 using namespace SP;
 
@@ -11,8 +13,8 @@ unique_ptr<IfNode> IfNode::parseIfStatement(Lexer& lex, int& statement_count) {
 	StmtRef statement_index = statement_count++;
 	lex.nextIf("(");
 	unique_ptr<ConditionalExpressionNode> condition = ConditionalExpressionNode::parseConditionalExpression(lex);
-	lex.nextIf("(");
-	lex.nextIf("then");
+    lex.nextIf(")");
+    lex.nextIf("then");
 	lex.nextIf("{");
 	unique_ptr<StatementListNode> then_statements = StatementListNode::parseStatementList(lex, statement_count);
 	lex.nextIf("}");
@@ -24,5 +26,11 @@ unique_ptr<IfNode> IfNode::parseIfStatement(Lexer& lex, int& statement_count) {
 }
 
 bool IfNode::equals(shared_ptr<StatementNode> object) {
-    return StatementNode::equals(object);
+    shared_ptr<IfNode> other = dynamic_pointer_cast<IfNode>(object);
+    if (other == nullptr) {
+        return false;
+    }
+    return this->stmtNo == other->stmtNo && this->condExpr->equals(move(other->condExpr))
+        && this->ifStmtLst->equals(move(other->ifStmtLst))
+        && this->elseStmtLst->equals(move(other->elseStmtLst));
 }

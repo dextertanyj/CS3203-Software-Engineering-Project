@@ -13,7 +13,7 @@ public:
     virtual bool equals(shared_ptr<StatementNode> object);
 
 protected:
-	StmtRef stmtNo;
+    StmtRef stmtNo;
 };
 
 #endif  // SPA_STATEMENTNODE_H
