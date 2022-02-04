@@ -11,6 +11,7 @@ using namespace std;
 class ReadNode : public StatementNode {
 public:
 	ReadNode(StmtRef stmtNo, unique_ptr<VariableNode> variable);
+    bool equals(shared_ptr<StatementNode> object) override;
 
 private:
 	unique_ptr<VariableNode> variable;

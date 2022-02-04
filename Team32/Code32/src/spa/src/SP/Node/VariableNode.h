@@ -10,6 +10,7 @@ using namespace SP;
 class VariableNode {
 public:
 	explicit VariableNode(VarRef name);
+    bool equals(unique_ptr<VariableNode> other);
 	static unique_ptr<VariableNode> parseVariable(Lexer& lex);
 	static unique_ptr<VariableNode> parseVariable(string token);
 

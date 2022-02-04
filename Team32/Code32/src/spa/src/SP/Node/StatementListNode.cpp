@@ -1,6 +1,7 @@
 #include "SP/Node/StatementListNode.h"
 
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -14,4 +15,20 @@ unique_ptr<StatementListNode> StatementListNode::parseStatementList(Lexer& lex, 
 		statement_list->addStatementNode(StatementNode::parseStatement(lex, statement_count));
 	} while (lex.peekToken() != "}");
 	return statement_list;
+}
+
+bool StatementListNode::equals(shared_ptr<StatementListNode> object) {
+    if (this->stmtList.size() != object->stmtList.size()) {
+        return false;
+    }
+    for (int i = 0; i < this->stmtList.size(); i++) {
+        if (!this->stmtList[i]->equals(object->stmtList[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+vector<shared_ptr<StatementNode>> StatementListNode::getStatementList() {
+    return this->stmtList;
 }

@@ -15,6 +15,7 @@ public:
 	IfNode(StmtRef stmtNo, unique_ptr<ConditionalExpressionNode> condExpr, unique_ptr<StatementListNode> ifStmtLst,
 	       unique_ptr<StatementListNode> elseStmtLst);
 	static unique_ptr<IfNode> parseIfStatement(Lexer& lex, int& statement_count);
+    bool equals(shared_ptr<StatementNode> object) override;
 
 private:
 	unique_ptr<ConditionalExpressionNode> condExpr;

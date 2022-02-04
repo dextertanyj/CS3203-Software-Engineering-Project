@@ -22,3 +22,7 @@ unique_ptr<IfNode> IfNode::parseIfStatement(Lexer& lex, int& statement_count) {
 	lex.nextIf("}");
 	return make_unique<IfNode>(statement_index, move(condition), move(then_statements), move(else_statements));
 }
+
+bool IfNode::equals(shared_ptr<StatementNode> object) {
+    return StatementNode::equals(object);
+}

@@ -7,6 +7,7 @@
 class CallNode : public StatementNode {
 public:
 	CallNode(StmtRef stmtNo, ProcRef procedure);
+    bool equals(shared_ptr<StatementNode> object) override;
 
 private:
 	ProcRef procedure;

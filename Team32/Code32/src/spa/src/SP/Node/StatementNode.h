@@ -10,8 +10,9 @@ class StatementNode {
 public:
 	explicit StatementNode(StmtRef stmtNo);
 	static unique_ptr<StatementNode> parseStatement(Lexer& lex, int& statement_count);
+    virtual bool equals(shared_ptr<StatementNode> object);
 
-private:
+protected:
 	StmtRef stmtNo;
 };
 
