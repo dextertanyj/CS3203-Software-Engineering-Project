@@ -38,10 +38,7 @@ QueryProperties QueryPreprocessor::parseQuery() {
 	// Used to check if synonyms for "Select" has been parsed
 	this->select.symbol = "";
 	while (tokenIndex < this->queryTokens.size()) {
-		if (this->declarationList.empty() && this->queryTokens[tokenIndex] != "Select") {
-			parseDeclaration(tokenIndex);
-		} 
-		else if (this->select.symbol == "") {
+		if (this->select.symbol == "") {
 			
 			if (this->queryTokens[tokenIndex] == "Select") {
 				parseSelect(++tokenIndex);
