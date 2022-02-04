@@ -4,8 +4,12 @@ using namespace std;
 
 FollowStore::FollowStore() {}
 
+// Also need to prevent same stmt No from following itself.
 // need to add checks that stmtno 2 doesnt follow another other stmt and stmt no 1 isnt followed by other stmts
 void FollowStore::setFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
+    if (stmtNo1 <= 0 || stmtNo2 <= 0) throw invalid_argument("Statement number must be a positive integer.");
+    if (stmtNo1 >= stmtNo2) throw invalid_argument("Second statement must come after the first statement.");
+    
     auto keyItr = followMap.find(stmtNo1);
     if (keyItr == followMap.end()) {
         // does not exist in map
