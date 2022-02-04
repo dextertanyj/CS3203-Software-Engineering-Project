@@ -158,12 +158,17 @@ void QueryPreprocessor::parsePattern(int& tokenIndex) {
 
 DesignEntity QueryPreprocessor::parseDesignEntity(int& tokenIndex) {
 	DesignEntity designEntity;
-
-	if (this->queryTokens[tokenIndex] == "read") {
+	if (this->queryTokens[tokenIndex] == "stmt") {
+		designEntity = DesignEntity::stmt;
+	}
+	else if (this->queryTokens[tokenIndex] == "read") {
 		designEntity = DesignEntity::read;
 	}
 	else if (this->queryTokens[tokenIndex] == "print") {
 		designEntity = DesignEntity::print;
+	}
+	else if (this->queryTokens[tokenIndex] == "call") {
+		designEntity = DesignEntity::call;
 	}
 	else if (this->queryTokens[tokenIndex] == "while") {
 		designEntity = DesignEntity::while_;

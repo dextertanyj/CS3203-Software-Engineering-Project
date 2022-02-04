@@ -10,6 +10,7 @@ enum class DesignEntity {
 	stmt,
 	read,
 	print,
+	call,
 	while_,
 	if_,
 	assign,
