@@ -111,7 +111,7 @@ void PKB::setNumStatements(int size) {
 
 void PKB::checkInvalidStmts(StmtRef stmtNo1, StmtRef stmtNo2) {
     if (stmtNo1 >= stmtNo2) throw invalid_argument("Second statement must come after the first statement.");
-    if (stmtNo1 < 0 || stmtNo2 < 0) throw invalid_argument("Statement number must be a positive integer.");
+    if (stmtNo1 <= 0 || stmtNo2 <= 0) throw invalid_argument("Statement number must be a positive integer.");
 }
 
 void PKB::checkInvalidStmt(StmtRef stmtNo1) {
