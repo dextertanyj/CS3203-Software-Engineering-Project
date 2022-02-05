@@ -15,5 +15,5 @@ bool PrintNode::equals(shared_ptr<StatementNode> object) {
     if (other == nullptr) {
         return false;
     }
-    return other->stmtNo == this->stmtNo && other->variable->equals(move(this->variable));
+    return other->getStmtRef() == this->getStmtRef() && other->variable->equals(move(this->variable));
 }

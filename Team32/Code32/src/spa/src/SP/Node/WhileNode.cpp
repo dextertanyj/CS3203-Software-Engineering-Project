@@ -32,6 +32,6 @@ bool WhileNode::equals(shared_ptr<StatementNode> object) {
     if (other == nullptr) {
         return false;
     }
-    return this->stmtNo == other->stmtNo && this->condExpr->equals(move(other->condExpr))
+    return this->getStmtRef() == other->getStmtRef() && this->condExpr->equals(move(other->condExpr))
            && this->stmtLst->equals(move(other->stmtLst));
 }

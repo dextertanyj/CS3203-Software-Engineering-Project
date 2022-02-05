@@ -13,5 +13,5 @@ bool CallNode::equals(shared_ptr<StatementNode> object) {
     if (other == nullptr) {
         return false;
     }
-    return this->stmtNo == other->stmtNo && this->procedure == other->procedure;
+    return this->getStmtRef() == other->getStmtRef() && this->procedure == other->procedure;
 }

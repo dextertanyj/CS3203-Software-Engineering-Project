@@ -32,6 +32,6 @@ bool AssignmentNode::equals(shared_ptr<StatementNode> object) {
     if (other == nullptr) {
         return false;
     }
-    return this->stmtNo == other->stmtNo && this->assignee->equals(move(other->assignee))
+    return this->getStmtRef() == other->getStmtRef() && this->assignee->equals(move(other->assignee))
         && this->expression->equals(move(other->expression));
 }
