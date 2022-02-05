@@ -1,3 +1,4 @@
+#include "Common/Validator.h"
 #include "SP/Node/CallNode.h"
 
 CallNode::CallNode(StmtRef stmtNo, ProcRef procedure) : StatementNode(stmtNo), procedure(move(procedure)) {}
@@ -14,4 +15,13 @@ bool CallNode::equals(shared_ptr<StatementNode> object) {
         return false;
     }
     return this->getStmtRef() == other->getStmtRef() && this->procedure == other->procedure;
+}
+
+unique_ptr<CallNode> CallNode::parseCallStatement(Lexer &lex, int &statement_count) {
+    ProcRef name = lex.readToken();
+    if (!Validator::validateName(name)) {
+        throw SP::ParseException("Invalid procedure name");
+    }
+    lex.nextIf(";");
+    return make_unique<CallNode>(statement_count++, name);
 }

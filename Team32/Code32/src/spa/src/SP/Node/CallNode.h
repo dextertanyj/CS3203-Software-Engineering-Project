@@ -9,6 +9,7 @@ public:
 	CallNode(StmtRef stmtNo, ProcRef procedure);
 	StmtInfo extract(PKB& pkb) override;
     bool equals(shared_ptr<StatementNode> object) override;
+    static unique_ptr<CallNode> parseCallStatement(Lexer& lex, int& statement_count);
 
 private:
 	ProcRef procedure;

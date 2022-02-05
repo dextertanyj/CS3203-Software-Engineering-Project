@@ -16,7 +16,7 @@ public:
 	virtual ~StatementNode() = default;
 
 protected:
-	StmtRef getStmtRef();
+	StmtRef getStmtRef() const;
 
 private:
 	StmtRef stmtNo;

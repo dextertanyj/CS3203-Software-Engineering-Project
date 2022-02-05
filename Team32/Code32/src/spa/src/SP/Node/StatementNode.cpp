@@ -22,22 +22,13 @@ unique_ptr<StatementNode> StatementNode::parseStatement(Lexer& lex, int& stateme
 	}
 	if (token == "read") {
 		// Should we abstract this at this cost of an additional function call?
-		unique_ptr<VariableNode> variable = VariableNode::parseVariable(lex);
-		lex.nextIf(";");
-		return make_unique<ReadNode>(statement_count++, move(variable));
+		return ReadNode::parseReadStatement(lex, statement_count);
 	}
 	if (token == "print") {
-		unique_ptr<VariableNode> variable = VariableNode::parseVariable(lex);
-		lex.nextIf(";");
-		return make_unique<PrintNode>(statement_count++, move(variable));
+		return PrintNode::parsePrintStatement(lex, statement_count);
 	}
 	if (token == "call") {
-		ProcRef name = lex.readToken();
-		if (!Validator::validateName(name)) {
-			throw SP::ParseException("Invalid procedure name");
-		}
-        lex.nextIf(";");
-		return make_unique<CallNode>(statement_count++, name);
+		return CallNode::parseCallStatement(lex, statement_count);
 	}
 	if (token == "while") {
 		return WhileNode::parseWhileStatement(lex, statement_count);
@@ -48,4 +39,4 @@ unique_ptr<StatementNode> StatementNode::parseStatement(Lexer& lex, int& stateme
 	throw SP::ParseException("Unknown statement type encountered" + token);
 }
 
-StmtRef StatementNode::getStmtRef() { return stmtNo; }
+StmtRef StatementNode::getStmtRef() const { return stmtNo; }

@@ -16,3 +16,9 @@ bool ReadNode::equals(shared_ptr<StatementNode> object) {
     }
     return other->getStmtRef() == this->getStmtRef() && other->variable->equals(move(this->variable));
 }
+
+unique_ptr<ReadNode> ReadNode::parseReadStatement(Lexer &lex, int &statement_count) {
+    unique_ptr<VariableNode> variable = VariableNode::parseVariable(lex);
+    lex.nextIf(";");
+    return make_unique<ReadNode>(statement_count++, move(variable));
+}

@@ -49,3 +49,13 @@ TEST_CASE("PrintNode::extract Test") {
 	REQUIRE_EQUALS(result.reference, expected.reference);
 	REQUIRE_EQUALS(result.type, expected.type);
 }
+
+TEST_CASE("SP::Node::PrintNode::parsePrintStatement Valid Token Test") {
+    Lexer lex;
+    lex.initialize("x;");
+    int statement_count = 1;
+    unique_ptr<PrintNode> node = PrintNode::parsePrintStatement(lex, statement_count);
+    shared_ptr<PrintNode> expected = make_shared<PrintNode>(1, make_unique<VariableNode>("x"));
+    REQUIRE(node->equals(move(expected)));
+    REQUIRE_EQUALS(statement_count, 2);
+}
