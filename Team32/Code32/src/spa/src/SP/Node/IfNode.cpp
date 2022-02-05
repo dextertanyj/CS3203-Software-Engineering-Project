@@ -11,8 +11,8 @@ unique_ptr<IfNode> IfNode::parseIfStatement(Lexer& lex, int& statement_count) {
 	StmtRef statement_index = statement_count++;
 	lex.nextIf("(");
 	unique_ptr<ConditionalExpressionNode> condition = ConditionalExpressionNode::parseConditionalExpression(lex);
-    lex.nextIf(")");
-    lex.nextIf("then");
+	lex.nextIf(")");
+	lex.nextIf("then");
 	lex.nextIf("{");
 	unique_ptr<StatementListNode> then_statements = StatementListNode::parseStatementList(lex, statement_count);
 	lex.nextIf("}");
