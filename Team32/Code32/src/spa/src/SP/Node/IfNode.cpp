@@ -35,7 +35,7 @@ StmtInfo IfNode::extract(PKB& pkb) {
 		pkb.setParent(stmt_ref, iter->reference);
 	}
 	UsageInfo usage = condExpr->extract();
-	for (auto iter = usage.variables.begin(); iter < usage.variables.end(); ++iter) {
+	for (auto iter = usage.variables.begin(); iter != usage.variables.end(); ++iter) {
 		pkb.setUses(stmt_ref, *iter);
 	}
 	return {stmt_ref, StmtType::IfStmt};

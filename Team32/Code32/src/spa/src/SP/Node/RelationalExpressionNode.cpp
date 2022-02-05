@@ -20,20 +20,19 @@ UsageInfo RelationalExpressionNode::extract() {
 	ArithmeticProcessor::ArithmeticExpression rhs_expression = rhs->extract();
 	unordered_set<VarRef> lhs_variables = lhs_expression.getVariables();
 	unordered_set<int> lhs_constants = lhs_expression.getConstants();
-	unordered_set<VarRef> rhs_variables = lhs_expression.getVariables();
-	unordered_set<int> rhs_constants = lhs_expression.getConstants();
-	usage.variables.insert(end(usage.variables), lhs_variables.begin(), lhs_variables.end());
-	usage.variables.insert(end(usage.variables), rhs_variables.begin(), rhs_variables.end());
-	usage.constants.insert(end(usage.constants), lhs_constants.begin(), lhs_constants.end());
-	usage.constants.insert(end(usage.constants), rhs_constants.begin(), rhs_constants.end());
+	unordered_set<VarRef> rhs_variables = rhs_expression.getVariables();
+	unordered_set<int> rhs_constants = rhs_expression.getConstants();
+	usage.variables.insert(lhs_variables.begin(), lhs_variables.end());
+	usage.variables.insert(rhs_variables.begin(), rhs_variables.end());
+	usage.constants.insert(lhs_constants.begin(), lhs_constants.end());
+	usage.constants.insert(rhs_constants.begin(), rhs_constants.end());
 	return usage;
 }
 
 bool RelationalExpressionNode::equals(shared_ptr<ConditionalExpressionNode> object) {
-    shared_ptr<RelationalExpressionNode> other = dynamic_pointer_cast<RelationalExpressionNode>(object);
-    if (other == nullptr) {
-        return false;
-    }
-    return this->op == other->op && this->lhs->equals(move(other->lhs)) &&
-        this->rhs->equals(move(other->rhs));
+	shared_ptr<RelationalExpressionNode> other = dynamic_pointer_cast<RelationalExpressionNode>(object);
+	if (other == nullptr) {
+		return false;
+	}
+	return this->op == other->op && this->lhs->equals(move(other->lhs)) && this->rhs->equals(move(other->rhs));
 }

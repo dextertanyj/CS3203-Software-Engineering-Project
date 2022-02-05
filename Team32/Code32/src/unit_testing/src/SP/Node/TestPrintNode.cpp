@@ -40,3 +40,12 @@ TEST_CASE("SP::Node::PrintNode::equals Different Node Type Test") {
     shared_ptr<CallNode> other = make_shared<CallNode>(1, "test");
     REQUIRE_FALSE(node->equals(move(other)));
 }
+
+TEST_CASE("PrintNode::extract Test") {
+	PKB pkb;
+	PrintNode node = PrintNode(1, make_unique<VariableNode>("A"));
+	StmtInfo result = node.extract(pkb);
+	StmtInfo expected = {1, StmtType::Print};
+	REQUIRE_EQUALS(result.reference, expected.reference);
+	REQUIRE_EQUALS(result.type, expected.type);
+}

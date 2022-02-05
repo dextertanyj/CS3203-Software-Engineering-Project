@@ -39,12 +39,12 @@ TEST_CASE("SP::Node::NotNode::equals Wrong Node Type Test") {
     REQUIRE_FALSE(node->equals(other));
 }
 
-TEST_CASE("NotNode::extract") {
-	UsageInfo mock = {vector<VarRef>({"A"}), vector<int>({1})};
+TEST_CASE("NotNode::extract Test") {
+	UsageInfo mock = {unordered_set<VarRef>({"A"}), unordered_set<int>({1})};
 	int ctr = 0;
 	NotNode node = NotNode(make_unique<MockCENode>(mock, ctr));
 	UsageInfo result = node.extract();
-	UsageInfo expected = {vector<VarRef>({"A"}), vector<int>({1})};
+	UsageInfo expected = {unordered_set<VarRef>({"A"}), unordered_set<int>({1})};
 	REQUIRE_EQUALS(result.constants, expected.constants);
 	REQUIRE_EQUALS(result.variables, expected.variables);
 	REQUIRE_EQUALS(ctr, 1);

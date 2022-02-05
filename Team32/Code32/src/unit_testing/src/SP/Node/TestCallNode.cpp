@@ -41,3 +41,11 @@ TEST_CASE("SP::Node::CallNode::equals Different Node Type Test") {
     REQUIRE_FALSE(node->equals(move(other)));
 }
 
+TEST_CASE("CallNode::extract Test") {
+	PKB pkb;
+	CallNode node = CallNode(1, "P");
+	StmtInfo result = node.extract(pkb);
+	StmtInfo expected = {1, StmtType::Call};
+	REQUIRE_EQUALS(result.reference, expected.reference);
+	REQUIRE_EQUALS(result.type, expected.type);
+}

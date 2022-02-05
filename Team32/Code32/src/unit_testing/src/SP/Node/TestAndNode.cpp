@@ -59,14 +59,14 @@ TEST_CASE("SP::Node::AndNode::equals Wrong Node Type Test") {
     REQUIRE_FALSE(node->equals(other));
 }
 
-TEST_CASE("AndNode::extract") {
-	UsageInfo lhs_mock = {vector<VarRef>({"A"}), vector<int>({1})};
-	UsageInfo rhs_mock = {vector<VarRef>({"B"}), vector<int>({2})};
+TEST_CASE("AndNode::extract Test") {
+	UsageInfo lhs_mock = {unordered_set<VarRef>({"A"}), unordered_set<int>({1})};
+	UsageInfo rhs_mock = {unordered_set<VarRef>({"B"}), unordered_set<int>({2})};
 	int lhs_ctr = 0;
 	int rhs_ctr = 0;
 	AndNode node = AndNode(make_unique<MockCENode>(lhs_mock, lhs_ctr), make_unique<MockCENode>(rhs_mock, rhs_ctr));
 	UsageInfo result = node.extract();
-	UsageInfo expected = {vector<VarRef>({"A", "B"}), vector<int>({1, 2})};
+	UsageInfo expected = {unordered_set<VarRef>({"A", "B"}), unordered_set<int>({1, 2})};
 	REQUIRE_EQUALS(result.constants, expected.constants);
 	REQUIRE_EQUALS(result.variables, expected.variables);
 	REQUIRE_EQUALS(lhs_ctr, 1);

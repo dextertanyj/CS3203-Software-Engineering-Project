@@ -17,7 +17,7 @@ unique_ptr<WhileNode> WhileNode::parseWhileStatement(Lexer& lex, int& statement_
 StmtInfo WhileNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	UsageInfo usage = condExpr->extract();
-	for (auto iter = usage.variables.begin(); iter < usage.variables.end(); ++iter) {
+	for (auto iter = usage.variables.begin(); iter != usage.variables.end(); ++iter) {
 		pkb.setUses(stmt_ref, *iter);
 	}
 	StmtInfoList children = stmtLst->extract(pkb);

@@ -2,7 +2,7 @@
 #define SPA_SP_H
 
 #include <stdexcept>
-#include <vector>
+#include <unordered_set>
 #include "Common/TypeDefs.h"
 
 using namespace std;
@@ -19,8 +19,8 @@ class Parser;
 class DesignExtractor;
 class Processor;
 struct UsageInfo {
-	vector<VarRef> variables;
-	vector<int> constants;
+	unordered_set<VarRef> variables;
+	unordered_set<int> constants;
 };
 }  // namespace SP
 
