@@ -11,7 +11,7 @@ using namespace SP;
 class ConditionalExpressionNode {
 public:
 	static unique_ptr<ConditionalExpressionNode> parseConditionalExpression(Lexer& lex);
-    virtual bool equals(shared_ptr<ConditionalExpressionNode> object);
+    virtual bool equals(shared_ptr<ConditionalExpressionNode> object) = 0;
 };
 
 #endif  // SPA_CONDITIONALEXPRESSIONNODE_H

@@ -6,7 +6,7 @@
 #include "SP/Node/NotNode.h"
 #include "SP/Node/OrNode.h"
 #include "SP/Node/RelationalExpressionNode.h"
-#include "../Node/MockArithmeticNode.h"
+#include "../Node/MockUtilities.h"
 
 #include "catch.hpp"
 #include "catch_tools.h"
@@ -17,7 +17,7 @@ TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression NotNo
     Lexer lex;
     lex.initialize("!(x != 0)");
     unique_ptr<ConditionalExpressionNode> node = ConditionalExpressionNode::parseConditionalExpression(lex);
-    unique_ptr<RelationalExpressionNode> expression = getRelationalExpression("x != 0)");
+    unique_ptr<RelationalExpressionNode> expression = createRelationalExpression("x != 0)");
     unique_ptr<NotNode> expected = make_unique<NotNode>(move(expression));
     REQUIRE(expected->equals(move(node)));
 }
@@ -38,8 +38,8 @@ TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression AndNo
     Lexer lex;
     lex.initialize("(x != 0) && (y == 0)");
     unique_ptr<ConditionalExpressionNode> node = ConditionalExpressionNode::parseConditionalExpression(lex);
-    unique_ptr<RelationalExpressionNode> lhs = getRelationalExpression("x != 0)");
-    unique_ptr<RelationalExpressionNode> rhs = getRelationalExpression("y == 0)");
+    unique_ptr<RelationalExpressionNode> lhs = createRelationalExpression("x != 0)");
+    unique_ptr<RelationalExpressionNode> rhs = createRelationalExpression("y == 0)");
     unique_ptr<AndNode> expected = make_unique<AndNode>(move(lhs), move(rhs));
     REQUIRE(expected->equals(move(node)));
 }
@@ -48,9 +48,9 @@ TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression AndNo
     Lexer lex;
     lex.initialize("(x != 0) && ((y == 0) && (z == (5 + x)))");
     unique_ptr<ConditionalExpressionNode> node = ConditionalExpressionNode::parseConditionalExpression(lex);
-    unique_ptr<RelationalExpressionNode> lhs = getRelationalExpression("x != 0)");
-    unique_ptr<RelationalExpressionNode> lhs_inner = getRelationalExpression("y == 0)");
-    unique_ptr<RelationalExpressionNode> rhs_inner = getRelationalExpression("z == (5 + x))");
+    unique_ptr<RelationalExpressionNode> lhs = createRelationalExpression("x != 0)");
+    unique_ptr<RelationalExpressionNode> lhs_inner = createRelationalExpression("y == 0)");
+    unique_ptr<RelationalExpressionNode> rhs_inner = createRelationalExpression("z == (5 + x))");
     unique_ptr<AndNode> rhs = make_unique<AndNode>(move(lhs_inner), move(rhs_inner));
     unique_ptr<AndNode> expected = make_unique<AndNode>(move(lhs), move(rhs));
     REQUIRE(expected->equals(move(node)));
@@ -65,15 +65,15 @@ TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression AndNo
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression AndNode Invalid Condition Test") {
     Lexer lex;
     lex.initialize("(x != 0) && y");
-//    REQUIRE_THROWS_AS(ConditionalExpressionNode::parseConditionalExpression(lex), SP::ParseException);
+    REQUIRE_THROWS_AS(ConditionalExpressionNode::parseConditionalExpression(lex), SP::TokenizationException);
 }
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression OrNode Valid Token Test") {
     Lexer lex;
     lex.initialize("(x != 0) || (y == 0)");
     unique_ptr<ConditionalExpressionNode> node = ConditionalExpressionNode::parseConditionalExpression(lex);
-    unique_ptr<RelationalExpressionNode> lhs = getRelationalExpression("x != 0)");
-    unique_ptr<RelationalExpressionNode> rhs = getRelationalExpression("y == 0)");
+    unique_ptr<RelationalExpressionNode> lhs = createRelationalExpression("x != 0)");
+    unique_ptr<RelationalExpressionNode> rhs = createRelationalExpression("y == 0)");
     unique_ptr<OrNode> expected = make_unique<OrNode>(move(lhs), move(rhs));
     REQUIRE(expected->equals(move(node)));
 }
@@ -82,9 +82,9 @@ TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression OrNod
     Lexer lex;
     lex.initialize("(x != 0) || ((y == 0) || (z == (5 + x)))");
     unique_ptr<ConditionalExpressionNode> node = ConditionalExpressionNode::parseConditionalExpression(lex);
-    unique_ptr<RelationalExpressionNode> lhs = getRelationalExpression("x != 0)");
-    unique_ptr<RelationalExpressionNode> lhs_inner = getRelationalExpression("y == 0)");
-    unique_ptr<RelationalExpressionNode> rhs_inner = getRelationalExpression("z == (5 + x))");
+    unique_ptr<RelationalExpressionNode> lhs = createRelationalExpression("x != 0)");
+    unique_ptr<RelationalExpressionNode> lhs_inner = createRelationalExpression("y == 0)");
+    unique_ptr<RelationalExpressionNode> rhs_inner = createRelationalExpression("z == (5 + x))");
     unique_ptr<OrNode> rhs = make_unique<OrNode>(move(lhs_inner), move(rhs_inner));
     unique_ptr<OrNode> expected = make_unique<OrNode>(move(lhs), move(rhs));
     REQUIRE(expected->equals(move(node)));
@@ -99,17 +99,17 @@ TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression OrNod
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression OrNode Invalid Condition Test") {
     Lexer lex;
     lex.initialize("(x != 0) || y");
-//    REQUIRE_THROWS_AS(ConditionalExpressionNode::parseConditionalExpression(lex), SP::ParseException);
+    REQUIRE_THROWS_AS(ConditionalExpressionNode::parseConditionalExpression(lex), SP::TokenizationException);
 }
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression Complex Valid Token Test") {
     Lexer lex;
     lex.initialize("(!(x != 0)) && ((y == 0) || (z == (5 + x)))");
     unique_ptr<ConditionalExpressionNode> node = ConditionalExpressionNode::parseConditionalExpression(lex);
-    unique_ptr<RelationalExpressionNode> not_node = getRelationalExpression("x != 0)");
+    unique_ptr<RelationalExpressionNode> not_node = createRelationalExpression("x != 0)");
     unique_ptr<NotNode> lhs = make_unique<NotNode>(move(not_node));
-    unique_ptr<RelationalExpressionNode> lhs_inner = getRelationalExpression("y == 0)");
-    unique_ptr<RelationalExpressionNode> rhs_inner = getRelationalExpression("z == (5 + x))");
+    unique_ptr<RelationalExpressionNode> lhs_inner = createRelationalExpression("y == 0)");
+    unique_ptr<RelationalExpressionNode> rhs_inner = createRelationalExpression("z == (5 + x))");
     unique_ptr<OrNode> rhs = make_unique<OrNode>(move(lhs_inner), move(rhs_inner));
     unique_ptr<AndNode> expected = make_unique<AndNode>(move(lhs), move(rhs));
     REQUIRE(expected->equals(move(node)));

@@ -1,7 +1,5 @@
 #include "SP/Node/IfNode.h"
 
-#include <iostream>
-
 using namespace std;
 using namespace SP;
 

@@ -40,7 +40,3 @@ unique_ptr<ConditionalExpressionNode> ConditionalExpressionNode::parseConditiona
 	}
 	return RelationalExpressionNode::parseRelationalExpression(lex);
 }
-
-bool ConditionalExpressionNode::equals(shared_ptr<ConditionalExpressionNode> object) {
-    return false;
-}

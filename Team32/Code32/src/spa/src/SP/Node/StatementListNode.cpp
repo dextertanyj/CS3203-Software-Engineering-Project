@@ -1,7 +1,6 @@
 #include "SP/Node/StatementListNode.h"
 
 #include <vector>
-#include <iostream>
 
 using namespace std;
 

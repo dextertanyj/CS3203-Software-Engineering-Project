@@ -110,6 +110,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList Valid Token Test") {
     other->addStatementNode(move(print_node));
     other->addStatementNode(move(read_node));
     REQUIRE(statement_list_node->equals(other));
+    REQUIRE_EQUALS(statement_count, 3);
 }
 
 TEST_CASE("SP::Node::StatementListNode::parseStatementList Different Statement Number Test") {
@@ -123,6 +124,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList Different Statement N
     other->addStatementNode(move(print_node));
     other->addStatementNode(move(read_node));
     REQUIRE_FALSE(statement_list_node->equals(other));
+    REQUIRE_EQUALS(statement_count, 3);
 }
 
 TEST_CASE("SP::Node::StatementListNode::parseStatementList Missing Token Test") {
@@ -130,6 +132,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList Missing Token Test") 
     lex.initialize("print x read y; }");
     int statement_count = 1;
     REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::TokenizationException);
+    REQUIRE_EQUALS(statement_count, 1);
 }
 
 TEST_CASE("SP::Node::StatementListNode::parseStatementList Extra Token Test") {
@@ -137,11 +140,13 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList Extra Token Test") {
     lex.initialize("print x ;; read y; }");
     int statement_count = 1;
     REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::ParseException);
+    REQUIRE_EQUALS(statement_count, 2);
 }
 
-TEST_CASE("SP::Node::StatementListNode::parseStatementList Invalid Statement Test") {
+TEST_CASE("SP::Node::StatementListNode::parseStatementList Invalid Keyword Test") {
     Lexer lex;
     lex.initialize("prints x ; }");
     int statement_count = 1;
     REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::ParseException);
+    REQUIRE_EQUALS(statement_count, 1);
 }

@@ -11,8 +11,6 @@
 #include "SP/Node/WhileNode.h"
 #include "SP/SP.h"
 
-#include <iostream>
-
 StatementNode::StatementNode(StmtRef stmtNo) : stmtNo(stmtNo) {}
 
 unique_ptr<StatementNode> StatementNode::parseStatement(Lexer& lex, int& statement_count) {
@@ -49,8 +47,4 @@ unique_ptr<StatementNode> StatementNode::parseStatement(Lexer& lex, int& stateme
 		return IfNode::parseIfStatement(lex, statement_count);
 	}
 	throw SP::ParseException("Unknown statement type encountered");
-}
-
-bool StatementNode::equals(shared_ptr<StatementNode> object) {
-    return false;
 }
