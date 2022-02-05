@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "../../../spa/src/PKB/ParentStore.cpp"
+#include "PKB/ParentStore.cpp"
 
 TEST_CASE( "Basic Parent Set and Get") {
   StmtRef s1 = 1;

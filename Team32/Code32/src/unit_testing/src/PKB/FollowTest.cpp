@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "../../../spa/src/PKB/FollowStore.cpp"
+#include "PKB/FollowStore.cpp"
 
 TEST_CASE( "Basic Follows Set and Get") {
   StmtRef s1 = 1;
