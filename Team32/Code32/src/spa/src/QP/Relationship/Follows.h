@@ -12,12 +12,16 @@ public:
 	QueryStmtRef getRightStmt();
 	bool getIsStar();
 
-	QueryResult execute();
+	bool isTrivialCase();
+	bool execute(PKB& pkb, QueryResult& result);
 
 private:
 	bool isStar;
 	QueryStmtRef leftStmt;
 	QueryStmtRef rightStmt;
+
+	bool executeTrivial(PKB& pkb);
+	bool executeNonTrivial(PKB& pkb, QueryResult& result);
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWS_H_

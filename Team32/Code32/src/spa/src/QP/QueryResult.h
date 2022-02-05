@@ -6,12 +6,19 @@
 class QueryResult {
 public:
 	QueryResult();
-	QueryResult(StmtInfoList stmtList, VarRefList varList);
-	StmtInfoList getStmtInfoList();
+	QueryResult(StmtRefList stmtList, VarRefList varList);
+	StmtRefList getStmtRefList();
 	VarRefList getVarRefList();
 
+	/*
+	* Updates the list by finding the intersection between existing list and new list.
+	* Returns false if the resulting list is empty.
+	*/
+	bool updateStmtList(StmtRefList newStmtList);
+	bool updateRefList(VarRefList newVarList);
+
 private:
-	StmtInfoList stmtList;
+	StmtRefList stmtList;
 	VarRefList varList;
 };
 

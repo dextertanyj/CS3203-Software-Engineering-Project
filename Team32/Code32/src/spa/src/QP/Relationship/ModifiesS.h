@@ -11,11 +11,15 @@ public:
 	QueryStmtRef getStmt();
 	QueryEntRef getEnt();
 
-	QueryResult execute();
+	bool isTrivialCase();
+	bool execute(PKB& pkb, QueryResult& result);
 
 private:
 	QueryStmtRef stmt;
 	QueryEntRef ent;
+
+	bool executeTrivial(PKB& pkb);
+	bool executeNonTrivial(PKB& pkb, QueryResult& result);
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_MODIFIESS_H_

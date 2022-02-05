@@ -12,6 +12,18 @@ QueryEntRef ModifiesP::getRightEnt() {
 	return rightEnt;
 }
 
-QueryResult ModifiesP::execute() {
-	return QueryResult();
+bool ModifiesP::execute(PKB& pkb, QueryResult& result) {
+	return false;
+}
+
+bool ModifiesP::isTrivialCase() {
+	return false;
+}
+
+bool ModifiesP::executeTrivial(PKB& pkb) {
+	return false;
+}
+
+bool ModifiesP::executeNonTrivial(PKB& pkb, QueryResult& result) {
+	return false;
 }
