@@ -17,6 +17,10 @@ bool Parent::getIsStar() {
 	return isStar;
 }
 
+bool Parent::execute(PKB& pkb, QueryResult& result) {
+	return isTrivialCase() ? executeTrivial(pkb) : executeNonTrivial(pkb, result);
+}
+
 bool Parent::isTrivialCase() {
 	return this->parentStmt.type != StmtRefType::synonym && this->childStmt.type != StmtRefType::synonym;
 }
@@ -62,7 +66,7 @@ bool Parent::executeTrivial(PKB& pkb) {
 	return false;
 }
 
-QueryResult Parent::executeNonTrivial(PKB& pkb) {
+bool Parent::executeNonTrivial(PKB& pkb, QueryResult& result) {
 	StmtRefList stmtList;
 	
 	if (this->parentStmt.type == StmtRefType::stmtNumber &&
@@ -103,5 +107,5 @@ QueryResult Parent::executeNonTrivial(PKB& pkb) {
 	
 	// TODO: Implement the case where both are synonyms
 
-	return QueryResult(stmtList, {});
+	return result.updateStmtList(stmtList);
 }

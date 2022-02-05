@@ -17,6 +17,10 @@ bool Follows::getIsStar() {
 	return isStar;
 }
 
+bool Follows::execute(PKB& pkb, QueryResult& result) {
+	return false;
+}
+
 bool Follows::isTrivialCase() {
 	return false;
 }
@@ -25,6 +29,6 @@ bool Follows::executeTrivial(PKB& pkb) {
 	return false;
 }
 
-QueryResult Follows::executeNonTrivial(PKB& pkb) {
-	return QueryResult();
+bool Follows::executeNonTrivial(PKB& pkb, QueryResult& result) {
+	return false;
 }

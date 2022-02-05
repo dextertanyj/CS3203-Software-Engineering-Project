@@ -1,5 +1,8 @@
 #include "QueryResult.h"
 
+#include <algorithm>
+#include <iterator>
+
 QueryResult::QueryResult() {}
 
 QueryResult::QueryResult(StmtRefList stmtList, VarRefList varList)
@@ -12,4 +15,30 @@ StmtRefList QueryResult::getStmtRefList() {
 
 VarRefList QueryResult::getVarRefList() {
 	return varList;
+}
+
+bool QueryResult::updateStmtList(StmtRefList newStmtList) {
+	StmtRefList result;
+	std::sort(this->stmtList.begin(), this->stmtList.end());
+	std::sort(newStmtList.begin(), newStmtList.end());
+	
+	std::set_intersection(
+		this->stmtList.begin(), this->stmtList.end(),
+		newStmtList.begin(), newStmtList.end(),
+		back_inserter(result));
+
+	return !result.empty();
+}
+
+bool QueryResult::updateRefList(VarRefList newVarList) {
+	VarRefList result;
+	std::sort(this->varList.begin(), this->varList.end());
+	std::sort(newVarList.begin(), newVarList.end());
+
+	std::set_intersection(
+		this->varList.begin(), this->varList.end(),
+		newVarList.begin(), newVarList.end(),
+		back_inserter(result));
+
+	return !result.empty();
 }

@@ -10,6 +10,13 @@ public:
 	StmtRefList getStmtRefList();
 	VarRefList getVarRefList();
 
+	/*
+	* Updates the list by finding the intersection between existing list and new list.
+	* Returns false if the resulting list is empty.
+	*/
+	bool updateStmtList(StmtRefList newStmtList);
+	bool updateRefList(VarRefList newVarList);
+
 private:
 	StmtRefList stmtList;
 	VarRefList varList;

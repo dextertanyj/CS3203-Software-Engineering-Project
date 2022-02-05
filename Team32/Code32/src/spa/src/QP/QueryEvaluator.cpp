@@ -23,33 +23,16 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& queryProperties) {
 }
 
 QueryResult QueryEvaluator::evaluateSuchThatClauses(SuchThatClauseList& suchThatClauseList) {
-	QueryResult result;
+	unordered_set<StmtRef> set = pkb.getAllStmt();
+	StmtRefList stmtList;
+	stmtList.insert(stmtList.end(), set.begin(), set.end());
+	QueryResult result = QueryResult(stmtList, {});
 
-	for (int i = 0; i < suchThatClauseList.size(); i++) {
-		SuchThatClause suchThatClause = suchThatClauseList[i];
-
-		if (suchThatClause.relation->isTrivialCase()) {
-			// Stop once a suchThatClause returns false
-			if (!suchThatClause.relation->executeTrivial(pkb)) {
-				return QueryResult();
-			}
-		}
-		else {
-			QueryResult newResult = suchThatClause.relation->executeNonTrivial(pkb);
-			if (i == 0) {
-				result = newResult;
-			}
-			else {
-				joinResult(result, newResult);
-			}
+	for (SuchThatClause suchThatClause : suchThatClauseList) {
+		if (!suchThatClause.relation->execute(pkb, result)) {
+			return QueryResult();
 		}
 	}
 
 	return result;
 }
-
-void QueryEvaluator::joinResult(QueryResult& currentResult, QueryResult& newResult) {
-	// TODO: Find intersection of results
-}
-
-
