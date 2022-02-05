@@ -23,8 +23,6 @@ unique_ptr<VariableNode> VariableNode::parseVariable(string token) {
 }
 
 VarRef VariableNode::extract() { return name; }
-
-
 bool VariableNode::equals(unique_ptr<VariableNode> other) {
     return other->name == this->name;
 }

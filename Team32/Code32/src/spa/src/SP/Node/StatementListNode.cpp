@@ -28,8 +28,6 @@ StmtInfoList StatementListNode::extract(PKB& pkb) {
 	}
 	return children;
 }
-
-
 bool StatementListNode::equals(shared_ptr<StatementListNode> object) {
     if (this->stmtList.size() != object->stmtList.size()) {
         return false;
