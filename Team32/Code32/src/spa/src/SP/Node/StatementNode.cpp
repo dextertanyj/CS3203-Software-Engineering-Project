@@ -18,7 +18,6 @@ unique_ptr<StatementNode> StatementNode::parseStatement(Lexer& lex, int& stateme
 	string lookahead = lex.peekToken();
 	if (lookahead == "=") {
         unique_ptr<AssignmentNode> node = AssignmentNode::parseAssignmentStatement(lex, statement_count, token);
-        lex.nextIf(";");
 		return node;
 	}
 	if (token == "read") {
@@ -46,7 +45,7 @@ unique_ptr<StatementNode> StatementNode::parseStatement(Lexer& lex, int& stateme
 	if (token == "if") {
 		return IfNode::parseIfStatement(lex, statement_count);
 	}
-	throw SP::ParseException("Unknown statement type encountered");
+	throw SP::ParseException("Unknown statement type encountered" + token);
 }
 
 StmtRef StatementNode::getStmtRef() { return stmtNo; }

@@ -10,6 +10,7 @@ unique_ptr<AssignmentNode> AssignmentNode::parseAssignmentStatement(Lexer& lex, 
 	unique_ptr<VariableNode> variable = VariableNode::parseVariable(std::move(token));
 	lex.nextIf("=");
 	unique_ptr<ArithmeticExpressionNode> expression = ArithmeticExpressionNode::parseArithmeticExpression(lex);
+	lex.nextIf(";");
 	return make_unique<AssignmentNode>(statement_count++, move(variable), move(expression));
 }
 
