@@ -28,6 +28,9 @@ public:
     void setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree);
 
     // Get methods called by PQL
+    // General get methods
+    StmtRefList getStatements();
+
     // Parent get methods
     StmtRef getParent(StmtRef stmtNo);
     unordered_set<StmtRef> getChildren(StmtRef stmtNo);

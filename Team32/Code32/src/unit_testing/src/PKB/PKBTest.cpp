@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "../../spa/src/PKB/PKB.h"
+#include "PKB/PKB.h"
 
 TEST_CASE("Follows Methods") {
     StmtRef s1 = 1;

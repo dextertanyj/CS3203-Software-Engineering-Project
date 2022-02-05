@@ -4,6 +4,14 @@ using namespace std;
 
 PKB::PKB() {}
 
+StmtRefList PKB::getStatements() {
+  StmtRefList stmtRefList;
+  for (auto key_value : typeMap) {
+    stmtRefList.push_back(key_value.first);
+  }
+  return stmtRefList;
+}
+
 void PKB::setParent(StmtRef stmtNo1, StmtRef stmtNo2) {
     checkInvalidStmts(stmtNo1, stmtNo2);
     parentStore.setParent(stmtNo1, stmtNo2);

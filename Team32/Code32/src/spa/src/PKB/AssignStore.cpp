@@ -45,6 +45,7 @@ StmtRefList AssignStore::getAllPatternMatch(VarRef variableLHS, string opTree, b
             stmtRefList.push_back(itr.first);
         }
     }
+    return stmtRefList;
 }
 
 // To be changed when Operation Tree is created
