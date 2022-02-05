@@ -1,10 +1,14 @@
 #include "SP/Node/AndNode.h"
+
+#include <utility>
+#include "SP/SP.h"
 #include "SP/Node/OrNode.h"
 #include "SP/Node/RelationalExpressionNode.h"
 #include "../Node/MockUtilities.h"
 
 #include "catch.hpp"
 #include "catch_tools.h"
+#include "MockUtilities.h"
 
 using namespace std;
 
@@ -53,4 +57,18 @@ TEST_CASE("SP::Node::AndNode::equals Wrong Node Type Test") {
     unique_ptr<RelationalExpressionNode> rhs_2 = createRelationalExpression("z >= 0)");
     shared_ptr<OrNode> other = make_shared<OrNode>(move(lhs_2), move(rhs_2));
     REQUIRE_FALSE(node->equals(other));
+}
+
+TEST_CASE("AndNode::extract") {
+	UsageInfo lhs_mock = {vector<VarRef>({"A"}), vector<int>({1})};
+	UsageInfo rhs_mock = {vector<VarRef>({"B"}), vector<int>({2})};
+	int lhs_ctr = 0;
+	int rhs_ctr = 0;
+	AndNode node = AndNode(make_unique<MockCENode>(lhs_mock, lhs_ctr), make_unique<MockCENode>(rhs_mock, rhs_ctr));
+	UsageInfo result = node.extract();
+	UsageInfo expected = {vector<VarRef>({"A", "B"}), vector<int>({1, 2})};
+	REQUIRE_EQUALS(result.constants, expected.constants);
+	REQUIRE_EQUALS(result.variables, expected.variables);
+	REQUIRE_EQUALS(lhs_ctr, 1);
+	REQUIRE_EQUALS(rhs_ctr, 1);
 }
