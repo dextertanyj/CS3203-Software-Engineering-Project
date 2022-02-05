@@ -2,11 +2,11 @@
 
 QueryResult::QueryResult() {}
 
-QueryResult::QueryResult(StmtInfoList stmtList, VarRefList varList)
+QueryResult::QueryResult(StmtRefList stmtList, VarRefList varList)
 	: stmtList(stmtList),
 	  varList(varList) {}
 
-StmtInfoList QueryResult::getStmtInfoList() {
+StmtRefList QueryResult::getStmtRefList() {
 	return stmtList;
 }
 

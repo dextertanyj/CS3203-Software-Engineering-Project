@@ -3,7 +3,10 @@
 #include<stdio.h>
 #include <iostream>
 #include <string>
+#include <unordered_set>
 #include <vector>
+
+#include "../Common/TypeDefs.h"
 
 using namespace std;
 typedef short PROC;
@@ -18,4 +21,12 @@ public:
 	static int setProcToAST(PROC p, TNode* r);
 	static TNode* getRootAST (PROC p);
 
+	PKB();
+
+	unordered_set<StmtRef> getAllStmt();
+
+	// Parent get methods
+	StmtRef getParent(StmtRef stmtNo);
+	unordered_set<StmtRef> getChildren(StmtRef stmtNo);
+	bool checkParents(StmtRef stmtNo1, StmtRef stmtNo2);
 };

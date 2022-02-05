@@ -11,7 +11,9 @@ public:
 	QueryEntRef getLeftEnt();
 	QueryEntRef getRightEnt();
 
-	QueryResult execute();
+	bool isTrivialCase();
+	bool executeTrivial(PKB& pkb);
+	QueryResult executeNonTrivial(PKB& pkb);
 
 private:
 	QueryEntRef leftEnt;

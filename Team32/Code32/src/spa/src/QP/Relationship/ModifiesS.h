@@ -11,7 +11,9 @@ public:
 	QueryStmtRef getStmt();
 	QueryEntRef getEnt();
 
-	QueryResult execute();
+	bool isTrivialCase();
+	bool executeTrivial(PKB& pkb);
+	QueryResult executeNonTrivial(PKB& pkb);
 
 private:
 	QueryStmtRef stmt;

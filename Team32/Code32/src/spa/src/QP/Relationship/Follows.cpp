@@ -17,8 +17,14 @@ bool Follows::getIsStar() {
 	return isStar;
 }
 
-QueryResult Follows::execute() {
-	return QueryResult();
+bool Follows::isTrivialCase() {
+	return false;
 }
 
+bool Follows::executeTrivial(PKB& pkb) {
+	return false;
+}
 
+QueryResult Follows::executeNonTrivial(PKB& pkb) {
+	return QueryResult();
+}

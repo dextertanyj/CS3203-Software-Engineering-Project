@@ -12,6 +12,14 @@ QueryEntRef UsesP::getRightEnt() {
 	return rightEnt;
 }
 
-QueryResult UsesP::execute() {
+bool UsesP::isTrivialCase() {
+	return false;
+}
+
+bool UsesP::executeTrivial(PKB& pkb) {
+	return false;
+}
+
+QueryResult UsesP::executeNonTrivial(PKB& pkb) {
 	return QueryResult();
 }

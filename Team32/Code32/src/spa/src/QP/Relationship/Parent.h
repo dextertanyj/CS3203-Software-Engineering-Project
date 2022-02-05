@@ -12,7 +12,9 @@ public:
 	QueryStmtRef getChildStmt();
 	bool getIsStar();
 
-	QueryResult execute();
+	bool isTrivialCase();
+	bool executeTrivial(PKB& pkb);
+	QueryResult executeNonTrivial(PKB& pkb);
 
 private:
 	bool isStar;

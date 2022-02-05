@@ -6,12 +6,12 @@
 class QueryResult {
 public:
 	QueryResult();
-	QueryResult(StmtInfoList stmtList, VarRefList varList);
-	StmtInfoList getStmtInfoList();
+	QueryResult(StmtRefList stmtList, VarRefList varList);
+	StmtRefList getStmtRefList();
 	VarRefList getVarRefList();
 
 private:
-	StmtInfoList stmtList;
+	StmtRefList stmtList;
 	VarRefList varList;
 };
 
