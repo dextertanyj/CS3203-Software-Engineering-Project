@@ -52,12 +52,15 @@ bool Parent::executeTrivial(PKB& pkb) {
 			return stmt > 0;
 		}
 		case StmtRefType::underscore: {
-			unordered_set<StmtRef> stmtSet = pkb.getAllStmt();
-			for (StmtRef stmt : stmtSet) {
+			StmtRefList allStmts = pkb.getStatements();
+			for (StmtRef stmt : allStmts) {
 				if (!pkb.getChildren(stmt).empty()) {
 					return true;
 				}
 			}
+			return false;
+		}
+		default: {
 			return false;
 		}
 		}
