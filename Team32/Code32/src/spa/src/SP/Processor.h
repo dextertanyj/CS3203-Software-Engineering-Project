@@ -10,8 +10,8 @@
 
 class SP::Processor {
 public:
-	Processor(SP::Parser parser, SP::DesignExtractor extractor);
-	void process(PKB& pkb, string source);
+	explicit Processor(PKB &pkb);
+	bool process(string source);
 
 private:
 	SP::Parser parser;

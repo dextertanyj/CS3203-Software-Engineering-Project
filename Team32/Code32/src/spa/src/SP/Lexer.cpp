@@ -1,14 +1,16 @@
 #include "Lexer.h"
-#include "SP.h"
 
 #include <regex>
 #include <string>
 
+#include "SP.h"
+
 using namespace std;
 
-regex SP::Lexer::tokenization_regex =
-	regex(R"(([a-zA-Z][0-9a-zA-Z]*|[0-9]+|\{|\}|\(|\)|;|!={0,1}|={1,2}|&&|\|\||>={0,1}|<={0,1}|\+|-|\*|\/|%))");  // NOLINT
-regex SP::Lexer::validation_regex = regex(R"(([^a-zA-Z0-9 \{\}\(\);=!&\|><\+\-\*\/%\n]))");                           // NOLINT
+regex SP::Lexer::tokenization_regex =  // NOLINT
+	regex(R"(([a-zA-Z][0-9a-zA-Z]*|[0-9]+|\{|\}|\(|\)|;|!={0,1}|={1,2}|&&|\|\||>={0,1}|<={0,1}|\+|-|\*|\/|%))");
+regex SP::Lexer::validation_regex =  // NOLINT
+	regex(R"(([^a-zA-Z0-9 \{\}\(\);=!&\|><\+\-\*\/%\n]))");
 
 void SP::Lexer::initialize(string raw_source) {
 	this->source = move(raw_source);
@@ -39,7 +41,7 @@ string SP::Lexer::readToken() {
 
 string SP::Lexer::peekToken() { return this->iterator->str(); }
 
-bool SP::Lexer::nextIf(const string& token) {
+bool SP::Lexer::nextIf(const string &token) {
 	if (this->iterator->str() == token) {
 		return nextToken();
 	}
@@ -48,7 +50,7 @@ bool SP::Lexer::nextIf(const string& token) {
 
 bool SP::Lexer::nextIf(initializer_list<string> tokens) {
 	bool last;
-	for (const string& token : tokens) {
+	for (const string &token : tokens) {
 		if (this->iterator->str() != token) {
 			throw TokenizationException("");
 		}

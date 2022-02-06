@@ -5,7 +5,9 @@
 using namespace std;
 using namespace SP;
 
-bool DesignExtractor::extract(PKB& pkb, unique_ptr<ProgramNode> ast) {
+DesignExtractor::DesignExtractor(PKB &pkb) : pkb(pkb) {}
+
+bool DesignExtractor::extract(unique_ptr<ProgramNode> ast) {
 	ast->extract(pkb);
 	return true;
 }

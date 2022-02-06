@@ -11,7 +11,11 @@ using namespace std;
 
 class SP::DesignExtractor {
 public:
-	bool extract(PKB& pkb, unique_ptr<ProgramNode> ast);
+	explicit DesignExtractor(PKB &pkb);
+	bool extract(unique_ptr<ProgramNode> ast);
+
+private:
+	PKB &pkb;
 };
 
 #endif  // SPA_DESIGNEXTRACTOR_H
