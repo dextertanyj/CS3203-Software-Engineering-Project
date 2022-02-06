@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
-#include "QueryEvaluator.h"
-#include "QueryFormatter.h"
+#include "QP/QueryEvaluator.h"
+#include "QP/QueryFormatter.h"
 
 using std::string;
 using std::vector;

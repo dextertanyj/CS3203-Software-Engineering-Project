@@ -1,4 +1,4 @@
-#include "UsesS.h"
+#include "QP/UsesS.h"
 
 UsesS::UsesS(QueryStmtRef stmt, QueryEntRef ent)
 	: stmt(stmt),

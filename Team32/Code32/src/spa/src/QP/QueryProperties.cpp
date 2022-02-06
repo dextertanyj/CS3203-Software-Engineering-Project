@@ -1,4 +1,4 @@
-#include "QueryProperties.h"
+#include "QP/QueryProperties.h"
 
 QueryProperties::QueryProperties(DeclarationList declarationList,
 	                               Declaration select,

@@ -1,8 +1,8 @@
-#include "QueryPreprocessor.h"
+#include "QP/QueryPreprocessor.h"
 
 #include <regex>
 
-#include "QueryTypeDefs.h"
+#include "QP/QueryTypeDefs.h"
 
 QueryProperties QueryPreprocessor::parseQuery(string query) {
 

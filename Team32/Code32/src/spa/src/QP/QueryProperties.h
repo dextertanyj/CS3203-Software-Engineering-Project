@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "QueryTypeDefs.h"
-#include "Relationship/Relation.h"
+#include "QP/QueryTypeDefs.h"
+#include "QP/Relationship/Relation.h"
 
 using std::string;
 using std::vector;

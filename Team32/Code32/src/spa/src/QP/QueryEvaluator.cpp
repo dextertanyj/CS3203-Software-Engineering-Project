@@ -1,4 +1,4 @@
-#include "QueryEvaluator.h"
+#include "QP/QueryEvaluator.h"
 
 PKB QueryEvaluator::pkb = PKB();
 

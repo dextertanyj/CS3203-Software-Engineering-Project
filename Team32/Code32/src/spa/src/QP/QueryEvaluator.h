@@ -1,8 +1,8 @@
 #ifndef QUERY_EVALUATOR_H_
 #define QUERY_EVALUATOR_H_
 
-#include "QueryProperties.h"
-#include "QueryResult.h"
+#include "QP/QueryProperties.h"
+#include "QP/QueryResult.h"
 #include "PKB/PKB.h"
 
 class QueryEvaluator {

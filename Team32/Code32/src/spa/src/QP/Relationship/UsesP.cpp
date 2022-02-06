@@ -1,4 +1,4 @@
-#include "UsesP.h"
+#include "QP/UsesP.h"
 
 UsesP::UsesP(QueryEntRef leftEnt, QueryEntRef rightEnt)
 	: leftEnt(leftEnt),

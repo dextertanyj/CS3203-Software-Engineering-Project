@@ -1,4 +1,4 @@
-#include "QueryResult.h"
+#include "QP/QueryResult.h"
 
 #include <algorithm>
 #include <iterator>

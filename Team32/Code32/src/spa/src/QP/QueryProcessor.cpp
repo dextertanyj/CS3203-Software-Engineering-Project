@@ -1,6 +1,6 @@
-#include "QueryProcessor.h"
+#include "QP/QueryProcessor.h"
 
-#include "QueryPreprocessor.h"
+#include "QP/QueryPreprocessor.h"
 
 string QueryProcessor::processQuery(string query) {
 	this->query = query;

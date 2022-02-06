@@ -1,9 +1,9 @@
-#include "QueryFormatter.h"
+#include "QP/QueryFormatter.h"
 
 #include <sstream>
 #include <string>
 
-#include "QueryTypeDefs.h"
+#include "QP/QueryTypeDefs.h"
 
 using std::string;
 using std::stringstream;
@@ -27,8 +27,9 @@ string QueryFormatter::stmtListToString(StmtRefList& stmts) {
 
 	std::stringstream result;
 	for (size_t i = 0; i < stmts.size(); ++i) {
-		if (i != 0)
+		if (i != 0) {
 			result << ", ";
+		}
 		result << stmts[i];
 	}
 	
