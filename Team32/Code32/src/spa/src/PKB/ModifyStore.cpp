@@ -1,5 +1,7 @@
 #include "ModifyStore.h"
 
+#include <cassert>
+
 using namespace std;
 
 ModifyStore::ModifyStore() {}

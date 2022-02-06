@@ -1,5 +1,7 @@
 #include "FollowStore.h"
 
+#include <cassert>
+
 using namespace std;
 
 FollowStore::FollowStore() {}

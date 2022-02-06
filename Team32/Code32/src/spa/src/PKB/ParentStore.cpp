@@ -1,5 +1,7 @@
 #include "ParentStore.h"
 
+#include <cassert>
+
 using namespace std;
 
 ParentStore::ParentStore() {}
