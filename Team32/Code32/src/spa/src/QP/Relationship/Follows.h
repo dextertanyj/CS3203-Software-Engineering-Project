@@ -1,7 +1,7 @@
 #ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWS_H_
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWS_H_
 
-#include "QP/Relation.h"
+#include "QP/Relationship/Relation.h"
 #include "QP/QueryTypeDefs.h"
 
 class Follows : public Relation {

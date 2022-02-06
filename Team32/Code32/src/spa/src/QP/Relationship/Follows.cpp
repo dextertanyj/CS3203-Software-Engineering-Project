@@ -1,4 +1,4 @@
-#include "QP/Follows.h"
+#include "QP/Relationship/Follows.h"
 
 Follows::Follows(bool isStar, QueryStmtRef leftStmt, QueryStmtRef rightStmt)
 	: isStar(isStar),

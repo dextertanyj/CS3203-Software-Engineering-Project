@@ -1,4 +1,4 @@
-#include "QP/ModifiesS.h"
+#include "QP/Relationship/ModifiesS.h"
 
 ModifiesS::ModifiesS(QueryStmtRef stmt, QueryEntRef ent)
 	: stmt(stmt),

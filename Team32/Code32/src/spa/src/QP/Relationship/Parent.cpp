@@ -1,4 +1,4 @@
-#include "QP/Parent.h"
+#include "QP/Relationship/Parent.h"
 
 Parent::Parent(bool isStar, QueryStmtRef parentStmt, QueryStmtRef childStmt)
 	: isStar(isStar),

@@ -1,4 +1,4 @@
-#include "QP/ModifiesP.h"
+#include "QP/Relationship/ModifiesP.h"
 
 ModifiesP::ModifiesP(QueryEntRef leftEnt, QueryEntRef rightEnt)
 	: leftEnt(leftEnt),
