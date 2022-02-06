@@ -18,12 +18,14 @@ TEST_CASE("TestValidator::validateArithmeticOperator Test") {
 TEST_CASE("TestValidator::validateInteger Test") {
     REQUIRE(Validator::validateInteger("0"));
     REQUIRE(Validator::validateInteger("2147483649"));
+    REQUIRE_FALSE(Validator::validateInteger("00123"));
     REQUIRE_FALSE(Validator::validateInteger("123a"));
     REQUIRE_FALSE(Validator::validateInteger("-10"));
 }
 
 TEST_CASE("TestValidator::validateName Test") {
     REQUIRE(Validator::validateName("computeAverage"));
+    REQUIRE(Validator::validateName("ComputeAverage"));
     REQUIRE(Validator::validateName("n1um"));
     REQUIRE(Validator::validateName("x"));
     REQUIRE_FALSE(Validator::validateName("1num"));

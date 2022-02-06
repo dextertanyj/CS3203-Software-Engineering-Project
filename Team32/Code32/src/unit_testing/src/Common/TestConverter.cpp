@@ -20,7 +20,7 @@ TEST_CASE("TestConverter::convertRelational Test") {
     REQUIRE_EQUALS(Converter::convertRelational(">="), RelationalOperator::GTE);
     REQUIRE_EQUALS(Converter::convertRelational("<"), RelationalOperator::LT);
     REQUIRE_EQUALS(Converter::convertRelational("<="), RelationalOperator::LTE);
-    REQUIRE_EQUALS(Converter::convertArithmetic("=="), RelationalOperator::EQ);
+    REQUIRE_EQUALS(Converter::convertRelational("=="), RelationalOperator::EQ);
     REQUIRE_EQUALS(Converter::convertRelational("!="), RelationalOperator::NEQ);
     REQUIRE_THROWS_AS(Converter::convertRelational("!"), Converter::ConversionException);
     REQUIRE_THROWS_AS(Converter::convertRelational("+"), Converter::ConversionException);
