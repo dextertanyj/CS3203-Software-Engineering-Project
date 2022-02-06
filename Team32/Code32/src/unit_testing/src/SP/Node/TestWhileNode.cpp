@@ -111,7 +111,7 @@ TEST_CASE("SP::Node::WhileNode::parseWhileStatement Closing Opening Brackets Tok
 TEST_CASE("WhileNode::extract Test") {
 	PKB pkb;
 	unique_ptr<ConditionalExpressionNode> condition = createRelationalExpression("x < y");
-	unique_ptr<StatementListNode> body = createStatementList("read x; print y; }", 1);
+	unique_ptr<StatementListNode> body = createStatementList("read x; print y; }", 2);
 	WhileNode node = WhileNode(1, std::move(condition), std::move(body));
 	StmtInfo result = node.extract(pkb);
 	StmtInfo expected = {1, StmtType::WhileStmt};
