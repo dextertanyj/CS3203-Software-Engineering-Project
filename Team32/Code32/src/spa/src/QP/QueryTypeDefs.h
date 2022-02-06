@@ -20,7 +20,7 @@ enum class DesignEntity {
 };
 
 enum class StmtRefType { synonym, underscore, stmtNumber };
-enum class EntRefType { synonym, underscore, varName, constant };
+enum class EntRefType { synonym, underscore, varName };
 
 typedef struct QueryStmtRef {
 	StmtRefType type;
