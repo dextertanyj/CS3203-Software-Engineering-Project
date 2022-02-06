@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "QueryEvaluator.h"
+#include "QueryFormatter.h"
 
 using std::string;
 using std::vector;

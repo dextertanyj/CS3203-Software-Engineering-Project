@@ -27,10 +27,12 @@ bool QueryResult::updateStmtList(StmtRefList newStmtList) {
 		newStmtList.begin(), newStmtList.end(),
 		back_inserter(result));
 
+	this->stmtList = result;
+
 	return !result.empty();
 }
 
-bool QueryResult::updateRefList(VarRefList newVarList) {
+bool QueryResult::updateVarList(VarRefList newVarList) {
 	VarRefList result;
 	std::sort(this->varList.begin(), this->varList.end());
 	std::sort(newVarList.begin(), newVarList.end());
@@ -39,6 +41,8 @@ bool QueryResult::updateRefList(VarRefList newVarList) {
 		this->varList.begin(), this->varList.end(),
 		newVarList.begin(), newVarList.end(),
 		back_inserter(result));
+
+	this->varList = result;
 
 	return !result.empty();
 }
