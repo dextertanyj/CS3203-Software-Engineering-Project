@@ -9,9 +9,7 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& queryProperties) {
 	if (suchThatClauseList.empty() && patternClauseList.empty()) {
 		Declaration select = queryProperties.getSelect();
 		if (select.type == DesignEntity::stmt) {
-			unordered_set<StmtRef> set = pkb.getAllStmt();
-			StmtRefList stmtList;
-			stmtList.insert(stmtList.end(), set.begin(), set.end());
+			StmtRefList stmtList = pkb.getStatements();
 			return QueryResult(stmtList, {});
 		} else {
 			// TODO: Handle other cases
@@ -23,9 +21,7 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& queryProperties) {
 }
 
 QueryResult QueryEvaluator::evaluateSuchThatClauses(SuchThatClauseList& suchThatClauseList) {
-	unordered_set<StmtRef> set = pkb.getAllStmt();
-	StmtRefList stmtList;
-	stmtList.insert(stmtList.end(), set.begin(), set.end());
+	StmtRefList stmtList = pkb.getStatements();
 	QueryResult result = QueryResult(stmtList, {});
 
 	for (SuchThatClause suchThatClause : suchThatClauseList) {

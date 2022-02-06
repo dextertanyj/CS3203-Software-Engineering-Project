@@ -79,8 +79,8 @@ bool Parent::executeNonTrivial(PKB& pkb, QueryResult& result) {
 	else if (this->parentStmt.type == StmtRefType::underscore &&
 			this->childStmt.type == StmtRefType::synonym) {
 		// Get all stmts with a parent
-		unordered_set<StmtRef> stmtSet = pkb.getAllStmt();
-		for (StmtRef stmt : stmtSet) {
+		StmtRefList allStmts = pkb.getStatements();
+		for (StmtRef stmt : allStmts) {
 			if (pkb.getParent(stmt) > 0) {
 				stmtList.push_back(stmt);
 			}
@@ -97,8 +97,8 @@ bool Parent::executeNonTrivial(PKB& pkb, QueryResult& result) {
 	else if (this->childStmt.type == StmtRefType::underscore &&
 			this->parentStmt.type == StmtRefType::synonym) {
 		// Get all stmts with a child
-		unordered_set<StmtRef> stmtSet = pkb.getAllStmt();
-		for (StmtRef stmt : stmtSet) {
+		StmtRefList allStmts = pkb.getStatements();
+		for (StmtRef stmt : allStmts) {
 			if (!pkb.getChildren(stmt).empty()) {
 				stmtList.push_back(stmt);
 			}
