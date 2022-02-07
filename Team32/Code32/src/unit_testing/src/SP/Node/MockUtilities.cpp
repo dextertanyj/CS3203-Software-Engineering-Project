@@ -1,9 +1,6 @@
 #include "MockUtilities.h"
 
-#include "SP/Node/RelationalExpressionNode.h"
 #include "../../Common/ArithmeticProcessor/MockLexer.h"
-
-#include <utility>
 
 using namespace std;
 
@@ -13,16 +10,16 @@ Common::ArithmeticProcessor::ArithmeticExpression createArithmeticExpression(vec
     return expression;
 }
 
-unique_ptr<RelationalExpressionNode> createRelationalExpression(string str) {
-    Lexer lex;
+unique_ptr<SP::Node::RelationalExpressionNode> createRelationalExpression(string str) {
+    SP::Lexer lex;
     lex.initialize(move(str));
-    unique_ptr<RelationalExpressionNode> node = RelationalExpressionNode::parseRelationalExpression(lex);
+    unique_ptr<SP::Node::RelationalExpressionNode> node = SP::Node::RelationalExpressionNode::parseRelationalExpression(lex);
     return node;
 }
 
-unique_ptr<StatementListNode> createStatementList(string str, int statement_count) {
-    Lexer lex;
+unique_ptr<SP::Node::StatementListNode> createStatementList(string str, int statement_count) {
+    SP::Lexer lex;
     lex.initialize(move(str));
-    unique_ptr<StatementListNode> node = StatementListNode::parseStatementList(lex, statement_count);
+    unique_ptr<SP::Node::StatementListNode> node = SP::Node::StatementListNode::parseStatementList(lex, statement_count);
     return node;
 }

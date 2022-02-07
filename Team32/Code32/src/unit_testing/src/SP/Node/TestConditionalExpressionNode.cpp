@@ -8,13 +8,13 @@
 #include "SP/Node/RelationalExpressionNode.h"
 #include "../Node/MockUtilities.h"
 
-#include "catch.hpp"
 #include "catch_tools.h"
 
 using namespace std;
+using namespace SP::Node;
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression NotNode Valid Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("!(x != 0)");
     unique_ptr<ConditionalExpressionNode> node = ConditionalExpressionNode::parseConditionalExpression(lex);
     unique_ptr<RelationalExpressionNode> expression = createRelationalExpression("x != 0)");
@@ -23,19 +23,19 @@ TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression NotNo
 }
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression NotNode Missing Brackets Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("!x != 0)");
     REQUIRE_THROWS_AS(ConditionalExpressionNode::parseConditionalExpression(lex), SP::TokenizationException);
 }
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression NotNode Invalid Cond Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("!(x)");
     REQUIRE_THROWS_AS(ConditionalExpressionNode::parseConditionalExpression(lex), Common::Converter::ConversionException);
 }
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression AndNode Valid Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("(x != 0) && (y == 0)");
     unique_ptr<ConditionalExpressionNode> node = ConditionalExpressionNode::parseConditionalExpression(lex);
     unique_ptr<RelationalExpressionNode> lhs = createRelationalExpression("x != 0)");
@@ -45,7 +45,7 @@ TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression AndNo
 }
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression AndNode Complex Valid Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("(x != 0) && ((y == 0) && (z == (5 + x)))");
     unique_ptr<ConditionalExpressionNode> node = ConditionalExpressionNode::parseConditionalExpression(lex);
     unique_ptr<RelationalExpressionNode> lhs = createRelationalExpression("x != 0)");
@@ -57,19 +57,19 @@ TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression AndNo
 }
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression AndNode Missing Bracket Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("(x != 0) && y == 0)");
     REQUIRE_THROWS_AS(ConditionalExpressionNode::parseConditionalExpression(lex), SP::TokenizationException);
 }
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression AndNode Invalid Condition Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("(x != 0) && y");
     REQUIRE_THROWS_AS(ConditionalExpressionNode::parseConditionalExpression(lex), SP::TokenizationException);
 }
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression OrNode Valid Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("(x != 0) || (y == 0)");
     unique_ptr<ConditionalExpressionNode> node = ConditionalExpressionNode::parseConditionalExpression(lex);
     unique_ptr<RelationalExpressionNode> lhs = createRelationalExpression("x != 0)");
@@ -79,7 +79,7 @@ TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression OrNod
 }
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression OrNode Complex Valid Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("(x != 0) || ((y == 0) || (z == (5 + x)))");
     unique_ptr<ConditionalExpressionNode> node = ConditionalExpressionNode::parseConditionalExpression(lex);
     unique_ptr<RelationalExpressionNode> lhs = createRelationalExpression("x != 0)");
@@ -91,19 +91,19 @@ TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression OrNod
 }
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression OrNode Missing Bracket Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("(x != 0) || y == 0)");
     REQUIRE_THROWS_AS(ConditionalExpressionNode::parseConditionalExpression(lex), SP::TokenizationException);
 }
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression OrNode Invalid Condition Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("(x != 0) || y");
     REQUIRE_THROWS_AS(ConditionalExpressionNode::parseConditionalExpression(lex), SP::TokenizationException);
 }
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression Complex Valid Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("(!(x != 0)) && ((y == 0) || (z == (5 + x)))");
     unique_ptr<ConditionalExpressionNode> node = ConditionalExpressionNode::parseConditionalExpression(lex);
     unique_ptr<RelationalExpressionNode> not_node = createRelationalExpression("x != 0)");

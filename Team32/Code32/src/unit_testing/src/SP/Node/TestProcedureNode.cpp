@@ -2,10 +2,10 @@
 #include "../Node/MockUtilities.h"
 #include "SP/SP.h"
 
-#include "catch.hpp"
 #include "catch_tools.h"
 
 using namespace std;
+using namespace SP::Node;
 
 TEST_CASE("SP::Node::ProcedureNode::equals Same Object Test") {
     unique_ptr<StatementListNode> stmt_lst = createStatementList("print flag; call x; }", 2);
@@ -38,7 +38,7 @@ TEST_CASE("SP::Node::ProcedureNode::equals Different StmtLst Test") {
 }
 
 TEST_CASE("SP::Node::ProcedureNode::parseProcedure Valid Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("procedure testName { count = 0; }");
     int statement_count = 1;
     unique_ptr<ProcedureNode> node = ProcedureNode::parseProcedure(lex, statement_count);
@@ -50,7 +50,7 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure Valid Token Test") {
 
 
 TEST_CASE("SP::Node::ProcedureNode::parseProcedure Valid Complex Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("procedure testName { while ((x != 0) && (y != 0)) { cenX = cenX + 1; call readPoint; }}");
     int statement_count = 1;
     unique_ptr<ProcedureNode> node = ProcedureNode::parseProcedure(lex, statement_count);
@@ -62,7 +62,7 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure Valid Complex Token Test") {
 }
 
 TEST_CASE("SP::Node::ProcedureNode::parseProcedure invalid Name Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("procedure 1testName { cenX = 0; }");
     int statement_count = 1;
     REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::ParseException);
@@ -70,7 +70,7 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure invalid Name Test") {
 }
 
 TEST_CASE("SP::Node::ProcedureNode::parseProcedure Missing Opening Brackets Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("procedure testName cenX = 0; }");
     int statement_count = 1;
     REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::TokenizationException);
@@ -78,7 +78,7 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure Missing Opening Brackets Toke
 }
 
 TEST_CASE("SP::Node::ProcedureNode::parseProcedure Missing Closing Brackets Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("procedure testName { cenX = 0; ");
     int statement_count = 1;
     REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::ParseException);

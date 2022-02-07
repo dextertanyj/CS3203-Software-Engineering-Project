@@ -2,10 +2,10 @@
 #include "../Node/MockUtilities.h"
 #include "SP/SP.h"
 
-#include "catch.hpp"
 #include "catch_tools.h"
 
 using namespace std;
+using namespace SP::Node;
 
 TEST_CASE("SP::Node::ProgramNode::addProcedureNode Add Test") {
     unique_ptr<ProgramNode> node = make_unique<ProgramNode>();
@@ -73,7 +73,7 @@ TEST_CASE("SP::Node::ProgramNode::equals Different Node Test") {
 }
 
 TEST_CASE("SP::Node::ProgramNode::parseProgram Valid Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("procedure A { read x; } procedure B { read y; }");
     int statement_count = 1;
     unique_ptr<ProgramNode> node = ProgramNode::parseProgram(lex, statement_count);

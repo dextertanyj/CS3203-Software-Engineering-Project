@@ -2,10 +2,10 @@
 #include "SP/Node/AssignmentNode.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/VariableNode.h"
-#include "catch.hpp"
 #include "catch_tools.h"
 
 using namespace std;
+using namespace SP::Node;
 
 TEST_CASE("SP::Node::AssignmentNode::equals Same Object Test") {
 	unique_ptr<VariableNode> assignee = make_unique<VariableNode>("A");
@@ -73,7 +73,7 @@ TEST_CASE("SP::Node::AssignmentNode::equals Different Node Type Test") {
 }
 
 TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement Valid Token Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("= 0;");
 	int statement_count = 1;
 	unique_ptr<AssignmentNode> node = AssignmentNode::parseAssignmentStatement(lex, statement_count, "count");
@@ -86,7 +86,7 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement Valid Token Test")
 }
 
 TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement Complex Valid Token Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("= (x + 6);");
 	int statement_count = 1;
 	unique_ptr<AssignmentNode> node = AssignmentNode::parseAssignmentStatement(lex, statement_count, "count");
@@ -99,7 +99,7 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement Complex Valid Toke
 }
 
 TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement Missing Token Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("(x + 6);");
 	int statement_count = 1;
 	REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count"), SP::TokenizationException);
@@ -107,7 +107,7 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement Missing Token Test
 }
 
 TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement Missing Terminal Token Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("= (x + 6)");
 	int statement_count = 1;
 	REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count"), SP::TokenizationException);
@@ -115,7 +115,7 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement Missing Terminal T
 }
 
 TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement Invalid Format Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("== (x + 6);");
 	int statement_count = 1;
 	REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count"), SP::TokenizationException);
@@ -123,7 +123,7 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement Invalid Format Tes
 }
 
 TEST_CASE("AssignmentNode::extract Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	PKB pkb;
 	lex.initialize("1;");
 	unique_ptr<ArithmeticExpressionNode> expression = ArithmeticExpressionNode::parseArithmeticExpression(lex);

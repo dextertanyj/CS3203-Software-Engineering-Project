@@ -1,10 +1,10 @@
 #include "SP/Node/CallNode.h"
 #include "SP/Node/PrintNode.h"
 
-#include "catch.hpp"
 #include "catch_tools.h"
 
 using namespace std;
+using namespace SP::Node;
 
 TEST_CASE("SP::Node::PrintNode::equals Same Object Test") {
     shared_ptr<PrintNode> node = make_shared<PrintNode>(1, make_unique<VariableNode>("a"));
@@ -51,7 +51,7 @@ TEST_CASE("PrintNode::extract Test") {
 }
 
 TEST_CASE("SP::Node::PrintNode::parsePrintStatement Valid Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("x;");
     int statement_count = 1;
     unique_ptr<PrintNode> node = PrintNode::parsePrintStatement(lex, statement_count);

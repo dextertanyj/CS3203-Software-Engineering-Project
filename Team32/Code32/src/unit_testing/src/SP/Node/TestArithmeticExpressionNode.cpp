@@ -2,10 +2,10 @@
 #include "../Node/MockUtilities.h"
 #include "../../Common/ArithmeticProcessor/MockLexer.h"
 
-#include "catch.hpp"
 #include "catch_tools.h"
 
 using namespace std;
+using namespace SP::Node;
 
 TEST_CASE("SP::Node::ArithmeticExpressionNode::equals Same Object Test") {
     shared_ptr<ArithmeticExpressionNode> node =

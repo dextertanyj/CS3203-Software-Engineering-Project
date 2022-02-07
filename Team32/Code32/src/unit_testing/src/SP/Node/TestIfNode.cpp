@@ -4,10 +4,10 @@
 #include "SP/Node/IfNode.h"
 #include "../Node/MockUtilities.h"
 
-#include "catch.hpp"
 #include "catch_tools.h"
 
 using namespace std;
+using namespace SP::Node;
 
 TEST_CASE("SP::Node::IfNode::equals Same Object Test") {
     unique_ptr<ConditionalExpressionNode> cond_expr = createRelationalExpression("x != 0)");
@@ -98,7 +98,7 @@ TEST_CASE("SP::Node::IfNode::equals Different Node Type Test") {
 }
 
 TEST_CASE("SP::Node::IfNode::parseIfStatement Valid Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("( x > 0 ) then { read y; } else { x = 10; }");
     int statement_count = 1;
     unique_ptr<IfNode> node = IfNode::parseIfStatement(lex, statement_count);
@@ -112,7 +112,7 @@ TEST_CASE("SP::Node::IfNode::parseIfStatement Valid Token Test") {
 }
 
 TEST_CASE("SP::Node::IfNode::parseIfStatement Missing Condition Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("(  ) then { read y; } else { x = 10; }");
     int statement_count = 1;
     REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), Common::ArithmeticProcessor::ArithmeticProcessorException);
@@ -120,7 +120,7 @@ TEST_CASE("SP::Node::IfNode::parseIfStatement Missing Condition Test") {
 }
 
 TEST_CASE("SP::Node::IfNode::parseIfStatement Missing Then Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("(x == 10) then { } else { x = 10; }");
     int statement_count = 1;
     REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), SP::ParseException);
@@ -128,7 +128,7 @@ TEST_CASE("SP::Node::IfNode::parseIfStatement Missing Then Test") {
 }
 
 TEST_CASE("SP::Node::IfNode::parseIfStatement Missing Else Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("( x > 0 ) then { read y; } ");
     int statement_count = 1;
     REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), SP::TokenizationException);
@@ -136,7 +136,7 @@ TEST_CASE("SP::Node::IfNode::parseIfStatement Missing Else Test") {
 }
 
 TEST_CASE("SP::Node::IfNode::parseIfStatement Missing Brackets Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("( x > 0 ) then  read y; } else { x = 10; }");
     int statement_count = 1;
     REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), SP::TokenizationException);
