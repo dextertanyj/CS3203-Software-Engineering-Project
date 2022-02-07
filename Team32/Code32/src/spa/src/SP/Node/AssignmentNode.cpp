@@ -1,12 +1,11 @@
 #include "SP/Node/AssignmentNode.h"
 
 using namespace std;
-using namespace SP;
 
-AssignmentNode::AssignmentNode(StmtRef stmtNo, unique_ptr<VariableNode> assignee, unique_ptr<ArithmeticExpressionNode> expression)
+SP::Node::AssignmentNode::AssignmentNode(StmtRef stmtNo, unique_ptr<VariableNode> assignee, unique_ptr<ArithmeticExpressionNode> expression)
 	: StatementNode(stmtNo), assignee(move(assignee)), expression(move(expression)) {}
 
-unique_ptr<AssignmentNode> AssignmentNode::parseAssignmentStatement(Lexer& lex, int& statement_count, string token) {
+unique_ptr<SP::Node::AssignmentNode> SP::Node::AssignmentNode::parseAssignmentStatement(Lexer& lex, int& statement_count, string token) {
 	unique_ptr<VariableNode> variable = VariableNode::parseVariable(std::move(token));
 	lex.nextIf("=");
 	unique_ptr<ArithmeticExpressionNode> expression = ArithmeticExpressionNode::parseArithmeticExpression(lex);
@@ -14,7 +13,7 @@ unique_ptr<AssignmentNode> AssignmentNode::parseAssignmentStatement(Lexer& lex, 
 	return make_unique<AssignmentNode>(statement_count++, move(variable), move(expression));
 }
 
-StmtInfo AssignmentNode::extract(PKB& pkb) {
+StmtInfo SP::Node::AssignmentNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Assign);
 	// TODO: Set arithmetic expression for pattern matching
@@ -27,11 +26,11 @@ StmtInfo AssignmentNode::extract(PKB& pkb) {
 	return {stmt_ref, StmtType::Assign};
 }
 
-bool AssignmentNode::equals(shared_ptr<StatementNode> object) {
-    shared_ptr<AssignmentNode> other = dynamic_pointer_cast<AssignmentNode>(object);
-    if (other == nullptr) {
-        return false;
-    }
-    return this->getStmtRef() == other->getStmtRef() && this->assignee->equals(move(other->assignee))
-        && this->expression->equals(move(other->expression));
+bool SP::Node::AssignmentNode::equals(shared_ptr<StatementNode> object) {
+	shared_ptr<AssignmentNode> other = dynamic_pointer_cast<AssignmentNode>(object);
+	if (other == nullptr) {
+		return false;
+	}
+	return this->getStmtRef() == other->getStmtRef() && this->assignee->equals(move(other->assignee)) &&
+	       this->expression->equals(move(other->expression));
 }

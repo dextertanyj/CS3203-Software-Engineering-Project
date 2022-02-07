@@ -1,13 +1,12 @@
 #include "SP/Node/IfNode.h"
 
 using namespace std;
-using namespace SP;
 
-IfNode::IfNode(StmtRef stmtNo, unique_ptr<ConditionalExpressionNode> condExpr, unique_ptr<StatementListNode> ifStmtLst,
+SP::Node::IfNode::IfNode(StmtRef stmtNo, unique_ptr<ConditionalExpressionNode> condExpr, unique_ptr<StatementListNode> ifStmtLst,
                unique_ptr<StatementListNode> elseStmtLst)
 	: StatementNode(stmtNo), condExpr(move(condExpr)), ifStmtLst(move(ifStmtLst)), elseStmtLst(move(elseStmtLst)) {}
 
-unique_ptr<IfNode> IfNode::parseIfStatement(Lexer& lex, int& statement_count) {
+unique_ptr<SP::Node::IfNode> SP::Node::IfNode::parseIfStatement(Lexer& lex, int& statement_count) {
 	StmtRef statement_index = statement_count++;
 	lex.nextIf("(");
 	unique_ptr<ConditionalExpressionNode> condition = ConditionalExpressionNode::parseConditionalExpression(lex);
@@ -23,7 +22,7 @@ unique_ptr<IfNode> IfNode::parseIfStatement(Lexer& lex, int& statement_count) {
 	return make_unique<IfNode>(statement_index, move(condition), move(then_statements), move(else_statements));
 }
 
-StmtInfo IfNode::extract(PKB& pkb) {
+StmtInfo SP::Node::IfNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::IfStmt);
 	StmtInfoList then_children = elseStmtLst->extract(pkb);
@@ -42,7 +41,7 @@ StmtInfo IfNode::extract(PKB& pkb) {
 }
 
 
-bool IfNode::equals(shared_ptr<StatementNode> object) {
+bool SP::Node::IfNode::equals(shared_ptr<StatementNode> object) {
     shared_ptr<IfNode> other = dynamic_pointer_cast<IfNode>(object);
     if (other == nullptr) {
         return false;

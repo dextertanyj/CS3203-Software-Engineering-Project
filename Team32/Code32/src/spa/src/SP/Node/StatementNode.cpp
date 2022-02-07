@@ -1,23 +1,21 @@
 #include "SP/Node/StatementNode.h"
 
-#include "Common/TypeDefs.h"
 #include "Common/Validator.h"
 #include "SP/Node/AssignmentNode.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/IfNode.h"
 #include "SP/Node/PrintNode.h"
 #include "SP/Node/ReadNode.h"
-#include "SP/Node/VariableNode.h"
 #include "SP/Node/WhileNode.h"
 #include "SP/SP.h"
 
-StatementNode::StatementNode(StmtRef stmtNo) : stmtNo(stmtNo) {}
+SP::Node::StatementNode::StatementNode(StmtRef stmtNo) : stmtNo(stmtNo) {}
 
-unique_ptr<StatementNode> StatementNode::parseStatement(Lexer& lex, int& statement_count) {
+unique_ptr<SP::Node::StatementNode> SP::Node::StatementNode::parseStatement(Lexer& lex, int& statement_count) {
 	string token = lex.readToken();
 	string lookahead = lex.peekToken();
 	if (lookahead == "=") {
-        unique_ptr<AssignmentNode> node = AssignmentNode::parseAssignmentStatement(lex, statement_count, token);
+		unique_ptr<AssignmentNode> node = AssignmentNode::parseAssignmentStatement(lex, statement_count, token);
 		return node;
 	}
 	if (token == "read") {
@@ -39,4 +37,4 @@ unique_ptr<StatementNode> StatementNode::parseStatement(Lexer& lex, int& stateme
 	throw SP::ParseException("Unknown statement type encountered" + token);
 }
 
-StmtRef StatementNode::getStmtRef() const { return stmtNo; }
+StmtRef SP::Node::StatementNode::getStmtRef() const { return stmtNo; }

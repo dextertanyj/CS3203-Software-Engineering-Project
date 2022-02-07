@@ -12,7 +12,7 @@ using namespace std;
 class SP::DesignExtractor {
 public:
 	explicit DesignExtractor(PKB &pkb);
-	bool extract(unique_ptr<ProgramNode> ast);
+	bool extract(unique_ptr<Node::ProgramNode> ast);
 
 private:
 	PKB &pkb;

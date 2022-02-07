@@ -4,14 +4,16 @@
 #include <memory>
 
 #include "SP/Node/ConditionalExpressionNode.h"
+#include "SP/Node/Node.h"
+#include "SP/SP.h"
 
 using namespace std;
 
-class AndNode : public ConditionalExpressionNode {
+class SP::Node::AndNode : public ConditionalExpressionNode {
 public:
 	AndNode(unique_ptr<ConditionalExpressionNode> lhs, unique_ptr<ConditionalExpressionNode> rhs);
 	UsageInfo extract() override;
-    bool equals(shared_ptr<ConditionalExpressionNode> object) override;
+	bool equals(shared_ptr<ConditionalExpressionNode> object) override;
 
 private:
 	unique_ptr<ConditionalExpressionNode> lhs;

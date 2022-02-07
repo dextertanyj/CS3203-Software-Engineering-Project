@@ -6,22 +6,20 @@
 #include "SP/Node/NotNode.h"
 #include "SP/Node/OrNode.h"
 #include "SP/Node/RelationalExpressionNode.h"
-#include "SP/SP.h"
 
 using namespace std;
-using namespace SP;
 
-unique_ptr<ConditionalExpressionNode> ConditionalExpressionNode::parseConditionalExpression(Lexer& lex) {
+unique_ptr<SP::Node::ConditionalExpressionNode> SP::Node::ConditionalExpressionNode::parseConditionalExpression(Lexer& lex) {
 	string token = lex.peekToken();
 	if (token == "!") {
-        lex.readToken();
+		lex.readToken();
 		lex.nextIf("(");
 		unique_ptr<ConditionalExpressionNode> expression = ConditionalExpressionNode::parseConditionalExpression(lex);
 		lex.nextIf(")");
 		return make_unique<NotNode>(move(expression));
 	}
 	if (token == "(") {
-        lex.readToken();
+		lex.readToken();
 		unique_ptr<ConditionalExpressionNode> lhs = ConditionalExpressionNode::parseConditionalExpression(lex);
 		lex.nextIf(")");
 		string op = lex.readToken();
