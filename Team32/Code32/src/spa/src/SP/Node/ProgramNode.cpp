@@ -16,6 +16,12 @@ unique_ptr<ProgramNode> ProgramNode::parseProgram(Lexer& lex, int& statement_cou
 	} while (!lex.peekToken().empty());
 	return program;
 }
+bool ProgramNode::extract(PKB& pkb) {
+	for (auto iter = procedures.begin(); iter < procedures.end(); ++iter) {
+		iter->get()->extract(pkb);
+	}
+	return true;
+}
 
 bool ProgramNode::equals(shared_ptr<ProgramNode> object) {
     if (this->procedures.size() != object->procedures.size()) {

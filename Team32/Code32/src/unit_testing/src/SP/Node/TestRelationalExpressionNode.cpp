@@ -129,3 +129,13 @@ TEST_CASE("SP::Node::RelationalExpressionNode::parseRelationalExpression Invalid
     REQUIRE_THROWS_AS(RelationalExpressionNode::parseRelationalExpression(lex),
                       ArithmeticProcessor::ArithmeticProcessorException);
 }
+
+TEST_CASE("RelationalExpressionNode::extract Test") {
+	unique_ptr<ArithmeticExpressionNode> lhs = make_unique<ArithmeticExpressionNode>(createArithmeticExpression(vector<string>({"x", ";"})));
+	unique_ptr<ArithmeticExpressionNode> rhs = make_unique<ArithmeticExpressionNode>(createArithmeticExpression(vector<string>({"1", "+", "x", ";"})));
+	RelationalExpressionNode node = RelationalExpressionNode(RelationalOperator::LTE, std::move(lhs), std::move(rhs));
+	UsageInfo result = node.extract();
+	UsageInfo expected = {unordered_set<VarRef>({"x"}), unordered_set<int>({1})};
+	REQUIRE_EQUALS(result.constants, expected.constants);
+	REQUIRE_EQUALS(result.variables, expected.variables);
+}

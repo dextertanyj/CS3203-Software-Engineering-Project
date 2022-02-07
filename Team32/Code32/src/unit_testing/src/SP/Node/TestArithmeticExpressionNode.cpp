@@ -36,3 +36,10 @@ TEST_CASE("SP::Node::ArithmeticExpressionNode::equals Different Node Test") {
             make_shared<ArithmeticExpressionNode>(createArithmeticExpression(vector<string>({"(", "B", ")", ")"})));
     REQUIRE_FALSE(node->equals(other));
 }
+
+TEST_CASE("ArithmeticExpressionNode::extract Test") {
+	ArithmeticProcessor::ArithmeticExpression expression = createArithmeticExpression(vector<string>({"A", "+", "B", ";"}));
+	ArithmeticExpressionNode node = ArithmeticExpressionNode(expression);
+	ArithmeticProcessor::ArithmeticExpression result = node.extract();
+	REQUIRE(result.equals(expression));
+}

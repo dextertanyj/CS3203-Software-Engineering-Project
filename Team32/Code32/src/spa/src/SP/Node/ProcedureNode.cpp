@@ -22,6 +22,11 @@ unique_ptr<ProcedureNode> ProcedureNode::parseProcedure(Lexer& lex, int& stateme
 	return make_unique<ProcedureNode>(name, std::move(statement_list));
 }
 
+bool ProcedureNode::extract(PKB& pkb) {
+	StmtInfoList children = stmtLst->extract(pkb);
+	return true;
+}
+
 bool ProcedureNode::equals(shared_ptr<ProcedureNode> object) {
-    return this->name == object->name && this->stmtLst->equals(move(object->stmtLst));
+	return this->name == object->name && this->stmtLst->equals(move(object->stmtLst));
 }

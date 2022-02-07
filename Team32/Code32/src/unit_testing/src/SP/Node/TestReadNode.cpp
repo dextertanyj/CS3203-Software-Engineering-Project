@@ -40,3 +40,22 @@ TEST_CASE("SP::Node::ReadNode::equals Different Node Type Test") {
     shared_ptr<CallNode> other = make_shared<CallNode>(1, "test");
     REQUIRE_FALSE(node->equals(move(other)));
 }
+
+TEST_CASE("ReadNode::extract Test") {
+	PKB pkb;
+	ReadNode node = ReadNode(1, make_unique<VariableNode>("A"));
+	StmtInfo result = node.extract(pkb);
+	StmtInfo expected = {1, StmtType::Read};
+	REQUIRE_EQUALS(result.reference, expected.reference);
+	REQUIRE_EQUALS(result.type, expected.type);
+}
+
+TEST_CASE("SP::Node::ReadNode::parseReadStatement Valid Token Test") {
+    Lexer lex;
+    lex.initialize("x;");
+    int statement_count = 1;
+    unique_ptr<ReadNode> node = ReadNode::parseReadStatement(lex, statement_count);
+    shared_ptr<ReadNode> expected = make_shared<ReadNode>(1, make_unique<VariableNode>("x"));
+    REQUIRE(node->equals(move(expected)));
+    REQUIRE_EQUALS(statement_count, 2);
+}

@@ -11,7 +11,9 @@ using namespace std;
 class ReadNode : public StatementNode {
 public:
 	ReadNode(StmtRef stmtNo, unique_ptr<VariableNode> variable);
+	StmtInfo extract(PKB& pkb) override;
     bool equals(shared_ptr<StatementNode> object) override;
+    static unique_ptr<ReadNode> parseReadStatement(Lexer& lex, int& statement_count);
 
 private:
 	unique_ptr<VariableNode> variable;

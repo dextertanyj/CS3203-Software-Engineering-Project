@@ -1,8 +1,8 @@
 #include "SP/Node/VariableNode.h"
 
 #include "Common/Validator.h"
-#include "SP/SP.h"
 #include "SP/Lexer.h"
+#include "SP/SP.h"
 
 VariableNode::VariableNode(VarRef name) : name(move(name)) {}
 
@@ -22,6 +22,7 @@ unique_ptr<VariableNode> VariableNode::parseVariable(string token) {
 	return make_unique<VariableNode>(name);
 }
 
+VarRef VariableNode::extract() { return name; }
 bool VariableNode::equals(unique_ptr<VariableNode> other) {
     return other->name == this->name;
 }

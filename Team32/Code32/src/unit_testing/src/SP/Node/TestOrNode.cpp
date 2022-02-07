@@ -54,3 +54,17 @@ TEST_CASE("SP::Node::OrNode::equals Wrong Node Type Test") {
     shared_ptr<AndNode> other = make_shared<AndNode>(move(lhs_2), move(rhs_2));
     REQUIRE_FALSE(node->equals(other));
 }
+
+TEST_CASE("OrNode::extract Test") {
+	UsageInfo lhs_mock = {unordered_set<VarRef>({"A"}), unordered_set<int>({1})};
+	UsageInfo rhs_mock = {unordered_set<VarRef>({"B"}), unordered_set<int>({2})};
+	int lhs_ctr = 0;
+	int rhs_ctr = 0;
+	OrNode node = OrNode(make_unique<MockCENode>(lhs_mock, lhs_ctr), make_unique<MockCENode>(rhs_mock, rhs_ctr));
+	UsageInfo result = node.extract();
+	UsageInfo expected = {unordered_set<VarRef>({"A", "B"}), unordered_set<int>({1, 2})};
+	REQUIRE_EQUALS(result.constants, expected.constants);
+	REQUIRE_EQUALS(result.variables, expected.variables);
+	REQUIRE_EQUALS(lhs_ctr, 1);
+	REQUIRE_EQUALS(rhs_ctr, 1);
+}

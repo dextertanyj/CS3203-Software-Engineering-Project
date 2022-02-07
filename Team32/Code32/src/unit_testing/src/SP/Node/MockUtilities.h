@@ -7,6 +7,21 @@
 
 #include <string>
 
+class MockCENode : public ConditionalExpressionNode {
+public:
+	MockCENode(UsageInfo data, int& ctr) : data(move(data)), ctr(ctr) {};
+	UsageInfo extract() override {
+		ctr++;
+		return data;
+	};
+	bool equals(shared_ptr<ConditionalExpressionNode> object) override { return false; };
+	~MockCENode() override = default;
+
+private:
+	UsageInfo data;
+	int& ctr;
+};
+
 ArithmeticProcessor::ArithmeticExpression createArithmeticExpression(vector<string> str_list);
 unique_ptr<RelationalExpressionNode> createRelationalExpression(string str);
 unique_ptr<StatementListNode> createStatementList(string str, int statement_count);

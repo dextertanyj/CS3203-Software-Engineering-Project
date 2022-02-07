@@ -6,7 +6,7 @@
 
 using namespace std;
 
-SP::Parser::Parser() : statement_count(1) {}
+SP::Parser::Parser(SP::Lexer lex) : lex(std::move(lex)), statement_count(1) {}
 
 unique_ptr<ProgramNode> SP::Parser::parse(string source) {
 	this->lex.initialize(std::move(source));

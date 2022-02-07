@@ -142,3 +142,15 @@ TEST_CASE("SP::Node::IfNode::parseIfStatement Missing Brackets Test") {
     REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), SP::TokenizationException);
     REQUIRE_EQUALS(statement_count, 2);
 }
+
+TEST_CASE("IfNode::extract Test") {
+	PKB pkb;
+	unique_ptr<ConditionalExpressionNode> condition = createRelationalExpression("x < y");
+	unique_ptr<StatementListNode> if_clause = createStatementList("read x; print y; }", 2);
+	unique_ptr<StatementListNode> then_clause = createStatementList("read x; print y; }", 3);
+	IfNode node = IfNode(1, std::move(condition), std::move(if_clause), std::move(then_clause));
+	StmtInfo result = node.extract(pkb);
+	StmtInfo expected = {1, StmtType::IfStmt};
+	REQUIRE_EQUALS(result.reference, expected.reference);
+	REQUIRE_EQUALS(result.type, expected.type);
+}

@@ -2,15 +2,15 @@
 
 #include <string>
 
-#include "SP/SP.h"
 #include "SP/Lexer.h"
 #include "SP/Node/ProgramNode.h"
+#include "SP/SP.h"
 
 using namespace std;
 
 class SP::Parser {
 public:
-	Parser();
+	explicit Parser(SP::Lexer lex);
 	unique_ptr<ProgramNode> parse(string source);
 
 private:

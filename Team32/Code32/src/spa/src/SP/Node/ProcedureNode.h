@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "PKB/PKB.h"
 #include "SP/Lexer.h"
 #include "SP/Node/StatementListNode.h"
 
@@ -13,6 +14,7 @@ class ProcedureNode {
 public:
 	ProcedureNode(string name, unique_ptr<StatementListNode> stmtLst);
 	static unique_ptr<ProcedureNode> parseProcedure(Lexer& lex, int& statement_count);
+	bool extract(PKB& pkb);
     bool equals(shared_ptr<ProcedureNode> object);
 
 private:

@@ -73,3 +73,10 @@ TEST_CASE("SP::Node::VariableNode::parseVariable Parse Valid Name String") {
 TEST_CASE("SP::Node::VariableNode::parseVariable Parse invalid Name String with digits first") {
     REQUIRE_THROWS_AS(VariableNode::parseVariable("123test"), SP::ParseException);
 }
+
+TEST_CASE("VariableNode::extract Test") {
+	VariableNode node = VariableNode("A");
+	VarRef result = node.extract();
+	VarRef expected = "A";
+	REQUIRE_EQUALS(result, expected);
+}

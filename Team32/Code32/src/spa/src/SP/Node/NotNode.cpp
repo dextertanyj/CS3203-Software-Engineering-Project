@@ -2,6 +2,8 @@
 
 NotNode::NotNode(unique_ptr<ConditionalExpressionNode> expression) : expression(move(expression)) {}
 
+UsageInfo NotNode::extract() { return expression->extract(); }
+
 bool NotNode::equals(shared_ptr<ConditionalExpressionNode> object) {
     shared_ptr<NotNode> other = dynamic_pointer_cast<NotNode>(object);
     if (other == nullptr) {

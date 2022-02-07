@@ -10,6 +10,7 @@ using namespace std;
 class AndNode : public ConditionalExpressionNode {
 public:
 	AndNode(unique_ptr<ConditionalExpressionNode> lhs, unique_ptr<ConditionalExpressionNode> rhs);
+	UsageInfo extract() override;
     bool equals(shared_ptr<ConditionalExpressionNode> object) override;
 
 private:

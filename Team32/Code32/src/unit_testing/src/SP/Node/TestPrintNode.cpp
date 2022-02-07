@@ -40,3 +40,22 @@ TEST_CASE("SP::Node::PrintNode::equals Different Node Type Test") {
     shared_ptr<CallNode> other = make_shared<CallNode>(1, "test");
     REQUIRE_FALSE(node->equals(move(other)));
 }
+
+TEST_CASE("PrintNode::extract Test") {
+	PKB pkb;
+	PrintNode node = PrintNode(1, make_unique<VariableNode>("A"));
+	StmtInfo result = node.extract(pkb);
+	StmtInfo expected = {1, StmtType::Print};
+	REQUIRE_EQUALS(result.reference, expected.reference);
+	REQUIRE_EQUALS(result.type, expected.type);
+}
+
+TEST_CASE("SP::Node::PrintNode::parsePrintStatement Valid Token Test") {
+    Lexer lex;
+    lex.initialize("x;");
+    int statement_count = 1;
+    unique_ptr<PrintNode> node = PrintNode::parsePrintStatement(lex, statement_count);
+    shared_ptr<PrintNode> expected = make_shared<PrintNode>(1, make_unique<VariableNode>("x"));
+    REQUIRE(node->equals(move(expected)));
+    REQUIRE_EQUALS(statement_count, 2);
+}
