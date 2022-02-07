@@ -1,5 +1,7 @@
 #include "AssignStore.h"
 
+#include <cassert>
+
 using namespace std;
 
 AssignStore::AssignStore() {}

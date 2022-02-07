@@ -1,5 +1,7 @@
 #include "UseStore.h"
 
+#include <cassert>
+
 using namespace std;
 
 UseStore::UseStore() {}
