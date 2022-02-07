@@ -5,7 +5,7 @@
 
 using namespace std;
 
-ArithmeticOperator Converter::convertArithmetic(const string& op) {
+ArithmeticOperator Common::Converter::convertArithmetic(const string& op) {
 	if (op == "+") {
 		return ArithmeticOperator::Plus;
 	}
@@ -24,7 +24,7 @@ ArithmeticOperator Converter::convertArithmetic(const string& op) {
 	throw ConversionException("Expected arithmetic symbol, got " + op + " instead.");
 }
 
-RelationalOperator Converter::convertRelational(const string& op) {
+RelationalOperator Common::Converter::convertRelational(const string& op) {
 	if (op == ">") {
 		return RelationalOperator::GT;
 	}
@@ -46,8 +46,8 @@ RelationalOperator Converter::convertRelational(const string& op) {
 	throw ConversionException("Expected relational symbol, got " + op + " instead.");
 }
 
-int Converter::convertInteger(const string& integer) {
-	if (!Validator::validateInteger(integer)) {
+int Common::Converter::convertInteger(const string& integer) {
+	if (!Common::Validator::validateInteger(integer)) {
 		throw ConversionException("Invalid argument");
 	}
 	try {

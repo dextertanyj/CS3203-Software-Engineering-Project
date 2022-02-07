@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace Validator {
+namespace Common::Validator {
 	bool validateArithmeticOperator(const string& op);
 	bool validateName(const string& name);
 	bool validateInteger(const string& integer);

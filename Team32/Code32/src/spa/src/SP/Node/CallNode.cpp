@@ -19,7 +19,7 @@ bool CallNode::equals(shared_ptr<StatementNode> object) {
 
 unique_ptr<CallNode> CallNode::parseCallStatement(Lexer &lex, int &statement_count) {
     ProcRef name = lex.readToken();
-    if (!Validator::validateName(name)) {
+    if (!Common::Validator::validateName(name)) {
         throw SP::ParseException("Invalid procedure name");
     }
     lex.nextIf(";");

@@ -13,7 +13,7 @@ ProcedureNode::ProcedureNode(string name, unique_ptr<StatementListNode> stmtLst)
 unique_ptr<ProcedureNode> ProcedureNode::parseProcedure(Lexer& lex, int& statement_count) {
 	lex.nextIf("procedure");
 	ProcRef name = lex.readToken();
-	if (!Validator::validateName(name)) {
+	if (!Common::Validator::validateName(name)) {
 		throw SP::ParseException("Invalid procedure name");
 	}
 	lex.nextIf("{");
