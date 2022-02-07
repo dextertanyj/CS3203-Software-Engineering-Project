@@ -1,0 +1,35 @@
+1 - Statement count test
+stmt s;
+Select s
+1, 2, 3, 4, 5, 6, 7, 8
+5000
+2 - Comment
+stmt s;
+Select s such that Parent(s, 4)
+3
+5000
+3 - Comment
+stmt s;
+Select s such that Parent(4, s)
+5, 6
+5000
+4 - Comment
+stmt s;
+Select s such that Parent(4, s)
+5, 6
+5000
+5 - Comment
+stmt s;
+Select s such that Parent(5, 5)
+none
+5000
+6 - Comment
+stmt ss;
+Select ss such that Parent(ss, 8)
+3
+5000
+7 - Comment
+stmt sss;
+Select sss such that Parent(_, sss)
+4, 5, 6, 7, 8
+5000
