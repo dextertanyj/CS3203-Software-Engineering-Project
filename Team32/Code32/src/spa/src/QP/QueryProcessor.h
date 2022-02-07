@@ -1,7 +1,6 @@
 #ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPROCESSOR_H_
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPROCESSOR_H_
 
-
 #include <string>
 #include <vector>
 
@@ -13,13 +12,11 @@ using std::vector;
 
 class QueryProcessor {
 public:
-	string processQuery(string query);
+	explicit QueryProcessor(PKB& pkb);
+	vector<string> processQuery(string query);
 
 private:
-	string formatResult();
-
-	string query;
-	QueryResult queryResult;
+	QueryEvaluator evaluator;
 };
 
-#endif // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPROCESSOR_H_
+#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPROCESSOR_H_

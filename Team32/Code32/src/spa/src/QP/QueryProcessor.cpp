@@ -2,10 +2,11 @@
 
 #include "QP/QueryPreprocessor.h"
 
-string QueryProcessor::processQuery(string query) {
-	this->query = query;
-	QueryPreprocessor queryPrepro;
-	QueryProperties queryProperties = queryPrepro.parseQuery(query);
-	this->queryResult = QueryEvaluator::executeQuery(queryProperties);
-	return QueryFormatter::formatResult(queryProperties, this->queryResult);
+QueryProcessor::QueryProcessor(PKB& pkb) : evaluator(QueryEvaluator(pkb)) {}
+
+vector<string> QueryProcessor::processQuery(string query) {
+	QueryPreprocessor preprocessor;
+	QueryProperties query_properties = preprocessor.parseQuery(std::move(query));
+	QueryResult result = evaluator.executeQuery(query_properties);
+	return QueryFormatter::formatResult(query_properties, result);
 }
