@@ -10,9 +10,9 @@
 #include "catch_tools.h"
 
 using namespace std;
-using namespace ArithmeticProcessor;
+using namespace Common::ArithmeticProcessor;
 
-TEST_CASE("ArithmeticExpression::parse Basic Test") {
+TEST_CASE("Common::ArithmeticProcessor::ArithmeticExpression::parse Basic Test") {
 	MockLexer lex = MockLexer(vector<string>({"1", "+", "2", ";"}));
 	ArithmeticExpression expression = ArithmeticExpression::parse(lex);
 	shared_ptr<ExpressionNode> root =
@@ -25,7 +25,7 @@ TEST_CASE("ArithmeticExpression::parse Basic Test") {
 	REQUIRE_EQUALS(expression.getVariables(), variables);
 }
 
-TEST_CASE("ArithmeticExpression::parse Bracketing Condition Test") {
+TEST_CASE("Common::ArithmeticProcessor::ArithmeticExpression::parse Bracketing Condition Test") {
 	MockLexer lex = MockLexer(vector<string>({"(", "(", "1", ")", ")", ")"}));
 	ArithmeticExpression expression = ArithmeticExpression::parse(lex);
 	shared_ptr<ExpressionNode> root = make_shared<ConstantNode>("1");
@@ -38,7 +38,7 @@ TEST_CASE("ArithmeticExpression::parse Bracketing Condition Test") {
 	REQUIRE_EQUALS(lex.readToken(), ")");
 }
 
-TEST_CASE("ArithmeticExpression::parse Precedence Test") {
+TEST_CASE("Common::ArithmeticProcessor::ArithmeticExpression::parse Precedence Test") {
 	MockLexer lex = MockLexer(vector<string>({"(", "A", "+", "1", ")", "*", "B", "+", "2", "/", "3", ")"}));
 	ArithmeticExpression expression = ArithmeticExpression::parse(lex);
 	shared_ptr<ExpressionNode> bracketed =

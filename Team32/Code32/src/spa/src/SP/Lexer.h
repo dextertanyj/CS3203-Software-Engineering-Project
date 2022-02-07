@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class SP::Lexer : public ArithmeticProcessor::LexerInterface {
+class SP::Lexer : public Common::ArithmeticProcessor::LexerInterface {
 public:
 	void initialize(string);
 	bool nextToken();

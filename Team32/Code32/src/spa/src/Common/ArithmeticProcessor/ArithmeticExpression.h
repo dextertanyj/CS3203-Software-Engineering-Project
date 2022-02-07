@@ -11,7 +11,7 @@
 
 using namespace std;
 
-class ArithmeticProcessor::ArithmeticExpression {
+class Common::ArithmeticProcessor::ArithmeticExpression {
 public:
 	static ArithmeticExpression parse(LexerInterface& lex);
 	ArithmeticExpression(shared_ptr<ExpressionNode> root, unordered_set<VarRef> variables, unordered_set<int> constants);

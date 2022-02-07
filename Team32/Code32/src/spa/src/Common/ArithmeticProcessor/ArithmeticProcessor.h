@@ -5,7 +5,7 @@
 
 using namespace std;
 
-namespace ArithmeticProcessor {
+namespace Common::ArithmeticProcessor {
 struct ArithmeticProcessorException : public runtime_error {
 	using runtime_error::runtime_error;
 };

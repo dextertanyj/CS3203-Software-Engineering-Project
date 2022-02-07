@@ -8,7 +8,7 @@
 
 using namespace std;
 
-class MockLexer : public ArithmeticProcessor::LexerInterface {
+class MockLexer : public Common::ArithmeticProcessor::LexerInterface {
 public:
 	MockLexer(vector<string> tokens);
 	string readToken() override;

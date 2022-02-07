@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class ArithmeticProcessor::ConstantNode : public ArithmeticProcessor::ExpressionNode {
+class Common::ArithmeticProcessor::ConstantNode : public ExpressionNode {
 public:
 	explicit ConstantNode(const string& value);
 	bool equals(shared_ptr<ExpressionNode> object) override;

@@ -5,14 +5,14 @@
 using namespace std;
 using namespace SP;
 
-ArithmeticExpressionNode::ArithmeticExpressionNode(ArithmeticProcessor::ArithmeticExpression expression) : expression(move(expression)) {}
+ArithmeticExpressionNode::ArithmeticExpressionNode(Common::ArithmeticProcessor::ArithmeticExpression expression) : expression(move(expression)) {}
 
 unique_ptr<ArithmeticExpressionNode> ArithmeticExpressionNode::parseArithmeticExpression(Lexer& lex) {
-	ArithmeticProcessor::ArithmeticExpression expression = ArithmeticProcessor::ArithmeticExpression::parse(lex);
+	Common::ArithmeticProcessor::ArithmeticExpression expression = Common::ArithmeticProcessor::ArithmeticExpression::parse(lex);
 	return make_unique<ArithmeticExpressionNode>(expression);
 }
 
-ArithmeticProcessor::ArithmeticExpression ArithmeticExpressionNode::extract() {
+Common::ArithmeticProcessor::ArithmeticExpression ArithmeticExpressionNode::extract() {
 	return expression;
 }
 

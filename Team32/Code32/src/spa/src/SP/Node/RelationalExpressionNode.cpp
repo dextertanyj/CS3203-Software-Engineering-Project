@@ -16,8 +16,8 @@ unique_ptr<RelationalExpressionNode> RelationalExpressionNode::parseRelationalEx
 
 UsageInfo RelationalExpressionNode::extract() {
 	UsageInfo usage;
-	ArithmeticProcessor::ArithmeticExpression lhs_expression = lhs->extract();
-	ArithmeticProcessor::ArithmeticExpression rhs_expression = rhs->extract();
+	Common::ArithmeticProcessor::ArithmeticExpression lhs_expression = lhs->extract();
+	Common::ArithmeticProcessor::ArithmeticExpression rhs_expression = rhs->extract();
 	unordered_set<VarRef> lhs_variables = lhs_expression.getVariables();
 	unordered_set<int> lhs_constants = lhs_expression.getConstants();
 	unordered_set<VarRef> rhs_variables = rhs_expression.getVariables();

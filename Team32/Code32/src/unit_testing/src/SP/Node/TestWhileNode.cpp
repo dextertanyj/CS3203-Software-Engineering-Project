@@ -80,7 +80,7 @@ TEST_CASE("SP::Node::WhileNode::parseWhileStatement Missing Condition Token Test
     Lexer lex;
     lex.initialize("( ) { count = count + 1; call readPoint; }");
     int statement_count = 1;
-    REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), ArithmeticProcessor::ArithmeticProcessorException);
+    REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), Common::ArithmeticProcessor::ArithmeticProcessorException);
     REQUIRE_EQUALS(statement_count, 2);
 }
 

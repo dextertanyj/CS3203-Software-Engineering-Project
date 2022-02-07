@@ -8,7 +8,7 @@
 
 using namespace std;
 
-class ArithmeticProcessor::ExpressionNode {
+class Common::ArithmeticProcessor::ExpressionNode {
 public:
 	virtual bool equals(shared_ptr<ExpressionNode> object) = 0;
 	virtual bool contains(shared_ptr<ExpressionNode> object) = 0;

@@ -15,12 +15,12 @@ using namespace SP;
 class ArithmeticExpressionNode {
 public:
 	static unique_ptr<ArithmeticExpressionNode> parseArithmeticExpression(Lexer& lex);
-	explicit ArithmeticExpressionNode(ArithmeticProcessor::ArithmeticExpression expression);
-	ArithmeticProcessor::ArithmeticExpression extract();
+	explicit ArithmeticExpressionNode(Common::ArithmeticProcessor::ArithmeticExpression expression);
+	Common::ArithmeticProcessor::ArithmeticExpression extract();
     bool equals(shared_ptr<ArithmeticExpressionNode> object);
 
 private:
-	ArithmeticProcessor::ArithmeticExpression expression;
+	Common::ArithmeticProcessor::ArithmeticExpression expression;
 };
 
 #endif  // SPA_ARITHMETICEXPRESSIONNODE_H

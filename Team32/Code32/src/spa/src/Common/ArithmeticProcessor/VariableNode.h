@@ -4,7 +4,7 @@
 #include "Common/ArithmeticProcessor/ArithmeticExpression.h"
 #include "Common/ArithmeticProcessor/ExpressionNode.h"
 
-class ArithmeticProcessor::VariableNode : public ArithmeticProcessor::ExpressionNode {
+class Common::ArithmeticProcessor::VariableNode : public ExpressionNode {
 public:
 	explicit VariableNode(VarRef name);
 	bool equals(shared_ptr<ExpressionNode> object) override;

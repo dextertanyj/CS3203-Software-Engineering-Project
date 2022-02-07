@@ -10,8 +10,7 @@
 #include "Common/Validator.h"
 
 using namespace std;
-using namespace ArithmeticProcessor;
-using namespace Common;
+using namespace Common::ArithmeticProcessor;
 
 ArithmeticExpression::ArithmeticExpression(shared_ptr<ExpressionNode> root, unordered_set<VarRef> variables, unordered_set<int> constants)
 	: root(std::move(root)), variables(std::move(variables)), constants(std::move(constants)) {}

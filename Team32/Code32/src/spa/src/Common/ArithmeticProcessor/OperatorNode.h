@@ -8,7 +8,7 @@
 
 using namespace std;
 
-class ArithmeticProcessor::OperatorNode : public ArithmeticProcessor::ExpressionNode {
+class Common::ArithmeticProcessor::OperatorNode : public ExpressionNode {
 public:
 	OperatorNode(ArithmeticOperator op, shared_ptr<ExpressionNode> lhs, shared_ptr<ExpressionNode> rhs);
 	bool equals(shared_ptr<ExpressionNode> object) override;

@@ -127,7 +127,7 @@ TEST_CASE("SP::Node::RelationalExpressionNode::parseRelationalExpression Invalid
     Lexer lex;
     lex.initialize("x == != 0)");
     REQUIRE_THROWS_AS(RelationalExpressionNode::parseRelationalExpression(lex),
-                      ArithmeticProcessor::ArithmeticProcessorException);
+	                  Common::ArithmeticProcessor::ArithmeticProcessorException);
 }
 
 TEST_CASE("RelationalExpressionNode::extract Test") {
