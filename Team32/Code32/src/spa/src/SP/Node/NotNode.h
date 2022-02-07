@@ -10,10 +10,10 @@ using namespace std;
 class NotNode : public ConditionalExpressionNode {
 public:
 	explicit NotNode(unique_ptr<ConditionalExpressionNode> expression);
+    bool equals(shared_ptr<ConditionalExpressionNode> object) override;
 
 private:
 	unique_ptr<ConditionalExpressionNode> expression;
 };
 
-
-#endif //SPA_NOTNODE_H
+#endif  // SPA_NOTNODE_H

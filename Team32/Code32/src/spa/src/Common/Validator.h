@@ -6,6 +6,7 @@
 using namespace std;
 
 namespace Validator {
+	bool validateArithmeticOperator(const string& op);
 	bool validateName(const string& name);
 	bool validateInteger(const string& integer);
 }

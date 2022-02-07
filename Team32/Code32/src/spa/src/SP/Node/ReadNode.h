@@ -10,9 +10,11 @@ using namespace std;
 
 class ReadNode : public StatementNode {
 public:
-    ReadNode(StmtRef stmtNo, unique_ptr<VariableNode> variable);
+	ReadNode(StmtRef stmtNo, unique_ptr<VariableNode> variable);
+    bool equals(shared_ptr<StatementNode> object) override;
+
 private:
-    unique_ptr<VariableNode> variable;
+	unique_ptr<VariableNode> variable;
 };
 
-#endif //SPA_READNODE_H
+#endif  // SPA_READNODE_H

@@ -6,9 +6,11 @@
 
 class CallNode : public StatementNode {
 public:
-    CallNode(StmtRef stmtNo, ProcRef procedure);
+	CallNode(StmtRef stmtNo, ProcRef procedure);
+    bool equals(shared_ptr<StatementNode> object) override;
+
 private:
-    ProcRef procedure;
+	ProcRef procedure;
 };
 
-#endif //SPA_CALLNODE_H
+#endif  // SPA_CALLNODE_H

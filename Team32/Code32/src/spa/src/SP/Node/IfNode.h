@@ -8,14 +8,19 @@
 #include "SP/Node/StatementNode.h"
 
 using namespace std;
+using namespace SP;
 
 class IfNode : public StatementNode {
 public:
-    IfNode(StmtRef stmtNo, unique_ptr<ConditionalExpressionNode> condExpr, unique_ptr<StatementListNode> ifStmtLst, unique_ptr<StatementListNode> elseStmtLst);
+	IfNode(StmtRef stmtNo, unique_ptr<ConditionalExpressionNode> condExpr, unique_ptr<StatementListNode> ifStmtLst,
+	       unique_ptr<StatementListNode> elseStmtLst);
+	static unique_ptr<IfNode> parseIfStatement(Lexer& lex, int& statement_count);
+    bool equals(shared_ptr<StatementNode> object) override;
+
 private:
-    unique_ptr<ConditionalExpressionNode> condExpr;
-    unique_ptr<StatementListNode> ifStmtLst;
-    unique_ptr<StatementListNode> elseStmtLst;
+	unique_ptr<ConditionalExpressionNode> condExpr;
+	unique_ptr<StatementListNode> ifStmtLst;
+	unique_ptr<StatementListNode> elseStmtLst;
 };
 
-#endif //SPA_IFNODE_H
+#endif  // SPA_IFNODE_H

@@ -1,23 +1,22 @@
 #ifndef SPA_LEXER_H
 #define SPA_LEXER_H
 
-#include <string>
 #include <regex>
+#include <string>
+
+#include "Common/ArithmeticProcessor/LexerInterface.h"
+#include "SP/SP.h"
 
 using namespace std;
 
-struct TokenizationException : public std::runtime_error {
-	using runtime_error::runtime_error;
-};
-
-class Lexer {
+class SP::Lexer : public ArithmeticProcessor::LexerInterface {
 public:
 	void initialize(string);
-	bool next_token();
-	string read_token();
-	string peek_token();
-	bool next_if(const string& token);
-	bool next_if(initializer_list<string> tokens);
+	bool nextToken();
+	string readToken() override;
+	string peekToken() override;
+	bool nextIf(const string& token);
+	bool nextIf(initializer_list<string> tokens);
 
 private:
 	static regex validation_regex;
@@ -27,4 +26,4 @@ private:
 	sregex_iterator iterator;
 };
 
-#endif //SPA_LEXER_H
+#endif  // SPA_LEXER_H

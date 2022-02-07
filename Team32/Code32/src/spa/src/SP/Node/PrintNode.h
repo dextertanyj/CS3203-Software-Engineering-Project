@@ -10,9 +10,10 @@ using namespace std;
 
 class PrintNode : public StatementNode {
 public:
-    PrintNode(StmtRef stmtNo, unique_ptr<VariableNode> variable);
+	PrintNode(StmtRef stmtNo, unique_ptr<VariableNode> variable);
+    bool equals(shared_ptr<StatementNode> object) override;
 private:
-    unique_ptr<VariableNode> variable;
+	unique_ptr<VariableNode> variable;
 };
 
-#endif //SPA_PRINTNODE_H
+#endif  // SPA_PRINTNODE_H
