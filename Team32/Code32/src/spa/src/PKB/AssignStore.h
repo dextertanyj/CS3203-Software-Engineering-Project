@@ -3,6 +3,7 @@
 
 #include "../Common/TypeDefs.h"
 #include <unordered_map>
+#include <memory>
 
 using namespace std;
 

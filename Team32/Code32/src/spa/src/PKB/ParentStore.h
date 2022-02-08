@@ -11,26 +11,24 @@ using namespace std;
 #ifndef INC_21S2_CP_SPA_TEAM_32_PARENTSTORE_H
 #define INC_21S2_CP_SPA_TEAM_32_PARENTSTORE_H
 
-typedef int StmtRef;
-typedef int StmtRef;
 struct ParentRelation {
-    unordered_set<StmtRef> childSet;
-    unordered_set<StmtRef> parentStarSet;
-    unordered_set<StmtRef> childStarSet;
-    StmtRef parent;
+    unordered_set<shared_ptr<StmtInfo>> childSet;
+    unordered_set<shared_ptr<StmtInfo>> parentStarSet;
+    unordered_set<shared_ptr<StmtInfo>> childStarSet;
+    shared_ptr<StmtInfo> parent;
 };
 
 class ParentStore {
 public:
     ParentStore();
-    void setParent(StmtRef parentStmt, StmtRef childStmt);
-    bool isParentChild(StmtRef parentStmt, StmtRef childStmt);
+    void setParent(shared_ptr<StmtInfo>, shared_ptr<StmtInfo>);
+    bool isParentChild(shared_ptr<StmtInfo>, shared_ptr<StmtInfo>);
     
     // Get the immediate parent statement of this statement.
-    StmtRef getParent(StmtRef stmt);
+    shared_ptr<StmtInfo> getParent(shared_ptr<StmtInfo>);
 
     // Get set of all child statements to stmt.
-    unordered_set<StmtRef> getChildren(StmtRef stmt);
+    unordered_set<shared_ptr<StmtInfo>> getChildren(shared_ptr<StmtInfo>);
     void clear();
     void populateParentStar(int numStatements);
 private:
