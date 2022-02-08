@@ -12,7 +12,7 @@ TEST_CASE("Follows Methods") {
         // Verify that normal setting works.
         CHECK_NOTHROW(pkb.setFollows(s1,s2));
         CHECK_NOTHROW(pkb.setFollows(s2,s3));
-        CHECK_NOTHROW(pkb.setFollows(1, INT32_MAX));
+        // CHECK_NOTHROW(pkb.setFollows(1, INT32_MAX));
 
         // Verify that improper arguments lead to an exception thrown.
         CHECK_THROWS(pkb.setFollows(-1, 1));
