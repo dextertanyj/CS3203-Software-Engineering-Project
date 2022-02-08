@@ -55,6 +55,5 @@ private:
     unordered_map<ProcRef, vector<StmtRef>> procMap;
     unordered_map<StmtRef, StmtType> typeMap;
     int numStatements;
-    void checkInvalidStmts(StmtRef stmtNo1, StmtRef stmtNo2);
     void checkInvalidStmt(StmtRef stmtNo1);
 };

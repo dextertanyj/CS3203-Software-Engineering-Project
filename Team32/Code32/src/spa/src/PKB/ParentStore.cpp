@@ -7,8 +7,8 @@ using namespace std;
 ParentStore::ParentStore() {}
 
 void ParentStore::setParent(StmtRef parentStmt, StmtRef childStmt) {
-    assert(parentStmt > 0 && childStmt > 0);
-    assert(parentStmt < childStmt);
+    if (parentStmt >= childStmt) throw invalid_argument("Second statement must come after the first statement.");
+    if (parentStmt <= 0 || childStmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
         
     auto keyItr = parentMap.find(parentStmt);
     if (keyItr == parentMap.end()) {
@@ -29,8 +29,8 @@ void ParentStore::setParent(StmtRef parentStmt, StmtRef childStmt) {
 }
 
 bool ParentStore::isParentChild(StmtRef parentStmt, StmtRef childStmt) {
-    assert(parentStmt > 0 && childStmt > 0);
-    assert(parentStmt < childStmt);
+    if (parentStmt <= 0 || childStmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
+    if (parentStmt >= childStmt) return false;
 
     auto keyItr = parentMap.find(childStmt);
     if (keyItr == parentMap.end()) {
@@ -41,7 +41,7 @@ bool ParentStore::isParentChild(StmtRef parentStmt, StmtRef childStmt) {
 }
 
 StmtRef ParentStore::getParent(StmtRef stmt) {
-    assert(stmt > 0);
+    if (stmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
     auto keyItr = parentMap.find(stmt);
     if (keyItr == parentMap.end()) {
@@ -51,7 +51,7 @@ StmtRef ParentStore::getParent(StmtRef stmt) {
 }
 
 unordered_set<StmtRef> ParentStore::getChildren(StmtRef stmt) {
-    assert(stmt > 0);
+    if (stmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
     for(auto& itr : parentMap) {
         if (itr.first == stmt) {

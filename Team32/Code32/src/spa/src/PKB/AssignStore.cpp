@@ -7,14 +7,14 @@ using namespace std;
 AssignStore::AssignStore() {}
 
 void AssignStore::setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree) {
-    assert(stmtNo > 0);
+    if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
     auto keyItr = assignMap.find(stmtNo);
     AssignRelation assignRelation = { variableLHS, opTree };
     if (keyItr == assignMap.end()) {
         assignMap.insert(make_pair(stmtNo, assignRelation));
     } else {
-        keyItr->second = assignRelation;
+        throw invalid_argument("Statement 1 already exists in assign map.");
     }
 }
 
@@ -23,8 +23,8 @@ StmtRefList AssignStore::getPatternMatch(StmtInfoList stmtNoList, VarRef variabl
     StmtRefList stmtRefList;
     for (auto& stmtInfo : stmtNoList) {
         StmtRef stmtNo = stmtInfo.reference;
-        assert(stmtInfo.type == StmtType::Assign);
-        assert(stmtNo > 0);
+        if (stmtInfo.type != StmtType::Assign) throw invalid_argument("Statement must be an Assign statement.");
+        if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
         auto keyItr = assignMap.find(stmtNo);
         if (keyItr == assignMap.end()) {

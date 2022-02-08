@@ -7,7 +7,7 @@ using namespace std;
 UseStore::UseStore() {}
 
 void UseStore::setUses(StmtRef stmtNo, VarRef var_name) {
-    assert(stmtNo > 0);
+    if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
     auto keyItr = varToStmtMap.find(var_name);
     if (keyItr == varToStmtMap.end()) {
