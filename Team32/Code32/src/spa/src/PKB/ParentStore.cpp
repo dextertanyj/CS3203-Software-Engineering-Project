@@ -16,7 +16,7 @@ void ParentStore::setParent(shared_ptr<StmtInfo> parentStmtInfo, shared_ptr<Stmt
     auto keyItr = parentMap.find(parentStmt);
     if (keyItr == parentMap.end()) {
         // If parent does not exist as key, create and store into parentMap.
-        ParentRelation parentRelation = {{childStmtInfo}, {}, {}, make_shared<StmtInfo>()};
+        ParentRelation parentRelation = {{childStmtInfo}, {}, {}, NULL};
         parentMap.insert(make_pair(parentStmt, parentRelation));
     } else {
         // If parent already exists as key, add childStmtNo to set of children
