@@ -15,11 +15,11 @@ using namespace std;
 class UseStore {
 public:
     UseStore();
-    void setUses(StmtRef stmtNo, VarRef var_name);
+    void setUses(shared_ptr<StmtInfo>, VarRef);
     void clear();
 private:
     unordered_map<StmtRef, unordered_set<VarRef>> stmtToVarMap;
-    unordered_map<VarRef, unordered_set<StmtRef>> varToStmtMap;
+    unordered_map<VarRef, unordered_set<shared_ptr<StmtInfo>>> varToStmtMap;
 };
 
 #endif //INC_21S2_CP_SPA_TEAM_32_USESTORE_H

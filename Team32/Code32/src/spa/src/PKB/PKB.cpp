@@ -12,36 +12,36 @@ StmtRefList PKB::getStatements() {
   return stmtRefList;
 }
 
-void PKB::setParent(StmtRef stmtNo1, StmtRef stmtNo2) {
+void PKB::setParent(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2) {
     parentStore.setParent(stmtNo1, stmtNo2);
 }
 
-StmtRef PKB::getParent(StmtRef stmtNo) {
-    return parentStore.getParent(stmtNo);
+shared_ptr<StmtInfo> PKB::getParent(shared_ptr<StmtInfo> stmt) {
+    return parentStore.getParent(stmt);
 }
 
-unordered_set<StmtRef> PKB::getChildren(StmtRef stmtNo) {
-    return parentStore.getChildren(stmtNo);
+unordered_set<shared_ptr<StmtInfo>> PKB::getChildren(shared_ptr<StmtInfo> stmt) {
+    return parentStore.getChildren(stmt);
 }
 
-bool PKB::checkParents(StmtRef stmtNo1, StmtRef stmtNo2) {
+bool PKB::checkParents(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2) {
     return parentStore.isParentChild(stmtNo1, stmtNo2);
 }
 
-void PKB::setFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
+void PKB::setFollows(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2) {
     followStore.setFollows(stmtNo1, stmtNo2);
 }
 
-bool PKB::checkFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
+bool PKB::checkFollows(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2) {
     return followStore.checkFollows(stmtNo1, stmtNo2);
 }
 
-StmtRef PKB::getFollower(StmtRef stmtNo) {
-    return followStore.getFollower(stmtNo);
+shared_ptr<StmtInfo> PKB::getFollower(shared_ptr<StmtInfo> stmt) {
+    return followStore.getFollower(stmt);
 }
 
-StmtRef PKB::getFollowee(StmtRef stmtNo) {
-    return followStore.getFollowee(stmtNo);
+shared_ptr<StmtInfo> PKB::getFollowee(shared_ptr<StmtInfo> stmt) {
+    return followStore.getFollowee(stmt);
 }
 
 void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree) {
@@ -71,12 +71,12 @@ void PKB::setStmtType(StmtRef stmtNo, StmtType type) {
     }
 }
 
-void PKB::setUses(StmtRef stmtNo, VarRef var_name) {
-    useStore.setUses(stmtNo, var_name);
+void PKB::setUses(shared_ptr<StmtInfo> stmt, VarRef var_name) {
+    useStore.setUses(stmt, var_name);
 }
 
-void PKB::setModifies(StmtRef stmtNo, VarRef var_name) {
-    modifyStore.setModify(stmtNo, var_name);
+void PKB::setModifies(shared_ptr<StmtInfo> stmt, VarRef var_name) {
+    modifyStore.setModify(stmt, var_name);
 }
 
 void PKB::populateComplexRelations() {
