@@ -9,8 +9,8 @@ FollowStore::FollowStore() {}
 // Also need to prevent same stmt No from following itself.
 // need to add checks that stmtno 2 doesnt follow another other stmt and stmt no 1 isnt followed by other stmts
 void FollowStore::setFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
-    assert(stmtNo1 > 0 && stmtNo2 > 0);
-    assert(stmtNo1 < stmtNo2);
+    if (stmtNo1 >= stmtNo2) throw invalid_argument("Second statement must come after the first statement.");
+    if (stmtNo1 <= 0 || stmtNo2 <= 0) throw invalid_argument("Statement number must be a positive integer.");
     
     auto keyItr = followMap.find(stmtNo1);
     if (keyItr == followMap.end()) {
@@ -18,13 +18,13 @@ void FollowStore::setFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
         FollowRelation followRelation = { stmtNo2, {}, {} };
         followMap.insert(make_pair(stmtNo1, followRelation));
     } else {
-        keyItr->second.follower = stmtNo2;
+        throw invalid_argument("Statement 1 already exists in follow map.");
     }
 }
 
 bool FollowStore::checkFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
-    assert(stmtNo1 > 0 && stmtNo2 > 0);
-    assert(stmtNo1 < stmtNo2);
+    if (stmtNo1 <= 0 || stmtNo2 <= 0) throw invalid_argument("Statement number must be a positive integer.");
+    if (stmtNo1 >= stmtNo2) return false;
 
     for(auto& itr : followMap) {
         if (itr.first == stmtNo1) {
@@ -35,7 +35,7 @@ bool FollowStore::checkFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
 }
 
 StmtRef FollowStore::getFollower(StmtRef stmt) {
-    assert(stmt > 0);
+    if (stmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
     for(auto& itr : followMap) {
         if (itr.first == stmt) {
@@ -46,7 +46,7 @@ StmtRef FollowStore::getFollower(StmtRef stmt) {
 }
 
 StmtRef FollowStore::getFollowee(StmtRef stmt) {
-    assert(stmt > 0);
+    if (stmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
     for(auto& itr : followMap) {
         if (itr.second.follower == stmt) {
