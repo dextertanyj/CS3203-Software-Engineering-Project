@@ -12,6 +12,7 @@ using namespace std;
 #define INC_21S2_CP_SPA_TEAM_32_FOLLOWSTORE_H
 
 struct FollowRelation {
+    shared_ptr<StmtInfo> followee;
     shared_ptr<StmtInfo> follower;
     unordered_set<shared_ptr<StmtInfo>> followers;
     unordered_set<shared_ptr<StmtInfo>> followees;
