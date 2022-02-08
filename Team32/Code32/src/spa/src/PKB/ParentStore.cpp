@@ -6,29 +6,35 @@ using namespace std;
 
 ParentStore::ParentStore() {}
 
-void ParentStore::setParent(StmtRef parentStmt, StmtRef childStmt) {
+void ParentStore::setParent(shared_ptr<StmtInfo> parentStmtInfo, shared_ptr<StmtInfo> childStmtInfo) {
+    StmtRef parentStmt = (parentStmtInfo.get())->reference;
+    StmtRef childStmt = (childStmtInfo.get())->reference;
+
     if (parentStmt >= childStmt) throw invalid_argument("Second statement must come after the first statement.");
     if (parentStmt <= 0 || childStmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
         
     auto keyItr = parentMap.find(parentStmt);
     if (keyItr == parentMap.end()) {
         // If parent does not exist as key, create and store into parentMap.
-        ParentRelation parentRelation = {{childStmt}, {}, {}, -1};
+        ParentRelation parentRelation = {{childStmtInfo}, {}, {}, make_shared<StmtInfo>()};
         parentMap.insert(make_pair(parentStmt, parentRelation));
     } else {
-        // If parent already exists as key, add childStmtNo to vector of children
-        keyItr->second.childSet.insert(childStmt);
+        // If parent already exists as key, add childStmtNo to set of children
+        keyItr->second.childSet.insert(childStmtInfo);
     }
     auto keyItr2 = parentMap.find(childStmt);
     if (keyItr2 == parentMap.end()) {
-        ParentRelation parentRelation = { {}, {}, {}, parentStmt };
+        ParentRelation parentRelation = { {}, {}, {}, parentStmtInfo };
         parentMap.insert(make_pair(childStmt, parentRelation));
     } else {
-        keyItr2->second.parent = parentStmt;
+        keyItr2->second.parent = parentStmtInfo;
     }
 }
 
-bool ParentStore::isParentChild(StmtRef parentStmt, StmtRef childStmt) {
+bool ParentStore::isParentChild(shared_ptr<StmtInfo> parentStmtInfo, shared_ptr<StmtInfo> childStmtInfo) {
+    StmtRef parentStmt = (parentStmtInfo.get())->reference;
+    StmtRef childStmt = (childStmtInfo.get())->reference;
+
     if (parentStmt <= 0 || childStmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
     if (parentStmt >= childStmt) return false;
 
@@ -36,29 +42,32 @@ bool ParentStore::isParentChild(StmtRef parentStmt, StmtRef childStmt) {
     if (keyItr == parentMap.end()) {
         return false;
     }
-    StmtRef parentStmtInStore = keyItr->second.parent;
-    return parentStmtInStore == parentStmt;
+    shared_ptr<StmtInfo> parentStmtInStore = keyItr->second.parent;
+    return parentStmtInStore.get() == parentStmtInfo.get();
 }
 
-StmtRef ParentStore::getParent(StmtRef stmt) {
+shared_ptr<StmtInfo> ParentStore::getParent(shared_ptr<StmtInfo> stmtInfo) {
+    StmtRef stmt = (stmtInfo.get())->reference;
+
     if (stmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
     auto keyItr = parentMap.find(stmt);
     if (keyItr == parentMap.end()) {
-        return -1;
+        return make_shared<StmtInfo>();
     }
     return keyItr->second.parent;
 }
 
-unordered_set<StmtRef> ParentStore::getChildren(StmtRef stmt) {
+unordered_set<shared_ptr<StmtInfo>> ParentStore::getChildren(shared_ptr<StmtInfo> stmtInfo) {
+    StmtRef stmt = (stmtInfo.get())->reference;
+
     if (stmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
-    for(auto& itr : parentMap) {
-        if (itr.first == stmt) {
-            return itr.second.childSet;
-        }
+    auto keyItr = parentMap.find(stmt);
+    if (keyItr == parentMap.end()) {
+        return unordered_set<shared_ptr<StmtInfo>>{};
     }
-    return unordered_set<StmtRef>{};
+    return keyItr->second.childSet;
 }
 
 void ParentStore::populateParentStar(int numStatements) {

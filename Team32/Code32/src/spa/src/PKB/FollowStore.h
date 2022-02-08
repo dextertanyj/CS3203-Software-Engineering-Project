@@ -12,18 +12,18 @@ using namespace std;
 #define INC_21S2_CP_SPA_TEAM_32_FOLLOWSTORE_H
 
 struct FollowRelation {
-    int follower;
-    unordered_set<StmtRef> followers;
-    unordered_set<StmtRef> followees;
+    shared_ptr<StmtInfo> follower;
+    unordered_set<shared_ptr<StmtInfo>> followers;
+    unordered_set<shared_ptr<StmtInfo>> followees;
 };
 
 class FollowStore {
 public:
     FollowStore();
-    void setFollows(StmtRef stmtNo1, StmtRef stmtNo2);
-    bool checkFollows(StmtRef stmtNo1, StmtRef stmtNo2);
-    StmtRef getFollowee(StmtRef stmt);
-    StmtRef getFollower(StmtRef stmt);
+    void setFollows(shared_ptr<StmtInfo>, shared_ptr<StmtInfo>);
+    bool checkFollows(shared_ptr<StmtInfo>, shared_ptr<StmtInfo>);
+    shared_ptr<StmtInfo> getFollowee(shared_ptr<StmtInfo>);
+    shared_ptr<StmtInfo> getFollower(shared_ptr<StmtInfo>);
     void clear();
 private:
     unordered_map<StmtRef, FollowRelation> followMap;
