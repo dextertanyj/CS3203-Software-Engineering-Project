@@ -19,12 +19,12 @@ public:
     PKB();
 
     // Set methods called by Source processor
-    void setFollows(StmtRef stmtNo1, StmtRef stmtNo2);
-    void setParent(StmtRef stmtNo1, StmtRef stmtNo2);
+    void setFollows(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2);
+    void setParent(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2);
     void setProc(ProcRef proc_name, vector<StmtRef> idxList);
     void setStmtType(StmtRef stmtNo, StmtType type);
-    void setUses(StmtRef stmtNo, VarRef var_name);
-    void setModifies(StmtRef stmtNo, VarRef var_name);
+    void setUses(shared_ptr<StmtInfo> stmtNo, VarRef var_name);
+    void setModifies(shared_ptr<StmtInfo> stmtNo, VarRef var_name);
     void setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree);
 
     // Get methods called by PQL
@@ -32,14 +32,14 @@ public:
     StmtRefList getStatements();
 
     // Parent get methods
-    StmtRef getParent(StmtRef stmtNo);
-    unordered_set<StmtRef> getChildren(StmtRef stmtNo);
-    bool checkParents(StmtRef stmtNo1, StmtRef stmtNo2);
+    shared_ptr<StmtInfo> getParent(shared_ptr<StmtInfo> stmtNo);
+    unordered_set<shared_ptr<StmtInfo>> getChildren(shared_ptr<StmtInfo> stmtNo);
+    bool checkParents(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2);
 
     // Follow get methods
-    StmtRef getFollowee(StmtRef stmtNo);
-    StmtRef getFollower(StmtRef stmtNo);
-    bool checkFollows(StmtRef stmtNo1, StmtRef stmtNo2);
+    shared_ptr<StmtInfo> getFollowee(shared_ptr<StmtInfo> stmtNo);
+    shared_ptr<StmtInfo> getFollower(shared_ptr<StmtInfo> stmtNo);
+    bool checkFollows(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2);
 
     // Others
     void clear();
