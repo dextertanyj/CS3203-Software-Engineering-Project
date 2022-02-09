@@ -29,8 +29,8 @@ void FollowStore::setFollows(shared_ptr<StmtInfo> stmtInfo1, shared_ptr<StmtInfo
     if (keyItr2 == followMap.end()) {
         FollowRelation followRelation = { stmtInfo1, NULL, {}, {} };
         followMap.insert(make_pair(stmtNo2, followRelation));
-    } else if (keyItr2->second.followee == NULL) {
-        keyItr2->second.followee = stmtInfo1;
+    } else if (keyItr2->second.preceding == NULL) {
+        keyItr2->second.preceding = stmtInfo1;
     } else {
         throw invalid_argument("Statement 2 already follows a statement.");
     }
@@ -54,7 +54,9 @@ bool FollowStore::checkFollows(shared_ptr<StmtInfo> stmtInfo1, shared_ptr<StmtIn
 shared_ptr<StmtInfo> FollowStore::getFollower(shared_ptr<StmtInfo> stmtInfo) {
     StmtRef stmt = stmtInfo->reference;
 
-    if (stmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
+    if (stmt <= 0) {
+		throw invalid_argument("Statement number must be a positive integer.");
+	}
 
     auto keyItr = followMap.find(stmt);
     if (keyItr != followMap.end()) {
@@ -64,14 +66,16 @@ shared_ptr<StmtInfo> FollowStore::getFollower(shared_ptr<StmtInfo> stmtInfo) {
     }
 }
 
-shared_ptr<StmtInfo> FollowStore::getFollowee(shared_ptr<StmtInfo> stmtInfo) {
+shared_ptr<StmtInfo> FollowStore::getPreceding(shared_ptr<StmtInfo> stmtInfo) {
     StmtRef stmt = stmtInfo->reference;
 
-    if (stmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
+    if (stmt <= 0) {
+		throw invalid_argument("Statement number must be a positive integer.");
+	}
 
     auto keyItr = followMap.find(stmt);
     if (keyItr != followMap.end()) {
-        return keyItr->second.followee;
+        return keyItr->second.preceding;
     } else {
         return make_shared<StmtInfo>();
     }

@@ -52,8 +52,8 @@ shared_ptr<StmtInfo> PKB::getFollower(StmtRef stmt) {
 }
 
 shared_ptr<StmtInfo> PKB::getFollowee(StmtRef stmt) {
-    shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
-    return followStore.getFollowee(stmtInfo);
+	shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
+	return followStore.getPreceding(stmtInfo);
 }
 
 void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree) {
