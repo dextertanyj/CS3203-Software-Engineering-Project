@@ -1,5 +1,5 @@
-#ifndef SPA_OPERATORNODE_H
-#define SPA_OPERATORNODE_H
+#ifndef SPA_BINARYOPERATORNODE_H
+#define SPA_BINARYOPERATORNODE_H
 
 #include <memory>
 
@@ -8,9 +8,9 @@
 
 using namespace std;
 
-class Common::ArithmeticProcessor::OperatorNode : public ExpressionNode {
+class Common::ArithmeticProcessor::BinaryOperatorNode : public ExpressionNode {
 public:
-	OperatorNode(ArithmeticOperator op, shared_ptr<ExpressionNode> lhs, shared_ptr<ExpressionNode> rhs);
+	BinaryOperatorNode(ArithmeticOperator op, shared_ptr<ExpressionNode> lhs, shared_ptr<ExpressionNode> rhs);
 	bool equals(shared_ptr<ExpressionNode> object) override;
 	bool contains(shared_ptr<ExpressionNode> object) override;
 private:
@@ -20,4 +20,4 @@ private:
 
 };
 
-#endif  // SPA_OPERATORNODE_H
+#endif  // SPA_BINARYOPERATORNODE_H

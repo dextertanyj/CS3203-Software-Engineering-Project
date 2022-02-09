@@ -2,7 +2,7 @@
 
 #include "Common/ArithmeticProcessor/ArithmeticExpression.h"
 #include "Common/ArithmeticProcessor/ConstantNode.h"
-#include "Common/ArithmeticProcessor/OperatorNode.h"
+#include "Common/ArithmeticProcessor/BinaryOperatorNode.h"
 #include "Common/ArithmeticProcessor/VariableNode.h"
 #include "Common/Converter.h"
 #include "MockLexer.h"
@@ -16,7 +16,7 @@ TEST_CASE("Common::ArithmeticProcessor::ArithmeticExpression::parse Basic Test")
 	MockLexer lex = MockLexer(vector<string>({"1", "+", "2", ";"}));
 	ArithmeticExpression expression = ArithmeticExpression::parse(lex);
 	shared_ptr<ExpressionNode> root =
-		make_shared<OperatorNode>(ArithmeticOperator::Plus, make_shared<ConstantNode>("1"), make_shared<ConstantNode>("2"));
+		make_shared<BinaryOperatorNode>(ArithmeticOperator::Plus, make_shared<ConstantNode>("1"), make_shared<ConstantNode>("2"));
 	unordered_set<VarRef> variables = unordered_set<VarRef>();
 	unordered_set<int> constants = unordered_set<int>({1, 2});
 	ArithmeticExpression expected = ArithmeticExpression(root, variables, constants);
@@ -42,11 +42,11 @@ TEST_CASE("Common::ArithmeticProcessor::ArithmeticExpression::parse Precedence T
 	MockLexer lex = MockLexer(vector<string>({"(", "A", "+", "1", ")", "*", "B", "+", "2", "/", "3", ")"}));
 	ArithmeticExpression expression = ArithmeticExpression::parse(lex);
 	shared_ptr<ExpressionNode> bracketed =
-		make_shared<OperatorNode>(ArithmeticOperator::Plus, make_shared<VariableNode>("A"), make_shared<ConstantNode>("1"));
-	shared_ptr<ExpressionNode> times = make_shared<OperatorNode>(ArithmeticOperator::Times, bracketed, make_shared<VariableNode>("B"));
+		make_shared<BinaryOperatorNode>(ArithmeticOperator::Plus, make_shared<VariableNode>("A"), make_shared<ConstantNode>("1"));
+	shared_ptr<ExpressionNode> times = make_shared<BinaryOperatorNode>(ArithmeticOperator::Times, bracketed, make_shared<VariableNode>("B"));
 	shared_ptr<ExpressionNode> divide =
-		make_shared<OperatorNode>(ArithmeticOperator::Divide, make_shared<ConstantNode>("2"), make_shared<ConstantNode>("3"));
-	shared_ptr<ExpressionNode> root = make_shared<OperatorNode>(ArithmeticOperator::Plus, times, divide);
+		make_shared<BinaryOperatorNode>(ArithmeticOperator::Divide, make_shared<ConstantNode>("2"), make_shared<ConstantNode>("3"));
+	shared_ptr<ExpressionNode> root = make_shared<BinaryOperatorNode>(ArithmeticOperator::Plus, times, divide);
 	unordered_set<VarRef> variables = unordered_set<VarRef>({"A", "B"});
 	unordered_set<int> constants = unordered_set<int>({1, 2, 3});
 	ArithmeticExpression expected = ArithmeticExpression(root, variables, constants);

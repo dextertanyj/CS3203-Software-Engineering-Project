@@ -12,7 +12,7 @@ struct ArithmeticProcessorException : public runtime_error {
 class LexerInterface;
 class ArithmeticExpression;
 class ExpressionNode;
-class OperatorNode;
+class BinaryOperatorNode;
 class ConstantNode;
 class VariableNode;
 }  // namespace ArithmeticProcessor

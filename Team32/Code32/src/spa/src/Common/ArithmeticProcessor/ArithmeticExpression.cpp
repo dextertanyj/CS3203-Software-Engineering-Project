@@ -3,7 +3,7 @@
 #include <string>
 
 #include "Common/ArithmeticProcessor/ConstantNode.h"
-#include "Common/ArithmeticProcessor/OperatorNode.h"
+#include "Common/ArithmeticProcessor/BinaryOperatorNode.h"
 #include "Common/ArithmeticProcessor/VariableNode.h"
 #include "Common/Converter.h"
 #include "Common/TypeDefs.h"
@@ -35,7 +35,7 @@ shared_ptr<ExpressionNode> ArithmeticExpression::construct(LexerInterface& lex, 
 			rhs = construct(lex, variables, constants, rhs, getPrecedence(Converter::convertArithmetic(lookahead)));
 			lookahead = lex.peekToken();
 		}
-		lhs = make_shared<OperatorNode>(op, lhs, rhs);
+		lhs = make_shared<BinaryOperatorNode>(op, lhs, rhs);
 	}
 	return lhs;
 }
