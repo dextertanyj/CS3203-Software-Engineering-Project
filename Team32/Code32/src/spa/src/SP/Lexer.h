@@ -4,12 +4,12 @@
 #include <regex>
 #include <string>
 
-#include "Common/ArithmeticProcessor/LexerInterface.h"
+#include "Common/ExpressionProcessor//LexerInterface.h"
 #include "SP/SP.h"
 
 using namespace std;
 
-class SP::Lexer : public Common::ArithmeticProcessor::LexerInterface {
+class SP::Lexer : public Common::ExpressionProcessor::LexerInterface {
 public:
 	void initialize(string);
 	bool nextToken();

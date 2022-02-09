@@ -4,19 +4,14 @@
 #include "SP/SP.h"
 
 namespace SP::Node {
-class AndNode;
-class ArithmeticExpressionNode;
+class ExpressionNode;
 class AssignmentNode;
 class CallNode;
-class ConditionalExpressionNode;
 class IfNode;
-class NotNode;
-class OrNode;
 class PrintNode;
 class ProcedureNode;
 class ProgramNode;
 class ReadNode;
-class RelationalExpressionNode;
 class StatementListNode;
 class StatementNode;
 class VariableNode;
