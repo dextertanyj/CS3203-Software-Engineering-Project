@@ -48,16 +48,12 @@ void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree) {
     return assignStore.setAssign(stmtNo, variableLHS, opTree);
 }
 
-void PKB::setProc(ProcRef proc_name, vector<StmtRef> idxList) {
-    for (auto itr : idxList) {
-        checkInvalidStmt(itr);
-    }
-    auto keyItr = procMap.find(proc_name);
-    if (keyItr == procMap.end()) {
-        procMap.insert(make_pair(proc_name, idxList));
-    } else {
-        keyItr->second = idxList;
-    }
+void PKB::setProc(ProcRef procName, vector<shared_ptr<StmtInfo>> idxList) {
+    procStore.setProc(procName, idxList);
+}
+
+void PKB::setCall(shared_ptr<StmtInfo> stmtInfo, ProcRef procName) {
+    procStore.setCall(stmtInfo, procName);
 }
 
 void PKB::setStmtType(StmtRef stmtNo, StmtType type) {
@@ -89,7 +85,7 @@ void PKB::clear() {
     assignStore.clear();
     useStore.clear();
     modifyStore.clear();
-    procMap.clear();
+    procStore.clear();
     typeMap.clear();
 }
 

@@ -16,6 +16,11 @@ class UseStore {
 public:
     UseStore();
     void setUses(shared_ptr<StmtInfo>, VarRef);
+    bool checkUses(shared_ptr<StmtInfo>, VarRef);
+    bool checkUsesList(vector<shared_ptr<StmtInfo>>, VarRef);
+    unordered_set<shared_ptr<StmtInfo>> getUsesByVar(VarRef);
+    unordered_set<VarRef> getUsesByStmt(shared_ptr<StmtInfo> stmtInfo);
+
     void clear();
 private:
     unordered_map<StmtRef, unordered_set<VarRef>> stmtToVarMap;
