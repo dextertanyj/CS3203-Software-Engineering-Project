@@ -6,26 +6,26 @@
 #include "catch_tools.h"
 
 using namespace std;
-using namespace ArithmeticProcessor;
+using namespace Common::ArithmeticProcessor;
 
-TEST_CASE("VariableNode::equals Same Object Test") {
+TEST_CASE("Common::ArithmeticProcessor::VariableNode::equals Same Object Test") {
 	shared_ptr<VariableNode> variable = make_shared<VariableNode>("A");
 	REQUIRE(variable->equals(variable));
 }
 
-TEST_CASE("VariableNode::equals Same Variable Name Test") {
+TEST_CASE("Common::ArithmeticProcessor::VariableNode::equals Same Variable Name Test") {
 	shared_ptr<VariableNode> variable = make_shared<VariableNode>("A");
 	shared_ptr<VariableNode> other = make_shared<VariableNode>("A");
 	REQUIRE(variable->equals(other));
 }
 
-TEST_CASE("VariableNode::equals Different Variable Name Test") {
+TEST_CASE("Common::ArithmeticProcessor::VariableNode::equals Different Variable Name Test") {
 	shared_ptr<VariableNode> variable = make_shared<VariableNode>("A");
 	shared_ptr<VariableNode> other = make_shared<VariableNode>("B");
 	REQUIRE_FALSE(variable->equals(other));
 }
 
-TEST_CASE("VariableNode::equals Different Expression Test") {
+TEST_CASE("Common::ArithmeticProcessor::VariableNode::equals Different Expression Test") {
 	shared_ptr<VariableNode> variable = make_shared<VariableNode>("A");
 	shared_ptr<ExpressionNode> other = make_shared<ConstantNode>("123");
 	shared_ptr<ExpressionNode> other_operator =
@@ -34,24 +34,24 @@ TEST_CASE("VariableNode::equals Different Expression Test") {
 	REQUIRE_FALSE(variable->equals(other_operator));
 }
 
-TEST_CASE("VariableNode::contains Same Object Test") {
+TEST_CASE("Common::ArithmeticProcessor::VariableNode::contains Same Object Test") {
 	shared_ptr<VariableNode> variable = make_shared<VariableNode>("A");
 	REQUIRE(variable->contains(variable));
 }
 
-TEST_CASE("VariableNode::contains Same Variable Name Test") {
+TEST_CASE("Common::ArithmeticProcessor::VariableNode::contains Same Variable Name Test") {
 	shared_ptr<VariableNode> variable = make_shared<VariableNode>("A");
 	shared_ptr<VariableNode> other = make_shared<VariableNode>("A");
 	REQUIRE(variable->contains(other));
 }
 
-TEST_CASE("VariableNode::contains Different Variable Name Test") {
+TEST_CASE("Common::ArithmeticProcessor::VariableNode::contains Different Variable Name Test") {
 	shared_ptr<VariableNode> variable = make_shared<VariableNode>("A");
 	shared_ptr<VariableNode> other = make_shared<VariableNode>("B");
 	REQUIRE_FALSE(variable->contains(other));
 }
 
-TEST_CASE("VariableNode::contains Different Expression Test") {
+TEST_CASE("Common::ArithmeticProcessor::VariableNode::contains Different Expression Test") {
 	shared_ptr<VariableNode> variable = make_shared<VariableNode>("A");
 	shared_ptr<ExpressionNode> other = make_shared<ConstantNode>("123");
 	shared_ptr<ExpressionNode> other_operator =

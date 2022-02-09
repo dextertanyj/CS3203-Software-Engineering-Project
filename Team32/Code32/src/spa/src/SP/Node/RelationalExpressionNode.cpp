@@ -9,15 +9,15 @@ RelationalExpressionNode::RelationalExpressionNode(RelationalOperator op, unique
 
 unique_ptr<RelationalExpressionNode> RelationalExpressionNode::parseRelationalExpression(Lexer& lex) {
 	unique_ptr<ArithmeticExpressionNode> lhs = ArithmeticExpressionNode::parseArithmeticExpression(lex);
-	RelationalOperator op = Converter::convertRelational(lex.readToken());
+	RelationalOperator op = Common::Converter::convertRelational(lex.readToken());
 	unique_ptr<ArithmeticExpressionNode> rhs = ArithmeticExpressionNode::parseArithmeticExpression(lex);
 	return make_unique<RelationalExpressionNode>(op, move(lhs), move(rhs));
 }
 
 UsageInfo RelationalExpressionNode::extract() {
 	UsageInfo usage;
-	ArithmeticProcessor::ArithmeticExpression lhs_expression = lhs->extract();
-	ArithmeticProcessor::ArithmeticExpression rhs_expression = rhs->extract();
+	Common::ArithmeticProcessor::ArithmeticExpression lhs_expression = lhs->extract();
+	Common::ArithmeticProcessor::ArithmeticExpression rhs_expression = rhs->extract();
 	unordered_set<VarRef> lhs_variables = lhs_expression.getVariables();
 	unordered_set<int> lhs_constants = lhs_expression.getConstants();
 	unordered_set<VarRef> rhs_variables = rhs_expression.getVariables();

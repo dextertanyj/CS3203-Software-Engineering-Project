@@ -8,13 +8,13 @@
 
 using namespace std;
 
-namespace Converter {
+namespace Common::Converter {
 struct ConversionException : public runtime_error {
 	using runtime_error::runtime_error;
 };
 ArithmeticOperator convertArithmetic(const string& op);
 RelationalOperator convertRelational(const string& op);
 int convertInteger(const string& integer);
-}  // namespace Converter
+}  // namespace Common::Converter
 
 #endif  // SPA_CONVERTER_H

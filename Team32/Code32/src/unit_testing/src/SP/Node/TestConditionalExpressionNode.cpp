@@ -31,7 +31,7 @@ TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression NotNo
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression NotNode Invalid Cond Token Test") {
     Lexer lex;
     lex.initialize("!(x)");
-    REQUIRE_THROWS_AS(ConditionalExpressionNode::parseConditionalExpression(lex), Converter::ConversionException);
+    REQUIRE_THROWS_AS(ConditionalExpressionNode::parseConditionalExpression(lex), Common::Converter::ConversionException);
 }
 
 TEST_CASE("SP::Node::ConditionalExpressionNode::parseConditionalExpression AndNode Valid Token Test") {

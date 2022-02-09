@@ -115,7 +115,7 @@ TEST_CASE("SP::Node::IfNode::parseIfStatement Missing Condition Test") {
     Lexer lex;
     lex.initialize("(  ) then { read y; } else { x = 10; }");
     int statement_count = 1;
-    REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), ArithmeticProcessor::ArithmeticProcessorException);
+    REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), Common::ArithmeticProcessor::ArithmeticProcessorException);
     REQUIRE_EQUALS(statement_count, 2);
 }
 

@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class ArithmeticProcessor::LexerInterface {
+class Common::ArithmeticProcessor::LexerInterface {
 public:
 	virtual string readToken() = 0;
 	virtual string peekToken() = 0;

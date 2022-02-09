@@ -22,7 +22,7 @@ private:
 	int& ctr;
 };
 
-ArithmeticProcessor::ArithmeticExpression createArithmeticExpression(vector<string> str_list);
+Common::ArithmeticProcessor::ArithmeticExpression createArithmeticExpression(vector<string> str_list);
 unique_ptr<RelationalExpressionNode> createRelationalExpression(string str);
 unique_ptr<StatementListNode> createStatementList(string str, int statement_count);
 

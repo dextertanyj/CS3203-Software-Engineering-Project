@@ -120,14 +120,14 @@ TEST_CASE("SP::Node::RelationalExpressionNode::parseRelationalExpression Valid C
 TEST_CASE("SP::Node::RelationalExpressionNode::parseRelationalExpression Invalid Operator Token Test") {
     Lexer lex;
     lex.initialize("x !> 0)");
-    REQUIRE_THROWS_AS(RelationalExpressionNode::parseRelationalExpression(lex), Converter::ConversionException);
+    REQUIRE_THROWS_AS(RelationalExpressionNode::parseRelationalExpression(lex), Common::Converter::ConversionException);
 }
 
 TEST_CASE("SP::Node::RelationalExpressionNode::parseRelationalExpression Invalid Format Token Test") {
     Lexer lex;
     lex.initialize("x == != 0)");
     REQUIRE_THROWS_AS(RelationalExpressionNode::parseRelationalExpression(lex),
-                      ArithmeticProcessor::ArithmeticProcessorException);
+	                  Common::ArithmeticProcessor::ArithmeticProcessorException);
 }
 
 TEST_CASE("RelationalExpressionNode::extract Test") {

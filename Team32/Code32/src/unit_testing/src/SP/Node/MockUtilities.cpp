@@ -7,9 +7,9 @@
 
 using namespace std;
 
-ArithmeticProcessor::ArithmeticExpression createArithmeticExpression(vector<string> str_list) {
+Common::ArithmeticProcessor::ArithmeticExpression createArithmeticExpression(vector<string> str_list) {
     MockLexer lex = MockLexer(move(str_list));
-    ArithmeticProcessor::ArithmeticExpression expression = ArithmeticProcessor::ArithmeticExpression::parse(lex);
+	Common::ArithmeticProcessor::ArithmeticExpression expression = Common::ArithmeticProcessor::ArithmeticExpression::parse(lex);
     return expression;
 }
 

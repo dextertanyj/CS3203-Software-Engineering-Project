@@ -18,7 +18,7 @@ StmtInfo AssignmentNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Assign);
 	// TODO: Set arithmetic expression for pattern matching
-	ArithmeticProcessor::ArithmeticExpression rhs = expression->extract();
+	Common::ArithmeticProcessor::ArithmeticExpression rhs = expression->extract();
 	pkb.setModifies(stmt_ref, assignee->extract());
 	unordered_set<VarRef> variables = rhs.getVariables();
 	for (const auto& variable : variables) {
