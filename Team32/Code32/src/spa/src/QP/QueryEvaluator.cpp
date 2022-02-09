@@ -1,11 +1,11 @@
 #include "QP/QueryEvaluator.h"
 
-PKB QueryEvaluator::pkb = PKB();
+QueryEvaluator::QueryEvaluator(PKB& pkb) : pkb(pkb) {}
 
 QueryResult QueryEvaluator::executeQuery(QueryProperties& queryProperties) {
 	SuchThatClauseList suchThatClauseList = queryProperties.getSuchThatClauseList();
 	PatternClauseList patternClauseList = queryProperties.getPatternClauseList();
-	
+
 	if (suchThatClauseList.empty() && patternClauseList.empty()) {
 		Declaration select = queryProperties.getSelect();
 		if (select.type == DesignEntity::stmt) {
@@ -19,7 +19,6 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& queryProperties) {
 
 	return evaluateSuchThatClauses(suchThatClauseList);
 }
-
 QueryResult QueryEvaluator::evaluateSuchThatClauses(SuchThatClauseList& suchThatClauseList) {
 	StmtRefList stmtList = pkb.getStatements();
 	QueryResult result = QueryResult(stmtList, {});

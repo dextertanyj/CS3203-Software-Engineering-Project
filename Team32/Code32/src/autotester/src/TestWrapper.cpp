@@ -1,3 +1,5 @@
+#include <fstream>
+#include <string>
 #include "TestWrapper.h"
 
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
@@ -10,22 +12,18 @@ AbstractWrapper* WrapperFactory::createWrapper() {
 volatile bool AbstractWrapper::GlobalStop = false;
 
 // a default constructor
-TestWrapper::TestWrapper() {
-  // create any objects here as instance variables of this class
-  // as well as any initialization required for your spa program
+TestWrapper::TestWrapper() : source_processor(pkb), query_processor(pkb) {
 }
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
-	// call your parser to do the parsing
-  // ...rest of your code...
+	std::ifstream file(filename);
+	std::string source((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+	source_processor.process(source);
 }
 
 // method to evaluating a query
-void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
-// call your evaluator to evaluate the query here
-  // ...code to evaluate query...
-
-  // store the answers to the query in the results list (it is initially empty)
-  // each result must be a string.
+void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
+	std::vector<std::string> internal_results = query_processor.processQuery(query);
+	results.insert(results.end(), internal_results.begin(), internal_results.end());
 }

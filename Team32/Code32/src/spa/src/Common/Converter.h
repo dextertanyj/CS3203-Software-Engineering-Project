@@ -2,6 +2,7 @@
 #define SPA_CONVERTER_H
 
 #include <string>
+#include <stdexcept>
 
 #include "Common/TypeDefs.h"
 

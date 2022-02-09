@@ -7,6 +7,9 @@
 
 // include your other headers here
 #include "AbstractWrapper.h"
+#include "PKB/PKB.h"
+#include "SP/Processor.h"
+#include "QP/QueryProcessor.h"
 
 class TestWrapper : public AbstractWrapper {
  public:
@@ -21,6 +24,10 @@ class TestWrapper : public AbstractWrapper {
   
   // method for evaluating a query
   virtual void evaluate(std::string query, std::list<std::string>& results);
+  private:
+	  PKB pkb;
+	  SP::Processor source_processor;
+	  QueryProcessor query_processor;
 };
 
 #endif
