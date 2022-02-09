@@ -33,7 +33,7 @@ void ProcStore::setCall(shared_ptr<StmtInfo> callStmt, ProcRef procName) {
     } else if (keyItr->second.callStmt == NULL) {
         keyItr->second.callStmt = callStmt;
     } else {
-        throw invalid_argument("Procedure already has a call statement.")
+        throw invalid_argument("Procedure already has a call statement.");
     }
 }
 
@@ -43,13 +43,14 @@ vector<shared_ptr<StmtInfo>> ProcStore::getStmtsByProc(ProcRef procName) {
     return keyItr->second.idxList;
 }
 
-vector<shared_ptr<StmtInfo>> ProcStore::getStmtsByCall(shared_ptr<StmtInfo> callStmt) {
+ProcRef ProcStore::getProcByCall(shared_ptr<StmtInfo> callStmt) {
+    if (callStmt.get()-> reference <= 0) throw invalid_argument("Statement number must be a positive integer.");
+    if (callStmt.get()->type != StmtType::Call) throw invalid_argument("Statement type must be a call statement.");
+
     for (auto& itr : procMap) {
-        if (itr.second.callStmt.get() == callStmt.get()) {
-            return itr.second.idxList;
-        }
+        if (itr.second.callStmt.get() == callStmt.get()) return itr.first;
     }
-    return vector<shared_ptr<StmtInfo>>();
+    return "";
 }
 
 ProcRef ProcStore::getProcByStmt(shared_ptr<StmtInfo> stmtInfo) {
@@ -57,7 +58,7 @@ ProcRef ProcStore::getProcByStmt(shared_ptr<StmtInfo> stmtInfo) {
     if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
     auto keyItr = stmtToProcMap.find(stmtNo);
-    if (keyItr == stmtToProcMap.end()) return NULL;
+    if (keyItr == stmtToProcMap.end()) return "";
     return keyItr->second;
 }
 

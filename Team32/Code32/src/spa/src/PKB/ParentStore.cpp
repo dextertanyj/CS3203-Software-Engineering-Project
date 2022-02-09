@@ -70,6 +70,7 @@ unordered_set<shared_ptr<StmtInfo>> ParentStore::getChildren(shared_ptr<StmtInfo
     return keyItr->second.childSet;
 }
 
+/*
 void ParentStore::populateParentStar(int numStatements) {
     if (numStatements >= 2) {
         for (StmtRef i = 2; i < numStatements; i++) {
@@ -99,6 +100,7 @@ void ParentStore::recursivelyAddParent(StmtRef stmtNo, unordered_set<StmtRef> &p
         return;
     }
 }
+ */
 
 void ParentStore::clear() {
     parentMap.clear();

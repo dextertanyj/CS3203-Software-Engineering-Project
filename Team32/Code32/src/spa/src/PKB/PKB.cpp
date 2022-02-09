@@ -75,9 +75,42 @@ void PKB::setModifies(shared_ptr<StmtInfo> stmt, VarRef var_name) {
     modifyStore.setModify(stmt, var_name);
 }
 
+bool PKB::checkUses(shared_ptr<StmtInfo> stmtInfo, VarRef varName) {
+    return useStore.checkUses(stmtInfo, varName);
+}
+
+bool PKB::checkProcUses(ProcRef procName, VarRef varName) {
+    vector<shared_ptr<StmtInfo>> procStmts = procStore.getStmtsByProc(procName);
+    return useStore.checkUsesList(procStmts, varName);
+}
+
+unordered_set<shared_ptr<StmtInfo>> PKB::getUsesByVar(VarRef varName) {
+    return useStore.getUsesByVar(varName);
+}
+
+unordered_set<ProcRef> PKB::getProcUsesByVar(VarRef varName) {
+    unordered_set<shared_ptr<StmtInfo>> stmtList = useStore.getUsesByVar(varName);
+    return useStore.getProcUsesByStmtList(stmtList, procStore);
+}
+
+unordered_set<VarRef> PKB::getUsesByStmt(shared_ptr<StmtInfo> stmtInfo) {
+    return useStore.getUsesByStmt(stmtInfo);
+}
+
+unordered_set<VarRef> PKB::getUsesByProc(ProcRef procName) {
+    vector<shared_ptr<StmtInfo>> procStmts = procStore.getStmtsByProc(procName);
+    return useStore.getUsesByStmtList(procStmts);
+}
+
+ProcRef PKB::getProcFromCall(shared_ptr<StmtInfo> stmtInfo) {
+    return procStore.getProcByCall(stmtInfo);
+}
+
+/*
 void PKB::populateComplexRelations() {
     parentStore.populateParentStar(numStatements);
 }
+ */
 
 void PKB::clear() {
     parentStore.clear();
