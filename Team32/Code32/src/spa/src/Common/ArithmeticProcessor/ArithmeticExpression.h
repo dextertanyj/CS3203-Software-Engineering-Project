@@ -29,7 +29,7 @@ private:
 	static shared_ptr<ExpressionNode> construct(LexerInterface& lex, unordered_set<VarRef>& variables, unordered_set<int>& constants,
 	                                            shared_ptr<ExpressionNode> lhs, int precedence);
 	static shared_ptr<ExpressionNode> parseTerminal(LexerInterface& lex, unordered_set<VarRef>& variables, unordered_set<int>& constants);
-	static int getPrecedence(ArithmeticOperator op);
+	static int getPrecedence(MathematicalOperator op);
 };
 
 #endif  // SPA_ARITHMETICEXPRESSION_H

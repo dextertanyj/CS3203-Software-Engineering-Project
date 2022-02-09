@@ -10,11 +10,11 @@ using namespace std;
 
 class Common::ArithmeticProcessor::BinaryOperatorNode : public ExpressionNode {
 public:
-	BinaryOperatorNode(ArithmeticOperator op, shared_ptr<ExpressionNode> lhs, shared_ptr<ExpressionNode> rhs);
+	BinaryOperatorNode(MathematicalOperator op, shared_ptr<ExpressionNode> lhs, shared_ptr<ExpressionNode> rhs);
 	bool equals(shared_ptr<ExpressionNode> object) override;
 	bool contains(shared_ptr<ExpressionNode> object) override;
 private:
-	ArithmeticOperator op;
+	MathematicalOperator op;
 	shared_ptr<ExpressionNode> lhs;
 	shared_ptr<ExpressionNode> rhs;
 

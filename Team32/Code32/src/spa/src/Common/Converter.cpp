@@ -5,23 +5,50 @@
 
 using namespace std;
 
-ArithmeticOperator Common::Converter::convertArithmetic(const string& op) {
+MathematicalOperator Common::Converter::convertMathematical(const string& op) {
 	if (op == "+") {
-		return ArithmeticOperator::Plus;
+		return MathematicalOperator::Plus;
 	}
 	if (op == "-") {
-		return ArithmeticOperator::Minus;
+		return MathematicalOperator::Minus;
 	}
 	if (op == "*") {
-		return ArithmeticOperator::Times;
+		return MathematicalOperator::Times;
 	}
 	if (op == "/") {
-		return ArithmeticOperator::Divide;
+		return MathematicalOperator::Divide;
 	}
 	if (op == "%") {
-		return ArithmeticOperator::Modulo;
+		return MathematicalOperator::Modulo;
 	}
-	throw ConversionException("Expected arithmetic symbol, got " + op + " instead.");
+	if (op == ">") {
+		return MathematicalOperator::GT;
+	}
+	if (op == ">=") {
+		return MathematicalOperator::GTE;
+	}
+	if (op == "<") {
+		return MathematicalOperator::LT;
+	}
+	if (op == "<=") {
+		return MathematicalOperator::LTE;
+	}
+	if (op == "==") {
+		return MathematicalOperator::EQ;
+	}
+	if (op == "!=") {
+		return MathematicalOperator::NEQ;
+	}
+	if (op == "!") {
+		return MathematicalOperator::Not;
+	}
+	if (op == "&&") {
+		return MathematicalOperator::And;
+	}
+	if (op == "||") {
+		return MathematicalOperator::Or;
+	}
+	throw ConversionException("Expected mathematical symbol, got " + op + " instead.");
 }
 
 RelationalOperator Common::Converter::convertRelational(const string& op) {

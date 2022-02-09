@@ -29,7 +29,7 @@ TEST_CASE("Common::ArithmeticProcessor::ConstantNode::equals Different Expressio
 	shared_ptr<ConstantNode> constant = make_shared<ConstantNode>("123");
 	shared_ptr<ExpressionNode> other = make_shared<VariableNode>("A");
 	shared_ptr<ExpressionNode> other_operator =
-		make_shared<BinaryOperatorNode>(ArithmeticOperator::Plus, make_unique<ConstantNode>("234"), make_unique<ConstantNode>("345"));
+		make_shared<BinaryOperatorNode>(MathematicalOperator::Plus, make_unique<ConstantNode>("234"), make_unique<ConstantNode>("345"));
 	REQUIRE_FALSE(constant->equals(other));
 	REQUIRE_FALSE(constant->equals(other_operator));
 }
@@ -55,9 +55,9 @@ TEST_CASE("Common::ArithmeticProcessor::ConstantNode::contains Different Express
 	shared_ptr<ConstantNode> constant = make_shared<ConstantNode>("123");
 	shared_ptr<ExpressionNode> other = make_shared<VariableNode>("A");
 	shared_ptr<ExpressionNode> other_operator =
-		make_shared<BinaryOperatorNode>(ArithmeticOperator::Plus, make_unique<ConstantNode>("234"), make_unique<ConstantNode>("345"));
+		make_shared<BinaryOperatorNode>(MathematicalOperator::Plus, make_unique<ConstantNode>("234"), make_unique<ConstantNode>("345"));
 	shared_ptr<ExpressionNode> contained =
-		make_shared<BinaryOperatorNode>(ArithmeticOperator::Plus, make_unique<ConstantNode>("123"), make_unique<ConstantNode>("234"));
+		make_shared<BinaryOperatorNode>(MathematicalOperator::Plus, make_unique<ConstantNode>("123"), make_unique<ConstantNode>("234"));
 	REQUIRE_FALSE(constant->contains(other));
 	REQUIRE_FALSE(constant->contains(other_operator));
 	REQUIRE_FALSE(constant->contains(contained));

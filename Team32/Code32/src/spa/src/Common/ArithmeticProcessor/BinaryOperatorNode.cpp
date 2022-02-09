@@ -2,7 +2,7 @@
 
 #include <memory>
 
-Common::ArithmeticProcessor::BinaryOperatorNode::BinaryOperatorNode(ArithmeticOperator op, shared_ptr<ExpressionNode> lhs, shared_ptr<ExpressionNode> rhs)
+Common::ArithmeticProcessor::BinaryOperatorNode::BinaryOperatorNode(MathematicalOperator op, shared_ptr<ExpressionNode> lhs, shared_ptr<ExpressionNode> rhs)
 	: op(op), lhs(std::move(lhs)), rhs(std::move(rhs)) {}
 
 bool Common::ArithmeticProcessor::BinaryOperatorNode::equals(shared_ptr<ExpressionNode> object) {

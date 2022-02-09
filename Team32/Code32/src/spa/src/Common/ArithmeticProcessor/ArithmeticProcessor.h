@@ -13,6 +13,7 @@ class LexerInterface;
 class ArithmeticExpression;
 class ExpressionNode;
 class BinaryOperatorNode;
+class UnaryOperatorNode;
 class ConstantNode;
 class VariableNode;
 }  // namespace ArithmeticProcessor

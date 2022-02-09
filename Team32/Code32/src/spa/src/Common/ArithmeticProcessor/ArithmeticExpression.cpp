@@ -26,13 +26,13 @@ ArithmeticExpression ArithmeticExpression::parse(LexerInterface& lex) {
 shared_ptr<ExpressionNode> ArithmeticExpression::construct(LexerInterface& lex, unordered_set<VarRef>& variables,
                                                            unordered_set<int>& constants, shared_ptr<ExpressionNode> lhs, int precedence) {
 	string lookahead = lex.peekToken();
-	while (Validator::validateArithmeticOperator(lookahead) && getPrecedence(Converter::convertArithmetic(lookahead)) >= precedence) {
-		ArithmeticOperator op = Converter::convertArithmetic(lex.readToken());
+	while (Validator::validateArithmeticOperator(lookahead) && getPrecedence(Converter::convertMathematical(lookahead)) >= precedence) {
+		MathematicalOperator op = Converter::convertMathematical(lex.readToken());
 		shared_ptr<ExpressionNode> rhs = parseTerminal(lex, variables, constants);
 		lookahead = lex.peekToken();
 		while (Validator::validateArithmeticOperator(lookahead) &&
-		       getPrecedence(Converter::convertArithmetic(lookahead)) > getPrecedence(op)) {
-			rhs = construct(lex, variables, constants, rhs, getPrecedence(Converter::convertArithmetic(lookahead)));
+		       getPrecedence(Converter::convertMathematical(lookahead)) > getPrecedence(op)) {
+			rhs = construct(lex, variables, constants, rhs, getPrecedence(Converter::convertMathematical(lookahead)));
 			lookahead = lex.peekToken();
 		}
 		lhs = make_shared<BinaryOperatorNode>(op, lhs, rhs);
@@ -62,8 +62,8 @@ shared_ptr<ExpressionNode> ArithmeticExpression::parseTerminal(LexerInterface& l
 	throw ArithmeticProcessorException("Unknown token received");
 }
 
-int ArithmeticExpression::getPrecedence(ArithmeticOperator op) {
-	if (op == ArithmeticOperator::Plus || op == ArithmeticOperator::Minus) {
+int ArithmeticExpression::getPrecedence(MathematicalOperator op) {
+	if (op == MathematicalOperator::Plus || op == MathematicalOperator::Minus) {
 		return 1;
 	}
 	return 2;
