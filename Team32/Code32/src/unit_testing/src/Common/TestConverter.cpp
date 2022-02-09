@@ -11,17 +11,6 @@ TEST_CASE("Common::Converter::convertMathematical Test") {
 	REQUIRE_THROWS_AS(Common::Converter::convertMathematical("++"), Common::Converter::ConversionException);
 }
 
-TEST_CASE("Common::Converter::convertRelational Test") {
-	REQUIRE_EQUALS(Common::Converter::convertRelational(">"), RelationalOperator::GT);
-	REQUIRE_EQUALS(Common::Converter::convertRelational(">="), RelationalOperator::GTE);
-	REQUIRE_EQUALS(Common::Converter::convertRelational("<"), RelationalOperator::LT);
-	REQUIRE_EQUALS(Common::Converter::convertRelational("<="), RelationalOperator::LTE);
-	REQUIRE_EQUALS(Common::Converter::convertRelational("=="), RelationalOperator::EQ);
-	REQUIRE_EQUALS(Common::Converter::convertRelational("!="), RelationalOperator::NEQ);
-	REQUIRE_THROWS_AS(Common::Converter::convertRelational("!"), Common::Converter::ConversionException);
-	REQUIRE_THROWS_AS(Common::Converter::convertRelational("+"), Common::Converter::ConversionException);
-}
-
 TEST_CASE("Common::Converter::convertInteger Test") {
 	REQUIRE_EQUALS(Common::Converter::convertInteger("1"), 1);
 	REQUIRE_EQUALS(Common::Converter::convertInteger("321"), 321);
