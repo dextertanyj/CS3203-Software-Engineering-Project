@@ -26,8 +26,10 @@ void ParentStore::setParent(shared_ptr<StmtInfo> parentStmtInfo, shared_ptr<Stmt
     if (keyItr2 == parentMap.end()) {
         ParentRelation parentRelation = { {}, {}, {}, parentStmtInfo };
         parentMap.insert(make_pair(childStmt, parentRelation));
-    } else {
+    } else if (keyItr->second.parent == NULL) {
         keyItr2->second.parent = parentStmtInfo;
+    } else {
+        throw invalid_argument("Child statement already has parent assigned.");
     }
 }
 
