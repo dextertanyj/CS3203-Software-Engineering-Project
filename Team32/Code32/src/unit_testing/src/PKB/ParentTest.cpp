@@ -1,82 +1,78 @@
+#include "PKB/ParentStore.cpp"
 #include "catch.hpp"
 #include "memory"
-#include "PKB/ParentStore.cpp"
 
-TEST_CASE( "Basic Parent Set and Get") {
-  StmtRef s1 = 1;
-  StmtRef s2 = 2;
-  StmtRef s3 = 3;
-  ParentStore ps = ParentStore();
-  
-  ps.setParent(s1, s2);
-  ps.setParent(s2, s3);
-
-  // Ensure simple parent relation is stored successfully.
-  CHECK( ps.isParentChild(s1, s2));
-  CHECK( ps.isParentChild(s2, s3));
-
-  // Ensure Parent* behavior does not appear for simple parent.
-  CHECK_FALSE( ps.isParentChild(s1, s3));
-}
 TEST_CASE("Parents Methods") {
-	StmtRef s1 = 1;
-	StmtRef s2 = 2;
-	StmtRef s3 = 3;
+	StmtInfo stmt1 = {1, StmtType::WhileStmt};
+	StmtInfo stmt2 = {2, StmtType::IfStmt};
+	StmtInfo stmt3 = {3, StmtType::Print};
+	StmtInfo stmtIntMax = {INT32_MAX, StmtType::Read};
+	StmtInfo stmtNegative = {-1, StmtType::Assign};
+	StmtInfo stmt0 = {0, StmtType::Read};
+
+	auto stmt1Ptr = make_shared<StmtInfo>(stmt1);
+	auto stmt2Ptr = make_shared<StmtInfo>(stmt2);
+	auto stmt3Ptr = make_shared<StmtInfo>(stmt3);
+	auto stmtIntMaxPtr = make_shared<StmtInfo>(stmtIntMax);
+	auto stmtNegativePtr = make_shared<StmtInfo>(stmtNegative);
+	auto stmt0Ptr = make_shared<StmtInfo>(stmt0);
+
 	ParentStore ps = ParentStore();
 
 	SECTION("Check validity of arguments") {
 		// Verify that normal setting works.
-		CHECK_NOTHROW(ps.setParent(s1,s2));
-		CHECK_NOTHROW(ps.setParent(s2,s3));
-		CHECK_NOTHROW(ps.setParent(1, INT32_MAX));
+		CHECK_NOTHROW(ps.setParent(stmt1Ptr, stmt2Ptr));
+		CHECK_NOTHROW(ps.setParent(stmt2Ptr, stmt3Ptr));
+		CHECK_NOTHROW(ps.setParent(stmt1Ptr, stmtIntMaxPtr));
+		ps.clear();
 
 		// Verify that improper arguments lead to an exception thrown.
-		CHECK_THROWS(ps.setParent(-1, 1));
-		CHECK_THROWS(ps.setParent(2, 1));
-		CHECK_THROWS(ps.setParent(3, 3));
-		CHECK_THROWS(ps.setParent(0, 2));
-		CHECK_THROWS(ps.setParent(3, -4));
-		CHECK_THROWS(ps.getParent(-1));
-		CHECK_THROWS(ps.getChildren(0));
+		CHECK_THROWS(ps.setParent(stmtNegativePtr, stmt1Ptr));
+		CHECK_THROWS(ps.setParent(stmt2Ptr, stmt1Ptr));
+		CHECK_THROWS(ps.setParent(stmt3Ptr, stmt3Ptr));
+		CHECK_THROWS(ps.setParent(stmt0Ptr, stmt2Ptr));
+		CHECK_THROWS(ps.setParent(stmt3Ptr, stmtNegativePtr));
+		CHECK_THROWS(ps.getParent(stmtNegativePtr));
+		CHECK_THROWS(ps.getChildren(stmt0Ptr));
 	}
 
-	SECTION("Basic set and get parents") {
-		StmtRef s4 = 4;
+	SECTION("Check seting and getting of parent/child") {
+		StmtInfo s4 = {4, StmtType::Print};
+		shared_ptr<StmtInfo> stmt4Ptr = make_shared<StmtInfo>(s4);
 
-		ps.setParent(s1, s2);
-		ps.setParent(s2, s3);
-		ps.setParent(s2, s4);
+		ps.setParent(stmt1Ptr, stmt2Ptr);
+		ps.setParent(stmt2Ptr, stmt3Ptr);
+		ps.setParent(stmt2Ptr, stmt4Ptr);
 
 		// Ensure simple parent relation is stored successfully.
-		CHECK( ps.checkParents(s1, s2));
-		CHECK( ps.checkParents(s2, s3));
-		CHECK( ps.getParent(s2) == s1);
-		CHECK( ps.getParent(s4) == s2);
-		CHECK (ps.getChildren(s1) == unordered_set<StmtRef>{ s2 });
-		CHECK (ps.getChildren(s2) == unordered_set<StmtRef>{ s3, s4 });
+		CHECK(ps.isParentChild(stmt1Ptr, stmt2Ptr));
+		CHECK(ps.isParentChild(stmt2Ptr, stmt3Ptr));
+		CHECK(ps.getParent(stmt2Ptr) == stmt1Ptr);
+		CHECK(ps.getParent(stmt4Ptr) == stmt2Ptr);
+		CHECK(ps.getChildren(stmt1Ptr) == unordered_set<shared_ptr<StmtInfo>>{stmt2Ptr});
+		CHECK(ps.getChildren(stmt2Ptr) == unordered_set<shared_ptr<StmtInfo>>{stmt3Ptr, stmt4Ptr});
 
 		// Ensure Parent* behavior does not appear for simple parent.
-		CHECK_FALSE( ps.checkParents(s1, s3));
+		CHECK_FALSE(ps.isParentChild(stmt1Ptr, stmt3Ptr));
 
-		CHECK_FALSE(ps.checkParents(s1, s1));
-		CHECK_FALSE(ps.checkParents(s2, s1));
-		CHECK_FALSE(ps.checkParents(s3, s2));
+		CHECK_FALSE(ps.isParentChild(stmt1Ptr, stmt1Ptr));
+		CHECK_FALSE(ps.isParentChild(stmt2Ptr, stmt1Ptr));
+		CHECK_FALSE(ps.isParentChild(stmt3Ptr, stmt2Ptr));
 	}
-TEST_CASE("Get Parent") {
-  StmtRef s1 = 1;
-  StmtRef s2 = 2;
-  StmtRef s3 = 3;
-  ParentStore ps = ParentStore();
 
-  ps.setParent(s1, s2);
-  ps.setParent(s2, s3);
+	SECTION("Get Parent") {
+		ParentStore ps = ParentStore();
 
-  CHECK(ps.getParent(s1) == -1); // Highest statement should have no parent.
-  CHECK(ps.getParent(s2) == s1);
-  CHECK(ps.getParent(s3) == s2);
+		ps.setParent(stmt1Ptr, stmt2Ptr);
+		ps.setParent(stmt2Ptr, stmt3Ptr);
 
-  // Statement which was not stored in PKB.
-  CHECK(ps.getParent(123) == -1);
+		CHECK(ps.getParent(stmt1Ptr)->reference == -1);  // Highest statement should have no parent.
+		CHECK(ps.getParent(stmt2Ptr)->reference == 1);
+		CHECK(ps.getParent(stmt3Ptr)->reference == 2);
+
+		// Statement which was not stored in PKB.
+		CHECK(ps.getParent(stmtIntMaxPtr)->reference == -1);
+	}
 }
 
-// TODO: Test Parent* functionality.
+	// TODO: Test Parent* functionality.
