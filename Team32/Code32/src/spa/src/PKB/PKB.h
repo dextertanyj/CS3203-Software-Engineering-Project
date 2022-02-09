@@ -45,11 +45,15 @@ public:
 
     // Use get methods
     bool checkUses(shared_ptr<StmtInfo>, VarRef);
+    bool checkProcUses(ProcRef, VarRef);
     unordered_set<shared_ptr<StmtInfo>> getUsesByVar(VarRef);
-    unordered_set<VarRef> getUsesByStmt(shared_ptr<StmtInfo> stmtInfo);
+    unordered_set<ProcRef> getProcUsesByVar(VarRef);
+    unordered_set<VarRef> getUsesByStmt(shared_ptr<StmtInfo>);
+    unordered_set<VarRef> getUsesByProc(ProcRef);
 
     // Others
     void clear();
+    ProcRef getProcFromCall(shared_ptr<StmtInfo>);
     void setNumStatements(int size);
     void populateComplexRelations();
 

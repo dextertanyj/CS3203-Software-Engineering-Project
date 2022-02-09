@@ -17,8 +17,8 @@ public:
     void setProc(ProcRef, vector<shared_ptr<StmtInfo>>);
     void setCall(shared_ptr<StmtInfo>, ProcRef);
     vector<shared_ptr<StmtInfo>> getStmtsByProc(ProcRef);
-    vector<shared_ptr<StmtInfo>> getStmtsByCall(shared_ptr<StmtInfo>);
     ProcRef getProcByStmt(shared_ptr<StmtInfo>);
+    ProcRef getProcByCall(shared_ptr<StmtInfo>);
     void clear();
 private:
     unordered_map<ProcRef, ProcRelation> procMap;
