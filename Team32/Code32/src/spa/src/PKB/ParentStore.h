@@ -2,6 +2,7 @@
 
 #include<stdio.h>
 #include <iostream>
+#include <memory>
 #include <map>
 #include <unordered_set>
 #include "../Common/TypeDefs.h"
