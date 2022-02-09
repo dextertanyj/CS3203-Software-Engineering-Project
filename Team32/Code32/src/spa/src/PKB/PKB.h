@@ -10,6 +10,7 @@
 #include "UseStore.h"
 #include "ModifyStore.h"
 #include "AssignStore.h"
+#include "ProcStore.h"
 #include "../Common/TypeDefs.h"
 
 using namespace std;
@@ -19,13 +20,14 @@ public:
     PKB();
 
     // Set methods called by Source processor
-    void setFollows(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2);
-    void setParent(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2);
-    void setProc(ProcRef proc_name, vector<StmtRef> idxList);
-    void setStmtType(StmtRef stmtNo, StmtType type);
-    void setUses(shared_ptr<StmtInfo> stmtNo, VarRef var_name);
-    void setModifies(shared_ptr<StmtInfo> stmtNo, VarRef var_name);
-    void setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree);
+    void setFollows(shared_ptr<StmtInfo>, shared_ptr<StmtInfo>);
+    void setParent(shared_ptr<StmtInfo>, shared_ptr<StmtInfo>);
+    void setProc(ProcRef, vector<shared_ptr<StmtInfo>>);
+    void setStmtType(StmtRef, StmtType);
+    void setUses(shared_ptr<StmtInfo>, VarRef);
+    void setModifies(shared_ptr<StmtInfo>, VarRef);
+    void setAssign(StmtRef, VarRef variableLHS, string opTree);
+    void setCall(shared_ptr<StmtInfo>, ProcRef);
 
     // Get methods called by PQL
     // General get methods
@@ -41,6 +43,11 @@ public:
     shared_ptr<StmtInfo> getFollower(shared_ptr<StmtInfo> stmtNo);
     bool checkFollows(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2);
 
+    // Use get methods
+    bool checkUses(shared_ptr<StmtInfo>, VarRef);
+    unordered_set<shared_ptr<StmtInfo>> getUsesByVar(VarRef);
+    unordered_set<VarRef> getUsesByStmt(shared_ptr<StmtInfo> stmtInfo);
+
     // Others
     void clear();
     void setNumStatements(int size);
@@ -52,7 +59,7 @@ private:
     UseStore useStore;
     ModifyStore modifyStore;
     AssignStore assignStore;
-    unordered_map<ProcRef, vector<StmtRef>> procMap;
+    ProcStore procStore;
     unordered_map<StmtRef, StmtType> typeMap;
     int numStatements;
     void checkInvalidStmt(StmtRef stmtNo1);
