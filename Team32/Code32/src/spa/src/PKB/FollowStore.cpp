@@ -9,8 +9,8 @@ FollowStore::FollowStore() {}
 // Also need to prevent same stmt No from following itself.
 // need to add checks that stmtno 2 doesnt follow another other stmt and stmt no 1 isnt followed by other stmts
 void FollowStore::setFollows(shared_ptr<StmtInfo> stmtInfo1, shared_ptr<StmtInfo> stmtInfo2) {
-    StmtRef stmtNo1 = (stmtInfo1.get())->reference;
-    StmtRef stmtNo2 = (stmtInfo2.get())->reference;
+    StmtRef stmtNo1 = stmtInfo1->reference;
+    StmtRef stmtNo2 = stmtInfo2->reference;
 
     if (stmtNo1 >= stmtNo2) throw invalid_argument("Second statement must come after the first statement.");
     if (stmtNo1 <= 0 || stmtNo2 <= 0) throw invalid_argument("Statement number must be a positive integer.");
@@ -37,22 +37,22 @@ void FollowStore::setFollows(shared_ptr<StmtInfo> stmtInfo1, shared_ptr<StmtInfo
 }
 
 bool FollowStore::checkFollows(shared_ptr<StmtInfo> stmtInfo1, shared_ptr<StmtInfo> stmtInfo2) {
-    StmtRef stmtNo1 = (stmtInfo1.get())->reference;
-    StmtRef stmtNo2 = (stmtInfo2.get())->reference;
+    StmtRef stmtNo1 = stmtInfo1->reference;
+    StmtRef stmtNo2 = stmtInfo2->reference;
 
     if (stmtNo1 <= 0 || stmtNo2 <= 0) throw invalid_argument("Statement number must be a positive integer.");
     if (stmtNo1 >= stmtNo2) return false;
 
     auto keyItr = followMap.find(stmtNo1);
     if (keyItr != followMap.end()) {
-        return keyItr->second.follower.get() == stmtInfo2.get();
+        return keyItr->second.follower == stmtInfo2;
     } else {
         return false;
     }
 }
 
 shared_ptr<StmtInfo> FollowStore::getFollower(shared_ptr<StmtInfo> stmtInfo) {
-    StmtRef stmt = (stmtInfo.get())->reference;
+    StmtRef stmt = stmtInfo->reference;
 
     if (stmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
@@ -65,7 +65,7 @@ shared_ptr<StmtInfo> FollowStore::getFollower(shared_ptr<StmtInfo> stmtInfo) {
 }
 
 shared_ptr<StmtInfo> FollowStore::getFollowee(shared_ptr<StmtInfo> stmtInfo) {
-    StmtRef stmt = (stmtInfo.get())->reference;
+    StmtRef stmt = stmtInfo->reference;
 
     if (stmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
