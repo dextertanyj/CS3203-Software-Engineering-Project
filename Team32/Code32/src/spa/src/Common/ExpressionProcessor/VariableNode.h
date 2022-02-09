@@ -1,10 +1,10 @@
 #ifndef SPA_VARIABLENODE_H
 #define SPA_VARIABLENODE_H
 
-#include "Common/ArithmeticProcessor/ArithmeticExpression.h"
-#include "Common/ArithmeticProcessor/ExpressionNode.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
+#include "Common/ExpressionProcessor/AtomicNode.h"
 
-class Common::ArithmeticProcessor::VariableNode : public ExpressionNode {
+class Common::ExpressionProcessor::VariableNode : public AtomicNode {
 public:
 	explicit VariableNode(VarRef name);
 	bool equals(shared_ptr<ExpressionNode> object) override;

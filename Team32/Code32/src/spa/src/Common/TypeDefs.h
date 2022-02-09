@@ -22,7 +22,6 @@ typedef vector<VarRef> VarRefList;
 typedef vector<StmtRef> StmtRefList;
 
 enum class MathematicalOperator { Plus, Minus, Times, Divide, Modulo, EQ, NEQ, LT, LTE, GT, GTE, And, Or, Not };
-enum class RelationalOperator { EQ, NEQ, LT, LTE, GT, GTE };
 
 #endif
 

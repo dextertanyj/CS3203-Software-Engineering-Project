@@ -3,12 +3,12 @@
 
 #include <memory>
 
-#include "Common/ArithmeticProcessor/ArithmeticProcessor.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/TypeDefs.h"
 
 using namespace std;
 
-class Common::ArithmeticProcessor::ExpressionNode {
+class Common::ExpressionProcessor::ExpressionNode {
 public:
 	virtual bool equals(shared_ptr<ExpressionNode> object) = 0;
 	virtual bool contains(shared_ptr<ExpressionNode> object) = 0;

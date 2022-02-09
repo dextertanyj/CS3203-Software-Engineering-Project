@@ -3,11 +3,11 @@
 
 #include <string>
 
-#include "Common/ArithmeticProcessor/ArithmeticProcessor.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 
 using namespace std;
 
-class Common::ArithmeticProcessor::LexerInterface {
+class Common::ExpressionProcessor::LexerInterface {
 public:
 	virtual string readToken() = 0;
 	virtual string peekToken() = 0;

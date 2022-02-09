@@ -13,7 +13,6 @@ struct ConversionException : public runtime_error {
 	using runtime_error::runtime_error;
 };
 MathematicalOperator convertMathematical(const string& op);
-RelationalOperator convertRelational(const string& op);
 int convertInteger(const string& integer);
 }  // namespace Common::Converter
 

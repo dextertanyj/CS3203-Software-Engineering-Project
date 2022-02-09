@@ -1,12 +1,12 @@
 #ifndef SPA_CONSTANTNODE_H
 #define SPA_CONSTANTNODE_H
 
-#include "Common/ArithmeticProcessor/ArithmeticProcessor.h"
-#include "Common/ArithmeticProcessor/ExpressionNode.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
+#include "Common/ExpressionProcessor/AtomicNode.h"
 
 using namespace std;
 
-class Common::ArithmeticProcessor::ConstantNode : public ExpressionNode {
+class Common::ExpressionProcessor::ConstantNode : public AtomicNode {
 public:
 	explicit ConstantNode(const string& value);
 	bool equals(shared_ptr<ExpressionNode> object) override;

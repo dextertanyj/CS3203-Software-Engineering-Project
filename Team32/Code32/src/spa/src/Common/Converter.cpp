@@ -1,6 +1,7 @@
+#include "Converter.h"
+
 #include <string>
 
-#include "Converter.h"
 #include "Common/Validator.h"
 
 using namespace std;
@@ -49,28 +50,6 @@ MathematicalOperator Common::Converter::convertMathematical(const string& op) {
 		return MathematicalOperator::Or;
 	}
 	throw ConversionException("Expected mathematical symbol, got " + op + " instead.");
-}
-
-RelationalOperator Common::Converter::convertRelational(const string& op) {
-	if (op == ">") {
-		return RelationalOperator::GT;
-	}
-	if (op == ">=") {
-		return RelationalOperator::GTE;
-	}
-	if (op == "<") {
-		return RelationalOperator::LT;
-	}
-	if (op == "<=") {
-		return RelationalOperator::LTE;
-	}
-	if (op == "==") {
-		return RelationalOperator::EQ;
-	}
-	if (op == "!=") {
-		return RelationalOperator::NEQ;
-	}
-	throw ConversionException("Expected relational symbol, got " + op + " instead.");
 }
 
 int Common::Converter::convertInteger(const string& integer) {
