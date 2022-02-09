@@ -7,7 +7,7 @@ using namespace std;
 ModifyStore::ModifyStore() {}
 
 void ModifyStore::setModify(shared_ptr<StmtInfo> stmtInfo, VarRef var_name) {
-    StmtRef stmtNo = (stmtInfo.get())->reference;
+    StmtRef stmtNo = stmtInfo->reference;
 
     if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
 

@@ -7,8 +7,8 @@ using namespace std;
 ParentStore::ParentStore() {}
 
 void ParentStore::setParent(shared_ptr<StmtInfo> parentStmtInfo, shared_ptr<StmtInfo> childStmtInfo) {
-    StmtRef parentStmt = (parentStmtInfo.get())->reference;
-    StmtRef childStmt = (childStmtInfo.get())->reference;
+    StmtRef parentStmt = parentStmtInfo->reference;
+    StmtRef childStmt = childStmtInfo->reference;
 
     if (parentStmt >= childStmt) throw invalid_argument("Second statement must come after the first statement.");
     if (parentStmt <= 0 || childStmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
@@ -32,8 +32,8 @@ void ParentStore::setParent(shared_ptr<StmtInfo> parentStmtInfo, shared_ptr<Stmt
 }
 
 bool ParentStore::isParentChild(shared_ptr<StmtInfo> parentStmtInfo, shared_ptr<StmtInfo> childStmtInfo) {
-    StmtRef parentStmt = (parentStmtInfo.get())->reference;
-    StmtRef childStmt = (childStmtInfo.get())->reference;
+    StmtRef parentStmt = parentStmtInfo->reference;
+    StmtRef childStmt = childStmtInfo->reference;
 
     if (parentStmt <= 0 || childStmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
     if (parentStmt >= childStmt) return false;
@@ -43,11 +43,11 @@ bool ParentStore::isParentChild(shared_ptr<StmtInfo> parentStmtInfo, shared_ptr<
         return false;
     }
     shared_ptr<StmtInfo> parentStmtInStore = keyItr->second.parent;
-    return parentStmtInStore.get() == parentStmtInfo.get();
+    return parentStmtInStore == parentStmtInfo;
 }
 
 shared_ptr<StmtInfo> ParentStore::getParent(shared_ptr<StmtInfo> stmtInfo) {
-    StmtRef stmt = (stmtInfo.get())->reference;
+    StmtRef stmt = stmtInfo->reference;
 
     if (stmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
@@ -59,7 +59,7 @@ shared_ptr<StmtInfo> ParentStore::getParent(shared_ptr<StmtInfo> stmtInfo) {
 }
 
 unordered_set<shared_ptr<StmtInfo>> ParentStore::getChildren(shared_ptr<StmtInfo> stmtInfo) {
-    StmtRef stmt = (stmtInfo.get())->reference;
+    StmtRef stmt = stmtInfo->reference;
 
     if (stmt <= 0) throw invalid_argument("Statement number must be a positive integer.");
 

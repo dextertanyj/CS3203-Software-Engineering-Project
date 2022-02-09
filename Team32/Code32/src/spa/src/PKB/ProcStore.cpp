@@ -4,7 +4,7 @@ ProcStore::ProcStore() {}
 
 void ProcStore::setProc(ProcRef procName, vector<shared_ptr<StmtInfo>> idxList) {
     for (auto itr : idxList) {
-        StmtRef stmtNo = (itr.get())->reference;
+        StmtRef stmtNo = itr->reference;
         if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
         auto keyItr1 = stmtToProcMap.find(stmtNo);
@@ -24,7 +24,7 @@ void ProcStore::setProc(ProcRef procName, vector<shared_ptr<StmtInfo>> idxList) 
 }
 
 void ProcStore::setCall(shared_ptr<StmtInfo> callStmt, ProcRef procName) {
-    if ((callStmt.get())->reference <= 0) throw invalid_argument("Statement number must be a positive integer.");
+    if (callStmt->reference <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
     auto keyItr = procMap.find(procName);
     if (keyItr == procMap.end()) {
@@ -44,17 +44,17 @@ vector<shared_ptr<StmtInfo>> ProcStore::getStmtsByProc(ProcRef procName) {
 }
 
 ProcRef ProcStore::getProcByCall(shared_ptr<StmtInfo> callStmt) {
-    if (callStmt.get()-> reference <= 0) throw invalid_argument("Statement number must be a positive integer.");
-    if (callStmt.get()->type != StmtType::Call) throw invalid_argument("Statement type must be a call statement.");
+    if (callStmt-> reference <= 0) throw invalid_argument("Statement number must be a positive integer.");
+    if (callStmt->type != StmtType::Call) throw invalid_argument("Statement type must be a call statement.");
 
     for (auto& itr : procMap) {
-        if (itr.second.callStmt.get() == callStmt.get()) return itr.first;
+        if (itr.second.callStmt == callStmt) return itr.first;
     }
     return "";
 }
 
 ProcRef ProcStore::getProcByStmt(shared_ptr<StmtInfo> stmtInfo) {
-    StmtRef stmtNo = (stmtInfo.get())->reference;
+    StmtRef stmtNo = stmtInfo->reference;
     if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
     auto keyItr = stmtToProcMap.find(stmtNo);
