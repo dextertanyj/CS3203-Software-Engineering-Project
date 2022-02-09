@@ -1,11 +1,11 @@
 name: Compile and Test - Self Hosted
-on: [push, pull_request]
+on: [workflow_dispatch]
 
 env:
   BUILD_TYPE: Coverage
 
 jobs:
-  runner-job:
+  self-hosted:
     runs-on: [self-hosted, macOS, x64]
     steps:
       - name: Cleanup workspace
@@ -67,5 +67,4 @@ jobs:
       - name: Upload coverage
         uses: codecov/codecov-action@v2
         with:
-          token: d5afce92-dfc9-486a-8744-97db7b0baf4e
           files: ${{runner.workspace}}/coverage/coverage_filtered.info

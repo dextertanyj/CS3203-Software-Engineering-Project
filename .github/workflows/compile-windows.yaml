@@ -1,0 +1,24 @@
+name: Compile and Test - Windows
+on: [push, pull_request]
+
+env:
+  BUILD_TYPE: Debug
+
+jobs:
+  compile-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v2
+
+      - name: Build Project
+        shell: bash
+        run: |
+          cd Team32/Code32
+          mkdir build
+          cd build
+          cmake -A Win32 ..
+          cmake --build . --target unit_testing --config Debug
+          cmake --build . --target integration_testing --config Debug
+          cmake --build . --target autotester --config Debug

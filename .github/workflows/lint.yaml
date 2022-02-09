@@ -5,13 +5,9 @@ env:
   BUILD_TYPE: Coverage
 
 jobs:
-  runner-job:
-    runs-on: [self-hosted, macOS, x64]
+  lint:
+    runs-on: macos-latest
     steps:
-      - name: Cleanup workspace
-        shell: bash
-        run: rm -rf ${{github.workspace}}/* && rm -rf ${{runner.workspace}}/build
-
       - name: Checkout repository code
         uses: actions/checkout@v2
 
