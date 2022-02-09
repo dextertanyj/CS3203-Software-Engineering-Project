@@ -3,10 +3,10 @@
 #include "SP/Node/RelationalExpressionNode.h"
 #include "../Node/MockUtilities.h"
 
-#include "catch.hpp"
 #include "catch_tools.h"
 
 using namespace std;
+using namespace SP::Node;
 
 TEST_CASE("SP::Node::OrNode::equals Same Object Test") {
     unique_ptr<RelationalExpressionNode> lhs = createRelationalExpression("x != 0)");
@@ -56,13 +56,13 @@ TEST_CASE("SP::Node::OrNode::equals Wrong Node Type Test") {
 }
 
 TEST_CASE("OrNode::extract Test") {
-	UsageInfo lhs_mock = {unordered_set<VarRef>({"A"}), unordered_set<int>({1})};
-	UsageInfo rhs_mock = {unordered_set<VarRef>({"B"}), unordered_set<int>({2})};
+	SP::UsageInfo lhs_mock = {unordered_set<VarRef>({"A"}), unordered_set<int>({1})};
+	SP::UsageInfo rhs_mock = {unordered_set<VarRef>({"B"}), unordered_set<int>({2})};
 	int lhs_ctr = 0;
 	int rhs_ctr = 0;
 	OrNode node = OrNode(make_unique<MockCENode>(lhs_mock, lhs_ctr), make_unique<MockCENode>(rhs_mock, rhs_ctr));
-	UsageInfo result = node.extract();
-	UsageInfo expected = {unordered_set<VarRef>({"A", "B"}), unordered_set<int>({1, 2})};
+	SP::UsageInfo result = node.extract();
+	SP::UsageInfo expected = {unordered_set<VarRef>({"A", "B"}), unordered_set<int>({1, 2})};
 	REQUIRE_EQUALS(result.constants, expected.constants);
 	REQUIRE_EQUALS(result.variables, expected.variables);
 	REQUIRE_EQUALS(lhs_ctr, 1);

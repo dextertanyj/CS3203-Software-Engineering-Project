@@ -5,10 +5,10 @@
 #include "SP/Node/ReadNode.h"
 #include "SP/Node/StatementListNode.h"
 #include "SP/SP.h"
-#include "catch.hpp"
 #include "catch_tools.h"
 
 using namespace std;
+using namespace SP::Node;
 
 TEST_CASE("SP::Node::StatementListNode::addStatementNode CallNode Test") {
 	shared_ptr<StatementListNode> statement_list_node = make_shared<StatementListNode>();
@@ -100,7 +100,7 @@ TEST_CASE("SP::Node::StatementListNode::equals Different Nodes Test") {
 }
 
 TEST_CASE("SP::Node::StatementListNode::parseStatementList Valid Token Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("print flag; read x; }");
 	int statement_count = 1;
 	unique_ptr<StatementListNode> statement_list_node = StatementListNode::parseStatementList(lex, statement_count);
@@ -114,7 +114,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList Valid Token Test") {
 }
 
 TEST_CASE("SP::Node::StatementListNode::parseStatementList Different Statement Number Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("print flag; read x; }");
 	int statement_count = 1;
 	unique_ptr<StatementListNode> statement_list_node = StatementListNode::parseStatementList(lex, statement_count);
@@ -128,7 +128,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList Different Statement N
 }
 
 TEST_CASE("SP::Node::StatementListNode::parseStatementList Missing Token Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("print x read y; }");
 	int statement_count = 1;
 	REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::TokenizationException);
@@ -136,7 +136,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList Missing Token Test") 
 }
 
 TEST_CASE("SP::Node::StatementListNode::parseStatementList Extra Token Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("print x ;; read y; }");
 	int statement_count = 1;
 	REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::ParseException);
@@ -144,7 +144,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList Extra Token Test") {
 }
 
 TEST_CASE("SP::Node::StatementListNode::parseStatementList Invalid Keyword Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("prints x ; }");
 	int statement_count = 1;
 	REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::ParseException);

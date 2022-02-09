@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <unordered_set>
+
 #include "Common/TypeDefs.h"
 
 using namespace std;
@@ -14,14 +15,15 @@ struct ParseException : public runtime_error {
 struct TokenizationException : public runtime_error {
 	using runtime_error::runtime_error;
 };
-class Lexer;
-class Parser;
-class DesignExtractor;
-class Processor;
 struct UsageInfo {
 	unordered_set<VarRef> variables;
 	unordered_set<int> constants;
 };
+namespace Node {};
+class Processor;
+class Lexer;
+class Parser;
+class DesignExtractor;
 }  // namespace SP
 
 #endif  // SPA_SP_H

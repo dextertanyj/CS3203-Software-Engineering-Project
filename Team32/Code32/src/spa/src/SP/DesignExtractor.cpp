@@ -3,11 +3,10 @@
 #include "PKB/PKB.h"
 
 using namespace std;
-using namespace SP;
 
-DesignExtractor::DesignExtractor(PKB &pkb) : pkb(pkb) {}
+SP::DesignExtractor::DesignExtractor(PKB &pkb) : pkb(pkb) {}
 
-bool DesignExtractor::extract(unique_ptr<ProgramNode> ast) {
+bool SP::DesignExtractor::extract(unique_ptr<Node::ProgramNode> ast) {
 	ast->extract(pkb);
 	return true;
 }

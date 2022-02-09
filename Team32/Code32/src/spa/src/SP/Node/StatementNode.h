@@ -1,13 +1,14 @@
 #ifndef SPA_STATEMENTNODE_H
 #define SPA_STATEMENTNODE_H
 
+#include <memory>
+
 #include "Common/TypeDefs.h"
 #include "PKB/PKB.h"
 #include "SP/Lexer.h"
+#include "SP/Node/Node.h"
 
-using namespace SP;
-
-class StatementNode {
+class SP::Node::StatementNode {
 public:
 	explicit StatementNode(StmtRef stmtNo);
 	static unique_ptr<StatementNode> parseStatement(Lexer& lex, int& statement_count);

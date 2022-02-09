@@ -1,11 +1,11 @@
 #include "SP/Node/WhileNode.h"
 
-WhileNode::WhileNode(StmtRef stmtNo, unique_ptr<ConditionalExpressionNode> condExpr, unique_ptr<StatementListNode> stmtLst)
+SP::Node::WhileNode::WhileNode(StmtRef stmtNo, unique_ptr<ConditionalExpressionNode> condExpr, unique_ptr<StatementListNode> stmtLst)
 	: StatementNode(stmtNo), condExpr(move(condExpr)), stmtLst(move(stmtLst)) {}
 
-unique_ptr<WhileNode> WhileNode::parseWhileStatement(Lexer& lex, int& statement_count) {
-	StmtRef statement_index = statement_count++;
-	lex.nextIf("(");
+unique_ptr<SP::Node::WhileNode> SP::Node::WhileNode::parseWhileStatement(Lexer& lex, int& statement_count) {
+    StmtRef statement_index = statement_count++;
+    lex.nextIf("(");
 	unique_ptr<ConditionalExpressionNode> condition = ConditionalExpressionNode::parseConditionalExpression(lex);
 	lex.nextIf(")");
 	lex.nextIf("{");
@@ -14,7 +14,7 @@ unique_ptr<WhileNode> WhileNode::parseWhileStatement(Lexer& lex, int& statement_
 	return make_unique<WhileNode>(statement_index, move(condition), move(statements));
 }
 
-StmtInfo WhileNode::extract(PKB& pkb) {
+StmtInfo SP::Node::WhileNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::WhileStmt);
 	UsageInfo usage = condExpr->extract();
@@ -28,11 +28,11 @@ StmtInfo WhileNode::extract(PKB& pkb) {
 	return {stmt_ref, StmtType::WhileStmt};
 }
 
-bool WhileNode::equals(shared_ptr<StatementNode> object) {
-	shared_ptr<WhileNode> other = dynamic_pointer_cast<WhileNode>(object);
-	if (other == nullptr) {
-		return false;
-	}
-	return this->getStmtRef() == other->getStmtRef() && this->condExpr->equals(move(other->condExpr)) &&
-	       this->stmtLst->equals(move(other->stmtLst));
+bool SP::Node::WhileNode::equals(shared_ptr<StatementNode> object) {
+    shared_ptr<WhileNode> other = dynamic_pointer_cast<WhileNode>(object);
+    if (other == nullptr) {
+        return false;
+    }
+    return this->getStmtRef() == other->getStmtRef() && this->condExpr->equals(move(other->condExpr))
+           && this->stmtLst->equals(move(other->stmtLst));
 }

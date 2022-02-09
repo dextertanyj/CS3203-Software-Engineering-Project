@@ -1,16 +1,19 @@
 #ifndef SPA_MOCKUTILITIES_H
 #define SPA_MOCKUTILITIES_H
 
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "Common/ArithmeticProcessor/ArithmeticExpression.h"
 #include "SP/Node/RelationalExpressionNode.h"
 #include "SP/Node/StatementListNode.h"
+#include "SP/SP.h"
 
-#include <string>
-
-class MockCENode : public ConditionalExpressionNode {
+class MockCENode : public SP::Node::ConditionalExpressionNode {
 public:
-	MockCENode(UsageInfo data, int& ctr) : data(move(data)), ctr(ctr) {};
-	UsageInfo extract() override {
+	MockCENode(SP::UsageInfo data, int& ctr) : data(move(data)), ctr(ctr){};
+	SP::UsageInfo extract() override {
 		ctr++;
 		return data;
 	};
@@ -18,12 +21,12 @@ public:
 	~MockCENode() override = default;
 
 private:
-	UsageInfo data;
+	SP::UsageInfo data;
 	int& ctr;
 };
 
 Common::ArithmeticProcessor::ArithmeticExpression createArithmeticExpression(vector<string> str_list);
-unique_ptr<RelationalExpressionNode> createRelationalExpression(string str);
-unique_ptr<StatementListNode> createStatementList(string str, int statement_count);
+unique_ptr<SP::Node::RelationalExpressionNode> createRelationalExpression(string str);
+unique_ptr<SP::Node::StatementListNode> createStatementList(string str, int statement_count);
 
-#endif //SPA_MOCKUTILITIES_H
+#endif  // SPA_MOCKUTILITIES_H

@@ -3,10 +3,10 @@
 #include "SP/Node/RelationalExpressionNode.h"
 #include "../Node/MockUtilities.h"
 
-#include "catch.hpp"
 #include "catch_tools.h"
 
 using namespace std;
+using namespace SP::Node;
 
 TEST_CASE("SP::Node::NotNode::equals Same Object Test") {
     unique_ptr<RelationalExpressionNode> expression = createRelationalExpression("x != 0)");
@@ -40,11 +40,11 @@ TEST_CASE("SP::Node::NotNode::equals Wrong Node Type Test") {
 }
 
 TEST_CASE("NotNode::extract Test") {
-	UsageInfo mock = {unordered_set<VarRef>({"A"}), unordered_set<int>({1})};
+	SP::UsageInfo mock = {unordered_set<VarRef>({"A"}), unordered_set<int>({1})};
 	int ctr = 0;
 	NotNode node = NotNode(make_unique<MockCENode>(mock, ctr));
-	UsageInfo result = node.extract();
-	UsageInfo expected = {unordered_set<VarRef>({"A"}), unordered_set<int>({1})};
+	SP::UsageInfo result = node.extract();
+	SP::UsageInfo expected = {unordered_set<VarRef>({"A"}), unordered_set<int>({1})};
 	REQUIRE_EQUALS(result.constants, expected.constants);
 	REQUIRE_EQUALS(result.variables, expected.variables);
 	REQUIRE_EQUALS(ctr, 1);
