@@ -79,17 +79,6 @@ unordered_set<VarRef> UseStore::getUsesByStmtList(vector<shared_ptr<StmtInfo>> s
     return varSet;
 }
 
-unordered_set<ProcRef> UseStore::getProcUsesByStmtList(unordered_set<shared_ptr<StmtInfo>> stmtInfoList, ProcStore procStore) {
-    unordered_set<ProcRef> procSet;
-    for (auto &itr: stmtInfoList) {
-        if (itr->reference <= 0) throw invalid_argument("Statement number must be a positive integer.");
-
-        ProcRef procName = procStore.getProcByStmt(itr);
-        if (!procName.empty()) procSet.insert(procName);
-    }
-    return procSet;
-}
-
 void UseStore::clear() {
     varToStmtMap.clear();
     stmtToVarMap.clear();

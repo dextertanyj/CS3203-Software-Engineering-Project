@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 using namespace std;
 
@@ -18,6 +19,7 @@ typedef struct StmtInfo {
 } StmtInfo;
 
 typedef vector<StmtInfo> StmtInfoList;
+typedef vector<shared_ptr<StmtInfo>> StmtInfoPtrList;
 typedef vector<VarRef> VarRefList;
 typedef vector<StmtRef> StmtRefList;
 

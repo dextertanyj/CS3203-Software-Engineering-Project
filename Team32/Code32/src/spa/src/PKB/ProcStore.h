@@ -3,6 +3,8 @@
 
 #include "Common/TypeDefs.h"
 #include <unordered_map>
+#include <unordered_set>
+#include <memory>
 
 using namespace std;
 
@@ -19,6 +21,7 @@ public:
     vector<shared_ptr<StmtInfo>> getStmtsByProc(ProcRef);
     ProcRef getProcByStmt(shared_ptr<StmtInfo>);
     ProcRef getProcByCall(shared_ptr<StmtInfo>);
+    unordered_set<ProcRef> getProcListByStmtList(unordered_set<shared_ptr<StmtInfo>>);
     void clear();
 private:
     unordered_map<ProcRef, ProcRelation> procMap;

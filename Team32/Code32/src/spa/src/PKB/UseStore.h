@@ -6,7 +6,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "../Common/TypeDefs.h"
-#include "ProcStore.h"
 
 using namespace std;
 
@@ -20,7 +19,6 @@ public:
     bool checkUses(shared_ptr<StmtInfo>, VarRef);
     bool checkUsesList(vector<shared_ptr<StmtInfo>>, VarRef);
     unordered_set<shared_ptr<StmtInfo>> getUsesByVar(VarRef);
-    unordered_set<ProcRef> getProcUsesByStmtList(unordered_set<shared_ptr<StmtInfo>>, ProcStore);
     unordered_set<VarRef> getUsesByStmt(shared_ptr<StmtInfo>);
     unordered_set<VarRef> getUsesByStmtList(vector<shared_ptr<StmtInfo>>);
 
