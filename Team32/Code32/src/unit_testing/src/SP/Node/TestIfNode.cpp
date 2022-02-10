@@ -147,7 +147,7 @@ TEST_CASE("IfNode::extract Test") {
 	PKB pkb;
 	unique_ptr<ConditionalExpressionNode> condition = createRelationalExpression("x < y");
 	unique_ptr<StatementListNode> if_clause = createStatementList("read x; print y; }", 2);
-	unique_ptr<StatementListNode> then_clause = createStatementList("read x; print y; }", 3);
+	unique_ptr<StatementListNode> then_clause = createStatementList("read x; print y; }", 4);
 	IfNode node = IfNode(1, std::move(condition), std::move(if_clause), std::move(then_clause));
 	StmtInfo result = node.extract(pkb);
 	StmtInfo expected = {1, StmtType::IfStmt};

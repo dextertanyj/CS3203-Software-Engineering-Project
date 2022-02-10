@@ -6,8 +6,8 @@ SP::Node::PrintNode::PrintNode(StmtRef stmtNo, unique_ptr<VariableNode> variable
 
 StmtInfo SP::Node::PrintNode::extract(PKB &pkb) {
 	StmtRef stmt_ref = getStmtRef();
-	pkb.setUses(stmt_ref, variable->extract());
 	pkb.setStmtType(stmt_ref, StmtType::Print);
+	pkb.setUses(stmt_ref, variable->extract());
 	return {stmt_ref, StmtType::Print};
 }
 
