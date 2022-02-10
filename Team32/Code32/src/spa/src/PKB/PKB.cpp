@@ -125,6 +125,35 @@ unordered_set<VarRef> PKB::getUsesByProc(ProcRef procName) {
     return useStore.getUsesByStmtList(procStmts);
 }
 
+bool PKB::checkModifies(StmtRef stmt, VarRef varName) {
+    shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
+    return modifyStore.checkModifies(stmtInfo, varName);
+}
+
+unordered_set<VarRef> PKB::getModifiesByProc(ProcRef procName) {
+    vector<shared_ptr<StmtInfo>> procStmts = procStore.getStmtsByProc(procName);
+    return modifyStore.getModifiesByStmtList(procStmts);
+}
+
+bool PKB::checkProcModifies(ProcRef procName, VarRef varName) {
+    vector<shared_ptr<StmtInfo>> procStmts = procStore.getStmtsByProc(procName);
+    return modifyStore.checkModifiesList(procStmts, varName);
+}
+
+unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef varName) {
+    return modifyStore.getModifiesByVar(varName);
+}
+
+unordered_set<VarRef> PKB::getModifiesByStmt(StmtRef stmt) {
+    shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
+    return modifyStore.getModifiesByStmt(stmtInfo);
+}
+
+unordered_set<ProcRef> PKB::getProcModifiesByVar(VarRef varName) {
+    unordered_set<shared_ptr<StmtInfo>> stmtList = modifyStore.getModifiesByVar(varName);
+    return procStore.getProcListByStmtList(stmtList);
+}
+
 ProcRef PKB::getProcFromCall(StmtRef stmt) {
     shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
     return procStore.getProcByCall(stmtInfo);

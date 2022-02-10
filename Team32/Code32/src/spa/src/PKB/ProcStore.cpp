@@ -62,7 +62,7 @@ ProcRef ProcStore::getProcByStmt(shared_ptr<StmtInfo> stmtInfo) {
     return keyItr->second;
 }
 
-unordered_set<ProcRef> ProcStore::getProcListbyStmtList(unordered_set<shared_ptr<StmtInfo>> stmtInfoList) {
+unordered_set<ProcRef> ProcStore::getProcListByStmtList(unordered_set<shared_ptr<StmtInfo>> stmtInfoList) {
     unordered_set<ProcRef> procSet;
     for (auto &itr: stmtInfoList) {
         if (itr->reference <= 0) throw invalid_argument("Statement number must be a positive integer.");

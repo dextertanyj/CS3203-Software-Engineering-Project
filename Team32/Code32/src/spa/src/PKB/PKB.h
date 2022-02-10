@@ -52,6 +52,14 @@ public:
     unordered_set<VarRef> getUsesByStmt(StmtRef);
     unordered_set<VarRef> getUsesByProc(ProcRef);
 
+    // Modify get methods
+    bool checkModifies(StmtRef, VarRef);
+    bool checkProcModifies(ProcRef, VarRef);
+    unordered_set<shared_ptr<StmtInfo>> getModifiesByVar(VarRef);
+    unordered_set<ProcRef> getProcModifiesByVar(VarRef);
+    unordered_set<VarRef> getModifiesByStmt(StmtRef);
+    unordered_set<VarRef> getModifiesByProc(ProcRef);
+
     // Others
     void clear();
     ProcRef getProcFromCall(StmtRef);
