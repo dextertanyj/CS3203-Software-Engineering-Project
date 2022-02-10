@@ -4,8 +4,8 @@ SP::Node::ReadNode::ReadNode(StmtRef stmtNo, unique_ptr<VariableNode> variable) 
 
 StmtInfo SP::Node::ReadNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
-	pkb.setModifies(stmt_ref, variable->extract());
 	pkb.setStmtType(stmt_ref, StmtType::Read);
+	pkb.setModifies(stmt_ref, variable->extract());
 	return {stmt_ref, StmtType::Read};
 }
 
