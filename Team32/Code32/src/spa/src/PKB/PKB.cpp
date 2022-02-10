@@ -57,6 +57,7 @@ shared_ptr<StmtInfo> PKB::getFollowee(StmtRef stmt) {
 }
 
 void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree) {
+    checkInvalidStmt(stmtNo);
     return assignStore.setAssign(stmtNo, variableLHS, opTree);
 }
 
