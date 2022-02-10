@@ -85,6 +85,22 @@ TEST_CASE("SP::Node::WhileNode::parseWhileStatement Missing Condition Token Test
 	REQUIRE_EQUALS(statement_count, 2);
 }
 
+TEST_CASE("SP::Node::WhileNode::parseWhileStatement Missing Condition Open Brackets Test") {
+    SP::Lexer lex;
+    lex.initialize("x == 0) { count = count + 1; call readPoint; }");
+    int statement_count = 1;
+    REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::TokenizationException);
+    REQUIRE_EQUALS(statement_count, 2);
+}
+
+TEST_CASE("SP::Node::WhileNode::parseWhileStatement Missing Condition Close Brackets Test") {
+    SP::Lexer lex;
+    lex.initialize("(x == 0 { count = count + 1; call readPoint; }");
+    int statement_count = 1;
+    REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::TokenizationException);
+    REQUIRE_EQUALS(statement_count, 2);
+}
+
 TEST_CASE("SP::Node::WhileNode::parseWhileStatement Missing Branch Token Test") {
 	SP::Lexer lex;
 	lex.initialize("(x == 0) { }");

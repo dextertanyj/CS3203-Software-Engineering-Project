@@ -19,6 +19,7 @@ TEST_CASE("SP::Node::StatementListNode::addStatementNode CallNode Test") {
 	vector<shared_ptr<StatementNode>> stmt_list = statement_list_node->getStatementList();
 	shared_ptr<CallNode> call_node_shared = make_shared<CallNode>(1, "test");
 	REQUIRE(stmt_list[0]->equals(call_node_shared));
+    REQUIRE_EQUALS(stmt_list.size(), 1);
 }
 
 TEST_CASE("SP::Node::StatementListNode::addStatementNode PrintNode Test") {
@@ -30,6 +31,7 @@ TEST_CASE("SP::Node::StatementListNode::addStatementNode PrintNode Test") {
 	vector<shared_ptr<StatementNode>> stmt_list = statement_list_node->getStatementList();
 	shared_ptr<PrintNode> print_node_shared = make_shared<PrintNode>(1, make_unique<VariableNode>("a"));
 	REQUIRE(stmt_list[0]->equals(print_node_shared));
+    REQUIRE_EQUALS(stmt_list.size(), 1);
 }
 
 TEST_CASE("SP::Node::StatementListNode::addStatementNode ReadNode Test") {
@@ -41,6 +43,7 @@ TEST_CASE("SP::Node::StatementListNode::addStatementNode ReadNode Test") {
 	vector<shared_ptr<StatementNode>> stmt_list = statement_list_node->getStatementList();
 	shared_ptr<ReadNode> read_node_shared = make_shared<ReadNode>(1, make_unique<VariableNode>("x"));
 	REQUIRE(stmt_list[0]->equals(read_node_shared));
+    REQUIRE_EQUALS(stmt_list.size(), 1);
 }
 
 TEST_CASE("SP::Node::StatementListNode::addStatementNode Multiple Nodes Test") {
@@ -56,6 +59,7 @@ TEST_CASE("SP::Node::StatementListNode::addStatementNode Multiple Nodes Test") {
 	shared_ptr<CallNode> call_node_shared = make_shared<CallNode>(2, "test");
 	REQUIRE(stmt_list[0]->equals(print_node_shared));
 	REQUIRE(stmt_list[1]->equals(call_node_shared));
+    REQUIRE_EQUALS(stmt_list.size(), 2);
 }
 
 TEST_CASE("SP::Node::StatementListNode::equals Same Object Test") {

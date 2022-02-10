@@ -72,6 +72,17 @@ TEST_CASE("SP::Node::ProgramNode::equals Different Node Test") {
     REQUIRE_FALSE(node->equals(other));
 }
 
+TEST_CASE("SP::Node::ProgramNode::addProcedureNode Test") {
+    SP::Lexer lex;
+    lex.initialize("procedure A { read x; } procedure B { read y; }");
+    shared_ptr<ProgramNode> node = make_shared<ProgramNode>();
+    unique_ptr<StatementListNode> stmt_lst = createStatementList("read x; }", 1);
+    unique_ptr<ProcedureNode> procedure = make_unique<ProcedureNode>("A", move(stmt_lst));
+    REQUIRE_EQUALS(node->getProcedures().size(), 0);
+    node->addProcedureNode(move(procedure));
+    REQUIRE_EQUALS(node->getProcedures().size(), 1);
+}
+
 TEST_CASE("SP::Node::ProgramNode::parseProgram Valid Token Test") {
 	SP::Lexer lex;
     lex.initialize("procedure A { read x; } procedure B { read y; }");
@@ -86,4 +97,11 @@ TEST_CASE("SP::Node::ProgramNode::parseProgram Valid Token Test") {
     expected->addProcedureNode(move(procedure_2));
     REQUIRE(node->equals(expected));
     REQUIRE_EQUALS(statement_count, 3);
+}
+
+TEST_CASE("SP::Node::ProgramNode::parseProgram 0 procedure Test") {
+    SP::Lexer lex;
+    lex.initialize(" ");
+    int statement_count = 1;
+    REQUIRE_THROWS_AS(ProgramNode::parseProgram(lex, statement_count), SP::TokenizationException);
 }

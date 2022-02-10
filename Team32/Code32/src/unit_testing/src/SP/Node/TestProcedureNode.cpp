@@ -61,7 +61,15 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure Valid Complex Token Test") {
     REQUIRE_EQUALS(statement_count, 4);
 }
 
-TEST_CASE("SP::Node::ProcedureNode::parseProcedure invalid Name Test") {
+TEST_CASE("SP::Node::ProcedureNode::parseProcedure Invalid Grammar Test") {
+    SP::Lexer lex;
+    lex.initialize("procedures testName { cenX = 0; }");
+    int statement_count = 1;
+    REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::TokenizationException);
+    REQUIRE_EQUALS(statement_count, 1);
+}
+
+TEST_CASE("SP::Node::ProcedureNode::parseProcedure Invalid Name Test") {
 	SP::Lexer lex;
     lex.initialize("procedure 1testName { cenX = 0; }");
     int statement_count = 1;
@@ -83,4 +91,28 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure Missing Closing Brackets Toke
     int statement_count = 1;
     REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::ParseException);
     REQUIRE_EQUALS(statement_count, 2);
+}
+
+TEST_CASE("SP::Node::ProcedureNode::parseProcedure 0 StmtLst Test") {
+    SP::Lexer lex;
+    lex.initialize("procedure testName {    } ");
+    int statement_count = 1;
+    REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::ParseException);
+    REQUIRE_EQUALS(statement_count, 1);
+}
+
+TEST_CASE("SP::Node::ProcedureNode::parseProcedure Wrong Brackets Type Test") {
+    SP::Lexer lex;
+    lex.initialize("procedure testName ( cenX = 0; ) ");
+    int statement_count = 1;
+    REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::TokenizationException);
+    REQUIRE_EQUALS(statement_count, 1);
+}
+
+TEST_CASE("SP::Node::ProcedureNode::parseProcedure Invalid Brackets Test") {
+    SP::Lexer lex;
+    lex.initialize("procedure testName { (cenX = 0;) } ");
+    int statement_count = 1;
+    REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::ParseException);
+    REQUIRE_EQUALS(statement_count, 1);
 }
