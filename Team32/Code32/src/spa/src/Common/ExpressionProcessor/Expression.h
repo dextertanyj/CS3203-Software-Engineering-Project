@@ -31,6 +31,8 @@ private:
 	                                            unordered_set<int>& constants, shared_ptr<ExpressionNode> lhs, int precedence);
 	static shared_ptr<ExpressionNode> parseTerminal(LexerInterface& lex, bool (*acceptor)(string op), unordered_set<VarRef>& variables,
 	                                                unordered_set<int>& constants);
+	static shared_ptr<ExpressionNode> parseTerminalSafe(LexerInterface& lex, bool (*acceptor)(string op), unordered_set<VarRef>& variables,
+	                                                    unordered_set<int>& constants);
 	static int getPrecedence(MathematicalOperator op);
 };
 

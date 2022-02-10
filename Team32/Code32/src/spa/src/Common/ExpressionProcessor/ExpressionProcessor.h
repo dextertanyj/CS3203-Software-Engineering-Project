@@ -20,6 +20,7 @@ class RelationalNode;
 class AtomicNode;
 class ArithmeticNode;
 class ConstantNode;
+class ParenthesesWrapper;
 class VariableNode;
 }  // namespace Common::ExpressionProcessor
 

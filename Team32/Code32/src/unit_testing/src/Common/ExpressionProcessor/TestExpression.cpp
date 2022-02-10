@@ -137,3 +137,19 @@ TEST_CASE("Common::ExpressionProcessor::Expression::parse Logical Complex Test")
 	REQUIRE_EQUALS(expression.getConstants(), constants);
 	REQUIRE_EQUALS(expression.getVariables(), variables);
 }
+
+TEST_CASE("Common::ExpressionProcessor::Expression::parse Acceptor Test") {
+	MockLexer lex = MockLexer(vector<string>({"x", "<", "y"}));
+	Expression::parse(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	REQUIRE_EQUALS(lex.peekToken(), "<");
+	lex = MockLexer(vector<string>({"(", "x", "<", "3", ")", "||", "(", "x", "<", "4", ")"}));
+	Expression::parse(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptRelational);
+	REQUIRE_EQUALS(lex.peekToken(), "||");
+}
+
+TEST_CASE("Common::ExpressionProcessor::Expression::parse Relational Subexpression Test") {
+	MockLexer lex = MockLexer(vector<string>({"(", "x", "||", "y", ")", "<", "(", "z", "+", "3", ")"}));
+	REQUIRE_THROWS_AS(Expression::parse(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptLogical), ExpressionProcessorException);
+	lex = MockLexer(vector<string>({"(", "(", "x", "<", "y", ")", ")"}));
+	REQUIRE_THROWS_AS(Expression::parse(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptLogical), ExpressionProcessorException);
+}
