@@ -9,8 +9,12 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& queryProperties) {
 	if (suchThatClauseList.empty() && patternClauseList.empty()) {
 		Declaration select = queryProperties.getSelect();
 		if (select.type == DesignEntity::stmt) {
-			StmtRefList stmtList = pkb.getStatements();
-			return QueryResult(stmtList, {});
+			StmtInfoPtrList stmt_pointers = pkb.getStatements();
+			vector<StmtRef> stmts;
+			for (const shared_ptr<StmtInfo>& stmt : stmt_pointers) {
+				stmts.push_back(stmt->reference);
+			}
+			return QueryResult(stmts, {});
 		} else {
 			// TODO: Handle other cases
 			return QueryResult();
@@ -20,8 +24,12 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& queryProperties) {
 	return evaluateSuchThatClauses(suchThatClauseList);
 }
 QueryResult QueryEvaluator::evaluateSuchThatClauses(SuchThatClauseList& suchThatClauseList) {
-	StmtRefList stmtList = pkb.getStatements();
-	QueryResult result = QueryResult(stmtList, {});
+	StmtInfoPtrList stmt_pointers = pkb.getStatements();
+	vector<StmtRef> stmts;
+	for (const shared_ptr<StmtInfo>& stmt : stmt_pointers) {
+		stmts.push_back(stmt->reference);
+	}
+	QueryResult result = QueryResult(stmts, {});
 
 	for (SuchThatClause suchThatClause : suchThatClauseList) {
 		if (!suchThatClause.relation->execute(pkb, result)) {
