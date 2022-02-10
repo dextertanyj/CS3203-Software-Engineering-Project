@@ -159,6 +159,52 @@ ProcRef PKB::getProcFromCall(StmtRef stmt) {
     return procStore.getProcByCall(stmtInfo);
 }
 
+bool PKB::isPattern(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
+    return assignStore.isPattern(varName, e, isRHSExactMatchNeeded);
+}
+
+StmtInfoList PKB::getPatternMatch(StmtInfoList stmtInfoList, VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
+    StmtInfoList stmtInfos;
+    StmtRefList stmtList = assignStore.getPatternMatch(stmtInfoList, varName, e, isRHSExactMatchNeeded);
+    for (auto stmtNo : stmtList) {
+        stmtInfos.push_back(typeMap.at(stmtNo));
+    }
+    return stmtInfos;
+}
+
+StmtInfoList PKB::getAllPatternMatch(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
+    StmtInfoList stmtInfoList;
+    StmtRefList stmtList = assignStore.getAllPatternMatch(varName, e, isRHSExactMatchNeeded);
+    for (auto stmtNo : stmtList) {
+        stmtInfoList.push_back(typeMap.at(stmtNo));
+    }
+    return stmtInfoList;
+}
+
+StmtInfoList PKB::getPatternMatchLHS(VarRef varName) {
+    StmtInfoList stmtInfoList;
+    StmtRefList stmtList = assignStore.getPatternMatchLHS(varName);
+    for (auto stmtNo : stmtList) {
+        stmtInfoList.push_back(typeMap.at(stmtNo));
+    }
+    return stmtInfoList;
+}
+
+unordered_set<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getPatternMatchRHS(Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
+    unordered_set<pair<shared_ptr<StmtInfo>, VarRef>> stmtInfoVarList;
+    vector<pair<StmtRef, VarRef>> stmtVarList = assignStore.getPatternMatchRHS(e, isRHSExactMatchNeeded);
+    for (auto& stmtVarPair : stmtVarList) {
+        shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmtVarPair.first);
+        pair<shared_ptr<StmtInfo>, VarRef> stmtInfoVarPair = make_pair(stmtInfo, stmtVarPair.second);
+        stmtInfoVarList.insert(stmtInfoVarPair);
+    }
+    return stmtInfoVarList;
+}
+
+
+
+
+
 /*
 void PKB::populateComplexRelations() {
     parentStore.populateParentStar(numStatements);

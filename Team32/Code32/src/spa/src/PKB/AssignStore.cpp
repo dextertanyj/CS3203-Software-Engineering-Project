@@ -6,7 +6,7 @@ using namespace std;
 
 AssignStore::AssignStore() {}
 
-void AssignStore::setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree) {
+void AssignStore::setAssign(StmtRef stmtNo, VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree) {
     if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
     auto keyItr = assignMap.find(stmtNo);
@@ -18,7 +18,16 @@ void AssignStore::setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree) {
     }
 }
 
-StmtRefList AssignStore::getPatternMatch(StmtInfoList stmtNoList, VarRef variableLHS, string opTree,
+bool AssignStore::isPattern(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression opTree, bool isRHSExactMatchNeeded) {
+    for (auto assignStmt : assignMap) {
+        if (compareOpTreeAndVar(assignStmt.second, varName, opTree, isRHSExactMatchNeeded)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+StmtRefList AssignStore::getPatternMatch(StmtInfoList stmtNoList, VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree,
                                          bool isRHSExactMatchNeeded) {
     StmtRefList stmtRefList;
     for (auto& stmtInfo : stmtNoList) {
@@ -39,7 +48,7 @@ StmtRefList AssignStore::getPatternMatch(StmtInfoList stmtNoList, VarRef variabl
     return stmtRefList;
 }
 
-StmtRefList AssignStore::getAllPatternMatch(VarRef variableLHS, string opTree, bool isRHSExactMatchNeeded) {
+StmtRefList AssignStore::getAllPatternMatch(VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree, bool isRHSExactMatchNeeded) {
     StmtRefList stmtRefList;
     for (auto& itr : assignMap) {
         AssignRelation assignRelation = itr.second;
@@ -50,17 +59,38 @@ StmtRefList AssignStore::getAllPatternMatch(VarRef variableLHS, string opTree, b
     return stmtRefList;
 }
 
+StmtRefList AssignStore::getPatternMatchLHS(VarRef varName) {
+    StmtRefList stmtRefList;
+    for (auto& itr : assignMap) {
+        AssignRelation assignRelation = itr.second;
+        if (assignRelation.variableLHS == varName) {
+            stmtRefList.push_back(itr.first);
+        }
+    }
+    return stmtRefList;
+}
+
+vector<pair<StmtRef, VarRef>> AssignStore::getPatternMatchRHS(Common::ArithmeticProcessor::ArithmeticExpression opTree, bool isRHSExactMatchNeeded) {
+    vector<pair<StmtRef, VarRef>> stmtVarList;
+    for (auto& itr : assignMap) {
+        AssignRelation assignRelation = itr.second;
+        if (compareOpTreeAndVar(assignRelation, "", opTree, isRHSExactMatchNeeded)) {
+            pair<StmtRef, VarRef> stmtVarPair = make_pair(itr.first, itr.second.variableLHS);
+            stmtVarList.push_back(stmtVarPair);
+        }
+    }
+    return stmtVarList;
+}
+
 // To be changed when Operation Tree is created
-bool AssignStore::compareOpTreeAndVar(AssignRelation assignRelation, VarRef variableLHS, string opTree, bool isRHSExactMatchNeeded) {
-    if (variableLHS != "" && assignRelation.variableLHS != variableLHS) {
+bool AssignStore::compareOpTreeAndVar(AssignRelation assignRelation, VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree, bool isRHSExactMatchNeeded) {
+    if (!variableLHS.empty() && assignRelation.variableLHS != variableLHS) {
         return false;
     }
     if (isRHSExactMatchNeeded) {
-        // call compare method of opTree object for exact comparison - to be changed when OperationTree merged in
-        return assignRelation.opTree.compare(opTree);
+        return assignRelation.opTree.equals(opTree);
     } else {
-        // call compare method of opTree object for partial comparison - to be changed when OperationTree merged in
-        return assignRelation.opTree.compare(opTree);
+        return assignRelation.opTree.contains(opTree);
     }
 }
 

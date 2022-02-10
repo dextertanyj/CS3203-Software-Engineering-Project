@@ -12,7 +12,8 @@
 #include "ModifyStore.h"
 #include "AssignStore.h"
 #include "ProcStore.h"
-#include "../Common/TypeDefs.h"
+#include "Common/TypeDefs.h"
+#include "Common/ArithmeticProcessor/ArithmeticExpression.h"
 
 using namespace std;
 
@@ -59,6 +60,13 @@ public:
     unordered_set<ProcRef> getProcModifiesByVar(VarRef);
     unordered_set<VarRef> getModifiesByStmt(StmtRef);
     unordered_set<VarRef> getModifiesByProc(ProcRef);
+
+    // Assign get methods
+    bool isPattern(VarRef, Common::ArithmeticProcessor::ArithmeticExpression, bool isRHSExactMatchNeeded);
+    StmtInfoList getPatternMatch(StmtInfoList, VarRef, Common::ArithmeticProcessor::ArithmeticExpression, bool isRHSExactMatchNeeded);
+    StmtInfoList getAllPatternMatch(VarRef, Common::ArithmeticProcessor::ArithmeticExpression, bool isRHSExactMatchNeeded);
+    StmtInfoList getPatternMatchLHS(VarRef);
+    unordered_set<pair<shared_ptr<StmtInfo>, VarRef>> getPatternMatchRHS(Common::ArithmeticProcessor::ArithmeticExpression, bool isRHSExactMatchNeeded);
 
     // Others
     void clear();
