@@ -4,8 +4,8 @@ using namespace std;
 
 PKB::PKB() {}
 
-StmtInfoPtrList PKB::getStatements() {
-  StmtInfoPtrList stmtList;
+StmtInfoList PKB::getStatements() {
+  StmtInfoList stmtList;
   for (auto key_value : typeMap) {
     stmtList.push_back(key_value.second);
   }
@@ -61,7 +61,7 @@ void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree) {
 }
 
 void PKB::setProc(ProcRef procName, StmtRefList idxList) {
-    StmtInfoPtrList stmtList;
+    StmtInfoList stmtList;
     for (auto stmtRef : idxList) {
         stmtList.push_back(typeMap.at(stmtRef));
     }

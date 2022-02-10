@@ -32,7 +32,7 @@ public:
 
     // Get methods called by PQL
     // General get methods
-    StmtInfoPtrList getStatements();
+    StmtInfoList getStatements();
 
     // Parent get methods
     shared_ptr<StmtInfo> getParent(StmtRef);

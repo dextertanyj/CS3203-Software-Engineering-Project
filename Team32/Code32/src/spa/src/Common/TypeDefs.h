@@ -18,8 +18,7 @@ typedef struct StmtInfo {
     StmtType type;
 } StmtInfo;
 
-typedef vector<StmtInfo> StmtInfoList;
-typedef vector<shared_ptr<StmtInfo>> StmtInfoPtrList;
+typedef vector<shared_ptr<StmtInfo>> StmtInfoList;
 typedef vector<VarRef> VarRefList;
 typedef vector<StmtRef> StmtRefList;
 

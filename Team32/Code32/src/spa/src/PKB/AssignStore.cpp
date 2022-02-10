@@ -22,8 +22,8 @@ StmtRefList AssignStore::getPatternMatch(StmtInfoList stmtNoList, VarRef variabl
                                          bool isRHSExactMatchNeeded) {
     StmtRefList stmtRefList;
     for (auto& stmtInfo : stmtNoList) {
-        StmtRef stmtNo = stmtInfo.reference;
-        if (stmtInfo.type != StmtType::Assign) throw invalid_argument("Statement must be an Assign statement.");
+        StmtRef stmtNo = stmtInfo->reference;
+        if (stmtInfo->type != StmtType::Assign) throw invalid_argument("Statement must be an Assign statement.");
         if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
         auto keyItr = assignMap.find(stmtNo);
