@@ -1,8 +1,15 @@
-#include "BinaryLogicalNode.h"
+#include "Common/ExpressionProcessor/BinaryLogicalNode.h"
+
+#include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
 Common::ExpressionProcessor::BinaryLogicalNode::BinaryLogicalNode(MathematicalOperator op, shared_ptr<LogicalNode> lhs,
                                                                   shared_ptr<LogicalNode> rhs)
-	: op(op), lhs(std::move(lhs)), rhs(std::move(rhs)) {}
+	: lhs(std::move(lhs)), rhs(std::move(rhs)) {
+	if (!OperatorAcceptor::acceptBinaryLogical(op)) {
+		throw ExpressionProcessorException("Expected binary logical operator");
+	}
+	this->op = op;
+}
 
 bool Common::ExpressionProcessor::BinaryLogicalNode::equals(shared_ptr<ExpressionNode> object) {
 	std::shared_ptr<BinaryLogicalNode> other = dynamic_pointer_cast<BinaryLogicalNode>(object);

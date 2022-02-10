@@ -7,6 +7,18 @@ TEST_CASE("Common::Converter::convertMathematical Test") {
 	REQUIRE_EQUALS(Common::Converter::convertMathematical("*"), MathematicalOperator::Times);
 	REQUIRE_EQUALS(Common::Converter::convertMathematical("/"), MathematicalOperator::Divide);
 	REQUIRE_EQUALS(Common::Converter::convertMathematical("%"), MathematicalOperator::Modulo);
+	REQUIRE_EQUALS(Common::Converter::convertMathematical(">"), MathematicalOperator::GT);
+	REQUIRE_EQUALS(Common::Converter::convertMathematical("<"), MathematicalOperator::LT);
+	REQUIRE_EQUALS(Common::Converter::convertMathematical(">="), MathematicalOperator::GTE);
+	REQUIRE_EQUALS(Common::Converter::convertMathematical("<="), MathematicalOperator::LTE);
+	REQUIRE_EQUALS(Common::Converter::convertMathematical("=="), MathematicalOperator::EQ);
+	REQUIRE_EQUALS(Common::Converter::convertMathematical("!="), MathematicalOperator::NEQ);
+	REQUIRE_EQUALS(Common::Converter::convertMathematical("&&"), MathematicalOperator::And);
+	REQUIRE_EQUALS(Common::Converter::convertMathematical("||"), MathematicalOperator::Or);
+	REQUIRE_EQUALS(Common::Converter::convertMathematical("!"), MathematicalOperator::Not);
+	REQUIRE_THROWS_AS(Common::Converter::convertMathematical("&"), Common::Converter::ConversionException);
+	REQUIRE_THROWS_AS(Common::Converter::convertMathematical("|"), Common::Converter::ConversionException);
+	REQUIRE_THROWS_AS(Common::Converter::convertMathematical("="), Common::Converter::ConversionException);
 	REQUIRE_THROWS_AS(Common::Converter::convertMathematical("^"), Common::Converter::ConversionException);
 	REQUIRE_THROWS_AS(Common::Converter::convertMathematical("++"), Common::Converter::ConversionException);
 }

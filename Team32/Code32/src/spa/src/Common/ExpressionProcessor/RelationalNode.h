@@ -1,7 +1,3 @@
-//
-// Created by Dexter on 9/2/22.
-//
-
 #ifndef SPA_RELATIONALOPERATORNODE_H
 #define SPA_RELATIONALOPERATORNODE_H
 

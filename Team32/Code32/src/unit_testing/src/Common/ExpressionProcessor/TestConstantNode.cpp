@@ -35,7 +35,7 @@ TEST_CASE("Common::ExpressionProcessor::ConstantNode::equals Different Expressio
 }
 
 TEST_CASE("Common::ExpressionProcessor::ConstantNode::contains Same Object Test") {
-	shared_ptr<VariableNode> constant = make_shared<VariableNode>("123");
+	shared_ptr<ConstantNode> constant = make_shared<ConstantNode>("123");
 	REQUIRE(constant->contains(constant));
 }
 
@@ -61,4 +61,8 @@ TEST_CASE("Common::ExpressionProcessor::ConstantNode::contains Different Express
 	REQUIRE_FALSE(constant->contains(other));
 	REQUIRE_FALSE(constant->contains(other_operator));
 	REQUIRE_FALSE(constant->contains(contained));
+}
+
+TEST_CASE("Common::ExpressionProcessor::VariableNode Invalid Value Test") {
+	REQUIRE_THROWS_AS(VariableNode("0123"), ExpressionProcessorException);
 }

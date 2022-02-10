@@ -1,8 +1,10 @@
 #ifndef SPA_BINARYLOGICALNODE_H
 #define SPA_BINARYLOGICALNODE_H
 
-#include "Common/ExpressionProcessor/LogicalNode.h"
+#include "Common/ExpressionProcessor/ExpressionNode.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
+#include "Common/ExpressionProcessor/LogicalNode.h"
+#include "Common/TypeDefs.h"
 
 class Common::ExpressionProcessor::BinaryLogicalNode : public LogicalNode {
 public:

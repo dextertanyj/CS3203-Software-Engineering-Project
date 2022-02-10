@@ -3,8 +3,10 @@
 
 #include <memory>
 
-#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/ExpressionProcessor/AtomicNode.h"
+#include "Common/ExpressionProcessor/ExpressionNode.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
+#include "Common/TypeDefs.h"
 
 using namespace std;
 

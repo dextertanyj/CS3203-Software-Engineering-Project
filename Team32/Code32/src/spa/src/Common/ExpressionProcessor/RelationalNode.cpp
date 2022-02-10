@@ -1,7 +1,14 @@
-#include "RelationalNode.h"
+#include "Common/ExpressionProcessor/RelationalNode.h"
+
+#include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
 Common::ExpressionProcessor::RelationalNode::RelationalNode(MathematicalOperator op, shared_ptr<AtomicNode> lhs, shared_ptr<AtomicNode> rhs)
-	: op(op), lhs(std::move(lhs)), rhs(std::move(rhs)) {}
+	: lhs(std::move(lhs)), rhs(std::move(rhs)) {
+	if (!OperatorAcceptor::acceptRelationalStrict(op)) {
+		throw ExpressionProcessorException("Expected relational operator");
+	}
+	this->op = op;
+}
 
 bool Common::ExpressionProcessor::RelationalNode::equals(shared_ptr<ExpressionNode> object) {
 	std::shared_ptr<RelationalNode> other = dynamic_pointer_cast<RelationalNode>(object);

@@ -1,7 +1,7 @@
-#include "Common/ExpressionProcessor/ConstantNode.h"
-#include "Common/ExpressionProcessor/ArithmeticNode.h"
-#include "Common/ExpressionProcessor/VariableNode.h"
 #include "Common/Converter.h"
+#include "Common/ExpressionProcessor/ArithmeticNode.h"
+#include "Common/ExpressionProcessor/ConstantNode.h"
+#include "Common/ExpressionProcessor/VariableNode.h"
 #include "catch.hpp"
 #include "catch_tools.h"
 
@@ -61,4 +61,8 @@ TEST_CASE("Common::ExpressionProcessor::VariableNode::contains Different Express
 	REQUIRE_FALSE(variable->contains(other));
 	REQUIRE_FALSE(variable->contains(other_operator));
 	REQUIRE_FALSE(variable->contains(contained));
+}
+
+TEST_CASE("Common::ExpressionProcessor::VariableNode Invalid Name Test") {
+	REQUIRE_THROWS_AS(VariableNode("0A"), ExpressionProcessorException);
 }

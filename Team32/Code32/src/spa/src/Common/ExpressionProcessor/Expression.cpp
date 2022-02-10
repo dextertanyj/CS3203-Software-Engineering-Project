@@ -1,7 +1,6 @@
 #include "Common/ExpressionProcessor/Expression.h"
 
 #include <cassert>
-#include <regex>
 #include <string>
 
 #include "Common/Converter.h"
