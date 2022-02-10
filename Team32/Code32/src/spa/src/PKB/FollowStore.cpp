@@ -53,32 +53,26 @@ bool FollowStore::checkFollows(shared_ptr<StmtInfo> stmtInfo1, shared_ptr<StmtIn
 
 shared_ptr<StmtInfo> FollowStore::getFollower(shared_ptr<StmtInfo> stmtInfo) {
     StmtRef stmt = stmtInfo->reference;
-
     if (stmt <= 0) {
 		throw invalid_argument("Statement number must be a positive integer.");
 	}
-
     auto keyItr = followMap.find(stmt);
-    if (keyItr != followMap.end()) {
-        return keyItr->second.follower;
-    } else {
-        return make_shared<StmtInfo>();
+    if (keyItr == followMap.end()) {
+		throw invalid_argument("This statement number is not found in the Follow Store.");
     }
+	return keyItr->second.follower;
 }
 
 shared_ptr<StmtInfo> FollowStore::getPreceding(shared_ptr<StmtInfo> stmtInfo) {
     StmtRef stmt = stmtInfo->reference;
-
     if (stmt <= 0) {
 		throw invalid_argument("Statement number must be a positive integer.");
 	}
-
     auto keyItr = followMap.find(stmt);
-    if (keyItr != followMap.end()) {
-        return keyItr->second.preceding;
-    } else {
-        return make_shared<StmtInfo>();
-    }
+    if (keyItr == followMap.end()) {
+    	throw invalid_argument("This statement number is not found in the Follow Store.");
+	}
+	return keyItr->second.preceding;
 }
 
 void FollowStore::clear() {

@@ -1,55 +1,68 @@
 #include "Common/TypeDefs.h"
-#include "PKB/FollowStore.cpp"
+#include "PKB/PKB.h"
 #include "catch.hpp"
 #include "memory"
 
+/*
+ * Tests Follow Relation Methods in PKB.
+ */
+
 TEST_CASE("Follows Methods") {
-	StmtInfo stmt1 = {1, StmtType::Assign};
-	StmtInfo stmt2 = {2, StmtType::IfStmt};
-	StmtInfo stmt3 = {3, StmtType::Print};
-	StmtInfo stmtIntMax = {INT32_MAX, StmtType::Read};
-	StmtInfo stmtNegative = {-1, StmtType::Assign};
-	auto stmt1Ptr = make_shared<StmtInfo>(stmt1);
-	auto stmt2Ptr = make_shared<StmtInfo>(stmt2);
-	auto stmt3Ptr = make_shared<StmtInfo>(stmt3);
-	auto stmtInfinityPtr = make_shared<StmtInfo>(stmtIntMax);
-	auto stmtNegativePtr = make_shared<StmtInfo>(stmtNegative);
-	FollowStore fs = FollowStore();
+	PKB pkb = PKB();
+	StmtRef s1 = 1;
+	StmtRef s2 = 2;
+	StmtRef s3 = 3;
+	StmtRef sIntMax = INT32_MAX;
+	StmtRef sMinusOne = -1;
+	CHECK_NOTHROW(pkb.setStmtType(1, StmtType::Assign));
+	CHECK_NOTHROW(pkb.setStmtType(2, StmtType::IfStmt));
+	CHECK_NOTHROW(pkb.setStmtType(3, StmtType::Print));
+	CHECK_NOTHROW(pkb.setStmtType(INT32_MAX, StmtType::Read));
+	CHECK_THROWS(pkb.setStmtType(-1, StmtType::Assign));
 
 	SECTION("Check validity of arguments") {
 		// Verify that normal setting works.
-		CHECK_NOTHROW(fs.setFollows(stmt1Ptr, stmt2Ptr));
-		CHECK_NOTHROW(fs.setFollows(stmt2Ptr, stmt3Ptr));
-		CHECK_NOTHROW(fs.setFollows(stmt1Ptr, stmtInfinityPtr));
-		fs.clear();
+		CHECK_NOTHROW(pkb.setFollows(s1, s2));
+		CHECK_NOTHROW(pkb.setFollows(s2, s3));
+		pkb.clear();
+
+		// If s1 already has a follower, it should not be able to have a new direct follower.
+		CHECK_NOTHROW(pkb.setFollows(s1, s2));
+		CHECK_THROWS(pkb.setFollows(s1, sIntMax));
+		pkb.clear();
+
+		// If s3 already follows s2, then it should be allowed to follow s1.
+		CHECK_NOTHROW(pkb.setFollows(s2, s3));
+		CHECK_THROWS(pkb.setFollows(s1, s3));
+		pkb.clear();
 
 		// Verify that improper arguments lead to an exception thrown.
-		CHECK_THROWS(fs.setFollows(stmtNegativePtr, stmt1Ptr));
-		CHECK_THROWS(fs.setFollows(stmt2Ptr, stmt1Ptr));
-		CHECK_THROWS(fs.setFollows(stmt3Ptr, stmt3Ptr));
-		CHECK_THROWS(fs.setFollows(stmtNegativePtr, stmt2Ptr));
-		CHECK_THROWS(fs.setFollows(stmt3Ptr, stmtNegativePtr));
-		CHECK_THROWS(fs.getFollower(stmtNegativePtr));
-		CHECK_THROWS(fs.getPreceding(stmt1Ptr));
+		CHECK_THROWS(pkb.setFollows(sMinusOne, s1));
+		CHECK_THROWS(pkb.setFollows(s2, s1));
+		CHECK_THROWS(pkb.setFollows(s3, s3));
+		CHECK_THROWS(pkb.setFollows(sMinusOne, s2));
+		CHECK_THROWS(pkb.setFollows(s3, sMinusOne));
+		CHECK_THROWS(pkb.getFollower(sMinusOne));
+		CHECK_THROWS(pkb.getPreceding(s1));
 	}
 
 	SECTION("Check setting and getting of follower/preceding statement") {
-		fs.setFollows(stmt1Ptr, stmt2Ptr);
-		fs.setFollows(stmt2Ptr, stmt3Ptr);
+		pkb.setFollows(s1, s2);
+		pkb.setFollows(s2, s3);
 
 		// Ensure simple follow relation is stored successfully.
-		CHECK(fs.checkFollows(stmt1Ptr, stmt2Ptr));
-		CHECK(fs.checkFollows(stmt2Ptr, stmt3Ptr));
-		CHECK(fs.getFollower(stmt1Ptr) == stmt2Ptr);
-		CHECK(fs.getPreceding(stmt3Ptr) == stmt2Ptr);
+		CHECK(pkb.checkFollows(s1, s2));
+		CHECK(pkb.checkFollows(s2, s3));
+		CHECK(pkb.getFollower(s1)->reference == s2);
+		CHECK(pkb.getPreceding(s3)->reference == s2);
 
 		// Ensure Follows* behavior does not appear for simple follow.
-		CHECK_FALSE(fs.checkFollows(stmt1Ptr, stmt3Ptr));
+		CHECK_FALSE(pkb.checkFollows(s1, s3));
 
-		CHECK_FALSE(fs.checkFollows(stmt1Ptr, stmt1Ptr));
-		CHECK_FALSE(fs.checkFollows(stmt2Ptr, stmt1Ptr));
-		CHECK_FALSE(fs.checkFollows(stmt3Ptr, stmt2Ptr));
-		fs.clear();
+		CHECK_FALSE(pkb.checkFollows(s1, s1));
+		CHECK_FALSE(pkb.checkFollows(s2, s1));
+		CHECK_FALSE(pkb.checkFollows(s3, s2));
+		pkb.clear();
 	}
 }
 
