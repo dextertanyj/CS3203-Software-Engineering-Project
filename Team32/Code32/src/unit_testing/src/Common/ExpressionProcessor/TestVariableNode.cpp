@@ -1,8 +1,6 @@
-#include "Common/Converter.h"
 #include "Common/ExpressionProcessor/ArithmeticNode.h"
 #include "Common/ExpressionProcessor/ConstantNode.h"
 #include "Common/ExpressionProcessor/VariableNode.h"
-#include "catch.hpp"
 #include "catch_tools.h"
 
 using namespace std;
@@ -54,12 +52,9 @@ TEST_CASE("Common::ExpressionProcessor::VariableNode::contains Different Variabl
 TEST_CASE("Common::ExpressionProcessor::VariableNode::contains Different Expression Test") {
 	shared_ptr<VariableNode> variable = make_shared<VariableNode>("A");
 	shared_ptr<ExpressionNode> other = make_shared<ConstantNode>("123");
-	shared_ptr<ExpressionNode> other_operator =
-		make_shared<ArithmeticNode>(MathematicalOperator::Plus, make_unique<VariableNode>("B"), make_unique<VariableNode>("C"));
 	shared_ptr<ExpressionNode> contained =
 		make_shared<ArithmeticNode>(MathematicalOperator::Plus, make_unique<VariableNode>("A"), make_unique<VariableNode>("B"));
 	REQUIRE_FALSE(variable->contains(other));
-	REQUIRE_FALSE(variable->contains(other_operator));
 	REQUIRE_FALSE(variable->contains(contained));
 }
 

@@ -1,4 +1,3 @@
-#include "Common/Converter.h"
 #include "Common/ExpressionProcessor/ConstantNode.h"
 #include "Common/ExpressionProcessor/RelationalNode.h"
 #include "Common/ExpressionProcessor/UnaryLogicalNode.h"
