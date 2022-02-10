@@ -19,7 +19,7 @@ public:
 	static unique_ptr<PrintNode> parsePrintStatement(Lexer& lex, int& statement_count);
 
 private:
-	unique_ptr<VariableNode> variable;
+	shared_ptr<VariableNode> variable;
 };
 
 #endif  // SPA_PRINTNODE_H

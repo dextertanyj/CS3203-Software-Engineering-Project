@@ -21,9 +21,9 @@ public:
 	bool equals(shared_ptr<StatementNode> object) override;
 
 private:
-	unique_ptr<ExpressionNode> condExpr;
-	unique_ptr<StatementListNode> ifStmtLst;
-	unique_ptr<StatementListNode> elseStmtLst;
+	shared_ptr<ExpressionNode> condExpr;
+	shared_ptr<StatementListNode> ifStmtLst;
+	shared_ptr<StatementListNode> elseStmtLst;
 };
 
 #endif  // SPA_IFNODE_H

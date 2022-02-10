@@ -22,4 +22,4 @@ unique_ptr<SP::Node::VariableNode> SP::Node::VariableNode::parseVariable(string 
 
 VarRef SP::Node::VariableNode::extract() { return name; }
 
-bool SP::Node::VariableNode::equals(unique_ptr<VariableNode> other) { return other->name == this->name; }
+bool SP::Node::VariableNode::equals(shared_ptr<VariableNode> other) { return other->name == this->name; }

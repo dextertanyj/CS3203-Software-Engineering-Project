@@ -20,7 +20,7 @@ public:
 
 private:
 	ProcRef name;
-	unique_ptr<StatementListNode> stmtLst;
+	shared_ptr<StatementListNode> stmtLst;
 };
 
 #endif  // SPA_PROCEDURENODE_H
