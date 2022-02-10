@@ -1,4 +1,4 @@
-#include "PKB/ParentStore.cpp"
+#include "PKB/PKB.h"
 #include "catch.hpp"
 #include "memory"
 
