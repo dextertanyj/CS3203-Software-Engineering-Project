@@ -1,8 +1,10 @@
 #ifndef SPA_RELATIONALOPERATORNODE_H
 #define SPA_RELATIONALOPERATORNODE_H
 
-#include "Common/ExpressionProcessor/LogicalNode.h"
+#include <memory>
+
 #include "Common/ExpressionProcessor/AtomicNode.h"
+#include "Common/ExpressionProcessor/LogicalNode.h"
 #include "Common/TypeDefs.h"
 
 class Common::ExpressionProcessor::RelationalNode : public LogicalNode {

@@ -1,6 +1,8 @@
 #ifndef SPA_VARIABLENODE_H
 #define SPA_VARIABLENODE_H
 
+#include <memory>
+
 #include "Common/ExpressionProcessor/AtomicNode.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/TypeDefs.h"

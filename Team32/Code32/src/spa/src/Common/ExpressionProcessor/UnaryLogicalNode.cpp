@@ -2,8 +2,6 @@
 
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
-#include <memory>
-
 Common::ExpressionProcessor::UnaryLogicalNode::UnaryLogicalNode(MathematicalOperator op, shared_ptr<LogicalNode> expression)
 	: expression(std::move(expression)) {
 	if (!OperatorAcceptor::acceptUnaryLogical(op)) {

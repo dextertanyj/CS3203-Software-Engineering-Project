@@ -1,9 +1,12 @@
 #ifndef SPA_CONSTANTNODE_H
 #define SPA_CONSTANTNODE_H
 
-#include "Common/ExpressionProcessor/ExpressionProcessor.h"
+#include <memory>
+#include <string>
+
 #include "Common/ExpressionProcessor/AtomicNode.h"
 #include "Common/ExpressionProcessor/ExpressionNode.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 
 using namespace std;
 
@@ -12,6 +15,7 @@ public:
 	explicit ConstantNode(const string& value);
 	bool equals(shared_ptr<ExpressionNode> object) override;
 	bool contains(shared_ptr<ExpressionNode> object) override;
+
 private:
 	int value;
 };

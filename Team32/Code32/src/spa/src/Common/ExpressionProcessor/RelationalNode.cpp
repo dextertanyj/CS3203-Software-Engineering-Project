@@ -15,9 +15,7 @@ bool Common::ExpressionProcessor::RelationalNode::equals(shared_ptr<ExpressionNo
 	if (other == nullptr) {
 		return false;
 	}
-	return other->op == this->op &&
-	       other->lhs->equals(this->lhs) &&
-	       other->rhs->equals(this->rhs);
+	return other->op == this->op && other->lhs->equals(this->lhs) && other->rhs->equals(this->rhs);
 }
 
 bool Common::ExpressionProcessor::RelationalNode::contains(shared_ptr<ExpressionNode> other) {

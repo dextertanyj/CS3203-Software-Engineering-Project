@@ -1,7 +1,6 @@
 #include "Common/ExpressionProcessor/VariableNode.h"
-#include "Common/Validator.h"
 
-#include <memory>
+#include "Common/Validator.h"
 
 using namespace std;
 

@@ -3,9 +3,9 @@
 
 #include <memory>
 
-#include "Common/TypeDefs.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/ExpressionProcessor/LogicalNode.h"
+#include "Common/TypeDefs.h"
 
 using namespace std;
 
@@ -14,6 +14,7 @@ public:
 	UnaryLogicalNode(MathematicalOperator op, shared_ptr<LogicalNode> expression);
 	bool equals(shared_ptr<ExpressionNode> object) override;
 	bool contains(shared_ptr<ExpressionNode> object) override;
+
 private:
 	MathematicalOperator op;
 	shared_ptr<LogicalNode> expression;

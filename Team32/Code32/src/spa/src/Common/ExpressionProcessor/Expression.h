@@ -2,10 +2,11 @@
 #define SPA_EXPRESSION_H
 
 #include <memory>
+#include <string>
 #include <unordered_set>
 
-#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/ExpressionProcessor/ExpressionNode.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/ExpressionProcessor/LexerInterface.h"
 #include "Common/TypeDefs.h"
 
