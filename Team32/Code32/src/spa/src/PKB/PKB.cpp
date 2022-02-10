@@ -4,78 +4,100 @@ using namespace std;
 
 PKB::PKB() {}
 
-StmtRefList PKB::getStatements() {
-  StmtRefList stmtRefList;
+StmtInfoPtrList PKB::getStatements() {
+  StmtInfoPtrList stmtList;
   for (auto key_value : typeMap) {
-    stmtRefList.push_back(key_value.first);
+    stmtList.push_back(key_value.second);
   }
-  return stmtRefList;
+  return stmtList;
 }
 
-void PKB::setParent(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2) {
-    parentStore.setParent(stmtNo1, stmtNo2);
+void PKB::setParent(StmtRef stmtNo1, StmtRef stmtNo2) {
+    shared_ptr<StmtInfo> stmtInfo1 = typeMap.at(stmtNo1);
+    shared_ptr<StmtInfo> stmtInfo2 = typeMap.at(stmtNo2);
+    parentStore.setParent(stmtInfo1, stmtInfo2);
 }
 
-shared_ptr<StmtInfo> PKB::getParent(shared_ptr<StmtInfo> stmt) {
-    return parentStore.getParent(stmt);
+shared_ptr<StmtInfo> PKB::getParent(StmtRef stmt) {
+    shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
+    return parentStore.getParent(stmtInfo);
 }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getChildren(shared_ptr<StmtInfo> stmt) {
-    return parentStore.getChildren(stmt);
+unordered_set<shared_ptr<StmtInfo>> PKB::getChildren(StmtRef stmt) {
+    shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
+    return parentStore.getChildren(stmtInfo);
 }
 
-bool PKB::checkParents(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2) {
-    return parentStore.isParentChild(stmtNo1, stmtNo2);
+bool PKB::checkParents(StmtRef stmtNo1, StmtRef stmtNo2) {
+    shared_ptr<StmtInfo> stmtInfo1 = typeMap.at(stmtNo1);
+    shared_ptr<StmtInfo> stmtInfo2 = typeMap.at(stmtNo2);
+    return parentStore.isParentChild(stmtInfo1, stmtInfo2);
 }
 
-void PKB::setFollows(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2) {
-    followStore.setFollows(stmtNo1, stmtNo2);
+void PKB::setFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
+    shared_ptr<StmtInfo> stmtInfo1 = typeMap.at(stmtNo1);
+    shared_ptr<StmtInfo> stmtInfo2 = typeMap.at(stmtNo2);
+    followStore.setFollows(stmtInfo1, stmtInfo2);
 }
 
-bool PKB::checkFollows(shared_ptr<StmtInfo> stmtNo1, shared_ptr<StmtInfo> stmtNo2) {
-    return followStore.checkFollows(stmtNo1, stmtNo2);
+bool PKB::checkFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
+    shared_ptr<StmtInfo> stmtInfo1 = typeMap.at(stmtNo1);
+    shared_ptr<StmtInfo> stmtInfo2 = typeMap.at(stmtNo2);
+    return followStore.checkFollows(stmtInfo1, stmtInfo2);
 }
 
-shared_ptr<StmtInfo> PKB::getFollower(shared_ptr<StmtInfo> stmt) {
-    return followStore.getFollower(stmt);
+shared_ptr<StmtInfo> PKB::getFollower(StmtRef stmt) {
+    shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
+    return followStore.getFollower(stmtInfo);
 }
 
-shared_ptr<StmtInfo> PKB::getFollowee(shared_ptr<StmtInfo> stmt) {
-    return followStore.getFollowee(stmt);
+shared_ptr<StmtInfo> PKB::getFollowee(StmtRef stmt) {
+    shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
+    return followStore.getFollowee(stmtInfo);
 }
 
 void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree) {
     return assignStore.setAssign(stmtNo, variableLHS, opTree);
 }
 
-void PKB::setProc(ProcRef procName, vector<shared_ptr<StmtInfo>> idxList) {
-    procStore.setProc(procName, idxList);
+void PKB::setProc(ProcRef procName, StmtRefList idxList) {
+    StmtInfoPtrList stmtList;
+    for (auto stmtRef : idxList) {
+        stmtList.push_back(typeMap.at(stmtRef));
+    }
+    procStore.setProc(procName, stmtList);
 }
 
-void PKB::setCall(shared_ptr<StmtInfo> stmtInfo, ProcRef procName) {
+void PKB::setCall(StmtRef stmt, ProcRef procName) {
+    shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
     procStore.setCall(stmtInfo, procName);
 }
 
 void PKB::setStmtType(StmtRef stmtNo, StmtType type) {
-    checkInvalidStmt(stmtNo);
+    if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
     auto keyItr = typeMap.find(stmtNo);
     if (keyItr == typeMap.end()) {
-        typeMap.insert(make_pair(stmtNo, type));
+        StmtInfo stmtInfo = { stmtNo, type };
+        auto stmtInfoPtr = make_shared<StmtInfo>(stmtInfo);
+        typeMap.insert(make_pair(stmtNo, stmtInfoPtr));
     } else {
-        keyItr->second = type;
+        throw invalid_argument("Statement type has already been assigned for this statement.");
     }
 }
 
-void PKB::setUses(shared_ptr<StmtInfo> stmt, VarRef var_name) {
-    useStore.setUses(stmt, var_name);
+void PKB::setUses(StmtRef stmt, VarRef varName) {
+    shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
+    useStore.setUses(stmtInfo, varName);
 }
 
-void PKB::setModifies(shared_ptr<StmtInfo> stmt, VarRef var_name) {
-    modifyStore.setModify(stmt, var_name);
+void PKB::setModifies(StmtRef stmt, VarRef varName) {
+    shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
+    modifyStore.setModify(stmtInfo, varName);
 }
 
-bool PKB::checkUses(shared_ptr<StmtInfo> stmtInfo, VarRef varName) {
+bool PKB::checkUses(StmtRef stmt, VarRef varName) {
+    shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
     return useStore.checkUses(stmtInfo, varName);
 }
 
@@ -93,7 +115,8 @@ unordered_set<ProcRef> PKB::getProcUsesByVar(VarRef varName) {
     return useStore.getProcUsesByStmtList(stmtList, procStore);
 }
 
-unordered_set<VarRef> PKB::getUsesByStmt(shared_ptr<StmtInfo> stmtInfo) {
+unordered_set<VarRef> PKB::getUsesByStmt(StmtRef stmt) {
+    shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
     return useStore.getUsesByStmt(stmtInfo);
 }
 
@@ -102,7 +125,8 @@ unordered_set<VarRef> PKB::getUsesByProc(ProcRef procName) {
     return useStore.getUsesByStmtList(procStmts);
 }
 
-ProcRef PKB::getProcFromCall(shared_ptr<StmtInfo> stmtInfo) {
+ProcRef PKB::getProcFromCall(StmtRef stmt) {
+    shared_ptr<StmtInfo> stmtInfo = typeMap.at(stmt);
     return procStore.getProcByCall(stmtInfo);
 }
 
@@ -125,8 +149,4 @@ void PKB::clear() {
 void PKB::setNumStatements(int size) {
     if (size < 0) throw invalid_argument("Size must be a positive integer.");
     this->numStatements = size;
-}
-
-void PKB::checkInvalidStmt(StmtRef stmtNo1) {
-    if (stmtNo1 <= 0) throw invalid_argument("Statement number must be a positive integer.");
 }
