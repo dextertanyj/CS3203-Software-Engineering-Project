@@ -15,6 +15,11 @@ class ModifyStore {
 public:
     ModifyStore();
     void setModify(shared_ptr<StmtInfo>, VarRef);
+    bool checkModifies(shared_ptr<StmtInfo>, VarRef);
+    bool checkModifiesList(vector<shared_ptr<StmtInfo>>, VarRef);
+    unordered_set<shared_ptr<StmtInfo>> getModifiesByVar(VarRef);
+    unordered_set<VarRef> getModifiesByStmt(shared_ptr<StmtInfo>);
+    unordered_set<VarRef> getModifiesByStmtList(vector<shared_ptr<StmtInfo>>);
     void clear();
 private:
     unordered_map<StmtRef, unordered_set<VarRef>> stmtToVarMap;

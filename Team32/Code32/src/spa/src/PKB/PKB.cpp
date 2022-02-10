@@ -112,7 +112,7 @@ unordered_set<shared_ptr<StmtInfo>> PKB::getUsesByVar(VarRef varName) {
 
 unordered_set<ProcRef> PKB::getProcUsesByVar(VarRef varName) {
     unordered_set<shared_ptr<StmtInfo>> stmtList = useStore.getUsesByVar(varName);
-    return useStore.getProcUsesByStmtList(stmtList, procStore);
+    return procStore.getProcListByStmtList(stmtList);
 }
 
 unordered_set<VarRef> PKB::getUsesByStmt(StmtRef stmt) {
