@@ -49,7 +49,7 @@ MathematicalOperator Common::Converter::convertMathematical(const string& op) {
 	if (op == "||") {
 		return MathematicalOperator::Or;
 	}
-	throw ConversionException("Expected mathematical symbol, got " + op + " instead.");
+	throw ConversionException("Expected mathematical symbol, got " + op + " instead");
 }
 
 int Common::Converter::convertInteger(const string& integer) {

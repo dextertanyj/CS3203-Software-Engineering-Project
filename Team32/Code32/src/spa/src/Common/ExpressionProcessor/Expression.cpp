@@ -36,6 +36,7 @@ shared_ptr<ExpressionNode> Expression::construct(LexerInterface& lex, bool (*acc
 		return lhs;
 	}
 
+	// Binary logical operators are a special case since they must be fully parenthesized
 	if (OperatorAcceptor::acceptBinaryLogical(lookahead)) {
 		string token = lex.readToken();
 		MathematicalOperator op = Converter::convertMathematical(token);
@@ -46,7 +47,7 @@ shared_ptr<ExpressionNode> Expression::construct(LexerInterface& lex, bool (*acc
 		shared_ptr<ExpressionNode> rhs = parseTerminal(lex, acceptor, variables, constants);
 		shared_ptr<LogicalNode> rhs_logical = dynamic_pointer_cast<LogicalNode>(rhs);
 		if (lhs_logical == nullptr || rhs_logical == nullptr) {
-			throw ExpressionProcessorException("Expected conditional expression" + token);
+			throw ExpressionProcessorException("Expected conditional expression");
 		}
 		return make_shared<BinaryLogicalNode>(op, lhs_logical, rhs_logical);
 	}
@@ -82,7 +83,7 @@ shared_ptr<ExpressionNode> Expression::parseTerminal(LexerInterface& lex, bool (
 		if (!acceptor(token)) {
 			throw ExpressionProcessorException("Unexpected token received: " + token);
 		}
-		token = lex.peekToken();
+		token = lex.peekToken(); // Do not consume this parenthesis since the subsequent call to parseTerminal will consume it.
 		if (token != "(") {
 			throw ExpressionProcessorException("Unexpected token received: " + token);
 		}
