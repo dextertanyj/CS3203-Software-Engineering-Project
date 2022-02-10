@@ -28,7 +28,7 @@ public:
     void setStmtType(StmtRef, StmtType);
     void setUses(StmtRef, VarRef);
     void setModifies(StmtRef, VarRef);
-    void setAssign(StmtRef, VarRef variableLHS, string opTree);
+    void setAssign(StmtRef, VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree);
     void setCall(StmtRef, ProcRef);
 
     // Get methods called by PQL

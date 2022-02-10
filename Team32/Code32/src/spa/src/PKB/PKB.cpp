@@ -56,8 +56,7 @@ shared_ptr<StmtInfo> PKB::getFollowee(StmtRef stmt) {
     return followStore.getFollowee(stmtInfo);
 }
 
-void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree) {
-    checkInvalidStmt(stmtNo);
+void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree) {
     return assignStore.setAssign(stmtNo, variableLHS, opTree);
 }
 
