@@ -225,6 +225,16 @@ void PKB::populateComplexRelations() {
     setNumStatements();
     parentStore.populateParent(numStatements);
     followStore.populateFollow(numStatements);
+    populateIfRelations();
+}
+
+void PKB::populateIfRelations() {
+    for (auto& stmt : stmtInfoMap) {
+        if (stmt.second->type == StmtType::IfStmt) {
+            unordered_set<shared_ptr<StmtInfo>> childStmts = parentStore.getChildStar(stmt.second);
+            ifStore.populateIfStore(stmt.second, childStmts);
+        }
+    }
 }
 
 void PKB::clear() {
@@ -234,6 +244,7 @@ void PKB::clear() {
 	useStore.clear();
 	modifyStore.clear();
 	procStore.clear();
+    ifStore.clear();
 	stmtInfoMap.clear();
 }
 

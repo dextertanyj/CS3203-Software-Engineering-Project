@@ -12,6 +12,7 @@
 #include "ModifyStore.h"
 #include "AssignStore.h"
 #include "ProcStore.h"
+#include "IfStore.h"
 #include "Common/TypeDefs.h"
 #include "Common/ArithmeticProcessor/ArithmeticExpression.h"
 
@@ -87,7 +88,9 @@ private:
     ModifyStore modifyStore;
     AssignStore assignStore;
     ProcStore procStore;
+    IfStore ifStore;
     unordered_map<StmtRef, shared_ptr<StmtInfo>> stmtInfoMap; // Stores StmtInfo for a particular StmtRef.
     int numStatements;
     void setNumStatements();
+    void populateIfRelations();
 };
