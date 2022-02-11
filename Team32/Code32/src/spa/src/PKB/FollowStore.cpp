@@ -8,29 +8,29 @@ FollowStore::FollowStore() {}
 
 // Also need to prevent same stmt No from following itself.
 // need to add checks that stmtno 2 doesnt follow another other stmt and stmt no 1 isnt followed by other stmts
-void FollowStore::setFollows(shared_ptr<StmtInfo> stmtInfo1, shared_ptr<StmtInfo> stmtInfo2) {
-    StmtRef stmtNo1 = stmtInfo1->reference;
-    StmtRef stmtNo2 = stmtInfo2->reference;
+void FollowStore::setFollows(shared_ptr<StmtInfo> stmt_info_1, shared_ptr<StmtInfo> stmt_info_2) {
+    StmtRef stmt_no_1 = stmt_info_1->reference;
+    StmtRef stmt_no_2 = stmt_info_2->reference;
 
-    if (stmtNo1 >= stmtNo2) throw invalid_argument("Second statement must come after the first statement.");
-    if (stmtNo1 <= 0 || stmtNo2 <= 0) throw invalid_argument("Statement number must be a positive integer.");
+    if (stmt_no_1 >= stmt_no_2) throw invalid_argument("Second statement must come after the first statement.");
+    if (stmt_no_1 <= 0 || stmt_no_2 <= 0) throw invalid_argument("Statement number must be a positive integer.");
     
-    auto keyItr = followMap.find(stmtNo1);
-    if (keyItr == followMap.end()) {
-        // does not exist in map
-        FollowRelation followRelation = { NULL, stmtInfo2, {}, {} };
-        followMap.insert(make_pair(stmtNo1, followRelation));
-    } else if (keyItr->second.follower == NULL) {
-        keyItr->second.follower = stmtInfo2;
+    auto key_parent_stmt_itr = followMap.find(stmt_no_1);
+    if (key_parent_stmt_itr == followMap.end()) {
+        // Parent does not exist in map
+        FollowRelation follow_relation = { nullptr, stmt_info_2, {}, {} };
+        followMap.insert(make_pair(stmt_no_1, follow_relation));
+    } else if (key_parent_stmt_itr->second.follower == nullptr) {
+		key_parent_stmt_itr->second.follower = stmt_info_2;
     } else {
         throw invalid_argument("Statement 1 already exists in follow map.");
     }
-    auto keyItr2 = followMap.find(stmtNo2);
-    if (keyItr2 == followMap.end()) {
-        FollowRelation followRelation = { stmtInfo1, NULL, {}, {} };
-        followMap.insert(make_pair(stmtNo2, followRelation));
-    } else if (keyItr2->second.preceding == NULL) {
-        keyItr2->second.preceding = stmtInfo1;
+    auto key_child_stmt_itr = followMap.find(stmt_no_2);
+    if (key_child_stmt_itr == followMap.end()) {
+        FollowRelation follow_relation = {stmt_info_1, nullptr, {}, {} };
+        followMap.insert(make_pair(stmt_no_2, follow_relation));
+    } else if (key_child_stmt_itr->second.preceding == nullptr) {
+		key_child_stmt_itr->second.preceding = stmt_info_1;
     } else {
         throw invalid_argument("Statement 2 already follows a statement.");
     }
@@ -44,10 +44,10 @@ bool FollowStore::checkFollows(shared_ptr<StmtInfo> stmtInfo1, shared_ptr<StmtIn
     if (stmtNo1 >= stmtNo2) return false;
 
     auto keyItr = followMap.find(stmtNo1);
-    if (keyItr != followMap.end()) {
-        return keyItr->second.follower == stmtInfo2;
+    if (keyItr == followMap.end()) {
+		throw invalid_argument("Statement info 1 is not stored into the followMap.");
     } else {
-        return false;
+		return keyItr->second.follower == stmtInfo2;
     }
 }
 
