@@ -227,3 +227,6 @@ void PKB::setNumStatements(int size) {
     if (size < 0) throw invalid_argument("Size must be a positive integer.");
     this->numStatements = size;
 }
+unordered_map<StmtRef, shared_ptr<StmtInfo>> PKB::getStmtInfoMap() {
+	return this->stmtInfoMap;
+}

@@ -1,12 +1,20 @@
 #include "Common/TypeDefs.h"
 #include "PKB/PKB.h"
-#include "PKBUtils.cpp"
 #include "catch.hpp"
 #include "memory"
 
 /*
  * Tests Follow Relation Methods in PKB.
  */
+
+PKB generateFollowTestPKB() {
+	PKB pkb = PKB();
+	pkb.setStmtType(1, StmtType::Assign);
+	pkb.setStmtType(2, StmtType::IfStmt);
+	pkb.setStmtType(3, StmtType::Print);
+	pkb.setStmtType(INT32_MAX, StmtType::Read);
+	return pkb;
+}
 
 TEST_CASE("Follows Methods") {
 	PKB pkb = generateFollowTestPKB();

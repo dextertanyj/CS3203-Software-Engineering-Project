@@ -86,7 +86,7 @@ bool Parent::executeNonTrivial(PKB& pkb, QueryResult& result) {
 		// Get all stmts with a parent
 		StmtInfoList allStmts = pkb.getStatements();
 		for (const shared_ptr<StmtInfo>& stmt : allStmts) {
-			if (pkb.getParent(stmt->reference) > 0) {
+			if (pkb.getParent(stmt->reference)->reference > 0) {
 				stmtList.push_back(stmt->reference);
 			}
 		}

@@ -73,6 +73,7 @@ public:
     ProcRef getProcFromCall(StmtRef);
     void setNumStatements(int size);
     void populateComplexRelations();
+	unordered_map<StmtRef, shared_ptr<StmtInfo>> getStmtInfoMap();
 
 private:
     ParentStore parentStore;
