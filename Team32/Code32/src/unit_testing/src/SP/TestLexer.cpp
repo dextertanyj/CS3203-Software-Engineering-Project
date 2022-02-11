@@ -8,6 +8,9 @@ using namespace std;
 
 TEST_CASE("SP::Lexer::initialize Illegal Token Test") {
 	SP::Lexer lex;
+	REQUIRE_NOTHROW(lex.initialize("x \t x"));
+	REQUIRE_NOTHROW(lex.initialize("x \n x"));
+
 	REQUIRE_THROWS_AS(lex.initialize("`"), SP::TokenizationException);
 	REQUIRE_THROWS_AS(lex.initialize("~"), SP::TokenizationException);
 	REQUIRE_THROWS_AS(lex.initialize("@"), SP::TokenizationException);

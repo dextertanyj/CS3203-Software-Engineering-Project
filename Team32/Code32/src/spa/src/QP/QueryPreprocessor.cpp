@@ -12,7 +12,7 @@ QueryProperties QueryPreprocessor::parseQuery(string query) {
 
 void QueryPreprocessor::tokenizeQuery(string query) {
 
-	regex invalidCharsRegex = regex(R"([^a-zA-Z0-9 ,"_\(\);\+\-\*\/%\n])");
+	regex invalidCharsRegex = regex(R"([^a-zA-Z0-9\s,"_\(\);\+\-\*\/%])");
 	regex queryTokenRegex = regex(R"(such that|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\\+|-|\*|\/|%|_|,|\")");
 
 	if (regex_search(query, invalidCharsRegex)) {
