@@ -201,11 +201,12 @@ vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getPatternMatchRHS(Common::Arith
 	return stmtInfoVarList;
 }
 
-/*
 void PKB::populateComplexRelations() {
-    parentStore.populateParentStar(numStatements);
+    setNumStatements();
+    parentStore.populateParent(numStatements);
 }
- */
+
+
 
 void PKB::clear() {
 	parentStore.clear();
@@ -217,9 +218,8 @@ void PKB::clear() {
 	stmtInfoMap.clear();
 }
 
-void PKB::setNumStatements(int size) {
-	if (size < 0) throw invalid_argument("Size must be a positive integer.");
-	this->numStatements = size;
+void PKB::setNumStatements() {
+	this->numStatements = stmtInfoMap.size();
 }
 
 int PKB::getNumStatements() { return this->numStatements; }

@@ -79,8 +79,7 @@ unordered_set<shared_ptr<StmtInfo>> ParentStore::getChildren(shared_ptr<StmtInfo
 	return keyItr->second.childSet;
 }
 
-/*
-void ParentStore::populateParentStar(int numStatements) {
+void ParentStore::populateParent(int numStatements) {
     if (numStatements >= 2) {
         for (StmtRef i = 2; i < numStatements; i++) {
             populateParentStarSet(i);
@@ -93,22 +92,24 @@ void ParentStore::populateParentStarSet(StmtRef stmtNo) {
     recursivelyAddParent(stmtNo, keyItr->second.parentStarSet);
 }
 
-void ParentStore::recursivelyAddParent(StmtRef stmtNo, unordered_set<StmtRef> &parentStarSet) {
+void ParentStore::recursivelyAddParent(StmtRef stmtNo, unordered_set<shared_ptr<StmtInfo>>& parentStarSet) {
     auto keyItr = parentMap.find(stmtNo);
-    StmtRef parent = keyItr->second.parent;
-    if (parent == -1) {
+    shared_ptr<StmtInfo> parent = keyItr->second.parent;
+    if (parent == nullptr) {
         return;
     }
-    unordered_set<StmtRef> parentOfParentSet = parentMap.find(parent)->second.parentStarSet;
+    unordered_set<shared_ptr<StmtInfo>> parentOfParentSet = parentMap.find(parent->reference)->second.parentStarSet;
     if (parentOfParentSet.empty()) {
         parentStarSet.insert(parent);
-        recursivelyAddParent(parent, parentStarSet);
+        recursivelyAddParent(parent->reference, parentStarSet);
     } else {
         parentStarSet.insert(parent);
         parentStarSet.insert(parentOfParentSet.begin(), parentOfParentSet.end());
         return;
     }
 }
- */
+
+
+
 
 void ParentStore::clear() { parentMap.clear(); }

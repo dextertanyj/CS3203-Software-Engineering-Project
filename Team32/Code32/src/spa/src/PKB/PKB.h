@@ -71,7 +71,6 @@ public:
     // Others
     void clear();
     ProcRef getProcFromCall(StmtRef);
-    void setNumStatements(int size);
     void populateComplexRelations();
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> getStmtInfoMap();
 	int getNumStatements();
@@ -82,6 +81,7 @@ private:
     ModifyStore modifyStore;
     AssignStore assignStore;
     ProcStore procStore;
+    void setNumStatements();
     unordered_map<StmtRef, shared_ptr<StmtInfo>> stmtInfoMap; // Stores StmtInfo for a particular StmtRef.
     int numStatements;
 };
