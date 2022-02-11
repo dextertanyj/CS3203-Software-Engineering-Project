@@ -6,7 +6,7 @@
 #include "SP/Node/StatementListNode.h"
 #include "SP/SP.h"
 #include "catch_tools.h"
-#include "memory"
+#include <memory>
 
 using namespace std;
 using namespace SP::Node;

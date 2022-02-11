@@ -15,11 +15,8 @@ void ParentStore::setParent(shared_ptr<StmtInfo> parentStmtInfo, shared_ptr<Stmt
 	auto key_itr_child_stmt = parentMap.find(childStmt);
 
 	// Check if child already has a parent.
-	if (key_itr_child_stmt != parentMap.end()) {
-		shared_ptr<StmtInfo> parent_of_child_ptr = key_itr_child_stmt->second.parent;
-		if (parent_of_child_ptr != nullptr) {
-			throw invalid_argument("Child statement already has parent assigned.");
-		}
+	if (key_itr_child_stmt != parentMap.end() && key_itr_child_stmt->second.parent != nullptr) {
+		throw invalid_argument("Child statement already has parent assigned.");
 	}
 	// If above are valid, then proceed to add child stmt to parent and parent to child.
 	if (key_itr_parent_stmt == parentMap.end()) {

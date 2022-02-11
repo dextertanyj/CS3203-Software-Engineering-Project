@@ -2,7 +2,6 @@
 #define SPA_STATEMENTLISTNODE_H
 
 #include <memory>
-#include <iostream>
 #include <vector>
 
 #include "Common/TypeDefs.h"
