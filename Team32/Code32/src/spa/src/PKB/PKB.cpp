@@ -142,9 +142,11 @@ bool PKB::checkProcModifies(ProcRef procName, VarRef varName) {
 	return modifyStore.checkModifiesList(procStmts, varName);
 }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef varName) { return modifyStore.getModifiesByVar(varName); }
+unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef varName) {
+	return modifyStore.getModifiesByVar(varName);
+}
 
-unordered_set<VarRef> PKB::getModifiesByStmt(StmtRef stmt) {
+VarRef PKB::getModifiesByStmt(StmtRef stmt) {
 	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
 	return modifyStore.getModifiesByStmt(stmtInfo);
 }

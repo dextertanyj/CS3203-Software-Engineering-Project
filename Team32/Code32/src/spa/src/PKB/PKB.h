@@ -58,7 +58,7 @@ public:
     bool checkProcModifies(ProcRef, VarRef);
     unordered_set<shared_ptr<StmtInfo>> getModifiesByVar(VarRef);
     unordered_set<ProcRef> getProcModifiesByVar(VarRef);
-    unordered_set<VarRef> getModifiesByStmt(StmtRef);
+	VarRef getModifiesByStmt(StmtRef);
     unordered_set<VarRef> getModifiesByProc(ProcRef);
 
     // Assign get methods

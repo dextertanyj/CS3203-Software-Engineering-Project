@@ -1,7 +1,6 @@
 #include "Common/TypeDefs.h"
 #include "PKB/PKB.h"
 #include "catch.hpp"
-#include "memory"
 
 PKB generateUsesTestPKB() {
 	PKB pkb = PKB();
