@@ -32,8 +32,12 @@ public:
     void setCall(StmtRef, ProcRef);
 
     // Get methods called by PQL
+
     // General get methods
     StmtInfoList getStatements();
+    int getNumStatements();
+    ProcRef getProcFromCall(StmtRef);
+    unordered_map<StmtRef, shared_ptr<StmtInfo>> getStmtInfoMap();
 
     // Parent get methods
     shared_ptr<StmtInfo> getParent(StmtRef);
@@ -74,10 +78,8 @@ public:
 
     // Others
     void clear();
-    ProcRef getProcFromCall(StmtRef);
     void populateComplexRelations();
-	unordered_map<StmtRef, shared_ptr<StmtInfo>> getStmtInfoMap();
-	int getNumStatements();
+
 private:
     ParentStore parentStore;
     FollowStore followStore;
@@ -85,7 +87,7 @@ private:
     ModifyStore modifyStore;
     AssignStore assignStore;
     ProcStore procStore;
-    void setNumStatements();
     unordered_map<StmtRef, shared_ptr<StmtInfo>> stmtInfoMap; // Stores StmtInfo for a particular StmtRef.
     int numStatements;
+    void setNumStatements();
 };

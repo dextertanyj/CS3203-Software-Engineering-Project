@@ -227,8 +227,6 @@ void PKB::populateComplexRelations() {
     followStore.populateFollow(numStatements);
 }
 
-
-
 void PKB::clear() {
 	parentStore.clear();
 	followStore.clear();
