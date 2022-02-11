@@ -8,7 +8,7 @@ UseStore::UseStore() {}
 
 void UseStore::setUses(shared_ptr<StmtInfo> stmtInfo, VarRef varName) {
     StmtRef stmtNo = stmtInfo->reference;
-    if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
+	if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
     auto keyItr = varToStmtMap.find(varName);
     if (keyItr == varToStmtMap.end()) {

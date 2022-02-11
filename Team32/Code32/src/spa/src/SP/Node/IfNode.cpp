@@ -28,10 +28,10 @@ StmtInfo SP::Node::IfNode::extract(PKB& pkb) {
 	StmtInfoList then_children = ifStmtLst->extract(pkb);
 	StmtInfoList else_children = elseStmtLst->extract(pkb);
 	for (auto iter = then_children.begin(); iter < then_children.end(); ++iter) {
-		pkb.setParent(stmt_ref, iter->reference);
+		pkb.setParent(stmt_ref, iter->get()->reference);
 	}
 	for (auto iter = else_children.begin(); iter < else_children.end(); ++iter) {
-		pkb.setParent(stmt_ref, iter->reference);
+		pkb.setParent(stmt_ref, iter->get()->reference);
 	}
 	UsageInfo usage = condExpr->extract();
 	for (auto iter = usage.variables.begin(); iter != usage.variables.end(); ++iter) {

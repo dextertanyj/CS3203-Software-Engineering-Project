@@ -41,7 +41,7 @@ public:
     bool checkParents(StmtRef, StmtRef);
 
     // Follow get methods
-    shared_ptr<StmtInfo> getFollowee(StmtRef);
+    shared_ptr<StmtInfo> getPreceding(StmtRef stmt);
     shared_ptr<StmtInfo> getFollower(StmtRef);
     bool checkFollows(StmtRef, StmtRef);
 
@@ -66,14 +66,15 @@ public:
     StmtInfoList getPatternMatch(StmtInfoList, VarRef, Common::ArithmeticProcessor::ArithmeticExpression, bool isRHSExactMatchNeeded);
     StmtInfoList getAllPatternMatch(VarRef, Common::ArithmeticProcessor::ArithmeticExpression, bool isRHSExactMatchNeeded);
     StmtInfoList getPatternMatchLHS(VarRef);
-    unordered_set<pair<shared_ptr<StmtInfo>, VarRef>> getPatternMatchRHS(Common::ArithmeticProcessor::ArithmeticExpression, bool isRHSExactMatchNeeded);
+    vector<pair<shared_ptr<StmtInfo>, VarRef>> getPatternMatchRHS(Common::ArithmeticProcessor::ArithmeticExpression, bool isRHSExactMatchNeeded);
 
     // Others
     void clear();
     ProcRef getProcFromCall(StmtRef);
     void setNumStatements(int size);
     void populateComplexRelations();
-
+	unordered_map<StmtRef, shared_ptr<StmtInfo>> getStmtInfoMap();
+	int getNumStatements();
 private:
     ParentStore parentStore;
     FollowStore followStore;
@@ -81,6 +82,6 @@ private:
     ModifyStore modifyStore;
     AssignStore assignStore;
     ProcStore procStore;
-    unordered_map<StmtRef, shared_ptr<StmtInfo>> typeMap;
+    unordered_map<StmtRef, shared_ptr<StmtInfo>> stmtInfoMap; // Stores StmtInfo for a particular StmtRef.
     int numStatements;
 };
