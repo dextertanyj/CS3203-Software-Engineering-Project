@@ -10,7 +10,7 @@ QueryGraph::QueryGraph(const DeclarationList& declarations) {
 void QueryGraph::setEdges(const SuchThatClauseList& suchThatClauseList, const PatternClauseList& patternClauseList) {
 	for (SuchThatClause suchThatClause : suchThatClauseList) {
 		vector<string> declarations = suchThatClause.relation->getDeclarationSymbols();
-		if (declarations.size()== 2) {
+		if (declarations.size() == 2) {
 			addEdge(declarations[0], declarations[1]);
 		}
 	}
@@ -22,16 +22,22 @@ void QueryGraph::setEdges(const SuchThatClauseList& suchThatClauseList, const Pa
 	}
 }
 
+unordered_map<string, Node> QueryGraph::getNodes() {
+	return nodes;
+}
+
 void QueryGraph::addEdge(string symbolOne, string symbolTwo) {
 	Node nodeOne = this->nodes.at(symbolOne);
-	if (find(nodeOne.adjacentSymbols.begin(), nodeOne.adjacentSymbols.end(), symbolTwo) !=
+	if (find(nodeOne.adjacentSymbols.begin(), nodeOne.adjacentSymbols.end(), symbolTwo) ==
 			nodeOne.adjacentSymbols.end()) {
 		nodeOne.adjacentSymbols.push_back(symbolTwo);
+		nodes[symbolOne] = nodeOne;
 	}
 
 	Node nodeTwo = this->nodes.at(symbolTwo);
-	if (find(nodeTwo.adjacentSymbols.begin(), nodeTwo.adjacentSymbols.end(), symbolOne) !=
+	if (find(nodeTwo.adjacentSymbols.begin(), nodeTwo.adjacentSymbols.end(), symbolOne) ==
 			nodeTwo.adjacentSymbols.end()) {
 		nodeTwo.adjacentSymbols.push_back(symbolOne);
+		nodes[symbolTwo] = nodeTwo;
 	}
 }
