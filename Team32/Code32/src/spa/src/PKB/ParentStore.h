@@ -30,13 +30,18 @@ public:
 
     // Get set of all child statements to stmt.
     unordered_set<shared_ptr<StmtInfo>> getChildren(shared_ptr<StmtInfo>);
+
+    unordered_set<shared_ptr<StmtInfo>> getParentStar(shared_ptr<StmtInfo>);
+    unordered_set<shared_ptr<StmtInfo>> getChildStar(shared_ptr<StmtInfo>);
     void clear();
     void populateParent(int numStatements);
 private:
     // key is parent stmtNo, value is a ParentRelation which contains information related to this statement.
     map<StmtRef, ParentRelation> parentMap;
     void populateParentStarSet(StmtRef StmtNo);
-    void recursivelyAddParent(StmtRef stmtNo, unordered_set<shared_ptr<StmtInfo>>& parentStarSet);
+    void populateChildStarSet(StmtRef StmtNo);
+    void recursivelyAddParent(StmtRef stmtNo, unordered_set<shared_ptr<StmtInfo>>&);
+    void recursivelyAddChild(StmtRef stmtNo, unordered_set<shared_ptr<StmtInfo>>&);
 };
 
 #endif

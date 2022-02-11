@@ -34,6 +34,16 @@ bool PKB::checkParents(StmtRef stmtNo1, StmtRef stmtNo2) {
 	return parentStore.isParentChild(stmtInfo1, stmtInfo2);
 }
 
+unordered_set<shared_ptr<StmtInfo>> PKB::getParentStar(StmtRef stmt) {
+    shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
+    return parentStore.getParentStar(stmtInfo);
+}
+
+unordered_set<shared_ptr<StmtInfo>> PKB::getChildStar(StmtRef stmt) {
+    shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
+    return parentStore.getChildStar(stmtInfo);
+}
+
 void PKB::setFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
 	shared_ptr<StmtInfo> stmtInfo1 = stmtInfoMap.at(stmtNo1);
 	shared_ptr<StmtInfo> stmtInfo2 = stmtInfoMap.at(stmtNo2);

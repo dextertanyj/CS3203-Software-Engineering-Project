@@ -39,6 +39,8 @@ public:
     shared_ptr<StmtInfo> getParent(StmtRef);
     unordered_set<shared_ptr<StmtInfo>> getChildren(StmtRef);
     bool checkParents(StmtRef, StmtRef);
+    unordered_set<shared_ptr<StmtInfo>> getParentStar(StmtRef);
+    unordered_set<shared_ptr<StmtInfo>> getChildStar(StmtRef);
 
     // Follow get methods
     shared_ptr<StmtInfo> getPreceding(StmtRef stmt);

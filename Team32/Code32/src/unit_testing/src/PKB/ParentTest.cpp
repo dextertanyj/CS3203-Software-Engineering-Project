@@ -97,4 +97,29 @@ TEST_CASE("Parent Methods") {
 		CHECK(pkb.getParent(sIntMax) == nullptr);
 	}
 }
+
+TEST_CASE("ParentStar Methods") {
+    PKB pkb = generateParentTestPKB();
+
+    pkb.setParent(s1, s2);
+    pkb.setParent(s2, s3);
+    pkb.setParent(s2, s4);
+    pkb.populateComplexRelations();
+    unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
+
+    SECTION("Check Populate ParentStar Method") {
+        unordered_set<shared_ptr<StmtInfo>> expectedParentStar = {stmt_info_map.at(s1),
+                                                                  stmt_info_map.at(s2)
+                                                                    };
+        CHECK(pkb.getParentStar(s4) == expectedParentStar);
+    }
+
+    SECTION("Check Populate ChildStar Method") {
+        unordered_set<shared_ptr<StmtInfo>> expectedChildStar = {stmt_info_map.at(s2),
+                                                                 stmt_info_map.at(s3),
+                                                                 stmt_info_map.at(s4)
+                                                                    };
+        CHECK(pkb.getChildStar(s1) == expectedChildStar);
+    }
+}
 // TODO: Test Parent* functionality.

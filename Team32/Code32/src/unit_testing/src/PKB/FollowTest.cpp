@@ -17,33 +17,6 @@ PKB generateFollowTestPKB() {
 	return pkb;
 }
 
-TEST_CASE("FollowStar Methods") {
-    PKB pkb = generateFollowTestPKB();
-    StmtRef s1 = 1;
-    StmtRef s2 = 2;
-    StmtRef s3 = 3;
-    StmtRef s4 = 4;
-
-    pkb.setFollows(s1, s2);
-    pkb.setFollows(s2, s4);
-    pkb.populateComplexRelations();
-
-    unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
-
-    SECTION("Check Populate FollowStar Method") {
-        unordered_set<shared_ptr<StmtInfo>> expectedFollowStar = {stmt_info_map.at(s2),
-                                                                  stmt_info_map.at(s4)};
-        CHECK(pkb.getFollowerStar(s1) == expectedFollowStar);
-    }
-
-    SECTION("Check Populate PrecedingStar Method") {
-        unordered_set<shared_ptr<StmtInfo>> expectedPrecedingStar = {stmt_info_map.at(s1),
-                                                                  stmt_info_map.at(s2)};
-        CHECK(pkb.getPrecedingStar(s4) == expectedPrecedingStar);
-    }
-
-}
-
 TEST_CASE("Follows Methods") {
 	PKB pkb = generateFollowTestPKB();
 	StmtRef s1 = 1;
@@ -99,6 +72,30 @@ TEST_CASE("Follows Methods") {
 		CHECK_FALSE(pkb.checkFollows(s2, s1));
 		CHECK_FALSE(pkb.checkFollows(s3, s2));
 	}
+}
+
+TEST_CASE("FollowStar Methods") {
+    PKB pkb = generateFollowTestPKB();
+    StmtRef s1 = 1;
+    StmtRef s2 = 2;
+    StmtRef s4 = 4;
+
+    pkb.setFollows(s1, s2);
+    pkb.setFollows(s2, s4);
+    pkb.populateComplexRelations();
+    unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
+
+    SECTION("Check Populate FollowStar Method") {
+        unordered_set<shared_ptr<StmtInfo>> expectedFollowStar = {stmt_info_map.at(s2),
+                                                                  stmt_info_map.at(s4)};
+        CHECK(pkb.getFollowerStar(s1) == expectedFollowStar);
+    }
+
+    SECTION("Check Populate PrecedingStar Method") {
+        unordered_set<shared_ptr<StmtInfo>> expectedPrecedingStar = {stmt_info_map.at(s1),
+                                                                     stmt_info_map.at(s2)};
+        CHECK(pkb.getPrecedingStar(s4) == expectedPrecedingStar);
+    }
 }
 
 // TODO: Test Follow* functionality.

@@ -132,19 +132,12 @@ void FollowStore::recursivelyAddPreceding(StmtRef stmtNo, unordered_set<shared_p
         return;
     }
     unordered_set<shared_ptr<StmtInfo>> precedingStmtsOfPreceding = followMap.find(preceding->reference)->second.preceding_stmts;
-    if (precedingStmtsOfPreceding.empty()) {
-        /*
-        // Should not happen, but just in case for now
-        precedingStmts.insert(preceding);
-        recursivelyAddPreceding(preceding->reference, precedingStmts);
-         */
-        precedingStmts.insert(preceding);
-        return;
-    } else {
-        precedingStmts.insert(preceding);
-        precedingStmts.insert(precedingStmtsOfPreceding.begin(), precedingStmtsOfPreceding.end());
-        return;
-    }
+//    if (precedingStmtsOfPreceding.empty()) {
+//        precedingStmts.insert(preceding);
+//        recursivelyAddPreceding(preceding->reference, precedingStmts);
+//    }
+    precedingStmts.insert(preceding);
+    precedingStmts.insert(precedingStmtsOfPreceding.begin(), precedingStmtsOfPreceding.end());
 }
 
 void FollowStore::recursivelyAddFollowers(StmtRef stmtNo, unordered_set<shared_ptr<StmtInfo>>& followers) {
@@ -154,19 +147,12 @@ void FollowStore::recursivelyAddFollowers(StmtRef stmtNo, unordered_set<shared_p
         return;
     }
     unordered_set<shared_ptr<StmtInfo>> followersOfFollower = followMap.find(follower->reference)->second.followers;
-    if (followersOfFollower.empty()) {
-        /*
-        // Should not happen, but just in case for now
-        followersOfFollower.insert(follower);
-        recursivelyAddFollowers(follower->reference, followers);
-         */
-        followers.insert(follower);
-        return;
-    } else {
-        followers.insert(follower);
-        followers.insert(followersOfFollower.begin(), followersOfFollower.end());
-        return;
-    }
+//    if (followersOfFollower.empty()) {
+//        followersOfFollower.insert(follower);
+//        recursivelyAddFollowers(follower->reference, followers);
+//    }
+    followers.insert(follower);
+    followers.insert(followersOfFollower.begin(), followersOfFollower.end());
 }
 
 void FollowStore::clear() {
