@@ -51,6 +51,16 @@ shared_ptr<StmtInfo> PKB::getFollower(StmtRef stmt) {
 	return followStore.getFollower(stmtInfo);
 }
 
+unordered_set<shared_ptr<StmtInfo>> PKB::getFollowerStar(StmtRef stmt) {
+    shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
+    return followStore.getFollowerStar(stmtInfo);
+}
+
+unordered_set<shared_ptr<StmtInfo>> PKB::getPrecedingStar(StmtRef stmt) {
+    shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
+    return followStore.getPrecedingStar(stmtInfo);
+}
+
 shared_ptr<StmtInfo> PKB::getPreceding(StmtRef stmt) {
 	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
 	return followStore.getPreceding(stmtInfo);
@@ -204,6 +214,7 @@ vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getPatternMatchRHS(Common::Arith
 void PKB::populateComplexRelations() {
     setNumStatements();
     parentStore.populateParent(numStatements);
+    followStore.populateFollow(numStatements);
 }
 
 

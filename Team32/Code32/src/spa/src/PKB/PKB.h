@@ -44,6 +44,8 @@ public:
     shared_ptr<StmtInfo> getPreceding(StmtRef stmt);
     shared_ptr<StmtInfo> getFollower(StmtRef);
     bool checkFollows(StmtRef, StmtRef);
+    unordered_set<shared_ptr<StmtInfo>> getFollowerStar(StmtRef);
+    unordered_set<shared_ptr<StmtInfo>> getPrecedingStar(StmtRef);
 
     // Use get methods
     bool checkUses(StmtRef, VarRef);

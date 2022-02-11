@@ -26,8 +26,15 @@ public:
     bool checkFollows(shared_ptr<StmtInfo>, shared_ptr<StmtInfo>);
     shared_ptr<StmtInfo> getPreceding(shared_ptr<StmtInfo> stmtInfo);
     shared_ptr<StmtInfo> getFollower(shared_ptr<StmtInfo>);
+    unordered_set<shared_ptr<StmtInfo>> getFollowerStar(shared_ptr<StmtInfo>);
+    unordered_set<shared_ptr<StmtInfo>> getPrecedingStar(shared_ptr<StmtInfo>);
+    void populateFollow(int numStatements);
     void clear();
 private:
+    void populateFollowers(int);
+    void recursivelyAddFollowers(StmtRef, unordered_set<shared_ptr<StmtInfo>>&);
+    void populatePrecedingStmts(int);
+    void recursivelyAddPreceding(StmtRef, unordered_set<shared_ptr<StmtInfo>>&);
     unordered_map<StmtRef, FollowRelation> followMap;
 };
 
