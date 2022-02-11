@@ -1,13 +1,13 @@
 #include "QueryGraph.h"
 
-QueryGraph::QueryGraph(DeclarationList& declarations) {
+QueryGraph::QueryGraph(const DeclarationList& declarations) {
 	for (Declaration declaration : declarations) {
 		Node node = { declaration.symbol, {} };
 		nodes.insert({ declaration.symbol, node });
 	}
 }
 
-void QueryGraph::setEdges(SuchThatClauseList& suchThatClauseList, PatternClauseList& patternClauseList) {
+void QueryGraph::setEdges(const SuchThatClauseList& suchThatClauseList, const PatternClauseList& patternClauseList) {
 	for (SuchThatClause suchThatClause : suchThatClauseList) {
 		vector<string> declarations = suchThatClause.relation->getDeclarationSymbols();
 		if (declarations.size()== 2) {

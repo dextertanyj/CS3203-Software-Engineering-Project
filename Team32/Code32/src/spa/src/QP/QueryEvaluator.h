@@ -19,7 +19,7 @@ public:
 private:
 	PKB& pkb;
 	unordered_map<string, QueryResult> results;
-	QueryResult executeNoClauses(Declaration& select);
+	QueryResult executeNoClauses(Declaration select);
 	QueryGraph buildGraph(QueryProperties& queryProperties);
 	QueryResult evaluateSuchThatClauses(SuchThatClauseList& suchThatClauseList);
 };

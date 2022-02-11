@@ -19,8 +19,8 @@ struct Node {
 
 class QueryGraph {
 public:
-	explicit QueryGraph(DeclarationList& declarations);
-	void setEdges(SuchThatClauseList& suchThatClauseList, PatternClauseList& patternClauseList);
+	explicit QueryGraph(const DeclarationList& declarations);
+	void setEdges(const SuchThatClauseList& suchThatClauseList, const PatternClauseList& patternClauseList);
 	void addEdge(string symbolOne, string symbolTwo);
 
 private:
