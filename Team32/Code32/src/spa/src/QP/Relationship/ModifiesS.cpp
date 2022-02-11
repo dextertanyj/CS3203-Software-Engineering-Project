@@ -12,18 +12,29 @@ QueryEntRef ModifiesS::getEnt() {
 	return ent;
 }
 
-bool ModifiesS::execute(PKB& pkb, QueryResult& result) {
-	return false;
+QueryResult ModifiesS::execute(PKB& pkb, QueryResult& result) {
+	return QueryResult();
+}
+
+vector<string> ModifiesS::getDeclarationSymbols() {
+	vector<string> declarationSymbols;
+	if (this->stmt.type == StmtRefType::synonym) {
+		declarationSymbols.push_back(this->stmt.stmtRef);
+	}
+	if (this->ent.type == EntRefType::synonym) {
+		declarationSymbols.push_back(this->ent.entRef);
+	}
+	return declarationSymbols;
 }
 
 bool ModifiesS::isTrivialCase() {
 	return false;
 }
 
-bool ModifiesS::executeTrivial(PKB& pkb) {
-	return false;
+QueryResult ModifiesS::executeTrivial(PKB& pkb) {
+	return QueryResult();
 }
 
-bool ModifiesS::executeNonTrivial(PKB& pkb, QueryResult& result) {
-	return false;
+QueryResult ModifiesS::executeNonTrivial(PKB& pkb, QueryResult& result) {
+	return QueryResult();
 }

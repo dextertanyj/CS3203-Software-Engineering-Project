@@ -12,14 +12,15 @@ public:
 	QueryEntRef getEnt();
 
 	bool isTrivialCase();
-	bool execute(PKB& pkb, QueryResult& result);
+	QueryResult execute(PKB& pkb, QueryResult& result);
+	vector<string> getDeclarationSymbols();
 
 private:
 	QueryStmtRef stmt;
 	QueryEntRef ent;
 
-	bool executeTrivial(PKB& pkb);
-	bool executeNonTrivial(PKB& pkb, QueryResult& result);
+	QueryResult executeTrivial(PKB& pkb);
+	QueryResult executeNonTrivial(PKB& pkb, QueryResult& result);
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_USESS_H_
