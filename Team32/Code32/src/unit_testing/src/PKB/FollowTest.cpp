@@ -50,7 +50,7 @@ TEST_CASE("Follows Methods") {
 		CHECK_THROWS(pkb.setFollows(sMinusOne, s2));
 		CHECK_THROWS(pkb.setFollows(s3, sMinusOne));
 		CHECK_THROWS(pkb.getFollower(sMinusOne));
-		CHECK_THROWS(pkb.getPreceding(s1));
+		CHECK(pkb.getPreceding(s1) == nullptr);
 	}
 
 	SECTION("Check setting and getting of follower/preceding statement") {

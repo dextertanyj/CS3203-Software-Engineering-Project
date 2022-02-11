@@ -89,12 +89,12 @@ TEST_CASE("Parent Methods") {
 		pkb.setParent(s1, s2);
 		pkb.setParent(s2, s3);
 
-		CHECK(pkb.getParent(s1)->reference == -1);  // Highest statement should have no parent.
+		CHECK(pkb.getParent(s1) == nullptr);  // Highest statement should have no parent.
 		CHECK(pkb.getParent(s2)->reference == 1);
 		CHECK(pkb.getParent(s3)->reference == 2);
 
 		// Statement which was not stored in PKB.
-		CHECK(pkb.getParent(sIntMax)->reference == -1);
+		CHECK(pkb.getParent(sIntMax) == nullptr);
 	}
 }
 // TODO: Test Parent* functionality.

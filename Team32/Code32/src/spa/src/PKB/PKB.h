@@ -74,7 +74,7 @@ public:
     void setNumStatements(int size);
     void populateComplexRelations();
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> getStmtInfoMap();
-
+	int getNumStatements();
 private:
     ParentStore parentStore;
     FollowStore followStore;

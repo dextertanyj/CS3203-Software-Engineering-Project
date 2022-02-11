@@ -23,7 +23,7 @@ void FollowStore::setFollows(shared_ptr<StmtInfo> stmt_info_1, shared_ptr<StmtIn
     } else if (key_parent_stmt_itr->second.follower == nullptr) {
 		key_parent_stmt_itr->second.follower = stmt_info_2;
     } else {
-        throw invalid_argument("Statement 1 already exists in follow map.");
+        throw invalid_argument("Statement 1 already has a follower in the follow map.");
     }
     auto key_child_stmt_itr = followMap.find(stmt_no_2);
     if (key_child_stmt_itr == followMap.end()) {
@@ -58,7 +58,7 @@ shared_ptr<StmtInfo> FollowStore::getFollower(shared_ptr<StmtInfo> stmtInfo) {
 	}
     auto keyItr = followMap.find(stmt);
     if (keyItr == followMap.end()) {
-		throw invalid_argument("This statement number is not found in the Follow Store.");
+		return nullptr; // Statement not found in FollowStore.
     }
 	return keyItr->second.follower;
 }
@@ -70,7 +70,7 @@ shared_ptr<StmtInfo> FollowStore::getPreceding(shared_ptr<StmtInfo> stmtInfo) {
 	}
     auto keyItr = followMap.find(stmt);
     if (keyItr == followMap.end()) {
-    	throw invalid_argument("This statement number is not found in the Follow Store.");
+		return nullptr;
 	}
 	return keyItr->second.preceding;
 }

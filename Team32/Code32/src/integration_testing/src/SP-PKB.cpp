@@ -31,7 +31,7 @@ TEST_CASE("SP::Processor::process Basic If Test") {
 	string source = "procedure main { if (x < 3) then { read x; } else { read y; x = y + 1; print x; } }";
 	source_processor.process(source);
 	REQUIRE_EQUALS(pkb.getStatements().size(), 5);
-	REQUIRE_EQUALS(pkb.getParent(1)->reference, -1);
+	REQUIRE_EQUALS(pkb.getParent(1), nullptr);
 	REQUIRE_EQUALS(pkb.getParent(2)->reference, 1);
 	REQUIRE_EQUALS(pkb.getParent(3)->reference, 1);
 	REQUIRE_EQUALS(pkb.getParent(4)->reference, 1);

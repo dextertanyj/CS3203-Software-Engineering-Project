@@ -69,17 +69,8 @@ shared_ptr<StmtInfo> ParentStore::getParent(shared_ptr<StmtInfo> stmtInfo) {
 	// If statement is not even in parentMap, then return point with StmtRef -1 and StmtType unknown.
 	if (key_parent != parentMap.end() && key_parent->second.parent != nullptr) {
 		return key_parent->second.parent;
-	} else {
-		StmtInfo root_stmt = {-1, StmtType::Unknown};
-		return make_shared<StmtInfo>(root_stmt);
 	}
-//	if (key_parent == parentMap.end()) {
-//	} else if (key_parent->second.parent != nullptr) { // If statement is in parentMap, return the parent.
-//		return key_parent->second.parent;
-//	} else {
-//		StmtInfo root_stmt = {-1, StmtType::Unknown};
-//		return make_shared<StmtInfo>(root_stmt);
-//	}
+	return nullptr;
 }
 
 unordered_set<shared_ptr<StmtInfo>> ParentStore::getChildren(shared_ptr<StmtInfo> stmtInfo) {
@@ -89,7 +80,7 @@ unordered_set<shared_ptr<StmtInfo>> ParentStore::getChildren(shared_ptr<StmtInfo
 
 	auto keyItr = parentMap.find(stmt);
 	if (keyItr == parentMap.end()) {
-		return unordered_set<shared_ptr<StmtInfo>>{};
+		return unordered_set<shared_ptr<StmtInfo>>{nullptr};
 	}
 	return keyItr->second.childSet;
 }
