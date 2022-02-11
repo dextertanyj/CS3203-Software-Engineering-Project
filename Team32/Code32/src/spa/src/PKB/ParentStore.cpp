@@ -13,14 +13,8 @@ void ParentStore::setParent(shared_ptr<StmtInfo> parentStmtInfo, shared_ptr<Stmt
 
 	auto key_itr_parent_stmt = parentMap.find(parentStmt);
 	auto key_itr_child_stmt = parentMap.find(childStmt);
-	// First check if child has already been assigned to parent stmt.
-	if (key_itr_parent_stmt != parentMap.end()) {
-		unordered_set<shared_ptr<StmtInfo>> child_set = key_itr_parent_stmt->second.childSet;
-		if (child_set.find(childStmtInfo) != child_set.end()) {
-			throw invalid_argument("Child statement is already child of a parent.");
-		}
-	}
-	// Then check if child already has a parent.
+
+	// Check if child already has a parent.
 	if (key_itr_child_stmt != parentMap.end()) {
 		shared_ptr<StmtInfo> parent_of_child_ptr = key_itr_child_stmt->second.parent;
 		if (parent_of_child_ptr != nullptr) {
@@ -40,7 +34,7 @@ void ParentStore::setParent(shared_ptr<StmtInfo> parentStmtInfo, shared_ptr<Stmt
 	if (key_itr_child_stmt == parentMap.end()) {  // Child might not yet be added to parent map.
 		ParentRelation parent_relation = {{}, {}, {}, parentStmtInfo};
 		parentMap.insert(make_pair(childStmt, parent_relation));
-	} else if (key_itr_child_stmt->second.parent == nullptr) {
+	} else {
 		key_itr_child_stmt->second.parent = parentStmtInfo;
 	}
 }
