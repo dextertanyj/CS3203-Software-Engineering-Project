@@ -145,6 +145,17 @@ unordered_set<VarRef> PKB::getUsesByProc(ProcRef procName) {
 	return useStore.getUsesByStmtList(procStmts);
 }
 
+unordered_set<VarRef> PKB::getUsesByIf(StmtRef stmt) {
+    shared_ptr<StmtInfo> ifInfo = stmtInfoMap.at(stmt);
+    if (ifInfo->type != StmtType::IfStmt) {
+        throw invalid_argument("Statement is not an if statement!");
+    }
+    unordered_set<shared_ptr<StmtInfo>> stmtList = ifStore.getStmtsFromIf(ifInfo);
+    // Should change parameter type of getUsesByStmtList to unordered_set instead of vector
+    unordered_set<VarRef> varSet = useStore.getUsesByStmtList(vector<shared_ptr<StmtInfo>>(stmtList.begin(), stmtList.end()));
+    return varSet;
+}
+
 bool PKB::checkModifies(StmtRef stmt, VarRef varName) {
 	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
 	return modifyStore.checkModifies(stmtInfo, varName);
@@ -170,6 +181,17 @@ unordered_set<VarRef> PKB::getModifiesByStmt(StmtRef stmt) {
 unordered_set<ProcRef> PKB::getProcModifiesByVar(VarRef varName) {
 	unordered_set<shared_ptr<StmtInfo>> stmtList = modifyStore.getModifiesByVar(varName);
 	return procStore.getProcListByStmtList(stmtList);
+}
+
+unordered_set<VarRef> PKB::getModifiesByIf(StmtRef stmt) {
+    shared_ptr<StmtInfo> modifyInfo = stmtInfoMap.at(stmt);
+    if (modifyInfo->type != StmtType::IfStmt) {
+        throw invalid_argument("Statement is not an if statement!");
+    }
+    unordered_set<shared_ptr<StmtInfo>> stmtList = ifStore.getStmtsFromIf(modifyInfo);
+    // Should change parameter type of getModifiesByStmtList to unordered_set instead of vector
+    unordered_set<VarRef> varSet = modifyStore.getModifiesByStmtList(vector<shared_ptr<StmtInfo>>(stmtList.begin(), stmtList.end()));
+    return varSet;
 }
 
 ProcRef PKB::getProcFromCall(StmtRef stmt) {

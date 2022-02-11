@@ -12,8 +12,8 @@ class IfStore {
 public:
     IfStore();
     void populateIfStore(shared_ptr<StmtInfo> ifInfo, unordered_set<shared_ptr<StmtInfo>> stmtsInfo);
-    unordered_set<shared_ptr<StmtInfo>> getIfsFromStmt(shared_ptr<StmtInfo>);
-    unordered_set<shared_ptr<StmtInfo>> getStmtsFromIf(shared_ptr<StmtInfo>);
+    unordered_set<shared_ptr<StmtInfo>> getIfsFromStmt(shared_ptr<StmtInfo> stmtInfo);
+    unordered_set<shared_ptr<StmtInfo>> getStmtsFromIf(shared_ptr<StmtInfo> ifIndo);
     void clear();
 private:
     unordered_map<StmtRef, unordered_set<shared_ptr<StmtInfo>>> ifToStmtsMap;

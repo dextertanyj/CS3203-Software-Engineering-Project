@@ -29,8 +29,8 @@ unordered_set<shared_ptr<StmtInfo>> IfStore::getIfsFromStmt(shared_ptr<StmtInfo>
     }
 }
 
-unordered_set<shared_ptr<StmtInfo>> IfStore::getStmtsFromIf(shared_ptr<StmtInfo> stmtInfo) {
-    auto if_itr = ifToStmtsMap.find(stmtInfo->reference);
+unordered_set<shared_ptr<StmtInfo>> IfStore::getStmtsFromIf(shared_ptr<StmtInfo> ifInfo) {
+    auto if_itr = ifToStmtsMap.find(ifInfo->reference);
     if (if_itr != ifToStmtsMap.end()) {
         return unordered_set<shared_ptr<StmtInfo>>();
     } else {
