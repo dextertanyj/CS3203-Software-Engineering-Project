@@ -20,13 +20,15 @@ void IfStore::populateIfStore(shared_ptr<StmtInfo> ifInfo, unordered_set<shared_
     }
 }
 
-unordered_set<shared_ptr<StmtInfo>> IfStore::getIfsFromStmt(shared_ptr<StmtInfo> stmtInfo) {
-    auto stmt_itr = stmtToIfsMap.find(stmtInfo->reference);
-    if (stmt_itr != stmtToIfsMap.end()) {
-        return unordered_set<shared_ptr<StmtInfo>>();
-    } else {
-        return stmt_itr->second;
+unordered_set<shared_ptr<StmtInfo>> IfStore::getIfsFromStmts(unordered_set<shared_ptr<StmtInfo>> stmtsInfo) {
+    unordered_set<shared_ptr<StmtInfo>> ifSet;
+    for (auto& stmtInfo : stmtsInfo) {
+        auto stmt_itr = stmtToIfsMap.find(stmtInfo->reference);
+        if (stmt_itr != stmtToIfsMap.end()) {
+            ifSet.insert(stmt_itr->second.begin(), stmt_itr->second.end());
+        }
     }
+    return ifSet;
 }
 
 unordered_set<shared_ptr<StmtInfo>> IfStore::getStmtsFromIf(shared_ptr<StmtInfo> ifInfo) {

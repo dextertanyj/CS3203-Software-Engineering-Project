@@ -62,6 +62,7 @@ public:
     unordered_set<VarRef> getUsesByStmt(StmtRef);
     unordered_set<VarRef> getUsesByProc(ProcRef);
     unordered_set<VarRef> getUsesByIf(StmtRef);
+    unordered_set<shared_ptr<StmtInfo>> getIfUsesByVar(VarRef);
 
     // Modify get methods
     bool checkModifies(StmtRef, VarRef);
@@ -71,6 +72,7 @@ public:
     unordered_set<VarRef> getModifiesByStmt(StmtRef);
     unordered_set<VarRef> getModifiesByProc(ProcRef);
     unordered_set<VarRef> getModifiesByIf(StmtRef);
+    unordered_set<shared_ptr<StmtInfo>> getIfModifiesByVar(VarRef);
 
     // Assign get methods
     bool isPattern(VarRef, Common::ArithmeticProcessor::ArithmeticExpression, bool isRHSExactMatchNeeded);

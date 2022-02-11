@@ -156,6 +156,12 @@ unordered_set<VarRef> PKB::getUsesByIf(StmtRef stmt) {
     return varSet;
 }
 
+unordered_set<shared_ptr<StmtInfo>> PKB::getIfUsesByVar(VarRef varName) {
+    unordered_set<shared_ptr<StmtInfo>> stmtList = useStore.getUsesByVar(varName);
+    unordered_set<shared_ptr<StmtInfo>> ifStmts = ifStore.getIfsFromStmts(stmtList);
+    return ifStmts;
+}
+
 bool PKB::checkModifies(StmtRef stmt, VarRef varName) {
 	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
 	return modifyStore.checkModifies(stmtInfo, varName);
@@ -192,6 +198,12 @@ unordered_set<VarRef> PKB::getModifiesByIf(StmtRef stmt) {
     // Should change parameter type of getModifiesByStmtList to unordered_set instead of vector
     unordered_set<VarRef> varSet = modifyStore.getModifiesByStmtList(vector<shared_ptr<StmtInfo>>(stmtList.begin(), stmtList.end()));
     return varSet;
+}
+
+unordered_set<shared_ptr<StmtInfo>> PKB::getIfModifiesByVar(VarRef varName) {
+    unordered_set<shared_ptr<StmtInfo>> stmtList = modifyStore.getModifiesByVar(varName);
+    unordered_set<shared_ptr<StmtInfo>> ifStmts = ifStore.getIfsFromStmts(stmtList);
+    return ifStmts;
 }
 
 ProcRef PKB::getProcFromCall(StmtRef stmt) {
