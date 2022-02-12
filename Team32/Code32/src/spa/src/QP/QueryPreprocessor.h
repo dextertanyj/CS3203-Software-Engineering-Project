@@ -1,10 +1,12 @@
 #ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPREPROCESSOR_H_
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPREPROCESSOR_H_
 
+#include <set>
 #include <stdexcept>
 #include <string>
 #include <vector>
 
+#include "Common/ArithmeticProcessor/ArithmeticExpression.h"
 #include "QueryEvaluator.h"
 #include "QueryProperties.h"
 #include "QueryResult.h"
@@ -15,9 +17,10 @@
 #include "Relationship/UsesP.h"
 #include "Relationship/UsesS.h"
 
+using std::runtime_error;
+using std::set;
 using std::string;
 using std::vector;
-using std::runtime_error;
 
 //struct QuerySyntaxException : public runtime_error {
 //    using runtime_error::runtime_error;
@@ -27,7 +30,7 @@ struct QueryException : public runtime_error {
   using runtime_error::runtime_error;
 };
 
-struct TokenizationException : public runtime_error {
+struct QueryTokenizationException : public runtime_error {
 	using runtime_error::runtime_error;
 };
 
@@ -56,9 +59,9 @@ private:
 	UsesS* parseUsesS(int& tokenIndex);
 	ModifiesP* parseModifiesP(int& tokenIndex);
 	ModifiesS* parseModifiesS(int& tokenIndex);
-	QueryEntRef parseQueryEntRef(int& tokenIndex);
-	QueryStmtRef parseQueryStmtRef(int& tokenIndex);
-	string parseExpression(int& tokenIndex);
+	QueryEntRef parseQueryEntRef(int& tokenIndex, set<DesignEntity> acceptedDesignEntities);
+	QueryStmtRef parseQueryStmtRef(int& tokenIndex, set<DesignEntity> acceptedDesignEntities);
+	Common::ArithmeticProcessor::ArithmeticExpression parseExpression(int& tokenIndex);
 
 	// Helper methods
 	bool isIdentOrName(string token);

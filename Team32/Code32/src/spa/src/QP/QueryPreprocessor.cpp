@@ -2,6 +2,7 @@
 
 #include <regex>
 
+#include "QP/QueryExpressionLexer.h"
 #include "QP/QueryTypeDefs.h"
 
 QueryProperties QueryPreprocessor::parseQuery(string query) {
@@ -13,10 +14,10 @@ QueryProperties QueryPreprocessor::parseQuery(string query) {
 void QueryPreprocessor::tokenizeQuery(string query) {
 
 	regex invalidCharsRegex = regex(R"([^a-zA-Z0-9\s,"_\(\);\+\-\*\/%])");
-	regex queryTokenRegex = regex(R"(such that|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\\+|-|\*|\/|%|_|,|\")");
+	regex queryTokenRegex = regex(R"([a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\+|-|\*|\/|%|_|,|\")");
 
 	if (regex_search(query, invalidCharsRegex)) {
-		throw TokenizationException("Query included invalid characters");
+		throw QueryTokenizationException("Query included invalid characters");
 	}
 
 	auto words_begin = sregex_iterator(
@@ -25,10 +26,22 @@ void QueryPreprocessor::tokenizeQuery(string query) {
 		queryTokenRegex
 	);
 	auto words_end = sregex_iterator();
-
+	int prev_pos = 0;
 	for (sregex_iterator i = words_begin; i != words_end; ++i) {
 		smatch match = *i;
-		this->queryTokens.push_back(match.str());
+		if (
+			match.str() == "*" && !this->queryTokens.empty() && 
+			(this->queryTokens.back() == "Parent" || this->queryTokens.back() == "Follows") && 
+			prev_pos + this->queryTokens.back().length() == match.position()
+		) {
+			string combinedToken = this->queryTokens.back() + "*";
+			this->queryTokens.pop_back();
+			this->queryTokens.push_back(combinedToken);
+		}
+		else {
+			this->queryTokens.push_back(match.str());
+		}
+		prev_pos = match.position();
 	}
 }
 
@@ -47,8 +60,9 @@ QueryProperties QueryPreprocessor::parseQuery() {
 				parseDeclaration(tokenIndex);
 			}
 		}
-		else if (this->queryTokens[tokenIndex] == "such that") {
-			parseSuchThat(++tokenIndex);
+		else if (this->queryTokens[tokenIndex] == "such" && this->queryTokens[tokenIndex+1] == "that") {
+			tokenIndex += 2;
+			parseSuchThat(tokenIndex);
 		}
 		else if (this->queryTokens[tokenIndex] == "pattern") {
 			parsePattern(++tokenIndex);
@@ -75,17 +89,16 @@ void QueryPreprocessor::parseDeclaration(int& tokenIndex) {
 	
 	declaration.type = parseDesignEntity(tokenIndex);
 	while (tokenIndex < this->queryTokens.size()) {
-		if (this->queryTokens[tokenIndex] == ";" && declaration.symbol != "") {
+		if (this->queryTokens[tokenIndex] == ";" && !declaration.symbol.empty()) {
 			tokenIndex++;
 			return;
 		}
-		else if (this->queryTokens[tokenIndex] == "," && declaration.symbol != "") {
-			Declaration declaration;
+		else if (this->queryTokens[tokenIndex] == "," && !declaration.symbol.empty()) {
 			declaration.symbol = "";
 			tokenIndex++;
 		}
-		// if token satisfies "synonym : IDENT"
-		else if (isIdentOrName(this->queryTokens[tokenIndex])) {
+		// if token satisfies "synonym : IDENT" and expecting a synonym
+		else if (isIdentOrName(this->queryTokens[tokenIndex]) && declaration.symbol.empty()) {
 			declaration.symbol = this->queryTokens[tokenIndex];
 			for (Declaration existingDeclaration : this->declarationList) {
 				if (existingDeclaration.symbol == declaration.symbol) {
@@ -127,7 +140,7 @@ void QueryPreprocessor::parseSuchThat(int& tokenIndex) {
 }
 
 void QueryPreprocessor::parsePattern(int& tokenIndex) {
-	PatternClause patternClause;
+	PatternClause patternClause = {};
 	bool hasSynonym = false;
 	for (Declaration declaration : this->declarationList) {
 		if (declaration.type == DesignEntity::assign && declaration.symbol == this->queryTokens[tokenIndex]) {
@@ -141,9 +154,16 @@ void QueryPreprocessor::parsePattern(int& tokenIndex) {
 	} else { tokenIndex++; }
 
 	matchTokenOrThrow("(", tokenIndex);
-	patternClause.entRef = parseQueryEntRef(tokenIndex);
+	set<DesignEntity> allowedDesignEntities = { DesignEntity::variable };
+	patternClause.entRef = parseQueryEntRef(tokenIndex, allowedDesignEntities);
 	matchTokenOrThrow(",", tokenIndex);
+	bool expectUnderscore = false;
+	if (this->queryTokens[tokenIndex] == "_") {
+		patternClause.underscore = "_";
+		expectUnderscore = true;
+	}
 	patternClause.expression = parseExpression(tokenIndex);
+	if (expectUnderscore) { matchTokenOrThrow("_", tokenIndex); }
 	matchTokenOrThrow(")", tokenIndex);
 
 	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "and") {
@@ -194,36 +214,34 @@ DesignEntity QueryPreprocessor::parseDesignEntity(int& tokenIndex) {
 }
 
 Relation* QueryPreprocessor::parseRelation(int& tokenIndex) {
-	if (this->queryTokens[tokenIndex] == "Follows") {
-		tokenIndex++;
+	if (this->queryTokens[tokenIndex] == "Follows" || this->queryTokens[tokenIndex] == "Follows*") {
 		return parseFollows(tokenIndex);
 	}
 	else if (this->queryTokens[tokenIndex] == "Modifies") {
 		tokenIndex++;
 		try {
 			int tempTokenIndex = tokenIndex;
-			Relation* relation = parseModifiesP(tempTokenIndex);
+			Relation* relation = parseModifiesS(tempTokenIndex);
 			tokenIndex = tempTokenIndex;
 			return relation;
 		}
 		catch (QueryException e) {
-			return parseModifiesS(tokenIndex);
+			return parseModifiesP(tokenIndex);
 		}
 	}
-	else if (this->queryTokens[tokenIndex] == "Parent") {
-		tokenIndex++;
+	else if (this->queryTokens[tokenIndex] == "Parent" || this->queryTokens[tokenIndex] == "Parent*") {
 		return parseParent(tokenIndex);
 	}
 	else if (this->queryTokens[tokenIndex] == "Uses") {
 		tokenIndex++;
 		try {
 			int tempTokenIndex = tokenIndex;
-			Relation* relation = parseUsesP(tempTokenIndex);
+			Relation* relation = parseUsesS(tempTokenIndex);
 			tokenIndex = tempTokenIndex;
 			return relation;
 		}
 		catch (QueryException e) {
-			return parseUsesS(tokenIndex);
+			return parseUsesP(tokenIndex);
 		}
 	}
 	else {
@@ -234,69 +252,129 @@ Relation* QueryPreprocessor::parseRelation(int& tokenIndex) {
 
 Follows* QueryPreprocessor::parseFollows(int& tokenIndex) {
 	bool isStar = false;
-	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "*") {
+	if (this->queryTokens[tokenIndex] == "Follows*") {
 		isStar = true;
-		tokenIndex++; // Skip * token
 	}
+	tokenIndex++;
+	set<DesignEntity> allowedDesignEntities = {
+		DesignEntity::stmt,
+		DesignEntity::read,
+		DesignEntity::print,
+		DesignEntity::call,
+		DesignEntity::while_,
+		DesignEntity::if_,
+		DesignEntity::assign,
+	};
 	matchTokenOrThrow("(", tokenIndex);
-	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
+	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex, allowedDesignEntities);
 	matchTokenOrThrow(",", tokenIndex);
-	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex);
+	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex, allowedDesignEntities);
 	matchTokenOrThrow(")", tokenIndex);
 	return new Follows(isStar, ref1, ref2);
 }
 
 Parent* QueryPreprocessor::parseParent(int& tokenIndex) {
 	bool isStar = false;
-	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "*") {
+	if (this->queryTokens[tokenIndex] == "Parent*") {
 		isStar = true;
-		tokenIndex++; // Skip * token
 	}
+	tokenIndex++;
+	set<DesignEntity> allowedDesignEntities = {
+		DesignEntity::stmt,
+		DesignEntity::read,
+		DesignEntity::print,
+		DesignEntity::call,
+		DesignEntity::while_,
+		DesignEntity::if_,
+		DesignEntity::assign,
+	};
 	matchTokenOrThrow("(", tokenIndex);
-	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
+	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex, allowedDesignEntities);
 	matchTokenOrThrow(",", tokenIndex);
-	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex);
+	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex, allowedDesignEntities);
 	matchTokenOrThrow(")", tokenIndex);
 	return new Parent(isStar, ref1, ref2);
 }
 
 UsesP* QueryPreprocessor::parseUsesP(int& tokenIndex) {
 	matchTokenOrThrow("(", tokenIndex);
-	QueryEntRef ref1 = parseQueryEntRef(tokenIndex);
+	set<DesignEntity> ref1AllowedDesignEntities = {
+		DesignEntity::call,
+		DesignEntity::procedure
+	};
+	QueryEntRef ref1 = parseQueryEntRef(tokenIndex, ref1AllowedDesignEntities);
+	// 1st entRef cannot be a wildcard
+	if (ref1.type == EntRefType::underscore) {
+		throw QueryException("Ambiguous wildcard _");
+	}
 	matchTokenOrThrow(",", tokenIndex);
-	QueryEntRef ref2 = parseQueryEntRef(tokenIndex);
+	set<DesignEntity> ref2AllowedDesignEntities = {DesignEntity::variable};
+	QueryEntRef ref2 = parseQueryEntRef(tokenIndex, ref2AllowedDesignEntities);
 	matchTokenOrThrow(")", tokenIndex);
 	return new UsesP(ref1, ref2);
 }
 
 UsesS* QueryPreprocessor::parseUsesS(int& tokenIndex) {
 	matchTokenOrThrow("(", tokenIndex);
-	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
+	set<DesignEntity> ref1AllowedDesignEntities = {
+		DesignEntity::assign,
+		DesignEntity::print,
+		DesignEntity::if_,
+		DesignEntity::while_,
+		DesignEntity::stmt
+	};
+	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex, ref1AllowedDesignEntities);
+	// 1st stmeRef cannot be a wildcard
+	if (ref1.type == StmtRefType::underscore) {
+		throw QueryException("Ambiguous wildcard _");
+	}
 	matchTokenOrThrow(",", tokenIndex);
-	QueryEntRef ref2 = parseQueryEntRef(tokenIndex);
+	set<DesignEntity> ref2AllowedDesignEntities = { DesignEntity::variable };
+	QueryEntRef ref2 = parseQueryEntRef(tokenIndex, ref2AllowedDesignEntities);
 	matchTokenOrThrow(")", tokenIndex);
 	return new UsesS(ref1, ref2);
 }
 
 ModifiesP* QueryPreprocessor::parseModifiesP(int& tokenIndex) {
 	matchTokenOrThrow("(", tokenIndex);
-	QueryEntRef ref1 = parseQueryEntRef(tokenIndex);
+	set<DesignEntity> ref1AllowedDesignEntities = {
+		DesignEntity::call,
+		DesignEntity::procedure
+	};
+	QueryEntRef ref1 = parseQueryEntRef(tokenIndex, ref1AllowedDesignEntities);
+	// 1st entRef cannot be a wildcard
+	if (ref1.type == EntRefType::underscore) {
+		throw QueryException("Ambiguous wildcard _");
+	}
 	matchTokenOrThrow(",", tokenIndex);
-	QueryEntRef ref2 = parseQueryEntRef(tokenIndex);
+	set<DesignEntity> ref2AllowedDesignEntities = { DesignEntity::variable };
+	QueryEntRef ref2 = parseQueryEntRef(tokenIndex, ref2AllowedDesignEntities);
 	matchTokenOrThrow(")", tokenIndex);
 	return new ModifiesP(ref1, ref2);
 }
 
 ModifiesS* QueryPreprocessor::parseModifiesS(int& tokenIndex) {
 	matchTokenOrThrow("(", tokenIndex);
-	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
+	set<DesignEntity> ref1AllowedDesignEntities = {
+		DesignEntity::assign,
+		DesignEntity::read,
+		DesignEntity::if_,
+		DesignEntity::while_,
+		DesignEntity::stmt
+	};
+	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex, ref1AllowedDesignEntities);
+	// 1st stmeRef cannot be a wildcard
+	if (ref1.type == StmtRefType::underscore) {
+		throw QueryException("Ambiguous wildcard _");
+	}
 	matchTokenOrThrow(",", tokenIndex);
-	QueryEntRef ref2 = parseQueryEntRef(tokenIndex);
+	set<DesignEntity> ref2AllowedDesignEntities = { DesignEntity::variable };
+	QueryEntRef ref2 = parseQueryEntRef(tokenIndex, ref2AllowedDesignEntities);
 	matchTokenOrThrow(")", tokenIndex);
 	return new ModifiesS(ref1, ref2);
 }
 
-QueryEntRef QueryPreprocessor::parseQueryEntRef(int& tokenIndex) {
+QueryEntRef QueryPreprocessor::parseQueryEntRef(int& tokenIndex, set<DesignEntity> acceptedDesignEntities) {
 	QueryEntRef entRef;
 	if (this->queryTokens[tokenIndex] == "_") {
 		entRef.type = EntRefType::underscore;
@@ -314,7 +392,7 @@ QueryEntRef QueryPreprocessor::parseQueryEntRef(int& tokenIndex) {
 	else {
 		bool hasSynonym = false;
 		for (Declaration declaration : this->declarationList) {
-			if (declaration.symbol == this->queryTokens[tokenIndex]) {
+			if (declaration.symbol == this->queryTokens[tokenIndex] && acceptedDesignEntities.count(declaration.type) != 0) {
 				entRef.type = EntRefType::synonym;
 				entRef.entRef = this->queryTokens[tokenIndex];
 				hasSynonym = true;
@@ -330,7 +408,7 @@ QueryEntRef QueryPreprocessor::parseQueryEntRef(int& tokenIndex) {
 	return entRef;
 }
 
-QueryStmtRef QueryPreprocessor::parseQueryStmtRef(int& tokenIndex) {
+QueryStmtRef QueryPreprocessor::parseQueryStmtRef(int& tokenIndex, set<DesignEntity> acceptedDesignEntities) {
 	QueryStmtRef stmtRef;
 	if (this->queryTokens[tokenIndex] == "_") {
 		stmtRef.type = StmtRefType::underscore;
@@ -344,7 +422,7 @@ QueryStmtRef QueryPreprocessor::parseQueryStmtRef(int& tokenIndex) {
 	else {
 		bool hasSynonym = false;
 		for (Declaration declaration : this->declarationList) {
-			if (declaration.symbol == this->queryTokens[tokenIndex]) {
+			if (declaration.symbol == this->queryTokens[tokenIndex] && acceptedDesignEntities.count(declaration.type) != 0) {
 				stmtRef.type = StmtRefType::synonym;
 				stmtRef.stmtRef = this->queryTokens[tokenIndex];
 				hasSynonym = true;
@@ -359,34 +437,23 @@ QueryStmtRef QueryPreprocessor::parseQueryStmtRef(int& tokenIndex) {
 	return stmtRef;
 }
 
-string QueryPreprocessor::parseExpression(int& tokenIndex) {
-	if (this->queryTokens[tokenIndex] == "\"" || 
-		(this->queryTokens[tokenIndex] == "_" && 
-			this->queryTokens[tokenIndex+1] == "\"")) {
-		string joinedExpression;
-		while (!(this->queryTokens[tokenIndex] == "\"")) {
-			joinedExpression += this->queryTokens[tokenIndex];
+Common::ArithmeticProcessor::ArithmeticExpression QueryPreprocessor::parseExpression(int& tokenIndex) {
+
+
+	if (this->queryTokens[tokenIndex] == "\"") {
+		vector<string> expression;
+		while (true) {
+			expression.push_back(this->queryTokens[tokenIndex]);
 			tokenIndex++;
+			if ((this->queryTokens[tokenIndex] == "\"")) { break; }
 		}
-		if (this->queryTokens[tokenIndex] == "_") {
-			joinedExpression += this->queryTokens[tokenIndex];
-			tokenIndex++;
-		}
-		for (int i = 0; i <= 4; ++i) {
-			joinedExpression += this->queryTokens[tokenIndex + i];
-		}
-		if (regex_match(joinedExpression, regex("^_?\"(a-zA-z0-9+-\\*\\/%\\(\\))\"_?"))) {
-			return joinedExpression;
-		}
-		else {
-			throw QueryException("Unexpected query token expression: " + joinedExpression);
-		}
+		QueryExpressionLexer& lexer = QueryExpressionLexer(expression);
+		return Common::ArithmeticProcessor::ArithmeticExpression::parse(lexer);
 	}
-	if (this->queryTokens[tokenIndex] == "_") {
-		tokenIndex++;
-		return "_";
+	else {
+		throw QueryException("Unexpected query token expression" + this->queryTokens[tokenIndex]);
 	}
-	throw QueryException("Unexpected query token expression" + this->queryTokens[tokenIndex]);
+
 }
 
 bool QueryPreprocessor::isIdentOrName(string token) {
@@ -397,5 +464,5 @@ void QueryPreprocessor::matchTokenOrThrow(string token, int& tokenIndex) {
 	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == token) {
 		tokenIndex++; // Skip token
 	}
-	else { throw QueryException("Missing token " + token + std::to_string(tokenIndex)); }
+	else { throw QueryException("Missing token " + token + this->queryTokens[tokenIndex-1]+ this->queryTokens[tokenIndex] + this->queryTokens[tokenIndex+1]); }
 }
