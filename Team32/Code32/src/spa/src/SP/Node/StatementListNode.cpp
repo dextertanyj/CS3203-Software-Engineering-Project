@@ -26,7 +26,7 @@ StmtInfoList SP::Node::StatementListNode::extract(PKB& pkb) {
 	}
 	return children;
 }
-bool SP::Node::StatementListNode::equals(const shared_ptr<StatementListNode> object) {
+bool SP::Node::StatementListNode::equals(const shared_ptr<StatementListNode>& object) {
 	if (this->stmtList.size() != object->stmtList.size()) {
 		return false;
 	}

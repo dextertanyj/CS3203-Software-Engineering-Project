@@ -16,7 +16,7 @@ public:
 	ProcedureNode(string name, unique_ptr<StatementListNode> stmtLst, StmtRef start, StmtRef end);
 	static unique_ptr<ProcedureNode> parseProcedure(Lexer& lex, int& statement_count);
 	bool extract(PKB& pkb);
-	bool equals(shared_ptr<ProcedureNode>& object);
+	bool equals(const shared_ptr<ProcedureNode>& object);
 
 private:
 	ProcRef name;

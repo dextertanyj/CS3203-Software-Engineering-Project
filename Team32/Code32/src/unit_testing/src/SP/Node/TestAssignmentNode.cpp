@@ -93,29 +93,10 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement Complex Valid Toke
 	unique_ptr<AssignmentNode> node = AssignmentNode::parseAssignmentStatement(lex, statement_count, "count");
 	unique_ptr<VariableNode> assignee = make_unique<VariableNode>("count");
 	unique_ptr<ExpressionNode> expression =
-		make_unique<ExpressionNode>(createArithmeticExpression(
-                vector<string>({"(", "x", "+", "6", ")", "*", "(", "3", "-", "8", ")", ";"})));
-	unique_ptr<ExpressionNode> expression =
-		make_unique<ExpressionNode>(createArithmeticExpression(vector<string>({"x", "+", "6", ";"})));
+		make_unique<ExpressionNode>(createArithmeticExpression(vector<string>({"(", "x", "+", "6", ")", "*", "(", "3", "-", "8", ")", ";"})));
 	shared_ptr<AssignmentNode> expected = make_shared<AssignmentNode>(1, move(assignee), move(expression));
 	REQUIRE(node->equals(expected));
 	REQUIRE_EQUALS(statement_count, 2);
-}
-
-TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement Invalid Assignee Name Test") {
-    SP::Lexer lex;
-    lex.initialize("(x + 6);");
-    int statement_count = 1;
-    REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count_1"), SP::ParseException);
-    REQUIRE_EQUALS(statement_count, 1);
-}
-
-TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement Invalid Factor Name Test") {
-    SP::Lexer lex;
-    lex.initialize("(1count + 6);");
-    int statement_count = 1;
-    REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count_1"), SP::ParseException);
-    REQUIRE_EQUALS(statement_count, 1);
 }
 
 TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement Missing Token Test") {

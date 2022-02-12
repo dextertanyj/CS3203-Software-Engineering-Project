@@ -26,7 +26,7 @@ bool SP::Node::ProcedureNode::extract(PKB& pkb) {
 	return true;
 }
 
-bool SP::Node::ProcedureNode::equals(shared_ptr<ProcedureNode>& object) {
+bool SP::Node::ProcedureNode::equals(const shared_ptr<ProcedureNode>& object) {
 	return this->name == object->name && this->stmtLst->equals(object->stmtLst) && this->start == object->start
         && this->end == object->end;
 }
