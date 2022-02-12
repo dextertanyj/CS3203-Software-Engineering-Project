@@ -10,7 +10,7 @@ using namespace std;
 regex SP::Lexer::tokenization_regex =  // NOLINT
 	regex(R"(([a-zA-Z][0-9a-zA-Z]*|[0-9]+|\{|\}|\(|\)|;|!={0,1}|={1,2}|&&|\|\||>={0,1}|<={0,1}|\+|-|\*|\/|%))");
 regex SP::Lexer::validation_regex =  // NOLINT
-	regex(R"(([^a-zA-Z0-9 \{\}\(\);=!&\|><\+\-\*\/%\n]))");
+	regex(R"(([^a-zA-Z0-9\s\{\}\(\);=!&\|><\+\-\*\/%]))");
 
 void SP::Lexer::initialize(string raw_source) {
 	this->source = move(raw_source);
