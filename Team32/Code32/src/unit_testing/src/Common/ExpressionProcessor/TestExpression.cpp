@@ -138,6 +138,18 @@ TEST_CASE("Common::ExpressionProcessor::Expression::parse Logical Complex Test")
 	REQUIRE_EQUALS(expression.getVariables(), variables);
 }
 
+TEST_CASE("Common::ExpressionProcessor::Expression::parse Logical Missing Before Bracket Test") {
+	MockLexer lex = MockLexer(vector<string>({"x", "<", "y", "&&", "(", "z", ">", "3", ")"}));
+	Expression::parse(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptLogical);
+	REQUIRE(lex.peekToken() == "&&");
+}
+
+TEST_CASE("Common::ExpressionProcessor::Expression::parse Logical Missing After Bracket Test") {
+	MockLexer lex = MockLexer(vector<string>({"(", "x", "<", "y", ")", "&&", "z", ">", "3"}));
+	REQUIRE_THROWS_AS(Expression::parse(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptLogical), ExpressionProcessorException);
+}
+
+
 TEST_CASE("Common::ExpressionProcessor::Expression::parse Acceptor Test") {
 	MockLexer lex = MockLexer(vector<string>({"x", "<", "y"}));
 	Expression::parse(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);

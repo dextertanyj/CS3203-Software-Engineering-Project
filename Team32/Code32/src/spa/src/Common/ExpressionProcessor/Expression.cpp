@@ -1,7 +1,6 @@
 #include "Common/ExpressionProcessor/Expression.h"
 
 #include <cassert>
-#include <string>
 
 #include "Common/Converter.h"
 #include "Common/ExpressionProcessor/ArithmeticNode.h"
@@ -20,14 +19,13 @@ using namespace std;
 using namespace Common::ExpressionProcessor;
 
 Expression::Expression(shared_ptr<ExpressionNode> root, unordered_set<VarRef> variables, unordered_set<int> constants)
-	: root(std::move(root)), variables(std::move(variables)), constants(std::move(constants)) {}
+	: root(move(root)), variables(move(variables)), constants(move(constants)) {}
 
 Expression Expression::parse(LexerInterface& lex, bool (*acceptor)(string op)) {
 	unordered_set<VarRef> variables;
 	unordered_set<int> constants;
 	shared_ptr<ExpressionNode> lhs = parseTerminalSafe(lex, acceptor, variables, constants);
-	shared_ptr<ExpressionNode> expression =
-		Expression::construct(lex, acceptor, variables, constants, lhs, 0);
+	shared_ptr<ExpressionNode> expression = Expression::construct(lex, acceptor, variables, constants, lhs, 0);
 	return Expression(expression, variables, constants);
 }
 
@@ -91,7 +89,6 @@ shared_ptr<ExpressionNode> Expression::parseTerminalSafe(LexerInterface& lex, bo
 	return expression;
 }
 
-
 shared_ptr<ExpressionNode> Expression::parseTerminal(LexerInterface& lex, bool (*acceptor)(string op), unordered_set<VarRef>& variables,
                                                      unordered_set<int>& constants) {
 	string token = lex.readToken();
@@ -113,7 +110,8 @@ shared_ptr<ExpressionNode> Expression::parseTerminal(LexerInterface& lex, bool (
 		return make_shared<UnaryLogicalNode>(MathematicalOperator::Not, logical_expression);
 	}
 	if (token == "(") {
-		// We only have to check for disallowed nested parentheses when parseTerminal is called sequentially without any actual construction.
+		// We only have to check for disallowed nested parentheses when parseTerminal is called sequentially without any actual
+		// construction.
 		shared_ptr<ExpressionNode> lhs = parseTerminal(lex, acceptor, variables, constants);
 		shared_ptr<ExpressionNode> expression = construct(lex, acceptor, variables, constants, lhs, 0);
 		if (dynamic_pointer_cast<ParenthesesWrapper>(expression) != nullptr) {
@@ -140,6 +138,10 @@ shared_ptr<ExpressionNode> Expression::parseTerminal(LexerInterface& lex, bool (
 }
 
 int Expression::getPrecedence(MathematicalOperator op) {
+	// Logical operators are expected to be fully parenthesized and so should never be chained.
+	if (op == MathematicalOperator::And || op == MathematicalOperator::Or) {
+		return -1;
+	}
 	if (op == MathematicalOperator::LTE || op == MathematicalOperator::GTE || op == MathematicalOperator::LT ||
 	    op == MathematicalOperator::GT || op == MathematicalOperator::EQ || op == MathematicalOperator::NEQ) {
 		return 1;
