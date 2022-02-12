@@ -13,6 +13,11 @@ vector<string> QueryResult::getSynonymResult(string synonym) {
 }
 
 void QueryResult::addColumn(string synonym, vector<string> column) {
+	if (column.size() == 0) {
+		result = false;
+		return;
+	}
+
 	result = true;
 	table.insert({ synonym, column });
 }
