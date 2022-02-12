@@ -1,5 +1,7 @@
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
+using namespace std;
+
 bool Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic(string op) {
 	return op == "+" || op == "-" || op == "*" || op == "/" || op == "%";
 }

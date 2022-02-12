@@ -5,6 +5,8 @@
 
 #include "Common/ExpressionProcessor/ExpressionNode.h"
 
+using namespace std;
+
 class Common::ExpressionProcessor::ParenthesesWrapper : public ExpressionNode {
 public:
 	explicit ParenthesesWrapper(shared_ptr<ExpressionNode> expression);

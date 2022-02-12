@@ -7,6 +7,8 @@
 #include "Common/ExpressionProcessor/LogicalNode.h"
 #include "Common/TypeDefs.h"
 
+using namespace std;
+
 class Common::ExpressionProcessor::RelationalNode : public LogicalNode {
 public:
 	RelationalNode(MathematicalOperator op, shared_ptr<AtomicNode> lhs, shared_ptr<AtomicNode> rhs);

@@ -1,11 +1,11 @@
 #include "Common/ExpressionProcessor/ArithmeticNode.h"
 
-#include <memory>
-
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
+using namespace std;
+
 Common::ExpressionProcessor::ArithmeticNode::ArithmeticNode(MathematicalOperator op, shared_ptr<AtomicNode> lhs, shared_ptr<AtomicNode> rhs)
-	: lhs(std::move(lhs)), rhs(std::move(rhs)) {
+	: lhs(move(lhs)), rhs(move(rhs)) {
 	if (!OperatorAcceptor::acceptArithmetic(op)) {
 		throw ExpressionProcessorException("Expected arithmetic operator");
 	}
@@ -13,7 +13,7 @@ Common::ExpressionProcessor::ArithmeticNode::ArithmeticNode(MathematicalOperator
 }
 
 bool Common::ExpressionProcessor::ArithmeticNode::equals(shared_ptr<ExpressionNode> object) {
-	std::shared_ptr<ArithmeticNode> other = dynamic_pointer_cast<ArithmeticNode>(object);
+	shared_ptr<ArithmeticNode> other = dynamic_pointer_cast<ArithmeticNode>(object);
 	if (other == nullptr) {
 		return false;
 	}

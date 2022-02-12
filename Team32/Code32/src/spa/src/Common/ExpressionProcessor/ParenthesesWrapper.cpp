@@ -1,7 +1,9 @@
 #include "Common/ExpressionProcessor/ParenthesesWrapper.h"
 
+using namespace std;
+
 Common::ExpressionProcessor::ParenthesesWrapper::ParenthesesWrapper(shared_ptr<ExpressionNode> expression)
-	: expression(std::move(expression)) {}
+	: expression(move(expression)) {}
 
 shared_ptr<Common::ExpressionProcessor::ExpressionNode> Common::ExpressionProcessor::ParenthesesWrapper::getExpression() {
 	return expression;

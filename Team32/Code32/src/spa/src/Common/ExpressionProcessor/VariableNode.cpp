@@ -8,11 +8,11 @@ Common::ExpressionProcessor::VariableNode::VariableNode(VarRef name) {
 	if (!Validator::validateName(name)) {
 		throw ExpressionProcessorException("Invalid variable name");
 	}
-	this->name = std::move(name);
+	this->name = move(name);
 }
 
 bool Common::ExpressionProcessor::VariableNode::equals(shared_ptr<ExpressionNode> object) {
-	std::shared_ptr<VariableNode> other = dynamic_pointer_cast<VariableNode>(object);
+	shared_ptr<VariableNode> other = dynamic_pointer_cast<VariableNode>(object);
 	if (other == nullptr) {
 		return false;
 	}

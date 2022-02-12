@@ -2,8 +2,10 @@
 
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
+using namespace std;
+
 Common::ExpressionProcessor::UnaryLogicalNode::UnaryLogicalNode(MathematicalOperator op, shared_ptr<LogicalNode> expression)
-	: expression(std::move(expression)) {
+	: expression(move(expression)) {
 	if (!OperatorAcceptor::acceptUnaryLogical(op)) {
 		throw ExpressionProcessorException("Expected unary logical operator");
 	}
@@ -11,7 +13,7 @@ Common::ExpressionProcessor::UnaryLogicalNode::UnaryLogicalNode(MathematicalOper
 }
 
 bool Common::ExpressionProcessor::UnaryLogicalNode::equals(shared_ptr<ExpressionNode> object) {
-	std::shared_ptr<UnaryLogicalNode> other = dynamic_pointer_cast<UnaryLogicalNode>(object);
+	shared_ptr<UnaryLogicalNode> other = dynamic_pointer_cast<UnaryLogicalNode>(object);
 	if (other == nullptr) {
 		return false;
 	}

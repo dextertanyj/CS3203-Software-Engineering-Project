@@ -7,6 +7,8 @@
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/TypeDefs.h"
 
+using namespace std;
+
 class Common::ExpressionProcessor::VariableNode : public AtomicNode {
 public:
 	explicit VariableNode(VarRef name);

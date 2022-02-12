@@ -8,6 +8,8 @@
 #include "Common/ExpressionProcessor/LogicalNode.h"
 #include "Common/TypeDefs.h"
 
+using namespace std;
+
 class Common::ExpressionProcessor::BinaryLogicalNode : public LogicalNode {
 public:
 	BinaryLogicalNode(MathematicalOperator op, shared_ptr<LogicalNode> lhs, shared_ptr<LogicalNode> rhs);
