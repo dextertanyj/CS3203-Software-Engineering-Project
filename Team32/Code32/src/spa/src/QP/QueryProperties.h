@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "Common/ArithmeticProcessor/ArithmeticExpression.h"
 #include "QP/QueryTypeDefs.h"
 #include "QP/Relationship/Relation.h"
 
@@ -13,7 +14,8 @@ using std::vector;
 typedef struct PatternClause {
 	Declaration synonym;
 	QueryEntRef entRef;
-	string expression;
+	string underscore;
+	Common::ArithmeticProcessor::ArithmeticExpression expression;
 } PatternClause;
 
 typedef struct SuchThatClause {
