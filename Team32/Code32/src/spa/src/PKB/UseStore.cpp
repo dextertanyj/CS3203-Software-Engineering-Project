@@ -1,38 +1,46 @@
 #include "UseStore.h"
 
-#include <cassert>
-
 using namespace std;
 
 UseStore::UseStore() {}
 
-void UseStore::setUses(shared_ptr<StmtInfo> stmtInfo, VarRef varName) {
-    StmtRef stmtNo = stmtInfo->reference;
-	if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
+void UseStore::setUses(shared_ptr<StmtInfo> stmt_info, VarRef var_name) {
+    StmtRef stmt_num = stmt_info->reference;
+	if (stmt_num <= 0) throw invalid_argument("Statement number must be a positive integer.");
+	if (var_name.length() == 0) throw invalid_argument("Variable name length cannot be 0.");
 
-    auto keyItr = varToStmtMap.find(varName);
-    if (keyItr == varToStmtMap.end()) {
-        varToStmtMap.insert(make_pair(varName, unordered_set<shared_ptr<StmtInfo>>{stmtInfo}));
+    auto key_var_to_stmt_map = varToStmtMap.find(var_name);
+	auto key_stmt_to_var_map = stmtToVarMap.find(stmt_num);
+
+	// Check if var-stmt mapping has already been set.
+	if (key_stmt_to_var_map != stmtToVarMap.end() && key_stmt_to_var_map->second.find(var_name) != key_stmt_to_var_map->second.end() ) {
+		throw invalid_argument("setUses() has already been done for this StmtInfo and VarRef.");
+	}
+
+	if (key_var_to_stmt_map == varToStmtMap.end()) {
+        varToStmtMap.insert(make_pair(var_name, unordered_set<shared_ptr<StmtInfo>>{stmt_info}));
     } else {
-        keyItr->second.insert(stmtInfo);
+		key_var_to_stmt_map->second.insert(stmt_info);
     }
-    auto keyItr2 = stmtToVarMap.find(stmtNo);
-    if (keyItr2 == stmtToVarMap.end()) {
-        stmtToVarMap.insert(make_pair(stmtNo, unordered_set<VarRef>{varName}));
+
+    if (key_stmt_to_var_map == stmtToVarMap.end()) {
+        stmtToVarMap.insert(make_pair(stmt_num, unordered_set<VarRef>{var_name}));
     } else {
-        keyItr2->second.insert(varName);
+		key_stmt_to_var_map->second.insert(var_name);
     }
 }
 
-bool UseStore::checkUses(shared_ptr<StmtInfo> stmtInfo, VarRef varName) {
-    StmtRef stmtNo = stmtInfo->reference;
-    if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
+// Checks if variable var_name is used at statement stmt_info.
+bool UseStore::checkUses(shared_ptr<StmtInfo> stmt_info, VarRef var_name) {
+    StmtRef stmt_num = stmt_info->reference;
+    if (stmt_num <= 0) throw invalid_argument("Statement number must be a positive integer.");
+	if (var_name.length() == 0) throw invalid_argument("Variable name length cannot be 0.");
 
-    auto keyItr = varToStmtMap.find(varName);
-    if (keyItr == varToStmtMap.end()) return false;
+    auto key_var_to_stmt_map = varToStmtMap.find(var_name);
+	if (key_var_to_stmt_map == varToStmtMap.end()) return false;
 
-    for (auto& itr : keyItr->second) {
-        if (stmtInfo == itr) {
+    for (const auto& itr : key_var_to_stmt_map->second) {
+        if (stmt_info == itr) {
             return true;
         }
     }
@@ -47,17 +55,19 @@ bool UseStore::checkUsesList(vector<shared_ptr<StmtInfo>> stmtInfoList, VarRef v
     return false;
 }
 
-unordered_set<shared_ptr<StmtInfo>> UseStore::getUsesByVar(VarRef varName) {
-    auto keyItr = varToStmtMap.find(varName);
-    if (keyItr == varToStmtMap.end()) {
+unordered_set<shared_ptr<StmtInfo>> UseStore::getUsesByVar(VarRef var_name) {
+	if (var_name.length() == 0) throw invalid_argument("Variable name length cannot be 0.");
+	auto key_var_to_stmt_map = varToStmtMap.find(var_name);
+    if (key_var_to_stmt_map == varToStmtMap.end()) {
         return unordered_set<shared_ptr<StmtInfo>>{};
     } else {
-        return keyItr->second;
+        return key_var_to_stmt_map->second;
     }
 }
 
 unordered_set<VarRef> UseStore::getUsesByStmt(shared_ptr<StmtInfo> stmtInfo) {
-    StmtRef stmtNo = stmtInfo->reference;
+    if (stmtInfo == nullptr) throw invalid_argument("Provided statement info is a null pointer.");
+	StmtRef stmtNo = stmtInfo->reference;
     if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
 
     auto keyItr = stmtToVarMap.find(stmtNo);

@@ -3,8 +3,8 @@
 #include<stdio.h>
 #include <string>
 #include <vector>
-#include "memory"
-#include "iostream"
+#include <memory>
+#include <iostream>
 #include <unordered_map>
 #include <unordered_set>
 #include "../Common/TypeDefs.h"
@@ -26,7 +26,9 @@ public:
 
     void clear();
 private:
+	// Key is StmtRef, Value is set of VarRef(s). Used to query what variables are used at a particular stmt.
     unordered_map<StmtRef, unordered_set<VarRef>> stmtToVarMap;
+	// Key is VarRef, Value is set of StmtRef(s). Used to query the statements where this variable was used.
     unordered_map<VarRef, unordered_set<shared_ptr<StmtInfo>>> varToStmtMap;
 };
 

@@ -1,8 +1,4 @@
 #include "SP/Node/StatementListNode.h"
-#include <memory>
-#include <vector>
-#include <iostream>
-#include <type_traits>
 
 using namespace std;
 

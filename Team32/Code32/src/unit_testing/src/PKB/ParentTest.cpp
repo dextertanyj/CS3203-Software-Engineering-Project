@@ -22,8 +22,8 @@ StmtRef s0 = 0;
 StmtRef sMinusOne = -1;
 
 TEST_CASE("Parent Methods") {
+	PKB pkb = generateParentTestPKB();
 	SECTION("Set Parent") {
-		PKB pkb = generateParentTestPKB();
 		// Verify that normal setting works.
 		CHECK_NOTHROW(pkb.setParent(s1, s2));
 		CHECK_NOTHROW(pkb.setParent(s2, s3));
@@ -53,7 +53,6 @@ TEST_CASE("Parent Methods") {
 	}
 
 	SECTION("Get Parent") {
-		PKB pkb = generateParentTestPKB();
 		unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
 		pkb.setParent(s1, s2);
 		pkb.setParent(s2, s3);
@@ -85,7 +84,6 @@ TEST_CASE("Parent Methods") {
 	}
 
 	SECTION("Check Parent-child relationships") {
-		PKB pkb = generateParentTestPKB();
 		pkb.setParent(s1, s2);
 		pkb.setParent(s2, s3);
 

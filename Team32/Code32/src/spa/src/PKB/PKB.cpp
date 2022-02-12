@@ -128,11 +128,13 @@ bool PKB::checkProcUses(ProcRef procName, VarRef varName) {
 	return useStore.checkUsesList(procStmts, varName);
 }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getUsesByVar(VarRef varName) { return useStore.getUsesByVar(varName); }
+unordered_set<shared_ptr<StmtInfo>> PKB::getUsesByVar(VarRef var_name) {
+	return useStore.getUsesByVar(var_name);
+}
 
-unordered_set<ProcRef> PKB::getProcUsesByVar(VarRef varName) {
-	unordered_set<shared_ptr<StmtInfo>> stmtList = useStore.getUsesByVar(varName);
-	return procStore.getProcListByStmtList(stmtList);
+unordered_set<ProcRef> PKB::getProcUsesByVar(VarRef var_name) {
+	unordered_set<shared_ptr<StmtInfo>> stmt_list = useStore.getUsesByVar(var_name);
+	return procStore.getProcListByStmtList(stmt_list);
 }
 
 unordered_set<VarRef> PKB::getUsesByStmt(StmtRef stmt) {
@@ -140,8 +142,8 @@ unordered_set<VarRef> PKB::getUsesByStmt(StmtRef stmt) {
 	return useStore.getUsesByStmt(stmtInfo);
 }
 
-unordered_set<VarRef> PKB::getUsesByProc(ProcRef procName) {
-	vector<shared_ptr<StmtInfo>> procStmts = procStore.getStmtsByProc(procName);
+unordered_set<VarRef> PKB::getUsesByProc(ProcRef proc_name) {
+	vector<shared_ptr<StmtInfo>> procStmts = procStore.getStmtsByProc(proc_name);
 	return useStore.getUsesByStmtList(procStmts);
 }
 
@@ -177,9 +179,11 @@ bool PKB::checkProcModifies(ProcRef procName, VarRef varName) {
 	return modifyStore.checkModifiesList(procStmts, varName);
 }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef varName) { return modifyStore.getModifiesByVar(varName); }
+unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef varName) {
+	return modifyStore.getModifiesByVar(varName);
+}
 
-unordered_set<VarRef> PKB::getModifiesByStmt(StmtRef stmt) {
+VarRef PKB::getModifiesByStmt(StmtRef stmt) {
 	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
 	return modifyStore.getModifiesByStmt(stmtInfo);
 }
