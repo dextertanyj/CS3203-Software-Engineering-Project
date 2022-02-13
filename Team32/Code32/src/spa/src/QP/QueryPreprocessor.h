@@ -61,7 +61,7 @@ private:
 	ModifiesS* parseModifiesS(int& tokenIndex);
 	QueryEntRef parseQueryEntRef(int& tokenIndex, set<DesignEntity> acceptedDesignEntities);
 	QueryStmtRef parseQueryStmtRef(int& tokenIndex, set<DesignEntity> acceptedDesignEntities);
-	Common::ArithmeticProcessor::ArithmeticExpression parseExpression(int& tokenIndex);
+	Common::ArithmeticProcessor::ArithmeticExpression* parseExpression(int& tokenIndex);
 
 	// Helper methods
 	bool isIdentOrName(string token);

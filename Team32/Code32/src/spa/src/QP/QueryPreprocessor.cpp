@@ -157,13 +157,24 @@ void QueryPreprocessor::parsePattern(int& tokenIndex) {
 	set<DesignEntity> allowedDesignEntities = { DesignEntity::variable };
 	patternClause.entRef = parseQueryEntRef(tokenIndex, allowedDesignEntities);
 	matchTokenOrThrow(",", tokenIndex);
-	bool expectUnderscore = false;
 	if (this->queryTokens[tokenIndex] == "_") {
-		patternClause.underscore = "_";
-		expectUnderscore = true;
+		tokenIndex++;
+		if (this->queryTokens[tokenIndex] == "\"") {
+			patternClause.expressionType = ExpressionType::expressionUnderscore;
+			patternClause.expression = parseExpression(tokenIndex);
+		}
+		else {
+			patternClause.expressionType = ExpressionType::underscore;
+		}
 	}
-	patternClause.expression = parseExpression(tokenIndex);
-	if (expectUnderscore) { matchTokenOrThrow("_", tokenIndex); }
+	else if (this->queryTokens[tokenIndex] == "\"") {
+		patternClause.expressionType = ExpressionType::expression;
+		patternClause.expression = parseExpression(tokenIndex);
+	}
+	
+	if (patternClause.expressionType == ExpressionType::expressionUnderscore) { 
+		matchTokenOrThrow("_", tokenIndex); 
+	}
 	matchTokenOrThrow(")", tokenIndex);
 
 	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "and") {
@@ -437,23 +448,18 @@ QueryStmtRef QueryPreprocessor::parseQueryStmtRef(int& tokenIndex, set<DesignEnt
 	return stmtRef;
 }
 
-Common::ArithmeticProcessor::ArithmeticExpression QueryPreprocessor::parseExpression(int& tokenIndex) {
-
-
-	if (this->queryTokens[tokenIndex] == "\"") {
-		vector<string> expression;
-		while (true) {
-			expression.push_back(this->queryTokens[tokenIndex]);
-			tokenIndex++;
-			if ((this->queryTokens[tokenIndex] == "\"")) { break; }
-		}
-		QueryExpressionLexer& lexer = QueryExpressionLexer(expression);
-		return Common::ArithmeticProcessor::ArithmeticExpression::parse(lexer);
+Common::ArithmeticProcessor::ArithmeticExpression* QueryPreprocessor::parseExpression(int& tokenIndex) {
+	matchTokenOrThrow("\"", tokenIndex);
+	vector<string> expression;
+	while (this->queryTokens[tokenIndex] != "\"") {
+		expression.push_back(this->queryTokens[tokenIndex]);
+		tokenIndex++;
 	}
-	else {
-		throw QueryException("Unexpected query token expression" + this->queryTokens[tokenIndex]);
-	}
-
+	expression.push_back(";");
+	QueryExpressionLexer& lexer = QueryExpressionLexer(expression);
+	Common::ArithmeticProcessor::ArithmeticExpression arithmeticExpression = Common::ArithmeticProcessor::ArithmeticExpression::parse(lexer);
+	matchTokenOrThrow("\"", tokenIndex);
+	return &arithmeticExpression;
 }
 
 bool QueryPreprocessor::isIdentOrName(string token) {

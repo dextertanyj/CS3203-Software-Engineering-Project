@@ -14,8 +14,8 @@ using std::vector;
 typedef struct PatternClause {
 	Declaration synonym;
 	QueryEntRef entRef;
-	string underscore;
-	Common::ArithmeticProcessor::ArithmeticExpression expression;
+	ExpressionType expressionType;
+	Common::ArithmeticProcessor::ArithmeticExpression* expression;
 } PatternClause;
 
 typedef struct SuchThatClause {
