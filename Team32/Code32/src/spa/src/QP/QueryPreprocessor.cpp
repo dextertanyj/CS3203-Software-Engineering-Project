@@ -162,7 +162,8 @@ void QueryPreprocessor::parsePattern(int& tokenIndex) {
 		tokenIndex++;
 		if (this->queryTokens[tokenIndex] == "\"") {
 			patternClause.expressionType = ExpressionType::expressionUnderscore;
-			patternClause.expression = &parseExpression(tokenIndex);
+			Common::ExpressionProcessor::Expression expression = parseExpression(tokenIndex);
+			patternClause.expression = &expression;
 		}
 		else {
 			patternClause.expressionType = ExpressionType::underscore;
@@ -170,7 +171,8 @@ void QueryPreprocessor::parsePattern(int& tokenIndex) {
 	}
 	else if (this->queryTokens[tokenIndex] == "\"") {
 		patternClause.expressionType = ExpressionType::expression;
-		patternClause.expression = &parseExpression(tokenIndex);
+		Common::ExpressionProcessor::Expression expression = parseExpression(tokenIndex);
+		patternClause.expression = &expression;
 	}
 	
 	if (patternClause.expressionType == ExpressionType::expressionUnderscore) { 
