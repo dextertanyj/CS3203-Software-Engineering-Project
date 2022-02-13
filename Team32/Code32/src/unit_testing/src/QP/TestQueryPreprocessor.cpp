@@ -282,6 +282,9 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Parent(*)") {
 	// misspelt word
 	QueryPreprocessor qpp4;
 	REQUIRE_THROWS_AS(qpp4.parseQuery(univDeclarations + "Select s1 such that Parents(s1, s2)"), QueryException);
+	// disallowed statement reference
+	QueryPreprocessor qpp5;
+	REQUIRE_THROWS_AS(qpp5.parseQuery(univDeclarations + "Select s1 such that Parents(s1, \"x\")"), QueryException);
 }
 
 
@@ -431,6 +434,9 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Follows(*)") {
 	// misspelt word
 	QueryPreprocessor qpp4;
 	REQUIRE_THROWS_AS(qpp4.parseQuery(univDeclarations + "Select s1 such that Follow(s1, s2)"), QueryException);
+	// disallowed statement reference
+	QueryPreprocessor qpp5;
+	REQUIRE_THROWS_AS(qpp5.parseQuery(univDeclarations + "Select s1 such that Follows(s1, \"x\")"), QueryException);
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
