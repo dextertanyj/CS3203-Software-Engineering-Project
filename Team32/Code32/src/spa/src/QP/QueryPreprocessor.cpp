@@ -162,7 +162,7 @@ void QueryPreprocessor::parsePattern(int& tokenIndex) {
 		tokenIndex++;
 		if (this->queryTokens[tokenIndex] == "\"") {
 			patternClause.expressionType = ExpressionType::expressionUnderscore;
-			patternClause.expression = parseExpression(tokenIndex);
+			patternClause.expression = &parseExpression(tokenIndex);
 		}
 		else {
 			patternClause.expressionType = ExpressionType::underscore;
@@ -170,7 +170,7 @@ void QueryPreprocessor::parsePattern(int& tokenIndex) {
 	}
 	else if (this->queryTokens[tokenIndex] == "\"") {
 		patternClause.expressionType = ExpressionType::expression;
-		patternClause.expression = parseExpression(tokenIndex);
+		patternClause.expression = &parseExpression(tokenIndex);
 	}
 	
 	if (patternClause.expressionType == ExpressionType::expressionUnderscore) { 
@@ -449,7 +449,7 @@ QueryStmtRef QueryPreprocessor::parseQueryStmtRef(int& tokenIndex, set<DesignEnt
 	return stmtRef;
 }
 
-Common::ExpressionProcessor::Expression* QueryPreprocessor::parseExpression(int& tokenIndex) {
+Common::ExpressionProcessor::Expression QueryPreprocessor::parseExpression(int& tokenIndex) {
 	matchTokenOrThrow("\"", tokenIndex);
 	vector<string> expression;
 	while (this->queryTokens[tokenIndex] != "\"") {
@@ -457,10 +457,10 @@ Common::ExpressionProcessor::Expression* QueryPreprocessor::parseExpression(int&
 		tokenIndex++;
 	}
 	expression.push_back(";");
-	QueryExpressionLexer& lexer = QueryExpressionLexer(expression);
+	QueryExpressionLexer lexer = QueryExpressionLexer(expression);
 	Common::ExpressionProcessor::Expression arithmeticExpression = Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
 	matchTokenOrThrow("\"", tokenIndex);
-	return &arithmeticExpression;
+	return arithmeticExpression;
 }
 
 bool QueryPreprocessor::isIdentOrName(string token) {
