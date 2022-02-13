@@ -1,41 +1,42 @@
-#include<stdio.h>
+#ifndef INC_21S2_CP_SPA_TEAM_32_FOLLOWSTORE_H
+#define INC_21S2_CP_SPA_TEAM_32_FOLLOWSTORE_H
+
+#include <stdio.h>
+
 #include <iostream>
+#include <memory>
 #include <string>
-#include <vector>
 #include <unordered_map>
 #include <unordered_set>
-#include <memory>
+#include <vector>
+
 #include "../Common/TypeDefs.h"
 
 using namespace std;
 
-#ifndef INC_21S2_CP_SPA_TEAM_32_FOLLOWSTORE_H
-#define INC_21S2_CP_SPA_TEAM_32_FOLLOWSTORE_H
-
 struct FollowRelation {
-    shared_ptr<StmtInfo> preceding;
-    shared_ptr<StmtInfo> follower;
-    unordered_set<shared_ptr<StmtInfo>> followers;
-    unordered_set<shared_ptr<StmtInfo>> preceding_stmts;
+	shared_ptr<StmtInfo> node;
+	shared_ptr<StmtInfo> preceding;
+	shared_ptr<StmtInfo> follower;
+	unordered_set<shared_ptr<StmtInfo>> followers;
+	unordered_set<shared_ptr<StmtInfo>> preceding_stmts;
 };
 
 class FollowStore {
 public:
-    FollowStore();
-    void setFollows(shared_ptr<StmtInfo>, shared_ptr<StmtInfo>);
-    bool checkFollows(shared_ptr<StmtInfo>, shared_ptr<StmtInfo>);
-    shared_ptr<StmtInfo> getPreceding(shared_ptr<StmtInfo> stmtInfo);
-    shared_ptr<StmtInfo> getFollower(shared_ptr<StmtInfo>);
-    unordered_set<shared_ptr<StmtInfo>> getFollowerStar(shared_ptr<StmtInfo>);
-    unordered_set<shared_ptr<StmtInfo>> getPrecedingStar(shared_ptr<StmtInfo>);
-    void populateFollow(int numStatements);
-    void clear();
+	FollowStore();
+	void setFollows(shared_ptr<StmtInfo>, shared_ptr<StmtInfo>);
+	bool checkFollows(StmtRef, StmtRef);
+	shared_ptr<StmtInfo> getPreceding(StmtRef stmtInfo);
+	shared_ptr<StmtInfo> getFollower(StmtRef);
+	unordered_set<shared_ptr<StmtInfo>> getFollowerStar(StmtRef);
+	unordered_set<shared_ptr<StmtInfo>> getPrecedingStar(StmtRef);
+	void optimize();
+	void clear();
+
 private:
-    void populateFollowers(int);
-    void recursivelyAddFollowers(StmtRef, unordered_set<shared_ptr<StmtInfo>>&);
-    void populatePrecedingStmts(int);
-    void recursivelyAddPreceding(StmtRef, unordered_set<shared_ptr<StmtInfo>>&);
-    unordered_map<StmtRef, FollowRelation> followMap;
+	unordered_set<shared_ptr<StmtInfo>> populateTransitive(FollowRelation& current, unordered_set<shared_ptr<StmtInfo>> previous);
+	unordered_map<StmtRef, FollowRelation> followMap;
 };
 
 #endif
