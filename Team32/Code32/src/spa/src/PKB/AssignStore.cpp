@@ -104,4 +104,8 @@ void AssignStore::clear() {
     assignMap.clear();
 }
 
+unordered_map<StmtRef, AssignRelation> AssignStore::getAssignMap() {
+    return assignMap;
+}
+
 

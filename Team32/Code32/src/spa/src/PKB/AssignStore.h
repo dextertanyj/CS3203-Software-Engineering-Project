@@ -36,9 +36,10 @@ public:
     StmtRefList getStmtsWithPattern(const VarRef &variableLHS, const Common::ArithmeticProcessor::ArithmeticExpression &opTree, bool isRHSExactMatchNeeded);
     StmtRefList getStmtsWithPatternLHS(const VarRef &varName);
     vector<pair<StmtRef, VarRef>> getStmtsWithPatternRHS(const Common::ArithmeticProcessor::ArithmeticExpression &opTree, bool isRHSExactMatchNeeded);
+    unordered_map<StmtRef, AssignRelation> getAssignMap();
     void clear();
 private:
-    bool compareOpTreeAndVar(AssignRelation assignRelation, const VarRef& variableLHS, const Common::ArithmeticProcessor::ArithmeticExpression& opTree, bool isRHSExactMatchNeeded);
+    static bool compareOpTreeAndVar(AssignRelation assignRelation, const VarRef& variableLHS, const Common::ArithmeticProcessor::ArithmeticExpression& opTree, bool isRHSExactMatchNeeded);
     unordered_map<StmtRef, AssignRelation> assignMap;
 };
 
