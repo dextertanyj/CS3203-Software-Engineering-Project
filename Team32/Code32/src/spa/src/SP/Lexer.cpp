@@ -45,14 +45,14 @@ bool SP::Lexer::nextIf(const string &token) {
 	if (this->iterator->str() == token) {
 		return nextToken();
 	}
-	throw TokenizationException("");
+	throw TokenizationException("Unexpected token encountered");
 }
 
 bool SP::Lexer::nextIf(initializer_list<string> tokens) {
 	bool last;
 	for (const string &token : tokens) {
 		if (this->iterator->str() != token) {
-			throw TokenizationException("");
+			throw TokenizationException("Unexpected token encountered");
 		}
 		last = nextToken();
 	}

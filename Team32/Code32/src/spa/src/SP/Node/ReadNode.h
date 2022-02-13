@@ -17,7 +17,7 @@ public:
 	static unique_ptr<ReadNode> parseReadStatement(Lexer& lex, int& statement_count);
 
 private:
-	unique_ptr<VariableNode> variable;
+	shared_ptr<VariableNode> variable;
 };
 
 #endif  // SPA_READNODE_H

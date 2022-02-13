@@ -49,7 +49,7 @@ bool SP::Node::IfNode::equals(shared_ptr<StatementNode> object) {
     if (other == nullptr) {
         return false;
     }
-    return this->getStmtRef() == other->getStmtRef() && this->condExpr->equals(move(other->condExpr))
-        && this->ifStmtLst->equals(move(other->ifStmtLst))
-        && this->elseStmtLst->equals(move(other->elseStmtLst));
+    return this->getStmtRef() == other->getStmtRef() && this->condExpr->equals(other->condExpr)
+        && this->ifStmtLst->equals(other->ifStmtLst)
+        && this->elseStmtLst->equals(other->elseStmtLst);
 }

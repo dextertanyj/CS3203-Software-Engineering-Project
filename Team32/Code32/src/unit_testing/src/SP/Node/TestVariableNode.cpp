@@ -48,7 +48,7 @@ TEST_CASE("SP::Node::VariableNode::parseVariable Parse Valid Name Token") {
 	REQUIRE(node->equals(move(other)));
 }
 
-TEST_CASE("SP::Node::VariableNode::parseVariable Parse invalid Name Token with digits first") {
+TEST_CASE("SP::Node::VariableNode::parseVariable Parse Invalid Name Token") {
 	SP::Lexer lex;
 	lex.initialize("123test");
 	REQUIRE_THROWS_AS(VariableNode::parseVariable(lex), SP::ParseException);
@@ -69,8 +69,9 @@ TEST_CASE("SP::Node::VariableNode::parseVariable Parse Valid Name String") {
 	REQUIRE(node->equals(move(other)));
 }
 
-TEST_CASE("SP::Node::VariableNode::parseVariable Parse invalid Name String with digits first") {
+TEST_CASE("SP::Node::VariableNode::parseVariable Parse Invalid Name String") {
 	REQUIRE_THROWS_AS(VariableNode::parseVariable("123test"), SP::ParseException);
+    REQUIRE_THROWS_AS(VariableNode::parseVariable("test_123"), SP::ParseException);
 }
 
 TEST_CASE("VariableNode::extract Test") {

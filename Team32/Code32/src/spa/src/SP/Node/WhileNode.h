@@ -20,8 +20,8 @@ public:
 	bool equals(shared_ptr<StatementNode> object) override;
 
 private:
-	unique_ptr<ExpressionNode> condExpr;
-	unique_ptr<StatementListNode> stmtLst;
+	shared_ptr<ExpressionNode> condExpr;
+	shared_ptr<StatementListNode> stmtLst;
 };
 
 #endif  // SPA_WHILENODE_H

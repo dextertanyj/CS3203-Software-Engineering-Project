@@ -20,8 +20,8 @@ public:
 	bool equals(shared_ptr<StatementNode> object) override;
 
 private:
-	unique_ptr<VariableNode> assignee;
-	unique_ptr<ExpressionNode> expression;
+	shared_ptr<VariableNode> assignee;
+	shared_ptr<ExpressionNode> expression;
 };
 
 #endif  // SPA_ASSIGNMENTNODE_H
