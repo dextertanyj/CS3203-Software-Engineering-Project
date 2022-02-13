@@ -95,7 +95,7 @@ unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef varName) { retu
 unordered_set<VarRef> PKB::getModifiesByStmt(StmtRef stmt) { return modifyStore.getModifiesByStmt(stmt); }
 
 bool PKB::isPattern(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
-	return assignStore.isPattern(varName, e, isRHSExactMatchNeeded);
+	return assignStore.patternExists(varName, e, isRHSExactMatchNeeded);
 }
 
 StmtInfoList PKB::getPatternMatch(StmtInfoList stmtInfoList, VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e,
@@ -110,7 +110,7 @@ StmtInfoList PKB::getPatternMatch(StmtInfoList stmtInfoList, VarRef varName, Com
 
 StmtInfoList PKB::getAllPatternMatch(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
 	StmtInfoList stmtInfoList;
-	StmtRefList stmtList = assignStore.getAllPatternMatch(varName, e, isRHSExactMatchNeeded);
+	StmtRefList stmtList = assignStore.getStmtsWithPattern(varName, e, isRHSExactMatchNeeded);
 	for (auto stmtNo : stmtList) {
 		stmtInfoList.push_back(stmtInfoMap.at(stmtNo));
 	}
@@ -119,7 +119,7 @@ StmtInfoList PKB::getAllPatternMatch(VarRef varName, Common::ArithmeticProcessor
 
 StmtInfoList PKB::getPatternMatchLHS(VarRef varName) {
 	StmtInfoList stmtInfoList;
-	StmtRefList stmtList = assignStore.getPatternMatchLHS(varName);
+	StmtRefList stmtList = assignStore.getStmtsWithPatternLHS(varName);
 	for (auto stmtNo : stmtList) {
 		stmtInfoList.push_back(stmtInfoMap.at(stmtNo));
 	}
@@ -129,7 +129,7 @@ StmtInfoList PKB::getPatternMatchLHS(VarRef varName) {
 vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getPatternMatchRHS(Common::ArithmeticProcessor::ArithmeticExpression e,
                                                                    bool isRHSExactMatchNeeded) {
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> stmtInfoVarList;
-	vector<pair<StmtRef, VarRef>> stmtVarList = assignStore.getPatternMatchRHS(e, isRHSExactMatchNeeded);
+	vector<pair<StmtRef, VarRef>> stmtVarList = assignStore.getStmtsWithPatternRHS(e, isRHSExactMatchNeeded);
 	for (auto& stmtVarPair : stmtVarList) {
 		shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmtVarPair.first);
 		pair<shared_ptr<StmtInfo>, VarRef> stmtInfoVarPair = make_pair(stmtInfo, stmtVarPair.second);
