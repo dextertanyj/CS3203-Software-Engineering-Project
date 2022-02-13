@@ -4,85 +4,110 @@ using namespace std;
 
 ModifyStore::ModifyStore() {}
 
-void ModifyStore::setModify(shared_ptr<StmtInfo> stmt_info, VarRef var_name) {
-    StmtRef stmt_num = stmt_info->reference;
-	if (stmt_num <= 0) throw invalid_argument("Statement number must be a positive integer.");
-	if (var_name.length() == 0) throw invalid_argument("Variable name must have length more than 0.");
+void ModifyStore::setModify(shared_ptr<StmtInfo> statement, VarRef variable) {
+	StmtRef index = statement->reference;
+	if (variable.length() == 0) {
+		throw invalid_argument("Variable name must have length more than 0.");
+	}
 
-    auto key_var_to_stmt_map = varToStmtMap.find(var_name);
-	auto key_stmt_to_var_map = stmtToVarMap.find(stmt_num);
+	auto variable_iter = varToStmtMap.find(variable);
+	auto statement_iter = stmtToVarMap.find(index);
 
-	if (key_stmt_to_var_map == stmtToVarMap.end()) {
-		stmtToVarMap.insert(make_pair(stmt_num, var_name));
+	if (statement_iter == stmtToVarMap.end()) {
+		stmtToVarMap.insert({index, {variable}});
 	} else {
-		// One-to-one stmt-modify relation already stored. Abort.
-		throw invalid_argument("Modifies relationship already stored for this statement.");
+		statement_iter->second.insert(variable);
 	}
 
-    if (key_var_to_stmt_map == varToStmtMap.end()) {
-        varToStmtMap.insert(make_pair(var_name, unordered_set<shared_ptr<StmtInfo>>{stmt_info}));
-    } else {
-		key_var_to_stmt_map->second.insert(stmt_info);
-    }
-}
-
-bool ModifyStore::checkModifies(shared_ptr<StmtInfo> stmt_info, VarRef var_name) {
-    StmtRef stmt_num = stmt_info->reference;
-    if (stmt_num <= 0) throw invalid_argument("Statement number must be a positive integer.");
-	if (var_name.length() == 0) throw invalid_argument("Variable name must have length more than 0.");
-
-    auto key_var_to_stmt_map = varToStmtMap.find(var_name);
-    if (key_var_to_stmt_map == varToStmtMap.end()) return false;
-
-    for (auto& itr : key_var_to_stmt_map->second) {
-        if (stmt_info == itr) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool ModifyStore::checkModifiesList(vector<shared_ptr<StmtInfo>> stmtInfoList, VarRef varName) {
-    for (auto& itr : stmtInfoList) {
-        if (itr->reference <= 0) throw invalid_argument("Statement number must be a positive integer.");
-        if (checkModifies(itr, varName)) return true;
-    }
-    return false;
-}
-
-// Should return only one modifies
-VarRef ModifyStore::getModifiesByStmt(shared_ptr<StmtInfo> stmt_info) {
-    StmtRef stmt_num = stmt_info->reference;
-    if (stmt_num <= 0) throw invalid_argument("Statement number must be a positive integer.");
-
-    auto key_stmt_to_var_map = stmtToVarMap.find(stmt_num);
-    if (key_stmt_to_var_map == stmtToVarMap.end()) {
-		throw invalid_argument("This modifies relation is not stored - did you do setModify()?");
+	if (variable_iter == varToStmtMap.end()) {
+		varToStmtMap.insert({variable, {statement}});
+	} else {
+		variable_iter->second.insert(statement);
 	}
-	return key_stmt_to_var_map->second;
 }
 
-unordered_set<shared_ptr<StmtInfo>> ModifyStore::getModifiesByVar(VarRef varName) {
-    auto keyItr = varToStmtMap.find(varName);
-    if (keyItr == varToStmtMap.end()) {
-        return unordered_set<shared_ptr<StmtInfo>>{};
-    } else {
-        return keyItr->second;
-    }
+void ModifyStore::setModify(shared_ptr<StmtInfo> statement, unordered_set<VarRef> variables) {
+	StmtRef index = statement->reference;
+	for (const VarRef& variable : variables) {
+		if (variable.length() == 0) {
+			throw invalid_argument("Variable name must have length more than 0.");
+		}
+	}
+	auto statement_iter = stmtToVarMap.find(index);
+	if (statement_iter == stmtToVarMap.end()) {
+		stmtToVarMap.insert({index, variables});
+	} else {
+		statement_iter->second.insert(variables.begin(), variables.end());
+	}
+
+	for (const VarRef& variable : variables) {
+		auto variable_iter = varToStmtMap.find(variable);
+		if (variable_iter == varToStmtMap.end()) {
+			varToStmtMap.insert({variable, {statement}});
+		} else {
+			variable_iter->second.insert(statement);
+		}
+	}
 }
 
-unordered_set<VarRef> ModifyStore::getModifiesByStmtList(vector<shared_ptr<StmtInfo>> stmt_info_list) {
-    unordered_set<VarRef> var_set;
-    for (auto& itr : stmt_info_list) {
-        if (itr->reference <= 0) throw invalid_argument("Statement number must be a positive integer.");
-        VarRef stmt_var = getModifiesByStmt(itr);
-		var_set.insert(stmt_var);
-    }
-    return var_set;
+bool ModifyStore::checkModifies(StmtRef index, VarRef variable) {
+	if (index <= 0) {
+		throw invalid_argument("Statement number must be a positive integer.");
+	}
+	if (variable.length() == 0) {
+		throw invalid_argument("Variable name must have length more than 0.");
+	}
+
+	auto iter = varToStmtMap.find(variable);
+	if (iter == varToStmtMap.end()) {
+		return false;
+	}
+
+	return any_of(iter->second.begin(), iter->second.end(),
+	              [index](const shared_ptr<StmtInfo>& statement) { return statement->reference == index; });
+}
+
+unordered_set<VarRef> ModifyStore::getModifiesByStmt(StmtRef index) {
+	if (index <= 0) {
+		throw invalid_argument("Statement number must be a positive integer.");
+	}
+
+	auto iter = stmtToVarMap.find(index);
+	if (iter == stmtToVarMap.end()) {
+		return {};
+	}
+	return iter->second;
+}
+
+unordered_set<shared_ptr<StmtInfo>> ModifyStore::getModifiesByVar(VarRef variable) {
+	if (variable.length() == 0) {
+		throw invalid_argument("Variable name must have length more than 0.");
+	}
+
+	auto iter = varToStmtMap.find(variable);
+	if (iter == varToStmtMap.end()) {
+		return {};
+	}
+	return iter->second;
+}
+
+void ModifyStore::optimize(unordered_map<StmtRef, shared_ptr<StmtInfo>> statement_store, ParentStore& parent_store) {
+	for (auto statement : statement_store) {
+		if (statement.second->type == StmtType::IfStmt || statement.second->type == StmtType::WhileStmt) {
+			auto children = parent_store.getChildStar(statement.second->reference);
+			unordered_set<VarRef> variables;
+			for (auto child : children) {
+				auto iter = stmtToVarMap.find(child->reference);
+				if (iter != stmtToVarMap.end()) {
+					variables.insert(iter->second.begin(), iter->second.end());
+				}
+			}
+			this->setModify(statement.second, variables);
+		}
+	}
 }
 
 void ModifyStore::clear() {
-    varToStmtMap.clear();
-    stmtToVarMap.clear();
+	varToStmtMap.clear();
+	stmtToVarMap.clear();
 }
-

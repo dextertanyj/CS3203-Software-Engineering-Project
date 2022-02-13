@@ -36,10 +36,6 @@ TEST_CASE("Modifies Methods") {
 		CHECK_NOTHROW(pkb.setModifies(s2, y));
 		CHECK_NOTHROW(pkb.setModifies(s3, z));
 
-		// A statement cannot modify more than 1 statement.
-		CHECK_THROWS(pkb.setModifies(s1, y));
-		CHECK_THROWS(pkb.setModifies(s2, z));
-
 		// 1 var can be modified in multiple statements.
 		pkb = generateModifyTestPKB();
 		pkb.setModifies(s1, x);
@@ -96,10 +92,10 @@ TEST_CASE("Modifies Methods") {
 		pkb.setModifies(s3, y);
 		pkb.setModifies(s_int_max, z);
 
-		CHECK(pkb.getModifiesByStmt(s1) == x);
-		CHECK(pkb.getModifiesByStmt(s2) == x);
-		CHECK(pkb.getModifiesByStmt(s3) == y);
-		CHECK(pkb.getModifiesByStmt(s_int_max) == z);
+		CHECK(pkb.getModifiesByStmt(s1) == unordered_set<VarRef>({x}));
+		CHECK(pkb.getModifiesByStmt(s2) == unordered_set<VarRef>({x}));
+		CHECK(pkb.getModifiesByStmt(s3) == unordered_set<VarRef>({y}));
+		CHECK(pkb.getModifiesByStmt(s_int_max) == unordered_set<VarRef>({z}));
 
 		// Invalid arguments
 		CHECK_THROWS(pkb.getModifiesByStmt(s_minus_one));
@@ -107,7 +103,7 @@ TEST_CASE("Modifies Methods") {
 
 		// Statement not stored into store.
 		pkb = generateModifyTestPKB();
-		CHECK_THROWS(pkb.getModifiesByStmt(s1));
+		CHECK(pkb.getModifiesByStmt(s1).empty());
 	}
 
 	SECTION("getModifiesByStmtList") {

@@ -18,31 +18,18 @@ void PKB::setParent(StmtRef stmtNo1, StmtRef stmtNo2) {
 	parentStore.setParent(stmtInfo1, stmtInfo2);
 }
 
-shared_ptr<StmtInfo> PKB::getParent(StmtRef stmt) {
-	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-	return parentStore.getParent(stmtInfo);
-}
+shared_ptr<StmtInfo> PKB::getParent(StmtRef stmt) { return parentStore.getParent(stmt); }
 
 unordered_set<shared_ptr<StmtInfo>> PKB::getChildren(StmtRef stmt) {
 	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-	return parentStore.getChildren(stmtInfo);
+	return parentStore.getChildren(stmt);
 }
 
-bool PKB::checkParents(StmtRef stmtNo1, StmtRef stmtNo2) {
-	shared_ptr<StmtInfo> stmtInfo1 = stmtInfoMap.at(stmtNo1);
-	shared_ptr<StmtInfo> stmtInfo2 = stmtInfoMap.at(stmtNo2);
-	return parentStore.isParentChild(stmtInfo1, stmtInfo2);
-}
+bool PKB::checkParents(StmtRef stmtNo1, StmtRef stmtNo2) { return parentStore.isParentChild(stmtNo1, stmtNo2); }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getParentStar(StmtRef stmt) {
-    shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-    return parentStore.getParentStar(stmtInfo);
-}
+unordered_set<shared_ptr<StmtInfo>> PKB::getParentStar(StmtRef stmt) { return parentStore.getParentStar(stmt); }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getChildStar(StmtRef stmt) {
-    shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-    return parentStore.getChildStar(stmtInfo);
-}
+unordered_set<shared_ptr<StmtInfo>> PKB::getChildStar(StmtRef stmt) { return parentStore.getChildStar(stmt); }
 
 void PKB::setFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
 	shared_ptr<StmtInfo> stmtInfo1 = stmtInfoMap.at(stmtNo1);
@@ -50,47 +37,18 @@ void PKB::setFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
 	followStore.setFollows(stmtInfo1, stmtInfo2);
 }
 
-bool PKB::checkFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
-	shared_ptr<StmtInfo> stmtInfo1 = stmtInfoMap.at(stmtNo1);
-	shared_ptr<StmtInfo> stmtInfo2 = stmtInfoMap.at(stmtNo2);
-	return followStore.checkFollows(stmtInfo1, stmtInfo2);
-}
+bool PKB::checkFollows(StmtRef stmtNo1, StmtRef stmtNo2) { return followStore.checkFollows(stmtNo1, stmtNo2); }
 
-shared_ptr<StmtInfo> PKB::getFollower(StmtRef stmt) {
-	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-	return followStore.getFollower(stmtInfo);
-}
+shared_ptr<StmtInfo> PKB::getFollower(StmtRef stmt) { return followStore.getFollower(stmt); }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getFollowerStar(StmtRef stmt) {
-    shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-    return followStore.getFollowerStar(stmtInfo);
-}
+unordered_set<shared_ptr<StmtInfo>> PKB::getFollowerStar(StmtRef stmt) { return followStore.getFollowerStar(stmt); }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getPrecedingStar(StmtRef stmt) {
-    shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-    return followStore.getPrecedingStar(stmtInfo);
-}
+unordered_set<shared_ptr<StmtInfo>> PKB::getPrecedingStar(StmtRef stmt) { return followStore.getPrecedingStar(stmt); }
 
-shared_ptr<StmtInfo> PKB::getPreceding(StmtRef stmt) {
-	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-	return followStore.getPreceding(stmtInfo);
-}
+shared_ptr<StmtInfo> PKB::getPreceding(StmtRef stmt) { return followStore.getPreceding(stmt); }
 
 void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree) {
 	return assignStore.setAssign(stmtNo, variableLHS, opTree);
-}
-
-void PKB::setProc(ProcRef procName, StmtRefList idxList) {
-	StmtInfoList stmtList;
-	for (auto stmtRef : idxList) {
-		stmtList.push_back(stmtInfoMap.at(stmtRef));
-	}
-	procStore.setProc(procName, stmtList);
-}
-
-void PKB::setCall(StmtRef stmt, ProcRef procName) {
-	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-	procStore.setCall(stmtInfo, procName);
 }
 
 // This method will store information about a statement into PKB's statement map.
@@ -123,97 +81,18 @@ bool PKB::checkUses(StmtRef stmt, VarRef varName) {
 	return useStore.checkUses(stmtInfo, varName);
 }
 
-bool PKB::checkProcUses(ProcRef procName, VarRef varName) {
-	vector<shared_ptr<StmtInfo>> procStmts = procStore.getStmtsByProc(procName);
-	return useStore.checkUsesList(procStmts, varName);
-}
-
-unordered_set<shared_ptr<StmtInfo>> PKB::getUsesByVar(VarRef var_name) {
-	return useStore.getUsesByVar(var_name);
-}
-
-unordered_set<ProcRef> PKB::getProcUsesByVar(VarRef var_name) {
-	unordered_set<shared_ptr<StmtInfo>> stmt_list = useStore.getUsesByVar(var_name);
-	return procStore.getProcListByStmtList(stmt_list);
-}
+unordered_set<shared_ptr<StmtInfo>> PKB::getUsesByVar(VarRef var_name) { return useStore.getUsesByVar(var_name); }
 
 unordered_set<VarRef> PKB::getUsesByStmt(StmtRef stmt) {
 	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
 	return useStore.getUsesByStmt(stmtInfo);
 }
 
-unordered_set<VarRef> PKB::getUsesByProc(ProcRef proc_name) {
-	vector<shared_ptr<StmtInfo>> procStmts = procStore.getStmtsByProc(proc_name);
-	return useStore.getUsesByStmtList(procStmts);
-}
+bool PKB::checkModifies(StmtRef stmt, VarRef varName) { return modifyStore.checkModifies(stmt, varName); }
 
-unordered_set<VarRef> PKB::getUsesByIf(StmtRef stmt) {
-    shared_ptr<StmtInfo> ifInfo = stmtInfoMap.at(stmt);
-    if (ifInfo->type != StmtType::IfStmt) {
-        throw invalid_argument("Statement is not an if statement!");
-    }
-    unordered_set<shared_ptr<StmtInfo>> stmtList = ifStore.getStmtsFromIf(ifInfo);
-    // Should change parameter type of getUsesByStmtList to unordered_set instead of vector
-    unordered_set<VarRef> varSet = useStore.getUsesByStmtList(vector<shared_ptr<StmtInfo>>(stmtList.begin(), stmtList.end()));
-    return varSet;
-}
+unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef varName) { return modifyStore.getModifiesByVar(varName); }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getIfUsesByVar(VarRef varName) {
-    unordered_set<shared_ptr<StmtInfo>> stmtList = useStore.getUsesByVar(varName);
-    unordered_set<shared_ptr<StmtInfo>> ifStmts = ifStore.getIfsFromStmts(stmtList);
-    return ifStmts;
-}
-
-bool PKB::checkModifies(StmtRef stmt, VarRef varName) {
-	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-	return modifyStore.checkModifies(stmtInfo, varName);
-}
-
-unordered_set<VarRef> PKB::getModifiesByProc(ProcRef procName) {
-	vector<shared_ptr<StmtInfo>> procStmts = procStore.getStmtsByProc(procName);
-	return modifyStore.getModifiesByStmtList(procStmts);
-}
-
-bool PKB::checkProcModifies(ProcRef procName, VarRef varName) {
-	vector<shared_ptr<StmtInfo>> procStmts = procStore.getStmtsByProc(procName);
-	return modifyStore.checkModifiesList(procStmts, varName);
-}
-
-unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef varName) {
-	return modifyStore.getModifiesByVar(varName);
-}
-
-VarRef PKB::getModifiesByStmt(StmtRef stmt) {
-	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-	return modifyStore.getModifiesByStmt(stmtInfo);
-}
-
-unordered_set<ProcRef> PKB::getProcModifiesByVar(VarRef varName) {
-	unordered_set<shared_ptr<StmtInfo>> stmtList = modifyStore.getModifiesByVar(varName);
-	return procStore.getProcListByStmtList(stmtList);
-}
-
-unordered_set<VarRef> PKB::getModifiesByIf(StmtRef stmt) {
-    shared_ptr<StmtInfo> modifyInfo = stmtInfoMap.at(stmt);
-    if (modifyInfo->type != StmtType::IfStmt) {
-        throw invalid_argument("Statement is not an if statement!");
-    }
-    unordered_set<shared_ptr<StmtInfo>> stmtList = ifStore.getStmtsFromIf(modifyInfo);
-    // Should change parameter type of getModifiesByStmtList to unordered_set instead of vector
-    unordered_set<VarRef> varSet = modifyStore.getModifiesByStmtList(vector<shared_ptr<StmtInfo>>(stmtList.begin(), stmtList.end()));
-    return varSet;
-}
-
-unordered_set<shared_ptr<StmtInfo>> PKB::getIfModifiesByVar(VarRef varName) {
-    unordered_set<shared_ptr<StmtInfo>> stmtList = modifyStore.getModifiesByVar(varName);
-    unordered_set<shared_ptr<StmtInfo>> ifStmts = ifStore.getIfsFromStmts(stmtList);
-    return ifStmts;
-}
-
-ProcRef PKB::getProcFromCall(StmtRef stmt) {
-	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-	return procStore.getProcByCall(stmtInfo);
-}
+unordered_set<VarRef> PKB::getModifiesByStmt(StmtRef stmt) { return modifyStore.getModifiesByStmt(stmt); }
 
 bool PKB::isPattern(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
 	return assignStore.isPattern(varName, e, isRHSExactMatchNeeded);
@@ -260,19 +139,9 @@ vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getPatternMatchRHS(Common::Arith
 }
 
 void PKB::populateComplexRelations() {
-    setNumStatements();
-    parentStore.populateParent(numStatements);
-    followStore.populateFollow(numStatements);
-    populateIfRelations();
-}
-
-void PKB::populateIfRelations() {
-    for (auto& stmt : stmtInfoMap) {
-        if (stmt.second->type == StmtType::IfStmt) {
-            unordered_set<shared_ptr<StmtInfo>> childStmts = parentStore.getChildStar(stmt.second);
-            ifStore.populateIfStore(stmt.second, childStmts);
-        }
-    }
+	parentStore.optimize();
+	followStore.optimize();
+	modifyStore.optimize(stmtInfoMap, parentStore);
 }
 
 void PKB::clear() {
@@ -281,15 +150,6 @@ void PKB::clear() {
 	assignStore.clear();
 	useStore.clear();
 	modifyStore.clear();
-	procStore.clear();
-    ifStore.clear();
 	stmtInfoMap.clear();
 }
-
-void PKB::setNumStatements() {
-	this->numStatements = stmtInfoMap.size();
-}
-
-int PKB::getNumStatements() { return this->numStatements; }
-
 unordered_map<StmtRef, shared_ptr<StmtInfo>> PKB::getStmtInfoMap() { return this->stmtInfoMap; }
