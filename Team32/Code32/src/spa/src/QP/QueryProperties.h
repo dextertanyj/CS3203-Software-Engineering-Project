@@ -4,7 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "Common/ArithmeticProcessor/ArithmeticExpression.h"
+#include "Common/ExpressionProcessor/Expression.h"
+#include "QP/QueryExpressionLexer.h"
 #include "QP/QueryTypeDefs.h"
 #include "QP/Relationship/Relation.h"
 
@@ -15,7 +16,7 @@ typedef struct PatternClause {
 	Declaration synonym;
 	QueryEntRef entRef;
 	ExpressionType expressionType;
-	Common::ArithmeticProcessor::ArithmeticExpression* expression;
+	Common::ExpressionProcessor::Expression* expression;
 } PatternClause;
 
 typedef struct SuchThatClause {

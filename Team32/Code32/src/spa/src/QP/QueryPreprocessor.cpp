@@ -2,6 +2,7 @@
 
 #include <regex>
 
+#include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "QP/QueryExpressionLexer.h"
 #include "QP/QueryTypeDefs.h"
 
@@ -448,7 +449,7 @@ QueryStmtRef QueryPreprocessor::parseQueryStmtRef(int& tokenIndex, set<DesignEnt
 	return stmtRef;
 }
 
-Common::ArithmeticProcessor::ArithmeticExpression* QueryPreprocessor::parseExpression(int& tokenIndex) {
+Common::ExpressionProcessor::Expression* QueryPreprocessor::parseExpression(int& tokenIndex) {
 	matchTokenOrThrow("\"", tokenIndex);
 	vector<string> expression;
 	while (this->queryTokens[tokenIndex] != "\"") {
@@ -457,7 +458,7 @@ Common::ArithmeticProcessor::ArithmeticExpression* QueryPreprocessor::parseExpre
 	}
 	expression.push_back(";");
 	QueryExpressionLexer& lexer = QueryExpressionLexer(expression);
-	Common::ArithmeticProcessor::ArithmeticExpression arithmeticExpression = Common::ArithmeticProcessor::ArithmeticExpression::parse(lexer);
+	Common::ExpressionProcessor::Expression arithmeticExpression = Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
 	matchTokenOrThrow("\"", tokenIndex);
 	return &arithmeticExpression;
 }

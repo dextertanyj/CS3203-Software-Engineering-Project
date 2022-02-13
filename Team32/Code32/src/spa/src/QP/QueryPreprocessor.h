@@ -6,8 +6,9 @@
 #include <string>
 #include <vector>
 
-#include "Common/ArithmeticProcessor/ArithmeticExpression.h"
+#include "Common/ExpressionProcessor/Expression.h"
 #include "QueryEvaluator.h"
+#include "QueryExpressionLexer.h"
 #include "QueryProperties.h"
 #include "QueryResult.h"
 #include "Relationship/Follows.h"
@@ -61,7 +62,7 @@ private:
 	ModifiesS* parseModifiesS(int& tokenIndex);
 	QueryEntRef parseQueryEntRef(int& tokenIndex, set<DesignEntity> acceptedDesignEntities);
 	QueryStmtRef parseQueryStmtRef(int& tokenIndex, set<DesignEntity> acceptedDesignEntities);
-	Common::ArithmeticProcessor::ArithmeticExpression* parseExpression(int& tokenIndex);
+	Common::ExpressionProcessor::Expression* parseExpression(int& tokenIndex);
 
 	// Helper methods
 	bool isIdentOrName(string token);
