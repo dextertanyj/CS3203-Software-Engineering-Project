@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "QP/QueryProperties.h"
 
@@ -19,6 +20,7 @@ public:
 	explicit QueryGraph(const DeclarationList& declarations);
 	void setEdges(const SuchThatClauseList& suchThatClauseList, const PatternClauseList& patternClauseList);
 	unordered_map<string, Node> getNodes();
+	unordered_set<string> getNonTrivialSynonyms(string selectedSynonym);
 
 private:
 	unordered_map<string, Node> nodes;

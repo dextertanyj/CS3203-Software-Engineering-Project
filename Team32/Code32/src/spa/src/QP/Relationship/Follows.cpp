@@ -17,8 +17,8 @@ bool Follows::getIsStar() {
 	return isStar;
 }
 
-QueryResult Follows::execute(PKB& pkb, QueryResult& result) {
-	return QueryResult();
+QueryResult Follows::execute(PKB& pkb, bool isTrivial) {
+	return isTrivial ? executeTrivial(pkb) : executeNonTrivial(pkb);
 }
 
 vector<string> Follows::getDeclarationSymbols() {
@@ -32,14 +32,10 @@ vector<string> Follows::getDeclarationSymbols() {
 	return declarationSymbols;
 }
 
-bool Follows::isTrivialCase() {
-	return false;
-}
-
 QueryResult Follows::executeTrivial(PKB& pkb) {
 	return QueryResult();
 }
 
-QueryResult Follows::executeNonTrivial(PKB& pkb, QueryResult& result) {
+QueryResult Follows::executeNonTrivial(PKB& pkb) {
 	return QueryResult();
 }

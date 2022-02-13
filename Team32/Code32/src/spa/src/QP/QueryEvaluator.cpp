@@ -9,8 +9,9 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& queryProperties) {
 	}
 	
 	QueryGraph graph = buildGraph(queryProperties);
+	unordered_set<string> nonTrivialSynonyms = graph.getNonTrivialSynonyms(queryProperties.getSelect().symbol);
 
-	return QueryResult();
+	return evaluateClauses(queryProperties, nonTrivialSynonyms);
 }
 
 QueryResult QueryEvaluator::executeNoClauses(Declaration select) {
@@ -40,15 +41,27 @@ QueryGraph QueryEvaluator::buildGraph(QueryProperties& queryProperties) {
 	return graph;
 }
 
-QueryResult QueryEvaluator::evaluateSuchThatClauses(SuchThatClauseList& suchThatClauseList) {
-	QueryResult result = QueryResult();
+QueryResult QueryEvaluator::evaluateClauses(QueryProperties& queryProperties,
+                                            unordered_set<string> nonTrivialSynonyms) {
+	vector<QueryResult> resultList;
 
-	for (SuchThatClause suchThatClause : suchThatClauseList) {
-		result = suchThatClause.relation->execute(pkb, result);
+	for (SuchThatClause suchThatClause :queryProperties.getSuchThatClauseList()) {
+		bool isTrivial = true;
+		for (string declaration : suchThatClause.relation->getDeclarationSymbols()) {
+			if (nonTrivialSynonyms.find(declaration) != nonTrivialSynonyms.end()) {
+				isTrivial = false;
+			}
+		}
+
+		QueryResult result = suchThatClause.relation->execute(pkb, isTrivial);
 		if (!result.getResult()) {
 			return QueryResult();
 		}
+
+		resultList.push_back(result);
 	}
 
-	return result;
+	// TODO: Evaluate pattern clauses
+
+	return QueryResult();
 }

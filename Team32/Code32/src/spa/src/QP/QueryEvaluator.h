@@ -21,7 +21,7 @@ private:
 	unordered_map<string, QueryResult> results;
 	QueryResult executeNoClauses(Declaration select);
 	QueryGraph buildGraph(QueryProperties& queryProperties);
-	QueryResult evaluateSuchThatClauses(SuchThatClauseList& suchThatClauseList);
+	QueryResult evaluateClauses(QueryProperties& queryProperties, unordered_set<string> nonTrivialSynonyms);
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYEVALUATOR_H_

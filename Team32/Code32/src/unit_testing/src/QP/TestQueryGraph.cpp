@@ -10,7 +10,7 @@ TEST_CASE("QP::QueryGraph::QueryGraph Should initialize nodes") {
 	REQUIRE(nodes.size() == 2);
 }
 
-TEST_CASE("QP::QueryGraph::QueryGraph Should set edges") {
+TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
 	DeclarationList list = { { DesignEntity::stmt, "s" }, { DesignEntity::variable, "v" }, { DesignEntity::assign, "a" } };
 	SuchThatClauseList suchThatList = { {new Parent(false, { StmtRefType::synonym, "s"}, { StmtRefType::synonym, "a"})} };
 	PatternClauseList patternList = { {{ DesignEntity::assign, "a" }, { EntRefType::synonym, "v"}, "x"} };
@@ -22,4 +22,26 @@ TEST_CASE("QP::QueryGraph::QueryGraph Should set edges") {
 	REQUIRE(nodes.at("s").adjacentSymbols.size() == 1);
 	REQUIRE(nodes.at("a").adjacentSymbols.size() == 2);
 	REQUIRE(nodes.at("v").adjacentSymbols.size() == 1);
+}
+
+TEST_CASE("QP::QueryGraph::getNonTrivialSynonyms Should get synonyms not linked to select") {
+	DeclarationList list = {
+		{ DesignEntity::stmt, "a" },
+		{ DesignEntity::assign, "b" },
+		{ DesignEntity::if_, "c" },
+		{ DesignEntity::assign, "d" },
+		{ DesignEntity::variable, "e" },
+	};
+	SuchThatClauseList suchThatList = {
+		{ new Parent(false, { StmtRefType::synonym, "a"}, { StmtRefType::synonym, "b"}) },
+		{ new Parent(false, { StmtRefType::synonym, "a"}, { StmtRefType::synonym, "c"}) },
+	};
+	PatternClauseList patternList = { {{ DesignEntity::assign, "d" }, { EntRefType::synonym, "e"}, "x"} };
+
+	QueryGraph graph = QueryGraph(list);
+	graph.setEdges(suchThatList, patternList);
+	unordered_set<string> synonyms = graph.getNonTrivialSynonyms("a");
+	
+	unordered_set<string> expectedSynonyms = {"a", "b", "c"};
+	REQUIRE(synonyms == expectedSynonyms);
 }

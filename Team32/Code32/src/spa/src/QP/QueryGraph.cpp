@@ -1,5 +1,7 @@
 #include "QueryGraph.h"
 
+#include <queue>
+
 QueryGraph::QueryGraph(const DeclarationList& declarations) {
 	for (Declaration declaration : declarations) {
 		Node node = { declaration.symbol, {} };
@@ -40,4 +42,26 @@ void QueryGraph::addEdge(string symbolOne, string symbolTwo) {
 		nodeTwo.adjacentSymbols.push_back(symbolOne);
 		nodes[symbolTwo] = nodeTwo;
 	}
+}
+
+unordered_set<string> QueryGraph::getNonTrivialSynonyms(string selectedSynonym) {
+	// Run BFS on the selected node
+	unordered_set<string> result;
+	std::queue<string> queue;
+	queue.push(selectedSynonym);
+	
+	while (!queue.empty()) {
+		string symbol = queue.front();
+		result.insert(symbol);
+		queue.pop();
+		
+		Node node = this->nodes.at(symbol);
+		for (string adjacentSymbol : node.adjacentSymbols) {
+			if (result.find(adjacentSymbol) == result.end()) {
+				queue.push(adjacentSymbol);
+			}
+		}
+	}
+
+	return result;
 }

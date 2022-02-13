@@ -17,8 +17,8 @@ bool Parent::getIsStar() {
 	return isStar;
 }
 
-QueryResult Parent::execute(PKB& pkb, QueryResult& result) {
-	return isTrivialCase() ? executeTrivial(pkb) : executeNonTrivial(pkb, result);
+QueryResult Parent::execute(PKB& pkb, bool isTrivial) {
+	return isTrivial ? executeTrivial(pkb) : executeNonTrivial(pkb);
 }
 
 vector<string> Parent::getDeclarationSymbols() {
@@ -32,14 +32,10 @@ vector<string> Parent::getDeclarationSymbols() {
 	return declarationSymbols;
 }
 
-bool Parent::isTrivialCase() {
-	return this->parentStmt.type != StmtRefType::synonym && this->childStmt.type != StmtRefType::synonym;
-}
-
 QueryResult Parent::executeTrivial(PKB& pkb) {
 	return QueryResult();
 }
 
-QueryResult Parent::executeNonTrivial(PKB& pkb, QueryResult& result) {
+QueryResult Parent::executeNonTrivial(PKB& pkb) {
 	return QueryResult();
 }

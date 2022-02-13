@@ -12,8 +12,8 @@ QueryEntRef ModifiesS::getEnt() {
 	return ent;
 }
 
-QueryResult ModifiesS::execute(PKB& pkb, QueryResult& result) {
-	return QueryResult();
+QueryResult ModifiesS::execute(PKB& pkb, bool isTrivial) {
+	return isTrivial ? executeTrivial(pkb) : executeNonTrivial(pkb);
 }
 
 vector<string> ModifiesS::getDeclarationSymbols() {
@@ -27,14 +27,10 @@ vector<string> ModifiesS::getDeclarationSymbols() {
 	return declarationSymbols;
 }
 
-bool ModifiesS::isTrivialCase() {
-	return false;
-}
-
 QueryResult ModifiesS::executeTrivial(PKB& pkb) {
 	return QueryResult();
 }
 
-QueryResult ModifiesS::executeNonTrivial(PKB& pkb, QueryResult& result) {
+QueryResult ModifiesS::executeNonTrivial(PKB& pkb) {
 	return QueryResult();
 }
