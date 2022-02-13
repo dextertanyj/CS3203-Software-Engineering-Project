@@ -6,12 +6,17 @@
 
 #include "Common/ArithmeticProcessor/LexerInterface.h"
 
+using std::runtime_error;
+
+struct QueryExpressionException : public runtime_error {
+    using runtime_error::runtime_error;
+};
 
 class QueryExpressionLexer : public Common::ArithmeticProcessor::LexerInterface {
 public:
 	QueryExpressionLexer(vector<string> expressionTokens);
-	string readToken();
-	string peekToken();
+	string readToken() override;
+	string peekToken() override;
 
 private:
 	vector<string> expressionTokens;

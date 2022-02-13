@@ -761,69 +761,111 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that") {
 	REQUIRE((*clause3).getEnt().entRef == "v1");
 }
 
-//TEST_CASE("QP::QueryPreprocessor::parseQuery valid pattern") {
-//	QueryPreprocessor qpp1;
-//	QueryProperties qp1 = qpp1.parseQuery(univDeclarations + "Select a1 pattern a1(v1, _)");
-//	QueryPreprocessor qpp2;
-//	QueryProperties qp2 = qpp2.parseQuery(univDeclarations + "Select v1 pattern a1(v1, \"x\")");
-//	QueryPreprocessor qpp3;
-//	QueryProperties qp3 = qpp3.parseQuery(univDeclarations + "Select v1 pattern a1  (v1, _\"x\"_)");
-//	QueryPreprocessor qpp4;
-//	QueryProperties qp4 = qpp4.parseQuery(univDeclarations + "Select a1 pattern a1(_, _)");
-//	QueryPreprocessor qpp5;
-//	QueryProperties qp5 = qpp5.parseQuery(univDeclarations + "Select a2 pattern a1(_, \"x\")");
-//	QueryPreprocessor qpp6;
-//	QueryProperties qp6 = qpp6.parseQuery(univDeclarations + "Select a1 pattern a1(_, _\"x + 2\"_)");
-//	QueryPreprocessor qpp7;
-//	QueryProperties qp7 = qpp7.parseQuery(univDeclarations + "Select a1 pattern a1(v1, _)");
-//	QueryPreprocessor qpp8;
-//	QueryProperties qp8 = qpp8.parseQuery(univDeclarations + "Select a1 pattern a1(v1, _)");
-//	QueryPreprocessor qpp9;
-//	QueryProperties qp9 = qpp9.parseQuery(univDeclarations + "Select a2 pattern a1(v1, _)");
-//
-//	QueryPreprocessor qpp10;
-//	QueryProperties qp10 = qpp10.parseQuery(univDeclarations + "Select pc1 pattern a1(pc1, _)");
-//	QueryPreprocessor qpp11;
-//	QueryProperties qp11 = qpp11.parseQuery(univDeclarations + "Select c1 pattern a1(c1, _\"x + 2 *y\"_)");
-//	QueryPreprocessor qpp12;
-//	QueryProperties qp12 = qpp12.parseQuery(univDeclarations + "Select a1 pattern a1(\"foo\", \"x\")");
-//
-//}
-//
-//TEST_CASE("QP::QueryPreprocessor::parseQuery invalid pattern") {
-//	// invalid synonym
-//	QueryPreprocessor qpp1;
-//	REQUIRE_THROWS_AS(qpp1.parseQuery(univDeclarations + "Select a pattern s(v, \"x\")"), QueryException);
-//	// undeclared synonym
-//	QueryPreprocessor qpp2;
-//	REQUIRE_THROWS_AS(qpp2.parseQuery(univDeclarations + "Select a pattern b(v, \"x\")"), QueryException);
-//	// unexpected integer
-//	QueryPreprocessor qpp3;
-//	REQUIRE_THROWS_AS(qpp3.parseQuery(univDeclarations + "Select a pattern a(1, \"x\") "), QueryException);
-//	// unexpected integer
-//	QueryPreprocessor qpp4;
-//	REQUIRE_THROWS_AS(qpp4.parseQuery(univDeclarations + "Select a pattern a(v, 1)"), QueryException);
-//	// unexpected synonym
-//	QueryPreprocessor qpp5;
-//	REQUIRE_THROWS_AS(qpp5.parseQuery(univDeclarations + "Select a pattern a(v, s)"), QueryException);
-//	// invalid synonym
-//	QueryPreprocessor qpp6;
-//	REQUIRE_THROWS_AS(qpp6.parseQuery(univDeclarations + "Select a pattern a(s, \"x\")"), QueryException);
-//	// missing synonym
-//	QueryPreprocessor qpp7;
-//	REQUIRE_THROWS_AS(qpp7.parseQuery(univDeclarations + "Select a pattern(s, \"x\")"), QueryException);
-//}
-//
-//TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that/pattern clauses") {
-//
-//	QueryPreprocessor qpp12;
-//	QueryProperties qp12 = qpp12.parseQuery(univDeclarations + "Select c2 such that Follows(w1, c2) pattern a1(c2, _\"2-4\"_)");
-//	auto clause = dynamic_cast<Follows*>(qp12.getSuchThatClauseList()[0].relation);
-//	REQUIRE((*clause).getIsStar() == false);
-//	REQUIRE((*clause).getLeftStmt().type == StmtRefType::synonym);
-//	REQUIRE((*clause).getLeftStmt().stmtRef == "w1");
-//	REQUIRE((*clause).getRightStmt().type == StmtRefType::synonym);
-//	REQUIRE((*clause).getRightStmt().stmtRef == "c2");
-//
-//
-//}
+TEST_CASE("QP::QueryPreprocessor::parseQuery valid pattern") {
+	QueryPreprocessor qpp1;
+	QueryProperties qp1 = qpp1.parseQuery(univDeclarations + "Select a1 pattern a1(v1, _)");
+	REQUIRE(qp1.getPatternClauseList()[0].synonym.type == DesignEntity::assign);
+	REQUIRE(qp1.getPatternClauseList()[0].synonym.symbol == "a1");
+	REQUIRE(qp1.getPatternClauseList()[0].entRef.type == EntRefType::synonym);
+	REQUIRE(qp1.getPatternClauseList()[0].entRef.entRef == "v1");
+	REQUIRE(qp1.getPatternClauseList()[0].expressionType == ExpressionType::underscore);
+	QueryPreprocessor qpp2;
+	QueryProperties qp2 = qpp2.parseQuery(univDeclarations + "Select v1 pattern a1(v1, \"x\")");
+	REQUIRE(qp2.getPatternClauseList()[0].synonym.type == DesignEntity::assign);
+	REQUIRE(qp2.getPatternClauseList()[0].synonym.symbol == "a1");
+	REQUIRE(qp2.getPatternClauseList()[0].entRef.type == EntRefType::synonym);
+	REQUIRE(qp2.getPatternClauseList()[0].entRef.entRef == "v1");
+	REQUIRE(qp2.getPatternClauseList()[0].expressionType == ExpressionType::expression);
+	QueryPreprocessor qpp3;
+	QueryProperties qp3 = qpp3.parseQuery(univDeclarations + "Select v1 pattern a2  (v1, _\"x\"_)");
+	REQUIRE(qp3.getPatternClauseList()[0].synonym.type == DesignEntity::assign);
+	REQUIRE(qp3.getPatternClauseList()[0].synonym.symbol == "a2");
+	REQUIRE(qp3.getPatternClauseList()[0].entRef.type == EntRefType::synonym);
+	REQUIRE(qp3.getPatternClauseList()[0].entRef.entRef == "v1");
+	REQUIRE(qp3.getPatternClauseList()[0].expressionType == ExpressionType::expressionUnderscore);
+	QueryPreprocessor qpp4;
+	QueryProperties qp4 = qpp4.parseQuery(univDeclarations + "Select a1 pattern a1(_, _)");
+	REQUIRE(qp4.getPatternClauseList()[0].synonym.type == DesignEntity::assign);
+	REQUIRE(qp4.getPatternClauseList()[0].synonym.symbol == "a1");
+	REQUIRE(qp4.getPatternClauseList()[0].entRef.type == EntRefType::underscore);
+	REQUIRE(qp4.getPatternClauseList()[0].entRef.entRef == "_");
+	REQUIRE(qp4.getPatternClauseList()[0].expressionType == ExpressionType::underscore);
+	QueryPreprocessor qpp5;
+	QueryProperties qp5 = qpp5.parseQuery(univDeclarations + "Select a2 pattern a1(_, \"x\")");
+	REQUIRE(qp5.getPatternClauseList()[0].synonym.type == DesignEntity::assign);
+	REQUIRE(qp5.getPatternClauseList()[0].synonym.symbol == "a1");
+	REQUIRE(qp5.getPatternClauseList()[0].entRef.type == EntRefType::underscore);
+	REQUIRE(qp5.getPatternClauseList()[0].entRef.entRef == "_");
+	REQUIRE(qp5.getPatternClauseList()[0].expressionType == ExpressionType::expression);
+	QueryPreprocessor qpp6;
+	QueryProperties qp6 = qpp6.parseQuery(univDeclarations + "Select a1 pattern a1(_, _\"x + 2\"_)");
+	REQUIRE(qp6.getPatternClauseList()[0].synonym.type == DesignEntity::assign);
+	REQUIRE(qp6.getPatternClauseList()[0].synonym.symbol == "a1");
+	REQUIRE(qp6.getPatternClauseList()[0].entRef.type == EntRefType::underscore);
+	REQUIRE(qp6.getPatternClauseList()[0].entRef.entRef == "_");
+	REQUIRE(qp6.getPatternClauseList()[0].expressionType == ExpressionType::expressionUnderscore);
+	QueryPreprocessor qpp7;
+	QueryProperties qp7 = qpp7.parseQuery(univDeclarations + "Select a1 pattern a1(\"foo\", \"(x+5)*3- y\")");
+	REQUIRE(qp7.getPatternClauseList()[0].synonym.type == DesignEntity::assign);
+	REQUIRE(qp7.getPatternClauseList()[0].synonym.symbol == "a1");
+	REQUIRE(qp7.getPatternClauseList()[0].entRef.type == EntRefType::varName);
+	REQUIRE(qp7.getPatternClauseList()[0].entRef.entRef == "foo");
+	REQUIRE(qp7.getPatternClauseList()[0].expressionType == ExpressionType::expression);
+	QueryPreprocessor qpp8;
+	QueryProperties qp8 = qpp8.parseQuery(univDeclarations + "Select a1 pattern a1(\"foo\", _)");
+	REQUIRE(qp8.getPatternClauseList()[0].synonym.type == DesignEntity::assign);
+	REQUIRE(qp8.getPatternClauseList()[0].synonym.symbol == "a1");
+	REQUIRE(qp8.getPatternClauseList()[0].entRef.type == EntRefType::varName);
+	REQUIRE(qp8.getPatternClauseList()[0].entRef.entRef == "foo");
+	REQUIRE(qp8.getPatternClauseList()[0].expressionType == ExpressionType::underscore);
+	QueryPreprocessor qpp9;
+	QueryProperties qp9 = qpp9.parseQuery(univDeclarations + "Select a2 pattern a1(\"foo\", _\"x-2\"_)");
+	REQUIRE(qp9.getPatternClauseList()[0].synonym.type == DesignEntity::assign);
+	REQUIRE(qp9.getPatternClauseList()[0].synonym.symbol == "a1");
+	REQUIRE(qp9.getPatternClauseList()[0].entRef.type == EntRefType::varName);
+	REQUIRE(qp9.getPatternClauseList()[0].entRef.entRef == "foo");
+	REQUIRE(qp9.getPatternClauseList()[0].expressionType == ExpressionType::expressionUnderscore);
+}
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery invalid pattern") {
+	// invalid synonym
+	QueryPreprocessor qpp1;
+	REQUIRE_THROWS_AS(qpp1.parseQuery(univDeclarations + "Select a1 pattern s1(v1, \"x\")"), QueryException);
+	// undeclared synonym
+	QueryPreprocessor qpp2;
+	REQUIRE_THROWS_AS(qpp2.parseQuery(univDeclarations + "Select a1 pattern b1(v1, \"x\")"), QueryException);
+	// unexpected integer
+	QueryPreprocessor qpp3;
+	REQUIRE_THROWS_AS(qpp3.parseQuery(univDeclarations + "Select a1 pattern a1(1, \"x\") "), QueryException);
+	// unexpected integer
+	QueryPreprocessor qpp4;
+	REQUIRE_THROWS_AS(qpp4.parseQuery(univDeclarations + "Select a1 pattern a1(v1, 1)"), QueryException);
+	// unexpected synonym
+	QueryPreprocessor qpp5;
+	REQUIRE_THROWS_AS(qpp5.parseQuery(univDeclarations + "Select a1 pattern a1(v1, s1)"), QueryException);
+	// invalid synonym
+	QueryPreprocessor qpp6;
+	REQUIRE_THROWS_AS(qpp6.parseQuery(univDeclarations + "Select a1 pattern a1(s1, \"x\")"), QueryException);
+	// missing synonym
+	QueryPreprocessor qpp7;
+	REQUIRE_THROWS_AS(qpp7.parseQuery(univDeclarations + "Select a1 pattern(s1, \"x\")"), QueryException);
+}
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that/pattern clauses") {
+
+	QueryPreprocessor qpp12;
+	QueryProperties qp12 = qpp12.parseQuery(univDeclarations + "Select a1 such that Follows(w1, a1) pattern a1(v1, _\"2-4\"_)");
+	auto clause = dynamic_cast<Follows*>(qp12.getSuchThatClauseList()[0].relation);
+	REQUIRE(qp12.getPatternClauseList()[0].synonym.type == DesignEntity::assign);
+	REQUIRE(qp12.getPatternClauseList()[0].synonym.symbol == "a1");
+	REQUIRE(qp12.getPatternClauseList()[0].entRef.type == EntRefType::synonym);
+	REQUIRE(qp12.getPatternClauseList()[0].entRef.entRef == "v1");
+	REQUIRE(qp12.getPatternClauseList()[0].expressionType == ExpressionType::expressionUnderscore);
+	REQUIRE((*clause).getIsStar() == false);
+	REQUIRE((*clause).getLeftStmt().type == StmtRefType::synonym);
+	REQUIRE((*clause).getLeftStmt().stmtRef == "w1");
+	REQUIRE((*clause).getRightStmt().type == StmtRefType::synonym);
+	REQUIRE((*clause).getRightStmt().stmtRef == "a1");
+
+
+}
