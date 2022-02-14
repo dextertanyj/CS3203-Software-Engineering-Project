@@ -63,12 +63,11 @@ public:
 	unordered_set<VarRef> getModifiesByStmt(StmtRef);
 
 	// Assign get methods
-	bool isPattern(VarRef, Common::ArithmeticProcessor::ArithmeticExpression, bool isRHSExactMatchNeeded);
-	StmtInfoList getPatternMatch(StmtInfoList, VarRef, Common::ArithmeticProcessor::ArithmeticExpression, bool isRHSExactMatchNeeded);
-	StmtInfoList getAllPatternMatch(VarRef, Common::ArithmeticProcessor::ArithmeticExpression, bool isRHSExactMatchNeeded);
-	StmtInfoList getPatternMatchLHS(VarRef);
-	vector<pair<shared_ptr<StmtInfo>, VarRef>> getPatternMatchRHS(Common::ArithmeticProcessor::ArithmeticExpression,
-	                                                              bool isRHSExactMatchNeeded);
+	bool patternExists(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded);
+	StmtInfoList getStmtsWithPattern(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded);
+	StmtInfoList getStmtsWithPatternLHS(VarRef varName);
+	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(Common::ArithmeticProcessor::ArithmeticExpression e,
+                                                                      bool isRHSExactMatchNeeded);
 
 	// Others
 	void clear();
