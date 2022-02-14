@@ -12,7 +12,7 @@
 <passed/>
 </query>
 <query>
-<id ReturnTuple="1" FollowsPKB="1" SuchThat="1" CondNum="3" RelNum="1" comment="comment">2</id><querystr><![CDATA[if ifs; Select ifs such that FollowsPKB(5, ifs)]]></querystr>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="comment">2</id><querystr><![CDATA[if ifs; Select ifs such that Follows(5, ifs)]]></querystr>
 <stuans></stuans>
 <correct>6</correct>
 <time_taken>21.000000</time_taken>
@@ -44,7 +44,7 @@
 </failed>
 </query>
 <query>
-<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="comment">4</id><querystr><![CDATA[call c; Select c such that FollowsPKB*(1, c)]]></querystr>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="comment">4</id><querystr><![CDATA[call c; Select c such that Follows*(1, c)]]></querystr>
 <stuans></stuans>
 <correct>12</correct>
 <time_taken>22.000000</time_taken>
@@ -266,7 +266,7 @@
 </failed>
 </query>
 <query>
-<id ReturnTuple="1" Followsstar="2" Modifies="1" Uses="1" SuchThat="1" With="1" CondNum="7" RelNum="4" comment="comment">19</id><querystr><![CDATA[if ifs; assign a1, a2; variable v1, v2; Select ifs such that FollowsPKB*(a1, ifs) and FollowsPKB*(ifs, a2) and Modifies(ifs, v1) and Uses(ifs, v2) with v1.varName = v2.varName]]></querystr>
+<id ReturnTuple="1" Followsstar="2" Modifies="1" Uses="1" SuchThat="1" With="1" CondNum="7" RelNum="4" comment="comment">19</id><querystr><![CDATA[if ifs; assign a1, a2; variable v1, v2; Select ifs such that Follows*(a1, ifs) and Follows*(ifs, a2) and Modifies(ifs, v1) and Uses(ifs, v2) with v1.varName = v2.varName]]></querystr>
 <stuans></stuans>
 <correct>6</correct>
 <time_taken>21.000000</time_taken>
@@ -330,7 +330,7 @@
 </failed>
 </query>
 <query>
-<id Affects="1" ReturnBoolean="1" Followsstar="1" UnnamedVar="2" Uses="1" SuchThat="1" CondNum="7" RelNum="3" comment="comment">23</id><querystr><![CDATA[call c; assign a1, a2; Select BOOLEAN such that FollowsPKB*(_, c) and Affects(a1, a2) and Uses(a2, _)]]></querystr>
+<id Affects="1" ReturnBoolean="1" Followsstar="1" UnnamedVar="2" Uses="1" SuchThat="1" CondNum="7" RelNum="3" comment="comment">23</id><querystr><![CDATA[call c; assign a1, a2; Select BOOLEAN such that Follows*(_, c) and Affects(a1, a2) and Uses(a2, _)]]></querystr>
 <stuans></stuans>
 <correct>true</correct>
 <time_taken>21.000000</time_taken>
