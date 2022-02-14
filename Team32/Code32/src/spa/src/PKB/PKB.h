@@ -11,10 +11,11 @@
 #include "AssignStore.h"
 #include "Common/ArithmeticProcessor/ArithmeticExpression.h"
 #include "Common/TypeDefs.h"
-#include "FollowStore.h"
-#include "ModifyStore.h"
-#include "ParentStore.h"
-#include "UseStore.h"
+#include "PKB/FollowsPKB.h"
+#include "PKB/Modifies.h"
+#include "PKB/ParentPKB.h"
+#include "PKB/SVRelationStore.tpp"
+#include "PKB/StatementRelationStore.tpp"
 
 using namespace std;
 
@@ -67,17 +68,17 @@ public:
 	StmtInfoList getStmtsWithPattern(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded);
 	StmtInfoList getStmtsWithPatternLHS(VarRef varName);
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(Common::ArithmeticProcessor::ArithmeticExpression e,
-                                                                      bool isRHSExactMatchNeeded);
+	                                                                  bool isRHSExactMatchNeeded);
 
 	// Others
 	void clear();
 	void populateComplexRelations();
 
 private:
-	ParentStore parentStore;
-	FollowStore followStore;
-	UseStore useStore;
-	ModifyStore modifyStore;
+	StatementStore stmtInfoMap;  // Stores StmtInfo for a particular StmtRef.
+	StatementRelationStore<ParentPKB> parentStore;
+	StatementRelationStore<FollowsPKB> followStore;
+	SVRelationStore<Uses> useStore;
+	SVRelationStore<Modifies> modifyStore;
 	AssignStore assignStore;
-	unordered_map<StmtRef, shared_ptr<StmtInfo>> stmtInfoMap;  // Stores StmtInfo for a particular StmtRef.
 };

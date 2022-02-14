@@ -1,5 +1,5 @@
-#ifndef SPA_PROCSTORE_H
-#define SPA_PROCSTORE_H
+#ifndef SPA_PROCEDURESTORE_H
+#define SPA_PROCEDURESTORE_H
 
 #include "Common/TypeDefs.h"
 #include <unordered_map>
@@ -14,9 +14,9 @@ struct ProcRelation {
     shared_ptr<StmtInfo> callStmt;
 };
 
-class ProcStore {
+class ProcedureStore {
 public:
-    ProcStore();
+	ProcedureStore();
     void setProc(ProcRef, vector<shared_ptr<StmtInfo>>);
     void setCall(shared_ptr<StmtInfo>, ProcRef);
     vector<shared_ptr<StmtInfo>> getStmtsByProc(ProcRef);

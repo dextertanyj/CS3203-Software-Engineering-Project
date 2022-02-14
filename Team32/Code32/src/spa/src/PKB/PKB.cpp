@@ -15,37 +15,55 @@ StmtInfoList PKB::getStatements() {
 void PKB::setParent(StmtRef stmtNo1, StmtRef stmtNo2) {
 	shared_ptr<StmtInfo> stmtInfo1 = stmtInfoMap.at(stmtNo1);
 	shared_ptr<StmtInfo> stmtInfo2 = stmtInfoMap.at(stmtNo2);
-	parentStore.setParent(stmtInfo1, stmtInfo2);
+	parentStore.set(stmtInfo1, stmtInfo2);
 }
 
-shared_ptr<StmtInfo> PKB::getParent(StmtRef stmt) { return parentStore.getParent(stmt); }
+shared_ptr<StmtInfo> PKB::getParent(StmtRef stmt) {
+	auto result = parentStore.getForward(stmt);
+	if (result.empty()) {
+		return nullptr;
+	}
+	return *result.begin();
+}
 
 unordered_set<shared_ptr<StmtInfo>> PKB::getChildren(StmtRef stmt) {
 	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-	return parentStore.getChildren(stmt);
+	return parentStore.getReverse(stmt);
 }
 
-bool PKB::checkParents(StmtRef stmtNo1, StmtRef stmtNo2) { return parentStore.isParentChild(stmtNo1, stmtNo2); }
+bool PKB::checkParents(StmtRef stmtNo1, StmtRef stmtNo2) { return parentStore.isRelated(stmtNo1, stmtNo2); }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getParentStar(StmtRef stmt) { return parentStore.getParentStar(stmt); }
+unordered_set<shared_ptr<StmtInfo>> PKB::getParentStar(StmtRef stmt) { return parentStore.getForwardTransitive(stmt); }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getChildStar(StmtRef stmt) { return parentStore.getChildStar(stmt); }
+unordered_set<shared_ptr<StmtInfo>> PKB::getChildStar(StmtRef stmt) { return parentStore.getReverseTransitive(stmt); }
 
 void PKB::setFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
 	shared_ptr<StmtInfo> stmtInfo1 = stmtInfoMap.at(stmtNo1);
 	shared_ptr<StmtInfo> stmtInfo2 = stmtInfoMap.at(stmtNo2);
-	followStore.setFollows(stmtInfo1, stmtInfo2);
+	followStore.set(stmtInfo1, stmtInfo2);
 }
 
-bool PKB::checkFollows(StmtRef stmtNo1, StmtRef stmtNo2) { return followStore.checkFollows(stmtNo1, stmtNo2); }
+bool PKB::checkFollows(StmtRef stmtNo1, StmtRef stmtNo2) { return followStore.isRelated(stmtNo1, stmtNo2); }
 
-shared_ptr<StmtInfo> PKB::getFollower(StmtRef stmt) { return followStore.getFollower(stmt); }
+shared_ptr<StmtInfo> PKB::getFollower(StmtRef stmt) {
+	auto result = followStore.getReverse(stmt);
+	if (result.empty()) {
+		return nullptr;
+	}
+	return *result.begin();
+}
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getFollowerStar(StmtRef stmt) { return followStore.getFollowerStar(stmt); }
+unordered_set<shared_ptr<StmtInfo>> PKB::getFollowerStar(StmtRef stmt) { return followStore.getReverseTransitive(stmt); }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getPrecedingStar(StmtRef stmt) { return followStore.getPrecedingStar(stmt); }
+unordered_set<shared_ptr<StmtInfo>> PKB::getPrecedingStar(StmtRef stmt) { return followStore.getForwardTransitive(stmt); }
 
-shared_ptr<StmtInfo> PKB::getPreceding(StmtRef stmt) { return followStore.getPreceding(stmt); }
+shared_ptr<StmtInfo> PKB::getPreceding(StmtRef stmt) {
+	auto result = followStore.getForward(stmt);
+	if (result.empty()) {
+		return nullptr;
+	}
+	return *result.begin();
+}
 
 void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree) {
 	return assignStore.setAssign(stmtNo, variableLHS, opTree);
@@ -68,31 +86,25 @@ void PKB::setStmtType(StmtRef stmtNo, StmtType type) {
 
 void PKB::setUses(StmtRef stmt, VarRef varName) {
 	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-	useStore.setUses(stmtInfo, varName);
+	useStore.set(stmtInfo, varName);
 }
 
 void PKB::setModifies(StmtRef stmt, VarRef varName) {
 	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-	modifyStore.setModify(stmtInfo, varName);
+	modifyStore.set(stmtInfo, varName);
 }
 
-bool PKB::checkUses(StmtRef stmt, VarRef varName) {
-	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-	return useStore.checkUses(stmtInfo, varName);
-}
+bool PKB::checkUses(StmtRef stmt, VarRef varName) { return useStore.check(stmt, varName); }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getUsesByVar(VarRef var_name) { return useStore.getUsesByVar(var_name); }
+unordered_set<shared_ptr<StmtInfo>> PKB::getUsesByVar(VarRef var_name) { return useStore.getByVar(var_name); }
 
-unordered_set<VarRef> PKB::getUsesByStmt(StmtRef stmt) {
-	shared_ptr<StmtInfo> stmtInfo = stmtInfoMap.at(stmt);
-	return useStore.getUsesByStmt(stmtInfo);
-}
+unordered_set<VarRef> PKB::getUsesByStmt(StmtRef stmt) { return useStore.getByStmt(stmt); }
 
-bool PKB::checkModifies(StmtRef stmt, VarRef varName) { return modifyStore.checkModifies(stmt, varName); }
+bool PKB::checkModifies(StmtRef stmt, VarRef varName) { return modifyStore.check(stmt, varName); }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef varName) { return modifyStore.getModifiesByVar(varName); }
+unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef varName) { return modifyStore.getByVar(varName); }
 
-unordered_set<VarRef> PKB::getModifiesByStmt(StmtRef stmt) { return modifyStore.getModifiesByStmt(stmt); }
+unordered_set<VarRef> PKB::getModifiesByStmt(StmtRef stmt) { return modifyStore.getByStmt(stmt); }
 
 bool PKB::patternExists(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
 	return assignStore.patternExists(varName, e, isRHSExactMatchNeeded);
@@ -129,9 +141,9 @@ vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getStmtsWithPatternRHS(Common::A
 }
 
 void PKB::populateComplexRelations() {
-	parentStore.optimize();
-	followStore.optimize();
-	modifyStore.optimize(stmtInfoMap, parentStore);
+	ParentPKB::optimize(parentStore);
+	FollowsPKB::optimize(followStore);
+	Modifies::optimize(stmtInfoMap, parentStore, modifyStore);
 }
 
 void PKB::clear() {

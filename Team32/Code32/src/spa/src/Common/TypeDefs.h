@@ -25,6 +25,11 @@ typedef vector<StmtRef> StmtRefList;
 enum class ArithmeticOperator { Plus, Minus, Times, Divide, Modulo };
 enum class RelationalOperator { EQ, NEQ, LT, LTE, GT, GTE };
 
+class Modifies;
+class FollowsPKB;
+class ParentPKB;
+class Uses;
+
 #endif
 
 
