@@ -4,12 +4,20 @@ using namespace std;
 
 PKB::PKB() {}
 
-StmtRefList PKB::getStatements() {
-  StmtRefList stmtRefList;
-  for (auto key_value : typeMap) {
-    stmtRefList.push_back(key_value.first);
-  }
-  return stmtRefList;
+
+StmtInfoPtrSet PKB::getStatements()
+{
+  return StmtInfoPtrSet();
+}
+
+VarRefSet PKB::getVariables()
+{
+  return VarRefSet();
+}
+
+unordered_set<int> PKB::getConstants()
+{
+  return unordered_set<int>();
 }
 
 void PKB::setParent(StmtRef stmtNo1, StmtRef stmtNo2) {
@@ -17,14 +25,15 @@ void PKB::setParent(StmtRef stmtNo1, StmtRef stmtNo2) {
     parentStore.setParent(stmtNo1, stmtNo2);
 }
 
-StmtRef PKB::getParent(StmtRef stmtNo) {
-    checkInvalidStmt(stmtNo);
-    return parentStore.getParent(stmtNo);
+
+shared_ptr<StmtInfo> PKB::getParent(StmtRef)
+{
+  return shared_ptr<StmtInfo>();
 }
 
-unordered_set<StmtRef> PKB::getChildren(StmtRef stmtNo) {
-    checkInvalidStmt(stmtNo);
-    return parentStore.getChildren(stmtNo);
+StmtInfoPtrSet PKB::getChildren(StmtRef)
+{
+  return StmtInfoPtrSet();
 }
 
 bool PKB::checkParents(StmtRef stmtNo1, StmtRef stmtNo2) {
@@ -34,6 +43,16 @@ bool PKB::checkParents(StmtRef stmtNo1, StmtRef stmtNo2) {
         return false;
     }
     return parentStore.isParentChild(stmtNo1, stmtNo2);
+}
+
+StmtInfoPtrSet PKB::getParentStar(StmtRef)
+{
+  return StmtInfoPtrSet();
+}
+
+StmtInfoPtrSet PKB::getChildStar(StmtRef)
+{
+  return StmtInfoPtrSet();
 }
 
 void PKB::setFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
@@ -50,32 +69,77 @@ bool PKB::checkFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
     return followStore.checkFollows(stmtNo1, stmtNo2);
 }
 
-StmtRef PKB::getFollower(StmtRef stmtNo) {
-    checkInvalidStmt(stmtNo);
-    return followStore.getFollower(stmtNo);
+StmtInfoPtrSet PKB::getFollowerStar(StmtRef)
+{
+  return StmtInfoPtrSet();
 }
 
-StmtRef PKB::getFollowee(StmtRef stmtNo) {
-    checkInvalidStmt(stmtNo);
-    return followStore.getFollowee(stmtNo);
+StmtInfoPtrSet PKB::getPrecedingStar(StmtRef)
+{
+  return StmtInfoPtrSet();
 }
 
-void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree) {
-    checkInvalidStmt(stmtNo);
-    return assignStore.setAssign(stmtNo, variableLHS, opTree);
+bool PKB::checkUses(StmtRef, VarRef)
+{
+  return false;
 }
 
-void PKB::setProc(ProcRef proc_name, vector<StmtRef> idxList) {
-    for (auto itr : idxList) {
-        checkInvalidStmt(itr);
-    }
-    auto keyItr = procMap.find(proc_name);
-    if (keyItr == procMap.end()) {
-        procMap.insert(make_pair(proc_name, idxList));
-    } else {
-        keyItr->second = idxList;
-    }
+StmtInfoPtrSet PKB::getUsesByVar(VarRef)
+{
+  return StmtInfoPtrSet();
 }
+
+VarRefSet PKB::getUsesByStmt(StmtRef)
+{
+  return VarRefSet();
+}
+
+bool PKB::checkModifies(StmtRef, VarRef)
+{
+  return false;
+}
+
+StmtInfoPtrSet PKB::getModifiesByVar(VarRef)
+{
+  return StmtInfoPtrSet();
+}
+
+VarRefSet PKB::getModifiesByStmt(StmtRef)
+{
+  return VarRefSet();
+}
+
+bool PKB::patternExists(VarRef varName, Common::ExpressionProcessor::Expression e, bool isRHSExactMatchNeeded)
+{
+  return false;
+}
+
+StmtInfoPtrSet PKB::getStmtsWithPattern(VarRef varName, Common::ExpressionProcessor::Expression e, bool isRHSExactMatchNeeded)
+{
+  return StmtInfoPtrSet();
+}
+
+StmtInfoPtrSet PKB::getStmtsWithPatternLHS(VarRef varName)
+{
+  return StmtInfoPtrSet();
+}
+
+vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getStmtsWithPatternRHS(Common::ExpressionProcessor::Expression e, bool isRHSExactMatchNeeded)
+{
+  return vector<pair<shared_ptr<StmtInfo>, VarRef>>();
+}
+
+shared_ptr<StmtInfo> PKB::getPreceding(StmtRef stmt)
+{
+  return shared_ptr<StmtInfo>();
+}
+
+shared_ptr<StmtInfo> PKB::getFollower(StmtRef)
+{
+  return shared_ptr<StmtInfo>();
+}
+
+
 
 void PKB::setStmtType(StmtRef stmtNo, StmtType type) {
     checkInvalidStmt(stmtNo);
@@ -88,6 +152,14 @@ void PKB::setStmtType(StmtRef stmtNo, StmtType type) {
     }
 }
 
+void PKB::setConstant(int)
+{
+}
+
+void PKB::setConstant(unordered_set<int>)
+{
+}
+
 void PKB::setUses(StmtRef stmtNo, VarRef var_name) {
     checkInvalidStmt(stmtNo);
     useStore.setUses(stmtNo, var_name);
@@ -96,6 +168,18 @@ void PKB::setUses(StmtRef stmtNo, VarRef var_name) {
 void PKB::setModifies(StmtRef stmtNo, VarRef var_name) {
     checkInvalidStmt(stmtNo);
     modifyStore.setModify(stmtNo, var_name);
+}
+
+void PKB::setUses(StmtRef, VarRefSet)
+{
+}
+
+void PKB::setModifies(StmtRef, VarRefSet)
+{
+}
+
+void PKB::setAssign(StmtRef, VarRef variableLHS, Common::ExpressionProcessor::Expression opTree)
+{
 }
 
 void PKB::populateComplexRelations() {

@@ -21,21 +21,21 @@ void AssignStore::setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree) {
 StmtRefList AssignStore::getPatternMatch(StmtInfoList stmtNoList, VarRef variableLHS, string opTree,
                                          bool isRHSExactMatchNeeded) {
     StmtRefList stmtRefList;
-    for (auto& stmtInfo : stmtNoList) {
-        StmtRef stmtNo = stmtInfo.reference;
-        assert(stmtInfo.type == StmtType::Assign);
-        assert(stmtNo > 0);
+    //for (auto& stmtInfo : stmtNoList) {
+    //    StmtRef stmtNo = stmtInfo.reference;
+    //    assert(stmtInfo.type == StmtType::Assign);
+    //    assert(stmtNo > 0);
 
-        auto keyItr = assignMap.find(stmtNo);
-        if (keyItr == assignMap.end()) {
-            continue;
-        }
-        AssignRelation assignRelation = keyItr->second;
+    //    auto keyItr = assignMap.find(stmtNo);
+    //    if (keyItr == assignMap.end()) {
+    //        continue;
+    //    }
+    //    AssignRelation assignRelation = keyItr->second;
 
-        if (compareOpTreeAndVar(assignRelation, variableLHS, opTree, isRHSExactMatchNeeded)) {
-            stmtRefList.push_back(stmtNo);
-        }
-    }
+    //    if (compareOpTreeAndVar(assignRelation, variableLHS, opTree, isRHSExactMatchNeeded)) {
+    //        stmtRefList.push_back(stmtNo);
+    //    }
+    //}
     return stmtRefList;
 }
 

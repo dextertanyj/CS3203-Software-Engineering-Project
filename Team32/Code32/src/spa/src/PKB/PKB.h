@@ -10,7 +10,9 @@
 #include "UseStore.h"
 #include "ModifyStore.h"
 #include "AssignStore.h"
-#include "../Common/TypeDefs.h"
+#include "Common/TypeDefs.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
+#include "Common/ExpressionProcessor/Expression.h"
 
 using namespace std;
 
@@ -18,28 +20,56 @@ class PKB {
 public:
     PKB();
 
-    // Set methods called by Source processor
-    void setFollows(StmtRef stmtNo1, StmtRef stmtNo2);
-    void setParent(StmtRef stmtNo1, StmtRef stmtNo2);
-    void setProc(ProcRef proc_name, vector<StmtRef> idxList);
-    void setStmtType(StmtRef stmtNo, StmtType type);
-    void setUses(StmtRef stmtNo, VarRef var_name);
-    void setModifies(StmtRef stmtNo, VarRef var_name);
-    void setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree);
+	// Set methods called by Source processor
+	void setFollows(StmtRef, StmtRef);
+	void setParent(StmtRef, StmtRef);
+	void setStmtType(StmtRef, StmtType);
+	void setConstant(int);
+	void setConstant(unordered_set<int>);
+	void setUses(StmtRef, VarRef);
+	void setModifies(StmtRef, VarRef);
+	void setUses(StmtRef, VarRefSet);
+	void setModifies(StmtRef, VarRefSet);
+	void setAssign(StmtRef, VarRef variableLHS, Common::ExpressionProcessor::Expression opTree);
 
-    // Get methods called by PQL
-    // General get methods
-    StmtRefList getStatements();
+	// Get methods called by PQL
 
-    // Parent get methods
-    StmtRef getParent(StmtRef stmtNo);
-    unordered_set<StmtRef> getChildren(StmtRef stmtNo);
-    bool checkParents(StmtRef stmtNo1, StmtRef stmtNo2);
+	// General get methods
+	StmtInfoPtrSet getStatements();
+	VarRefSet getVariables();
+	unordered_set<int> getConstants();
 
-    // Follow get methods
-    StmtRef getFollowee(StmtRef stmtNo);
-    StmtRef getFollower(StmtRef stmtNo);
-    bool checkFollows(StmtRef stmtNo1, StmtRef stmtNo2);
+	// Parent get methods
+	shared_ptr<StmtInfo> getParent(StmtRef);
+	StmtInfoPtrSet getChildren(StmtRef);
+	bool checkParents(StmtRef, StmtRef);
+	StmtInfoPtrSet getParentStar(StmtRef);
+	StmtInfoPtrSet getChildStar(StmtRef);
+
+	// Follow get methods
+	shared_ptr<StmtInfo> getPreceding(StmtRef stmt);
+	shared_ptr<StmtInfo> getFollower(StmtRef);
+	bool checkFollows(StmtRef, StmtRef);
+	StmtInfoPtrSet getFollowerStar(StmtRef);
+	StmtInfoPtrSet getPrecedingStar(StmtRef);
+
+	// Use get methods
+	bool checkUses(StmtRef, VarRef);
+	StmtInfoPtrSet getUsesByVar(VarRef);
+	VarRefSet getUsesByStmt(StmtRef);
+
+	// Modify get methods
+	bool checkModifies(StmtRef, VarRef);
+	StmtInfoPtrSet getModifiesByVar(VarRef);
+	VarRefSet getModifiesByStmt(StmtRef);
+
+	// Assign get methods
+	bool patternExists(VarRef varName, Common::ExpressionProcessor::Expression e, bool isRHSExactMatchNeeded);
+	StmtInfoPtrSet getStmtsWithPattern(VarRef varName, Common::ExpressionProcessor::Expression e, bool isRHSExactMatchNeeded);
+	StmtInfoPtrSet getStmtsWithPatternLHS(VarRef varName);
+	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(Common::ExpressionProcessor::Expression e,
+	                                                                  bool isRHSExactMatchNeeded);
+
 
     // Others
     void clear();
