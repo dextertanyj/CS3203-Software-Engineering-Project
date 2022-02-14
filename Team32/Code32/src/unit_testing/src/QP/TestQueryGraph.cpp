@@ -12,7 +12,9 @@ TEST_CASE("QP::QueryGraph::QueryGraph Should initialize nodes") {
 
 TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
 	DeclarationList list = { { DesignEntity::stmt, "s" }, { DesignEntity::variable, "v" }, { DesignEntity::assign, "a" } };
-	SuchThatClauseList suchThatList = { {new Parent(false, { StmtRefType::synonym, "s"}, { StmtRefType::synonym, "a"})} };
+	QueryStmtRef s = { StmtRefType::synonym, "s" };
+	QueryStmtRef a = { StmtRefType::synonym, "a" };
+	SuchThatClauseList suchThatList = { {make_unique<Parent>(false, s, a)} };
 	PatternClauseList patternList = { {{ DesignEntity::assign, "a" }, { EntRefType::synonym, "v"}, "x"} };
 
 	QueryGraph graph = QueryGraph(list);
@@ -32,11 +34,14 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 		{ DesignEntity::assign, "d" },
 		{ DesignEntity::variable, "e" },
 	};
-	Relation* relation1 = new Parent(false, { StmtRefType::synonym, "a" }, { StmtRefType::synonym, "b" });
-	Relation* relation2 = new Parent(false, { StmtRefType::synonym, "a" }, { StmtRefType::synonym, "c" });
-	SuchThatClauseList suchThatList = { {relation1}, {relation2} };
-	PatternClauseList patternList;
-	patternList.push_back({ { DesignEntity::assign, "d" }, { EntRefType::synonym, "e" }, "x" });
+	QueryStmtRef a = { StmtRefType::synonym, "a" };
+	QueryStmtRef b = { StmtRefType::synonym, "b" };
+	QueryStmtRef c = { StmtRefType::synonym, "c" };
+	SuchThatClauseList suchThatList = {
+		{ make_unique<Parent>(false, a, b) },
+		{ make_unique<Parent>(false, a, c) }
+	};
+	PatternClauseList patternList = { { { DesignEntity::assign, "d" }, { EntRefType::synonym, "e" }, "x" } };
 
 	QueryGraph graph = QueryGraph(list);
 	graph.setEdges(suchThatList, patternList);

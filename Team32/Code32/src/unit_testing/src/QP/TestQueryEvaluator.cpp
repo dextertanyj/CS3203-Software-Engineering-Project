@@ -12,11 +12,18 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 		{ DesignEntity::if_, "i" },
 	};
 	Declaration select = { DesignEntity::stmt, "s1" };
-	Relation* relation1 = new Parent(false, { StmtRefType::synonym, "s1" }, { StmtRefType::synonym, "s2" });
-	Relation* relation2 = new Parent(false, { StmtRefType::synonym, "a" }, { StmtRefType::synonym, "i" });
-	Relation* relation3 = new Parent(false, { StmtRefType::stmtNumber, "1" }, { StmtRefType::stmtNumber, "2" });
+	QueryStmtRef s1 = { StmtRefType::synonym, "s1" };
+	QueryStmtRef s2 = { StmtRefType::synonym, "s2" };
+	QueryStmtRef a = { StmtRefType::synonym, "a" };
+	QueryStmtRef i = { StmtRefType::synonym, "i" };
+	QueryStmtRef stmtNo1 = { StmtRefType::stmtNumber, "1" };
+	QueryStmtRef stmtNo2 = { StmtRefType::stmtNumber, "2" };
 
-	SuchThatClauseList suchThatClauses = { {relation1}, {relation2}, {relation3} };
+	SuchThatClauseList suchThatClauses = {
+		{ make_unique<Parent>(false, s1, s2) },
+		{ make_unique<Parent>(false, a, i) },
+		{ make_unique<Parent>(false, stmtNo1, stmtNo2) }
+	};
 	PatternClauseList patternClauses = { { { DesignEntity::assign, "a" }, { EntRefType::synonym, "v"}, "x" } };
 	QueryProperties properties = QueryProperties(declarations, select, suchThatClauses, patternClauses);
 	vector<unordered_set<string>> synonymsInGroup = {
