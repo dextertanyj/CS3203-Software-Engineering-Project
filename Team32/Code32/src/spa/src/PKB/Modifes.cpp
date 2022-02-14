@@ -2,6 +2,40 @@
 
 #include "PKB/SVRelationStore.tpp"
 
+bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
+	StmtRef idx = statement->reference;
+	if (statement->type == StmtType::Print) {
+		throw "Print statements cannot modify a variable";
+	}
+	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt) {
+		return true;
+	}
+	auto statement_iter = store->statement_key_map.find(idx);
+	if (statement_iter == store->statement_key_map.end()) {
+		return true;
+	}
+	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& x) { return x == variable; }));
+}
+
+bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
+	StmtRef idx = statement->reference;
+	if (statement->type == StmtType::Print) {
+		throw "Print statements cannot modify a variable";
+	}
+	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt) {
+		return true;
+	}
+	if (variables.size() > 1) {
+		return false;
+	}
+	VarRef variable = *variables.begin();
+	auto statement_iter = store->statement_key_map.find(idx);
+	if (statement_iter == store->statement_key_map.end()) {
+		return true;
+	}
+	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& x) { return x == variable; }));
+}
+
 void Modifies::optimize(StatementStore& statement_store, StatementRelationStore<ParentPKB>& parent_store,
                         SVRelationStore<Modifies>& store) {
 	for (const auto& statement : statement_store.getAll()) {
@@ -17,19 +51,4 @@ void Modifies::optimize(StatementStore& statement_store, StatementRelationStore<
 			store.set(statement, variables);
 		}
 	}
-}
-
-bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
-	StmtRef idx = statement->reference;
-	if (statement->type == StmtType::Print) {
-		throw "Print statements cannot modify a variable";
-	}
-	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt) {
-		return true;
-	}
-	auto statement_iter = store->statement_key_map.find(idx);
-	if (statement_iter == store->statement_key_map.end()) {
-		return true;
-	}
-	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](VarRef x) { return x == variable; }));
 }

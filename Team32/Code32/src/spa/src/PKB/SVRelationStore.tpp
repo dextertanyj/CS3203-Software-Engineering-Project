@@ -14,7 +14,7 @@ void SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRef variable) {
 	}
 
 	if (!T::validate(this, statement, variable)) {
-		throw invalid_argument("Issue here");
+		throw "Relationship set error";
 	}
 
 	auto variable_iter = variable_key_map.find(variable);
@@ -34,13 +34,18 @@ void SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRef variable) {
 }
 
 template <class T>
-void SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, unordered_set<VarRef> variables) {
+void SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRefSet variables) {
 	StmtRef index = statement->reference;
 	for (const VarRef& variable : variables) {
 		if (variable.length() == 0) {
 			throw invalid_argument("Variable name must have length more than 0.");
 		}
 	}
+
+	if (!T::validate(this, statement, variables)) {
+		throw "Relationship set error";
+	}
+
 	auto statement_iter = statement_key_map.find(index);
 	if (statement_iter == statement_key_map.end()) {
 		statement_key_map.insert({index, variables});

@@ -1,14 +1,24 @@
 #include "PKB.h"
 
+#include <utility>
+
 using namespace std;
 
-PKB::PKB() {}
-
-StmtInfoPtrSet PKB::getStatements() { return statement_store.getAll(); }
+PKB::PKB() = default;
 
 // This method will store information about a statement into PKB's statement map.
 // Source Processor is guaranteed to call this method before storing relationships and variables.
 void PKB::setStmtType(StmtRef idx, StmtType type) { statement_store.insert(idx, type); }
+
+void PKB::setConstant(int value) { constant_store.insert(value); }
+
+void PKB::setConstant(unordered_set<int> values) { constant_store.insert(values); }
+
+StmtInfoPtrSet PKB::getStatements() { return statement_store.getAll(); }
+
+VarRefSet PKB::getVariables() { return variable_store.getAll(); }
+
+unordered_set<int> PKB::getConstants() { return constant_store.getAll(); }
 
 void PKB::setParent(StmtRef parent, StmtRef child) {
 	shared_ptr<StmtInfo> parent_info = statement_store.get(parent);
@@ -66,18 +76,34 @@ unordered_set<shared_ptr<StmtInfo>> PKB::getPrecedingStar(StmtRef idx) { return 
 
 unordered_set<shared_ptr<StmtInfo>> PKB::getFollowerStar(StmtRef idx) { return follows_store.getReverseTransitive(idx); }
 
-void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree) {
-	return assign_store.setAssign(stmtNo, variableLHS, opTree);
+void PKB::setModifies(StmtRef stmt, VarRef variable) {
+	shared_ptr<StmtInfo> stmtInfo = statement_store.get(stmt);
+	variable_store.insert(variable);
+	modifies_store.set(stmtInfo, std::move(variable));
 }
 
-void PKB::setUses(StmtRef stmt, VarRef varName) {
+void PKB::setModifies(StmtRef stmt, VarRefSet variables) {
 	shared_ptr<StmtInfo> stmtInfo = statement_store.get(stmt);
-	uses_store.set(stmtInfo, varName);
+	variable_store.insert(variables);
+	modifies_store.set(stmtInfo, std::move(variables));
 }
 
-void PKB::setModifies(StmtRef stmt, VarRef varName) {
+bool PKB::checkModifies(StmtRef stmt, VarRef varName) { return modifies_store.check(stmt, varName); }
+
+unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef varName) { return modifies_store.getByVar(varName); }
+
+unordered_set<VarRef> PKB::getModifiesByStmt(StmtRef stmt) { return modifies_store.getByStmt(stmt); }
+
+void PKB::setUses(StmtRef stmt, VarRef variable) {
 	shared_ptr<StmtInfo> stmtInfo = statement_store.get(stmt);
-	modifies_store.set(stmtInfo, varName);
+	variable_store.insert(variable);
+	uses_store.set(stmtInfo, std::move(variable));
+}
+
+void PKB::setUses(StmtRef stmt, VarRefSet variables) {
+	shared_ptr<StmtInfo> stmtInfo = statement_store.get(stmt);
+	variable_store.insert(variables);
+	uses_store.set(stmtInfo, std::move(variables));
 }
 
 bool PKB::checkUses(StmtRef stmt, VarRef varName) { return uses_store.check(stmt, varName); }
@@ -86,11 +112,9 @@ unordered_set<shared_ptr<StmtInfo>> PKB::getUsesByVar(VarRef var_name) { return 
 
 unordered_set<VarRef> PKB::getUsesByStmt(StmtRef stmt) { return uses_store.getByStmt(stmt); }
 
-bool PKB::checkModifies(StmtRef stmt, VarRef varName) { return modifies_store.check(stmt, varName); }
-
-unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef varName) { return modifies_store.getByVar(varName); }
-
-unordered_set<VarRef> PKB::getModifiesByStmt(StmtRef stmt) { return modifies_store.getByStmt(stmt); }
+void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree) {
+	return assign_store.setAssign(stmtNo, variableLHS, opTree);
+}
 
 bool PKB::patternExists(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
 	return assign_store.patternExists(varName, e, isRHSExactMatchNeeded);
