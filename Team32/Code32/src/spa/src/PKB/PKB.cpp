@@ -94,21 +94,11 @@ unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef varName) { retu
 
 unordered_set<VarRef> PKB::getModifiesByStmt(StmtRef stmt) { return modifyStore.getModifiesByStmt(stmt); }
 
-bool PKB::isPattern(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
+bool PKB::patternExists(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
 	return assignStore.patternExists(varName, e, isRHSExactMatchNeeded);
 }
 
-StmtInfoList PKB::getPatternMatch(StmtInfoList stmtInfoList, VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e,
-                                  bool isRHSExactMatchNeeded) {
-	StmtInfoList stmtInfos;
-	StmtRefList stmtList = assignStore.getPatternMatch(stmtInfoList, varName, e, isRHSExactMatchNeeded);
-	for (auto stmtNo : stmtList) {
-		stmtInfos.push_back(stmtInfoMap.at(stmtNo));
-	}
-	return stmtInfos;
-}
-
-StmtInfoList PKB::getAllPatternMatch(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
+StmtInfoList PKB::getStmtsWithPattern(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
 	StmtInfoList stmtInfoList;
 	StmtRefList stmtList = assignStore.getStmtsWithPattern(varName, e, isRHSExactMatchNeeded);
 	for (auto stmtNo : stmtList) {
@@ -117,7 +107,7 @@ StmtInfoList PKB::getAllPatternMatch(VarRef varName, Common::ArithmeticProcessor
 	return stmtInfoList;
 }
 
-StmtInfoList PKB::getPatternMatchLHS(VarRef varName) {
+StmtInfoList PKB::getStmtsWithPatternLHS(VarRef varName) {
 	StmtInfoList stmtInfoList;
 	StmtRefList stmtList = assignStore.getStmtsWithPatternLHS(varName);
 	for (auto stmtNo : stmtList) {
@@ -126,8 +116,8 @@ StmtInfoList PKB::getPatternMatchLHS(VarRef varName) {
 	return stmtInfoList;
 }
 
-vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getPatternMatchRHS(Common::ArithmeticProcessor::ArithmeticExpression e,
-                                                                   bool isRHSExactMatchNeeded) {
+vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getStmtsWithPatternRHS(Common::ArithmeticProcessor::ArithmeticExpression e,
+                                                                       bool isRHSExactMatchNeeded) {
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> stmtInfoVarList;
 	vector<pair<StmtRef, VarRef>> stmtVarList = assignStore.getStmtsWithPatternRHS(e, isRHSExactMatchNeeded);
 	for (auto& stmtVarPair : stmtVarList) {

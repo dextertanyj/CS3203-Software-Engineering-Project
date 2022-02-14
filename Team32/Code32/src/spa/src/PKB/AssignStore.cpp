@@ -30,31 +30,6 @@ bool AssignStore::patternExists(const VarRef& varName, const Common::ArithmeticP
     return false;
 }
 
-StmtRefList AssignStore::getPatternMatch(const StmtInfoList& stmtNoList, const VarRef& variableLHS, const Common::ArithmeticProcessor::ArithmeticExpression& opTree,
-                                         bool isRHSExactMatchNeeded) {
-    StmtRefList stmt_ref_list;
-    for (const auto& stmt_info : stmtNoList) {
-        StmtRef stmt_no = stmt_info->reference;
-        if (stmt_info->type != StmtType::Assign) {
-            throw invalid_argument("Statement must be an Assign statement.");
-        }
-        if (stmt_no <= 0) {
-            throw invalid_argument("Statement number must be a positive integer.");
-        }
-
-        auto key_itr = assignMap.find(stmt_no);
-        if (key_itr == assignMap.end()) {
-            continue;
-        }
-        AssignRelation assign_relation = key_itr->second;
-
-        if (compareOpTreeAndVar(assign_relation, variableLHS, opTree, isRHSExactMatchNeeded)) {
-            stmt_ref_list.push_back(stmt_no);
-        }
-    }
-    return stmt_ref_list;
-}
-
 StmtRefList AssignStore::getStmtsWithPattern(const VarRef& variableLHS, const Common::ArithmeticProcessor::ArithmeticExpression& opTree, bool isRHSExactMatchNeeded) {
     StmtRefList stmt_ref_list;
     for (auto& itr : assignMap) {
