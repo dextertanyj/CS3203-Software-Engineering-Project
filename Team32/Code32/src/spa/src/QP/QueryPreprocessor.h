@@ -1,6 +1,7 @@
 #ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPREPROCESSOR_H_
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPREPROCESSOR_H_
 
+#include <memory>
 #include <set>
 #include <stdexcept>
 #include <string>
@@ -53,13 +54,13 @@ private:
 
 	// Parsing Rules
 	DesignEntity parseDesignEntity(int& tokenIndex);
-	Relation* parseRelation(int& tokenIndex);
-	Follows* parseFollows(int& tokenIndex);
-	Parent* parseParent(int& tokenIndex);
-	UsesP* parseUsesP(int& tokenIndex);
-	UsesS* parseUsesS(int& tokenIndex);
-	ModifiesP* parseModifiesP(int& tokenIndex);
-	ModifiesS* parseModifiesS(int& tokenIndex);
+	unique_ptr<Relation> parseRelation(int& tokenIndex);
+	unique_ptr<Follows> parseFollows(int& tokenIndex);
+	unique_ptr<Parent> parseParent(int& tokenIndex);
+	unique_ptr<UsesP> parseUsesP(int& tokenIndex);
+	unique_ptr<UsesS> parseUsesS(int& tokenIndex);
+	unique_ptr<ModifiesP> parseModifiesP(int& tokenIndex);
+	unique_ptr<ModifiesS> parseModifiesS(int& tokenIndex);
 	QueryEntRef parseQueryEntRef(int& tokenIndex, set<DesignEntity> acceptedDesignEntities);
 	QueryStmtRef parseQueryStmtRef(int& tokenIndex, set<DesignEntity> acceptedDesignEntities);
 	Common::ExpressionProcessor::Expression parseExpression(int& tokenIndex);

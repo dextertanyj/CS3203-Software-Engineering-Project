@@ -1,6 +1,7 @@
 #ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPROPERTIES_H_
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPROPERTIES_H_
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -9,8 +10,7 @@
 #include "QP/QueryTypeDefs.h"
 #include "QP/Relationship/Relation.h"
 
-using std::string;
-using std::vector;
+using namespace std;
 
 typedef struct PatternClause {
 	Declaration synonym;
@@ -20,7 +20,7 @@ typedef struct PatternClause {
 } PatternClause;
 
 typedef struct SuchThatClause {
-	Relation* relation;
+	shared_ptr<Relation> relation;
 } SuchThatClause;
 
 typedef vector<Declaration> DeclarationList;
