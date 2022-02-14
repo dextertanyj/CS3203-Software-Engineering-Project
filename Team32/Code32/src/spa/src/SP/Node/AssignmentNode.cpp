@@ -20,9 +20,7 @@ StmtInfo SP::Node::AssignmentNode::extract(PKB& pkb) {
 	Common::ArithmeticProcessor::ArithmeticExpression rhs = expression->extract();
 	pkb.setModifies(stmt_ref, assignee->extract());
 	unordered_set<VarRef> variables = rhs.getVariables();
-	for (const auto& variable : variables) {
-		pkb.setUses(stmt_ref, variable);
-	}
+	pkb.setUses(stmt_ref, std::move(variables));
 	return {stmt_ref, StmtType::Assign};
 }
 

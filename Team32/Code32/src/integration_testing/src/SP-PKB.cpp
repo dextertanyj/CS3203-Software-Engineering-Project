@@ -12,7 +12,7 @@ TEST_CASE("SP::Processor::process Basic Test") {
 	SP::Processor source_processor = SP::Processor(pkb);
 	string source = "procedure main { print x; }";
 	source_processor.process(source);
-	StmtInfoList result = pkb.getStatements();
+	StmtInfoPtrSet result = pkb.getStatements();
 	REQUIRE_EQUALS(result.size(), 1);
 }
 
@@ -21,7 +21,7 @@ TEST_CASE("SP::Processor::process Two Line Test") {
 	SP::Processor source_processor = SP::Processor(pkb);
 	string source = "procedure main { print x; read y; }";
 	source_processor.process(source);
-	StmtInfoList result = pkb.getStatements();
+	StmtInfoPtrSet result = pkb.getStatements();
 	REQUIRE_EQUALS(result.size(), 2);
 }
 

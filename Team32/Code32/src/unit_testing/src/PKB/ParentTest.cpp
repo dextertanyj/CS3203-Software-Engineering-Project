@@ -63,6 +63,7 @@ TEST_CASE("Parent Methods") {
 		CHECK(pkb.checkParents(s2, s3));
 		CHECK(pkb.getParent(s2)->reference == s1);
 		CHECK(pkb.getParent(s4)->reference == s2);
+		pkb.getParent(s4);
 		shared_ptr<StmtInfo> expected_s2_info = stmt_info_map.find(s2)->second;
 		shared_ptr<StmtInfo> expected_s3_info = stmt_info_map.find(s3)->second;
 		shared_ptr<StmtInfo> expected_s4_info = stmt_info_map.find(s4)->second;
