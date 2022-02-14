@@ -4,17 +4,17 @@ QueryExpressionLexer::QueryExpressionLexer(vector<string> expressionTokens)
 	: expressionTokens(expressionTokens), idx(0) {}
 
 string QueryExpressionLexer::readToken() {
+	if (idx >= expressionTokens.size()) {
+		return "";
+	}
 	string token = expressionTokens[idx];
 	idx++;
-	if (idx >= expressionTokens.size()) {
-		throw QueryExpressionException("");
-	}
 	return token;
 }
 
 string QueryExpressionLexer::peekToken() {
 	if (idx >= expressionTokens.size()) {
-		return 0;
+		return "";
 	}
 
 	return expressionTokens[idx];

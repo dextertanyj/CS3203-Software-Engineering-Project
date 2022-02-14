@@ -26,6 +26,9 @@ void QueryPreprocessor::tokenizeQuery(string query) {
 		query.end(),
 		queryTokenRegex
 	);
+
+	/*Check to make sure that there are no spaces between Parent|Follows and *.
+	  If so, combine the tokens into Parent* or Follows* */ 
 	auto words_end = sregex_iterator();
 	int prev_pos = 0;
 	for (sregex_iterator i = words_begin; i != words_end; ++i) {
@@ -458,9 +461,12 @@ Common::ExpressionProcessor::Expression QueryPreprocessor::parseExpression(int& 
 		expression.push_back(this->queryTokens[tokenIndex]);
 		tokenIndex++;
 	}
-	expression.push_back(";");
 	QueryExpressionLexer lexer = QueryExpressionLexer(expression);
 	Common::ExpressionProcessor::Expression arithmeticExpression = Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	if (!lexer.readToken().empty()) {
+		throw QueryException("Incomplete expression parsing likely implies incorrect expression");
+	}
+	
 	matchTokenOrThrow("\"", tokenIndex);
 	return arithmeticExpression;
 }

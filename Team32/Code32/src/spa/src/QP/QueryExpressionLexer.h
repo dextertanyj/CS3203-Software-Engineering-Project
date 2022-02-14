@@ -6,12 +6,6 @@
 
 #include "Common/ExpressionProcessor/LexerInterface.h"
 
-using std::runtime_error;
-
-struct QueryExpressionException : public runtime_error {
-    using runtime_error::runtime_error;
-};
-
 class QueryExpressionLexer : public Common::ExpressionProcessor::LexerInterface {
 public:
 	QueryExpressionLexer(vector<string> expressionTokens);
