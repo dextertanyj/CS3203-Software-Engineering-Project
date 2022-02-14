@@ -5,7 +5,7 @@
 bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
 	StmtRef idx = statement->reference;
 	if (statement->type == StmtType::Print) {
-		throw "Print statements cannot modify a variable";
+		throw invalid_argument("Print statements cannot modify a variable");
 	}
 	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt) {
 		return true;
@@ -20,7 +20,7 @@ bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtI
 bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
 	StmtRef idx = statement->reference;
 	if (statement->type == StmtType::Print) {
-		throw "Print statements cannot modify a variable";
+		throw invalid_argument("Print statements cannot modify a variable");
 	}
 	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt) {
 		return true;

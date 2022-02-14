@@ -4,14 +4,14 @@ FollowsPKB::FollowsPKB(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
 
 void FollowsPKB::insertForward(shared_ptr<StmtInfo> following) {
 	if (this->following != nullptr) {
-		throw "This statement is already following a statement";
+		throw invalid_argument("This statement is already following a statement");
 	}
 	this->following = following;
 }
 
 void FollowsPKB::insertReverse(shared_ptr<StmtInfo> follower) {
 	if (this->follower != nullptr) {
-		throw "This statement is already following a statement";
+		throw invalid_argument("This statement is already following a statement");
 	}
 	this->follower = follower;
 }

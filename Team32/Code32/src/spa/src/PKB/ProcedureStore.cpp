@@ -25,6 +25,7 @@ void ProcedureStore::setProc(ProcRef procName, vector<shared_ptr<StmtInfo>> idxL
 
 void ProcedureStore::setCall(shared_ptr<StmtInfo> callStmt, ProcRef procName) {
     if (callStmt->reference <= 0) throw invalid_argument("Statement number must be a positive integer.");
+    if (callStmt->type != StmtType::Call) throw invalid_argument("Statement type must be a call statement.");
 
     auto keyItr = procMap.find(procName);
     if (keyItr == procMap.end()) {

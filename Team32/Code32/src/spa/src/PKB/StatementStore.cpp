@@ -4,12 +4,12 @@ StatementStore::StatementStore() = default;
 
 void StatementStore::insert(StmtRef idx, StmtType type) {
 	if (idx <= 0) {
-		throw "Statement index must be positive";
+		throw invalid_argument("Statement index must be positive");
 	}
 
 	auto iter = store.find(idx);
 	if (iter != store.end() && iter->second->type != type) {
-		throw "Statement has already been assigned a different type";
+		throw invalid_argument("Statement has already been assigned a different type");
 	}
 	if (iter != store.end()) {
 		return;
@@ -20,7 +20,7 @@ void StatementStore::insert(StmtRef idx, StmtType type) {
 
 shared_ptr<StmtInfo> StatementStore::get(StmtRef idx) {
 	if (idx <= 0) {
-		throw "Statement index must be positive";
+		throw invalid_argument("Statement index must be positive");
 	}
 	auto iter = this->store.find(idx);
 	if (iter == store.end()) {
