@@ -7,7 +7,7 @@ using namespace std;
 
 AssignStore::AssignStore() = default;
 
-void AssignStore::setAssign(StmtRef stmtNo, VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree) {
+void AssignStore::setAssign(StmtRef stmtNo, VarRef variableLHS, Common::ExpressionProcessor::Expression opTree) {
     if (stmtNo <= 0) {
         throw invalid_argument("Statement number must be a positive integer.");
     }
@@ -21,7 +21,7 @@ void AssignStore::setAssign(StmtRef stmtNo, VarRef variableLHS, Common::Arithmet
     }
 }
 
-bool AssignStore::patternExists(const VarRef& varName, const Common::ArithmeticProcessor::ArithmeticExpression& opTree, bool isRHSExactMatchNeeded) {
+bool AssignStore::patternExists(const VarRef& varName, const Common::ExpressionProcessor::Expression& opTree, bool isRHSExactMatchNeeded) {
     for (const auto& assign_stmt : assignMap) {
         if (compareOpTreeAndVar(assign_stmt.second, varName, opTree, isRHSExactMatchNeeded)) {
             return true;
@@ -30,7 +30,7 @@ bool AssignStore::patternExists(const VarRef& varName, const Common::ArithmeticP
     return false;
 }
 
-StmtRefList AssignStore::getStmtsWithPattern(const VarRef& variableLHS, const Common::ArithmeticProcessor::ArithmeticExpression& opTree, bool isRHSExactMatchNeeded) {
+StmtRefList AssignStore::getStmtsWithPattern(const VarRef& variableLHS, const Common::ExpressionProcessor::Expression& opTree, bool isRHSExactMatchNeeded) {
     StmtRefList stmt_ref_list;
     for (auto& itr : assignMap) {
         AssignRelation assign_relation = itr.second;
@@ -52,7 +52,7 @@ StmtRefList AssignStore::getStmtsWithPatternLHS(const VarRef& varName) {
     return stmt_ref_list;
 }
 
-vector<pair<StmtRef, VarRef>> AssignStore::getStmtsWithPatternRHS(const Common::ArithmeticProcessor::ArithmeticExpression& opTree, bool isRHSExactMatchNeeded) {
+vector<pair<StmtRef, VarRef>> AssignStore::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& opTree, bool isRHSExactMatchNeeded) {
     vector<pair<StmtRef, VarRef>> stmt_var_list;
     for (auto& itr : assignMap) {
         AssignRelation assign_relation = itr.second;
@@ -65,7 +65,7 @@ vector<pair<StmtRef, VarRef>> AssignStore::getStmtsWithPatternRHS(const Common::
 }
 
 // To be changed when Operation Tree is created
-bool AssignStore::compareOpTreeAndVar(AssignRelation assignRelation, const VarRef& variableLHS, const Common::ArithmeticProcessor::ArithmeticExpression& opTree, bool isRHSExactMatchNeeded) {
+bool AssignStore::compareOpTreeAndVar(AssignRelation assignRelation, const VarRef& variableLHS, const Common::ExpressionProcessor::Expression& opTree, bool isRHSExactMatchNeeded) {
     if (!variableLHS.empty() && assignRelation.variableLHS != variableLHS) {
         return false;
     }

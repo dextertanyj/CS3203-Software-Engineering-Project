@@ -112,15 +112,15 @@ unordered_set<shared_ptr<StmtInfo>> PKB::getUsesByVar(VarRef var_name) { return 
 
 unordered_set<VarRef> PKB::getUsesByStmt(StmtRef stmt) { return uses_store.getByStmt(stmt); }
 
-void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree) {
+void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, Common::ExpressionProcessor::Expression opTree) {
 	return assign_store.setAssign(stmtNo, variableLHS, opTree);
 }
 
-bool PKB::patternExists(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
+bool PKB::patternExists(VarRef varName, Common::ExpressionProcessor::Expression e, bool isRHSExactMatchNeeded) {
 	return assign_store.patternExists(varName, e, isRHSExactMatchNeeded);
 }
 
-StmtInfoList PKB::getStmtsWithPattern(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded) {
+StmtInfoList PKB::getStmtsWithPattern(VarRef varName, Common::ExpressionProcessor::Expression e, bool isRHSExactMatchNeeded) {
 	StmtInfoList stmtInfoList;
 	StmtRefList stmtList = assign_store.getStmtsWithPattern(varName, e, isRHSExactMatchNeeded);
 	for (auto stmtNo : stmtList) {
@@ -138,7 +138,7 @@ StmtInfoList PKB::getStmtsWithPatternLHS(VarRef varName) {
 	return stmtInfoList;
 }
 
-vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getStmtsWithPatternRHS(Common::ArithmeticProcessor::ArithmeticExpression e,
+vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getStmtsWithPatternRHS(Common::ExpressionProcessor::Expression e,
                                                                        bool isRHSExactMatchNeeded) {
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> stmtInfoVarList;
 	vector<pair<StmtRef, VarRef>> stmtVarList = assign_store.getStmtsWithPatternRHS(e, isRHSExactMatchNeeded);

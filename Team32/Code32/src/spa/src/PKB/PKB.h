@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "Common/ArithmeticProcessor/ArithmeticExpression.h"
+#include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
 #include "PKB/AssignStore.h"
 #include "PKB/ConstantStore.h"
@@ -33,7 +33,7 @@ public:
 	void setModifies(StmtRef, VarRef);
 	void setUses(StmtRef, VarRefSet);
 	void setModifies(StmtRef, VarRefSet);
-	void setAssign(StmtRef, VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree);
+	void setAssign(StmtRef, VarRef variableLHS, Common::ExpressionProcessor::Expression opTree);
 
 	// Get methods called by PQL
 
@@ -67,10 +67,10 @@ public:
 	VarRefSet getModifiesByStmt(StmtRef);
 
 	// Assign get methods
-	bool patternExists(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded);
-	StmtInfoList getStmtsWithPattern(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded);
+	bool patternExists(VarRef varName, Common::ExpressionProcessor::Expression e, bool isRHSExactMatchNeeded);
+	StmtInfoList getStmtsWithPattern(VarRef varName, Common::ExpressionProcessor::Expression e, bool isRHSExactMatchNeeded);
 	StmtInfoList getStmtsWithPatternLHS(VarRef varName);
-	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(Common::ArithmeticProcessor::ArithmeticExpression e,
+	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(Common::ExpressionProcessor::Expression e,
 	                                                                  bool isRHSExactMatchNeeded);
 
 	// Others

@@ -1,28 +1,28 @@
 #include "PKB/AssignStore.h"
 
-#include "Common/ArithmeticProcessor/ArithmeticExpression.h"
-#include "Common/ArithmeticProcessor/ConstantNode.h"
-#include "Common/ArithmeticProcessor/OperatorNode.h"
+#include "Common/ExpressionProcessor/Expression.h"
+#include "Common/ExpressionProcessor/ConstantNode.h"
+#include "Common/ExpressionProcessor/ArithmeticNode.h"
 #include "catch.hpp"
 #include "catch_tools.h"
 
 using namespace std;
-using namespace Common::ArithmeticProcessor;
+using namespace Common::ExpressionProcessor;
 
-ArithmeticExpression getBasicOpTree() {
+Expression getBasicOpTree() {
     shared_ptr<ExpressionNode> root =
-            make_shared<OperatorNode>(ArithmeticOperator::Plus, make_shared<ConstantNode>("1"), make_shared<ConstantNode>("2"));
+            make_shared<ArithmeticNode>(MathematicalOperator::Plus, make_shared<ConstantNode>("1"), make_shared<ConstantNode>("2"));
     unordered_set<VarRef> variables = unordered_set<VarRef>();
     unordered_set<int> constants = unordered_set<int>({1, 2});
-    ArithmeticExpression node = ArithmeticExpression(root, variables, constants);
+	Expression node = Expression(root, variables, constants);
     return node;
 }
 
-ArithmeticExpression getPartialOpTree() {
+Expression getPartialOpTree() {
     shared_ptr<ExpressionNode> root = make_shared<ConstantNode>("2");
     unordered_set<VarRef> variables = unordered_set<VarRef>();
     unordered_set<int> constants = unordered_set<int>({2});
-    ArithmeticExpression node = ArithmeticExpression(root, variables, constants);
+	Expression node = Expression(root, variables, constants);
     return node;
 }
 
