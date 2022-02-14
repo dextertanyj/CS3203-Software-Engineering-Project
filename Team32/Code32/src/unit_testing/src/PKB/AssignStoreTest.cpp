@@ -39,12 +39,6 @@ TEST_CASE("PKB::AssignStore::setAssign Success Test") {
     REQUIRE(obj->second.expression.equals(getBasicOpTree()));
 }
 
-TEST_CASE("PKB::AssignStore::setAssign Invalid StmtNo Test") {
-    AssignStore store = AssignStore();
-    REQUIRE_THROWS_AS(store.setAssign(ASSIGN(0), "x", getBasicOpTree()), invalid_argument);
-    REQUIRE_THROWS_AS(store.setAssign(ASSIGN(10), "x", getBasicOpTree()), invalid_argument);
-}
-
 TEST_CASE("PKB::AssignStore::setAssign Duplicate StmtNo Test") {
     AssignStore store = AssignStore();
     store.setAssign(ASSIGN(1), "x", getBasicOpTree());
@@ -89,79 +83,97 @@ TEST_CASE("PKB::AssignStone::patternExists Partial Match RHS No Match Test") {
 
 TEST_CASE("PKB::AssignStone::getStmtsWithPattern Exact Match Test") {
     AssignStore store = AssignStore();
-    store.setAssign(ASSIGN(1), "x", getPartialOpTree());
-    store.setAssign(ASSIGN(4), "x", getPartialOpTree());
-    store.setAssign(ASSIGN(3), "x", getBasicOpTree());
+	shared_ptr<StmtInfo> s1 = ASSIGN(1);
+	shared_ptr<StmtInfo> s3 = ASSIGN(3);
+	shared_ptr<StmtInfo> s4 = ASSIGN(4);
+    store.setAssign(s1, "x", getPartialOpTree());
+    store.setAssign(s4, "x", getPartialOpTree());
+    store.setAssign(s3, "x", getBasicOpTree());
     unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
     REQUIRE_EQUALS(map.size(), 3);
     StmtInfoPtrSet lst = store.getStmtsWithPattern("x", getPartialOpTree(), true);
     REQUIRE_EQUALS(lst.size(), 2);
-    REQUIRE(find(lst.begin(), lst.end(), 1) != lst.end());
-    REQUIRE(find(lst.begin(), lst.end(), 4) != lst.end());
-    REQUIRE_FALSE(find(lst.begin(), lst.end(), 3) != lst.end());
+    REQUIRE(find(lst.begin(), lst.end(), s1) != lst.end());
+    REQUIRE(find(lst.begin(), lst.end(), s4) != lst.end());
+    REQUIRE_FALSE(find(lst.begin(), lst.end(), s3) != lst.end());
 }
 
 TEST_CASE("PKB::AssignStone::getStmtsWithPattern Exact Match Variable LHS Test") {
     AssignStore store = AssignStore();
-    store.setAssign(ASSIGN(1), "x", getPartialOpTree());
-    store.setAssign(ASSIGN(4), "y", getPartialOpTree());
-    store.setAssign(ASSIGN(3), "x", getBasicOpTree());
+	shared_ptr<StmtInfo> s1 = ASSIGN(1);
+	shared_ptr<StmtInfo> s3 = ASSIGN(3);
+	shared_ptr<StmtInfo> s4 = ASSIGN(4);
+    store.setAssign(s1, "x", getPartialOpTree());
+    store.setAssign(s4, "y", getPartialOpTree());
+    store.setAssign(s3, "x", getBasicOpTree());
     unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
     REQUIRE_EQUALS(map.size(), 3);
 	StmtInfoPtrSet lst = store.getStmtsWithPattern("x", getPartialOpTree(), true);
     REQUIRE_EQUALS(lst.size(), 1);
-    REQUIRE(find(lst.begin(), lst.end(), 1) != lst.end());
-    REQUIRE_FALSE(find(lst.begin(), lst.end(), 4) != lst.end());
-    REQUIRE_FALSE(find(lst.begin(), lst.end(), 3) != lst.end());
+    REQUIRE(find(lst.begin(), lst.end(), s1) != lst.end());
+    REQUIRE_FALSE(find(lst.begin(), lst.end(), s4) != lst.end());
+    REQUIRE_FALSE(find(lst.begin(), lst.end(), s3) != lst.end());
 }
 
 TEST_CASE("PKB::AssignStone::getStmtsWithPattern Partial Match Test") {
     AssignStore store = AssignStore();
-    store.setAssign(ASSIGN(1), "x", getBasicOpTree());
-    store.setAssign(ASSIGN(4), "x", getBasicOpTree());
-    store.setAssign(ASSIGN(3), "x", getPartialOpTree());
+	shared_ptr<StmtInfo> s1 = ASSIGN(1);
+	shared_ptr<StmtInfo> s3 = ASSIGN(3);
+	shared_ptr<StmtInfo> s4 = ASSIGN(4);
+    store.setAssign(s1, "x", getBasicOpTree());
+    store.setAssign(s4, "x", getBasicOpTree());
+    store.setAssign(s3, "x", getPartialOpTree());
     unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
     REQUIRE_EQUALS(map.size(), 3);
 	StmtInfoPtrSet lst = store.getStmtsWithPattern("x", getPartialOpTree(), false);
     REQUIRE_EQUALS(lst.size(), 3);
-    REQUIRE(find(lst.begin(), lst.end(), 1) != lst.end());
-    REQUIRE(find(lst.begin(), lst.end(), 4) != lst.end());
-    REQUIRE(find(lst.begin(), lst.end(), 3) != lst.end());
+    REQUIRE(find(lst.begin(), lst.end(), s1) != lst.end());
+    REQUIRE(find(lst.begin(), lst.end(), s4) != lst.end());
+    REQUIRE(find(lst.begin(), lst.end(), s3) != lst.end());
 }
 
 TEST_CASE("PKB::AssignStone::getStmtsWithPattern Partial Match Variable LHS Test") {
     AssignStore store = AssignStore();
-    store.setAssign(ASSIGN(1), "x", getBasicOpTree());
-    store.setAssign(ASSIGN(4), "y", getBasicOpTree());
-    store.setAssign(ASSIGN(3), "x", getPartialOpTree());
+	shared_ptr<StmtInfo> s1 = ASSIGN(1);
+	shared_ptr<StmtInfo> s3 = ASSIGN(3);
+	shared_ptr<StmtInfo> s4 = ASSIGN(4);
+    store.setAssign(s1, "x", getBasicOpTree());
+    store.setAssign(s4, "y", getBasicOpTree());
+    store.setAssign(s3, "x", getPartialOpTree());
     unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
     REQUIRE_EQUALS(map.size(), 3);
 	StmtInfoPtrSet lst = store.getStmtsWithPattern("x", getPartialOpTree(), false);
     REQUIRE_EQUALS(lst.size(), 2);
-    REQUIRE(find(lst.begin(), lst.end(), 1) != lst.end());
-    REQUIRE_FALSE(find(lst.begin(), lst.end(), 4) != lst.end());
-    REQUIRE(find(lst.begin(), lst.end(), 3) != lst.end());
+    REQUIRE(find(lst.begin(), lst.end(), s1) != lst.end());
+    REQUIRE_FALSE(find(lst.begin(), lst.end(), s4) != lst.end());
+    REQUIRE(find(lst.begin(), lst.end(), s3) != lst.end());
 }
 
 TEST_CASE("PKB::AssignStone::getStmtsWithPatternLHS Test") {
     AssignStore store = AssignStore();
-    store.setAssign(ASSIGN(1), "x", getBasicOpTree());
-    store.setAssign(ASSIGN(4), "y", getBasicOpTree());
-    store.setAssign(ASSIGN(3), "x", getPartialOpTree());
+	shared_ptr<StmtInfo> s1 = ASSIGN(1);
+	shared_ptr<StmtInfo> s3 = ASSIGN(3);
+	shared_ptr<StmtInfo> s4 = ASSIGN(4);
+    store.setAssign(s1, "x", getBasicOpTree());
+    store.setAssign(s4, "y", getBasicOpTree());
+    store.setAssign(s3, "x", getPartialOpTree());
     unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
     REQUIRE_EQUALS(map.size(), 3);
 	StmtInfoPtrSet lst = store.getStmtsWithPatternLHS("x");
     REQUIRE_EQUALS(lst.size(), 2);
-    REQUIRE(find(lst.begin(), lst.end(), 1) != lst.end());
-    REQUIRE_FALSE(find(lst.begin(), lst.end(), 4) != lst.end());
-    REQUIRE(find(lst.begin(), lst.end(), 3) != lst.end());
+    REQUIRE(find(lst.begin(), lst.end(), s1) != lst.end());
+    REQUIRE_FALSE(find(lst.begin(), lst.end(), s4) != lst.end());
+    REQUIRE(find(lst.begin(), lst.end(), s3) != lst.end());
 }
 
 TEST_CASE("PKB::AssignStone::getStmtsWithPatternLHS No Match Test") {
     AssignStore store = AssignStore();
-    store.setAssign(ASSIGN(1), "x", getBasicOpTree());
-    store.setAssign(ASSIGN(4), "y", getBasicOpTree());
-    store.setAssign(ASSIGN(3), "x", getPartialOpTree());
+	shared_ptr<StmtInfo> s1 = ASSIGN(1);
+	shared_ptr<StmtInfo> s3 = ASSIGN(3);
+	shared_ptr<StmtInfo> s4 = ASSIGN(4);
+    store.setAssign(s1, "x", getBasicOpTree());
+    store.setAssign(s4, "y", getBasicOpTree());
+    store.setAssign(s3, "x", getPartialOpTree());
     unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
     REQUIRE_EQUALS(map.size(), 3);
 	StmtInfoPtrSet lst = store.getStmtsWithPatternLHS("z");
@@ -170,9 +182,12 @@ TEST_CASE("PKB::AssignStone::getStmtsWithPatternLHS No Match Test") {
 
 TEST_CASE("PKB::AssignStone::getStmtsWithPatternRHS Exact Match Test") {
     AssignStore store = AssignStore();
-    store.setAssign(ASSIGN(1), "x", getBasicOpTree());
-    store.setAssign(ASSIGN(4), "y", getBasicOpTree());
-    store.setAssign(ASSIGN(3), "z", getPartialOpTree());
+	shared_ptr<StmtInfo> s1 = ASSIGN(1);
+	shared_ptr<StmtInfo> s3 = ASSIGN(3);
+	shared_ptr<StmtInfo> s4 = ASSIGN(4);
+    store.setAssign(s1, "x", getBasicOpTree());
+    store.setAssign(s4, "y", getBasicOpTree());
+    store.setAssign(s3, "z", getPartialOpTree());
     unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
     REQUIRE_EQUALS(map.size(), 3);
     vector<pair<shared_ptr<StmtInfo>, VarRef>> lst = store.getStmtsWithPatternRHS(getPartialOpTree(), true);
@@ -191,9 +206,12 @@ TEST_CASE("PKB::AssignStone::getStmtsWithPatternRHS Exact Match Test") {
 
 TEST_CASE("PKB::AssignStone::getStmtsWithPatternRHS Partial Match Test") {
     AssignStore store = AssignStore();
-    store.setAssign(ASSIGN(1), "x", getBasicOpTree());
-    store.setAssign(ASSIGN(4), "y", getBasicOpTree());
-    store.setAssign(ASSIGN(3), "z", getPartialOpTree());
+	shared_ptr<StmtInfo> s1 = ASSIGN(1);
+	shared_ptr<StmtInfo> s3 = ASSIGN(3);
+	shared_ptr<StmtInfo> s4 = ASSIGN(4);
+    store.setAssign(s1, "x", getBasicOpTree());
+    store.setAssign(s4, "y", getBasicOpTree());
+    store.setAssign(s3, "z", getPartialOpTree());
     unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
     REQUIRE_EQUALS(map.size(), 3);
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> lst = store.getStmtsWithPatternRHS(getPartialOpTree(), false);
