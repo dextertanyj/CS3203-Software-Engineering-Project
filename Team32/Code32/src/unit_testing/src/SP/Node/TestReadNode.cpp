@@ -1,10 +1,10 @@
 #include "SP/Node/CallNode.h"
 #include "SP/Node/ReadNode.h"
 
-#include "catch.hpp"
 #include "catch_tools.h"
 
 using namespace std;
+using namespace SP::Node;
 
 TEST_CASE("SP::Node::ReadNode::equals Same Object Test") {
     shared_ptr<ReadNode> node = make_shared<ReadNode>(1, make_unique<VariableNode>("a"));
@@ -51,11 +51,27 @@ TEST_CASE("ReadNode::extract Test") {
 }
 
 TEST_CASE("SP::Node::ReadNode::parseReadStatement Valid Token Test") {
-    Lexer lex;
+	SP::Lexer lex;
     lex.initialize("x;");
     int statement_count = 1;
     unique_ptr<ReadNode> node = ReadNode::parseReadStatement(lex, statement_count);
     shared_ptr<ReadNode> expected = make_shared<ReadNode>(1, make_unique<VariableNode>("x"));
     REQUIRE(node->equals(move(expected)));
     REQUIRE_EQUALS(statement_count, 2);
+}
+
+TEST_CASE("SP::Node::ReadNode::parseReadStatement Missing Semicolon Test") {
+    SP::Lexer lex;
+    lex.initialize("x");
+    int statement_count = 1;
+    REQUIRE_THROWS_AS(ReadNode::parseReadStatement(lex, statement_count), SP::TokenizationException);
+    REQUIRE_EQUALS(statement_count, 1);
+}
+
+TEST_CASE("SP::Node::ReadNode::parseReadStatement Missing Variable Test") {
+    SP::Lexer lex;
+    lex.initialize(" ");
+    int statement_count = 1;
+    REQUIRE_THROWS_AS(ReadNode::parseReadStatement(lex, statement_count), SP::ParseException);
+    REQUIRE_EQUALS(statement_count, 1);
 }

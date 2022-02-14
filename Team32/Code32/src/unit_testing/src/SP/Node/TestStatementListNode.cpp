@@ -5,10 +5,10 @@
 #include "SP/Node/ReadNode.h"
 #include "SP/Node/StatementListNode.h"
 #include "SP/SP.h"
-#include "catch.hpp"
 #include "catch_tools.h"
 
 using namespace std;
+using namespace SP::Node;
 
 TEST_CASE("SP::Node::StatementListNode::addStatementNode CallNode Test") {
 	shared_ptr<StatementListNode> statement_list_node = make_shared<StatementListNode>();
@@ -19,6 +19,7 @@ TEST_CASE("SP::Node::StatementListNode::addStatementNode CallNode Test") {
 	vector<shared_ptr<StatementNode>> stmt_list = statement_list_node->getStatementList();
 	shared_ptr<CallNode> call_node_shared = make_shared<CallNode>(1, "test");
 	REQUIRE(stmt_list[0]->equals(call_node_shared));
+    REQUIRE_EQUALS(stmt_list.size(), 1);
 }
 
 TEST_CASE("SP::Node::StatementListNode::addStatementNode PrintNode Test") {
@@ -30,6 +31,7 @@ TEST_CASE("SP::Node::StatementListNode::addStatementNode PrintNode Test") {
 	vector<shared_ptr<StatementNode>> stmt_list = statement_list_node->getStatementList();
 	shared_ptr<PrintNode> print_node_shared = make_shared<PrintNode>(1, make_unique<VariableNode>("a"));
 	REQUIRE(stmt_list[0]->equals(print_node_shared));
+    REQUIRE_EQUALS(stmt_list.size(), 1);
 }
 
 TEST_CASE("SP::Node::StatementListNode::addStatementNode ReadNode Test") {
@@ -41,6 +43,7 @@ TEST_CASE("SP::Node::StatementListNode::addStatementNode ReadNode Test") {
 	vector<shared_ptr<StatementNode>> stmt_list = statement_list_node->getStatementList();
 	shared_ptr<ReadNode> read_node_shared = make_shared<ReadNode>(1, make_unique<VariableNode>("x"));
 	REQUIRE(stmt_list[0]->equals(read_node_shared));
+    REQUIRE_EQUALS(stmt_list.size(), 1);
 }
 
 TEST_CASE("SP::Node::StatementListNode::addStatementNode Multiple Nodes Test") {
@@ -56,6 +59,7 @@ TEST_CASE("SP::Node::StatementListNode::addStatementNode Multiple Nodes Test") {
 	shared_ptr<CallNode> call_node_shared = make_shared<CallNode>(2, "test");
 	REQUIRE(stmt_list[0]->equals(print_node_shared));
 	REQUIRE(stmt_list[1]->equals(call_node_shared));
+    REQUIRE_EQUALS(stmt_list.size(), 2);
 }
 
 TEST_CASE("SP::Node::StatementListNode::equals Same Object Test") {
@@ -100,7 +104,7 @@ TEST_CASE("SP::Node::StatementListNode::equals Different Nodes Test") {
 }
 
 TEST_CASE("SP::Node::StatementListNode::parseStatementList Valid Token Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("print flag; read x; }");
 	int statement_count = 1;
 	unique_ptr<StatementListNode> statement_list_node = StatementListNode::parseStatementList(lex, statement_count);
@@ -114,7 +118,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList Valid Token Test") {
 }
 
 TEST_CASE("SP::Node::StatementListNode::parseStatementList Different Statement Number Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("print flag; read x; }");
 	int statement_count = 1;
 	unique_ptr<StatementListNode> statement_list_node = StatementListNode::parseStatementList(lex, statement_count);
@@ -128,7 +132,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList Different Statement N
 }
 
 TEST_CASE("SP::Node::StatementListNode::parseStatementList Missing Token Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("print x read y; }");
 	int statement_count = 1;
 	REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::TokenizationException);
@@ -136,7 +140,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList Missing Token Test") 
 }
 
 TEST_CASE("SP::Node::StatementListNode::parseStatementList Extra Token Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("print x ;; read y; }");
 	int statement_count = 1;
 	REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::ParseException);
@@ -144,7 +148,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList Extra Token Test") {
 }
 
 TEST_CASE("SP::Node::StatementListNode::parseStatementList Invalid Keyword Test") {
-	Lexer lex;
+	SP::Lexer lex;
 	lex.initialize("prints x ; }");
 	int statement_count = 1;
 	REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::ParseException);

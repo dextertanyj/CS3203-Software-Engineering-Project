@@ -1,12 +1,10 @@
 #include "SP/Node/VariableNode.h"
 
 #include "Common/Validator.h"
-#include "SP/Lexer.h"
-#include "SP/SP.h"
 
-VariableNode::VariableNode(VarRef name) : name(move(name)) {}
+SP::Node::VariableNode::VariableNode(VarRef name) : name(move(name)) {}
 
-unique_ptr<VariableNode> VariableNode::parseVariable(SP::Lexer& lex) {
+unique_ptr<SP::Node::VariableNode> SP::Node::VariableNode::parseVariable(SP::Lexer& lex) {
 	VarRef name = lex.readToken();
 	if (!Common::Validator::validateName(name)) {
 		throw SP::ParseException("Invalid variable name");
@@ -14,7 +12,7 @@ unique_ptr<VariableNode> VariableNode::parseVariable(SP::Lexer& lex) {
 	return make_unique<VariableNode>(name);
 }
 
-unique_ptr<VariableNode> VariableNode::parseVariable(string token) {
+unique_ptr<SP::Node::VariableNode> SP::Node::VariableNode::parseVariable(string token) {
 	VarRef name = std::move(token);
 	if (!Common::Validator::validateName(name)) {
 		throw SP::ParseException("Invalid variable name");
@@ -22,7 +20,6 @@ unique_ptr<VariableNode> VariableNode::parseVariable(string token) {
 	return make_unique<VariableNode>(name);
 }
 
-VarRef VariableNode::extract() { return name; }
-bool VariableNode::equals(unique_ptr<VariableNode> other) {
-    return other->name == this->name;
-}
+VarRef SP::Node::VariableNode::extract() { return name; }
+
+bool SP::Node::VariableNode::equals(const shared_ptr<VariableNode>& other) { return other->name == this->name; }

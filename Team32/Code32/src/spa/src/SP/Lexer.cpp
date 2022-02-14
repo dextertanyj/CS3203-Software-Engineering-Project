@@ -10,7 +10,7 @@ using namespace std;
 regex SP::Lexer::tokenization_regex =  // NOLINT
 	regex(R"(([a-zA-Z][0-9a-zA-Z]*|[0-9]+|\{|\}|\(|\)|;|!={0,1}|={1,2}|&&|\|\||>={0,1}|<={0,1}|\+|-|\*|\/|%))");
 regex SP::Lexer::validation_regex =  // NOLINT
-	regex(R"(([^a-zA-Z0-9 \{\}\(\);=!&\|><\+\-\*\/%\n]))");
+	regex(R"(([^a-zA-Z0-9\s\{\}\(\);=!&\|><\+\-\*\/%]))");
 
 void SP::Lexer::initialize(string raw_source) {
 	this->source = move(raw_source);
@@ -45,14 +45,14 @@ bool SP::Lexer::nextIf(const string &token) {
 	if (this->iterator->str() == token) {
 		return nextToken();
 	}
-	throw TokenizationException("");
+	throw TokenizationException("Unexpected token encountered");
 }
 
 bool SP::Lexer::nextIf(initializer_list<string> tokens) {
 	bool last;
 	for (const string &token : tokens) {
 		if (this->iterator->str() != token) {
-			throw TokenizationException("");
+			throw TokenizationException("Unexpected token encountered");
 		}
 		last = nextToken();
 	}

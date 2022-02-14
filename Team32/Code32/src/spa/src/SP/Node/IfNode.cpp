@@ -1,16 +1,17 @@
 #include "SP/Node/IfNode.h"
 
-using namespace std;
-using namespace SP;
+#include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
-IfNode::IfNode(StmtRef stmtNo, unique_ptr<ConditionalExpressionNode> condExpr, unique_ptr<StatementListNode> ifStmtLst,
+using namespace std;
+
+SP::Node::IfNode::IfNode(StmtRef stmtNo, unique_ptr<ExpressionNode> condExpr, unique_ptr<StatementListNode> ifStmtLst,
                unique_ptr<StatementListNode> elseStmtLst)
 	: StatementNode(stmtNo), condExpr(move(condExpr)), ifStmtLst(move(ifStmtLst)), elseStmtLst(move(elseStmtLst)) {}
 
-unique_ptr<IfNode> IfNode::parseIfStatement(Lexer& lex, int& statement_count) {
+unique_ptr<SP::Node::IfNode> SP::Node::IfNode::parseIfStatement(Lexer& lex, int& statement_count) {
 	StmtRef statement_index = statement_count++;
 	lex.nextIf("(");
-	unique_ptr<ConditionalExpressionNode> condition = ConditionalExpressionNode::parseConditionalExpression(lex);
+	unique_ptr<ExpressionNode> condition = ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptLogical);
 	lex.nextIf(")");
 	lex.nextIf("then");
 	lex.nextIf("{");
@@ -23,7 +24,7 @@ unique_ptr<IfNode> IfNode::parseIfStatement(Lexer& lex, int& statement_count) {
 	return make_unique<IfNode>(statement_index, move(condition), move(then_statements), move(else_statements));
 }
 
-StmtInfo IfNode::extract(PKB& pkb) {
+StmtInfo SP::Node::IfNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::IfStmt);
 	StmtInfoList then_children = elseStmtLst->extract(pkb);
@@ -34,7 +35,8 @@ StmtInfo IfNode::extract(PKB& pkb) {
 	for (auto iter = else_children.begin(); iter < else_children.end(); ++iter) {
 		pkb.setParent(stmt_ref, iter->reference);
 	}
-	UsageInfo usage = condExpr->extract();
+	Common::ExpressionProcessor::Expression expression = condExpr->extract();
+	UsageInfo usage = {expression.getVariables(), expression.getConstants()};
 	for (auto iter = usage.variables.begin(); iter != usage.variables.end(); ++iter) {
 		pkb.setUses(stmt_ref, *iter);
 	}
@@ -42,12 +44,12 @@ StmtInfo IfNode::extract(PKB& pkb) {
 }
 
 
-bool IfNode::equals(shared_ptr<StatementNode> object) {
+bool SP::Node::IfNode::equals(shared_ptr<StatementNode> object) {
     shared_ptr<IfNode> other = dynamic_pointer_cast<IfNode>(object);
     if (other == nullptr) {
         return false;
     }
-    return this->getStmtRef() == other->getStmtRef() && this->condExpr->equals(move(other->condExpr))
-        && this->ifStmtLst->equals(move(other->ifStmtLst))
-        && this->elseStmtLst->equals(move(other->elseStmtLst));
+    return this->getStmtRef() == other->getStmtRef() && this->condExpr->equals(other->condExpr)
+        && this->ifStmtLst->equals(other->ifStmtLst)
+        && this->elseStmtLst->equals(other->elseStmtLst);
 }

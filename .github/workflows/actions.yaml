@@ -10,10 +10,15 @@ jobs:
     steps:
       - name: Cleanup workspace
         shell: bash
-        run: rm -rf ${{github.workspace}}/* && rm -rf ${{runner.workspace}}/build
+        run: |
+          rm -rf ${{github.workspace}}/*
+          rm -rf ${{runner.workspace}}/build
+          rm -rf ${{runner.workspace}}/coverage
 
       - name: Checkout repository code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
 
       - name: Create build environment
         run: cmake -E make_directory ${{runner.workspace}}/build
@@ -33,6 +38,14 @@ jobs:
         shell: bash
         run: cmake --build . --config $BUILD_TYPE --parallel 8
 
+      - name: Baseline coverage
+        shell: bash
+        working-directory: ${{runner.workspace}}
+        run: |
+          mkdir ${{runner.workspace}}/coverage
+          lcov -z -d ./build/src/spa/CMakeFiles/spa.dir/src
+          lcov -c -i -d ./build/src/spa/CMakeFiles/spa.dir/src -o ./coverage/coverage_base.info
+
       - name: Run unit tests
         working-directory: ${{runner.workspace}}/build
         shell: bash
@@ -42,3 +55,17 @@ jobs:
         working-directory: ${{runner.workspace}}/build
         shell: bash
         run: ./src/integration_testing/integration_testing
+
+      - name: Analyse coverage
+        shell: bash
+        working-directory: ${{runner.workspace}}
+        run: |
+          lcov -c -d ./build/src/spa/CMakeFiles/spa.dir/src -o ./coverage/coverage.info
+          lcov -a ./coverage/coverage_base.info -a ./coverage/coverage.info -o ./coverage/coverage_total.info
+          lcov -r ./coverage/coverage_total.info '/Library/Developer/CommandLineTools/SDKs/*' -o ./coverage/coverage_filtered.info
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v2
+        with:
+          token: d5afce92-dfc9-486a-8744-97db7b0baf4e
+          files: ${{runner.workspace}}/coverage/coverage_filtered.info

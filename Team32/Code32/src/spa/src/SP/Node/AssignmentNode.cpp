@@ -1,24 +1,26 @@
 #include "SP/Node/AssignmentNode.h"
 
-using namespace std;
-using namespace SP;
+#include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
-AssignmentNode::AssignmentNode(StmtRef stmtNo, unique_ptr<VariableNode> assignee, unique_ptr<ArithmeticExpressionNode> expression)
+using namespace std;
+
+SP::Node::AssignmentNode::AssignmentNode(StmtRef stmtNo, unique_ptr<VariableNode> assignee, unique_ptr<ExpressionNode> expression)
 	: StatementNode(stmtNo), assignee(move(assignee)), expression(move(expression)) {}
 
-unique_ptr<AssignmentNode> AssignmentNode::parseAssignmentStatement(Lexer& lex, int& statement_count, string token) {
+unique_ptr<SP::Node::AssignmentNode> SP::Node::AssignmentNode::parseAssignmentStatement(Lexer& lex, int& statement_count, string token) {
 	unique_ptr<VariableNode> variable = VariableNode::parseVariable(std::move(token));
 	lex.nextIf("=");
-	unique_ptr<ArithmeticExpressionNode> expression = ArithmeticExpressionNode::parseArithmeticExpression(lex);
+	unique_ptr<ExpressionNode> expression =
+		ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
 	lex.nextIf(";");
 	return make_unique<AssignmentNode>(statement_count++, move(variable), move(expression));
 }
 
-StmtInfo AssignmentNode::extract(PKB& pkb) {
+StmtInfo SP::Node::AssignmentNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Assign);
 	// TODO: Set arithmetic expression for pattern matching
-	Common::ArithmeticProcessor::ArithmeticExpression rhs = expression->extract();
+	Common::ExpressionProcessor::Expression rhs = expression->extract();
 	pkb.setModifies(stmt_ref, assignee->extract());
 	unordered_set<VarRef> variables = rhs.getVariables();
 	for (const auto& variable : variables) {
@@ -27,11 +29,11 @@ StmtInfo AssignmentNode::extract(PKB& pkb) {
 	return {stmt_ref, StmtType::Assign};
 }
 
-bool AssignmentNode::equals(shared_ptr<StatementNode> object) {
-    shared_ptr<AssignmentNode> other = dynamic_pointer_cast<AssignmentNode>(object);
-    if (other == nullptr) {
-        return false;
-    }
-    return this->getStmtRef() == other->getStmtRef() && this->assignee->equals(move(other->assignee))
-        && this->expression->equals(move(other->expression));
+bool SP::Node::AssignmentNode::equals(shared_ptr<StatementNode> object) {
+	shared_ptr<AssignmentNode> other = dynamic_pointer_cast<AssignmentNode>(object);
+	if (other == nullptr) {
+		return false;
+	}
+	return this->getStmtRef() == other->getStmtRef() && this->assignee->equals(other->assignee) &&
+	       this->expression->equals(other->expression);
 }
