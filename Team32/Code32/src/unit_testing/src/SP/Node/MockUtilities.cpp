@@ -1,20 +1,23 @@
 #include "MockUtilities.h"
 
-#include "../../Common/ArithmeticProcessor/MockLexer.h"
+#include "../../Common/ExpressionProcessor/MockLexer.h"
+
+#include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
 using namespace std;
 
-Common::ArithmeticProcessor::ArithmeticExpression createArithmeticExpression(vector<string> str_list) {
+Common::ExpressionProcessor::Expression createArithmeticExpression(vector<string> str_list) {
     MockLexer lex = MockLexer(move(str_list));
-	Common::ArithmeticProcessor::ArithmeticExpression expression = Common::ArithmeticProcessor::ArithmeticExpression::parse(lex);
+	Common::ExpressionProcessor::Expression expression =
+		Common::ExpressionProcessor::Expression::parse(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
     return expression;
 }
 
-unique_ptr<SP::Node::RelationalExpressionNode> createRelationalExpression(string str) {
-    SP::Lexer lex;
-    lex.initialize(move(str));
-    unique_ptr<SP::Node::RelationalExpressionNode> node = SP::Node::RelationalExpressionNode::parseRelationalExpression(lex);
-    return node;
+Common::ExpressionProcessor::Expression createConditionalExpression(vector<string> str_list) {
+	MockLexer lex = MockLexer(move(str_list));
+	Common::ExpressionProcessor::Expression expression =
+		Common::ExpressionProcessor::Expression::parse(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptLogical);
+	return expression;
 }
 
 unique_ptr<SP::Node::StatementListNode> createStatementList(string str, int statement_count) {

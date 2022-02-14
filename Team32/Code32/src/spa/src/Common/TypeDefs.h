@@ -27,8 +27,7 @@ typedef unordered_set<shared_ptr<StmtInfo>> StmtInfoPtrSet;
 typedef unordered_set<VarRef> VarRefSet;
 typedef unordered_set<StmtRef> StmtRefSet;
 
-enum class ArithmeticOperator { Plus, Minus, Times, Divide, Modulo };
-enum class RelationalOperator { EQ, NEQ, LT, LTE, GT, GTE };
+enum class MathematicalOperator { Plus, Minus, Times, Divide, Modulo, EQ, NEQ, LT, LTE, GT, GTE, And, Or, Not };
 
 class Modifies;
 class FollowsPKB;

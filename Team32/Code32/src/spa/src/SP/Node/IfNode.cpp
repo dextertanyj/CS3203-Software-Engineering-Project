@@ -1,15 +1,17 @@
 #include "SP/Node/IfNode.h"
 
+#include "Common/ExpressionProcessor/OperatorAcceptor.h"
+
 using namespace std;
 
-SP::Node::IfNode::IfNode(StmtRef stmtNo, unique_ptr<ConditionalExpressionNode> condExpr, unique_ptr<StatementListNode> ifStmtLst,
+SP::Node::IfNode::IfNode(StmtRef stmtNo, unique_ptr<ExpressionNode> condExpr, unique_ptr<StatementListNode> ifStmtLst,
                unique_ptr<StatementListNode> elseStmtLst)
 	: StatementNode(stmtNo), condExpr(move(condExpr)), ifStmtLst(move(ifStmtLst)), elseStmtLst(move(elseStmtLst)) {}
 
 unique_ptr<SP::Node::IfNode> SP::Node::IfNode::parseIfStatement(Lexer& lex, int& statement_count) {
 	StmtRef statement_index = statement_count++;
 	lex.nextIf("(");
-	unique_ptr<ConditionalExpressionNode> condition = ConditionalExpressionNode::parseConditionalExpression(lex);
+	unique_ptr<ExpressionNode> condition = ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptLogical);
 	lex.nextIf(")");
 	lex.nextIf("then");
 	lex.nextIf("{");
@@ -33,7 +35,8 @@ StmtInfo SP::Node::IfNode::extract(PKB& pkb) {
 	for (auto iter = else_children.begin(); iter < else_children.end(); ++iter) {
 		pkb.setParent(stmt_ref, iter->get()->reference);
 	}
-	UsageInfo usage = condExpr->extract();
+	Common::ExpressionProcessor::Expression expression = condExpr->extract();
+	UsageInfo usage = {expression.getVariables(), expression.getConstants()};
 	for (auto iter = usage.variables.begin(); iter != usage.variables.end(); ++iter) {
 		pkb.setUses(stmt_ref, *iter);
 	}
@@ -46,7 +49,7 @@ bool SP::Node::IfNode::equals(shared_ptr<StatementNode> object) {
     if (other == nullptr) {
         return false;
     }
-    return this->getStmtRef() == other->getStmtRef() && this->condExpr->equals(move(other->condExpr))
-        && this->ifStmtLst->equals(move(other->ifStmtLst))
-        && this->elseStmtLst->equals(move(other->elseStmtLst));
+    return this->getStmtRef() == other->getStmtRef() && this->condExpr->equals(other->condExpr)
+        && this->ifStmtLst->equals(other->ifStmtLst)
+        && this->elseStmtLst->equals(other->elseStmtLst);
 }

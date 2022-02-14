@@ -59,3 +59,19 @@ TEST_CASE("SP::Node::ReadNode::parseReadStatement Valid Token Test") {
     REQUIRE(node->equals(move(expected)));
     REQUIRE_EQUALS(statement_count, 2);
 }
+
+TEST_CASE("SP::Node::ReadNode::parseReadStatement Missing Semicolon Test") {
+    SP::Lexer lex;
+    lex.initialize("x");
+    int statement_count = 1;
+    REQUIRE_THROWS_AS(ReadNode::parseReadStatement(lex, statement_count), SP::TokenizationException);
+    REQUIRE_EQUALS(statement_count, 1);
+}
+
+TEST_CASE("SP::Node::ReadNode::parseReadStatement Missing Variable Test") {
+    SP::Lexer lex;
+    lex.initialize(" ");
+    int statement_count = 1;
+    REQUIRE_THROWS_AS(ReadNode::parseReadStatement(lex, statement_count), SP::ParseException);
+    REQUIRE_EQUALS(statement_count, 1);
+}

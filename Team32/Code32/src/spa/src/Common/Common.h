@@ -4,7 +4,7 @@
 namespace Common {
 namespace Converter {};
 namespace Validator {};
-namespace ArithmeticProcessor {};
+namespace ExpressionProcessor {};
 }  // namespace Common
 
 #endif  // SPA_COMMON_H

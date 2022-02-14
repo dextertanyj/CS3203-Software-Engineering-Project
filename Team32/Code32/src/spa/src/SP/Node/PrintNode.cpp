@@ -16,7 +16,7 @@ bool SP::Node::PrintNode::equals(shared_ptr<StatementNode> object) {
 	if (other == nullptr) {
 		return false;
 	}
-	return other->getStmtRef() == this->getStmtRef() && other->variable->equals(move(this->variable));
+	return other->getStmtRef() == this->getStmtRef() && other->variable->equals(this->variable);
 }
 
 unique_ptr<SP::Node::PrintNode> SP::Node::PrintNode::parsePrintStatement(Lexer &lex, int &statement_count) {

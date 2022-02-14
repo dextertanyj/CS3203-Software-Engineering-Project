@@ -20,7 +20,7 @@ bool SP::Node::ProgramNode::extract(PKB& pkb) {
 	return true;
 }
 
-bool SP::Node::ProgramNode::equals(shared_ptr<ProgramNode> object) {
+bool SP::Node::ProgramNode::equals(const shared_ptr<ProgramNode>& object) {
     if (this->procedures.size() != object->procedures.size()) {
         return false;
     }

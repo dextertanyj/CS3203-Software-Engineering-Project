@@ -12,7 +12,7 @@ QueryProperties QueryPreprocessor::parseQuery(string query) {
 
 void QueryPreprocessor::tokenizeQuery(string query) {
 
-	regex invalidCharsRegex = regex(R"([^a-zA-Z0-9 ,"_\(\);\+\-\*\/%\n])");
+	regex invalidCharsRegex = regex(R"([^a-zA-Z0-9\s,"_\(\);\+\-\*\/%])");
 	regex queryTokenRegex = regex(R"(such that|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\\+|-|\*|\/|%|_|,|\")");
 
 	if (regex_search(query, invalidCharsRegex)) {
@@ -119,7 +119,7 @@ void QueryPreprocessor::parseSelect(int& tokenIndex) {
 }
 
 void QueryPreprocessor::parseSuchThat(int& tokenIndex) {
-	SuchThatClause suchThatClause = { parseRelation(tokenIndex) };
+	SuchThatClause suchThatClause = { std::move(parseRelation(tokenIndex)) };
 	this->suchThatClauseList.push_back(suchThatClause);
 	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "and") {
 		parseSuchThat(++tokenIndex);
@@ -193,7 +193,7 @@ DesignEntity QueryPreprocessor::parseDesignEntity(int& tokenIndex) {
 
 }
 
-Relation* QueryPreprocessor::parseRelation(int& tokenIndex) {
+unique_ptr<Relation> QueryPreprocessor::parseRelation(int& tokenIndex) {
 	if (this->queryTokens[tokenIndex] == "Follows") {
 		tokenIndex++;
 		return parseFollows(tokenIndex);
@@ -202,7 +202,7 @@ Relation* QueryPreprocessor::parseRelation(int& tokenIndex) {
 		tokenIndex++;
 		try {
 			int tempTokenIndex = tokenIndex;
-			Relation* relation = parseModifiesP(tempTokenIndex);
+			unique_ptr<Relation> relation = parseModifiesP(tempTokenIndex);
 			tokenIndex = tempTokenIndex;
 			return relation;
 		}
@@ -218,7 +218,7 @@ Relation* QueryPreprocessor::parseRelation(int& tokenIndex) {
 		tokenIndex++;
 		try {
 			int tempTokenIndex = tokenIndex;
-			Relation* relation = parseUsesP(tempTokenIndex);
+			unique_ptr<Relation> relation = parseUsesP(tempTokenIndex);
 			tokenIndex = tempTokenIndex;
 			return relation;
 		}
@@ -232,7 +232,7 @@ Relation* QueryPreprocessor::parseRelation(int& tokenIndex) {
 
 }
 
-Follows* QueryPreprocessor::parseFollows(int& tokenIndex) {
+unique_ptr<Follows> QueryPreprocessor::parseFollows(int& tokenIndex) {
 	bool isStar = false;
 	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "*") {
 		isStar = true;
@@ -243,10 +243,10 @@ Follows* QueryPreprocessor::parseFollows(int& tokenIndex) {
 	matchTokenOrThrow(",", tokenIndex);
 	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex);
 	matchTokenOrThrow(")", tokenIndex);
-	return new Follows(isStar, ref1, ref2);
+	return make_unique<Follows>(isStar, ref1, ref2);
 }
 
-Parent* QueryPreprocessor::parseParent(int& tokenIndex) {
+unique_ptr<Parent> QueryPreprocessor::parseParent(int& tokenIndex) {
 	bool isStar = false;
 	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "*") {
 		isStar = true;
@@ -257,43 +257,43 @@ Parent* QueryPreprocessor::parseParent(int& tokenIndex) {
 	matchTokenOrThrow(",", tokenIndex);
 	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex);
 	matchTokenOrThrow(")", tokenIndex);
-	return new Parent(isStar, ref1, ref2);
+	return make_unique<Parent>(isStar, ref1, ref2);
 }
 
-UsesP* QueryPreprocessor::parseUsesP(int& tokenIndex) {
+unique_ptr<UsesP> QueryPreprocessor::parseUsesP(int& tokenIndex) {
 	matchTokenOrThrow("(", tokenIndex);
 	QueryEntRef ref1 = parseQueryEntRef(tokenIndex);
 	matchTokenOrThrow(",", tokenIndex);
 	QueryEntRef ref2 = parseQueryEntRef(tokenIndex);
 	matchTokenOrThrow(")", tokenIndex);
-	return new UsesP(ref1, ref2);
+	return make_unique<UsesP>(ref1, ref2);
 }
 
-UsesS* QueryPreprocessor::parseUsesS(int& tokenIndex) {
+unique_ptr<UsesS> QueryPreprocessor::parseUsesS(int& tokenIndex) {
 	matchTokenOrThrow("(", tokenIndex);
 	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
 	matchTokenOrThrow(",", tokenIndex);
 	QueryEntRef ref2 = parseQueryEntRef(tokenIndex);
 	matchTokenOrThrow(")", tokenIndex);
-	return new UsesS(ref1, ref2);
+	return make_unique<UsesS>(ref1, ref2);
 }
 
-ModifiesP* QueryPreprocessor::parseModifiesP(int& tokenIndex) {
+unique_ptr<ModifiesP> QueryPreprocessor::parseModifiesP(int& tokenIndex) {
 	matchTokenOrThrow("(", tokenIndex);
 	QueryEntRef ref1 = parseQueryEntRef(tokenIndex);
 	matchTokenOrThrow(",", tokenIndex);
 	QueryEntRef ref2 = parseQueryEntRef(tokenIndex);
 	matchTokenOrThrow(")", tokenIndex);
-	return new ModifiesP(ref1, ref2);
+	return make_unique<ModifiesP>(ref1, ref2);
 }
 
-ModifiesS* QueryPreprocessor::parseModifiesS(int& tokenIndex) {
+unique_ptr<ModifiesS> QueryPreprocessor::parseModifiesS(int& tokenIndex) {
 	matchTokenOrThrow("(", tokenIndex);
 	QueryStmtRef ref1 = parseQueryStmtRef(tokenIndex);
 	matchTokenOrThrow(",", tokenIndex);
 	QueryEntRef ref2 = parseQueryEntRef(tokenIndex);
 	matchTokenOrThrow(")", tokenIndex);
-	return new ModifiesS(ref1, ref2);
+	return make_unique<ModifiesS>(ref1, ref2);
 }
 
 QueryEntRef QueryPreprocessor::parseQueryEntRef(int& tokenIndex) {
