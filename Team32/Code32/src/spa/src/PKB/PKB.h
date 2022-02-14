@@ -68,8 +68,8 @@ public:
 
 	// Assign get methods
 	bool patternExists(VarRef varName, Common::ExpressionProcessor::Expression e, bool isRHSExactMatchNeeded);
-	StmtInfoList getStmtsWithPattern(VarRef varName, Common::ExpressionProcessor::Expression e, bool isRHSExactMatchNeeded);
-	StmtInfoList getStmtsWithPatternLHS(VarRef varName);
+	StmtInfoPtrSet getStmtsWithPattern(VarRef varName, Common::ExpressionProcessor::Expression e, bool isRHSExactMatchNeeded);
+	StmtInfoPtrSet getStmtsWithPatternLHS(VarRef varName);
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(Common::ExpressionProcessor::Expression e,
 	                                                                  bool isRHSExactMatchNeeded);
 
