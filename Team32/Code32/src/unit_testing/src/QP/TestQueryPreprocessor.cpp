@@ -722,6 +722,9 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid pattern") {
 	// missing synonym
 	QueryPreprocessor qpp7;
 	REQUIRE_THROWS_AS(qpp7.parseQuery(univDeclarations + "Select a1 pattern(s1, \"x\")"), QueryException);
+	// incorrect expression
+	QueryPreprocessor qpp8;
+	REQUIRE_THROWS_AS(qpp8.parseQuery(univDeclarations + "Select a1 pattern(s1, \"x)\")"), QueryException);
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that/pattern clauses") {
