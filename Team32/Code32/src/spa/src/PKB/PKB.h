@@ -1,21 +1,19 @@
 #pragma once
 
-#include <stdio.h>
-
-#include <iostream>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "AssignStore.h"
 #include "Common/ArithmeticProcessor/ArithmeticExpression.h"
 #include "Common/TypeDefs.h"
+#include "PKB/AssignStore.h"
 #include "PKB/FollowsPKB.h"
 #include "PKB/Modifies.h"
 #include "PKB/ParentPKB.h"
 #include "PKB/SVRelationStore.tpp"
 #include "PKB/StatementRelationStore.tpp"
+#include "PKB/StatementStore.h"
 
 using namespace std;
 
@@ -26,42 +24,39 @@ public:
 	// Set methods called by Source processor
 	void setFollows(StmtRef, StmtRef);
 	void setParent(StmtRef, StmtRef);
-	void setProc(ProcRef, StmtRefList);
 	void setStmtType(StmtRef, StmtType);
 	void setUses(StmtRef, VarRef);
 	void setModifies(StmtRef, VarRef);
 	void setAssign(StmtRef, VarRef variableLHS, Common::ArithmeticProcessor::ArithmeticExpression opTree);
-	void setCall(StmtRef, ProcRef);
 
 	// Get methods called by PQL
 
 	// General get methods
-	StmtInfoList getStatements();
-	unordered_map<StmtRef, shared_ptr<StmtInfo>> getStmtInfoMap();
-
+	StmtInfoPtrSet getStatements();
 	// Parent get methods
 	shared_ptr<StmtInfo> getParent(StmtRef);
-	unordered_set<shared_ptr<StmtInfo>> getChildren(StmtRef);
-	bool checkParents(StmtRef, StmtRef);
-	unordered_set<shared_ptr<StmtInfo>> getParentStar(StmtRef);
-	unordered_set<shared_ptr<StmtInfo>> getChildStar(StmtRef);
 
+	StmtInfoPtrSet getChildren(StmtRef);
+	bool checkParents(StmtRef, StmtRef);
+	StmtInfoPtrSet getParentStar(StmtRef);
+	StmtInfoPtrSet getChildStar(StmtRef);
 	// Follow get methods
 	shared_ptr<StmtInfo> getPreceding(StmtRef stmt);
+
 	shared_ptr<StmtInfo> getFollower(StmtRef);
 	bool checkFollows(StmtRef, StmtRef);
-	unordered_set<shared_ptr<StmtInfo>> getFollowerStar(StmtRef);
-	unordered_set<shared_ptr<StmtInfo>> getPrecedingStar(StmtRef);
-
+	StmtInfoPtrSet getFollowerStar(StmtRef);
+	StmtInfoPtrSet getPrecedingStar(StmtRef);
 	// Use get methods
 	bool checkUses(StmtRef, VarRef);
-	unordered_set<shared_ptr<StmtInfo>> getUsesByVar(VarRef);
-	unordered_set<VarRef> getUsesByStmt(StmtRef);
 
+	StmtInfoPtrSet getUsesByVar(VarRef);
+	VarRefSet getUsesByStmt(StmtRef);
 	// Modify get methods
 	bool checkModifies(StmtRef, VarRef);
-	unordered_set<shared_ptr<StmtInfo>> getModifiesByVar(VarRef);
-	unordered_set<VarRef> getModifiesByStmt(StmtRef);
+
+	StmtInfoPtrSet getModifiesByVar(VarRef);
+	VarRefSet getModifiesByStmt(StmtRef);
 
 	// Assign get methods
 	bool patternExists(VarRef varName, Common::ArithmeticProcessor::ArithmeticExpression e, bool isRHSExactMatchNeeded);
@@ -69,16 +64,18 @@ public:
 	StmtInfoList getStmtsWithPatternLHS(VarRef varName);
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(Common::ArithmeticProcessor::ArithmeticExpression e,
 	                                                                  bool isRHSExactMatchNeeded);
-
 	// Others
 	void clear();
 	void populateComplexRelations();
 
+	// For testing
+	unordered_map<StmtRef, shared_ptr<StmtInfo>> getStmtInfoMap();
+
 private:
-	StatementStore stmtInfoMap;  // Stores StmtInfo for a particular StmtRef.
-	StatementRelationStore<ParentPKB> parentStore;
-	StatementRelationStore<FollowsPKB> followStore;
-	SVRelationStore<Uses> useStore;
-	SVRelationStore<Modifies> modifyStore;
-	AssignStore assignStore;
+	StatementStore statement_store;
+	StatementRelationStore<ParentPKB> parent_store;
+	StatementRelationStore<FollowsPKB> follows_store;
+	SVRelationStore<Uses> uses_store;
+	SVRelationStore<Modifies> modifies_store;
+	AssignStore assign_store;
 };

@@ -52,7 +52,7 @@ bool Parent::executeTrivial(PKB& pkb) {
 			return stmt->reference > 0;
 		}
 		case StmtRefType::underscore: {
-			StmtInfoList allStmts = pkb.getStatements();
+			StmtInfoPtrSet allStmts = pkb.getStatements();
 			for (const shared_ptr<StmtInfo>& stmt : allStmts) {
 				if (!pkb.getChildren(stmt->reference).empty()) {
 					return true;
@@ -84,7 +84,7 @@ bool Parent::executeNonTrivial(PKB& pkb, QueryResult& result) {
 	else if (this->parentStmt.type == StmtRefType::underscore &&
 			this->childStmt.type == StmtRefType::synonym) {
 		// Get all stmts with a parent
-		StmtInfoList allStmts = pkb.getStatements();
+		StmtInfoPtrSet allStmts = pkb.getStatements();
 		for (const shared_ptr<StmtInfo>& stmt : allStmts) {
 			if (pkb.getParent(stmt->reference)->reference > 0) {
 				stmtList.push_back(stmt->reference);
@@ -102,7 +102,7 @@ bool Parent::executeNonTrivial(PKB& pkb, QueryResult& result) {
 	else if (this->childStmt.type == StmtRefType::underscore &&
 			this->parentStmt.type == StmtRefType::synonym) {
 		// Get all stmts with a child
-		StmtInfoList allStmts = pkb.getStatements();
+		StmtInfoPtrSet allStmts = pkb.getStatements();
 		for (const shared_ptr<StmtInfo>& stmt : allStmts) {
 			if (!pkb.getChildren(stmt->reference).empty()) {
 				stmtList.push_back(stmt->reference);

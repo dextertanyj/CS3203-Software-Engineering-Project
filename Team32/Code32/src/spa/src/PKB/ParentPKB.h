@@ -8,9 +8,9 @@
 
 class ParentPKB {
 public:
-	ParentPKB(shared_ptr<StmtInfo> self);
+	explicit ParentPKB(shared_ptr<StmtInfo> self);
 	void insertForward(shared_ptr<StmtInfo> parent);
-	void insertReverse(shared_ptr<StmtInfo> child);
+	void insertReverse(const shared_ptr<StmtInfo>& child);
 	void appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> parents);
 	void appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> children);
 

@@ -1,6 +1,8 @@
 #include "PKB/ParentPKB.h"
 
-ParentPKB::ParentPKB(shared_ptr<StmtInfo> self) : self(self) {}
+#include <utility>
+
+ParentPKB::ParentPKB(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
 
 void ParentPKB::insertForward(shared_ptr<StmtInfo> parent) {
 	if (this->parent != nullptr) {
@@ -9,7 +11,7 @@ void ParentPKB::insertForward(shared_ptr<StmtInfo> parent) {
 	this->parent = parent;
 }
 
-void ParentPKB::insertReverse(shared_ptr<StmtInfo> child) { this->children.insert(child); }
+void ParentPKB::insertReverse(const shared_ptr<StmtInfo>& child) { this->children.insert(child); }
 
 void ParentPKB::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> parents) {
 	this->parent_transitive.insert(parents.begin(), parents.end());

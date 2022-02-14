@@ -1,11 +1,12 @@
-#include "Modifies.h"
-#include "SVRelationStore.tpp"
+#include "PKB/Modifies.h"
 
-void Modifies::optimize(const StatementStore& statement_store, StatementRelationStore<ParentPKB>& parent_store,
+#include "PKB/SVRelationStore.tpp"
+
+void Modifies::optimize(StatementStore& statement_store, StatementRelationStore<ParentPKB>& parent_store,
                         SVRelationStore<Modifies>& store) {
-	for (auto statement : statement_store) {
-		if (statement.second->type == StmtType::IfStmt || statement.second->type == StmtType::WhileStmt) {
-			auto children = parent_store.getReverseTransitive(statement.second->reference);
+	for (const auto& statement : statement_store.getAll()) {
+		if (statement->type == StmtType::IfStmt || statement->type == StmtType::WhileStmt) {
+			auto children = parent_store.getReverseTransitive(statement->reference);
 			unordered_set<VarRef> variables;
 			for (auto child : children) {
 				auto iter = store.statement_key_map.find(child->reference);
@@ -13,14 +14,22 @@ void Modifies::optimize(const StatementStore& statement_store, StatementRelation
 					variables.insert(iter->second.begin(), iter->second.end());
 				}
 			}
-			store.set(statement.second, variables);
+			store.set(statement, variables);
 		}
 	}
 }
 
-bool Modifies::validate(SVRelationStore<Modifies>* store, shared_ptr<StmtInfo> statement, VarRef variable) {
+bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
 	StmtRef idx = statement->reference;
-	store->statement_key_map.find(idx);
-	store->variable_key_map.find(variable);
-	return true;
+	if (statement->type == StmtType::Print) {
+		throw "Print statements cannot modify a variable";
+	}
+	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt) {
+		return true;
+	}
+	auto statement_iter = store->statement_key_map.find(idx);
+	if (statement_iter == store->statement_key_map.end()) {
+		return true;
+	}
+	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](VarRef x) { return x == variable; }));
 }

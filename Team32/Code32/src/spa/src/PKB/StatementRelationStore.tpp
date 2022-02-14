@@ -1,9 +1,8 @@
 #pragma once
 
-#include "PKB/StatementRelationStore.h"
-
 #include "PKB/FollowsPKB.h"
 #include "PKB/ParentPKB.h"
+#include "PKB/StatementRelationStore.h"
 
 using namespace std;
 

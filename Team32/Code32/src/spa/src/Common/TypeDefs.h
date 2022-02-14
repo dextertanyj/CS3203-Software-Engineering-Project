@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_set>
 #include <memory>
 
 using namespace std;
@@ -21,6 +22,10 @@ typedef struct StmtInfo {
 typedef vector<shared_ptr<StmtInfo>> StmtInfoList;
 typedef vector<VarRef> VarRefList;
 typedef vector<StmtRef> StmtRefList;
+
+typedef unordered_set<shared_ptr<StmtInfo>> StmtInfoPtrSet;
+typedef unordered_set<VarRef> VarRefSet;
+typedef unordered_set<StmtRef> StmtRefSet;
 
 enum class ArithmeticOperator { Plus, Minus, Times, Divide, Modulo };
 enum class RelationalOperator { EQ, NEQ, LT, LTE, GT, GTE };

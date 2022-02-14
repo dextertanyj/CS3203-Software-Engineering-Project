@@ -1,5 +1,6 @@
 #include "FollowsPKB.h"
-FollowsPKB::FollowsPKB(shared_ptr<StmtInfo> self) : self(self) {}
+
+FollowsPKB::FollowsPKB(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
 
 void FollowsPKB::insertForward(shared_ptr<StmtInfo> following) {
 	if (this->following != nullptr) {
@@ -23,23 +24,23 @@ void FollowsPKB::appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> fol
 	this->followers_transitive.insert(followers.begin(), followers.end());
 }
 
-unordered_set<shared_ptr<StmtInfo>> FollowsPKB::getForward() {
+StmtInfoPtrSet FollowsPKB::getForward() {
 	if (following == nullptr) {
 		return {};
 	}
 	return {following};
 }
 
-unordered_set<shared_ptr<StmtInfo>> FollowsPKB::getReverse() {
+StmtInfoPtrSet FollowsPKB::getReverse() {
 	if (follower == nullptr) {
 		return {};
 	}
 	return {follower};
 }
 
-unordered_set<shared_ptr<StmtInfo>> FollowsPKB::getForwardTransitive() { return following_transitive; }
+StmtInfoPtrSet FollowsPKB::getForwardTransitive() { return following_transitive; }
 
-unordered_set<shared_ptr<StmtInfo>> FollowsPKB::getReverseTransitive() { return followers_transitive; }
+StmtInfoPtrSet FollowsPKB::getReverseTransitive() { return followers_transitive; }
 
 void FollowsPKB::optimize(StatementRelationStore<FollowsPKB>& store) {
 	for (auto& item : store.map) {
@@ -49,8 +50,8 @@ void FollowsPKB::optimize(StatementRelationStore<FollowsPKB>& store) {
 	}
 }
 
-unordered_set<shared_ptr<StmtInfo>> FollowsPKB::populateTransitive(StatementRelationStore<FollowsPKB>& store, FollowsPKB& current,
-                                                                   unordered_set<shared_ptr<StmtInfo>> previous) {
+StmtInfoPtrSet FollowsPKB::populateTransitive(StatementRelationStore<FollowsPKB>& store, FollowsPKB& current,
+                                              unordered_set<shared_ptr<StmtInfo>> previous) {
 	current.appendForwardTransitive(previous);
 	previous.insert(current.self);
 	unordered_set<shared_ptr<StmtInfo>> result;
