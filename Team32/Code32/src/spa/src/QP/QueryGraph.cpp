@@ -44,24 +44,41 @@ void QueryGraph::addEdge(string symbolOne, string symbolTwo) {
 	}
 }
 
-unordered_set<string> QueryGraph::getNonTrivialSynonyms(string selectedSynonym) {
+vector<unordered_set<string>> QueryGraph::getSynonymsInGroup(string selectedSynonym) {
 	// Run BFS on the selected node
-	unordered_set<string> result;
-	std::queue<string> queue;
+	vector<unordered_set<string>> result;
+	unordered_set<string> group;
+	unordered_set<string> unvisitedNodes;
+
+	for (auto &node : nodes) {
+		unvisitedNodes.insert(node.first);
+	}
+
+	queue<string> queue;
 	queue.push(selectedSynonym);
 	
 	while (!queue.empty()) {
 		string symbol = queue.front();
-		result.insert(symbol);
+		group.insert(symbol);
+		unvisitedNodes.erase(symbol);
 		queue.pop();
 		
 		Node node = this->nodes.at(symbol);
 		for (string adjacentSymbol : node.adjacentSymbols) {
-			if (result.find(adjacentSymbol) == result.end()) {
+			if (unvisitedNodes.find(adjacentSymbol) != unvisitedNodes.end()) {
 				queue.push(adjacentSymbol);
 			}
 		}
+
+		// If queue is empty but there are still unvisited nodes,
+		// we add an unvisited node to queue
+		if (queue.empty() && !unvisitedNodes.empty()) {
+			queue.push(*unvisitedNodes.begin());
+			result.push_back(group);
+			group.clear();
+		}
 	}
 
+	result.push_back(group);
 	return result;
 }

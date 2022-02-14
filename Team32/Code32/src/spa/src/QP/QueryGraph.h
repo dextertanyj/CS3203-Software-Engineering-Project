@@ -20,7 +20,11 @@ public:
 	explicit QueryGraph(const DeclarationList& declarations);
 	void setEdges(const SuchThatClauseList& suchThatClauseList, const PatternClauseList& patternClauseList);
 	unordered_map<string, Node> getNodes();
-	unordered_set<string> getNonTrivialSynonyms(string selectedSynonym);
+
+	/*
+	* The first group will contain the selected synonym
+	*/
+	vector<unordered_set<string>> getSynonymsInGroup(string selectedSynonym);
 
 private:
 	unordered_map<string, Node> nodes;

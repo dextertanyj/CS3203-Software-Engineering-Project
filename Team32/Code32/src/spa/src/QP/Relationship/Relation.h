@@ -7,6 +7,10 @@
 
 class Relation {
 public:
+	/*
+	* A trivial relation is one that does not contain synonym or contains
+	* synonyms that only appear in one clause.
+	*/
 	virtual QueryResult execute(PKB& pkb, bool isTrivial) = 0;
 	virtual vector<string> getDeclarationSymbols() = 0;
 

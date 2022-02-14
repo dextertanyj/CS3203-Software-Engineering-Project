@@ -24,7 +24,7 @@ TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
 	REQUIRE(nodes.at("v").adjacentSymbols.size() == 1);
 }
 
-TEST_CASE("QP::QueryGraph::getNonTrivialSynonyms Should get synonyms not linked to select") {
+TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connected components") {
 	DeclarationList list = {
 		{ DesignEntity::stmt, "a" },
 		{ DesignEntity::assign, "b" },
@@ -40,8 +40,11 @@ TEST_CASE("QP::QueryGraph::getNonTrivialSynonyms Should get synonyms not linked 
 
 	QueryGraph graph = QueryGraph(list);
 	graph.setEdges(suchThatList, patternList);
-	unordered_set<string> synonyms = graph.getNonTrivialSynonyms("a");
+	vector<unordered_set<string>> synonyms = graph.getSynonymsInGroup("a");
 	
-	unordered_set<string> expectedSynonyms = {"a", "b", "c"};
-	REQUIRE(synonyms == expectedSynonyms);
+	unordered_set<string> expectedFirstGroup = {"a", "b", "c"};
+	unordered_set<string> expectedSecondGroup = {"d", "e"};
+	REQUIRE(synonyms.size() == 2);
+	REQUIRE(synonyms[0] == expectedFirstGroup);
+	REQUIRE(synonyms[1] == expectedSecondGroup);
 }

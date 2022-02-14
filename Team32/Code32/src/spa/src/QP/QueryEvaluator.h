@@ -3,6 +3,9 @@
 
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <vector>
 
 #include "PKB/PKB.h"
 #include "QP/QueryGraph.h"
@@ -15,13 +18,18 @@ class QueryEvaluator {
 public:
 	explicit QueryEvaluator(PKB& pkb);
 	QueryResult executeQuery(QueryProperties& queryProperties);
+	vector<pair<SuchThatClauseList, PatternClauseList>> splitClauses(QueryProperties& queryProperties,
+                                                                   vector<unordered_set<string>>& synonymsInGroup);
 
 private:
 	PKB& pkb;
 	unordered_map<string, QueryResult> results;
 	QueryResult executeNoClauses(Declaration select);
 	QueryGraph buildGraph(QueryProperties& queryProperties);
-	QueryResult evaluateClauses(QueryProperties& queryProperties, unordered_set<string> nonTrivialSynonyms);
+	QueryResult evaluateClauses(SuchThatClauseList& suchThatClauses,
+                              PatternClauseList& patternClauses,
+                              Declaration select,
+                              bool isTrivial);
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYEVALUATOR_H_

@@ -70,6 +70,9 @@ void QueryResult::joinWithDifferentSynonym(QueryResult& queryResult) {
 	}
 
 	this->table = finalResult;
+	if (finalResult.begin()->second.size() == 0) {
+		this->result = false;
+	}
 }
 
 void QueryResult::joinWithSameSynonym(QueryResult& queryResult) {
@@ -91,6 +94,9 @@ void QueryResult::joinWithSameSynonym(QueryResult& queryResult) {
 	}
 
 	this->table = finalResult;
+	if (finalResult.begin()->second.size() == 0) {
+		this->result = false;
+	}
 }
 
 bool QueryResult::contains(unordered_map<string, string> row) {
