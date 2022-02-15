@@ -5,24 +5,26 @@
 bool Uses::validate(SVRelationStore<Uses>* store, shared_ptr<StmtInfo> statement, const VarRef& variable) {
 	StmtRef idx = statement->reference;
 	if (statement->type == StmtType::Read) {
-		throw "Read statements cannot use a variable";
+		throw invalid_argument("Read statements cannot use a variable");
 	}
-	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt) {
+	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt
+        || statement->type == StmtType::Call || statement->type == StmtType::Assign) {
 		return true;
 	}
 	auto statement_iter = store->statement_key_map.find(idx);
 	if (statement_iter == store->statement_key_map.end()) {
 		return true;
 	}
-	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& x) { return x == variable; }));
+	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& x) { return x != variable; }));
 }
 
 bool Uses::validate(SVRelationStore<Uses>* store, shared_ptr<StmtInfo> statement, const VarRefSet& variables) {
 	StmtRef idx = statement->reference;
 	if (statement->type == StmtType::Read) {
-		throw "Read statements cannot use a variable";
+		throw invalid_argument("Read statements cannot use a variable");
 	}
-	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt || variables.empty()) {
+	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt
+        || statement->type == StmtType::Call || statement->type == StmtType::Assign|| variables.empty()) {
 		return true;
 	}
 	if (variables.size() > 1) {

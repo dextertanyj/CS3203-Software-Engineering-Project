@@ -7,14 +7,14 @@ bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtI
 	if (statement->type == StmtType::Print) {
 		throw invalid_argument("Print statements cannot modify a variable");
 	}
-	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt) {
+	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt || statement->type == StmtType::Call) {
 		return true;
 	}
 	auto statement_iter = store->statement_key_map.find(idx);
 	if (statement_iter == store->statement_key_map.end()) {
 		return true;
 	}
-	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& x) { return x == variable; }));
+	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& x) { return x != variable; }));
 }
 
 bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
@@ -22,7 +22,7 @@ bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtI
 	if (statement->type == StmtType::Print) {
 		throw invalid_argument("Print statements cannot modify a variable");
 	}
-	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt) {
+	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt || statement->type == StmtType::Call) {
 		return true;
 	}
 	if (variables.size() > 1) {
