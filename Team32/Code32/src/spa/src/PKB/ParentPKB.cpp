@@ -5,19 +5,37 @@
 ParentPKB::ParentPKB(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
 
 void ParentPKB::insertForward(shared_ptr<StmtInfo> parent) {
+	if (self->reference <= parent->reference) {
+		throw invalid_argument("Statement out of order");
+	}
 	if (this->parent != nullptr) {
-		throw "This statement already has a parent";
+		throw invalid_argument("This statement already has a parent");
 	}
 	this->parent = parent;
 }
 
-void ParentPKB::insertReverse(const shared_ptr<StmtInfo>& child) { this->children.insert(child); }
+void ParentPKB::insertReverse(const shared_ptr<StmtInfo>& child) {
+	if (self->reference >= child->reference) {
+		throw invalid_argument("Statement out of order");
+	}
+	this->children.insert(child);
+}
 
 void ParentPKB::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> parents) {
+	for (const auto& parent : parents) {
+		if (self->reference <= parent->reference) {
+			throw invalid_argument("Statement out of order");
+		}
+	}
 	this->parent_transitive.insert(parents.begin(), parents.end());
 }
 
 void ParentPKB::appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> children) {
+	for (const auto& child : children) {
+		if (self->reference >= child->reference) {
+			throw invalid_argument("Statement out of order");
+		}
+	}
 	this->children_transitive.insert(children.begin(), children.end());
 }
 

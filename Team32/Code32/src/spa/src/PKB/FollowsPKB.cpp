@@ -1,26 +1,46 @@
 #include "FollowsPKB.h"
 
+#include <utility>
+
+using namespace std;
+
 FollowsPKB::FollowsPKB(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
 
 void FollowsPKB::insertForward(shared_ptr<StmtInfo> following) {
+	if (self->reference <= following->reference) {
+		throw invalid_argument("Statement out of order");
+	}
 	if (this->following != nullptr) {
 		throw invalid_argument("This statement is already following a statement");
 	}
-	this->following = following;
+	this->following = move(following);
 }
 
 void FollowsPKB::insertReverse(shared_ptr<StmtInfo> follower) {
+	if (self->reference >= follower->reference) {
+		throw invalid_argument("Statement out of order");
+	}
 	if (this->follower != nullptr) {
 		throw invalid_argument("This statement is already following a statement");
 	}
-	this->follower = follower;
+	this->follower = move(follower);
 }
 
 void FollowsPKB::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> followings) {
+	for (const auto& following : followings) {
+		if (self->reference <= following->reference) {
+			throw invalid_argument("Statement out of order");
+		}
+	}
 	this->following_transitive.insert(followings.begin(), followings.end());
 }
 
 void FollowsPKB::appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> followers) {
+	for (const auto& follower : followers) {
+		if (self->reference >= follower->reference) {
+			throw invalid_argument("Statement out of order");
+		}
+	}
 	this->followers_transitive.insert(followers.begin(), followers.end());
 }
 
