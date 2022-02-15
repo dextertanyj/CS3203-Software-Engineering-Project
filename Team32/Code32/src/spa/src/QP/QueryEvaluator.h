@@ -23,13 +23,15 @@ public:
 
 private:
 	PKB& pkb;
-	unordered_map<string, QueryResult> results;
+	unordered_map<string, DesignEntity> symbolToTypeMap;
 	QueryResult executeNoClauses(Declaration select);
+	QueryResult getSpecificStmtType(StmtType type, string symbol);
 	QueryGraph buildGraph(QueryProperties& queryProperties);
 	QueryResult evaluateClauses(SuchThatClauseList& suchThatClauses,
                               PatternClauseList& patternClauses,
                               Declaration select,
                               bool isTrivial);
+	void createSymbolToTypeMap(DeclarationList& declarations);
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYEVALUATOR_H_

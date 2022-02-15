@@ -17,8 +17,8 @@ bool Follows::getIsStar() {
 	return isStar;
 }
 
-QueryResult Follows::execute(PKB& pkb, bool isTrivial) {
-	return isTrivial ? executeTrivial(pkb) : executeNonTrivial(pkb);
+QueryResult Follows::execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) {
+	return isTrivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
 vector<string> Follows::getDeclarationSymbols() {
@@ -32,10 +32,10 @@ vector<string> Follows::getDeclarationSymbols() {
 	return declarationSymbols;
 }
 
-QueryResult Follows::executeTrivial(PKB& pkb) {
+QueryResult Follows::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
 	return QueryResult();
 }
 
-QueryResult Follows::executeNonTrivial(PKB& pkb) {
+QueryResult Follows::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
 	return QueryResult();
 }

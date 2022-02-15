@@ -12,8 +12,8 @@ QueryEntRef UsesS::getEnt() {
 	return ent;
 }
 
-QueryResult UsesS::execute(PKB& pkb, bool isTrivial) {
-	return isTrivial ? executeTrivial(pkb) : executeNonTrivial(pkb);
+QueryResult UsesS::execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) {
+	return isTrivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
 vector<string> UsesS::getDeclarationSymbols() {
@@ -27,10 +27,10 @@ vector<string> UsesS::getDeclarationSymbols() {
 	return declarationSymbols;
 }
 
-QueryResult UsesS::executeTrivial(PKB& pkb) {
+QueryResult UsesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
 	return QueryResult();
 }
 
-QueryResult UsesS::executeNonTrivial(PKB& pkb) {
+QueryResult UsesS::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
 	return QueryResult();
 }

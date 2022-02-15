@@ -8,6 +8,7 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& queryProperties) {
 		return executeNoClauses(queryProperties.getSelect());
 	}
 
+	createSymbolToTypeMap(queryProperties.getDeclarationList());
 	QueryGraph graph = buildGraph(queryProperties);
 	Declaration select = queryProperties.getSelect();
 	vector<unordered_set<string>> synonymsInGroup = graph.getSynonymsInGroup(select.symbol);
@@ -56,23 +57,79 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& queryProperties) {
 }
 
 QueryResult QueryEvaluator::executeNoClauses(Declaration select) {
-	if (select.type == DesignEntity::stmt) {
-		StmtRefList stmtList = pkb.getStatements();
+	switch (select.type) {
+	case DesignEntity::stmt: {
+		StmtInfoPtrSet stmtSet = pkb.getStatements();
 		QueryResult result = QueryResult();
-
+		
 		vector<string> resultString;
-		for (StmtRef stmt : stmtList) {
-			resultString.push_back({ to_string(stmt) });
+		for (auto const &stmt : stmtSet) {
+			resultString.push_back(to_string(stmt.get()->reference));
 		}
 
 		result.addColumn(select.symbol, resultString);
-
 		return result;
+	}
+	case DesignEntity::read: {
+		return getSpecificStmtType(StmtType::Read, select.symbol);
+	}
+	case DesignEntity::print: {
+		return getSpecificStmtType(StmtType::Print, select.symbol);
+	}
+	case DesignEntity::call: {
+		return getSpecificStmtType(StmtType::Call, select.symbol);
+	}
+	case DesignEntity::while_: {
+		return getSpecificStmtType(StmtType::WhileStmt, select.symbol);
+	}
+	case DesignEntity::if_: {
+		return getSpecificStmtType(StmtType::IfStmt, select.symbol);
+	}
+	case DesignEntity::assign: {
+		return getSpecificStmtType(StmtType::Assign, select.symbol);
+	}
+	case DesignEntity::variable: {
+		VarRefSet varSet = pkb.getVariables();
+		QueryResult result = QueryResult();
+		
+		vector<string> resultString;
+		for (auto const &var : varSet) {
+			resultString.push_back(var);
+		}
 
-	} else {
-		// TODO: Handle other cases
+		result.addColumn(select.symbol, resultString);
+		return result;
+	}
+	case DesignEntity::constant: {
+		unordered_set<int> constants = pkb.getConstants();
+		QueryResult result = QueryResult();
+		
+		vector<string> resultString;
+		for (auto const &constant : constants) {
+			resultString.push_back(to_string(constant));
+		}
+
+		result.addColumn(select.symbol, resultString);
+		return result;
+	}
+	default:
 		return QueryResult();
 	}
+}
+
+QueryResult QueryEvaluator::getSpecificStmtType(StmtType type, string symbol) {
+	StmtInfoPtrSet stmtSet = pkb.getStatements();
+	QueryResult result = QueryResult();
+		
+	vector<string> resultString;
+	for (auto const &stmt : stmtSet) {
+		if (stmt.get()->type == type) {
+			resultString.push_back(to_string(stmt.get()->reference));
+		}
+	}
+
+	result.addColumn(symbol, resultString);
+	return result;
 }
 
 QueryGraph QueryEvaluator::buildGraph(QueryProperties& queryProperties) {
@@ -89,7 +146,7 @@ QueryResult QueryEvaluator::evaluateClauses(SuchThatClauseList& suchThatClauses,
 	vector<QueryResult> resultList;
 
 	for (SuchThatClause suchThatClause : suchThatClauses) {
-		QueryResult result = suchThatClause.relation->execute(pkb, isTrivial);
+		QueryResult result = suchThatClause.relation->execute(pkb, isTrivial, symbolToTypeMap);
 		if (!result.getResult()) {
 			return QueryResult();
 		}
@@ -162,4 +219,10 @@ vector<pair<SuchThatClauseList, PatternClauseList>> QueryEvaluator::splitClauses
 	return result;
 }
 
-
+void QueryEvaluator::createSymbolToTypeMap(DeclarationList& declarations) {
+	unordered_map<string, DesignEntity> map;
+	for (Declaration const& declaration : declarations) {
+		map.insert({ declaration.symbol, declaration.type });
+	}
+	this->symbolToTypeMap = map;
+}

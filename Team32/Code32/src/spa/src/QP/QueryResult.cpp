@@ -4,6 +4,10 @@ QueryResult::QueryResult() {
 	this->result = false;
 }
 
+QueryResult::QueryResult(bool result) {
+	this->result = result;
+}
+
 bool QueryResult::getResult() {
 	return result;
 }
