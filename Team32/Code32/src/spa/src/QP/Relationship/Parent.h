@@ -12,16 +12,16 @@ public:
 	QueryStmtRef getChildStmt();
 	bool getIsStar();
 
-	bool isTrivialCase();
-	bool execute(PKB& pkb, QueryResult& result);
+	QueryResult execute(PKB& pkb, bool isTrivial);
+	vector<string> getDeclarationSymbols();
 
 private:
 	bool isStar;
 	QueryStmtRef parentStmt;
 	QueryStmtRef childStmt;
 
-	bool executeTrivial(PKB& pkb);
-	bool executeNonTrivial(PKB& pkb, QueryResult& result);
+	QueryResult executeTrivial(PKB& pkb);
+	QueryResult executeNonTrivial(PKB& pkb);
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_PARENT_H_
