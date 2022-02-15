@@ -4,10 +4,10 @@
 
 SP::Node::CallNode::CallNode(StmtRef stmtNo, ProcRef procedure) : StatementNode(stmtNo), procedure(move(procedure)) {}
 
-StmtInfo SP::Node::CallNode::extract(PKB &pkb) {
+StmtRef SP::Node::CallNode::extract(PKB &pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Call);
-	return {stmt_ref, StmtType::Call};
+	return stmt_ref;
 }
 
 bool SP::Node::CallNode::equals(const shared_ptr<StatementNode>& object) {

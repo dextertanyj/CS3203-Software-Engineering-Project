@@ -137,8 +137,6 @@ TEST_CASE("AssignmentNode::extract Test") {
 	lex.initialize("1;");
 	unique_ptr<ExpressionNode> expression = ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
 	AssignmentNode node = AssignmentNode(1, make_unique<VariableNode>("A"), std::move(expression));
-	StmtInfo result = node.extract(pkb);
-	StmtInfo expected = {1, StmtType::Assign};
-	REQUIRE_EQUALS(result.reference, expected.reference);
-	REQUIRE_EQUALS(result.type, expected.type);
+	StmtRef result = node.extract(pkb);
+	REQUIRE_EQUALS(result, 1);
 }

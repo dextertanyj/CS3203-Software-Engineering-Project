@@ -17,7 +17,7 @@ public:
 	IfNode(StmtRef stmtNo, unique_ptr<ExpressionNode> condExpr, unique_ptr<StatementListNode> ifStmtLst,
 	       unique_ptr<StatementListNode> elseStmtLst);
 	static unique_ptr<IfNode> parseIfStatement(Lexer& lex, int& statement_count);
-	StmtInfo extract(PKB& pkb) override;
+	StmtRef extract(PKB& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
 
 private:

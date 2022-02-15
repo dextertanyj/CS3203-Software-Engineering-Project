@@ -130,8 +130,6 @@ TEST_CASE("WhileNode::extract Test") {
 	unique_ptr<ExpressionNode> condition = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "<", "0" ,")"})));
 	unique_ptr<StatementListNode> body = createStatementList("read x; print y; }", 2);
 	WhileNode node = WhileNode(1, std::move(condition), std::move(body));
-	StmtInfo result = node.extract(pkb);
-	StmtInfo expected = {1, StmtType::WhileStmt};
-	REQUIRE_EQUALS(result.reference, expected.reference);
-	REQUIRE_EQUALS(result.type, expected.type);
+	StmtRef result = node.extract(pkb);
+	REQUIRE_EQUALS(result, 1);
 }

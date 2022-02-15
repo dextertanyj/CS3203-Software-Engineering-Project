@@ -44,10 +44,9 @@ TEST_CASE("SP::Node::ReadNode::equals Different Node Type Test") {
 TEST_CASE("ReadNode::extract Test") {
 	PKB pkb;
 	ReadNode node = ReadNode(1, make_unique<VariableNode>("A"));
-	StmtInfo result = node.extract(pkb);
+	StmtRef result = node.extract(pkb);
 	StmtInfo expected = {1, StmtType::Read};
-	REQUIRE_EQUALS(result.reference, expected.reference);
-	REQUIRE_EQUALS(result.type, expected.type);
+	REQUIRE_EQUALS(result, 1);
 }
 
 TEST_CASE("SP::Node::ReadNode::parseReadStatement Valid Token Test") {

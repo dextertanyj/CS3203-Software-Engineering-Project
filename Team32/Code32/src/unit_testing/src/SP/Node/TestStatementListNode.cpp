@@ -159,15 +159,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList Invalid Keyword Test"
 TEST_CASE("StatementListNode::extract Test") {
 	PKB pkb;
 	StatementListNode node = *createStatementList("read x; print y; }", 1).release();
-	StmtInfoList result = node.extract(pkb);
-	StmtInfo stmt_info_1 = {1, StmtType::Read};
-	StmtInfo stmt_info_2 = {2, StmtType::Print};
-	shared_ptr<StmtInfo> first = std::make_shared<StmtInfo>(stmt_info_1);
-	shared_ptr<StmtInfo> second = std::make_shared<StmtInfo>(stmt_info_2);
-	StmtInfoList expected = vector<shared_ptr<StmtInfo>>({first, second});
-	REQUIRE_EQUALS(expected.size(), result.size());
-	for (int i = 0; i < expected.size(); i++) {
-		REQUIRE_EQUALS(result.at(i)->reference, expected.at(i)->reference);
-		REQUIRE_EQUALS(result.at(i)->type, expected.at(i)->type);
-	}
+	vector<StmtRef> result = node.extract(pkb);
+	vector<StmtRef> expected = vector<StmtRef>({1, 2});
+	REQUIRE_EQUALS(expected, result);
 }

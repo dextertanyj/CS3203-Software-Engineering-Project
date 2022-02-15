@@ -22,7 +22,7 @@ unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parseProcedure(Lexe
 }
 
 bool SP::Node::ProcedureNode::extract(PKB& pkb) {
-	StmtInfoList children = stmtLst->extract(pkb);
+	stmtLst->extract(pkb);
 	return true;
 }
 
