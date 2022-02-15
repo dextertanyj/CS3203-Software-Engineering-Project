@@ -1,5 +1,7 @@
 #include "PKB/Uses.h"
 
+#include <algorithm>
+
 #include "PKB/SVRelationStore.tpp"
 
 bool Uses::validate(SVRelationStore<Uses>* store, shared_ptr<StmtInfo> statement, const VarRef& variable) {

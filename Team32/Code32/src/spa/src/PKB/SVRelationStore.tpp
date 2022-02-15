@@ -1,5 +1,7 @@
 #include "PKB/SVRelationStore.h"
 
+#include <algorithm>
+
 #include "PKB/Modifies.h"
 #include "PKB/Uses.h"
 
