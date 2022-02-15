@@ -155,7 +155,7 @@ QueryResult Parent::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEnti
 			StmtInfoPtrSet children = pkb.getChildren(stmt.get()->reference);
 			for (auto const& child : children) {
 				if (childDesignEntity == DesignEntity::stmt ||
-					  stmt.get()->type == QueryUtils::designEntToStmtType[parentDesignEntity]) {
+					  stmt.get()->type == QueryUtils::designEntToStmtType[childDesignEntity]) {
 					parentColumn.push_back(to_string(stmt.get()->reference));
 					childColumn.push_back(to_string(child.get()->reference));
 				}
