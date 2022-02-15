@@ -2,11 +2,14 @@
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPREPROCESSOR_H_
 
 #include <memory>
+#include <set>
 #include <stdexcept>
 #include <string>
 #include <vector>
 
+#include "Common/ExpressionProcessor/Expression.h"
 #include "QueryEvaluator.h"
+#include "QueryExpressionLexer.h"
 #include "QueryProperties.h"
 #include "QueryResult.h"
 #include "Relationship/Follows.h"
@@ -16,9 +19,10 @@
 #include "Relationship/UsesP.h"
 #include "Relationship/UsesS.h"
 
+using std::runtime_error;
+using std::set;
 using std::string;
 using std::vector;
-using std::runtime_error;
 
 //struct QuerySyntaxException : public runtime_error {
 //    using runtime_error::runtime_error;
@@ -28,7 +32,7 @@ struct QueryException : public runtime_error {
   using runtime_error::runtime_error;
 };
 
-struct TokenizationException : public runtime_error {
+struct QueryTokenizationException : public runtime_error {
 	using runtime_error::runtime_error;
 };
 
@@ -57,9 +61,9 @@ private:
 	unique_ptr<UsesS> parseUsesS(int& tokenIndex);
 	unique_ptr<ModifiesP> parseModifiesP(int& tokenIndex);
 	unique_ptr<ModifiesS> parseModifiesS(int& tokenIndex);
-	QueryEntRef parseQueryEntRef(int& tokenIndex);
-	QueryStmtRef parseQueryStmtRef(int& tokenIndex);
-	string parseExpression(int& tokenIndex);
+	QueryEntRef parseQueryEntRef(int& tokenIndex, set<DesignEntity> acceptedDesignEntities);
+	QueryStmtRef parseQueryStmtRef(int& tokenIndex, set<DesignEntity> acceptedDesignEntities);
+	Common::ExpressionProcessor::Expression parseExpression(int& tokenIndex);
 
 	// Helper methods
 	bool isIdentOrName(string token);
