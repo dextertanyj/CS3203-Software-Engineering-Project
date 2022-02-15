@@ -1,5 +1,7 @@
 #include "StatementStore.h"
 
+#include <stdexcept>
+
 StatementStore::StatementStore() = default;
 
 void StatementStore::insert(StmtRef idx, StmtType type) {

@@ -1,5 +1,6 @@
 #include "PKB/ParentPKB.h"
 
+#include <stdexcept>
 #include <utility>
 
 ParentPKB::ParentPKB(shared_ptr<StmtInfo> self) : self(std::move(self)) {}

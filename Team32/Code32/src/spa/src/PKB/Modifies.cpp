@@ -1,5 +1,7 @@
 #include "PKB/Modifies.h"
 
+#include <algorithm>
+
 #include "PKB/SVRelationStore.tpp"
 
 bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
