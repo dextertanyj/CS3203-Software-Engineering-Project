@@ -19,11 +19,12 @@ unique_ptr<SP::Node::AssignmentNode> SP::Node::AssignmentNode::parseAssignmentSt
 StmtRef SP::Node::AssignmentNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Assign);
-	// TODO: Set arithmetic expression for pattern matching
 	Common::ExpressionProcessor::Expression rhs = expression->extract();
-	pkb.setModifies(stmt_ref, assignee->extract());
+	VarRef lhs = assignee->extract();
 	unordered_set<VarRef> variables = rhs.getVariables();
+	pkb.setModifies(stmt_ref, lhs);
 	pkb.setUses(stmt_ref, std::move(variables));
+	pkb.setAssign(stmt_ref, lhs, rhs);
 	return stmt_ref;
 }
 
