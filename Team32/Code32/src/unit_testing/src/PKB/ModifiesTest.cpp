@@ -1,5 +1,8 @@
+#include "PKB/ProcedureStore.h"
+
 #include "Common/TypeDefs.h"
 #include "PKB/PKB.h"
+#include "MockUtilities.h"
 #include "catch.hpp"
 
 PKB generateModifyTestPKB() {
