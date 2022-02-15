@@ -1,18 +1,18 @@
-#include "QP/Relationship/Parent.h"
+#include "QP/Relationship/Follows.h"
 #include "PKB/PKB.h"
 #include "Common/TypeDefs.h"
 
 #include "catch.hpp"
 
-TEST_CASE("QP::Relationship::Parent::execute") {
+TEST_CASE("QP::Relationship::Follows::execute") {
 	PKB pkb = PKB();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::WhileStmt);
 	pkb.setStmtType(4, StmtType::IfStmt);
-	pkb.setParent(1, 2);
-	pkb.setParent(2, 3);
-	pkb.setParent(3, 4);
+	pkb.setFollows(1, 2);
+	pkb.setFollows(2, 3);
+	pkb.setFollows(3, 4);
 
 	unordered_map<string, DesignEntity> map;
 	map.insert({ "s", DesignEntity::stmt });
@@ -29,96 +29,96 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	QueryStmtRef underscore = { StmtRefType::underscore, "_"};
 
 	SECTION("trivial: stmtNumber & stmtNumber") {
-		Parent parent1 = Parent(stmtNo1, stmtNo2);
-		Parent parent2 = Parent(stmtNo1, stmtNo3);
+		Follows follows1 = Follows(stmtNo1, stmtNo2);
+		Follows follows2 = Follows(stmtNo1, stmtNo3);
 
-		QueryResult result1 = parent1.execute(pkb, true, map);
-		QueryResult result2 = parent2.execute(pkb, true, map);
+		QueryResult result1 = follows1.execute(pkb, true, map);
+		QueryResult result2 = follows2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: stmtNumber & underscore") {
-		Parent parent1 = Parent(stmtNo1, underscore);
-		Parent parent2 = Parent(stmtNo4, underscore);
+		Follows follows1 = Follows(stmtNo1, underscore);
+		Follows follows2 = Follows(stmtNo4, underscore);
 
-		QueryResult result1 = parent1.execute(pkb, true, map);
-		QueryResult result2 = parent2.execute(pkb, true, map);
+		QueryResult result1 = follows1.execute(pkb, true, map);
+		QueryResult result2 = follows2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: stmtNumber & synonym") {
-		Parent parent1 = Parent(stmtNo1, stmtSynonym);
-		Parent parent2 = Parent(stmtNo1, assignSynonym);
+		Follows follows1 = Follows(stmtNo1, stmtSynonym);
+		Follows follows2 = Follows(stmtNo1, assignSynonym);
 
-		QueryResult result1 = parent1.execute(pkb, true, map);
-		QueryResult result2 = parent2.execute(pkb, true, map);
+		QueryResult result1 = follows1.execute(pkb, true, map);
+		QueryResult result2 = follows2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: underscore & stmtNumber") {
-		Parent parent1 = Parent(underscore, stmtNo2);
-		Parent parent2 = Parent(underscore, stmtNo1);
+		Follows follows1 = Follows(underscore, stmtNo2);
+		Follows follows2 = Follows(underscore, stmtNo1);
 
-		QueryResult result1 = parent1.execute(pkb, true, map);
-		QueryResult result2 = parent2.execute(pkb, true, map);
+		QueryResult result1 = follows1.execute(pkb, true, map);
+		QueryResult result2 = follows2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: underscore & underscore") {
-		Parent parent = Parent(underscore, underscore);
+		Follows follows = Follows(underscore, underscore);
 
-		QueryResult result = parent.execute(pkb, true, map);
+		QueryResult result = follows.execute(pkb, true, map);
 
 		REQUIRE(result.getResult());
 	}
 
 	SECTION("trivial: underscore & synonym") {
-		Parent parent1 = Parent(underscore, stmtSynonym);
-		Parent parent2 = Parent(underscore, assignSynonym);
+		Follows follows1 = Follows(underscore, stmtSynonym);
+		Follows follows2 = Follows(underscore, assignSynonym);
 
-		QueryResult result1 = parent1.execute(pkb, true, map);
-		QueryResult result2 = parent2.execute(pkb, true, map);
+		QueryResult result1 = follows1.execute(pkb, true, map);
+		QueryResult result2 = follows2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: synonym & stmtNumber") {
-		Parent parent1 = Parent(assignSynonym, stmtNo2);
-		Parent parent2 = Parent(assignSynonym, stmtNo3);
+		Follows follows1 = Follows(assignSynonym, stmtNo2);
+		Follows follows2 = Follows(assignSynonym, stmtNo3);
 
-		QueryResult result1 = parent1.execute(pkb, true, map);
-		QueryResult result2 = parent2.execute(pkb, true, map);
+		QueryResult result1 = follows1.execute(pkb, true, map);
+		QueryResult result2 = follows2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: synonym & underscore") {
-		Parent parent1 = Parent(assignSynonym, underscore);
-		Parent parent2 = Parent(ifSynonym, underscore);
+		Follows follows1 = Follows(assignSynonym, underscore);
+		Follows follows2 = Follows(ifSynonym, underscore);
 
-		QueryResult result1 = parent1.execute(pkb, true, map);
-		QueryResult result2 = parent2.execute(pkb, true, map);
+		QueryResult result1 = follows1.execute(pkb, true, map);
+		QueryResult result2 = follows2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("non-trivial: synonym & stmtNumber") {
-		Parent parent1 = Parent(assignSynonym, stmtNo2);
-		Parent parent2 = Parent(ifSynonym, stmtNo2);
+		Follows follows1 = Follows(assignSynonym, stmtNo2);
+		Follows follows2 = Follows(ifSynonym, stmtNo2);
 
-		QueryResult result1 = parent1.execute(pkb, false, map);
-		QueryResult result2 = parent2.execute(pkb, false, map);
+		QueryResult result1 = follows1.execute(pkb, false, map);
+		QueryResult result2 = follows2.execute(pkb, false, map);
 
 		vector<string> expectedResult = { "1" };
 		REQUIRE(result1.getSynonymResult("a") == expectedResult);
@@ -126,11 +126,11 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("non-trivial: synonym & underscore") {
-		Parent parent1 = Parent(stmtSynonym, underscore);
-		Parent parent2 = Parent(ifSynonym, underscore);
+		Follows follows1 = Follows(stmtSynonym, underscore);
+		Follows follows2 = Follows(ifSynonym, underscore);
 
-		QueryResult result1 = parent1.execute(pkb, false, map);
-		QueryResult result2 = parent2.execute(pkb, false, map);
+		QueryResult result1 = follows1.execute(pkb, false, map);
+		QueryResult result2 = follows2.execute(pkb, false, map);
 
 		vector<string> expectedResult = { "1", "2", "3" };
 		vector<string> actualResult = result1.getSynonymResult("s");
@@ -140,11 +140,11 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("non-trivial: synonym & synonym") {
-		Parent parent1 = Parent(stmtSynonym, ifSynonym);
-		Parent parent2 = Parent(ifSynonym, assignSynonym);
+		Follows follows1 = Follows(stmtSynonym, ifSynonym);
+		Follows follows2 = Follows(ifSynonym, assignSynonym);
 
-		QueryResult result1 = parent1.execute(pkb, false, map);
-		QueryResult result2 = parent2.execute(pkb, false, map);
+		QueryResult result1 = follows1.execute(pkb, false, map);
+		QueryResult result2 = follows2.execute(pkb, false, map);
 
 		vector<string> expectedStmtResult = { "3" };
 		vector<string> expectedIfResult = { "4" };
@@ -154,11 +154,11 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("non-trivial: underscore & synonym") {
-		Parent parent1 = Parent(underscore, ifSynonym);
-		Parent parent2 = Parent(underscore, assignSynonym);
+		Follows follows1 = Follows(underscore, ifSynonym);
+		Follows follows2 = Follows(underscore, assignSynonym);
 
-		QueryResult result1 = parent1.execute(pkb, false, map);
-		QueryResult result2 = parent2.execute(pkb, false, map);
+		QueryResult result1 = follows1.execute(pkb, false, map);
+		QueryResult result2 = follows2.execute(pkb, false, map);
 
 		vector<string> expectedResult = { "4" };
 		REQUIRE(result1.getSynonymResult("if") == expectedResult);
@@ -166,11 +166,11 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("non-trivial: stmtNumber & synonym") {
-		Parent parent1 = Parent(stmtNo1, stmtSynonym);
-		Parent parent2 = Parent(stmtNo1, ifSynonym);
+		Follows follows1 = Follows(stmtNo1, stmtSynonym);
+		Follows follows2 = Follows(stmtNo1, ifSynonym);
 
-		QueryResult result1 = parent1.execute(pkb, false, map);
-		QueryResult result2 = parent2.execute(pkb, false, map);
+		QueryResult result1 = follows1.execute(pkb, false, map);
+		QueryResult result2 = follows2.execute(pkb, false, map);
 
 		vector<string> expectedResult = { "2" };
 		REQUIRE(result1.getSynonymResult("s") == expectedResult);

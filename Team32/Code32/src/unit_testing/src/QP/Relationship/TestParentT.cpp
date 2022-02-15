@@ -1,18 +1,19 @@
-#include "QP/Relationship/Parent.h"
+#include "QP/Relationship/ParentT.h"
 #include "PKB/PKB.h"
 #include "Common/TypeDefs.h"
 
 #include "catch.hpp"
 
-TEST_CASE("QP::Relationship::Parent::execute") {
+TEST_CASE("QP::Relationship::ParentT::execute") {
 	PKB pkb = PKB();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::WhileStmt);
 	pkb.setStmtType(4, StmtType::IfStmt);
 	pkb.setParent(1, 2);
-	pkb.setParent(2, 3);
-	pkb.setParent(3, 4);
+	pkb.setParent(1, 3);
+	pkb.setParent(2, 4);
+	pkb.populateComplexRelations();
 
 	unordered_map<string, DesignEntity> map;
 	map.insert({ "s", DesignEntity::stmt });
@@ -29,8 +30,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	QueryStmtRef underscore = { StmtRefType::underscore, "_"};
 
 	SECTION("trivial: stmtNumber & stmtNumber") {
-		Parent parent1 = Parent(stmtNo1, stmtNo2);
-		Parent parent2 = Parent(stmtNo1, stmtNo3);
+		ParentT parent1 = ParentT(stmtNo1, stmtNo3);
+		ParentT parent2 = ParentT(stmtNo2, stmtNo1);
 
 		QueryResult result1 = parent1.execute(pkb, true, map);
 		QueryResult result2 = parent2.execute(pkb, true, map);
@@ -40,8 +41,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("trivial: stmtNumber & underscore") {
-		Parent parent1 = Parent(stmtNo1, underscore);
-		Parent parent2 = Parent(stmtNo4, underscore);
+		ParentT parent1 = ParentT(stmtNo1, underscore);
+		ParentT parent2 = ParentT(stmtNo3, underscore);
 
 		QueryResult result1 = parent1.execute(pkb, true, map);
 		QueryResult result2 = parent2.execute(pkb, true, map);
@@ -51,8 +52,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("trivial: stmtNumber & synonym") {
-		Parent parent1 = Parent(stmtNo1, stmtSynonym);
-		Parent parent2 = Parent(stmtNo1, assignSynonym);
+		ParentT parent1 = ParentT(stmtNo1, ifSynonym);
+		ParentT parent2 = ParentT(stmtNo1, assignSynonym);
 
 		QueryResult result1 = parent1.execute(pkb, true, map);
 		QueryResult result2 = parent2.execute(pkb, true, map);
@@ -62,8 +63,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("trivial: underscore & stmtNumber") {
-		Parent parent1 = Parent(underscore, stmtNo2);
-		Parent parent2 = Parent(underscore, stmtNo1);
+		ParentT parent1 = ParentT(underscore, stmtNo3);
+		ParentT parent2 = ParentT(underscore, stmtNo1);
 
 		QueryResult result1 = parent1.execute(pkb, true, map);
 		QueryResult result2 = parent2.execute(pkb, true, map);
@@ -73,7 +74,7 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("trivial: underscore & underscore") {
-		Parent parent = Parent(underscore, underscore);
+		ParentT parent = ParentT(underscore, underscore);
 
 		QueryResult result = parent.execute(pkb, true, map);
 
@@ -81,8 +82,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("trivial: underscore & synonym") {
-		Parent parent1 = Parent(underscore, stmtSynonym);
-		Parent parent2 = Parent(underscore, assignSynonym);
+		ParentT parent1 = ParentT(underscore, stmtSynonym);
+		ParentT parent2 = ParentT(underscore, assignSynonym);
 
 		QueryResult result1 = parent1.execute(pkb, true, map);
 		QueryResult result2 = parent2.execute(pkb, true, map);
@@ -92,8 +93,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("trivial: synonym & stmtNumber") {
-		Parent parent1 = Parent(assignSynonym, stmtNo2);
-		Parent parent2 = Parent(assignSynonym, stmtNo3);
+		ParentT parent1 = ParentT(assignSynonym, stmtNo4);
+		ParentT parent2 = ParentT(ifSynonym, stmtNo3);
 
 		QueryResult result1 = parent1.execute(pkb, true, map);
 		QueryResult result2 = parent2.execute(pkb, true, map);
@@ -103,8 +104,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("trivial: synonym & underscore") {
-		Parent parent1 = Parent(assignSynonym, underscore);
-		Parent parent2 = Parent(ifSynonym, underscore);
+		ParentT parent1 = ParentT(assignSynonym, underscore);
+		ParentT parent2 = ParentT(ifSynonym, underscore);
 
 		QueryResult result1 = parent1.execute(pkb, true, map);
 		QueryResult result2 = parent2.execute(pkb, true, map);
@@ -114,8 +115,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("non-trivial: synonym & stmtNumber") {
-		Parent parent1 = Parent(assignSynonym, stmtNo2);
-		Parent parent2 = Parent(ifSynonym, stmtNo2);
+		ParentT parent1 = ParentT(assignSynonym, stmtNo4);
+		ParentT parent2 = ParentT(ifSynonym, stmtNo2);
 
 		QueryResult result1 = parent1.execute(pkb, false, map);
 		QueryResult result2 = parent2.execute(pkb, false, map);
@@ -126,13 +127,13 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("non-trivial: synonym & underscore") {
-		Parent parent1 = Parent(stmtSynonym, underscore);
-		Parent parent2 = Parent(ifSynonym, underscore);
+		ParentT parent1 = ParentT(stmtSynonym, underscore);
+		ParentT parent2 = ParentT(ifSynonym, underscore);
 
 		QueryResult result1 = parent1.execute(pkb, false, map);
 		QueryResult result2 = parent2.execute(pkb, false, map);
 
-		vector<string> expectedResult = { "1", "2", "3" };
+		vector<string> expectedResult = { "1", "2" };
 		vector<string> actualResult = result1.getSynonymResult("s");
 		sort(actualResult.begin(), actualResult.end());
 		REQUIRE(actualResult == expectedResult);
@@ -140,22 +141,24 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("non-trivial: synonym & synonym") {
-		Parent parent1 = Parent(stmtSynonym, ifSynonym);
-		Parent parent2 = Parent(ifSynonym, assignSynonym);
+		ParentT parent1 = ParentT(stmtSynonym, ifSynonym);
+		ParentT parent2 = ParentT(ifSynonym, assignSynonym);
 
 		QueryResult result1 = parent1.execute(pkb, false, map);
 		QueryResult result2 = parent2.execute(pkb, false, map);
 
-		vector<string> expectedStmtResult = { "3" };
-		vector<string> expectedIfResult = { "4" };
-		REQUIRE(result1.getSynonymResult("s") == expectedStmtResult);
+		vector<string> expectedStmtResult = { "1", "2" };
+		vector<string> expectedIfResult = { "4", "4"};
+		vector<string> actualStmtResult = result1.getSynonymResult("s");
+		sort(actualStmtResult.begin(), actualStmtResult.end());
+		REQUIRE(actualStmtResult == expectedStmtResult);
 		REQUIRE(result1.getSynonymResult("if") == expectedIfResult);
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("non-trivial: underscore & synonym") {
-		Parent parent1 = Parent(underscore, ifSynonym);
-		Parent parent2 = Parent(underscore, assignSynonym);
+		ParentT parent1 = ParentT(underscore, ifSynonym);
+		ParentT parent2 = ParentT(underscore, assignSynonym);
 
 		QueryResult result1 = parent1.execute(pkb, false, map);
 		QueryResult result2 = parent2.execute(pkb, false, map);
@@ -166,14 +169,16 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	}
 
 	SECTION("non-trivial: stmtNumber & synonym") {
-		Parent parent1 = Parent(stmtNo1, stmtSynonym);
-		Parent parent2 = Parent(stmtNo1, ifSynonym);
+		ParentT parent1 = ParentT(stmtNo1, stmtSynonym);
+		ParentT parent2 = ParentT(stmtNo3, ifSynonym);
 
 		QueryResult result1 = parent1.execute(pkb, false, map);
 		QueryResult result2 = parent2.execute(pkb, false, map);
 
-		vector<string> expectedResult = { "2" };
-		REQUIRE(result1.getSynonymResult("s") == expectedResult);
+		vector<string> expectedResult = { "2", "3", "4" };
+		vector<string> actualResult = result1.getSynonymResult("s");
+		sort(actualResult.begin(), actualResult.end());
+		REQUIRE(actualResult == expectedResult);
 		REQUIRE(!result2.getResult());
 	}
 };

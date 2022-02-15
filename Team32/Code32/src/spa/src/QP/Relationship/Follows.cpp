@@ -82,7 +82,7 @@ QueryResult Follows::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity
 	}
 	else if (leftStmt.type == StmtRefType::synonym && rightStmt.type == StmtRefType::stmtNumber) {
 		shared_ptr<StmtInfo> preceding = pkb.getPreceding(stoi(rightStmt.stmtRef));
-		DesignEntity designEntity = map[rightStmt.stmtRef];
+		DesignEntity designEntity = map[leftStmt.stmtRef];
 		if (preceding.get() == nullptr ||
 			  (designEntity != DesignEntity::stmt &&
 				 preceding.get()->type != QueryUtils::designEntToStmtType[designEntity])) {
@@ -160,7 +160,7 @@ QueryResult Follows::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEnt
 			shared_ptr<StmtInfo> follower = pkb.getFollower(stmt.get()->reference);
 			if (follower.get() != nullptr &&
 				  (rightDesignEntity == DesignEntity::stmt ||
-					stmt.get()->type == QueryUtils::designEntToStmtType[rightDesignEntity])) {
+					 follower.get()->type == QueryUtils::designEntToStmtType[rightDesignEntity])) {
 				leftColumn.push_back(to_string(stmt.get()->reference));
 				rightColumn.push_back(to_string(follower.get()->reference));
 			}

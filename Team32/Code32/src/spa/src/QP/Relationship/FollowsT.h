@@ -12,9 +12,6 @@ public:
 	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
 
 private:
-	QueryStmtRef leftStmt;
-	QueryStmtRef rightStmt;
-
 	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
 	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
 };
