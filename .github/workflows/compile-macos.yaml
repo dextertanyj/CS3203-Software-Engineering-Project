@@ -13,11 +13,6 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Run format check
-        shell: bash
-        working-directory: ${{github.workspace}}/Team32/Code32
-        run: clang-format -style=file -Werror --dry-run src/spa/src/**/*
-
       - name: Create build environment
         run: cmake -E make_directory ${{runner.workspace}}/build
 
