@@ -8,6 +8,14 @@ jobs:
   lint-checks:
     runs-on: macos-latest
     steps:
+      - name: Install dependencies
+        shell: bash
+        run: |
+          brew install llvm
+          ln -s "$(brew --prefix llvm)/bin/clang-format" "/usr/local/bin/clang-format"
+          ln -s "$(brew --prefix llvm)/bin/clang-tidy" "/usr/local/bin/clang-tidy"
+          ln -s "$(brew --prefix llvm)/bin/clang-apply-replacements" "/usr/local/bin/clang-apply-replacements"
+
       - name: Checkout repository code
         uses: actions/checkout@v2
 
