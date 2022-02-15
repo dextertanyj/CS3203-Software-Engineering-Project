@@ -44,7 +44,7 @@ StmtInfo SP::Node::IfNode::extract(PKB& pkb) {
 }
 
 
-bool SP::Node::IfNode::equals(shared_ptr<StatementNode> object) {
+bool SP::Node::IfNode::equals(const shared_ptr<StatementNode>& object) {
     shared_ptr<IfNode> other = dynamic_pointer_cast<IfNode>(object);
     if (other == nullptr) {
         return false;

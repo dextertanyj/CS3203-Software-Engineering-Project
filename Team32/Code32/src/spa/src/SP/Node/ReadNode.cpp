@@ -9,7 +9,7 @@ StmtInfo SP::Node::ReadNode::extract(PKB& pkb) {
 	return {stmt_ref, StmtType::Read};
 }
 
-bool SP::Node::ReadNode::equals(shared_ptr<StatementNode> object) {
+bool SP::Node::ReadNode::equals(const shared_ptr<StatementNode>& object) {
     shared_ptr<ReadNode> other = dynamic_pointer_cast<ReadNode>(object);
     if (other == nullptr) {
         return false;
