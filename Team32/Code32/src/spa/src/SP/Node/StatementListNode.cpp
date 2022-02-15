@@ -17,12 +17,12 @@ unique_ptr<SP::Node::StatementListNode> SP::Node::StatementListNode::parseStatem
 StmtInfoList SP::Node::StatementListNode::extract(PKB& pkb) {
 	StmtInfoList children;
 	for (auto iter = stmtList.begin(); iter < stmtList.end(); ++iter) {
-		children.push_back(iter->get()->extract(pkb));
+		children.push_back(std::make_shared<StmtInfo>(iter->get()->extract(pkb)));
 	}
-	StmtInfo previous = children.at(0);
+	StmtInfo previous = *(children.at(0));
 	for (auto iter = ++children.begin(); iter < children.end(); ++iter) {
-		pkb.setFollows(previous.reference, iter->reference);
-		previous = *iter;
+		pkb.setFollows(previous.reference, iter->get()->reference);
+		previous = *(iter->get());
 	}
 	return children;
 }

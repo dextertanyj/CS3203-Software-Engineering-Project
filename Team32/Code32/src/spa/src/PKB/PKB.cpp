@@ -1,127 +1,170 @@
 #include "PKB.h"
 
+#include <utility>
+
 using namespace std;
 
-PKB::PKB() {}
+PKB::PKB() = default;
 
-StmtRefList PKB::getStatements() {
-  StmtRefList stmtRefList;
-  for (auto key_value : typeMap) {
-    stmtRefList.push_back(key_value.first);
-  }
-  return stmtRefList;
+// This method will store information about a statement into PKB's statement map.
+// Source Processor is guaranteed to call this method before storing relationships and variables.
+void PKB::setStmtType(StmtRef idx, StmtType type) { statement_store.insert(idx, type); }
+
+void PKB::setConstant(int value) { constant_store.insert(value); }
+
+void PKB::setConstant(unordered_set<int> values) { constant_store.insert(values); }
+
+StmtInfoPtrSet PKB::getStatements() { return statement_store.getAll(); }
+
+VarRefSet PKB::getVariables() { return variable_store.getAll(); }
+
+unordered_set<int> PKB::getConstants() { return constant_store.getAll(); }
+
+void PKB::setParent(StmtRef parent, StmtRef child) {
+	shared_ptr<StmtInfo> parent_info = statement_store.get(parent);
+	shared_ptr<StmtInfo> child_info = statement_store.get(child);
+	if (parent_info == nullptr || child_info == nullptr) {
+		throw "Statement does not exist";
+	}
+	parent_store.set(parent_info, child_info);
 }
 
-void PKB::setParent(StmtRef stmtNo1, StmtRef stmtNo2) {
-    checkInvalidStmts(stmtNo1, stmtNo2);
-    parentStore.setParent(stmtNo1, stmtNo2);
+bool PKB::checkParents(StmtRef parent, StmtRef child) { return parent_store.isRelated(parent, child); }
+
+shared_ptr<StmtInfo> PKB::getParent(StmtRef idx) {
+	auto result = parent_store.getForward(idx);
+	if (result.empty()) {
+		return nullptr;
+	}
+	return *result.begin();
 }
 
-StmtRef PKB::getParent(StmtRef stmtNo) {
-    checkInvalidStmt(stmtNo);
-    return parentStore.getParent(stmtNo);
+unordered_set<shared_ptr<StmtInfo>> PKB::getChildren(StmtRef idx) { return parent_store.getReverse(idx); }
+
+unordered_set<shared_ptr<StmtInfo>> PKB::getParentStar(StmtRef idx) { return parent_store.getForwardTransitive(idx); }
+
+unordered_set<shared_ptr<StmtInfo>> PKB::getChildStar(StmtRef idx) { return parent_store.getReverseTransitive(idx); }
+
+void PKB::setFollows(StmtRef following, StmtRef follower) {
+	shared_ptr<StmtInfo> following_info = statement_store.get(following);
+	shared_ptr<StmtInfo> follower_info = statement_store.get(follower);
+	if (following_info == nullptr || follower_info == nullptr) {
+		throw "Statement does not exist";
+	}
+	follows_store.set(following_info, follower_info);
 }
 
-unordered_set<StmtRef> PKB::getChildren(StmtRef stmtNo) {
-    checkInvalidStmt(stmtNo);
-    return parentStore.getChildren(stmtNo);
+bool PKB::checkFollows(StmtRef following, StmtRef follower) { return follows_store.isRelated(following, follower); }
+
+shared_ptr<StmtInfo> PKB::getPreceding(StmtRef idx) {
+	auto result = follows_store.getForward(idx);
+	if (result.empty()) {
+		return nullptr;
+	}
+	return *result.begin();
 }
 
-bool PKB::checkParents(StmtRef stmtNo1, StmtRef stmtNo2) {
-    try {
-        checkInvalidStmts(stmtNo1, stmtNo2);
-    } catch (invalid_argument) {
-        return false;
-    }
-    return parentStore.isParentChild(stmtNo1, stmtNo2);
+shared_ptr<StmtInfo> PKB::getFollower(StmtRef idx) {
+	auto result = follows_store.getReverse(idx);
+	if (result.empty()) {
+		return nullptr;
+	}
+	return *result.begin();
 }
 
-void PKB::setFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
-    checkInvalidStmts(stmtNo1, stmtNo2);
-    followStore.setFollows(stmtNo1, stmtNo2);
+unordered_set<shared_ptr<StmtInfo>> PKB::getPrecedingStar(StmtRef idx) { return follows_store.getForwardTransitive(idx); }
+
+unordered_set<shared_ptr<StmtInfo>> PKB::getFollowerStar(StmtRef idx) { return follows_store.getReverseTransitive(idx); }
+
+void PKB::setModifies(StmtRef idx, VarRef variable) {
+	shared_ptr<StmtInfo> statement = statement_store.get(idx);
+	if (statement == nullptr) {
+		throw "Statement does not exist";
+	}
+	variable_store.insert(variable);
+	modifies_store.set(std::move(statement), std::move(variable));
 }
 
-bool PKB::checkFollows(StmtRef stmtNo1, StmtRef stmtNo2) {
-    try {
-        checkInvalidStmts(stmtNo1, stmtNo2);
-    } catch (invalid_argument) {
-        return false;
-    }
-    return followStore.checkFollows(stmtNo1, stmtNo2);
+void PKB::setModifies(StmtRef idx, VarRefSet variables) {
+	shared_ptr<StmtInfo> statement = statement_store.get(idx);
+	if (statement == nullptr) {
+		throw "Statement does not exist";
+	}
+	variable_store.insert(variables);
+	modifies_store.set(std::move(statement), std::move(variables));
 }
 
-StmtRef PKB::getFollower(StmtRef stmtNo) {
-    checkInvalidStmt(stmtNo);
-    return followStore.getFollower(stmtNo);
+bool PKB::checkModifies(StmtRef idx, VarRef variable) { return modifies_store.check(idx, std::move(variable)); }
+
+unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef variable) { return modifies_store.getByVar(std::move(variable)); }
+
+unordered_set<VarRef> PKB::getModifiesByStmt(StmtRef idx) { return modifies_store.getByStmt(idx); }
+
+void PKB::setUses(StmtRef idx, VarRef variable) {
+	shared_ptr<StmtInfo> statement = statement_store.get(idx);
+	if (statement == nullptr) {
+		throw "Statement does not exist";
+	}
+	variable_store.insert(variable);
+	uses_store.set(statement, std::move(variable));
 }
 
-StmtRef PKB::getFollowee(StmtRef stmtNo) {
-    checkInvalidStmt(stmtNo);
-    return followStore.getFollowee(stmtNo);
+void PKB::setUses(StmtRef idx, VarRefSet variables) {
+	shared_ptr<StmtInfo> statement = statement_store.get(idx);
+	if (statement == nullptr) {
+		throw "Statement does not exist";
+	}
+	variable_store.insert(variables);
+	uses_store.set(statement, std::move(variables));
 }
 
-void PKB::setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree) {
-    checkInvalidStmt(stmtNo);
-    return assignStore.setAssign(stmtNo, variableLHS, opTree);
+bool PKB::checkUses(StmtRef stmt, VarRef variable) { return uses_store.check(stmt, variable); }
+
+unordered_set<shared_ptr<StmtInfo>> PKB::getUsesByVar(VarRef variable) { return uses_store.getByVar(variable); }
+
+unordered_set<VarRef> PKB::getUsesByStmt(StmtRef stmt) { return uses_store.getByStmt(stmt); }
+
+void PKB::setAssign(StmtRef idx, VarRef variable, Common::ExpressionProcessor::Expression expression) {
+	shared_ptr<StmtInfo> statement = statement_store.get(idx);
+	return assign_store.setAssign(statement, variable, expression);
 }
 
-void PKB::setProc(ProcRef proc_name, vector<StmtRef> idxList) {
-    for (auto itr : idxList) {
-        checkInvalidStmt(itr);
-    }
-    auto keyItr = procMap.find(proc_name);
-    if (keyItr == procMap.end()) {
-        procMap.insert(make_pair(proc_name, idxList));
-    } else {
-        keyItr->second = idxList;
-    }
+bool PKB::patternExists(VarRef variable, Common::ExpressionProcessor::Expression expression, bool is_exact_match) {
+	return assign_store.patternExists(variable, expression, is_exact_match);
 }
 
-void PKB::setStmtType(StmtRef stmtNo, StmtType type) {
-    checkInvalidStmt(stmtNo);
-
-    auto keyItr = typeMap.find(stmtNo);
-    if (keyItr == typeMap.end()) {
-        typeMap.insert(make_pair(stmtNo, type));
-    } else {
-        keyItr->second = type;
-    }
+StmtInfoPtrSet PKB::getStmtsWithPattern(VarRef variable, Common::ExpressionProcessor::Expression expression, bool is_exact_match) {
+	return assign_store.getStmtsWithPattern(variable, expression, is_exact_match);
 }
 
-void PKB::setUses(StmtRef stmtNo, VarRef var_name) {
-    checkInvalidStmt(stmtNo);
-    useStore.setUses(stmtNo, var_name);
-}
+StmtInfoPtrSet PKB::getStmtsWithPatternLHS(VarRef variable) { return assign_store.getStmtsWithPatternLHS(variable); }
 
-void PKB::setModifies(StmtRef stmtNo, VarRef var_name) {
-    checkInvalidStmt(stmtNo);
-    modifyStore.setModify(stmtNo, var_name);
+vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getStmtsWithPatternRHS(Common::ExpressionProcessor::Expression expression,
+                                                                              bool is_exact_match) {
+	return assign_store.getStmtsWithPatternRHS(expression, is_exact_match);
 }
 
 void PKB::populateComplexRelations() {
-    parentStore.populateParentStar(numStatements);
+	ParentPKB::optimize(parent_store);
+	FollowsPKB::optimize(follows_store);
+	Modifies::optimize(statement_store, parent_store, modifies_store);
+	Uses::optimize(statement_store, parent_store, uses_store);
 }
 
 void PKB::clear() {
-    parentStore.clear();
-    followStore.clear();
-    assignStore.clear();
-    useStore.clear();
-    modifyStore.clear();
-    procMap.clear();
-    typeMap.clear();
+	parent_store.clear();
+	follows_store.clear();
+	assign_store.clear();
+	uses_store.clear();
+	modifies_store.clear();
+	statement_store.clear();
 }
 
-void PKB::setNumStatements(int size) {
-    if (size < 0) throw invalid_argument("Size must be a positive integer.");
-    this->numStatements = size;
-}
-
-void PKB::checkInvalidStmts(StmtRef stmtNo1, StmtRef stmtNo2) {
-    if (stmtNo1 >= stmtNo2) throw invalid_argument("Second statement must come after the first statement.");
-    if (stmtNo1 <= 0 || stmtNo2 <= 0) throw invalid_argument("Statement number must be a positive integer.");
-}
-
-void PKB::checkInvalidStmt(StmtRef stmtNo1) {
-    if (stmtNo1 <= 0) throw invalid_argument("Statement number must be a positive integer.");
+unordered_map<StmtRef, shared_ptr<StmtInfo>> PKB::getStmtInfoMap() {
+	StmtInfoPtrSet set = statement_store.getAll();
+	unordered_map<StmtRef, shared_ptr<StmtInfo>> map;
+	for (const auto& item : set) {
+		map.insert({item->reference, item});
+	}
+	return map;
 }

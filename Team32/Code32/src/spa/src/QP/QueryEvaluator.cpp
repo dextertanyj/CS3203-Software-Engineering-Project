@@ -60,12 +60,12 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& queryProperties) {
 
 QueryResult QueryEvaluator::executeNoClauses(Declaration select) {
 	if (select.type == DesignEntity::stmt) {
-		StmtRefList stmtList = pkb.getStatements();
+		StmtInfoPtrSet stmtList = pkb.getStatements();
 		QueryResult result = QueryResult();
 
 		vector<string> resultString;
-		for (StmtRef stmt : stmtList) {
-			resultString.push_back({ to_string(stmt) });
+		for (const shared_ptr<StmtInfo>& stmt : stmtList) {
+			resultString.push_back({ to_string(stmt->reference) });
 		}
 
 		result.addColumn(select.symbol, resultString);
@@ -164,5 +164,3 @@ vector<pair<SuchThatClauseList, PatternClauseList>> QueryEvaluator::splitClauses
 
 	return result;
 }
-
-

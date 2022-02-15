@@ -1,71 +1,80 @@
 #include "AssignStore.h"
 
 #include <cassert>
+#include <utility>
 
 using namespace std;
 
-AssignStore::AssignStore() {}
+AssignStore::AssignStore() = default;
 
-void AssignStore::setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree) {
-    assert(stmtNo > 0);
+void AssignStore::setAssign(shared_ptr<StmtInfo> statement, VarRef variable, Common::ExpressionProcessor::Expression expression) {
+	StmtRef idx = statement->reference;
+	if (statement->type != StmtType::Assign) {
+		throw "Statement type cannot be bound to expression";
+	}
 
-    auto keyItr = assignMap.find(stmtNo);
-    AssignRelation assignRelation = { variableLHS, opTree };
-    if (keyItr == assignMap.end()) {
-        assignMap.insert(make_pair(stmtNo, assignRelation));
-    } else {
-        keyItr->second = assignRelation;
-    }
+	auto iter = store.find(idx);
+	if (iter != store.end()) {
+		throw invalid_argument("Statement already bound to existing expression");
+	}
+	AssignRelation relation = {statement, move(variable), move(expression)};
+	store.insert({idx, relation});
 }
 
-StmtRefList AssignStore::getPatternMatch(StmtInfoList stmtNoList, VarRef variableLHS, string opTree,
-                                         bool isRHSExactMatchNeeded) {
-    StmtRefList stmtRefList;
-    for (auto& stmtInfo : stmtNoList) {
-        StmtRef stmtNo = stmtInfo.reference;
-        assert(stmtInfo.type == StmtType::Assign);
-        assert(stmtNo > 0);
-
-        auto keyItr = assignMap.find(stmtNo);
-        if (keyItr == assignMap.end()) {
-            continue;
-        }
-        AssignRelation assignRelation = keyItr->second;
-
-        if (compareOpTreeAndVar(assignRelation, variableLHS, opTree, isRHSExactMatchNeeded)) {
-            stmtRefList.push_back(stmtNo);
-        }
-    }
-    return stmtRefList;
+bool AssignStore::patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) {
+	for (auto& assignment : store) {
+		if (compareExpressions(assignment.second, variable, expression, is_exact_match)) {
+			return true;
+		}
+	}
+	return false;
 }
 
-StmtRefList AssignStore::getAllPatternMatch(VarRef variableLHS, string opTree, bool isRHSExactMatchNeeded) {
-    StmtRefList stmtRefList;
-    for (auto& itr : assignMap) {
-        AssignRelation assignRelation = itr.second;
-        if (compareOpTreeAndVar(assignRelation, variableLHS, opTree, isRHSExactMatchNeeded)) {
-            stmtRefList.push_back(itr.first);
-        }
-    }
-    return stmtRefList;
+StmtInfoPtrSet AssignStore::getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
+                                                bool is_exact_match) {
+	StmtInfoPtrSet result;
+	for (auto& assignment : store) {
+		if (compareExpressions(assignment.second, variable, expression, is_exact_match)) {
+			result.insert(assignment.second.node);
+		}
+	}
+	return result;
 }
 
-// To be changed when Operation Tree is created
-bool AssignStore::compareOpTreeAndVar(AssignRelation assignRelation, VarRef variableLHS, string opTree, bool isRHSExactMatchNeeded) {
-    if (variableLHS != "" && assignRelation.variableLHS != variableLHS) {
-        return false;
-    }
-    if (isRHSExactMatchNeeded) {
-        // call compare method of opTree object for exact comparison - to be changed when OperationTree merged in
-        return assignRelation.opTree.compare(opTree);
-    } else {
-        // call compare method of opTree object for partial comparison - to be changed when OperationTree merged in
-        return assignRelation.opTree.compare(opTree);
-    }
+StmtInfoPtrSet AssignStore::getStmtsWithPatternLHS(const VarRef& varName) {
+	StmtInfoPtrSet result;
+	for (const auto& assignment : store) {
+		if (assignment.second.variable == varName) {
+			result.insert(assignment.second.node);
+		}
+	}
+	return result;
 }
 
-void AssignStore::clear() {
-    assignMap.clear();
+vector<pair<shared_ptr<StmtInfo>, VarRef>> AssignStore::getStmtsWithPatternRHS(
+	const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) {
+	vector<pair<shared_ptr<StmtInfo>, VarRef>> result;
+	for (auto& itr : store) {
+		AssignRelation assign_relation = itr.second;
+		if (compareExpressions(assign_relation, "", expression, is_exact_match)) {
+			pair<shared_ptr<StmtInfo>, VarRef> pair = make_pair(itr.second.node, itr.second.variable);
+			result.push_back(pair);
+		}
+	}
+	return result;
 }
 
+bool AssignStore::compareExpressions(AssignRelation& relation, const VarRef& variable,
+                                     const Common::ExpressionProcessor::Expression& opTree, bool is_exact_match) {
+	if (!variable.empty() && relation.variable != variable) {
+		return false;
+	}
+	if (is_exact_match) {
+		return relation.expression.equals(opTree);
+	}
+	return relation.expression.contains(opTree);
+}
 
+void AssignStore::clear() { store.clear(); }
+
+unordered_map<StmtRef, AssignRelation> AssignStore::getAssignMap() { return store; }
