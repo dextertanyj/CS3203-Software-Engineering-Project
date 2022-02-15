@@ -1,12 +1,12 @@
-#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWS_H_
-#define TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWS_H_
+#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWST_H_
+#define TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWST_H_
 
 #include "QP/Relationship/Relation.h"
 #include "QP/QueryTypeDefs.h"
 
-class Follows : public Relation {
+class FollowsT : public Relation {
 public:
-	Follows(QueryStmtRef leftStmt, QueryStmtRef rightStmt);
+	FollowsT( QueryStmtRef leftStmt, QueryStmtRef rightStmt);
 
 	QueryStmtRef getLeftStmt();
 	QueryStmtRef getRightStmt();
@@ -22,4 +22,4 @@ private:
 	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
 };
 
-#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWS_H_
+#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWST_H_

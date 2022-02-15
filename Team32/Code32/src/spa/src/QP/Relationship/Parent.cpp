@@ -1,8 +1,7 @@
 #include "QP/Relationship/Parent.h"
 
-Parent::Parent(bool isStar, QueryStmtRef parentStmt, QueryStmtRef childStmt)
-	: isStar(isStar),
-	  parentStmt(parentStmt),
+Parent::Parent(QueryStmtRef parentStmt, QueryStmtRef childStmt)
+	: parentStmt(parentStmt),
 	  childStmt(childStmt) {}
 
 QueryStmtRef Parent::getParentStmt() {
@@ -11,10 +10,6 @@ QueryStmtRef Parent::getParentStmt() {
 
 QueryStmtRef Parent::getChildStmt() {
 	return childStmt;
-}
-
-bool Parent::getIsStar() {
-	return isStar;
 }
 
 QueryResult Parent::execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) {

@@ -10,9 +10,11 @@
 #include "QueryProperties.h"
 #include "QueryResult.h"
 #include "Relationship/Follows.h"
+#include "Relationship/FollowsT.h"
 #include "Relationship/ModifiesP.h"
 #include "Relationship/ModifiesS.h"
 #include "Relationship/Parent.h"
+#include "Relationship/ParentT.h"
 #include "Relationship/UsesP.h"
 #include "Relationship/UsesS.h"
 
@@ -51,8 +53,8 @@ private:
 	// Parsing Rules
 	DesignEntity parseDesignEntity(int& tokenIndex);
 	unique_ptr<Relation> parseRelation(int& tokenIndex);
-	unique_ptr<Follows> parseFollows(int& tokenIndex);
-	unique_ptr<Parent> parseParent(int& tokenIndex);
+	unique_ptr<Relation> parseFollows(int& tokenIndex);
+	unique_ptr<Relation> parseParent(int& tokenIndex);
 	unique_ptr<UsesP> parseUsesP(int& tokenIndex);
 	unique_ptr<UsesS> parseUsesS(int& tokenIndex);
 	unique_ptr<ModifiesP> parseModifiesP(int& tokenIndex);

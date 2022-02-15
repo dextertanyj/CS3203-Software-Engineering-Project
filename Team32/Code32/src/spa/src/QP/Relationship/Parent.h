@@ -6,17 +6,15 @@
 
 class Parent : public Relation {
 public:
-	Parent(bool isStar, QueryStmtRef parentStmt, QueryStmtRef childStmt);
+	Parent(QueryStmtRef parentStmt, QueryStmtRef childStmt);
 
 	QueryStmtRef getParentStmt();
 	QueryStmtRef getChildStmt();
-	bool getIsStar();
 
 	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
 	vector<string> getDeclarationSymbols();
 
 private:
-	bool isStar;
 	QueryStmtRef parentStmt;
 	QueryStmtRef childStmt;
 

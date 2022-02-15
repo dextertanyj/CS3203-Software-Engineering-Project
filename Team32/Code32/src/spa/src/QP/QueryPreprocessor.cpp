@@ -232,7 +232,7 @@ unique_ptr<Relation> QueryPreprocessor::parseRelation(int& tokenIndex) {
 
 }
 
-unique_ptr<Follows> QueryPreprocessor::parseFollows(int& tokenIndex) {
+unique_ptr<Relation> QueryPreprocessor::parseFollows(int& tokenIndex) {
 	bool isStar = false;
 	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "*") {
 		isStar = true;
@@ -243,10 +243,14 @@ unique_ptr<Follows> QueryPreprocessor::parseFollows(int& tokenIndex) {
 	matchTokenOrThrow(",", tokenIndex);
 	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex);
 	matchTokenOrThrow(")", tokenIndex);
-	return make_unique<Follows>(isStar, ref1, ref2);
+	if (isStar) {
+		return make_unique<FollowsT>(ref1, ref2);
+	} else {
+		return make_unique<Follows>(ref1, ref2);
+	}
 }
 
-unique_ptr<Parent> QueryPreprocessor::parseParent(int& tokenIndex) {
+unique_ptr<Relation> QueryPreprocessor::parseParent(int& tokenIndex) {
 	bool isStar = false;
 	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "*") {
 		isStar = true;
@@ -257,7 +261,11 @@ unique_ptr<Parent> QueryPreprocessor::parseParent(int& tokenIndex) {
 	matchTokenOrThrow(",", tokenIndex);
 	QueryStmtRef ref2 = parseQueryStmtRef(tokenIndex);
 	matchTokenOrThrow(")", tokenIndex);
-	return make_unique<Parent>(isStar, ref1, ref2);
+	if (isStar) {
+		return make_unique<ParentT>(ref1, ref2);
+	} else {
+		return make_unique<Parent>(ref1, ref2);
+	}
 }
 
 unique_ptr<UsesP> QueryPreprocessor::parseUsesP(int& tokenIndex) {
