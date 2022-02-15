@@ -22,7 +22,7 @@ jobs:
       - name: Run format check
         shell: bash
         working-directory: ${{github.workspace}}/Team32/Code32
-        run: clang-format -style=file -Werror --dry-run src/spa/src/**/*
+        run: find src/spa/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.tpp' | xargs clang-format -style=file -Werror --dry-run
 
       - name: Create build environment
         run: cmake -E make_directory ${{runner.workspace}}/build
