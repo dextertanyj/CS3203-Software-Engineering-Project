@@ -31,7 +31,7 @@ private:
                               PatternClauseList& patternClauses,
                               Declaration select,
                               bool isTrivial);
-	void createSymbolToTypeMap(DeclarationList& declarations);
+	void createSymbolToTypeMap(const DeclarationList& declarations);
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYEVALUATOR_H_

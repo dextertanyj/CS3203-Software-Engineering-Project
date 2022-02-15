@@ -132,8 +132,8 @@ QueryResult Parent::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEnti
 			}
 
 			StmtInfoPtrSet children = pkb.getChildren(stmt.get()->reference);
-			for (auto const& child : children) {
-				column.push_back(to_string(child.get()->reference));
+			if (!children.empty()) {
+				column.push_back(to_string(stmt.get()->reference));
 			}
 		}
 		QueryResult result = QueryResult();
@@ -159,7 +159,7 @@ QueryResult Parent::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEnti
 			StmtInfoPtrSet children = pkb.getChildren(stmt.get()->reference);
 			for (auto const& child : children) {
 				if (childDesignEntity == DesignEntity::stmt ||
-					  stmt.get()->type == QueryUtils::designEntToStmtType[childDesignEntity]) {
+					  child.get()->type == QueryUtils::designEntToStmtType[childDesignEntity]) {
 					parentColumn.push_back(to_string(stmt.get()->reference));
 					childColumn.push_back(to_string(child.get()->reference));
 				}

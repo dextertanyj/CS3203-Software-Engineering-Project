@@ -222,7 +222,7 @@ vector<pair<SuchThatClauseList, PatternClauseList>> QueryEvaluator::splitClauses
 	return result;
 }
 
-void QueryEvaluator::createSymbolToTypeMap(DeclarationList& declarations) {
+void QueryEvaluator::createSymbolToTypeMap(const DeclarationList& declarations) {
 	unordered_map<string, DesignEntity> map;
 	for (Declaration const& declaration : declarations) {
 		map.insert({ declaration.symbol, declaration.type });
