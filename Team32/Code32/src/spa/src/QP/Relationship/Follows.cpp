@@ -17,18 +17,25 @@ bool Follows::getIsStar() {
 	return isStar;
 }
 
-bool Follows::execute(PKB& pkb, QueryResult& result) {
-	return false;
+QueryResult Follows::execute(PKB& pkb, bool isTrivial) {
+	return isTrivial ? executeTrivial(pkb) : executeNonTrivial(pkb);
 }
 
-bool Follows::isTrivialCase() {
-	return false;
+vector<string> Follows::getDeclarationSymbols() {
+	vector<string> declarationSymbols;
+	if (this->leftStmt.type == StmtRefType::synonym) {
+		declarationSymbols.push_back(this->leftStmt.stmtRef);
+	}
+	if (this->rightStmt.type == StmtRefType::synonym) {
+		declarationSymbols.push_back(this->rightStmt.stmtRef);
+	}
+	return declarationSymbols;
 }
 
-bool Follows::executeTrivial(PKB& pkb) {
-	return false;
+QueryResult Follows::executeTrivial(PKB& pkb) {
+	return QueryResult();
 }
 
-bool Follows::executeNonTrivial(PKB& pkb, QueryResult& result) {
-	return false;
+QueryResult Follows::executeNonTrivial(PKB& pkb) {
+	return QueryResult();
 }

@@ -17,100 +17,25 @@ bool Parent::getIsStar() {
 	return isStar;
 }
 
-bool Parent::execute(PKB& pkb, QueryResult& result) {
-	return isTrivialCase() ? executeTrivial(pkb) : executeNonTrivial(pkb, result);
+QueryResult Parent::execute(PKB& pkb, bool isTrivial) {
+	return isTrivial ? executeTrivial(pkb) : executeNonTrivial(pkb);
 }
 
-bool Parent::isTrivialCase() {
-	return this->parentStmt.type != StmtRefType::synonym && this->childStmt.type != StmtRefType::synonym;
+vector<string> Parent::getDeclarationSymbols() {
+	vector<string> declarationSymbols;
+	if (this->parentStmt.type == StmtRefType::synonym) {
+		declarationSymbols.push_back(this->parentStmt.stmtRef);
+	}
+	if (this->childStmt.type == StmtRefType::synonym) {
+		declarationSymbols.push_back(this->childStmt.stmtRef);
+	}
+	return declarationSymbols;
 }
 
-bool Parent::executeTrivial(PKB& pkb) {
-	if (this->parentStmt.type == StmtRefType::stmtNumber) {
-		int parent = stoi(this->parentStmt.stmtRef);
-
-		switch (this->childStmt.type) {
-		case StmtRefType::stmtNumber: {
-			int child = stoi(this->childStmt.stmtRef);
-			return pkb.checkParents(parent, child);
-		}
-		case StmtRefType::underscore: {
-			unordered_set<shared_ptr<StmtInfo>> stmtSet = pkb.getChildren(parent);
-			return !stmtSet.empty();
-		}
-		default: {
-			return false;
-		}
-		}
-	}
-
-	if (this->parentStmt.type == StmtRefType::underscore) {
-		switch (this->childStmt.type) {
-		case StmtRefType::stmtNumber: {
-			int child = stoi(this->childStmt.stmtRef);
-			shared_ptr<StmtInfo> stmt = pkb.getParent(child);
-			return stmt->reference > 0;
-		}
-		case StmtRefType::underscore: {
-			StmtInfoPtrSet allStmts = pkb.getStatements();
-			for (const shared_ptr<StmtInfo>& stmt : allStmts) {
-				if (!pkb.getChildren(stmt->reference).empty()) {
-					return true;
-				}
-			}
-			return false;
-		}
-		default: {
-			return false;
-		}
-		}
-	}
-
-	return false;
+QueryResult Parent::executeTrivial(PKB& pkb) {
+	return QueryResult();
 }
 
-bool Parent::executeNonTrivial(PKB& pkb, QueryResult& result) {
-	StmtRefList stmtList;
-	
-	if (this->parentStmt.type == StmtRefType::stmtNumber &&
-			this->childStmt.type == StmtRefType::synonym) {
-		int parent = stoi(this->parentStmt.stmtRef);
-		unordered_set<shared_ptr<StmtInfo>> set = pkb.getChildren(parent);
-		for (const shared_ptr<StmtInfo>& stmt : set) {
-			stmtList.push_back(stmt->reference);
-		}
-	}
-
-	else if (this->parentStmt.type == StmtRefType::underscore &&
-			this->childStmt.type == StmtRefType::synonym) {
-		// Get all stmts with a parent
-		StmtInfoPtrSet allStmts = pkb.getStatements();
-		for (const shared_ptr<StmtInfo>& stmt : allStmts) {
-			if (pkb.getParent(stmt->reference)->reference > 0) {
-				stmtList.push_back(stmt->reference);
-			}
-		}
-	}
-	
-	else if (this->childStmt.type == StmtRefType::stmtNumber &&
-			this->parentStmt.type == StmtRefType::synonym) {
-		int child = stoi(this->childStmt.stmtRef);
-		shared_ptr<StmtInfo> parent = pkb.getParent(child);
-		stmtList.push_back(parent->reference);
-	}
-
-	else if (this->childStmt.type == StmtRefType::underscore &&
-			this->parentStmt.type == StmtRefType::synonym) {
-		// Get all stmts with a child
-		StmtInfoPtrSet allStmts = pkb.getStatements();
-		for (const shared_ptr<StmtInfo>& stmt : allStmts) {
-			if (!pkb.getChildren(stmt->reference).empty()) {
-				stmtList.push_back(stmt->reference);
-			}
-		}
-	}
-	
-	// TODO: Implement the case where both are synonyms
-
-	return result.updateStmtList(stmtList);
+QueryResult Parent::executeNonTrivial(PKB& pkb) {
+	return QueryResult();
 }
