@@ -23,6 +23,7 @@ TEST_CASE("PKB::Uses::validate One Var Test") {
     store.set(s3, "x");
     store.set(s4, "x");
     store.set(s5, "x");
+    REQUIRE(Uses::validate(&store, s1, "x"));
     REQUIRE(Uses::validate(&store, s1, "y"));
     REQUIRE(Uses::validate(&store, s2, "y"));
     REQUIRE(Uses::validate(&store, s3, "y"));

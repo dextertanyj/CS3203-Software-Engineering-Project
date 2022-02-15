@@ -36,10 +36,6 @@ TEST_CASE("Uses Methods") {
 		CHECK_NOTHROW(pkb.setUses(s1, y));
 		CHECK_NOTHROW(pkb.setUses(s1, z));
 
-		// Reassigning should lead to error.
-		CHECK_THROWS(pkb.setUses(s1, x));
-		CHECK_THROWS(pkb.setUses(s1, z));
-
 		// 1 var, multiple statements.
 		CHECK_NOTHROW(pkb.setUses(s2, x));
 		CHECK_NOTHROW(pkb.setUses(s3, x));
@@ -90,12 +86,11 @@ TEST_CASE("Uses Methods") {
 		pkb.setUses(s2, y);
 		pkb.setUses(s2, z);
 		pkb.setUses(s3, x);
-		pkb.setUses(s3, z);
 		pkb.setUses(s_int_max, xyz);
 
 		unordered_set<string> used_by_s1 = {x, y, z};
 		unordered_set<string> used_by_s2 = {y, z};
-		unordered_set<string> used_by_s3 = {x, z};
+		unordered_set<string> used_by_s3 = {x};
 		unordered_set<string> used_by_s_int_max = {xyz};
 
 		CHECK(pkb.getUsesByStmt(s1) == used_by_s1);
