@@ -13,11 +13,10 @@ unique_ptr<SP::Node::ProgramNode> SP::Node::ProgramNode::parseProgram(Lexer& lex
 	} while (!lex.peekToken().empty());
 	return program;
 }
-bool SP::Node::ProgramNode::extract(PKB& pkb) {
+void SP::Node::ProgramNode::extract(PKB& pkb) {
 	for (auto iter = procedures.begin(); iter < procedures.end(); ++iter) {
 		iter->get()->extract(pkb);
 	}
-	return true;
 }
 
 bool SP::Node::ProgramNode::equals(const shared_ptr<ProgramNode>& object) {

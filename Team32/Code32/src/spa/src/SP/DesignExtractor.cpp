@@ -6,7 +6,7 @@ using namespace std;
 
 SP::DesignExtractor::DesignExtractor(PKB &pkb) : pkb(pkb) {}
 
-bool SP::DesignExtractor::extract(unique_ptr<Node::ProgramNode> ast) {
+void SP::DesignExtractor::extract(unique_ptr<Node::ProgramNode> ast) {
 	ast->extract(pkb);
-	return true;
+	pkb.populateComplexRelations();
 }
