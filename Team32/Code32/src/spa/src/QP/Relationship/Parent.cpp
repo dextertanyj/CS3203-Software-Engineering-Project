@@ -48,11 +48,10 @@ QueryResult Parent::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>
 				return QueryResult(true);
 			}
 		}
-		return QueryResult();
 	}
 	else if (parentStmt.type == StmtRefType::underscore && childStmt.type == StmtRefType::stmtNumber) {
-		shared_ptr<StmtInfo> parentStmt = pkb.getParent(stoi(childStmt.stmtRef));
-		return QueryResult(parentStmt.get() != nullptr);
+		shared_ptr<StmtInfo> parent = pkb.getParent(stoi(childStmt.stmtRef));
+		return QueryResult(parent.get() != nullptr);
 	}
 	else if (parentStmt.type == StmtRefType::underscore && childStmt.type == StmtRefType::underscore) {
 		StmtInfoPtrSet stmtSet = pkb.getStatements();
@@ -62,7 +61,6 @@ QueryResult Parent::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>
 				return QueryResult(true);
 			}
 		}
-		return QueryResult();
 	}
 	else if (parentStmt.type == StmtRefType::underscore && childStmt.type == StmtRefType::synonym) {
 		StmtInfoPtrSet stmtSet = pkb.getStatements();
@@ -78,7 +76,6 @@ QueryResult Parent::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>
 				return QueryResult(true);
 			}
 		}
-		return QueryResult();
 	}
 	else if (parentStmt.type == StmtRefType::synonym && childStmt.type == StmtRefType::stmtNumber) {
 		shared_ptr<StmtInfo> parent = pkb.getParent(stoi(childStmt.stmtRef));
@@ -102,7 +99,6 @@ QueryResult Parent::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>
 				return QueryResult(true);
 			}
 		}
-		return QueryResult();
 	}
 	
 	return QueryResult();
