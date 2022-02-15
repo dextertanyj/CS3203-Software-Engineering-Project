@@ -23,9 +23,9 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 	QueryEntRef v = { EntRefType::synonym, "v" };
 
 	SuchThatClauseList suchThatClauses = {
-		{ make_unique<Parent>(false, s1, s2) },
-		{ make_unique<Parent>(false, a, i) },
-		{ make_unique<Parent>(false, stmtNo1, stmtNo2) },
+		{ make_unique<Parent>(s1, s2) },
+		{ make_unique<Parent>(a, i) },
+		{ make_unique<Parent>(stmtNo1, stmtNo2) },
 		{ make_unique<UsesS>(a, v) },
 	};
 	QueryProperties properties = QueryProperties(declarations, select, suchThatClauses, {});

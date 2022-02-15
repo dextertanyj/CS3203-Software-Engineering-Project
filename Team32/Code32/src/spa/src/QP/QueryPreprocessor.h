@@ -57,8 +57,8 @@ private:
 	// Parsing Rules
 	DesignEntity parseDesignEntity(int& tokenIndex);
 	unique_ptr<Relation> parseRelation(int& tokenIndex);
-	unique_ptr<Relation> parseFollows(int& tokenIndex);
-	unique_ptr<Relation> parseParent(int& tokenIndex);
+	unique_ptr<Follows> parseFollows(int& tokenIndex);
+	unique_ptr<Parent> parseParent(int& tokenIndex);
 	unique_ptr<UsesP> parseUsesP(int& tokenIndex);
 	unique_ptr<UsesS> parseUsesS(int& tokenIndex);
 	unique_ptr<ModifiesP> parseModifiesP(int& tokenIndex);

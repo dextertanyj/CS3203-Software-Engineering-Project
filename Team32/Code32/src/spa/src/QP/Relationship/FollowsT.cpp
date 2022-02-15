@@ -1,38 +1,19 @@
 #include "FollowsT.h"
 
-FollowsT::FollowsT(QueryStmtRef leftStmt, QueryStmtRef rightStmt)
-	: leftStmt(leftStmt),
-	  rightStmt(rightStmt) {}
-
-QueryStmtRef FollowsT::getLeftStmt() {
-	return leftStmt;
-}
-
-QueryStmtRef FollowsT::getRightStmt() {
-	return rightStmt;
+bool FollowsT::getIsStar() {
+	return true;
 }
 
 QueryResult FollowsT::execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) {
 	return isTrivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
-vector<string> FollowsT::getDeclarationSymbols() {
-	vector<string> declarationSymbols;
-	if (this->leftStmt.type == StmtRefType::synonym) {
-		declarationSymbols.push_back(this->leftStmt.stmtRef);
-	}
-	if (this->rightStmt.type == StmtRefType::synonym) {
-		declarationSymbols.push_back(this->rightStmt.stmtRef);
-	}
-	return declarationSymbols;
-}
-
 QueryResult FollowsT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
 	if (leftStmt.type == StmtRefType::stmtNumber && rightStmt.type == StmtRefType::stmtNumber) {
-		StmtInfoPtrSet followersSet = pkb.getFollowerStar(stoi(parentStmt.stmtRef));
-		int rightStmt = stoi(rightStmt.stmtRef);
+		StmtInfoPtrSet followersSet = pkb.getFollowerStar(stoi(leftStmt.stmtRef));
+		int rightStmtNo = stoi(rightStmt.stmtRef);
 		for (auto const& follower : followersSet) {
-			if (follower.get()->reference == rightStmt) {
+			if (follower.get()->reference == rightStmtNo) {
 				return QueryResult(true);
 			}
 		}

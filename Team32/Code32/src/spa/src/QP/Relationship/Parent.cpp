@@ -12,6 +12,10 @@ QueryStmtRef Parent::getChildStmt() {
 	return childStmt;
 }
 
+bool Parent::getIsStar() {
+	return false;
+}
+
 QueryResult Parent::execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) {
 	return isTrivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }

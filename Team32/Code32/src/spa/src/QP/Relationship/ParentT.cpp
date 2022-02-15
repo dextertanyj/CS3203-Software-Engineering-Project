@@ -1,38 +1,19 @@
 #include "ParentT.h"
 
-ParentT::ParentT(QueryStmtRef parentStmt, QueryStmtRef childStmt)
-	: parentStmt(parentStmt),
-	  childStmt(childStmt) {}
-
-QueryStmtRef ParentT::getParentStmt() {
-	return parentStmt;
-}
-
-QueryStmtRef ParentT::getChildStmt() {
-	return childStmt;
-}
-
 QueryResult ParentT::execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) {
 	return isTrivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
-vector<string> ParentT::getDeclarationSymbols() {
-	vector<string> declarationSymbols;
-	if (this->parentStmt.type == StmtRefType::synonym) {
-		declarationSymbols.push_back(this->parentStmt.stmtRef);
-	}
-	if (this->childStmt.type == StmtRefType::synonym) {
-		declarationSymbols.push_back(this->childStmt.stmtRef);
-	}
-	return declarationSymbols;
+bool ParentT::getIsStar() {
+	return true;
 }
 
 QueryResult ParentT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
 	if (parentStmt.type == StmtRefType::stmtNumber && childStmt.type == StmtRefType::stmtNumber) {
 		StmtInfoPtrSet childrenSet = pkb.getChildStar(stoi(parentStmt.stmtRef));
-		int childStmt = stoi(childStmt.stmtRef);
+		int childStmtNo = stoi(childStmt.stmtRef);
 		for (auto const& child : childrenSet) {
-			if (child.get()->reference == childStmt) {
+			if (child.get()->reference == childStmtNo) {
 				return QueryResult(true);
 			}
 		}

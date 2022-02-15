@@ -1,6 +1,6 @@
 #include "QP/Relationship/Follows.h"
 
-Follows::Follows( QueryStmtRef leftStmt, QueryStmtRef rightStmt)
+Follows::Follows(QueryStmtRef leftStmt, QueryStmtRef rightStmt)
 	: leftStmt(leftStmt),
 	  rightStmt(rightStmt) {}
 
@@ -10,6 +10,10 @@ QueryStmtRef Follows::getLeftStmt() {
 
 QueryStmtRef Follows::getRightStmt() {
 	return rightStmt;
+}
+
+bool Follows::getIsStar() {
+	return false;
 }
 
 QueryResult Follows::execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) {

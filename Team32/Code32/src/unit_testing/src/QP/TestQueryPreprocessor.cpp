@@ -157,6 +157,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Parent(*)") {
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 	Follows* clause, * clause1;
+	FollowsT* clauseT;
 	// Combinations of stmtRef : synonym | '_' | INTEGER for Follows
 	QueryPreprocessor qpp1;
 	QueryProperties qp1 = qpp1.parseQuery(univDeclarations + "Select s1 such that Follows(s1, s2)");
@@ -242,20 +243,20 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 	// Follows*
 	QueryPreprocessor qpp10;
 	QueryProperties qp10 = qpp10.parseQuery(univDeclarations + "Select c2 such that Follows*(w1, c2)");
-	clause = dynamic_pointer_cast<Follows>(qp10.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getIsStar() == true);
-	REQUIRE((*clause).getLeftStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getLeftStmt().stmtRef == "w1");
-	REQUIRE((*clause).getRightStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getRightStmt().stmtRef == "c2");
+	clauseT = dynamic_pointer_cast<FollowsT>(qp10.getSuchThatClauseList()[0].relation).get();
+	REQUIRE((*clauseT).getIsStar() == true);
+	REQUIRE((*clauseT).getLeftStmt().type == StmtRefType::synonym);
+	REQUIRE((*clauseT).getLeftStmt().stmtRef == "w1");
+	REQUIRE((*clauseT).getRightStmt().type == StmtRefType::synonym);
+	REQUIRE((*clauseT).getRightStmt().stmtRef == "c2");
 	QueryPreprocessor qpp11;
 	QueryProperties qp11 = qpp11.parseQuery(univDeclarations + "Select c2 such that Follows*      (   w1  , c2  )");
-	clause = dynamic_pointer_cast<Follows>(qp11.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getIsStar() == true);
-	REQUIRE((*clause).getLeftStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getLeftStmt().stmtRef == "w1");
-	REQUIRE((*clause).getRightStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getRightStmt().stmtRef == "c2");
+	clauseT = dynamic_pointer_cast<FollowsT>(qp11.getSuchThatClauseList()[0].relation).get();
+	REQUIRE((*clauseT).getIsStar() == true);
+	REQUIRE((*clauseT).getLeftStmt().type == StmtRefType::synonym);
+	REQUIRE((*clauseT).getLeftStmt().stmtRef == "w1");
+	REQUIRE((*clauseT).getRightStmt().type == StmtRefType::synonym);
+	REQUIRE((*clauseT).getRightStmt().stmtRef == "c2");
 
 	// Multiple Follows(*) clauses
 	QueryPreprocessor qpp12;
@@ -274,13 +275,13 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 	REQUIRE((*clause1).getRightStmt().stmtRef == "c2");
 	QueryPreprocessor qpp13;
 	QueryProperties qp13 = qpp13.parseQuery(univDeclarations + "Select c2 such that Follows*(i1, _) and Follows(w1, c2)");
-	clause = dynamic_pointer_cast<Follows>(qp13.getSuchThatClauseList()[0].relation).get();
+	clauseT = dynamic_pointer_cast<FollowsT>(qp13.getSuchThatClauseList()[0].relation).get();
 	clause1 = dynamic_pointer_cast<Follows>(qp13.getSuchThatClauseList()[1].relation).get();
-	REQUIRE((*clause).getIsStar() == true);
-	REQUIRE((*clause).getLeftStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getLeftStmt().stmtRef == "i1");
-	REQUIRE((*clause).getRightStmt().type == StmtRefType::underscore);
-	REQUIRE((*clause).getRightStmt().stmtRef == "_");
+	REQUIRE((*clauseT).getIsStar() == true);
+	REQUIRE((*clauseT).getLeftStmt().type == StmtRefType::synonym);
+	REQUIRE((*clauseT).getLeftStmt().stmtRef == "i1");
+	REQUIRE((*clauseT).getRightStmt().type == StmtRefType::underscore);
+	REQUIRE((*clauseT).getRightStmt().stmtRef == "_");
 	REQUIRE((*clause1).getIsStar() == false);
 	REQUIRE((*clause1).getLeftStmt().type == StmtRefType::synonym);
 	REQUIRE((*clause1).getLeftStmt().stmtRef == "w1");
@@ -621,7 +622,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that") {
 
 	QueryPreprocessor qpp2;
 	QueryProperties qp2 = qpp2.parseQuery(univDeclarations + "Select w2 such that Parent*(007, _) such that Uses(w2, v1)");
-	Parent* clause2 = dynamic_pointer_cast<Parent>(qp2.getSuchThatClauseList()[0].relation).get();
+	ParentT* clause2 = dynamic_pointer_cast<ParentT>(qp2.getSuchThatClauseList()[0].relation).get();
 	UsesS* clause3 = dynamic_pointer_cast<UsesS>(qp2.getSuchThatClauseList()[1].relation).get();
 	REQUIRE((*clause2).getIsStar() == true);
 	REQUIRE((*clause2).getParentStmt().type == StmtRefType::stmtNumber);

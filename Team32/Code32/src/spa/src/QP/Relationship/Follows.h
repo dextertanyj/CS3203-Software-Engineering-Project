@@ -10,14 +10,16 @@ public:
 
 	QueryStmtRef getLeftStmt();
 	QueryStmtRef getRightStmt();
+	bool getIsStar();
 
 	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
 	vector<string> getDeclarationSymbols();
 
-private:
+protected:
 	QueryStmtRef leftStmt;
 	QueryStmtRef rightStmt;
 
+private:
 	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
 	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
 };

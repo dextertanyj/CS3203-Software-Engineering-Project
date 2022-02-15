@@ -267,7 +267,7 @@ unique_ptr<Relation> QueryPreprocessor::parseRelation(int& tokenIndex) {
 
 }
 
-unique_ptr<Relation> QueryPreprocessor::parseFollows(int& tokenIndex) {
+unique_ptr<Follows> QueryPreprocessor::parseFollows(int& tokenIndex) {
 	bool isStar = false;
 	if (this->queryTokens[tokenIndex] == "Follows*") {
 		isStar = true;
@@ -294,7 +294,7 @@ unique_ptr<Relation> QueryPreprocessor::parseFollows(int& tokenIndex) {
 	}
 }
 
-unique_ptr<Relation> QueryPreprocessor::parseParent(int& tokenIndex) {
+unique_ptr<Parent> QueryPreprocessor::parseParent(int& tokenIndex) {
 	bool isStar = false;
 	if (this->queryTokens[tokenIndex] == "Parent*") {
 		isStar = true;

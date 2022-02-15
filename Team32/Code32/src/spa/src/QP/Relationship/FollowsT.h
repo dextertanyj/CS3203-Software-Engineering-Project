@@ -1,18 +1,15 @@
 #ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWST_H_
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWST_H_
 
-#include "QP/Relationship/Relation.h"
+#include "QP/Relationship/Follows.h"
 #include "QP/QueryTypeDefs.h"
 
-class FollowsT : public Relation {
+class FollowsT : public Follows {
 public:
-	FollowsT( QueryStmtRef leftStmt, QueryStmtRef rightStmt);
+	using Follows::Follows;
 
-	QueryStmtRef getLeftStmt();
-	QueryStmtRef getRightStmt();
-
+	bool getIsStar();
 	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
-	vector<string> getDeclarationSymbols();
 
 private:
 	QueryStmtRef leftStmt;

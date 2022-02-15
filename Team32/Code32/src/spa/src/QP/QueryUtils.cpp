@@ -1,6 +1,6 @@
 #include "QP/QueryUtils.h"
 
-QueryUtils::designEntToStmtType = {
+unordered_map<DesignEntity, StmtType> QueryUtils::designEntToStmtType = {
 	{ DesignEntity::read, StmtType::Read },
 	{ DesignEntity::print, StmtType::Print },
 	{ DesignEntity::call, StmtType::Call },
