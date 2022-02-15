@@ -1,24 +1,27 @@
 #pragma once
 
-#include<stdio.h>
-#include <iostream>
+#include <memory>
 #include <string>
-#include <vector>
 #include <unordered_map>
-#include "ParentStore.h"
-#include "FollowStore.h"
-#include "UseStore.h"
-#include "ModifyStore.h"
-#include "AssignStore.h"
-#include "Common/TypeDefs.h"
-#include "Common/ExpressionProcessor/ExpressionProcessor.h"
+#include <vector>
+
 #include "Common/ExpressionProcessor/Expression.h"
+#include "Common/TypeDefs.h"
+#include "PKB/AssignStore.h"
+#include "PKB/ConstantStore.h"
+#include "PKB/FollowsPKB.h"
+#include "PKB/Modifies.h"
+#include "PKB/ParentPKB.h"
+#include "PKB/SVRelationStore.tpp"
+#include "PKB/StatementRelationStore.tpp"
+#include "PKB/StatementStore.h"
+#include "PKB/VariableStore.h"
 
 using namespace std;
 
 class PKB {
 public:
-    PKB();
+	PKB();
 
 	// Set methods called by Source processor
 	void setFollows(StmtRef, StmtRef);
@@ -70,21 +73,20 @@ public:
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(Common::ExpressionProcessor::Expression e,
 	                                                                  bool isRHSExactMatchNeeded);
 
+	// Others
+	void clear();
+	void populateComplexRelations();
 
-    // Others
-    void clear();
-    void setNumStatements(int size);
-    void populateComplexRelations();
+	// For testing
+	unordered_map<StmtRef, shared_ptr<StmtInfo>> getStmtInfoMap();
 
 private:
-    ParentStore parentStore;
-    FollowStore followStore;
-    UseStore useStore;
-    ModifyStore modifyStore;
-    AssignStore assignStore;
-    unordered_map<ProcRef, vector<StmtRef>> procMap;
-    unordered_map<StmtRef, StmtType> typeMap;
-    int numStatements;
-    void checkInvalidStmts(StmtRef stmtNo1, StmtRef stmtNo2);
-    void checkInvalidStmt(StmtRef stmtNo1);
+	ConstantStore constant_store;
+	VariableStore variable_store;
+	StatementStore statement_store;
+	StatementRelationStore<ParentPKB> parent_store;
+	StatementRelationStore<FollowsPKB> follows_store;
+	SVRelationStore<Uses> uses_store;
+	SVRelationStore<Modifies> modifies_store;
+	AssignStore assign_store;
 };

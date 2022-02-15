@@ -26,7 +26,7 @@ StmtInfo SP::Node::WhileNode::extract(PKB& pkb) {
 	}
 	StmtInfoList children = stmtLst->extract(pkb);
 	for (auto iter = children.begin(); iter < children.end(); ++iter) {
-		pkb.setParent(stmt_ref, iter->reference);
+		pkb.setParent(stmt_ref, iter->get()->reference);
 	}
 	return {stmt_ref, StmtType::WhileStmt};
 }

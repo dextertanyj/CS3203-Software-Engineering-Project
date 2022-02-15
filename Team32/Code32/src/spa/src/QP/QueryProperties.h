@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include "Common/ExpressionProcessor/Expression.h"
+#include "QP/QueryExpressionLexer.h"
 #include "QP/QueryTypeDefs.h"
 #include "QP/Relationship/Relation.h"
 
@@ -13,7 +15,8 @@ using namespace std;
 typedef struct PatternClause {
 	Declaration synonym;
 	QueryEntRef entRef;
-	string expression;
+	ExpressionType expressionType;
+	Common::ExpressionProcessor::Expression* expression;
 } PatternClause;
 
 typedef struct SuchThatClause {

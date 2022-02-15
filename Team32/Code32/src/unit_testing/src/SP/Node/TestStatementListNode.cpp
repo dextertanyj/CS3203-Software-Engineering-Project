@@ -6,6 +6,7 @@
 #include "SP/Node/StatementListNode.h"
 #include "SP/SP.h"
 #include "catch_tools.h"
+#include <memory>
 
 using namespace std;
 using namespace SP::Node;
@@ -159,10 +160,14 @@ TEST_CASE("StatementListNode::extract Test") {
 	PKB pkb;
 	StatementListNode node = *createStatementList("read x; print y; }", 1).release();
 	StmtInfoList result = node.extract(pkb);
-	StmtInfoList expected = vector<StmtInfo>({{1, StmtType::Read}, {2, StmtType::Print}});
+	StmtInfo stmt_info_1 = {1, StmtType::Read};
+	StmtInfo stmt_info_2 = {2, StmtType::Print};
+	shared_ptr<StmtInfo> first = std::make_shared<StmtInfo>(stmt_info_1);
+	shared_ptr<StmtInfo> second = std::make_shared<StmtInfo>(stmt_info_2);
+	StmtInfoList expected = vector<shared_ptr<StmtInfo>>({first, second});
 	REQUIRE_EQUALS(expected.size(), result.size());
 	for (int i = 0; i < expected.size(); i++) {
-		REQUIRE_EQUALS(result.at(i).reference, expected.at(i).reference);
-		REQUIRE_EQUALS(result.at(i).type, expected.at(i).type);
+		REQUIRE_EQUALS(result.at(i)->reference, expected.at(i)->reference);
+		REQUIRE_EQUALS(result.at(i)->type, expected.at(i)->type);
 	}
 }

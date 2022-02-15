@@ -23,7 +23,7 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& queryProperties) {
 
 	for (int i = 1; i < clausesInGroup.size(); i++) {
 		// The clauses in last group should be evaluated independently since they are unrelated
-		if (i == clausesInGroup.size()) {
+		if (i == clausesInGroup.size() - 1) {
 			for (SuchThatClause suchThatClause : clausesInGroup[i].first) {
 				SuchThatClauseList suchThatList = { suchThatClause };
 				PatternClauseList patternList = {};
@@ -40,13 +40,16 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& queryProperties) {
 			}
 		}
 
-		if (clausesInGroup[i].first.size() + clausesInGroup[i].second.size() > 1) {
-			QueryResult queryResult = evaluateClauses(clausesInGroup[i].first, clausesInGroup[i].second, select, false);
+		if (clausesInGroup[i].first.size() + clausesInGroup[i].second.size() == 0) {
+			continue;
+		}
+		else if (clausesInGroup[i].first.size() + clausesInGroup[i].second.size() == 1) {
+			QueryResult queryResult = evaluateClauses(clausesInGroup[i].first, clausesInGroup[i].second, select, true);
 			if (!queryResult.getResult()) {
 				return QueryResult();
 			}
 		} else {
-			QueryResult queryResult = evaluateClauses(clausesInGroup[i].first, clausesInGroup[i].second, select, true);
+			QueryResult queryResult = evaluateClauses(clausesInGroup[i].first, clausesInGroup[i].second, select, false);
 			if (!queryResult.getResult()) {
 				return QueryResult();
 			}

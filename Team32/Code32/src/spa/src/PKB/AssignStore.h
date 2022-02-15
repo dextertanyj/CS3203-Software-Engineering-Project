@@ -1,37 +1,38 @@
 #ifndef INC_21S2_CP_SPA_TEAM_32_ASSIGNSTORE_H
 #define INC_21S2_CP_SPA_TEAM_32_ASSIGNSTORE_H
 
-#include "../Common/TypeDefs.h"
+#include <memory>
 #include <unordered_map>
+
+#include "../Common/TypeDefs.h"
+#include "Common/ExpressionProcessor/Expression.h"
+#include "iostream"
 
 using namespace std;
 
-typedef struct {
-    VarRef variableLHS;
-    // Note: Use OperationTree instead of string when OperationTree is created
-    string opTree;
-} AssignRelation ;
+typedef struct AssignRelation {
+	shared_ptr<StmtInfo> node;
+	VarRef variable;
+	Common::ExpressionProcessor::Expression expression;
+} AssignRelation;
 
 class AssignStore {
 public:
-    AssignStore();
-    void setAssign(StmtRef stmtNo, VarRef variableLHS, string opTree);
+	AssignStore();
+	void setAssign(shared_ptr<StmtInfo> statement, VarRef variable, Common::ExpressionProcessor::Expression expression);
+	bool patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression, bool is_exact_match);
+	StmtInfoPtrSet getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
+	                                   bool is_exact_match);
+	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& varName);
+	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
+	                                                                         bool is_exact_match);
+	unordered_map<StmtRef, AssignRelation> getAssignMap();
+	void clear();
 
-    /**
-     * Matches LHS variable and RHS operation tree only for specific statements given. Used for multi-clause
-     * queries where statement list is already filtered through first clause.
-     * Specify LHS variable as "" if matching of LHS variable is not required.
-     */
-    StmtRefList getPatternMatch(StmtInfoList stmtNoList, VarRef variableLHS, string opTree, bool isRHSExactMatchNeeded);
-
-    /**
-     * Matches LHS variable and RHS operation for all assign statements. Used for single pattern clause queries.
-     */
-    StmtRefList getAllPatternMatch(VarRef variableLHS, string opTree, bool isRHSExactMatchNeeded);
-    void clear();
 private:
-    bool compareOpTreeAndVar(AssignRelation assignRelation, VarRef variableLHS, string opTree, bool isRHSExactMatchNeeded);
-    unordered_map<StmtRef, AssignRelation> assignMap;
+	static bool compareExpressions(AssignRelation& relation, const VarRef& variable, const Common::ExpressionProcessor::Expression& opTree,
+	                               bool is_exact_match);
+	unordered_map<StmtRef, AssignRelation> store;
 };
 
 #endif

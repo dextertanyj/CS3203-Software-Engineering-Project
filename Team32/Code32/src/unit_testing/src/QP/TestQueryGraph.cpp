@@ -1,5 +1,6 @@
 #include "QP/QueryGraph.h"
 #include "QP/Relationship/Parent.h"
+#include "QP/Relationship/UsesS.h"
 
 #include "catch.hpp"
 
@@ -14,11 +15,14 @@ TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
 	DeclarationList list = { { DesignEntity::stmt, "s" }, { DesignEntity::variable, "v" }, { DesignEntity::assign, "a" } };
 	QueryStmtRef s = { StmtRefType::synonym, "s" };
 	QueryStmtRef a = { StmtRefType::synonym, "a" };
-	SuchThatClauseList suchThatList = { {make_unique<Parent>(false, s, a)} };
-	PatternClauseList patternList = { {{ DesignEntity::assign, "a" }, { EntRefType::synonym, "v"}, "x"} };
+	QueryEntRef v = { EntRefType::synonym, "v" };
+	SuchThatClauseList suchThatList = {
+		{ make_unique<Parent>(false, s, a) },
+		{ make_unique<UsesS>(a, v) },
+	};
 
 	QueryGraph graph = QueryGraph(list);
-	graph.setEdges(suchThatList, patternList);
+	graph.setEdges(suchThatList, {});
 
 	unordered_map<string, Node> nodes = graph.getNodes();
 	REQUIRE(nodes.at("s").adjacentSymbols.size() == 1);
@@ -37,14 +41,16 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 	QueryStmtRef a = { StmtRefType::synonym, "a" };
 	QueryStmtRef b = { StmtRefType::synonym, "b" };
 	QueryStmtRef c = { StmtRefType::synonym, "c" };
+	QueryStmtRef d = { StmtRefType::synonym, "d" };
+	QueryEntRef e = { EntRefType::synonym, "e" };
 	SuchThatClauseList suchThatList = {
 		{ make_unique<Parent>(false, a, b) },
-		{ make_unique<Parent>(false, a, c) }
+		{ make_unique<Parent>(false, a, c) },
+		{ make_unique<UsesS>(d, e)},
 	};
-	PatternClauseList patternList = { { { DesignEntity::assign, "d" }, { EntRefType::synonym, "e" }, "x" } };
 
 	QueryGraph graph = QueryGraph(list);
-	graph.setEdges(suchThatList, patternList);
+	graph.setEdges(suchThatList, {});
 	vector<unordered_set<string>> synonyms = graph.getSynonymsInGroup("a");
 	
 	unordered_set<string> expectedFirstGroup = {"a", "b", "c"};

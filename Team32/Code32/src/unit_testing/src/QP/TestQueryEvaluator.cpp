@@ -1,5 +1,7 @@
 #include "QP/QueryEvaluator.h"
 #include "QP/Relationship/Parent.h"
+#include "QP/Relationship/UsesS.h"
+#include "Common/ExpressionProcessor/Expression.h"
 
 #include "catch.hpp"
 
@@ -18,14 +20,15 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 	QueryStmtRef i = { StmtRefType::synonym, "i" };
 	QueryStmtRef stmtNo1 = { StmtRefType::stmtNumber, "1" };
 	QueryStmtRef stmtNo2 = { StmtRefType::stmtNumber, "2" };
+	QueryEntRef v = { EntRefType::synonym, "v" };
 
 	SuchThatClauseList suchThatClauses = {
 		{ make_unique<Parent>(false, s1, s2) },
 		{ make_unique<Parent>(false, a, i) },
-		{ make_unique<Parent>(false, stmtNo1, stmtNo2) }
+		{ make_unique<Parent>(false, stmtNo1, stmtNo2) },
+		{ make_unique<UsesS>(a, v) },
 	};
-	PatternClauseList patternClauses = { { { DesignEntity::assign, "a" }, { EntRefType::synonym, "v"}, "x" } };
-	QueryProperties properties = QueryProperties(declarations, select, suchThatClauses, patternClauses);
+	QueryProperties properties = QueryProperties(declarations, select, suchThatClauses, {});
 	vector<unordered_set<string>> synonymsInGroup = {
 		{"s1", "s2"},
 		{"a", "v", "i"},
@@ -37,9 +40,6 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 
 	REQUIRE(clausesInGroup.size() == 3);
 	REQUIRE(clausesInGroup[0].first.size() == 1);
-	REQUIRE(clausesInGroup[0].second.empty());
-	REQUIRE(clausesInGroup[1].first.size() == 1);
-	REQUIRE(clausesInGroup[1].second.size() == 1);
+	REQUIRE(clausesInGroup[1].first.size() == 2);
 	REQUIRE(clausesInGroup[2].first.size() == 1);
-	REQUIRE(clausesInGroup[2].second.empty());
 }
