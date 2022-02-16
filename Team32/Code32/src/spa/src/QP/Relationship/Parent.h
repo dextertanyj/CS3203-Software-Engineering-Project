@@ -6,22 +6,21 @@
 
 class Parent : public Relation {
 public:
-	Parent(bool isStar, QueryStmtRef parentStmt, QueryStmtRef childStmt);
+	Parent(QueryStmtRef parentStmt, QueryStmtRef childStmt);
 
 	QueryStmtRef getParentStmt();
 	QueryStmtRef getChildStmt();
-	bool getIsStar();
 
-	QueryResult execute(PKB& pkb, bool isTrivial);
+	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
 	vector<string> getDeclarationSymbols();
 
-private:
-	bool isStar;
+protected:
 	QueryStmtRef parentStmt;
 	QueryStmtRef childStmt;
 
-	QueryResult executeTrivial(PKB& pkb);
-	QueryResult executeNonTrivial(PKB& pkb);
+private:
+	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
+	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_PARENT_H_

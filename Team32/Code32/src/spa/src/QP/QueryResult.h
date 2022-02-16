@@ -12,6 +12,7 @@
 class QueryResult {
 public:
 	QueryResult();
+	explicit QueryResult(bool result);
 	bool getResult();
 	unordered_map<string, vector<string>> getTable();
 	unordered_set<string> getSynonymsStored();

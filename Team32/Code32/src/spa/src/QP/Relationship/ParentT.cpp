@@ -1,42 +1,25 @@
-#include "QP/Relationship/Parent.h"
+#include "ParentT.h"
 
-Parent::Parent(QueryStmtRef parentStmt, QueryStmtRef childStmt)
-	: parentStmt(parentStmt),
-	  childStmt(childStmt) {}
-
-QueryStmtRef Parent::getParentStmt() {
-	return parentStmt;
-}
-
-QueryStmtRef Parent::getChildStmt() {
-	return childStmt;
-}
-
-QueryResult Parent::execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) {
+QueryResult ParentT::execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) {
 	return isTrivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
-vector<string> Parent::getDeclarationSymbols() {
-	vector<string> declarationSymbols;
-	if (this->parentStmt.type == StmtRefType::synonym) {
-		declarationSymbols.push_back(this->parentStmt.stmtRef);
-	}
-	if (this->childStmt.type == StmtRefType::synonym) {
-		declarationSymbols.push_back(this->childStmt.stmtRef);
-	}
-	return declarationSymbols;
-}
-
-QueryResult Parent::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
+QueryResult ParentT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
 	if (parentStmt.type == StmtRefType::stmtNumber && childStmt.type == StmtRefType::stmtNumber) {
-		return QueryResult(pkb.checkParents(stoi(parentStmt.stmtRef), stoi(childStmt.stmtRef)));
+		StmtInfoPtrSet childrenSet = pkb.getChildStar(stoi(parentStmt.stmtRef));
+		int childStmtNo = stoi(childStmt.stmtRef);
+		for (auto const& child : childrenSet) {
+			if (child.get()->reference == childStmtNo) {
+				return QueryResult(true);
+			}
+		}
 	}
 	else if (parentStmt.type == StmtRefType::stmtNumber && childStmt.type == StmtRefType::underscore) {
-		StmtInfoPtrSet stmtSet = pkb.getChildren(stoi(parentStmt.stmtRef));
+		StmtInfoPtrSet stmtSet = pkb.getChildStar(stoi(parentStmt.stmtRef));
 		return QueryResult(!stmtSet.empty());
 	}
 	else if (parentStmt.type == StmtRefType::stmtNumber && childStmt.type == StmtRefType::synonym) {
-		StmtInfoPtrSet stmtSet = pkb.getChildren(stoi(parentStmt.stmtRef));
+		StmtInfoPtrSet stmtSet = pkb.getChildStar(stoi(parentStmt.stmtRef));
 		DesignEntity designEntity = map[childStmt.stmtRef];
 		
 		if (designEntity == DesignEntity::stmt) {
@@ -50,13 +33,13 @@ QueryResult Parent::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>
 		}
 	}
 	else if (parentStmt.type == StmtRefType::underscore && childStmt.type == StmtRefType::stmtNumber) {
-		shared_ptr<StmtInfo> parent = pkb.getParent(stoi(childStmt.stmtRef));
-		return QueryResult(parent.get() != nullptr);
+		StmtInfoPtrSet parentSet = pkb.getParentStar(stoi(childStmt.stmtRef));
+		return QueryResult(!parentSet.empty());
 	}
 	else if (parentStmt.type == StmtRefType::underscore && childStmt.type == StmtRefType::underscore) {
 		StmtInfoPtrSet stmtSet = pkb.getStatements();
 		for (auto const& stmt : stmtSet) {
-			StmtInfoPtrSet children = pkb.getChildren(stmt.get()->reference);
+			StmtInfoPtrSet children = pkb.getChildStar(stmt.get()->reference);
 			if (!children.empty()) {
 				return QueryResult(true);
 			}
@@ -70,19 +53,20 @@ QueryResult Parent::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>
 				continue;
 			}
 
-			shared_ptr<StmtInfo> parent = pkb.getParent(stmt.get()->reference);
-			if (parent != nullptr) {
+			StmtInfoPtrSet parentSet = pkb.getParentStar(stmt.get()->reference);
+			if (!parentSet.empty()) {
 				return QueryResult(true);
 			}
 		}
 	}
 	else if (parentStmt.type == StmtRefType::synonym && childStmt.type == StmtRefType::stmtNumber) {
-		shared_ptr<StmtInfo> parent = pkb.getParent(stoi(childStmt.stmtRef));
+		StmtInfoPtrSet parentSet = pkb.getParentStar(stoi(childStmt.stmtRef));
 		DesignEntity designEntity = map[parentStmt.stmtRef];
-		if (!QueryUtils::checkStmtTypeMatch(parent, designEntity)) {
-			return QueryResult();
+		for (auto const& parent : parentSet) {
+			if (QueryUtils::checkStmtTypeMatch(parent, designEntity)) {
+				return QueryResult(true);
+			}
 		}
-		return QueryResult(true);
 	}
 	else if (parentStmt.type == StmtRefType::synonym && childStmt.type == StmtRefType::underscore) {
 		StmtInfoPtrSet stmtSet = pkb.getStatements();
@@ -92,7 +76,7 @@ QueryResult Parent::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>
 				continue;
 			}
 
-			StmtInfoPtrSet children = pkb.getChildren(stmt.get()->reference);
+			StmtInfoPtrSet children = pkb.getChildStar(stmt.get()->reference);
 			if (!children.empty()) {
 				return QueryResult(true);
 			}
@@ -111,7 +95,7 @@ QueryResult Parent::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>
 				continue;
 			}
 
-			StmtInfoPtrSet children = pkb.getChildren(stmt.get()->reference);
+			StmtInfoPtrSet children = pkb.getChildStar(stmt.get()->reference);
 			for (auto const& child : children) {
 				if (QueryUtils::checkStmtTypeMatch(child, childDesignEntity)) {
 					return QueryResult(true);
@@ -123,15 +107,16 @@ QueryResult Parent::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>
 	return QueryResult();
 }
 
-QueryResult Parent::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
+QueryResult ParentT::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
 	if (parentStmt.type == StmtRefType::synonym && childStmt.type == StmtRefType::stmtNumber) {
-		shared_ptr<StmtInfo> parent = pkb.getParent(stoi(childStmt.stmtRef));
+		StmtInfoPtrSet parentSet = pkb.getParentStar(stoi(childStmt.stmtRef));
 		DesignEntity designEntity = map[parentStmt.stmtRef];
 		vector<string> column;
-		if (!QueryUtils::checkStmtTypeMatch(parent, designEntity)) {
-			return QueryResult();
+		for (auto const& parent : parentSet) {
+			if (QueryUtils::checkStmtTypeMatch(parent, designEntity)) {
+				column.push_back(to_string(parent.get()->reference));
+			}
 		}
-		column.push_back(to_string(parent.get()->reference));
 		QueryResult result = QueryResult();
 		result.addColumn(parentStmt.stmtRef, column);
 		return result;
@@ -145,7 +130,7 @@ QueryResult Parent::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEnti
 				continue;
 			}
 
-			StmtInfoPtrSet children = pkb.getChildren(stmt.get()->reference);
+			StmtInfoPtrSet children = pkb.getChildStar(stmt.get()->reference);
 			if (!children.empty()) {
 				column.push_back(to_string(stmt.get()->reference));
 			}
@@ -169,7 +154,7 @@ QueryResult Parent::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEnti
 				continue;
 			}
 
-			StmtInfoPtrSet children = pkb.getChildren(stmt.get()->reference);
+			StmtInfoPtrSet children = pkb.getChildStar(stmt.get()->reference);
 			for (auto const& child : children) {
 				if (QueryUtils::checkStmtTypeMatch(child, childDesignEntity)) {
 					parentColumn.push_back(to_string(stmt.get()->reference));
@@ -191,8 +176,8 @@ QueryResult Parent::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEnti
 				continue;
 			}
 
-			shared_ptr<StmtInfo> parent = pkb.getParent(stmt.get()->reference);
-			if (parent != nullptr) {
+			StmtInfoPtrSet parentSet = pkb.getParentStar(stmt.get()->reference);
+			if (!parentSet.empty()) {
 				column.push_back(to_string(stmt.get()->reference));
 			}
 		}
@@ -201,7 +186,7 @@ QueryResult Parent::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEnti
 		return result;
 	}
 	else if (parentStmt.type == StmtRefType::stmtNumber && childStmt.type == StmtRefType::synonym) {
-		StmtInfoPtrSet stmtSet = pkb.getChildren(stoi(parentStmt.stmtRef));
+		StmtInfoPtrSet stmtSet = pkb.getChildStar(stoi(parentStmt.stmtRef));
 		DesignEntity designEntity = map[childStmt.stmtRef];
 		vector<string> column;
 

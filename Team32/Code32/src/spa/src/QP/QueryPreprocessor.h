@@ -13,9 +13,11 @@
 #include "QueryProperties.h"
 #include "QueryResult.h"
 #include "Relationship/Follows.h"
+#include "Relationship/FollowsT.h"
 #include "Relationship/ModifiesP.h"
 #include "Relationship/ModifiesS.h"
 #include "Relationship/Parent.h"
+#include "Relationship/ParentT.h"
 #include "Relationship/UsesP.h"
 #include "Relationship/UsesS.h"
 

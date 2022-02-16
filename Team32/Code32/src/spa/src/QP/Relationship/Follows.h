@@ -6,22 +6,21 @@
 
 class Follows : public Relation {
 public:
-	Follows(bool isStar, QueryStmtRef leftStmt, QueryStmtRef rightStmt);
+	Follows(QueryStmtRef leftStmt, QueryStmtRef rightStmt);
 
 	QueryStmtRef getLeftStmt();
 	QueryStmtRef getRightStmt();
-	bool getIsStar();
 
-	QueryResult execute(PKB& pkb, bool isTrivial);
+	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
 	vector<string> getDeclarationSymbols();
 
-private:
-	bool isStar;
+protected:
 	QueryStmtRef leftStmt;
 	QueryStmtRef rightStmt;
 
-	QueryResult executeTrivial(PKB& pkb);
-	QueryResult executeNonTrivial(PKB& pkb);
+private:
+	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
+	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWS_H_

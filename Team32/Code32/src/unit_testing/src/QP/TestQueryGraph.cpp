@@ -17,7 +17,7 @@ TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
 	QueryStmtRef a = { StmtRefType::synonym, "a" };
 	QueryEntRef v = { EntRefType::synonym, "v" };
 	SuchThatClauseList suchThatList = {
-		{ make_unique<Parent>(false, s, a) },
+		{ make_unique<Parent>(s, a) },
 		{ make_unique<UsesS>(a, v) },
 	};
 
@@ -44,8 +44,8 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 	QueryStmtRef d = { StmtRefType::synonym, "d" };
 	QueryEntRef e = { EntRefType::synonym, "e" };
 	SuchThatClauseList suchThatList = {
-		{ make_unique<Parent>(false, a, b) },
-		{ make_unique<Parent>(false, a, c) },
+		{ make_unique<Parent>(a, b) },
+		{ make_unique<Parent>(a, c) },
 		{ make_unique<UsesS>(d, e)},
 	};
 
