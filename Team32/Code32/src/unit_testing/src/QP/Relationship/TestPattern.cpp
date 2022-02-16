@@ -8,6 +8,29 @@
 
 #include "catch.hpp"
 
+TEST_CASE("QP::Relationship::Pattern::getDeclarationSymbols") {
+	Declaration synAssign = { DesignEntity::assign, "a" };
+
+	PKB pkb = PKB();
+	QueryEntRef x = { EntRefType::varName, "x" };
+	QueryEntRef var = { EntRefType::synonym, "var" };
+	QueryEntRef varUnderscore = { EntRefType::underscore, "_" };
+	vector<string> queryToken = { "0" };
+	QueryExpressionLexer lexer = QueryExpressionLexer(queryToken);
+	auto queryExpression = Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+
+	Pattern pattern1 = Pattern(synAssign, x, ExpressionType::underscore, queryExpression);
+	Pattern pattern2 = Pattern(synAssign, var, ExpressionType::underscore, queryExpression);
+	Pattern pattern3 = Pattern(synAssign, varUnderscore, ExpressionType::underscore, queryExpression);
+
+	vector<string> symbols1 = { "a" };
+	vector<string> symbols2 = { "a", "var" };
+
+	REQUIRE(pattern1.getDeclarationSymbols() == symbols1);
+	REQUIRE(pattern2.getDeclarationSymbols() == symbols2);
+	REQUIRE(pattern3.getDeclarationSymbols() == symbols1);
+}
+
 TEST_CASE("QP::Relationship::Pattern::execute") {
 	PKB pkb = PKB();
 	pkb.setStmtType(1, StmtType::Assign);
