@@ -31,6 +31,24 @@ PKB MockUtilities::generateParentTestPKB() {
 	return pkb;
 }
 
+PKB MockUtilities::generateUsesTestPKB() {
+    PKB pkb = PKB();
+    pkb.setStmtType(1, StmtType::Assign);
+    pkb.setStmtType(2, StmtType::IfStmt);
+    pkb.setStmtType(3, StmtType::Print);
+    pkb.setStmtType(INT32_MAX, StmtType::WhileStmt);
+    return pkb;
+}
+
+PKB MockUtilities::generateModifyTestPKB() {
+    PKB pkb = PKB();
+    pkb.setStmtType(1, StmtType::Assign);
+    pkb.setStmtType(2, StmtType::Read);
+    pkb.setStmtType(3, StmtType::Call);
+    pkb.setStmtType(INT32_MAX, StmtType::Assign);
+    return pkb;
+}
+
 StatementStore MockUtilities::generateStatementStore() {
     StatementStore statement_store = StatementStore();
     statement_store.insert(1, StmtType::WhileStmt);

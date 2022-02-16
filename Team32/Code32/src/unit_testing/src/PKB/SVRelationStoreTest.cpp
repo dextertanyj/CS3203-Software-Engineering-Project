@@ -23,10 +23,10 @@ TEST_CASE("PKB::SVRelationStore") {
         REQUIRE_THROWS_AS(uses_store.set(s1, ""), invalid_argument);
         // Read statement does not use a variable
         REQUIRE_THROWS_AS(uses_store.set(s4, "x"), invalid_argument);
-        uses_store.set(s1, "x");
-        uses_store.set(s2, "y");
-        uses_store.set(s2, "a");
-        uses_store.set(s3, "x");
+        CHECK_NOTHROW(uses_store.set(s1, "x"));
+        CHECK_NOTHROW(uses_store.set(s2, "y"));
+        CHECK_NOTHROW(uses_store.set(s2, "a"));
+        CHECK_NOTHROW(uses_store.set(s3, "x"));
 
         // Print statement cannot use more than one variable
         CHECK_THROWS(uses_store.set(s1, "a"));
@@ -61,9 +61,10 @@ TEST_CASE("PKB::SVRelationStore") {
         REQUIRE_THROWS_AS(uses_store.check(-1, "x"), invalid_argument);
         // Variable as an empty string
         REQUIRE_THROWS_AS(uses_store.check(2, ""), invalid_argument);
-        // StmtRef does not exist in map
+        // Check negative cases
         CHECK_FALSE(uses_store.check(2, "x"));
         CHECK_FALSE(uses_store.check(5, "y"));
+
         CHECK(uses_store.check(5, "x"));
         CHECK(uses_store.check(6, "x"));
         CHECK(uses_store.check(6, "y"));

@@ -9,6 +9,8 @@ public:
     static shared_ptr<StmtInfo> createStmtInfo(int stmtNo, StmtType type);
 	static PKB generateFollowsTestPKB();
 	static PKB generateParentTestPKB();
+    static PKB generateUsesTestPKB();
+    static PKB generateModifyTestPKB();
     static StatementStore generateStatementStore();
 };
 
