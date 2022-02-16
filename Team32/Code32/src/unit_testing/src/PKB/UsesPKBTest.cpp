@@ -17,7 +17,7 @@ TEST_CASE("PKB::Uses::validate One Var Test") {
     REQUIRE(Uses::validate(&store, s3, "x"));
     REQUIRE(Uses::validate(&store, s4, "x"));
     REQUIRE(Uses::validate(&store, s5, "x"));
-    REQUIRE_THROWS_AS(Uses::validate(&store, s6, "x"), std::exception);
+    REQUIRE_THROWS_AS(Uses::validate(&store, s6, "x"), invalid_argument);
     store.set(s1, "x");
     store.set(s2, "x");
     store.set(s3, "x");
@@ -45,5 +45,5 @@ TEST_CASE("PKB::Uses::validate Multiple Var Test") {
     REQUIRE(Uses::validate(&store, s3, varRefs));
     REQUIRE(Uses::validate(&store, s4, varRefs));
     REQUIRE_FALSE(Uses::validate(&store, s5, varRefs));
-    REQUIRE_THROWS_AS(Uses::validate(&store, s6, varRefs), std::exception);
+    REQUIRE_THROWS_AS(Uses::validate(&store, s6, varRefs), invalid_argument);
 }
