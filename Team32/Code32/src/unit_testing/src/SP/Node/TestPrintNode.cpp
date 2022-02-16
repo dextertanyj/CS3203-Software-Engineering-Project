@@ -44,10 +44,8 @@ TEST_CASE("SP::Node::PrintNode::equals Different Node Type Test") {
 TEST_CASE("PrintNode::extract Test") {
 	PKB pkb;
 	PrintNode node = PrintNode(1, make_unique<VariableNode>("A"));
-	StmtInfo result = node.extract(pkb);
-	StmtInfo expected = {1, StmtType::Print};
-	REQUIRE_EQUALS(result.reference, expected.reference);
-	REQUIRE_EQUALS(result.type, expected.type);
+	StmtRef result = node.extract(pkb);
+	REQUIRE_EQUALS(result, 1);
 }
 
 TEST_CASE("SP::Node::PrintNode::parsePrintStatement Valid Token Test") {

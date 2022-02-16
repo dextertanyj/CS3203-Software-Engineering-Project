@@ -2,11 +2,11 @@
 
 SP::Node::ReadNode::ReadNode(StmtRef stmtNo, unique_ptr<VariableNode> variable) : StatementNode(stmtNo), variable(move(variable)) {}
 
-StmtInfo SP::Node::ReadNode::extract(PKB& pkb) {
+StmtRef SP::Node::ReadNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Read);
 	pkb.setModifies(stmt_ref, variable->extract());
-	return {stmt_ref, StmtType::Read};
+	return stmt_ref;
 }
 
 bool SP::Node::ReadNode::equals(const shared_ptr<StatementNode>& object) {
