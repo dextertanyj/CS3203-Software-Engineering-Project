@@ -50,7 +50,7 @@ QueryResult Pattern::execute(PKB& pkb, bool isTrivial, unordered_map<string, Des
 	}
 	vector<string> assignStmtStrings;
 	for (auto const& stmt : stmtSet) {
-		if (!QueryUtils::checkStmtTypeMatch(stmt, DesignEntity::assign)) {
+		if (QueryUtils::checkStmtTypeMatch(stmt, DesignEntity::assign)) {
 			assignStmtStrings.push_back(to_string(stmt.get()->reference));
 		}
 	}
