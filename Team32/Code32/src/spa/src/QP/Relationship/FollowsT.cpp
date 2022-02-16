@@ -1,9 +1,5 @@
 #include "FollowsT.h"
 
-bool FollowsT::getIsStar() {
-	return true;
-}
-
 QueryResult FollowsT::execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) {
 	return isTrivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }

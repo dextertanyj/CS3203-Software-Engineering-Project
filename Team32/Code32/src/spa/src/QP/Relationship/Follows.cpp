@@ -12,10 +12,6 @@ QueryStmtRef Follows::getRightStmt() {
 	return rightStmt;
 }
 
-bool Follows::getIsStar() {
-	return false;
-}
-
 QueryResult Follows::execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) {
 	return isTrivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }

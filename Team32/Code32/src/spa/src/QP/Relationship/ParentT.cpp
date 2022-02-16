@@ -4,10 +4,6 @@ QueryResult ParentT::execute(PKB& pkb, bool isTrivial, unordered_map<string, Des
 	return isTrivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
-bool ParentT::getIsStar() {
-	return true;
-}
-
 QueryResult ParentT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
 	if (parentStmt.type == StmtRefType::stmtNumber && childStmt.type == StmtRefType::stmtNumber) {
 		StmtInfoPtrSet childrenSet = pkb.getChildStar(stoi(parentStmt.stmtRef));

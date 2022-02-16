@@ -9,7 +9,6 @@ public:
 	using Parent::Parent;
 
 	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
-	bool getIsStar();
 
 private:
 	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);

@@ -10,7 +10,6 @@ public:
 
 	QueryStmtRef getParentStmt();
 	QueryStmtRef getChildStmt();
-	bool getIsStar();
 
 	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
 	vector<string> getDeclarationSymbols();

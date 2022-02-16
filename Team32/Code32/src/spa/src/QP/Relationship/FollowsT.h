@@ -8,7 +8,6 @@ class FollowsT : public Follows {
 public:
 	using Follows::Follows;
 
-	bool getIsStar();
 	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
 
 private:
