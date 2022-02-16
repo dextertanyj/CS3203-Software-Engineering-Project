@@ -135,7 +135,7 @@ TEST_CASE("PKB::ParentRelation::optimize Test") {
     shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(2, StmtType::WhileStmt);
     shared_ptr<StmtInfo> s2 = MockUtilities::createStmtInfo(7, StmtType::Assign);
     shared_ptr<StmtInfo> s3 = MockUtilities::createStmtInfo(3, StmtType::IfStmt);
-    shared_ptr<StmtInfo> s1_if = MockUtilities::createStmtInfo(4, StmtType::Unknown);
+    shared_ptr<StmtInfo> s1_if = MockUtilities::createStmtInfo(4, StmtType::Read);
     shared_ptr<StmtInfo> s2_if = MockUtilities::createStmtInfo(5, StmtType::Print);
     shared_ptr<StmtInfo> s3_if = MockUtilities::createStmtInfo(6, StmtType::Assign);
     store.set(s1, s2);
