@@ -9,12 +9,12 @@
 #include "QP/QueryTypeDefs.h"
 #include "QP/Relationship/Relation.h"
 
-class QueryPattern {
+class Pattern : public Relation {
 public:
-	QueryPattern(Declaration synonym, QueryEntRef entRef, ExpressionType expressionType, 
+	Pattern(Declaration synonym, QueryEntRef entRef, ExpressionType expressionType, 
 				Common::ExpressionProcessor::Expression expression);
 
-	Declaration getSynonym();
+	Declaration getSynAssign();
 	QueryEntRef getEntRef();
 	ExpressionType getExpressionType();
 	Common::ExpressionProcessor::Expression getExpression();
@@ -22,14 +22,15 @@ public:
 	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
 	vector<string> getDeclarationSymbols();
 
-private:
-	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
-	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
-
-	Declaration synonym;
+protected:
+	Declaration synAssign;
 	QueryEntRef entRef;
 	ExpressionType expressionType;
 	Common::ExpressionProcessor::Expression expression;
+
+private:
+	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
+	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPATTERN_H_

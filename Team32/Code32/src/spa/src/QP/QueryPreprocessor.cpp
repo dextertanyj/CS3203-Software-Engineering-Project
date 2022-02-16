@@ -4,8 +4,8 @@
 
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "QP/QueryExpressionLexer.h"
-#include "QP/QueryPattern.h"
 #include "QP/QueryTypeDefs.h"
+#include "QP/Relationship/Pattern.h"
 
 QueryProperties QueryPreprocessor::parseQuery(string query) {
 
@@ -182,7 +182,7 @@ void QueryPreprocessor::parsePattern(int& tokenIndex) {
 		queryExpression = expression;
 	}
 	else {
-		throw QueryException("Unexpected query expression" + this->queryTokens[tokenIndex]);
+		throw QueryException("Unexpected query expression: " + this->queryTokens[tokenIndex]);
 	}
 	
 	if (expressionType == ExpressionType::expressionUnderscore) { 
@@ -193,8 +193,8 @@ void QueryPreprocessor::parsePattern(int& tokenIndex) {
 	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "and") {
 		parsePattern(++tokenIndex);
 	}
-	
-	PatternClause patternClause = { make_unique<QueryPattern>(synonym, entRef, expressionType, queryExpression) };
+	unique_ptr<Relation> relation = make_unique<Pattern>(synonym, entRef, expressionType, queryExpression);
+	PatternClause patternClause = { std::move(relation) };
 	this->patternClauseList.push_back(patternClause);
 }
 
