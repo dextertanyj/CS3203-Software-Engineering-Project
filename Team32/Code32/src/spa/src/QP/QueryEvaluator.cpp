@@ -158,7 +158,13 @@ QueryResult QueryEvaluator::evaluateClauses(SuchThatClauseList& suchThatClauses,
 	}
 
 	// TODO: Handle pattern clause after pattern is refactored to a relation
-
+	//for (PatternClause patternClause : patternClauses) {
+	//	QueryResult result = patternClause.queryPattern->execute(pkb, isTrivial, symbolToTypeMap);
+	//	if (!result.getResult()) {
+	//		return QueryResult();
+	//	}
+	//	resultList.push_back(result);
+	//}
 	// For iteration one, the size of resultList is at most 2
 	if (resultList.size() == 1) {
 		return resultList[0];
@@ -206,19 +212,19 @@ vector<pair<SuchThatClauseList, PatternClauseList>> QueryEvaluator::splitClauses
 		}
 	}
 
-	for (PatternClause patternClause : queryProperties.getPatternClauseList()) {
-		for (int i = 0; i <= synonymsInGroup.size(); i++) {
-			if (i == synonymsInGroup.size()) {
-				result[synonymsInGroup.size()].second.push_back(patternClause);
-				break;
-			}
+	//for (PatternClause patternClause : queryProperties.getPatternClauseList()) {
+	//	for (int i = 0; i <= synonymsInGroup.size(); i++) {
+	//		if (i == synonymsInGroup.size()) {
+	//			result[synonymsInGroup.size()].second.push_back(patternClause);
+	//			break;
+	//		}
 
-			if (synonymsInGroup[i].find(patternClause.synonym.symbol) != synonymsInGroup[i].end()) {
-				result[i].second.push_back(patternClause);
-				break;
-			}
-		}
-	}
+	//		if (synonymsInGroup[i].find(patternClause.synonym.symbol) != synonymsInGroup[i].end()) {
+	//			result[i].second.push_back(patternClause);
+	//			break;
+	//		}
+	//	}
+	//}
 
 	return result;
 }

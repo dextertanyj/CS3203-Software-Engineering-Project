@@ -18,8 +18,8 @@ void QueryGraph::setEdges(const SuchThatClauseList& suchThatClauseList, const Pa
 	}
 
 	for (PatternClause patternClause : patternClauseList) {
-		if (patternClause.entRef.type == EntRefType::synonym) {
-			addEdge(patternClause.synonym.symbol, patternClause.entRef.entRef);
+		if (patternClause.queryPattern->getEntRef().type == EntRefType::synonym) {
+			addEdge(patternClause.queryPattern->getSynonym().symbol, patternClause.queryPattern->getEntRef().entRef);
 		}
 	}
 }
