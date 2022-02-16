@@ -30,3 +30,14 @@ PKB MockUtilities::generateParentTestPKB() {
 	pkb.setStmtType(9, StmtType::Read);
 	return pkb;
 }
+
+StatementStore MockUtilities::generateStatementStore() {
+    StatementStore statement_store = StatementStore();
+    statement_store.insert(1, StmtType::WhileStmt);
+    statement_store.insert(2, StmtType::IfStmt);
+    statement_store.insert(3, StmtType::Assign);
+    statement_store.insert(4, StmtType::Call);
+    statement_store.insert(5, StmtType::Print);
+    statement_store.insert(6, StmtType::Read);
+    return statement_store;
+}
