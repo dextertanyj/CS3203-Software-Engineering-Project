@@ -105,6 +105,28 @@ QueryResult Follows::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity
 			}
 		}
 	}
+	else if (leftStmt.type == StmtRefType::synonym && rightStmt.type == StmtRefType::synonym) {
+		if (leftStmt.stmtRef == rightStmt.stmtRef) {
+			return QueryResult();
+		}
+		
+		StmtInfoPtrSet stmtSet = pkb.getStatements();
+		DesignEntity leftDesignEntity = map[leftStmt.stmtRef];
+		DesignEntity rightDesignEntity = map[rightStmt.stmtRef];
+		for (auto const& stmt : stmtSet) {
+			if (leftDesignEntity != DesignEntity::stmt &&
+			    stmt.get()->type != QueryUtils::designEntToStmtType[leftDesignEntity]) {
+				continue;
+			}
+
+			shared_ptr<StmtInfo> follower = pkb.getFollower(stmt.get()->reference);
+			if (follower.get() != nullptr &&
+				  (rightDesignEntity == DesignEntity::stmt ||
+					 follower.get()->type == QueryUtils::designEntToStmtType[rightDesignEntity])) {
+				return QueryResult(true);
+			}
+		}
+	}
 	
 	return QueryResult();
 }

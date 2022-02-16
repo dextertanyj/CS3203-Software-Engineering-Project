@@ -111,6 +111,17 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
+	SECTION("trivial: synonym & synonym") {
+		ModifiesS modifies1 = ModifiesS(stmtSynonym, var);
+		ModifiesS modifies2 = ModifiesS(ifSynonym, var);
+
+		QueryResult result1 = modifies1.execute(pkb, true, map);
+		QueryResult result2 = modifies2.execute(pkb, true, map);
+
+		REQUIRE(result1.getResult());
+		REQUIRE(!result2.getResult());
+	}
+
 	SECTION("non-trivial: synonym & varName") {
 		ModifiesS modifies1 = ModifiesS(assignSynonym, x);
 		ModifiesS modifies2 = ModifiesS(ifSynonym, y);

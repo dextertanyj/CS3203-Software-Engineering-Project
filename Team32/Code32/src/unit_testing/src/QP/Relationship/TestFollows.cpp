@@ -113,6 +113,17 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
+	SECTION("trivial: synonym & synonym") {
+		Follows follows1 = Follows(assignSynonym, stmtSynonym);
+		Follows follows2 = Follows(assignSynonym, ifSynonym);
+
+		QueryResult result1 = follows1.execute(pkb, true, map);
+		QueryResult result2 = follows2.execute(pkb, true, map);
+
+		REQUIRE(result1.getResult());
+		REQUIRE(!result2.getResult());
+	}
+
 	SECTION("non-trivial: synonym & stmtNumber") {
 		Follows follows1 = Follows(assignSynonym, stmtNo2);
 		Follows follows2 = Follows(ifSynonym, stmtNo2);

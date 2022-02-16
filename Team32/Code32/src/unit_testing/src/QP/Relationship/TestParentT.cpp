@@ -114,6 +114,17 @@ TEST_CASE("QP::Relationship::ParentT::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
+	SECTION("trivial: synonym & synonym") {
+		ParentT parent1 = ParentT(assignSynonym, ifSynonym);
+		ParentT parent2 = ParentT(ifSynonym, stmtSynonym);
+
+		QueryResult result1 = parent1.execute(pkb, true, map);
+		QueryResult result2 = parent2.execute(pkb, true, map);
+
+		REQUIRE(result1.getResult());
+		REQUIRE(!result2.getResult());
+	}
+
 	SECTION("non-trivial: synonym & stmtNumber") {
 		ParentT parent1 = ParentT(assignSynonym, stmtNo4);
 		ParentT parent2 = ParentT(ifSynonym, stmtNo2);

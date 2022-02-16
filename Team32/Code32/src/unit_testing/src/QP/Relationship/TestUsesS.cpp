@@ -112,6 +112,17 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
+	SECTION("trivial: synonym & synonym") {
+		UsesS uses1 = UsesS(stmtSynonym, var);
+		UsesS uses2 = UsesS(ifSynonym, var);
+
+		QueryResult result1 = uses1.execute(pkb, true, map);
+		QueryResult result2 = uses2.execute(pkb, true, map);
+
+		REQUIRE(result1.getResult());
+		REQUIRE(!result2.getResult());
+	}
+
 	SECTION("non-trivial: synonym & varName") {
 		UsesS uses1 = UsesS(assignSynonym, x);
 		UsesS uses2 = UsesS(ifSynonym, y);
