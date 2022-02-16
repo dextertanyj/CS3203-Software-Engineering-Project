@@ -60,8 +60,12 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 		QueryResult result1 = pattern1.execute(pkb, false, map);
 		QueryResult result2 = pattern1.execute(pkb, true, map);
 		vector<string> expectedResult = { "1", "2", "3" };
-		REQUIRE(result1.getSynonymResult("a") == expectedResult);
-		REQUIRE(result2.getSynonymResult("a") == expectedResult);
+		auto result1vec = result1.getSynonymResult("a");
+		std::sort(result1vec.begin(), result1vec.end());
+		REQUIRE(result1vec == expectedResult);
+		auto result2vec = result2.getSynonymResult("a");
+		std::sort(result2vec.begin(), result2vec.end());
+		REQUIRE(result2vec == expectedResult);
 	}
 
 	SECTION("_, expr") {
@@ -88,10 +92,14 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 		vector<string> expectedResult1 = { "1", "2"};
 		vector<string> expectedResult3 = { "2", "3" };
 		REQUIRE(result1.getResult());
-		REQUIRE(result1.getSynonymResult("a") == expectedResult1);
+		auto result1vec = result1.getSynonymResult("a");
+		std::sort(result1vec.begin(), result1vec.end());
+		REQUIRE(result1vec == expectedResult1);
 		REQUIRE(!result2.getResult());
 		REQUIRE(result3.getResult());
-		REQUIRE(result3.getSynonymResult("a") == expectedResult3);
+		auto result3vec = result3.getSynonymResult("a");
+		std::sort(result3vec.begin(), result3vec.end());
+		REQUIRE(result3vec == expectedResult3);
 	}
 
 	SECTION("varName, _") {
@@ -108,7 +116,9 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 		REQUIRE(result1.getResult());
 		REQUIRE(result1.getSynonymResult("a") == expectedResult1);
 		REQUIRE(result2.getResult());
-		REQUIRE(result2.getSynonymResult("a") == expectedResult2);
+		auto result2vec = result2.getSynonymResult("a");
+		std::sort(result2vec.begin(), result2vec.end());
+		REQUIRE(result2vec == expectedResult2);
 		REQUIRE(!result3.getResult());
 	}
 
@@ -175,7 +185,9 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 		REQUIRE(result4.getSynonymResult("a") == expectedResult4);
 		REQUIRE(!result5.getResult());
 		REQUIRE(result6.getResult());
-		REQUIRE(result6.getSynonymResult("a") == expectedResult6);
+		auto result6vec = result6.getSynonymResult("a");
+		std::sort(result6vec.begin(), result6vec.end());
+		REQUIRE(result6vec == expectedResult6);
 		REQUIRE(!result7.getResult());
 		REQUIRE(!result8.getResult());
 		REQUIRE(!result9.getResult());
@@ -189,8 +201,12 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 		vector<string> expectedResult1 = { "1", "2", "3" };
 
 		REQUIRE(result1.getResult());
-		REQUIRE(result1.getSynonymResult("a") == expectedResult1);
-		REQUIRE(result1.getSynonymResult("a") == result1.getSynonymResult("var"));
+		auto result1vec1 = result1.getSynonymResult("a");
+		std::sort(result1vec1.begin(), result1vec1.end());
+		auto result1vec2 = result1.getSynonymResult("var");
+		std::sort(result1vec2.begin(), result1vec2.end());
+		REQUIRE(result1vec1 == expectedResult1);
+		REQUIRE(result1vec1 == result1vec2);
 	}
 
 	SECTION("synonym, expr") {
@@ -205,7 +221,9 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 		vector<string> expectedResult6 = { "2", "3" };
 
 		REQUIRE(result1.getResult());
-		REQUIRE(result1.getSynonymResult("a") == expectedResult1);
+		auto result1vec = result1.getSynonymResult("a");
+		std::sort(result1vec.begin(), result1vec.end());
+		REQUIRE(result1vec == expectedResult1);
 		REQUIRE(!result2.getResult());
 		REQUIRE(!result3.getResult());
 
@@ -221,13 +239,16 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 		QueryResult result3 = pattern3.execute(pkb, false, map);
 
 		vector<string> expectedResult1 = { "1", "2" };
-		vector<string> expectedResult3 = { "2", "3"};
+		vector<string> expectedResult3 = { "2", "3" };
 
 		REQUIRE(result1.getResult());
-		REQUIRE(result1.getSynonymResult("a") == expectedResult1);
+		auto result1vec = result1.getSynonymResult("a");
+		std::sort(result1vec.begin(), result1vec.end());
+		REQUIRE(result1vec == expectedResult1);
 		REQUIRE(!result2.getResult());
 		REQUIRE(result3.getResult());
-
+		auto result3vec = result3.getSynonymResult("a");
+		std::sort(result3vec.begin(), result3vec.end());
 	}
 
 }
