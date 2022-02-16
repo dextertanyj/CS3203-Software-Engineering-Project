@@ -9,9 +9,9 @@
 #include "Common/TypeDefs.h"
 #include "PKB/AssignStore.h"
 #include "PKB/ConstantStore.h"
-#include "PKB/FollowsPKB.h"
+#include "PKB/FollowsRelation.h"
 #include "PKB/Modifies.h"
-#include "PKB/ParentPKB.h"
+#include "PKB/ParentRelation.h"
 #include "PKB/SVRelationStore.tpp"
 #include "PKB/StatementRelationStore.tpp"
 #include "PKB/StatementStore.h"
@@ -84,8 +84,8 @@ private:
 	ConstantStore constant_store;
 	VariableStore variable_store;
 	StatementStore statement_store;
-	StatementRelationStore<ParentPKB> parent_store;
-	StatementRelationStore<FollowsPKB> follows_store;
+	StatementRelationStore<ParentRelation> parent_store;
+	StatementRelationStore<FollowsRelation> follows_store;
 	SVRelationStore<Uses> uses_store;
 	SVRelationStore<Modifies> modifies_store;
 	AssignStore assign_store;
