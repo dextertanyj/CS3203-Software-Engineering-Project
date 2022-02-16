@@ -31,7 +31,7 @@ StmtInfo SP::Node::WhileNode::extract(PKB& pkb) {
 	return {stmt_ref, StmtType::WhileStmt};
 }
 
-bool SP::Node::WhileNode::equals(shared_ptr<StatementNode> object) {
+bool SP::Node::WhileNode::equals(const shared_ptr<StatementNode>& object) {
     shared_ptr<WhileNode> other = dynamic_pointer_cast<WhileNode>(object);
     if (other == nullptr) {
         return false;

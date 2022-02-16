@@ -17,7 +17,7 @@ public:
 	WhileNode(StmtRef stmtNo, unique_ptr<ExpressionNode> condExpr, unique_ptr<StatementListNode> stmtLst);
 	static unique_ptr<WhileNode> parseWhileStatement(Lexer& lex, int& statement_count);
 	StmtInfo extract(PKB& pkb) override;
-	bool equals(shared_ptr<StatementNode> object) override;
+	bool equals(const shared_ptr<StatementNode>& object) override;
 
 private:
 	shared_ptr<ExpressionNode> condExpr;

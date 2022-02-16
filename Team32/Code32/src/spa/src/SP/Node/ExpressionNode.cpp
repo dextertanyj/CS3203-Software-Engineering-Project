@@ -15,6 +15,6 @@ unique_ptr<SP::Node::ExpressionNode> SP::Node::ExpressionNode::parseExpression(L
 
 Common::ExpressionProcessor::Expression SP::Node::ExpressionNode::extract() { return expression; }
 
-bool SP::Node::ExpressionNode::equals(shared_ptr<ExpressionNode> object) {
+bool SP::Node::ExpressionNode::equals(const shared_ptr<ExpressionNode>& object) {
 	return this->expression.equals(object->expression);
 }

@@ -27,7 +27,7 @@ StmtInfo SP::Node::AssignmentNode::extract(PKB& pkb) {
 	return {stmt_ref, StmtType::Assign};
 }
 
-bool SP::Node::AssignmentNode::equals(shared_ptr<StatementNode> object) {
+bool SP::Node::AssignmentNode::equals(const shared_ptr<StatementNode>& object) {
 	shared_ptr<AssignmentNode> other = dynamic_pointer_cast<AssignmentNode>(object);
 	if (other == nullptr) {
 		return false;

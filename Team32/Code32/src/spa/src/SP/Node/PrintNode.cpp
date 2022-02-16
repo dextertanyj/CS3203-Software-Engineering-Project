@@ -11,7 +11,7 @@ StmtInfo SP::Node::PrintNode::extract(PKB &pkb) {
 	return {stmt_ref, StmtType::Print};
 }
 
-bool SP::Node::PrintNode::equals(shared_ptr<StatementNode> object) {
+bool SP::Node::PrintNode::equals(const shared_ptr<StatementNode>& object) {
 	shared_ptr<PrintNode> other = dynamic_pointer_cast<PrintNode>(object);
 	if (other == nullptr) {
 		return false;
