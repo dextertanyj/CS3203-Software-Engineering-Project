@@ -75,9 +75,11 @@ TEST_CASE("SP::Node::CallNode::parseCallStatement") {
     }
 }
 
-TEST_CASE("CallNode::extract Test") {
+TEST_CASE("SP::Node::CallNode::extract Test") {
 	PKB pkb;
-	CallNode node = CallNode(1, "P");
+
+	int statement_number = 1;
+	CallNode node = CallNode(1, "Procedure");
 	StmtRef result = node.extract(pkb);
-	REQUIRE_EQUALS(result, 1);
+	REQUIRE_EQUALS(result, statement_number);
 }
