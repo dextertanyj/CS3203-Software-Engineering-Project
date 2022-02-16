@@ -19,7 +19,6 @@ unique_ptr<SP::Node::StatementNode> SP::Node::StatementNode::parseStatement(Lexe
 		return node;
 	}
 	if (token == "read") {
-		// Should we abstract this at this cost of an additional function call?
 		return ReadNode::parseReadStatement(lex, statement_count);
 	}
 	if (token == "print") {

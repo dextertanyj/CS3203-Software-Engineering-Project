@@ -11,7 +11,7 @@
 class SP::Processor {
 public:
 	explicit Processor(PKB &pkb);
-	bool process(string source);
+	void process(string source);
 
 private:
 	SP::Parser parser;

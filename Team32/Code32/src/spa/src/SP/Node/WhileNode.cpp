@@ -20,10 +20,8 @@ StmtRef SP::Node::WhileNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::WhileStmt);
 	Common::ExpressionProcessor::Expression expression = condExpr->extract();
-	UsageInfo usage = {expression.getVariables(), expression.getConstants()};
-	for (auto iter = usage.variables.begin(); iter != usage.variables.end(); ++iter) {
-		pkb.setUses(stmt_ref, *iter);
-	}
+	pkb.setConstant(expression.getConstants());
+	pkb.setUses(stmt_ref, expression.getVariables());
 	vector<StmtRef> children = stmtLst->extract(pkb);
 	for (auto iter = children.begin(); iter < children.end(); ++iter) {
 		pkb.setParent(stmt_ref, *iter);
