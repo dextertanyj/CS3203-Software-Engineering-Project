@@ -40,16 +40,8 @@ QueryResult ModifiesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEnti
 		StmtInfoPtrSet stmtSet = pkb.getModifiesByVar(ent.entRef);
 		return QueryResult(!stmtSet.empty());
 	}
-	else if (stmt.type == StmtRefType::underscore && ent.type == EntRefType::underscore) {
-		StmtInfoPtrSet stmtSet = pkb.getStatements();
-		for (auto const& stmt : stmtSet) {
-			VarRefSet varSet = pkb.getModifiesByStmt(stmt.get()->reference);
-			if (!varSet.empty()) {
-				return QueryResult(true);
-			}
-		}
-	}
-	else if (stmt.type == StmtRefType::underscore && ent.type == EntRefType::synonym) {
+	else if (stmt.type == StmtRefType::underscore && ent.type == EntRefType::underscore ||
+	         stmt.type == StmtRefType::underscore && ent.type == EntRefType::synonym) {
 		VarRefSet varSet = pkb.getVariables();
 		for (auto const& var : varSet) {
 			StmtInfoPtrSet stmtSet = pkb.getModifiesByVar(var);
@@ -62,8 +54,7 @@ QueryResult ModifiesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEnti
 		StmtInfoPtrSet stmtSet = pkb.getModifiesByVar(ent.entRef);
 		DesignEntity designEntity = map[stmt.stmtRef];
 		for (auto const& stmt : stmtSet) {
-			if (designEntity == DesignEntity::stmt ||
-			    stmt.get()->type == QueryUtils::designEntToStmtType[designEntity]) {
+			if (QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
 				return QueryResult(true);
 			}
 		}
@@ -72,8 +63,7 @@ QueryResult ModifiesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEnti
 		StmtInfoPtrSet stmtSet = pkb.getStatements();
 		DesignEntity designEntity = map[stmt.stmtRef];
 		for (auto const& stmt : stmtSet) {
-			if (designEntity != DesignEntity::stmt &&
-			    stmt.get()->type != QueryUtils::designEntToStmtType[designEntity]) {
+			if (!QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
 				continue;
 			}
 
@@ -89,8 +79,7 @@ QueryResult ModifiesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEnti
 		vector<string> stmtColumn;
 		vector<string> varColumn;
 		for (auto const& stmt : stmtSet) {
-			if (designEntity != DesignEntity::stmt &&
-			    stmt.get()->type != QueryUtils::designEntToStmtType[designEntity]) {
+			if (!QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
 				continue;
 			}
 
@@ -110,8 +99,7 @@ QueryResult ModifiesS::executeNonTrivial(PKB& pkb, unordered_map<string, DesignE
 		DesignEntity designEntity = map[stmt.stmtRef];
 		vector<string> column;
 		for (auto const& stmt : stmtSet) {
-			if (designEntity == DesignEntity::stmt ||
-			    stmt.get()->type == QueryUtils::designEntToStmtType[designEntity]) {
+			if (QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
 				column.push_back(to_string(stmt.get()->reference));
 			}
 		}
@@ -124,8 +112,7 @@ QueryResult ModifiesS::executeNonTrivial(PKB& pkb, unordered_map<string, DesignE
 		DesignEntity designEntity = map[stmt.stmtRef];
 		vector<string> column;
 		for (auto const& stmt : stmtSet) {
-			if (designEntity != DesignEntity::stmt &&
-			    stmt.get()->type != QueryUtils::designEntToStmtType[designEntity]) {
+			if (!QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
 				continue;
 			}
 
@@ -144,8 +131,7 @@ QueryResult ModifiesS::executeNonTrivial(PKB& pkb, unordered_map<string, DesignE
 		vector<string> stmtColumn;
 		vector<string> varColumn;
 		for (auto const& stmt : stmtSet) {
-			if (designEntity != DesignEntity::stmt &&
-			    stmt.get()->type != QueryUtils::designEntToStmtType[designEntity]) {
+			if (!QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
 				continue;
 			}
 
