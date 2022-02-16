@@ -27,6 +27,9 @@ unique_ptr<SP::Node::IfNode> SP::Node::IfNode::parseIfStatement(Lexer& lex, int&
 StmtRef SP::Node::IfNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::IfStmt);
+	Common::ExpressionProcessor::Expression expression = condExpr->extract();
+	pkb.setConstant(expression.getConstants());
+	pkb.setUses(stmt_ref, expression.getVariables());
 	vector<StmtRef> then_children = ifStmtLst->extract(pkb);
 	vector<StmtRef> else_children = elseStmtLst->extract(pkb);
 	for (auto iter = then_children.begin(); iter < then_children.end(); ++iter) {
@@ -34,11 +37,6 @@ StmtRef SP::Node::IfNode::extract(PKB& pkb) {
 	}
 	for (auto iter = else_children.begin(); iter < else_children.end(); ++iter) {
 		pkb.setParent(stmt_ref, *iter);
-	}
-	Common::ExpressionProcessor::Expression expression = condExpr->extract();
-	UsageInfo usage = {expression.getVariables(), expression.getConstants()};
-	for (auto iter = usage.variables.begin(); iter != usage.variables.end(); ++iter) {
-		pkb.setUses(stmt_ref, *iter);
 	}
 	return stmt_ref;
 }

@@ -19,16 +19,16 @@ unique_ptr<SP::Node::AssignmentNode> SP::Node::AssignmentNode::parseAssignmentSt
 StmtRef SP::Node::AssignmentNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Assign);
-	Common::ExpressionProcessor::Expression rhs = expression->extract();
 	VarRef lhs = assignee->extract();
-	unordered_set<VarRef> variables = rhs.getVariables();
 	pkb.setModifies(stmt_ref, lhs);
-	pkb.setUses(stmt_ref, std::move(variables));
+	Common::ExpressionProcessor::Expression rhs = expression->extract();
+	pkb.setConstant(rhs.getConstants());
+	pkb.setUses(stmt_ref, rhs.getVariables());
 	pkb.setAssign(stmt_ref, lhs, rhs);
 	return stmt_ref;
 }
 
-bool SP::Node::AssignmentNode::equals(shared_ptr<StatementNode> object) {
+bool SP::Node::AssignmentNode::equals(const shared_ptr<StatementNode>& object) {
 	shared_ptr<AssignmentNode> other = dynamic_pointer_cast<AssignmentNode>(object);
 	if (other == nullptr) {
 		return false;
