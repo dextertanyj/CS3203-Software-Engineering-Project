@@ -14,15 +14,18 @@ unique_ptr<SP::Node::StatementListNode> SP::Node::StatementListNode::parseStatem
 	return statement_list;
 }
 
-StmtInfoList SP::Node::StatementListNode::extract(PKB& pkb) {
-	StmtInfoList children;
+vector<StmtRef> SP::Node::StatementListNode::extract(PKB& pkb) {
+	vector<StmtRef> children;
 	for (auto iter = stmtList.begin(); iter < stmtList.end(); ++iter) {
-		children.push_back(std::make_shared<StmtInfo>(iter->get()->extract(pkb)));
+		children.push_back(iter->get()->extract(pkb));
 	}
-	StmtInfo previous = *(children.at(0));
+	if (children.empty()) {
+		throw ParseException("Statement list is empty");
+	}
+	StmtRef previous = children.at(0);
 	for (auto iter = ++children.begin(); iter < children.end(); ++iter) {
-		pkb.setFollows(previous.reference, iter->get()->reference);
-		previous = *(iter->get());
+		pkb.setFollows(previous, *iter);
+		previous = *iter;
 	}
 	return children;
 }

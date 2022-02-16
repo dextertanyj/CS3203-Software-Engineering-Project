@@ -12,7 +12,7 @@ typedef int StmtRef;
 typedef string VarRef;
 typedef string ProcRef;
 
-enum class StmtType { Assign, Print, Call, Read, WhileStmt, IfStmt, Unknown };
+enum class StmtType { Assign, Print, Call, Read, WhileStmt, IfStmt };
 
 typedef struct StmtInfo {
     StmtRef reference;

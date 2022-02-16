@@ -16,15 +16,16 @@ unique_ptr<SP::Node::AssignmentNode> SP::Node::AssignmentNode::parseAssignmentSt
 	return make_unique<AssignmentNode>(statement_count++, move(variable), move(expression));
 }
 
-StmtInfo SP::Node::AssignmentNode::extract(PKB& pkb) {
+StmtRef SP::Node::AssignmentNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Assign);
-	// TODO: Set arithmetic expression for pattern matching
+	VarRef lhs = assignee->extract();
+	pkb.setModifies(stmt_ref, lhs);
 	Common::ExpressionProcessor::Expression rhs = expression->extract();
-	pkb.setModifies(stmt_ref, assignee->extract());
-	unordered_set<VarRef> variables = rhs.getVariables();
-	pkb.setUses(stmt_ref, std::move(variables));
-	return {stmt_ref, StmtType::Assign};
+	pkb.setConstant(rhs.getConstants());
+	pkb.setUses(stmt_ref, rhs.getVariables());
+	pkb.setAssign(stmt_ref, lhs, rhs);
+	return stmt_ref;
 }
 
 bool SP::Node::AssignmentNode::equals(const shared_ptr<StatementNode>& object) {

@@ -15,7 +15,7 @@ class SP::Node::ProcedureNode {
 public:
 	ProcedureNode(string name, unique_ptr<StatementListNode> stmtLst, StmtRef start, StmtRef end);
 	static unique_ptr<ProcedureNode> parseProcedure(Lexer& lex, int& statement_count);
-	bool extract(PKB& pkb);
+	void extract(PKB& pkb);
 	bool equals(const shared_ptr<ProcedureNode>& object);
 
 private:

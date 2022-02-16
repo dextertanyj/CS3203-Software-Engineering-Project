@@ -4,11 +4,11 @@ using namespace std;
 
 SP::Node::PrintNode::PrintNode(StmtRef stmtNo, unique_ptr<VariableNode> variable) : StatementNode(stmtNo), variable(move(variable)) {}
 
-StmtInfo SP::Node::PrintNode::extract(PKB &pkb) {
+StmtRef SP::Node::PrintNode::extract(PKB &pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Print);
 	pkb.setUses(stmt_ref, variable->extract());
-	return {stmt_ref, StmtType::Print};
+	return stmt_ref;
 }
 
 bool SP::Node::PrintNode::equals(const shared_ptr<StatementNode>& object) {

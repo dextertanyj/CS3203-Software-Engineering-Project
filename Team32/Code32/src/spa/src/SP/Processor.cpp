@@ -8,7 +8,7 @@ using namespace std;
 
 SP::Processor::Processor(PKB &pkb) : parser(SP::Lexer()), extractor(pkb) {}
 
-bool SP::Processor::process(string source) {
+void SP::Processor::process(string source) {
 	unique_ptr<Node::ProgramNode> ast = parser.parse(std::move(source));
-	return extractor.extract(std::move(ast));
+	extractor.extract(std::move(ast));
 }

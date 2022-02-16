@@ -16,19 +16,17 @@ unique_ptr<SP::Node::WhileNode> SP::Node::WhileNode::parseWhileStatement(Lexer& 
 	return make_unique<WhileNode>(statement_index, move(condition), move(statements));
 }
 
-StmtInfo SP::Node::WhileNode::extract(PKB& pkb) {
+StmtRef SP::Node::WhileNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::WhileStmt);
 	Common::ExpressionProcessor::Expression expression = condExpr->extract();
-	UsageInfo usage = {expression.getVariables(), expression.getConstants()};
-	for (auto iter = usage.variables.begin(); iter != usage.variables.end(); ++iter) {
-		pkb.setUses(stmt_ref, *iter);
-	}
-	StmtInfoList children = stmtLst->extract(pkb);
+	pkb.setConstant(expression.getConstants());
+	pkb.setUses(stmt_ref, expression.getVariables());
+	vector<StmtRef> children = stmtLst->extract(pkb);
 	for (auto iter = children.begin(); iter < children.end(); ++iter) {
-		pkb.setParent(stmt_ref, iter->get()->reference);
+		pkb.setParent(stmt_ref, *iter);
 	}
-	return {stmt_ref, StmtType::WhileStmt};
+	return stmt_ref;
 }
 
 bool SP::Node::WhileNode::equals(const shared_ptr<StatementNode>& object) {

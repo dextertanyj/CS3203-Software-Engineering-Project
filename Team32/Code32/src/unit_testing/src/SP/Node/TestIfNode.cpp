@@ -189,8 +189,6 @@ TEST_CASE("IfNode::extract Test") {
 	unique_ptr<StatementListNode> if_clause = createStatementList("read x; print y; }", 2);
 	unique_ptr<StatementListNode> then_clause = createStatementList("read x; print y; }", 4);
 	IfNode node = IfNode(1, std::move(condition), std::move(if_clause), std::move(then_clause));
-	StmtInfo result = node.extract(pkb);
-	StmtInfo expected = {1, StmtType::IfStmt};
-	REQUIRE_EQUALS(result.reference, expected.reference);
-	REQUIRE_EQUALS(result.type, expected.type);
+	StmtRef result = node.extract(pkb);
+	REQUIRE_EQUALS(result, 1);
 }

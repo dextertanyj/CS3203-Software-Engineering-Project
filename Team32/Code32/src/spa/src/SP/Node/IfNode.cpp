@@ -24,23 +24,21 @@ unique_ptr<SP::Node::IfNode> SP::Node::IfNode::parseIfStatement(Lexer& lex, int&
 	return make_unique<IfNode>(statement_index, move(condition), move(then_statements), move(else_statements));
 }
 
-StmtInfo SP::Node::IfNode::extract(PKB& pkb) {
+StmtRef SP::Node::IfNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::IfStmt);
-	StmtInfoList then_children = ifStmtLst->extract(pkb);
-	StmtInfoList else_children = elseStmtLst->extract(pkb);
+	Common::ExpressionProcessor::Expression expression = condExpr->extract();
+	pkb.setConstant(expression.getConstants());
+	pkb.setUses(stmt_ref, expression.getVariables());
+	vector<StmtRef> then_children = ifStmtLst->extract(pkb);
+	vector<StmtRef> else_children = elseStmtLst->extract(pkb);
 	for (auto iter = then_children.begin(); iter < then_children.end(); ++iter) {
-		pkb.setParent(stmt_ref, iter->get()->reference);
+		pkb.setParent(stmt_ref, *iter);
 	}
 	for (auto iter = else_children.begin(); iter < else_children.end(); ++iter) {
-		pkb.setParent(stmt_ref, iter->get()->reference);
+		pkb.setParent(stmt_ref, *iter);
 	}
-	Common::ExpressionProcessor::Expression expression = condExpr->extract();
-	UsageInfo usage = {expression.getVariables(), expression.getConstants()};
-	for (auto iter = usage.variables.begin(); iter != usage.variables.end(); ++iter) {
-		pkb.setUses(stmt_ref, *iter);
-	}
-	return {stmt_ref, StmtType::IfStmt};
+	return stmt_ref;
 }
 
 
