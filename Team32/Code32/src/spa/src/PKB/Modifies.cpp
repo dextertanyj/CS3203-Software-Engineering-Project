@@ -38,7 +38,7 @@ bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtI
 	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& x) { return x == variable; }));
 }
 
-void Modifies::optimize(StatementStore& statement_store, StatementRelationStore<ParentPKB>& parent_store,
+void Modifies::optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
                         SVRelationStore<Modifies>& store) {
 	for (const auto& statement : statement_store.getAll()) {
 		if (statement->type == StmtType::IfStmt || statement->type == StmtType::WhileStmt) {

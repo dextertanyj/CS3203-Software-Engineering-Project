@@ -1,11 +1,11 @@
-#include "PKB/ParentPKB.h"
+#include "PKB/ParentRelation.h"
 
 #include <stdexcept>
 #include <utility>
 
-ParentPKB::ParentPKB(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
+ParentRelation::ParentRelation(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
 
-void ParentPKB::insertForward(shared_ptr<StmtInfo> parent) {
+void ParentRelation::insertForward(shared_ptr<StmtInfo> parent) {
 	if (self->reference <= parent->reference) {
 		throw invalid_argument("Statement out of order");
 	}
@@ -15,14 +15,14 @@ void ParentPKB::insertForward(shared_ptr<StmtInfo> parent) {
 	this->parent = parent;
 }
 
-void ParentPKB::insertReverse(const shared_ptr<StmtInfo>& child) {
+void ParentRelation::insertReverse(const shared_ptr<StmtInfo>& child) {
 	if (self->reference >= child->reference) {
 		throw invalid_argument("Statement out of order");
 	}
 	this->children.insert(child);
 }
 
-void ParentPKB::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> parents) {
+void ParentRelation::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> parents) {
 	for (const auto& parent : parents) {
 		if (self->reference <= parent->reference) {
 			throw invalid_argument("Statement out of order");
@@ -31,7 +31,7 @@ void ParentPKB::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> pare
 	this->parent_transitive.insert(parents.begin(), parents.end());
 }
 
-void ParentPKB::appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> children) {
+void ParentRelation::appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> children) {
 	for (const auto& child : children) {
 		if (self->reference >= child->reference) {
 			throw invalid_argument("Statement out of order");
@@ -40,28 +40,29 @@ void ParentPKB::appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> chil
 	this->children_transitive.insert(children.begin(), children.end());
 }
 
-unordered_set<shared_ptr<StmtInfo>> ParentPKB::getForward() {
+unordered_set<shared_ptr<StmtInfo>> ParentRelation::getForward() {
 	if (parent == nullptr) {
 		return {};
 	}
 	return {parent};
 }
 
-unordered_set<shared_ptr<StmtInfo>> ParentPKB::getReverse() { return children; }
+unordered_set<shared_ptr<StmtInfo>> ParentRelation::getReverse() { return children; }
 
-unordered_set<shared_ptr<StmtInfo>> ParentPKB::getForwardTransitive() { return parent_transitive; }
+unordered_set<shared_ptr<StmtInfo>> ParentRelation::getForwardTransitive() { return parent_transitive; }
 
-unordered_set<shared_ptr<StmtInfo>> ParentPKB::getReverseTransitive() { return children_transitive; }
+unordered_set<shared_ptr<StmtInfo>> ParentRelation::getReverseTransitive() { return children_transitive; }
 
-void ParentPKB::optimize(StatementRelationStore<ParentPKB>& store) {
+void ParentRelation::optimize(StatementRelationStore<ParentRelation>& store) {
 	for (auto& item : store.map) {
 		if (item.second.parent == nullptr) {
-			ParentPKB::populateTransitive(store, item.second, {});
+			ParentRelation::populateTransitive(store, item.second, {});
 		}
 	}
 }
 
-unordered_set<shared_ptr<StmtInfo>> ParentPKB::populateTransitive(StatementRelationStore<ParentPKB>& store, ParentPKB& current,
+unordered_set<shared_ptr<StmtInfo>> ParentRelation::populateTransitive(StatementRelationStore<ParentRelation>& store,
+                                                                       ParentRelation& current,
                                                                   unordered_set<shared_ptr<StmtInfo>> previous) {
 	current.appendForwardTransitive(previous);
 	previous.insert(current.self);

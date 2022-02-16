@@ -1,14 +1,14 @@
-#ifndef SPA_PARENTPKB_H
-#define SPA_PARENTPKB_H
+#ifndef SPA_PARENTRELATION_H
+#define SPA_PARENTRELATION_H
 
 #include <unordered_set>
 
 #include "Common/TypeDefs.h"
 #include "PKB/StatementRelationStore.h"
 
-class ParentPKB {
+class ParentRelation {
 public:
-	explicit ParentPKB(shared_ptr<StmtInfo> self);
+	explicit ParentRelation(shared_ptr<StmtInfo> self);
 	void insertForward(shared_ptr<StmtInfo> parent);
 	void insertReverse(const shared_ptr<StmtInfo>& child);
 	void appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> parents);
@@ -18,7 +18,7 @@ public:
 	unordered_set<shared_ptr<StmtInfo>> getReverse();
 	unordered_set<shared_ptr<StmtInfo>> getForwardTransitive();
 	unordered_set<shared_ptr<StmtInfo>> getReverseTransitive();
-	static void optimize(StatementRelationStore<ParentPKB>& store);
+	static void optimize(StatementRelationStore<ParentRelation>& store);
 
 private:
 	shared_ptr<StmtInfo> self;
@@ -26,8 +26,8 @@ private:
 	unordered_set<shared_ptr<StmtInfo>> children;
 	unordered_set<shared_ptr<StmtInfo>> parent_transitive;
 	unordered_set<shared_ptr<StmtInfo>> children_transitive;
-	static unordered_set<shared_ptr<StmtInfo>> populateTransitive(StatementRelationStore<ParentPKB>& store, ParentPKB& current,
+	static unordered_set<shared_ptr<StmtInfo>> populateTransitive(StatementRelationStore<ParentRelation>& store, ParentRelation& current,
 	                                                              unordered_set<shared_ptr<StmtInfo>> previous);
 };
 
-#endif  // SPA_PARENTPKB_H
+#endif  // SPA_PARENTRELATION_H

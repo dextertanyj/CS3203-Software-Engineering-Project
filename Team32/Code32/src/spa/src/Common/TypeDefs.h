@@ -30,8 +30,8 @@ typedef unordered_set<StmtRef> StmtRefSet;
 enum class MathematicalOperator { Plus, Minus, Times, Divide, Modulo, EQ, NEQ, LT, LTE, GT, GTE, And, Or, Not };
 
 class Modifies;
-class FollowsPKB;
-class ParentPKB;
+class FollowsRelation;
+class ParentRelation;
 class Uses;
 
 #endif

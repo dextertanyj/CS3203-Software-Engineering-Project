@@ -22,8 +22,8 @@ public:
 private:
 	unordered_map<StmtRef, T> map;
 
-	friend class ParentPKB;
-	friend class FollowsPKB;
+	friend class ParentRelation;
+	friend class FollowsRelation;
 };
 
 #endif  // SPA_STATEMENTRELATIONSTORE_H

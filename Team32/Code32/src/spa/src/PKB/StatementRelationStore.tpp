@@ -1,7 +1,7 @@
 #pragma once
 
-#include "PKB/FollowsPKB.h"
-#include "PKB/ParentPKB.h"
+#include "PKB/FollowsRelation.h"
+#include "PKB/ParentRelation.h"
 #include "PKB/StatementRelationStore.h"
 
 using namespace std;
@@ -54,7 +54,7 @@ bool StatementRelationStore<T>::isRelated(StmtRef front, StmtRef back) {
 	if (result.empty()) {
 		return false;
 	}
-	return (*result.begin())->reference == back;
+	return (any_of(result.begin(), result.end(), [back](const shared_ptr<StmtInfo>& ptr) { return ptr->reference == back; }));
 }
 
 template <class T>
