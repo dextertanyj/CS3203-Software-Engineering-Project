@@ -31,7 +31,6 @@ TEST_CASE("PKB::StatementStore::insert Duplicate StmtNo Test") {
 
 TEST_CASE("PKB::StatementStore::insert Invalid StmtNo Test") {
     StatementStore store = StatementStore();
-    REQUIRE_THROWS_AS(store.insert(-1, StmtType::Assign), std::exception);
     REQUIRE_THROWS_AS(store.insert(0, StmtType::Assign), std::exception);
     REQUIRE_EQUALS(store.getAll().size(), 0);
 }
@@ -48,7 +47,6 @@ TEST_CASE("PKB::StatementStore::get Success Test") {
 TEST_CASE("PKB::StatementStore::get Invalid StmtNo Test") {
     StatementStore store = StatementStore();
     REQUIRE_THROWS_AS(store.get(0), std::exception);
-    REQUIRE_THROWS_AS(store.get(-1), std::exception);
 }
 
 TEST_CASE("PKB::StatementStore::getAll Test") {

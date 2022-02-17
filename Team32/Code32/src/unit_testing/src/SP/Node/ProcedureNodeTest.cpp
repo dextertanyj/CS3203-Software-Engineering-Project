@@ -55,7 +55,7 @@ TEST_CASE("SP::Node::ProcedureNode::equals") {
 
 TEST_CASE("SP::Node::ProcedureNode::parseProcedure") {
     SP::Lexer lex;
-    int statement_count = 1;
+    StmtRef statement_count = 1;
 
     SECTION("Valid Token Test") {
         lex.initialize("procedure testName { count = 0; }");

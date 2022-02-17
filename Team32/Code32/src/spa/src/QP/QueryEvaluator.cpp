@@ -105,7 +105,7 @@ QueryResult QueryEvaluator::executeNoClauses(Declaration select) {
 		return result;
 	}
 	case DesignEntity::constant: {
-		unordered_set<int> constants = pkb.getConstants();
+		unordered_set<ConstVal> constants = pkb.getConstants();
 		QueryResult result = QueryResult();
 		
 		vector<string> resultString;

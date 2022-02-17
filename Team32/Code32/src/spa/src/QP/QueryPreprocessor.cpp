@@ -32,7 +32,7 @@ void QueryPreprocessor::tokenizeQuery(string query) {
 	/*Check to make sure that there are no spaces between Parent|Follows and *.
 	  If so, combine the tokens into Parent* or Follows* */ 
 	auto words_end = sregex_iterator();
-	int prev_pos = 0;
+	size_t prev_pos = 0;
 	for (sregex_iterator i = words_begin; i != words_end; ++i) {
 		smatch match = *i;
 		if (

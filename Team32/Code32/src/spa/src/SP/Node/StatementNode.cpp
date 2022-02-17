@@ -11,7 +11,7 @@
 
 SP::Node::StatementNode::StatementNode(StmtRef stmtNo) : stmtNo(stmtNo) {}
 
-unique_ptr<SP::Node::StatementNode> SP::Node::StatementNode::parseStatement(Lexer& lex, int& statement_count) {
+unique_ptr<SP::Node::StatementNode> SP::Node::StatementNode::parseStatement(Lexer& lex, StmtRef& statement_count) {
 	string token = lex.readToken();
 	string lookahead = lex.peekToken();
 	if (lookahead == "=") {

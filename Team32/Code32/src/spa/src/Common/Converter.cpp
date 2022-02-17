@@ -52,12 +52,12 @@ MathematicalOperator Common::Converter::convertMathematical(const string& op) {
 	throw ConversionException("Expected mathematical symbol, got " + op + " instead");
 }
 
-int Common::Converter::convertInteger(const string& integer) {
+ConstVal Common::Converter::convertInteger(const string& integer) {
 	if (!Common::Validator::validateInteger(integer)) {
 		throw ConversionException("Invalid argument");
 	}
 	try {
-		return stoi(integer);
+		return stoull(integer);
 	} catch (invalid_argument&) {
 		throw ConversionException("Invalid argument");
 	} catch (out_of_range&) {

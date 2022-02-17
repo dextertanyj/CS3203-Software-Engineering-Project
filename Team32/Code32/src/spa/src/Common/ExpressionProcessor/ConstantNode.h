@@ -7,6 +7,7 @@
 #include "Common/ExpressionProcessor/AtomicNode.h"
 #include "Common/ExpressionProcessor/ExpressionNode.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
+#include "Common/TypeDefs.h"
 
 using namespace std;
 
@@ -17,7 +18,7 @@ public:
 	bool contains(shared_ptr<ExpressionNode> object) override;
 
 private:
-	int value;
+	ConstVal value;
 };
 
 #endif  // SPA_CONSTANTNODE_H

@@ -14,7 +14,7 @@ public:
 	CallNode(StmtRef stmtNo, ProcRef procedure);
 	StmtRef extract(PKB& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
-	static unique_ptr<CallNode> parseCallStatement(Lexer& lex, int& statement_count);
+	static unique_ptr<CallNode> parseCallStatement(Lexer& lex, StmtRef& statement_count);
 
 private:
 	ProcRef procedure;

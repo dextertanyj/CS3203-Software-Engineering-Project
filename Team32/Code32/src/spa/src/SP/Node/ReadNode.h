@@ -14,7 +14,7 @@ public:
 	ReadNode(StmtRef stmtNo, unique_ptr<VariableNode> variable);
 	StmtRef extract(PKB& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
-	static unique_ptr<ReadNode> parseReadStatement(Lexer& lex, int& statement_count);
+	static unique_ptr<ReadNode> parseReadStatement(Lexer& lex, StmtRef& statement_count);
 
 private:
 	shared_ptr<VariableNode> variable;

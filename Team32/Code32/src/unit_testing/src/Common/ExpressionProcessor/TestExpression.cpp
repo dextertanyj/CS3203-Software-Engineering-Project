@@ -27,7 +27,7 @@ TEST_CASE("Common::ExpressionProcessor::Expression::parse Arithmetic Basic Test"
 	Expression expression = Expression::parse(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
 	shared_ptr<ExpressionNode> root = arithmetic(MathematicalOperator::Plus, constant("1"), constant("2"));
 	unordered_set<VarRef> variables = unordered_set<VarRef>();
-	unordered_set<int> constants = unordered_set<int>({1, 2});
+	unordered_set<ConstVal> constants = unordered_set<ConstVal>({1, 2});
 	Expression expected = Expression(root, variables, constants);
 	REQUIRE(expression.equals(expected));
 	REQUIRE_EQUALS(expression.getConstants(), constants);
@@ -39,7 +39,7 @@ TEST_CASE("Common::ExpressionProcessor::Expression::parse Arithmetic Bracketing 
 	Expression expression = Expression::parse(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
 	shared_ptr<ExpressionNode> root = constant("1");
 	unordered_set<VarRef> variables = unordered_set<VarRef>();
-	unordered_set<int> constants = unordered_set<int>({1});
+	unordered_set<ConstVal> constants = unordered_set<ConstVal>({1});
 	Expression expected = Expression(root, variables, constants);
 	REQUIRE(expression.equals(expected));
 	REQUIRE_EQUALS(expression.getConstants(), constants);
@@ -55,7 +55,7 @@ TEST_CASE("Common::ExpressionProcessor::Expression::parse Arithmetic Precedence 
 	shared_ptr<ArithmeticNode> divide = arithmetic(MathematicalOperator::Divide, constant("2"), constant("3"));
 	shared_ptr<ExpressionNode> root = arithmetic(MathematicalOperator::Plus, times, divide);
 	unordered_set<VarRef> variables = unordered_set<VarRef>({"A", "B"});
-	unordered_set<int> constants = unordered_set<int>({1, 2, 3});
+	unordered_set<ConstVal> constants = unordered_set<ConstVal>({1, 2, 3});
 	Expression expected = Expression(root, variables, constants);
 	REQUIRE(expression.equals(expected));
 	REQUIRE_EQUALS(expression.getConstants(), constants);
@@ -68,7 +68,7 @@ TEST_CASE("Common::ExpressionProcessor::Expression::parse Relational Basic Test"
 	Expression expression = Expression::parse(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptLogical);
 	shared_ptr<ExpressionNode> root = relational(MathematicalOperator::LT, constant("1"), constant("2"));
 	unordered_set<VarRef> variables = unordered_set<VarRef>();
-	unordered_set<int> constants = unordered_set<int>({1, 2});
+	unordered_set<ConstVal> constants = unordered_set<ConstVal>({1, 2});
 	Expression expected = Expression(root, variables, constants);
 	REQUIRE(expression.equals(expected));
 	REQUIRE_EQUALS(expression.getConstants(), constants);
@@ -83,7 +83,7 @@ TEST_CASE("Common::ExpressionProcessor::Expression::parse Relational Complex Tes
 	shared_ptr<ArithmeticNode> times = arithmetic(MathematicalOperator::Times, bracketed, constant("3"));
 	shared_ptr<ExpressionNode> root = relational(MathematicalOperator::LT, times, constant("2"));
 	unordered_set<VarRef> variables = unordered_set<VarRef>();
-	unordered_set<int> constants = unordered_set<int>({1, 2, 3});
+	unordered_set<ConstVal> constants = unordered_set<ConstVal>({1, 2, 3});
 	Expression expected = Expression(root, variables, constants);
 	REQUIRE(expression.equals(expected));
 	REQUIRE_EQUALS(expression.getConstants(), constants);
@@ -97,7 +97,7 @@ TEST_CASE("Common::ExpressionProcessor::Expression::parse Unary Logical Basic Te
 	shared_ptr<RelationalNode> relation = relational(MathematicalOperator::LT, variable("x"), constant("1"));
 	shared_ptr<LogicalNode> root = unarylogical(MathematicalOperator::Not, relation);
 	unordered_set<VarRef> variables = unordered_set<VarRef>({"x"});
-	unordered_set<int> constants = unordered_set<int>({1});
+	unordered_set<ConstVal> constants = unordered_set<ConstVal>({1});
 	Expression expected = Expression(root, variables, constants);
 	REQUIRE(expression.equals(expected));
 	REQUIRE_EQUALS(expression.getConstants(), constants);
@@ -111,7 +111,7 @@ TEST_CASE("Common::ExpressionProcessor::Expression::parse Binary Logical Basic T
 	shared_ptr<RelationalNode> rhs_relation = relational(MathematicalOperator::NEQ, variable("x"), variable("y"));
 	shared_ptr<LogicalNode> root = binarylogical(MathematicalOperator::Or, lhs_relation, rhs_relation);
 	unordered_set<VarRef> variables = unordered_set<VarRef>({"x", "y"});
-	unordered_set<int> constants = unordered_set<int>({1});
+	unordered_set<ConstVal> constants = unordered_set<ConstVal>({1});
 	Expression expected = Expression(root, variables, constants);
 	REQUIRE(expression.equals(expected));
 	REQUIRE_EQUALS(expression.getConstants(), constants);
@@ -131,7 +131,7 @@ TEST_CASE("Common::ExpressionProcessor::Expression::parse Logical Complex Test")
 	shared_ptr<LogicalNode> rhs = binarylogical(MathematicalOperator::And, less_than_equal, not_node);
 	shared_ptr<LogicalNode> root = binarylogical(MathematicalOperator::Or, lhs, rhs);
 	unordered_set<VarRef> variables = unordered_set<VarRef>();
-	unordered_set<int> constants = unordered_set<int>({1, 2, 3, 4, 5, 6, 7});
+	unordered_set<ConstVal> constants = unordered_set<ConstVal>({1, 2, 3, 4, 5, 6, 7});
 	Expression expected = Expression(root, variables, constants);
 	REQUIRE(expression.equals(expected));
 	REQUIRE_EQUALS(expression.getConstants(), constants);

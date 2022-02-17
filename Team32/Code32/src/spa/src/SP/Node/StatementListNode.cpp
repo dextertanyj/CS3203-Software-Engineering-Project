@@ -6,7 +6,7 @@ SP::Node::StatementListNode::StatementListNode() = default;
 
 void SP::Node::StatementListNode::addStatementNode(unique_ptr<StatementNode> statement) { stmtList.push_back(move(statement)); }
 
-unique_ptr<SP::Node::StatementListNode> SP::Node::StatementListNode::parseStatementList(Lexer& lex, int& statement_count) {
+unique_ptr<SP::Node::StatementListNode> SP::Node::StatementListNode::parseStatementList(Lexer& lex, StmtRef& statement_count) {
 	unique_ptr<StatementListNode> statement_list = make_unique<StatementListNode>();
 	do {
 		statement_list->addStatementNode(StatementNode::parseStatement(lex, statement_count));

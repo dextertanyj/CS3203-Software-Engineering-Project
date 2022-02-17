@@ -19,7 +19,7 @@ bool SP::Node::PrintNode::equals(const shared_ptr<StatementNode>& object) {
 	return other->getStmtRef() == this->getStmtRef() && other->variable->equals(this->variable);
 }
 
-unique_ptr<SP::Node::PrintNode> SP::Node::PrintNode::parsePrintStatement(Lexer &lex, int &statement_count) {
+unique_ptr<SP::Node::PrintNode> SP::Node::PrintNode::parsePrintStatement(Lexer &lex, StmtRef &statement_count) {
 	unique_ptr<VariableNode> variable = VariableNode::parseVariable(lex);
 	lex.nextIf(";");
 	return make_unique<PrintNode>(statement_count++, move(variable));

@@ -18,19 +18,19 @@
 using namespace std;
 using namespace Common::ExpressionProcessor;
 
-Expression::Expression(shared_ptr<ExpressionNode> root, unordered_set<VarRef> variables, unordered_set<int> constants)
+Expression::Expression(shared_ptr<ExpressionNode> root, unordered_set<VarRef> variables, unordered_set<ConstVal> constants)
 	: root(move(root)), variables(move(variables)), constants(move(constants)) {}
 
 Expression Expression::parse(LexerInterface& lex, bool (*acceptor)(string op)) {
 	unordered_set<VarRef> variables;
-	unordered_set<int> constants;
+	unordered_set<ConstVal> constants;
 	shared_ptr<ExpressionNode> lhs = parseTerminalSafe(lex, acceptor, variables, constants);
 	shared_ptr<ExpressionNode> expression = Expression::construct(lex, acceptor, variables, constants, lhs, 0);
 	return Expression(expression, variables, constants);
 }
 
 shared_ptr<ExpressionNode> Expression::construct(LexerInterface& lex, bool (*acceptor)(string op), unordered_set<VarRef>& variables,
-                                                 unordered_set<int>& constants, shared_ptr<ExpressionNode> lhs, int precedence) {
+                                                 unordered_set<ConstVal>& constants, shared_ptr<ExpressionNode> lhs, int precedence) {
 	string lookahead = lex.peekToken();
 	if (!acceptor(lookahead)) {
 		return lhs;
@@ -81,7 +81,7 @@ shared_ptr<ExpressionNode> Expression::construct(LexerInterface& lex, bool (*acc
 }
 
 shared_ptr<ExpressionNode> Expression::parseTerminalSafe(LexerInterface& lex, bool (*acceptor)(string), unordered_set<VarRef>& variables,
-                                                         unordered_set<int>& constants) {
+                                                         unordered_set<ConstVal>& constants) {
 	shared_ptr<ExpressionNode> expression = parseTerminal(lex, acceptor, variables, constants);
 	if (dynamic_pointer_cast<ParenthesesWrapper>(expression) != nullptr) {
 		expression = dynamic_pointer_cast<ParenthesesWrapper>(expression)->getExpression();
@@ -90,7 +90,7 @@ shared_ptr<ExpressionNode> Expression::parseTerminalSafe(LexerInterface& lex, bo
 }
 
 shared_ptr<ExpressionNode> Expression::parseTerminal(LexerInterface& lex, bool (*acceptor)(string op), unordered_set<VarRef>& variables,
-                                                     unordered_set<int>& constants) {
+                                                     unordered_set<ConstVal>& constants) {
 	string token = lex.readToken();
 	if (OperatorAcceptor::acceptUnaryLogical(token)) {
 		if (!acceptor(token)) {
@@ -156,6 +156,6 @@ bool Expression::contains(const Expression& other) { return root->contains(other
 
 bool Expression::equals(const Expression& other) { return root->equals(other.root); }
 
-unordered_set<int> Expression::getConstants() { return constants; }
+unordered_set<ConstVal> Expression::getConstants() { return constants; }
 
 unordered_set<VarRef> Expression::getVariables() { return variables; }

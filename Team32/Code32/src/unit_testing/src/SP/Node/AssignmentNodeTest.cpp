@@ -120,7 +120,7 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
-		REQUIRE_EQUALS(pkb.getConstants(), unordered_set<int>({1}));
+		REQUIRE_EQUALS(pkb.getConstants(), unordered_set<ConstVal>({1}));
 		REQUIRE(pkb.checkModifies(statement_number, "A"));
 		REQUIRE(pkb.patternExists("A", createArithmeticExpression(vector<string>({"1"})), true));
 	}
@@ -147,7 +147,7 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
-		REQUIRE_EQUALS(pkb.getConstants(), unordered_set<int>({1, 2}));
+		REQUIRE_EQUALS(pkb.getConstants(), unordered_set<ConstVal>({1, 2}));
 		REQUIRE(pkb.checkModifies(statement_number, "A"));
 		REQUIRE(pkb.checkUses(statement_number, "B"));
 		REQUIRE(pkb.checkUses(statement_number, "C"));

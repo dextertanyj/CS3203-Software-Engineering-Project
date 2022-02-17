@@ -9,6 +9,7 @@
 #include "SP/Node/Node.h"
 #include "SP/Node/StatementListNode.h"
 #include "SP/Node/StatementNode.h"
+#include "Common/TypeDefs.h"
 
 using namespace std;
 
@@ -16,7 +17,7 @@ class SP::Node::IfNode : public StatementNode {
 public:
 	IfNode(StmtRef stmtNo, unique_ptr<ExpressionNode> condExpr, unique_ptr<StatementListNode> ifStmtLst,
 	       unique_ptr<StatementListNode> elseStmtLst);
-	static unique_ptr<IfNode> parseIfStatement(Lexer& lex, int& statement_count);
+	static unique_ptr<IfNode> parseIfStatement(Lexer& lex, StmtRef& statement_count);
 	StmtRef extract(PKB& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
 

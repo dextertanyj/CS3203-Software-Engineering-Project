@@ -29,11 +29,11 @@ vector<string> ModifiesS::getDeclarationSymbols() {
 
 QueryResult ModifiesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
 	if (stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::varName) {
-		return QueryResult(pkb.checkModifies(stoi(stmt.stmtRef), ent.entRef));
+		return QueryResult(pkb.checkModifies(stoul(stmt.stmtRef), ent.entRef));
 	}
 	else if (stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::underscore ||
 	         stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::synonym) {
-		VarRefSet varSet = pkb.getModifiesByStmt(stoi(stmt.stmtRef));
+		VarRefSet varSet = pkb.getModifiesByStmt(stoul(stmt.stmtRef));
 		return QueryResult(!varSet.empty());
 	}
 	else if (stmt.type == StmtRefType::underscore && ent.type == EntRefType::varName) {
@@ -160,7 +160,7 @@ QueryResult ModifiesS::executeNonTrivial(PKB& pkb, unordered_map<string, DesignE
 		return result;
 	}
 	else if (stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::synonym) {
-		VarRefSet varSet = pkb.getModifiesByStmt(stoi(stmt.stmtRef));
+		VarRefSet varSet = pkb.getModifiesByStmt(stoul(stmt.stmtRef));
 		vector<string> column;
 
 		for (auto const& var : varSet) {

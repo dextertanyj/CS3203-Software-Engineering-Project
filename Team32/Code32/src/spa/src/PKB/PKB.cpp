@@ -10,15 +10,15 @@ PKB::PKB() = default;
 // Source Processor is guaranteed to call this method before storing relationships and variables.
 void PKB::setStmtType(StmtRef idx, StmtType type) { statement_store.insert(idx, type); }
 
-void PKB::setConstant(int value) { constant_store.insert(value); }
+void PKB::setConstant(ConstVal value) { constant_store.insert(value); }
 
-void PKB::setConstant(unordered_set<int> values) { constant_store.insert(values); }
+void PKB::setConstant(unordered_set<ConstVal> values) { constant_store.insert(values); }
 
 StmtInfoPtrSet PKB::getStatements() { return statement_store.getAll(); }
 
 VarRefSet PKB::getVariables() { return variable_store.getAll(); }
 
-unordered_set<int> PKB::getConstants() { return constant_store.getAll(); }
+unordered_set<ConstVal> PKB::getConstants() { return constant_store.getAll(); }
 
 void PKB::setParent(StmtRef parent, StmtRef child) {
 	shared_ptr<StmtInfo> parent_info = statement_store.get(parent);
