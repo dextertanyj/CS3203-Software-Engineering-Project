@@ -22,6 +22,7 @@ class ArithmeticNode;
 class ConstantNode;
 class ParenthesesWrapper;
 class VariableNode;
+enum class ExpressionType { Arithmetic, Relational, Logical };
 }  // namespace Common::ExpressionProcessor
 
 #endif  // SPA_EXPRESSIONPROCESSOR_H

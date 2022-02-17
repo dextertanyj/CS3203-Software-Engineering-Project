@@ -11,7 +11,7 @@ unique_ptr<SP::Node::AssignmentNode> SP::Node::AssignmentNode::parseAssignmentSt
 	unique_ptr<VariableNode> variable = VariableNode::parseVariable(std::move(token));
 	lex.nextIf("=");
 	unique_ptr<ExpressionNode> expression =
-		ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+		ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	lex.nextIf(";");
 	return make_unique<AssignmentNode>(statement_count++, move(variable), move(expression));
 }

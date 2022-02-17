@@ -2,6 +2,19 @@
 
 using namespace std;
 
+Acceptor Common::ExpressionProcessor::OperatorAcceptor::getAcceptor(ExpressionType type) {
+	switch (type) {
+		case ExpressionType::Arithmetic:
+			return Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic;
+		case ExpressionType::Relational:
+			return Common::ExpressionProcessor::OperatorAcceptor::acceptRelational;
+		case ExpressionType::Logical:
+			return Common::ExpressionProcessor::OperatorAcceptor::acceptLogical;
+		default:
+			throw ExpressionProcessorException("Unknown expression type received");
+	}
+}
+
 bool Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic(string op) {
 	return op == "+" || op == "-" || op == "*" || op == "/" || op == "%";
 }

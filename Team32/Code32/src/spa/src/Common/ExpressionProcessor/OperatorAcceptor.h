@@ -4,10 +4,14 @@
 #include <string>
 
 #include "Common/TypeDefs.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 
 using namespace std;
 
+typedef bool (*Acceptor)(string op);
+
 namespace Common::ExpressionProcessor::OperatorAcceptor {
+Acceptor getAcceptor(ExpressionType type);
 bool acceptArithmetic(string op);
 bool acceptArithmetic(MathematicalOperator op);
 bool acceptRelational(string op);

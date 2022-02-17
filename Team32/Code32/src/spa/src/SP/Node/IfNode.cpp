@@ -11,7 +11,7 @@ SP::Node::IfNode::IfNode(StmtRef stmtNo, unique_ptr<ExpressionNode> condExpr, un
 unique_ptr<SP::Node::IfNode> SP::Node::IfNode::parseIfStatement(Lexer& lex, StmtRef& statement_count) {
 	StmtRef statement_index = statement_count++;
 	lex.nextIf("(");
-	unique_ptr<ExpressionNode> condition = ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptLogical);
+	unique_ptr<ExpressionNode> condition = ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Logical);
 	lex.nextIf(")");
 	lex.nextIf("then");
 	lex.nextIf("{");

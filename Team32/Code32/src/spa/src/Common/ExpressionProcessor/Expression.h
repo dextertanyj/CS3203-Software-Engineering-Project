@@ -7,6 +7,7 @@
 
 #include "Common/ExpressionProcessor/ExpressionNode.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
+#include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "Common/ExpressionProcessor/LexerInterface.h"
 #include "Common/TypeDefs.h"
 
@@ -14,7 +15,7 @@ using namespace std;
 
 class Common::ExpressionProcessor::Expression {
 public:
-	static Expression parse(LexerInterface& lex, bool (*acceptor)(string op));
+	static Expression parse(LexerInterface& lex, ExpressionType type);
 	Expression(shared_ptr<ExpressionNode> root, unordered_set<VarRef> variables, unordered_set<ConstVal> constants);
 	bool equals(const Expression& other);
 	bool contains(const Expression& other);
@@ -27,12 +28,13 @@ private:
 	unordered_set<VarRef> variables;
 	unordered_set<ConstVal> constants;
 
-	static shared_ptr<ExpressionNode> construct(LexerInterface& lex, bool (*acceptor)(string op), unordered_set<VarRef>& variables,
+	static shared_ptr<ExpressionNode> construct(LexerInterface& lex, Acceptor acceptor, unordered_set<VarRef>& variables,
 	                                            unordered_set<ConstVal>& constants, shared_ptr<ExpressionNode> lhs, int precedence);
-	static shared_ptr<ExpressionNode> parseTerminal(LexerInterface& lex, bool (*acceptor)(string op), unordered_set<VarRef>& variables,
+	static shared_ptr<ExpressionNode> parseTerminal(LexerInterface& lex, Acceptor acceptor, unordered_set<VarRef>& variables,
 	                                                unordered_set<ConstVal>& constants);
-	static shared_ptr<ExpressionNode> parseTerminalSafe(LexerInterface& lex, bool (*acceptor)(string op), unordered_set<VarRef>& variables,
+	static shared_ptr<ExpressionNode> parseTerminalSafe(LexerInterface& lex, Acceptor acceptor, unordered_set<VarRef>& variables,
 	                                                    unordered_set<ConstVal>& constants);
+	static bool checkExpressionType(const shared_ptr<ExpressionNode>& expression, ExpressionType type);
 	static int getPrecedence(MathematicalOperator op);
 };
 

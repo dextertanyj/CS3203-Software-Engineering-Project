@@ -116,7 +116,7 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		lex.initialize("1;");
 		StmtRef statement_number = 1;
 		unique_ptr<ExpressionNode> expression =
-			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
@@ -129,7 +129,7 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		lex.initialize("B;");
 		StmtRef statement_number = 2;
 		unique_ptr<ExpressionNode> expression =
-			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
@@ -143,7 +143,7 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		lex.initialize("1 + B * 2 / C;");
 		StmtRef statement_number = 3;
 		unique_ptr<ExpressionNode> expression =
-			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);

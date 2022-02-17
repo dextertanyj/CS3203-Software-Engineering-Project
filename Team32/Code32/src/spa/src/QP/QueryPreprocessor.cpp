@@ -479,7 +479,7 @@ Common::ExpressionProcessor::Expression QueryPreprocessor::parseExpression(int& 
 		tokenIndex++;
 	}
 	QueryExpressionLexer lexer = QueryExpressionLexer(expression);
-	Common::ExpressionProcessor::Expression arithmeticExpression = Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	Common::ExpressionProcessor::Expression arithmeticExpression = Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	if (!lexer.readToken().empty()) {
 		throw QueryException("Incomplete expression parsing likely implies incorrect expression");
 	}

@@ -80,7 +80,7 @@ TEST_CASE("SP::Node::IfNode::parseIfStatement") {
     SP::Lexer lex;
 
     SECTION("Valid Token Test") {
-        lex.initialize("(( x > 0 )) then { read y; } else { x = 10; }");
+        lex.initialize("( x > 0 ) then { read y; } else { x = 10; }");
         unique_ptr<IfNode> node = IfNode::parseIfStatement(lex, statement_count);
         unique_ptr<ExpressionNode> cond_expr = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", ">", "0" ,")"})));
         unique_ptr<StatementListNode> if_stmt_lst = createStatementList("read y; }", 2);
