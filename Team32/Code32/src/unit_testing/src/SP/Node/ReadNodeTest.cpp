@@ -59,6 +59,12 @@ TEST_CASE("SP::Node::ReadNode::parseReadStatement") {
         REQUIRE_EQUALS(statement_count, 1);
     }
 
+    SECTION("Invalid Variable Name Test") {
+        lex.initialize("1x;");
+        REQUIRE_THROWS_AS(ReadNode::parseReadStatement(lex, statement_count), SP::ParseException);
+        REQUIRE_EQUALS(statement_count, 1);
+    }
+
     SECTION("Missing Variable Test") {
         lex.initialize(" ");
         REQUIRE_THROWS_AS(ReadNode::parseReadStatement(lex, statement_count), SP::ParseException);
