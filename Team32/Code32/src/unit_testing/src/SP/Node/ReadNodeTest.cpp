@@ -76,10 +76,12 @@ TEST_CASE("SP::Node::ReadNode::parseReadStatement") {
     }
 }
 
-TEST_CASE("ReadNode::extract Test") {
+TEST_CASE("SP::Node::ReadNode::extract Test") {
 	PKB pkb;
-	ReadNode node = ReadNode(1, make_unique<VariableNode>("A"));
+	StmtRef statement_number = 2;
+	ReadNode node = ReadNode(statement_number, make_unique<VariableNode>("A"));
 	StmtRef result = node.extract(pkb);
-	StmtInfo expected = {1, StmtType::Read};
-	REQUIRE_EQUALS(result, 1);
+	REQUIRE_EQUALS(result, statement_number);
+	REQUIRE(pkb.checkModifies(statement_number, "A"));
+	REQUIRE_FALSE(pkb.checkUses(statement_number, "A"));
 }

@@ -108,12 +108,49 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement") {
     }
 }
 
-TEST_CASE("AssignmentNode::extract Test") {
+TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 	SP::Lexer lex;
 	PKB pkb;
-	lex.initialize("1;");
-	unique_ptr<ExpressionNode> expression = ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
-	AssignmentNode node = AssignmentNode(1, make_unique<VariableNode>("A"), std::move(expression));
-	StmtRef result = node.extract(pkb);
-	REQUIRE_EQUALS(result, 1);
+
+	SECTION("Single constant assignment") {
+		lex.initialize("1;");
+		StmtRef statement_number = 1;
+		unique_ptr<ExpressionNode> expression =
+			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
+		StmtRef result = node.extract(pkb);
+		REQUIRE_EQUALS(result, statement_number);
+		REQUIRE_EQUALS(pkb.getConstants(), unordered_set<int>({1}));
+		REQUIRE(pkb.checkModifies(statement_number, "A"));
+		REQUIRE(pkb.patternExists("A", createArithmeticExpression(vector<string>({"1"})), true));
+	}
+
+	SECTION("Single variable assignment") {
+		lex.initialize("B;");
+		StmtRef statement_number = 2;
+		unique_ptr<ExpressionNode> expression =
+			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
+		StmtRef result = node.extract(pkb);
+		REQUIRE_EQUALS(result, statement_number);
+		REQUIRE(pkb.getConstants().empty());
+		REQUIRE(pkb.checkModifies(statement_number, "A"));
+		REQUIRE(pkb.checkUses(statement_number, "B"));
+		REQUIRE(pkb.patternExists("A", createArithmeticExpression(vector<string>({"B"})), true));
+	}
+
+	SECTION("Multiple terminal assignment") {
+		lex.initialize("1 + B * 2 / C;");
+		StmtRef statement_number = 3;
+		unique_ptr<ExpressionNode> expression =
+			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
+		StmtRef result = node.extract(pkb);
+		REQUIRE_EQUALS(result, statement_number);
+		REQUIRE_EQUALS(pkb.getConstants(), unordered_set<int>({1, 2}));
+		REQUIRE(pkb.checkModifies(statement_number, "A"));
+		REQUIRE(pkb.checkUses(statement_number, "B"));
+		REQUIRE(pkb.checkUses(statement_number, "C"));
+		REQUIRE(pkb.patternExists("A", createArithmeticExpression(vector<string>({"1", "+", "B", "*", "2", "/", "C"})), true));
+	}
 }

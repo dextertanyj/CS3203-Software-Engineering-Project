@@ -79,9 +79,9 @@ TEST_CASE("SP::Node::VariableNode::parseVariable") {
     }
 }
 
-TEST_CASE("VariableNode::extract Test") {
-	VariableNode node = VariableNode("A");
+TEST_CASE("SP::Node::VariableNode::extract Test") {
+	VarRef name = "Name";
+	VariableNode node = VariableNode(name);
 	VarRef result = node.extract();
-	VarRef expected = "A";
-	REQUIRE_EQUALS(result, expected);
+	REQUIRE_EQUALS(result, name);
 }

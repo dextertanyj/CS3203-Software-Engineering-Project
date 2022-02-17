@@ -2,6 +2,8 @@
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/IfNode.h"
+#include "SP/Node/ReadNode.h"
+#include "SP/Node/PrintNode.h"
 #include "../Node/MockUtilities.h"
 
 #include "catch_tools.h"
@@ -154,12 +156,68 @@ TEST_CASE("SP::Node::IfNode::parseIfStatement") {
     }
 }
 
-TEST_CASE("IfNode::extract Test") {
+TEST_CASE("SP::Node::IfNode::extract Test") {
 	PKB pkb;
-	unique_ptr<ExpressionNode> condition = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "<", "y" ,")"})));
-	unique_ptr<StatementListNode> if_clause = createStatementList("read x; print y; }", 2);
-	unique_ptr<StatementListNode> then_clause = createStatementList("read x; print y; }", 4);
-	IfNode node = IfNode(1, std::move(condition), std::move(if_clause), std::move(then_clause));
-	StmtRef result = node.extract(pkb);
-	REQUIRE_EQUALS(result, 1);
+
+	SECTION("Single enclosed statement") {
+		StmtRef statement_number = 2;
+		StmtRef then_statement = 3;
+		StmtRef else_statement = 8;
+		unique_ptr<ExpressionNode> condition =
+			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "<", "0"})));
+		unique_ptr<StatementListNode> then_body = make_unique<StatementListNode>();
+		then_body->addStatementNode(make_unique<CallNode>(then_statement, "Procedure"));
+		unique_ptr<StatementListNode> else_body = make_unique<StatementListNode>();
+		else_body->addStatementNode(make_unique<ReadNode>(else_statement, make_unique<VariableNode>("A")));
+		IfNode node = IfNode(statement_number, std::move(condition), std::move(then_body), std::move(else_body));
+		StmtRef result = node.extract(pkb);
+		REQUIRE_EQUALS(result, statement_number);
+
+		REQUIRE(pkb.checkParents(statement_number, then_statement));
+		REQUIRE(pkb.checkParents(statement_number, else_statement));
+		REQUIRE_FALSE(pkb.checkParents(then_statement, else_statement));
+
+		REQUIRE_FALSE(pkb.checkFollows(then_statement, then_statement));
+		REQUIRE_FALSE(pkb.checkFollows(statement_number, then_statement));
+		REQUIRE_FALSE(pkb.checkFollows(statement_number, else_statement));
+	}
+
+	SECTION("Multiple enclosed statements") {
+		StmtRef statement_number = 2;
+		StmtRef first_then_statement = 3;
+		StmtRef second_then_statement = 5;
+		StmtRef third_then_statement = 8;
+		StmtRef first_else_statement = 10;
+		StmtRef second_else_statement = 13;
+		StmtRef third_else_statement = 16;
+		unique_ptr<ExpressionNode> condition =
+			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "<", "0"})));
+		unique_ptr<StatementListNode> then_body = make_unique<StatementListNode>();
+		then_body->addStatementNode(make_unique<CallNode>(first_then_statement, "Procedure"));
+		then_body->addStatementNode(make_unique<ReadNode>(second_then_statement, make_unique<VariableNode>("A")));
+		then_body->addStatementNode(make_unique<PrintNode>(third_then_statement, make_unique<VariableNode>("B")));
+		unique_ptr<StatementListNode> else_body = make_unique<StatementListNode>();
+		else_body->addStatementNode(make_unique<CallNode>(first_else_statement, "Other"));
+		else_body->addStatementNode(make_unique<ReadNode>(second_else_statement, make_unique<VariableNode>("Y")));
+		else_body->addStatementNode(make_unique<PrintNode>(third_else_statement, make_unique<VariableNode>("Z")));
+		IfNode node = IfNode(statement_number, std::move(condition), std::move(then_body), std::move(else_body));
+		StmtRef result = node.extract(pkb);
+		REQUIRE_EQUALS(result, statement_number);
+
+		REQUIRE(pkb.checkParents(statement_number, first_then_statement));
+		REQUIRE(pkb.checkParents(statement_number, second_then_statement));
+		REQUIRE(pkb.checkParents(statement_number, third_then_statement));
+		REQUIRE(pkb.checkParents(statement_number, first_else_statement));
+		REQUIRE(pkb.checkParents(statement_number, second_else_statement));
+		REQUIRE(pkb.checkParents(statement_number, third_else_statement));
+		REQUIRE_FALSE(pkb.checkParents(third_then_statement, first_else_statement));
+		REQUIRE_FALSE(pkb.checkParents(third_else_statement, first_then_statement));
+
+		REQUIRE(pkb.checkFollows(first_then_statement, second_then_statement));
+		REQUIRE(pkb.checkFollows(second_then_statement, third_then_statement));
+		REQUIRE(pkb.checkFollows(first_else_statement, second_else_statement));
+		REQUIRE(pkb.checkFollows(second_else_statement, third_else_statement));
+		REQUIRE_FALSE(pkb.checkFollows(third_then_statement, first_else_statement));
+		REQUIRE_FALSE(pkb.checkFollows(third_else_statement, first_then_statement));
+	}
 }

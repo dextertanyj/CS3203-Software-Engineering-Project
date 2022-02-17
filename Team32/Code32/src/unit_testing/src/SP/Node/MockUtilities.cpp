@@ -13,6 +13,13 @@ Common::ExpressionProcessor::Expression createArithmeticExpression(vector<string
     return expression;
 }
 
+Common::ExpressionProcessor::Expression createRelationalExpression(vector<string> str_list) {
+	MockLexer lex = MockLexer(move(str_list));
+	Common::ExpressionProcessor::Expression expression =
+		Common::ExpressionProcessor::Expression::parse(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptRelational);
+	return expression;
+}
+
 Common::ExpressionProcessor::Expression createConditionalExpression(vector<string> str_list) {
 	MockLexer lex = MockLexer(move(str_list));
 	Common::ExpressionProcessor::Expression expression =
