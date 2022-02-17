@@ -10,119 +10,100 @@
 using namespace std;
 using namespace SP::Node;
 
-TEST_CASE("SP::Node::WhileNode::equals Same Object Test") {
-	unique_ptr<ExpressionNode> cond_expr = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0" ,")"})));
-	unique_ptr<StatementListNode> stmt_lst = createStatementList("print flag; call x; }", 2);
-	shared_ptr<WhileNode> node = make_shared<WhileNode>(1, move(cond_expr), move(stmt_lst));
-	REQUIRE(node->equals(node));
+TEST_CASE("SP::Node::WhileNode::equals") {
+    string stmt_1 = "print flag; call x; }";
+    string stmt_2 = "cenX = 0; read x; }";
+    unique_ptr<ExpressionNode> cond_expr = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0" ,")"})));
+    unique_ptr<StatementListNode> stmt_lst = createStatementList(stmt_1, 2);
+    shared_ptr<WhileNode> node = make_shared<WhileNode>(1, move(cond_expr), move(stmt_lst));
+
+    SECTION("Same Object Test") {
+        REQUIRE(node->equals(node));
+    }
+
+    SECTION("Same Node Test") {
+        unique_ptr<ExpressionNode> cond_expr_2 = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0" ,")"})));
+        unique_ptr<StatementListNode> stmt_lst_2 = createStatementList(stmt_1, 2);
+        shared_ptr<WhileNode> other = make_shared<WhileNode>(1, move(cond_expr_2), move(stmt_lst_2));
+        REQUIRE(node->equals(other));
+    }
+
+    SECTION("Different StmtNo Test") {
+        unique_ptr<ExpressionNode> cond_expr_2 = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0" ,")"})));
+        unique_ptr<StatementListNode> stmt_lst_2 = createStatementList(stmt_1, 2);
+        shared_ptr<WhileNode> other = make_shared<WhileNode>(6, move(cond_expr_2), move(stmt_lst_2));
+        REQUIRE_FALSE(node->equals(other));
+    }
+
+    SECTION("Different CondExpr Test") {
+        unique_ptr<ExpressionNode> cond_expr_2 = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "==", "0" ,")"})));
+        unique_ptr<StatementListNode> stmt_lst_2 = createStatementList(stmt_1, 2);
+        shared_ptr<WhileNode> other = make_shared<WhileNode>(1, move(cond_expr_2), move(stmt_lst_2));
+        REQUIRE_FALSE(node->equals(other));
+    }
+
+    SECTION("Different StmtLst Test") {
+        unique_ptr<ExpressionNode> cond_expr_2 = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0" ,")"})));
+        unique_ptr<StatementListNode> stmt_lst_2 = createStatementList(stmt_2, 2);
+        shared_ptr<WhileNode> other = make_shared<WhileNode>(1, move(cond_expr_2), move(stmt_lst_2));
+        REQUIRE_FALSE(node->equals(other));
+    }
+
+    SECTION("Different Node Type Test") {
+        shared_ptr<CallNode> other = make_shared<CallNode>(1, "test");
+        REQUIRE_FALSE(node->equals(move(other)));
+    }
 }
 
-TEST_CASE("SP::Node::WhileNode::equals Same Node Test") {
-	unique_ptr<ExpressionNode> cond_expr = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0" ,")"})));
-	unique_ptr<StatementListNode> stmt_lst = createStatementList("print flag; call x; }", 2);
-	shared_ptr<WhileNode> node = make_shared<WhileNode>(1, move(cond_expr), move(stmt_lst));
-	unique_ptr<ExpressionNode> cond_expr_2 = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0" ,")"})));
-	unique_ptr<StatementListNode> stmt_lst_2 = createStatementList("print flag; call x; }", 2);
-	shared_ptr<WhileNode> other = make_shared<WhileNode>(1, move(cond_expr_2), move(stmt_lst_2));
-	REQUIRE(node->equals(other));
-}
-
-TEST_CASE("SP::Node::WhileNode::equals Different StmtNo Test") {
-	unique_ptr<ExpressionNode> cond_expr = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0" ,")"})));
-	unique_ptr<StatementListNode> stmt_lst = createStatementList("print flag; call x; }", 2);
-	shared_ptr<WhileNode> node = make_shared<WhileNode>(1, move(cond_expr), move(stmt_lst));
-	unique_ptr<ExpressionNode> cond_expr_2 = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0" ,")"})));
-	unique_ptr<StatementListNode> stmt_lst_2 = createStatementList("print flag; call x; }", 2);
-	shared_ptr<WhileNode> other = make_shared<WhileNode>(6, move(cond_expr_2), move(stmt_lst_2));
-	REQUIRE_FALSE(node->equals(other));
-}
-
-TEST_CASE("SP::Node::WhileNode::equals Different CondExpr Test") {
-	unique_ptr<ExpressionNode> cond_expr = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "==", "0" ,")"})));
-	unique_ptr<StatementListNode> stmt_lst = createStatementList("print flag; call x; }", 2);
-	shared_ptr<WhileNode> node = make_shared<WhileNode>(1, move(cond_expr), move(stmt_lst));
-	unique_ptr<ExpressionNode> cond_expr_2 = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0" ,")"})));
-	unique_ptr<StatementListNode> stmt_lst_2 = createStatementList("print flag; call x; }", 2);
-	shared_ptr<WhileNode> other = make_shared<WhileNode>(1, move(cond_expr_2), move(stmt_lst_2));
-	REQUIRE_FALSE(node->equals(other));
-}
-
-TEST_CASE("SP::Node::WhileNode::equals Different StmtLst Test") {
-	unique_ptr<ExpressionNode> cond_expr = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0" ,")"})));
-	unique_ptr<StatementListNode> stmt_lst = createStatementList("print flag; call x; }", 2);
-	shared_ptr<WhileNode> node = make_shared<WhileNode>(1, move(cond_expr), move(stmt_lst));
-	unique_ptr<ExpressionNode> cond_expr_2 = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0" ,")"})));
-	unique_ptr<StatementListNode> stmt_lst_2 = createStatementList("cenX = 0; cenY = 0; }", 2);
-	shared_ptr<WhileNode> other = make_shared<WhileNode>(1, move(cond_expr_2), move(stmt_lst_2));
-	REQUIRE_FALSE(node->equals(other));
-}
-
-TEST_CASE("SP::Node::WhileNode::equals Different Node Type Test") {
-	unique_ptr<ExpressionNode> cond_expr = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0" ,")"})));
-	unique_ptr<StatementListNode> stmt_lst = createStatementList("print flag; call x; }", 2);
-	shared_ptr<WhileNode> node = make_shared<WhileNode>(1, move(cond_expr), move(stmt_lst));
-	shared_ptr<CallNode> other = make_shared<CallNode>(1, "test");
-	REQUIRE_FALSE(node->equals(move(other)));
-}
-
-TEST_CASE("SP::Node::WhileNode::parseWhileStatement Valid Token Test") {
-	SP::Lexer lex;
-	lex.initialize("(x == 0) { count = count + 1; call readPoint; }");
-	int statement_count = 1;
-	unique_ptr<WhileNode> node = WhileNode::parseWhileStatement(lex, statement_count);
-	unique_ptr<ExpressionNode> cond_expr = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "==", "0" ,")"})));
-	unique_ptr<StatementListNode> stmt_lst = createStatementList("count = count + 1; call readPoint; }", 2);
-	shared_ptr<WhileNode> expected = make_shared<WhileNode>(1, move(cond_expr), move(stmt_lst));
-	REQUIRE(node->equals(expected));
-	REQUIRE_EQUALS(statement_count, 4);
-}
-
-TEST_CASE("SP::Node::WhileNode::parseWhileStatement Missing Condition Token Test") {
-	SP::Lexer lex;
-	lex.initialize("( ) { count = count + 1; call readPoint; }");
-	int statement_count = 1;
-	REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), Common::ExpressionProcessor::ExpressionProcessorException);
-	REQUIRE_EQUALS(statement_count, 2);
-}
-
-TEST_CASE("SP::Node::WhileNode::parseWhileStatement Missing Condition Open Brackets Test") {
+TEST_CASE("SP::Node::WhileNode::parseWhileStatement") {
     SP::Lexer lex;
-    lex.initialize("x == 0) { count = count + 1; call readPoint; }");
-    int statement_count = 1;
-    REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::TokenizationException);
-    REQUIRE_EQUALS(statement_count, 2);
-}
+    StmtRef statement_count = 1;
 
-TEST_CASE("SP::Node::WhileNode::parseWhileStatement Missing Condition Close Brackets Test") {
-    SP::Lexer lex;
-    lex.initialize("(x == 0 { count = count + 1; call readPoint; }");
-    int statement_count = 1;
-    REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::TokenizationException);
-    REQUIRE_EQUALS(statement_count, 2);
-}
+    SECTION("Valid Token Test") {
+        lex.initialize("(x == 0) { count = count + 1; call readPoint; }");
+        unique_ptr<WhileNode> node = WhileNode::parseWhileStatement(lex, statement_count);
+        unique_ptr<ExpressionNode> cond_expr = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "==", "0" ,")"})));
+        unique_ptr<StatementListNode> stmt_lst = createStatementList("count = count + 1; call readPoint; }", 2);
+        shared_ptr<WhileNode> expected = make_shared<WhileNode>(1, move(cond_expr), move(stmt_lst));
+        REQUIRE(node->equals(expected));
+        REQUIRE_EQUALS(statement_count, 4);
+    }
 
-TEST_CASE("SP::Node::WhileNode::parseWhileStatement Missing Branch Token Test") {
-	SP::Lexer lex;
-	lex.initialize("(x == 0) { }");
-	int statement_count = 1;
-	REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::ParseException);
-	REQUIRE_EQUALS(statement_count, 2);
-}
+    SECTION("Missing Condition Token Test") {
+        lex.initialize("( ) { count = count + 1; call readPoint; }");
+        REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), Common::ExpressionProcessor::ExpressionProcessorException);
+        REQUIRE_EQUALS(statement_count, 2);
+    }
 
-TEST_CASE("SP::Node::WhileNode::parseWhileStatement Missing Opening Brackets Token Test") {
-	SP::Lexer lex;
-	lex.initialize("(x == 0)  count = count + 1; call readPoint; }");
-	int statement_count = 1;
-	REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::TokenizationException);
-	REQUIRE_EQUALS(statement_count, 2);
-}
+    SECTION("Missing Condition Open Brackets Test") {
+        lex.initialize("x == 0) { count = count + 1; call readPoint; }");
+        REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::TokenizationException);
+        REQUIRE_EQUALS(statement_count, 2);
+    }
 
-TEST_CASE("SP::Node::WhileNode::parseWhileStatement Closing Opening Brackets Token Test") {
-	SP::Lexer lex;
-	lex.initialize("(x == 0) { count = count + 1; call readPoint; ");
-	int statement_count = 1;
-	REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::ParseException);
-	REQUIRE_EQUALS(statement_count, 4);
+    SECTION("Missing Condition Close Brackets Test") {
+        lex.initialize("(x == 0 { count = count + 1; call readPoint; }");
+        REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::TokenizationException);
+        REQUIRE_EQUALS(statement_count, 2);
+    }
+
+    SECTION("Missing Branch Token Test") {
+        lex.initialize("(x == 0) { }");
+        REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::ParseException);
+        REQUIRE_EQUALS(statement_count, 2);
+    }
+
+    SECTION("Missing Opening Brackets Token Test") {
+        lex.initialize("(x == 0)  count = count + 1; call readPoint; }");
+        REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::TokenizationException);
+        REQUIRE_EQUALS(statement_count, 2);
+    }
+
+    SECTION("Closing Opening Brackets Token Test") {
+        lex.initialize("(x == 0) { count = count + 1; call readPoint; ");
+        REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::ParseException);
+        REQUIRE_EQUALS(statement_count, 4);
+    }
 }
 
 TEST_CASE("WhileNode::extract Test") {

@@ -7,34 +7,31 @@
 using namespace std;
 using namespace SP::Node;
 
-TEST_CASE("SP::Node::ExpressionNode::equals Same Object Test") {
+TEST_CASE("SP::Node::ExpressionNode::equals") {
     shared_ptr<ExpressionNode> node =
             make_shared<ExpressionNode>(createArithmeticExpression(vector<string>({"A", ";"})));
-    REQUIRE(node->equals(node));
-}
 
-TEST_CASE("SP::Node::ExpressionNode::equals Same Node Test") {
-    shared_ptr<ExpressionNode> node =
-            make_shared<ExpressionNode>(createArithmeticExpression(vector<string>({"A", ";"})));
-    shared_ptr<ExpressionNode> other =
-            make_shared<ExpressionNode>(createArithmeticExpression(vector<string>({"A", ";"})));
-    REQUIRE(node->equals(other));
-}
+    SECTION("Same Object Test") {
+        REQUIRE(node->equals(node));
+    }
 
-TEST_CASE("SP::Node::ExpressionNode::equals Same Node Test With Brackets") {
-    shared_ptr<ExpressionNode> node =
-            make_shared<ExpressionNode>(createArithmeticExpression(vector<string>({"A", ";"})));
-    shared_ptr<ExpressionNode> other =
-            make_shared<ExpressionNode>(createArithmeticExpression(vector<string>({"(", "A", ")", ";"})));
-    REQUIRE(node->equals(other));
-}
+    SECTION("Same Node Test") {
+        shared_ptr<ExpressionNode> other =
+                make_shared<ExpressionNode>(createArithmeticExpression(vector<string>({"A", ";"})));
+        REQUIRE(node->equals(other));
+    }
 
-TEST_CASE("SP::Node::ExpressionNode::equals Different Node Test") {
-    shared_ptr<ExpressionNode> node =
-            make_shared<ExpressionNode>(createArithmeticExpression(vector<string>({"A", ";"})));
-    shared_ptr<ExpressionNode> other =
-            make_shared<ExpressionNode>(createArithmeticExpression(vector<string>({"(", "B", ")", ")"})));
-    REQUIRE_FALSE(node->equals(other));
+    SECTION("Same Node Test With Brackets") {
+        shared_ptr<ExpressionNode> other =
+                make_shared<ExpressionNode>(createArithmeticExpression(vector<string>({"(", "A", ")", ";"})));
+        REQUIRE(node->equals(other));
+    }
+
+    SECTION("Different Node Test") {
+        shared_ptr<ExpressionNode> other =
+                make_shared<ExpressionNode>(createArithmeticExpression(vector<string>({"(", "B", ")", ")"})));
+        REQUIRE_FALSE(node->equals(other));
+    }
 }
 
 TEST_CASE("ExpressionNode::extract Test") {

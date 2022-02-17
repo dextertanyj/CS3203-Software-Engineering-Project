@@ -6,72 +6,73 @@
 using namespace std;
 using namespace SP::Node;
 
-TEST_CASE("SP::Node::VariableNode::equals Same Object Test") {
-	unique_ptr<VariableNode> node = make_unique<VariableNode>("A");
-	REQUIRE(node->equals(move(node)));
+TEST_CASE("SP::Node::VariableNode::equals") {
+    unique_ptr<VariableNode> node = make_unique<VariableNode>("A");
+
+    SECTION("Same Object Test") {
+        REQUIRE(node->equals(move(node)));
+    }
+
+    SECTION("Same Variable Name Test") {
+        unique_ptr<VariableNode> other = make_unique<VariableNode>("A");
+        REQUIRE(node->equals(move(other)));
+    }
+
+    SECTION("Different Variable Name Test") {
+        unique_ptr<VariableNode> other = make_unique<VariableNode>("B");
+        REQUIRE_FALSE(node->equals(move(other)));
+    }
+
+    SECTION("Case-Sensitivity Test") {
+        unique_ptr<VariableNode> other = make_unique<VariableNode>("a");
+        REQUIRE_FALSE(node->equals(move(other)));
+    }
 }
 
-TEST_CASE("SP::Node::VariableNode::equals Same Variable Name Test") {
-	unique_ptr<VariableNode> node = make_unique<VariableNode>("A");
-	unique_ptr<VariableNode> other = make_unique<VariableNode>("A");
-	REQUIRE(node->equals(move(other)));
-}
+TEST_CASE("SP::Node::VariableNode::parseVariable") {
+    SP::Lexer lex;
 
-TEST_CASE("SP::Node::VariableNode::equals Different Variable Name Test") {
-	unique_ptr<VariableNode> node = make_unique<VariableNode>("A");
-	unique_ptr<VariableNode> other = make_unique<VariableNode>("B");
-	REQUIRE_FALSE(node->equals(move(other)));
-}
+    SECTION("Parse Valid Only Letters Name Token") {
+        lex.initialize("test");
+        unique_ptr<VariableNode> node = VariableNode::parseVariable(lex);
+        unique_ptr<VariableNode> other = make_unique<VariableNode>(VariableNode("test"));
+        REQUIRE(node->equals(move(other)));
+    }
 
-TEST_CASE("SP::Node::VariableNode::equals Case-Sensitivity Test") {
-	unique_ptr<VariableNode> node = make_unique<VariableNode>("A");
-	unique_ptr<VariableNode> other = make_unique<VariableNode>("a");
-	REQUIRE_FALSE(node->equals(move(other)));
-}
+    SECTION("Parse Valid Name Token") {
+        lex.initialize("test123 t1est23");
+        unique_ptr<VariableNode> node = VariableNode::parseVariable(lex);
+        unique_ptr<VariableNode> other = make_unique<VariableNode>(VariableNode("test123"));
+        REQUIRE(node->equals(move(other)));
+        node = VariableNode::parseVariable(lex);
+        other = make_unique<VariableNode>(VariableNode("t1est23"));
+        REQUIRE(node->equals(move(other)));
+    }
 
-TEST_CASE("SP::Node::VariableNode::parseVariable Parse Valid Only Letters Name Token") {
-	SP::Lexer lex;
-	lex.initialize("test");
-	unique_ptr<VariableNode> node = VariableNode::parseVariable(lex);
-	unique_ptr<VariableNode> other = make_unique<VariableNode>(VariableNode("test"));
-	REQUIRE(node->equals(move(other)));
-}
+    SECTION("Parse Invalid Name Token") {
+        lex.initialize("123test");
+        REQUIRE_THROWS_AS(VariableNode::parseVariable(lex), SP::ParseException);
+    }
 
-TEST_CASE("SP::Node::VariableNode::parseVariable Parse Valid Name Token") {
-	SP::Lexer lex;
-	lex.initialize("test123 t1est23");
-	unique_ptr<VariableNode> node = VariableNode::parseVariable(lex);
-	unique_ptr<VariableNode> other = make_unique<VariableNode>(VariableNode("test123"));
-	REQUIRE(node->equals(move(other)));
-	node = VariableNode::parseVariable(lex);
-	other = make_unique<VariableNode>(VariableNode("t1est23"));
-	REQUIRE(node->equals(move(other)));
-}
+    SECTION("Parse Valid Only Letters Name String") {
+        unique_ptr<VariableNode> node = VariableNode::parseVariable("test");
+        unique_ptr<VariableNode> other = make_unique<VariableNode>(VariableNode("test"));
+        REQUIRE(node->equals(move(other)));
+    }
 
-TEST_CASE("SP::Node::VariableNode::parseVariable Parse Invalid Name Token") {
-	SP::Lexer lex;
-	lex.initialize("123test");
-	REQUIRE_THROWS_AS(VariableNode::parseVariable(lex), SP::ParseException);
-}
+    SECTION("Parse Valid Name String") {
+        unique_ptr<VariableNode> node = VariableNode::parseVariable("test123");
+        unique_ptr<VariableNode> other = make_unique<VariableNode>(VariableNode("test123"));
+        REQUIRE(node->equals(move(other)));
+        node = VariableNode::parseVariable("t1est23");
+        other = make_unique<VariableNode>(VariableNode("t1est23"));
+        REQUIRE(node->equals(move(other)));
+    }
 
-TEST_CASE("SP::Node::VariableNode::parseVariable Parse Valid Only Letters Name String") {
-	unique_ptr<VariableNode> node = VariableNode::parseVariable("test");
-	unique_ptr<VariableNode> other = make_unique<VariableNode>(VariableNode("test"));
-	REQUIRE(node->equals(move(other)));
-}
-
-TEST_CASE("SP::Node::VariableNode::parseVariable Parse Valid Name String") {
-	unique_ptr<VariableNode> node = VariableNode::parseVariable("test123");
-	unique_ptr<VariableNode> other = make_unique<VariableNode>(VariableNode("test123"));
-	REQUIRE(node->equals(move(other)));
-	node = VariableNode::parseVariable("t1est23");
-	other = make_unique<VariableNode>(VariableNode("t1est23"));
-	REQUIRE(node->equals(move(other)));
-}
-
-TEST_CASE("SP::Node::VariableNode::parseVariable Parse Invalid Name String") {
-	REQUIRE_THROWS_AS(VariableNode::parseVariable("123test"), SP::ParseException);
-    REQUIRE_THROWS_AS(VariableNode::parseVariable("test_123"), SP::ParseException);
+    SECTION("Parse Invalid Name String") {
+        REQUIRE_THROWS_AS(VariableNode::parseVariable("123test"), SP::ParseException);
+        REQUIRE_THROWS_AS(VariableNode::parseVariable("test_123"), SP::ParseException);
+    }
 }
 
 TEST_CASE("VariableNode::extract Test") {
