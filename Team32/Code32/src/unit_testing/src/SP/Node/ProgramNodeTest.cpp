@@ -1,4 +1,6 @@
 #include "SP/Node/ProgramNode.h"
+#include "SP/Node/ReadNode.h"
+#include "SP/Node/CallNode.h"
 #include "../Node/MockUtilities.h"
 #include "SP/SP.h"
 

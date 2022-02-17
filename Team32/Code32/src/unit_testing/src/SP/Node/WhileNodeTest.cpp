@@ -2,6 +2,8 @@
 
 #include "../Node/MockUtilities.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
+#include "SP/Node/ReadNode.h"
+#include "SP/Node/PrintNode.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/WhileNode.h"
 #include "SP/SP.h"

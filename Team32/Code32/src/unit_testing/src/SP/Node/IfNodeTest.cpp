@@ -2,6 +2,8 @@
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/IfNode.h"
+#include "SP/Node/ReadNode.h"
+#include "SP/Node/PrintNode.h"
 #include "../Node/MockUtilities.h"
 
 #include "catch_tools.h"
