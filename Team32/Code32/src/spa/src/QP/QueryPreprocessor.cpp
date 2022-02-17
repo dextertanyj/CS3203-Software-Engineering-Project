@@ -1,10 +1,12 @@
 #include "QP/QueryPreprocessor.h"
 
+#include <optional>
 #include <regex>
 
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "QP/QueryExpressionLexer.h"
 #include "QP/QueryTypeDefs.h"
+#include "QP/Relationship/Pattern.h"
 
 QueryProperties QueryPreprocessor::parseQuery(string query) {
 
@@ -144,11 +146,14 @@ void QueryPreprocessor::parseSuchThat(int& tokenIndex) {
 }
 
 void QueryPreprocessor::parsePattern(int& tokenIndex) {
-	PatternClause patternClause = {};
+	Declaration synonym;
+	QueryEntRef entRef;
+	ExpressionType expressionType = ExpressionType::underscore;
+	optional<Common::ExpressionProcessor::Expression> queryExpression;
 	bool hasSynonym = false;
 	for (Declaration declaration : this->declarationList) {
 		if (declaration.type == DesignEntity::assign && declaration.symbol == this->queryTokens[tokenIndex]) {
-			patternClause.synonym = declaration;
+			synonym = declaration;
 			hasSynonym = true;
 			break;
 		}
@@ -159,26 +164,29 @@ void QueryPreprocessor::parsePattern(int& tokenIndex) {
 
 	matchTokenOrThrow("(", tokenIndex);
 	set<DesignEntity> allowedDesignEntities = { DesignEntity::variable };
-	patternClause.entRef = parseQueryEntRef(tokenIndex, allowedDesignEntities);
+	entRef = parseQueryEntRef(tokenIndex, allowedDesignEntities);
 	matchTokenOrThrow(",", tokenIndex);
 	if (this->queryTokens[tokenIndex] == "_") {
 		tokenIndex++;
 		if (this->queryTokens[tokenIndex] == "\"") {
-			patternClause.expressionType = ExpressionType::expressionUnderscore;
+			expressionType = ExpressionType::expressionUnderscore;
 			Common::ExpressionProcessor::Expression expression = parseExpression(tokenIndex);
-			patternClause.expression = &expression;
+			queryExpression = expression;
 		}
 		else {
-			patternClause.expressionType = ExpressionType::underscore;
+			expressionType = ExpressionType::underscore;
 		}
 	}
 	else if (this->queryTokens[tokenIndex] == "\"") {
-		patternClause.expressionType = ExpressionType::expression;
+		expressionType = ExpressionType::expression;
 		Common::ExpressionProcessor::Expression expression = parseExpression(tokenIndex);
-		patternClause.expression = &expression;
+		queryExpression = expression;
+	}
+	else {
+		throw QueryException("Unexpected query expression: " + this->queryTokens[tokenIndex]);
 	}
 	
-	if (patternClause.expressionType == ExpressionType::expressionUnderscore) { 
+	if (expressionType == ExpressionType::expressionUnderscore) { 
 		matchTokenOrThrow("_", tokenIndex); 
 	}
 	matchTokenOrThrow(")", tokenIndex);
@@ -186,7 +194,8 @@ void QueryPreprocessor::parsePattern(int& tokenIndex) {
 	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "and") {
 		parsePattern(++tokenIndex);
 	}
-
+	unique_ptr<Relation> relation = make_unique<Pattern>(synonym, entRef, expressionType, queryExpression);
+	PatternClause patternClause = { std::move(relation) };
 	this->patternClauseList.push_back(patternClause);
 }
 

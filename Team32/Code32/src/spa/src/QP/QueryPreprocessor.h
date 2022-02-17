@@ -8,18 +8,18 @@
 #include <vector>
 
 #include "Common/ExpressionProcessor/Expression.h"
-#include "QueryEvaluator.h"
-#include "QueryExpressionLexer.h"
-#include "QueryProperties.h"
-#include "QueryResult.h"
-#include "Relationship/Follows.h"
-#include "Relationship/FollowsT.h"
-#include "Relationship/ModifiesP.h"
-#include "Relationship/ModifiesS.h"
-#include "Relationship/Parent.h"
-#include "Relationship/ParentT.h"
-#include "Relationship/UsesP.h"
-#include "Relationship/UsesS.h"
+#include "QP/QueryEvaluator.h"
+#include "QP/QueryExpressionLexer.h"
+#include "QP/QueryProperties.h"
+#include "QP/QueryResult.h"
+#include "QP/Relationship/Follows.h"
+#include "QP/Relationship/FollowsT.h"
+#include "QP/Relationship/ModifiesP.h"
+#include "QP/Relationship/ModifiesS.h"
+#include "QP/Relationship/Parent.h"
+#include "QP/Relationship/ParentT.h"
+#include "QP/Relationship/UsesP.h"
+#include "QP/Relationship/UsesS.h"
 
 using std::runtime_error;
 using std::set;
