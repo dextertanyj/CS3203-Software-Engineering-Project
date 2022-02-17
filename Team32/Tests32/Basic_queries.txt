@@ -38,11 +38,6 @@ constant c;
 Select c
 0, 1
 5000
-9 - procedure list
-procedure pc;
-Select pc
-all
-5000
 10 - invalid synonym
 stmt 1;
 Select 1
