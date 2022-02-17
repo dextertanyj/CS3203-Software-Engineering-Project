@@ -355,7 +355,7 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 		Pattern pattern1 = Pattern(synAssign, var, ExpressionType::underscore, queryExpression1);
 		QueryResult result1 = pattern1.execute(pkb, false, map);
 		vector<string> expectedResult1 = { "1", "2", "3" };
-		vector<string> expectedResultVar1 = { "x", "y" };
+		vector<string> expectedResultVar1 = { "x", "y", "y" };
 		REQUIRE(result1.getResult());
 		auto result1vec1 = result1.getSynonymResult("a");
 		std::sort(result1vec1.begin(), result1vec1.end());
@@ -396,7 +396,7 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 		vector<string> expectedResult1 = { "1", "2" };
 		vector<string> expectedResultVar1 = { "x", "y" };
 		vector<string> expectedResult3 = { "2", "3" };
-		vector<string> expectedResultVar3 = { "y" };
+		vector<string> expectedResultVar3 = { "y", "y" };
 
 		REQUIRE(result1.getResult());
 		auto result1vec = result1.getSynonymResult("a");

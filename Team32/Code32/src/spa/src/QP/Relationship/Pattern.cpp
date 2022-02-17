@@ -1,7 +1,5 @@
 #include "QP/Relationship/Pattern.h"
 
-
-
 Pattern::Pattern(Declaration synAssign, QueryEntRef entRef, ExpressionType expressionType,
 	optional<Common::ExpressionProcessor::Expression> expression)
 	: synAssign(std::move(synAssign)),
@@ -71,8 +69,37 @@ QueryResult Pattern::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity
 
 QueryResult Pattern::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
 	QueryResult result = QueryResult();
+	
+	if (this->entRef.type == EntRefType::synonym) {
+		vector<string> assignResult;
+		vector<string> varResult;
+
+		if (this->expressionType != ExpressionType::underscore) {
+			bool isExact = this->expressionType != ExpressionType::expressionUnderscore;
+			auto stmtPairs = pkb.getStmtsWithPatternRHS(getExpression(), isExact);
+			for (auto const& pair : stmtPairs) {
+				assignResult.push_back(to_string(pair.first.get()->reference));
+				varResult.push_back(pair.second);
+			}
+		}
+		else {
+			VarRefSet varSet = pkb.getVariables();
+			for (auto const& varRef : varSet) {
+				StmtInfoPtrSet stmtSet = pkb.getStmtsWithPatternLHS(varRef);
+				for (auto const& stmt : stmtSet) {
+					assignResult.push_back(to_string(stmt.get()->reference));
+					varResult.push_back(varRef);
+				}
+			}
+		}
+
+		result.addColumn(this->synAssign.symbol, assignResult);
+		result.addColumn(this->entRef.entRef, varResult);
+
+		return result;
+	}
+
 	StmtInfoPtrSet stmtSet;
-	unordered_set<string> varSet;
 	if (this->expressionType != ExpressionType::underscore) {
 		bool isExact = this->expressionType != ExpressionType::expressionUnderscore;
 		if (this->entRef.type == EntRefType::varName) {
@@ -82,23 +109,11 @@ QueryResult Pattern::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEnt
 			auto stmtPairs = pkb.getStmtsWithPatternRHS(getExpression(), isExact);
 			for (auto stmtPair : stmtPairs) {
 				stmtSet.insert(stmtPair.first);
-				varSet.insert(stmtPair.second);
 			}
 		}
 	}
 	else if (this->entRef.type == EntRefType::varName) {
 		stmtSet = pkb.getStmtsWithPatternLHS(this->entRef.entRef);
-	}
-	else if (this->entRef.type == EntRefType::synonym) {
-		/* For the case of a(synonym, _). Can be replaced with a more efficient 
-		getter of all variables in assign statements */
-		auto tempVarSet = pkb.getVariables();
-		for (VarRef varRef : tempVarSet) {
-			if (!pkb.getStmtsWithPatternLHS(varRef).empty()) {
-				varSet.insert(varRef);
-			}
-		}
-		stmtSet = pkb.getStatements();
 	}
 	else {
 		stmtSet = pkb.getStatements();
@@ -110,11 +125,5 @@ QueryResult Pattern::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEnt
 		}
 	}
 	result.addColumn(this->synAssign.symbol, assignStmtStrings);
-	if (this->entRef.type == EntRefType::synonym) {
-		vector<string> varStrings;
-		varStrings.insert(varStrings.end(), varSet.begin(), varSet.end());
-		result.addColumn(this->entRef.entRef, varStrings);
-	}
 	return result;
-
 }
