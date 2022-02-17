@@ -66,7 +66,7 @@ TEST_CASE("SP::Node::ProgramNode::addProcedureNode") {
     }
 }
 
-TEST_CASE("SP::Node::ProgramNode::parseProgram Valid Token Test") {
+TEST_CASE("SP::Node::ProgramNode::parseProgram") {
     SP::Lexer lex;
     StmtRef statement_count = 1;
 

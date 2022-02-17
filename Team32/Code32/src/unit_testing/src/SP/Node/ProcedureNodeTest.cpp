@@ -7,7 +7,7 @@
 using namespace std;
 using namespace SP::Node;
 
-TEST_CASE("SP::Node::ProcedureNode::equals Same Object Test") {
+TEST_CASE("SP::Node::ProcedureNode::equals") {
     ProcRef name_1 = "testName";
     ProcRef name_2 = "testName2";
     string stmt_1 = "print flag; call x; }";
@@ -50,7 +50,7 @@ TEST_CASE("SP::Node::ProcedureNode::equals Same Object Test") {
     }
 }
 
-TEST_CASE("SP::Node::ProcedureNode::parseProcedure Valid Token Test") {
+TEST_CASE("SP::Node::ProcedureNode::parseProcedure") {
     SP::Lexer lex;
     int statement_count = 1;
 
