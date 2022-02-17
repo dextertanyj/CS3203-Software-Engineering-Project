@@ -134,3 +134,30 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure") {
         REQUIRE_EQUALS(lex.peekToken(), "cenX");
     }
 }
+
+TEST_CASE("SP::Node::ProcedureNode::extract Test") {
+	PKB pkb;
+
+	SECTION("Single statement") {
+		int statement_number = 1;
+		unique_ptr<StatementListNode> statements = make_unique<StatementListNode>();
+		statements->addStatementNode(make_unique<ReadNode>(statement_number, make_unique<VariableNode>("A")));
+		ProcedureNode node = ProcedureNode("Procedure", move(statements), statement_number, statement_number);
+		node.extract(pkb);
+		REQUIRE(pkb.checkModifies(statement_number, "A"));
+	}
+
+	SECTION("Multiple statements") {
+		int first_statement_number = 1;
+		int second_statement_number = 2;
+		int third_statement_number = 3;
+		unique_ptr<StatementListNode> statements = make_unique<StatementListNode>();
+		statements->addStatementNode(make_unique<CallNode>(first_statement_number, "Procedure"));
+		statements->addStatementNode(make_unique<ReadNode>(second_statement_number, make_unique<VariableNode>("A")));
+		statements->addStatementNode(make_unique<PrintNode>(third_statement_number, make_unique<VariableNode>("B")));
+		ProcedureNode node = ProcedureNode("Procedure", move(statements), first_statement_number, third_statement_number);
+		node.extract(pkb);
+		REQUIRE(pkb.checkModifies(second_statement_number, "A"));
+		REQUIRE(pkb.checkUses(third_statement_number, "B"));
+	}
+}
