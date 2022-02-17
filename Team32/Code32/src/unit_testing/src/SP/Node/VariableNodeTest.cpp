@@ -79,7 +79,7 @@ TEST_CASE("SP::Node::VariableNode::parseVariable") {
     }
 }
 
-TEST_CASE("VariableNode::extract Test") {
+TEST_CASE("SP::Node::VariableNode::extract Test") {
 	VarRef name = "Name";
 	VariableNode node = VariableNode(name);
 	VarRef result = node.extract();

@@ -76,7 +76,7 @@ TEST_CASE("SP::Node::ReadNode::parseReadStatement") {
     }
 }
 
-TEST_CASE("ReadNode::extract Test") {
+TEST_CASE("SP::Node::ReadNode::extract Test") {
 	PKB pkb;
 	StmtRef statement_number = 2;
 	ReadNode node = ReadNode(statement_number, make_unique<VariableNode>("A"));

@@ -75,7 +75,7 @@ TEST_CASE("SP::Node::PrintNode::parsePrintStatement") {
     }
 }
 
-TEST_CASE("PrintNode::extract Test") {
+TEST_CASE("SP::Node::PrintNode::extract Test") {
 	PKB pkb;
 	StmtRef statement_number = 3;
 	PrintNode node = PrintNode(statement_number, make_unique<VariableNode>("A"));
