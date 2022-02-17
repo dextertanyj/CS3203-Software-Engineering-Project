@@ -157,8 +157,13 @@ QueryResult QueryEvaluator::evaluateClauses(SuchThatClauseList& suchThatClauses,
 		resultList.push_back(result);
 	}
 
-	// TODO: Handle pattern clause after pattern is refactored to a relation
-
+	for (PatternClause patternClause : patternClauses) {
+		QueryResult result = patternClause.relation->execute(pkb, isTrivial, symbolToTypeMap);
+		if (!result.getResult()) {
+			return QueryResult();
+		}
+		resultList.push_back(result);
+	}
 	// For iteration one, the size of resultList is at most 2
 	if (resultList.size() == 1) {
 		return resultList[0];
@@ -205,15 +210,15 @@ vector<pair<SuchThatClauseList, PatternClauseList>> QueryEvaluator::splitClauses
 			}
 		}
 	}
-
 	for (PatternClause patternClause : queryProperties.getPatternClauseList()) {
 		for (int i = 0; i <= synonymsInGroup.size(); i++) {
+			vector<string> declarations = patternClause.relation->getDeclarationSymbols();
 			if (i == synonymsInGroup.size()) {
 				result[synonymsInGroup.size()].second.push_back(patternClause);
 				break;
 			}
 
-			if (synonymsInGroup[i].find(patternClause.synonym.symbol) != synonymsInGroup[i].end()) {
+			if (synonymsInGroup[i].find(declarations[0]) != synonymsInGroup[i].end()) {
 				result[i].second.push_back(patternClause);
 				break;
 			}
