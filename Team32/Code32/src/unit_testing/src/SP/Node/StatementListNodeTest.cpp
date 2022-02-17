@@ -150,7 +150,7 @@ TEST_CASE("SP::Node::StatementListNode::extract Test") {
 	PKB pkb;
 
 	SECTION("Single enclosed statement") {
-		int statement_number = 2;
+		StmtRef statement_number = 2;
 		StatementListNode node = StatementListNode();
 		node.addStatementNode(make_unique<PrintNode>(statement_number, make_unique<VariableNode>("A")));
 		vector<StmtRef> result = node.extract(pkb);
@@ -160,9 +160,9 @@ TEST_CASE("SP::Node::StatementListNode::extract Test") {
 	}
 
 	SECTION("Multiple enclosed statements") {
-		int first_statement = 2;
-		int second_statement = 4;
-		int third_statement = 6;
+		StmtRef first_statement = 2;
+		StmtRef second_statement = 4;
+		StmtRef third_statement = 6;
 		StatementListNode node = StatementListNode();
 		node.addStatementNode(make_unique<PrintNode>(first_statement, make_unique<VariableNode>("A")));
 		node.addStatementNode(make_unique<CallNode>(second_statement, "Procedure"));

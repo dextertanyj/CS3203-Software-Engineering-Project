@@ -77,7 +77,7 @@ TEST_CASE("SP::Node::PrintNode::parsePrintStatement") {
 
 TEST_CASE("PrintNode::extract Test") {
 	PKB pkb;
-	int statement_number = 3;
+	StmtRef statement_number = 3;
 	PrintNode node = PrintNode(statement_number, make_unique<VariableNode>("A"));
 	StmtRef result = node.extract(pkb);
 	REQUIRE_EQUALS(result, statement_number);

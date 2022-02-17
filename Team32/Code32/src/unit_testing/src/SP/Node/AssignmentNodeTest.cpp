@@ -114,7 +114,7 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 
 	SECTION("Single constant assignment") {
 		lex.initialize("1;");
-		int statement_number = 1;
+		StmtRef statement_number = 1;
 		unique_ptr<ExpressionNode> expression =
 			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
@@ -127,7 +127,7 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 
 	SECTION("Single variable assignment") {
 		lex.initialize("B;");
-		int statement_number = 2;
+		StmtRef statement_number = 2;
 		unique_ptr<ExpressionNode> expression =
 			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
@@ -141,7 +141,7 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 
 	SECTION("Multiple terminal assignment") {
 		lex.initialize("1 + B * 2 / C;");
-		int statement_number = 3;
+		StmtRef statement_number = 3;
 		unique_ptr<ExpressionNode> expression =
 			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));

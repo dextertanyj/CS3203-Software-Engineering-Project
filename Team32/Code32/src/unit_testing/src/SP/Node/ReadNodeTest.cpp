@@ -78,7 +78,7 @@ TEST_CASE("SP::Node::ReadNode::parseReadStatement") {
 
 TEST_CASE("ReadNode::extract Test") {
 	PKB pkb;
-	int statement_number = 2;
+	StmtRef statement_number = 2;
 	ReadNode node = ReadNode(statement_number, make_unique<VariableNode>("A"));
 	StmtRef result = node.extract(pkb);
 	REQUIRE_EQUALS(result, statement_number);

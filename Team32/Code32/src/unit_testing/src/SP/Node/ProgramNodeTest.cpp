@@ -99,7 +99,7 @@ TEST_CASE("SP::Node::ProgramNode::extract Test") {
 
 	SECTION("Single procedure") {
 		ProgramNode node = ProgramNode();
-		int statement_number = 1;
+		StmtRef statement_number = 1;
 		unique_ptr<StatementListNode> first_procedure = make_unique<StatementListNode>();
 		first_procedure->addStatementNode(make_unique<ReadNode>(statement_number, make_unique<VariableNode>("A")));
 		node.addProcedureNode(make_unique<ProcedureNode>("First", move(first_procedure), statement_number, statement_number));
@@ -109,11 +109,11 @@ TEST_CASE("SP::Node::ProgramNode::extract Test") {
 
 	SECTION("Multiple procedures") {
 		ProgramNode node = ProgramNode();
-		int first_statement_number = 1;
+		StmtRef first_statement_number = 1;
 		unique_ptr<StatementListNode> first_procedure = make_unique<StatementListNode>();
 		first_procedure->addStatementNode(make_unique<ReadNode>(first_statement_number, make_unique<VariableNode>("A")));
 		node.addProcedureNode(make_unique<ProcedureNode>("First", move(first_procedure), first_statement_number, first_statement_number));
-		int second_statement_number = 2;
+		StmtRef second_statement_number = 2;
 		unique_ptr<StatementListNode> second_procedure = make_unique<StatementListNode>();
 		second_procedure->addStatementNode(make_unique<ReadNode>(second_statement_number, make_unique<VariableNode>("B")));
 		node.addProcedureNode(make_unique<ProcedureNode>("Second", move(second_procedure), second_statement_number, second_statement_number));

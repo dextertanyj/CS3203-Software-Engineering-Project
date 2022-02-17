@@ -160,9 +160,9 @@ TEST_CASE("SP::Node::IfNode::extract Test") {
 	PKB pkb;
 
 	SECTION("Single enclosed statement") {
-		int statement_number = 2;
-		int then_statement = 3;
-		int else_statement = 8;
+		StmtRef statement_number = 2;
+		StmtRef then_statement = 3;
+		StmtRef else_statement = 8;
 		unique_ptr<ExpressionNode> condition =
 			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "<", "0"})));
 		unique_ptr<StatementListNode> then_body = make_unique<StatementListNode>();
@@ -183,13 +183,13 @@ TEST_CASE("SP::Node::IfNode::extract Test") {
 	}
 
 	SECTION("Multiple enclosed statements") {
-		int statement_number = 2;
-		int first_then_statement = 3;
-		int second_then_statement = 5;
-		int third_then_statement = 8;
-		int first_else_statement = 10;
-		int second_else_statement = 13;
-		int third_else_statement = 16;
+		StmtRef statement_number = 2;
+		StmtRef first_then_statement = 3;
+		StmtRef second_then_statement = 5;
+		StmtRef third_then_statement = 8;
+		StmtRef first_else_statement = 10;
+		StmtRef second_else_statement = 13;
+		StmtRef third_else_statement = 16;
 		unique_ptr<ExpressionNode> condition =
 			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "<", "0"})));
 		unique_ptr<StatementListNode> then_body = make_unique<StatementListNode>();

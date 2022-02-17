@@ -142,7 +142,7 @@ TEST_CASE("SP::Node::ProcedureNode::extract Test") {
 	PKB pkb;
 
 	SECTION("Single statement") {
-		int statement_number = 1;
+		StmtRef statement_number = 1;
 		unique_ptr<StatementListNode> statements = make_unique<StatementListNode>();
 		statements->addStatementNode(make_unique<ReadNode>(statement_number, make_unique<VariableNode>("A")));
 		ProcedureNode node = ProcedureNode("Procedure", move(statements), statement_number, statement_number);
@@ -151,9 +151,9 @@ TEST_CASE("SP::Node::ProcedureNode::extract Test") {
 	}
 
 	SECTION("Multiple statements") {
-		int first_statement_number = 1;
-		int second_statement_number = 2;
-		int third_statement_number = 3;
+		StmtRef first_statement_number = 1;
+		StmtRef second_statement_number = 2;
+		StmtRef third_statement_number = 3;
 		unique_ptr<StatementListNode> statements = make_unique<StatementListNode>();
 		statements->addStatementNode(make_unique<CallNode>(first_statement_number, "Procedure"));
 		statements->addStatementNode(make_unique<ReadNode>(second_statement_number, make_unique<VariableNode>("A")));
