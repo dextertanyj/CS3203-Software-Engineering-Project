@@ -15,66 +15,49 @@ TEST_CASE("Common::ExpressionProcessor::ArithmeticNode Invalid Operator Test") {
 }
 
 TEST_CASE("Common::ExpressionProcessor::ArithmeticNode::equals Same Object Test") {
-	shared_ptr<ArithmeticNode> op =
-		make_shared<ArithmeticNode>(MathematicalOperator::Plus, variable("A"), constant("123"));
+	shared_ptr<ArithmeticNode> op = make_shared<ArithmeticNode>(MathematicalOperator::Plus, variable("A"), constant("123"));
 
-	SECTION("Same Object Test") {
-		REQUIRE(op->equals(op));
-	}
+	SECTION("Same Object Test") { REQUIRE(op->equals(op)); }
 
 	SECTION("Same Structure Test") {
-		shared_ptr<ArithmeticNode> other =
-			make_shared<ArithmeticNode>(MathematicalOperator::Plus, variable("A"), constant("123"));
+		shared_ptr<ArithmeticNode> other = make_shared<ArithmeticNode>(MathematicalOperator::Plus, variable("A"), constant("123"));
 		REQUIRE(op->equals(other));
 	}
 
 	SECTION("Different Operator Test") {
-		shared_ptr<ArithmeticNode> other =
-			make_shared<ArithmeticNode>(MathematicalOperator::Times, variable("A"), constant("123"));
+		shared_ptr<ArithmeticNode> other = make_shared<ArithmeticNode>(MathematicalOperator::Times, variable("A"), constant("123"));
 		REQUIRE_FALSE(op->equals(other));
 	}
 
 	SECTION("Different Subexpression Test") {
-		shared_ptr<ArithmeticNode> other =
-			make_shared<ArithmeticNode>(MathematicalOperator::Plus, variable("B"), constant("123"));
+		shared_ptr<ArithmeticNode> other = make_shared<ArithmeticNode>(MathematicalOperator::Plus, variable("B"), constant("123"));
 		REQUIRE_FALSE(op->equals(other));
 	}
 
 	SECTION("Different Type Test") {
-		shared_ptr<ArithmeticNode> op =
-			make_shared<ArithmeticNode>(MathematicalOperator::Plus, variable("A"), variable("A"));
+		shared_ptr<ArithmeticNode> op = make_shared<ArithmeticNode>(MathematicalOperator::Plus, variable("A"), variable("A"));
 		shared_ptr<ExpressionNode> other = variable("A");
 		REQUIRE_FALSE(op->equals(other));
 	}
 }
 
-
-
-
-
 TEST_CASE("Common::ExpressionProcessor::ArithmeticNode::contains") {
-	shared_ptr<ArithmeticNode> op =
-		make_shared<ArithmeticNode>(MathematicalOperator::Plus, variable("A"), constant("123"));
+	shared_ptr<ArithmeticNode> op = make_shared<ArithmeticNode>(MathematicalOperator::Plus, variable("A"), constant("123"));
 
-	SECTION("Same Object Test") {
-		REQUIRE(op->contains(op));
-	}
+	SECTION("Same Object Test") { REQUIRE(op->contains(op)); }
 
 	SECTION("Same Structure Test") {
-		shared_ptr<ArithmeticNode> other =
-			make_shared<ArithmeticNode>(MathematicalOperator::Plus, variable("A"), constant("123"));
+		shared_ptr<ArithmeticNode> other = make_shared<ArithmeticNode>(MathematicalOperator::Plus, variable("A"), constant("123"));
 		REQUIRE(op->contains(other));
 	}
 
 	SECTION("Different Operator Test") {
-		shared_ptr<ArithmeticNode> other =
-			make_shared<ArithmeticNode>(MathematicalOperator::Times, variable("A"), constant("123"));
+		shared_ptr<ArithmeticNode> other = make_shared<ArithmeticNode>(MathematicalOperator::Times, variable("A"), constant("123"));
 		REQUIRE_FALSE(op->contains(other));
 	}
 
 	SECTION("Different Subexpression Test") {
-		shared_ptr<ArithmeticNode> other =
-			make_shared<ArithmeticNode>(MathematicalOperator::Plus, variable("B"), constant("123"));
+		shared_ptr<ArithmeticNode> other = make_shared<ArithmeticNode>(MathematicalOperator::Plus, variable("B"), constant("123"));
 		REQUIRE_FALSE(op->contains(other));
 	}
 

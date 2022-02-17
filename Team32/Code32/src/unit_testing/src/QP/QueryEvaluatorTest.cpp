@@ -77,12 +77,12 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 
 	vector<string> assignToken = { "x", "+", "1" };
 	QueryExpressionLexer lexer = QueryExpressionLexer(assignToken);
-	auto expression = Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto expression = Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(1, "x", expression);
 
 	vector<string> token = { "1" };
 	QueryExpressionLexer queryLexer = QueryExpressionLexer(token);
-	auto queryExpression = Common::ExpressionProcessor::Expression::parse(queryLexer, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto queryExpression = Common::ExpressionProcessor::Expression::parse(queryLexer, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 
 	SECTION("No clause, select assign statement") {
 		QueryProperties properties = QueryProperties(declarations, assignSynonym, {}, {});

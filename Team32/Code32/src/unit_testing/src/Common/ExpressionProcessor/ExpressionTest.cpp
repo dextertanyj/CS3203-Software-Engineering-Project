@@ -173,7 +173,7 @@ TEST_CASE("Common::ExpressionProcessor::Expression::parse Relational Tests") {
 		REQUIRE_THROWS_AS(Expression::parse(lex, Common::ExpressionProcessor::ExpressionType::Relational), ExpressionProcessorException);
 		lex = MockLexer(vector<string>({"1", "<", "2", "+", "3", "<", "4"}));
 		REQUIRE_THROWS_AS(Expression::parse(lex, Common::ExpressionProcessor::ExpressionType::Relational), ExpressionProcessorException);
-		lex = MockLexer(vector<string>({"(", "1", "<", "2", ")", "+", "(" "3", "<", "4", ")"}));
+		lex = MockLexer(vector<string>({"(", "1", "<", "2", ")", "+", "(", "3", "<", "4", ")"}));
 		REQUIRE_THROWS_AS(Expression::parse(lex, Common::ExpressionProcessor::ExpressionType::Relational), ExpressionProcessorException);
 	}
 }

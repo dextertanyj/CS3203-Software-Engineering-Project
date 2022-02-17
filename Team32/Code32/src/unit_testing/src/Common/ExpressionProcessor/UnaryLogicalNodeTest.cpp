@@ -24,16 +24,13 @@ TEST_CASE("Common::ExpressionProcessor::UnaryLogicalNode::equals") {
 	shared_ptr<UnaryLogicalNode> op =
 		make_shared<UnaryLogicalNode>(MathematicalOperator::Not, relational(MathematicalOperator::EQ, variable("A"), constant("123")));
 
-	SECTION("Same Object Test") {
-		REQUIRE(op->equals(op));
-	}
+	SECTION("Same Object Test") { REQUIRE(op->equals(op)); }
 
 	SECTION("Same Structure Test") {
 		shared_ptr<UnaryLogicalNode> other =
 			make_shared<UnaryLogicalNode>(MathematicalOperator::Not, relational(MathematicalOperator::EQ, variable("A"), constant("123")));
 		REQUIRE(op->equals(other));
 	}
-
 
 	SECTION("Different Subexpression Test") {
 		shared_ptr<UnaryLogicalNode> other =
@@ -51,9 +48,7 @@ TEST_CASE("Common::ExpressionProcessor::UnaryLogicalNode::contains") {
 	shared_ptr<UnaryLogicalNode> op =
 		make_shared<UnaryLogicalNode>(MathematicalOperator::Not, relational(MathematicalOperator::EQ, variable("A"), constant("123")));
 
-	SECTION("Same Object Test") {
-		REQUIRE(op->contains(op));
-	}
+	SECTION("Same Object Test") { REQUIRE(op->contains(op)); }
 
 	SECTION("Same Structure Test") {
 		shared_ptr<UnaryLogicalNode> other =

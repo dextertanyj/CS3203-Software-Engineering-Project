@@ -19,9 +19,7 @@ TEST_CASE("Common::ExpressionProcessor::RelationalNode Invalid Operator Test") {
 TEST_CASE("Common::ExpressionProcessor::RelationalNode::equals ") {
 	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
 
-	SECTION("Same Object Test") {
-		REQUIRE(op->equals(op));
-	}
+	SECTION("Same Object Test") { REQUIRE(op->equals(op)); }
 
 	SECTION("Same Structure Test") {
 		shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
@@ -47,9 +45,7 @@ TEST_CASE("Common::ExpressionProcessor::RelationalNode::equals ") {
 TEST_CASE("Common::ExpressionProcessor::RelationalNode::contains") {
 	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
 
-	SECTION("Same Object Test") {
-		REQUIRE(op->contains(op));
-	}
+	SECTION("Same Object Test") { REQUIRE(op->contains(op)); }
 
 	SECTION("Same Structure Test") {
 		shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));

@@ -14,9 +14,7 @@ TEST_CASE("Common::ExpressionProcessor::VariableNode Invalid Name Test") {
 TEST_CASE("Common::ExpressionProcessor::VariableNode::equals") {
 	shared_ptr<VariableNode> variable = make_shared<VariableNode>("A");
 
-	SECTION(" Same Object Test") {
-		REQUIRE(variable->equals(variable));
-	}
+	SECTION(" Same Object Test") { REQUIRE(variable->equals(variable)); }
 
 	SECTION("Common::ExpressionProcessor::VariableNode::equals Same Variable Name Test") {
 		shared_ptr<VariableNode> other = make_shared<VariableNode>("A");
@@ -37,13 +35,10 @@ TEST_CASE("Common::ExpressionProcessor::VariableNode::equals") {
 	}
 }
 
-
 TEST_CASE("Common::ExpressionProcessor::VariableNode::contains") {
 	shared_ptr<VariableNode> variable = make_shared<VariableNode>("A");
 
-	SECTION("Same Object Test") {
-		REQUIRE(variable->contains(variable));
-	}
+	SECTION("Same Object Test") { REQUIRE(variable->contains(variable)); }
 
 	SECTION("Same Variable Name Test") {
 		shared_ptr<VariableNode> other = make_shared<VariableNode>("A");
