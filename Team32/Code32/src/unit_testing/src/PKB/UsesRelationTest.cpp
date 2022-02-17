@@ -69,7 +69,7 @@ TEST_CASE("PKB::Uses") {
         VarRefSet expected_set_2 = { "y", "b" };
         unordered_set<shared_ptr<StmtInfo>> expected_set_3 = { p1, p4 };
         unordered_set<shared_ptr<StmtInfo>> expected_set_4 = { p2, p5 };
-        // Verify that the variables modified by the if/while statements include variables in the if/while blocks
+        // Verify that the variables used by the if/while statements include variables in the if/while blocks
         CHECK(store.getByStmt(1) == expected_set_1);
         CHECK(store.getByStmt(2) == expected_set_2);
         CHECK(store.getByVar("a") == expected_set_3);
@@ -77,7 +77,7 @@ TEST_CASE("PKB::Uses") {
     }
 
         // If statement (index 2) is nested within while statement (index 1)
-    SECTION("PKB::Modifies::optimize Nested Test") {
+    SECTION("PKB::Uses::optimize Nested Test") {
         StatementStore statement_store = MockUtilities::generateStatementStore();
         StatementRelationStore<ParentRelation> parent_store = StatementRelationStore<ParentRelation>();
         unordered_set<VarRef> var_refs = unordered_set<VarRef>({"e", "f", "g"});
