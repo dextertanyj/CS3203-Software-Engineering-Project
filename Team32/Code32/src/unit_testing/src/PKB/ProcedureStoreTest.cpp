@@ -20,10 +20,8 @@ TEST_CASE("PKB::ProcedureStore::setProc Success Test") {
 
 TEST_CASE("PKB::ProcedureStore::setProc Invalid StmtNo Test") {
     ProcedureStore store = ProcedureStore();
-    shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(-1, StmtType::Print);
-    shared_ptr<StmtInfo> s2 = MockUtilities::createStmtInfo(0, StmtType::Assign);
-    vector<shared_ptr<StmtInfo>> stmt_lst { s1, s2 };
-    REQUIRE_THROWS_AS(store.setProc("test", vector<shared_ptr<StmtInfo>> { s2 }), std::exception);
+    shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(0, StmtType::Assign);
+    vector<shared_ptr<StmtInfo>> stmt_lst { s1 };
     REQUIRE_THROWS_AS(store.setProc("test", vector<shared_ptr<StmtInfo>> { s1 }), std::exception);
     vector<shared_ptr<StmtInfo>> res = store.getStmtsByProc("test");
     REQUIRE_EQUALS(res.size(), 0);
@@ -73,10 +71,8 @@ TEST_CASE("PKB::ProcedureStore::setCall Non-Call Type Test") {
 
 TEST_CASE("PKB::ProcedureStore::setCall Invalid StmtNo Test") {
     ProcedureStore store = ProcedureStore();
-    shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(-1, StmtType::Call);
-    shared_ptr<StmtInfo> s2 = MockUtilities::createStmtInfo(0, StmtType::Call);
+    shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(0, StmtType::Call);
     REQUIRE_THROWS_AS(store.setCall(s1, "test"), std::exception);
-    REQUIRE_THROWS_AS(store.setCall(s2, "test"), std::exception);
 }
 
 TEST_CASE("PKB::ProcedureStore::setCall More Than 1 Call Stmt Test") {
@@ -97,15 +93,13 @@ TEST_CASE("PKB::ProcedureStore::getStmtsByProc Test") {
 
 TEST_CASE("PKB::ProcedureStore::getProcByCall Invalid StmtNo Test") {
     ProcedureStore store = ProcedureStore();
-    shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(-1, StmtType::Call);
-    shared_ptr<StmtInfo> s2 = MockUtilities::createStmtInfo(0, StmtType::Call);
+    shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(0, StmtType::Call);
     REQUIRE_THROWS_AS(store.getProcByCall(s1), std::exception);
-    REQUIRE_THROWS_AS(store.getProcByCall(s2), std::exception);
 }
 
 TEST_CASE("PKB::ProcedureStore::getProcByCall Invalid Type Test") {
     ProcedureStore store = ProcedureStore();
-    shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(-1, StmtType::IfStmt);
+    shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(1, StmtType::IfStmt);
     REQUIRE_THROWS_AS(store.getProcByCall(s1), std::exception);
 }
 
@@ -120,10 +114,8 @@ TEST_CASE("PKB::ProcedureStore::getProcByStmt Success Test") {
 
 TEST_CASE("PKB::ProcedureStore::getProcByStmt Invalid StmtNo Test") {
     ProcedureStore store = ProcedureStore();
-    shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(-1, StmtType::Call);
-    shared_ptr<StmtInfo> s2 = MockUtilities::createStmtInfo(0, StmtType::Call);
+    shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(0, StmtType::Call);
     REQUIRE_THROWS_AS(store.getProcByStmt(s1), std::exception);
-    REQUIRE_THROWS_AS(store.getProcByStmt(s2), std::exception);
 }
 
 TEST_CASE("PKB::ProcedureStore::getProcListByStmtList Success Test") {

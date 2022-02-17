@@ -8,7 +8,7 @@
 
 using namespace std;
 
-typedef int StmtRef;
+typedef size_t StmtRef;
 typedef unsigned long long int ConstVal;
 typedef string VarRef;
 typedef string ProcRef;

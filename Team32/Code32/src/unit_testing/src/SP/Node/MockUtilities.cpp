@@ -27,7 +27,7 @@ Common::ExpressionProcessor::Expression createConditionalExpression(vector<strin
 	return expression;
 }
 
-unique_ptr<SP::Node::StatementListNode> createStatementList(string str, int statement_count) {
+unique_ptr<SP::Node::StatementListNode> createStatementList(string str, StmtRef statement_count) {
     SP::Lexer lex;
     lex.initialize(move(str));
     unique_ptr<SP::Node::StatementListNode> node = SP::Node::StatementListNode::parseStatementList(lex, statement_count);

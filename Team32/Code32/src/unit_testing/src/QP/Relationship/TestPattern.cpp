@@ -55,7 +55,7 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	pkb.setModifies(2, "y");
 	pkb.setModifies(3, "y");
 
-	unordered_set<int> constants = { 0, 1 };
+	unordered_set<ConstVal> constants = { 0, 1 };
 	pkb.setConstant(constants);
 
 	unordered_map<string, DesignEntity> map;
