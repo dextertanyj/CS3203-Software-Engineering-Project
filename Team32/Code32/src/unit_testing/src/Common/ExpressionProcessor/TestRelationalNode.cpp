@@ -11,67 +11,63 @@
 using namespace std;
 using namespace Common::ExpressionProcessor;
 
-TEST_CASE("Common::ExpressionProcessor::RelationalNode::equals Same Object Test") {
-	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
-	REQUIRE(op->equals(op));
-}
-
-TEST_CASE("Common::ExpressionProcessor::RelationalNode::equals Same Structure Test") {
-	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
-	shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
-	REQUIRE(op->equals(other));
-}
-
-TEST_CASE("Common::ExpressionProcessor::RelationalNode::equals Different Operator Test") {
-	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
-	shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::NEQ, variable("A"), constant("123"));
-	REQUIRE_FALSE(op->equals(other));
-}
-
-TEST_CASE("Common::ExpressionProcessor::RelationalNode::equals Different Subexpression Test") {
-	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(
-		MathematicalOperator::EQ, arithmetic(MathematicalOperator::Plus, variable("A"), variable("B")), constant("123"));
-	shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
-	REQUIRE_FALSE(op->equals(other));
-}
-
-TEST_CASE("Common::ExpressionProcessor::RelationalNode::equals Different Type Test") {
-	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
-	shared_ptr<ExpressionNode> other = variable("A");
-	REQUIRE_FALSE(op->equals(other));
-}
-
-TEST_CASE("Common::ExpressionProcessor::RelationalNode::contains Same Object Test") {
-	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
-	REQUIRE(op->contains(op));
-}
-
-TEST_CASE("Common::ExpressionProcessor::RelationalNode::contains Same Structure Test") {
-	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
-	shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
-	REQUIRE(op->contains(other));
-}
-
-TEST_CASE("Common::ExpressionProcessor::RelationalNode::contains Different Operator Test") {
-	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
-	shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::NEQ, variable("A"), constant("123"));
-	REQUIRE_FALSE(op->contains(other));
-}
-
-TEST_CASE("Common::ExpressionProcessor::RelationalNode::contains Different Subexpression Test") {
-	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
-	shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("B"), constant("123"));
-	REQUIRE_FALSE(op->contains(other));
-}
-
-TEST_CASE("Common::ExpressionProcessor::RelationalNode::contains Subexpression Test") {
-	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(
-		MathematicalOperator::EQ, arithmetic(MathematicalOperator::Plus, variable("A"), variable("B")), constant("123"));
-	shared_ptr<ExpressionNode> other = arithmetic(MathematicalOperator::Plus, variable("A"), variable("B"));
-	REQUIRE(op->contains(other));
-}
-
 TEST_CASE("Common::ExpressionProcessor::RelationalNode Invalid Operator Test") {
 	REQUIRE_THROWS_AS(RelationalNode(MathematicalOperator::Plus, variable("A"), constant("123")), ExpressionProcessorException);
 	REQUIRE_THROWS_AS(RelationalNode(MathematicalOperator::And, variable("A"), constant("123")), ExpressionProcessorException);
+}
+
+TEST_CASE("Common::ExpressionProcessor::RelationalNode::equals ") {
+	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
+
+	SECTION("Same Object Test") {
+		REQUIRE(op->equals(op));
+	}
+
+	SECTION("Same Structure Test") {
+		shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
+		REQUIRE(op->equals(other));
+	}
+
+	SECTION("Different Operator Test") {
+		shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::NEQ, variable("A"), constant("123"));
+		REQUIRE_FALSE(op->equals(other));
+	}
+
+	SECTION("Different Subexpression Test") {
+		shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("B"), constant("123"));
+		REQUIRE_FALSE(op->equals(other));
+	}
+
+	SECTION("Different Type Test") {
+		shared_ptr<ExpressionNode> other = variable("A");
+		REQUIRE_FALSE(op->equals(other));
+	}
+}
+
+TEST_CASE("Common::ExpressionProcessor::RelationalNode::contains") {
+	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
+
+	SECTION("Same Object Test") {
+		REQUIRE(op->contains(op));
+	}
+
+	SECTION("Same Structure Test") {
+		shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant("123"));
+		REQUIRE(op->contains(other));
+	}
+
+	SECTION("Different Operator Test") {
+		shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::NEQ, variable("A"), constant("123"));
+		REQUIRE_FALSE(op->contains(other));
+	}
+
+	SECTION("Different Subexpression Test") {
+		shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("B"), constant("123"));
+		REQUIRE_FALSE(op->contains(other));
+	}
+
+	SECTION("Subexpression Test") {
+		shared_ptr<ExpressionNode> other = variable("A");
+		REQUIRE(op->contains(other));
+	}
 }
