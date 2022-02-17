@@ -1,5 +1,6 @@
 #include "QP/QueryPreprocessor.h"
 
+#include <optional>
 #include <regex>
 
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
@@ -148,7 +149,7 @@ void QueryPreprocessor::parsePattern(int& tokenIndex) {
 	Declaration synonym;
 	QueryEntRef entRef;
 	ExpressionType expressionType = ExpressionType::underscore;
-	Common::ExpressionProcessor::Expression queryExpression = dummyExpression();
+	optional<Common::ExpressionProcessor::Expression> queryExpression;
 	bool hasSynonym = false;
 	for (Declaration declaration : this->declarationList) {
 		if (declaration.type == DesignEntity::assign && declaration.symbol == this->queryTokens[tokenIndex]) {
@@ -486,14 +487,6 @@ Common::ExpressionProcessor::Expression QueryPreprocessor::parseExpression(int& 
 	matchTokenOrThrow("\"", tokenIndex);
 	return arithmeticExpression;
 }
-
-
-Common::ExpressionProcessor::Expression QueryPreprocessor::dummyExpression() {
-	vector<string> expression = {"0"};
-	QueryExpressionLexer lexer = QueryExpressionLexer(expression);
-	return Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
-}
-
 
 bool QueryPreprocessor::isIdentOrName(string token) {
 	return regex_match(token, regex("^[a-zA-Z][a-zA-Z0-9]*$"));

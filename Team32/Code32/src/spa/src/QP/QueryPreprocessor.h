@@ -68,7 +68,6 @@ private:
 	Common::ExpressionProcessor::Expression parseExpression(int& tokenIndex);
 
 	// Helper methods
-	Common::ExpressionProcessor::Expression dummyExpression();
 	bool isIdentOrName(string token);
 	void matchTokenOrThrow(string token, int& tokenIndex);
 

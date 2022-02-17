@@ -1,6 +1,7 @@
 #ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPATTERN_H_
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPATTERN_H_
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -12,25 +13,24 @@
 class Pattern : public Relation {
 public:
 	Pattern(Declaration synonym, QueryEntRef entRef, ExpressionType expressionType, 
-				Common::ExpressionProcessor::Expression expression);
+				optional<Common::ExpressionProcessor::Expression> expression);
 
 	Declaration getSynAssign();
 	QueryEntRef getEntRef();
 	ExpressionType getExpressionType();
 	Common::ExpressionProcessor::Expression getExpression();
 
-	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
-	vector<string> getDeclarationSymbols();
+	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) override;
+	vector<string> getDeclarationSymbols() override;
 
-protected:
+private:
+	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
+
 	Declaration synAssign;
 	QueryEntRef entRef;
 	ExpressionType expressionType;
-	Common::ExpressionProcessor::Expression expression;
-
-private:
-	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
-	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
+	optional<Common::ExpressionProcessor::Expression> expression;
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPATTERN_H_
