@@ -9,6 +9,7 @@
 using namespace std;
 
 typedef int StmtRef;
+typedef unsigned long long int ConstVal;
 typedef string VarRef;
 typedef string ProcRef;
 

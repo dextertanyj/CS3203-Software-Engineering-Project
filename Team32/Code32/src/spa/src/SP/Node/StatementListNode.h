@@ -15,7 +15,7 @@ class SP::Node::StatementListNode {
 public:
 	StatementListNode();
 	void addStatementNode(unique_ptr<StatementNode> statement);
-	static unique_ptr<StatementListNode> parseStatementList(Lexer& lex, int& statement_count);
+	static unique_ptr<StatementListNode> parseStatementList(Lexer& lex, StmtRef& statement_count);
 	vector<StmtRef> extract(PKB& pkb);
 	virtual bool equals(const shared_ptr<StatementListNode>& object);
 	vector<shared_ptr<StatementNode>> getStatementList();

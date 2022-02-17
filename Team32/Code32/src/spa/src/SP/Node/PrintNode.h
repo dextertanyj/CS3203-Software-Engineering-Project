@@ -8,6 +8,7 @@
 #include "SP/Lexer.h"
 #include "SP/Node/StatementNode.h"
 #include "SP/Node/VariableNode.h"
+#include "Common/TypeDefs.h"
 
 using namespace std;
 
@@ -16,7 +17,7 @@ public:
 	PrintNode(StmtRef stmtNo, unique_ptr<VariableNode> variable);
 	StmtRef extract(PKB& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
-	static unique_ptr<PrintNode> parsePrintStatement(Lexer& lex, int& statement_count);
+	static unique_ptr<PrintNode> parsePrintStatement(Lexer& lex, StmtRef& statement_count);
 
 private:
 	shared_ptr<VariableNode> variable;

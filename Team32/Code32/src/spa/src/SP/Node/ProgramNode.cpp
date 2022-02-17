@@ -6,7 +6,7 @@ SP::Node::ProgramNode::ProgramNode() = default;
 
 void SP::Node::ProgramNode::addProcedureNode(unique_ptr<ProcedureNode> procedure) { procedures.push_back(move(procedure)); }
 
-unique_ptr<SP::Node::ProgramNode> SP::Node::ProgramNode::parseProgram(Lexer& lex, int& statement_count) {
+unique_ptr<SP::Node::ProgramNode> SP::Node::ProgramNode::parseProgram(Lexer& lex, StmtRef& statement_count) {
 	unique_ptr<ProgramNode> program = make_unique<ProgramNode>();
 	do {
 		program->addProcedureNode(ProcedureNode::parseProcedure(lex, statement_count));
