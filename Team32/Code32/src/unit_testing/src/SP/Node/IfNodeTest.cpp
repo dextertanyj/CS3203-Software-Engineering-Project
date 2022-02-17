@@ -87,60 +87,70 @@ TEST_CASE("SP::Node::IfNode::parseIfStatement") {
                                                           move(if_stmt_lst), move(else_stmt_lst));
         REQUIRE(node->equals(expected));
         REQUIRE_EQUALS(statement_count, 4);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("Missing Condition Test") {
         lex.initialize("(  ) then { read y; } else { x = 10; }");
         REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), Common::ExpressionProcessor::ExpressionProcessorException);
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "then");
     }
 
     SECTION("Missing Condition Open Bracket Test") {
         lex.initialize("x == 10) then { read y; } else { x = 10; }");
         REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), SP::TokenizationException);
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "x");
     }
 
     SECTION("Missing Condition Close Bracket Test") {
         lex.initialize("(x == 10 then { read y; } else { x = 10; }");
         REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), SP::TokenizationException);
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "then");
     }
 
     SECTION("Missing Then Keyword Test") {
         lex.initialize("(x == 10) else { x = 10; }");
         REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), SP::TokenizationException);
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "else");
     }
 
     SECTION("Empty Then Block Test") {
         lex.initialize("(x == 10) then {  } else { x = 10; }");
         REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), SP::ParseException);
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "else");
     }
 
-    SECTION("Missing Else Test") {
+    SECTION("Missing Else Keyword Test") {
         lex.initialize("( x > 0 ) then { read y; } ");
         REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), SP::TokenizationException);
         REQUIRE_EQUALS(statement_count, 3);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("Empty Else Block Test") {
         lex.initialize("(x == 10) then { read y; } else {  }");
         REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), SP::ParseException);
         REQUIRE_EQUALS(statement_count, 3);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("Missing Brackets Test") {
         lex.initialize("( x > 0 ) then  read y; } else { x = 10; }");
         REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), SP::TokenizationException);
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "read");
     }
 
     SECTION("Wrong Brackets Type Test") {
-        lex.initialize("( x > 0 ) then  read y; } else ( x = 10; )");
+        lex.initialize("( x > 0 ) then { read y; } else ( x = 10; )");
         REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), SP::TokenizationException);
-        REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(statement_count, 3);
+        REQUIRE_EQUALS(lex.peekToken(), "(");
     }
 }
 

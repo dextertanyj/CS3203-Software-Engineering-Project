@@ -37,6 +37,7 @@ TEST_CASE("SP::Node::VariableNode::parseVariable") {
         unique_ptr<VariableNode> node = VariableNode::parseVariable(lex);
         unique_ptr<VariableNode> other = make_unique<VariableNode>(VariableNode("test"));
         REQUIRE(node->equals(move(other)));
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("Parse Valid Name Token") {
@@ -44,14 +45,17 @@ TEST_CASE("SP::Node::VariableNode::parseVariable") {
         unique_ptr<VariableNode> node = VariableNode::parseVariable(lex);
         unique_ptr<VariableNode> other = make_unique<VariableNode>(VariableNode("test123"));
         REQUIRE(node->equals(move(other)));
+        REQUIRE_EQUALS(lex.peekToken(), "t1est23");
         node = VariableNode::parseVariable(lex);
         other = make_unique<VariableNode>(VariableNode("t1est23"));
         REQUIRE(node->equals(move(other)));
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("Parse Invalid Name Token") {
         lex.initialize("123test");
         REQUIRE_THROWS_AS(VariableNode::parseVariable(lex), SP::ParseException);
+        REQUIRE_EQUALS(lex.peekToken(), "test");
     }
 
     SECTION("Parse Valid Only Letters Name String") {

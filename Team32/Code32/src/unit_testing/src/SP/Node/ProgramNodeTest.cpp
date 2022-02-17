@@ -82,11 +82,13 @@ TEST_CASE("SP::Node::ProgramNode::parseProgram") {
         expected->addProcedureNode(move(procedure_2));
         REQUIRE(node->equals(expected));
         REQUIRE_EQUALS(statement_count, 3);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("0 procedure Test") {
         lex.initialize(" ");
         REQUIRE_THROWS_AS(ProgramNode::parseProgram(lex, statement_count), SP::TokenizationException);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
 }

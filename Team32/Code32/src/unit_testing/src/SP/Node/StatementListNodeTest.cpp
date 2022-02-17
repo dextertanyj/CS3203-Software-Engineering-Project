@@ -108,6 +108,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList") {
         other->addStatementNode(move(read_node));
         REQUIRE(statement_list_node->equals(other));
         REQUIRE_EQUALS(statement_count, 3);
+        REQUIRE_EQUALS(lex.peekToken(), "}");
     }
 
     SECTION("Different Statement Number Test") {
@@ -120,24 +121,28 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList") {
         other->addStatementNode(move(read_node));
         REQUIRE_FALSE(statement_list_node->equals(other));
         REQUIRE_EQUALS(statement_count, 3);
+        REQUIRE_EQUALS(lex.peekToken(), "}");
     }
 
     SECTION("Missing Token Test") {
         lex.initialize("print x read y; }");
         REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::TokenizationException);
         REQUIRE_EQUALS(statement_count, 1);
+        REQUIRE_EQUALS(lex.peekToken(), "read");
     }
 
     SECTION("Extra Token Test") {
-        lex.initialize("print x ;; read y; }");
+        lex.initialize("print x ;; print y; }");
         REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::ParseException);
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "print");
     }
 
     SECTION("Invalid Keyword Test") {
         lex.initialize("prints x ; }");
         REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::ParseException);
         REQUIRE_EQUALS(statement_count, 1);
+        REQUIRE_EQUALS(lex.peekToken(), "x");
     }
 }
 

@@ -50,24 +50,28 @@ TEST_CASE("SP::Node::CallNode::parseCallStatement") {
         shared_ptr<CallNode> expected = make_shared<CallNode>(1, "readPoint");
         REQUIRE(node->equals(move(expected)));
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("Missing Semicolon Test") {
         lex.initialize("readPoint");
         REQUIRE_THROWS_AS(CallNode::parseCallStatement(lex, statement_count), SP::TokenizationException);
         REQUIRE_EQUALS(statement_count, 1);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("Invalid Procedure Name Test") {
         lex.initialize("1readPoint;");
         REQUIRE_THROWS_AS(CallNode::parseCallStatement(lex, statement_count), SP::ParseException);
         REQUIRE_EQUALS(statement_count, 1);
+        REQUIRE_EQUALS(lex.peekToken(), "readPoint");
     }
 
     SECTION("Missing Procedure Test") {
         lex.initialize(" ");
         REQUIRE_THROWS_AS(CallNode::parseCallStatement(lex, statement_count), SP::ParseException);
         REQUIRE_EQUALS(statement_count, 1);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 }
 

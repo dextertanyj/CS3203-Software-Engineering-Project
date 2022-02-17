@@ -1,4 +1,5 @@
 #include "../Node/MockUtilities.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "SP/Node/AssignmentNode.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/VariableNode.h"
@@ -63,6 +64,7 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement") {
         shared_ptr<AssignmentNode> expected = make_shared<AssignmentNode>(1, move(assignee), move(expression));
         REQUIRE(node->equals(expected));
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("Complex Valid Token Test") {
@@ -74,30 +76,35 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement") {
         shared_ptr<AssignmentNode> expected = make_shared<AssignmentNode>(1, move(assignee), move(expression));
         REQUIRE(node->equals(expected));
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("Missing Token Test") {
         lex.initialize("(x + 6);");
         REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count"), SP::TokenizationException);
         REQUIRE_EQUALS(statement_count, 1);
+        REQUIRE_EQUALS(lex.peekToken(), "(");
     }
 
     SECTION("Missing Terminal Token Test") {
         lex.initialize("= (x + 6)");
         REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count"), SP::TokenizationException);
         REQUIRE_EQUALS(statement_count, 1);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("Invalid Format Test") {
         lex.initialize("== (x + 6);");
         REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count"), SP::TokenizationException);
         REQUIRE_EQUALS(statement_count, 1);
+        REQUIRE_EQUALS(lex.peekToken(), "==");
     }
 
     SECTION("Incomplete Brackets Test") {
-        lex.initialize("== ((x + 6;)");
-        REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count"), SP::TokenizationException);
+        lex.initialize("= ((x + 6);");
+        REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count"), Common::ExpressionProcessor::ExpressionProcessorException);
         REQUIRE_EQUALS(statement_count, 1);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 }
 

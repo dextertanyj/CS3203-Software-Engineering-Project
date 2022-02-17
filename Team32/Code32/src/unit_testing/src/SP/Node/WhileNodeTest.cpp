@@ -67,42 +67,49 @@ TEST_CASE("SP::Node::WhileNode::parseWhileStatement") {
         shared_ptr<WhileNode> expected = make_shared<WhileNode>(1, move(cond_expr), move(stmt_lst));
         REQUIRE(node->equals(expected));
         REQUIRE_EQUALS(statement_count, 4);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("Missing Condition Token Test") {
         lex.initialize("( ) { count = count + 1; call readPoint; }");
         REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), Common::ExpressionProcessor::ExpressionProcessorException);
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "{");
     }
 
     SECTION("Missing Condition Open Brackets Test") {
         lex.initialize("x == 0) { count = count + 1; call readPoint; }");
         REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::TokenizationException);
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "x");
     }
 
     SECTION("Missing Condition Close Brackets Test") {
         lex.initialize("(x == 0 { count = count + 1; call readPoint; }");
         REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::TokenizationException);
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "{");
     }
 
     SECTION("Missing Branch Token Test") {
         lex.initialize("(x == 0) { }");
         REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::ParseException);
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("Missing Opening Brackets Token Test") {
         lex.initialize("(x == 0)  count = count + 1; call readPoint; }");
         REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::TokenizationException);
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "count");
     }
 
     SECTION("Closing Opening Brackets Token Test") {
         lex.initialize("(x == 0) { count = count + 1; call readPoint; ");
         REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::ParseException);
         REQUIRE_EQUALS(statement_count, 4);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 }
 

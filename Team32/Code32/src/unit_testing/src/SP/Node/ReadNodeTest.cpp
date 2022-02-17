@@ -51,24 +51,28 @@ TEST_CASE("SP::Node::ReadNode::parseReadStatement") {
         shared_ptr<ReadNode> expected = make_shared<ReadNode>(1, make_unique<VariableNode>("x"));
         REQUIRE(node->equals(move(expected)));
         REQUIRE_EQUALS(statement_count, 2);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("Missing Semicolon Test") {
         lex.initialize("x");
         REQUIRE_THROWS_AS(ReadNode::parseReadStatement(lex, statement_count), SP::TokenizationException);
         REQUIRE_EQUALS(statement_count, 1);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 
     SECTION("Invalid Variable Name Test") {
         lex.initialize("1x;");
         REQUIRE_THROWS_AS(ReadNode::parseReadStatement(lex, statement_count), SP::ParseException);
         REQUIRE_EQUALS(statement_count, 1);
+        REQUIRE_EQUALS(lex.peekToken(), "x");
     }
 
     SECTION("Missing Variable Test") {
         lex.initialize(" ");
         REQUIRE_THROWS_AS(ReadNode::parseReadStatement(lex, statement_count), SP::ParseException);
         REQUIRE_EQUALS(statement_count, 1);
+        REQUIRE_EQUALS(lex.peekToken(), "");
     }
 }
 
