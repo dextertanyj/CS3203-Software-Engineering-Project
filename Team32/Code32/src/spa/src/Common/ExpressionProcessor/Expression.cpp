@@ -36,7 +36,7 @@ Expression Expression::parse(LexerInterface& lex, ExpressionType type) {
 	if (!checkExpressionType(expression, type)) {
 		throw ExpressionProcessorException("Expression invalid");
 	}
-	return Expression(expression, variables, constants);
+	return {expression, variables, constants};
 }
 
 shared_ptr<ExpressionNode> Expression::construct(LexerInterface& lex, Acceptor acceptor, unordered_set<VarRef>& variables,
@@ -99,7 +99,7 @@ shared_ptr<ExpressionNode> Expression::parseTerminalSafe(LexerInterface& lex, Ac
 	return expression;
 }
 
-shared_ptr<ExpressionNode> Expression::parseTerminal(LexerInterface& lex, bool (*acceptor)(string op), unordered_set<VarRef>& variables,
+shared_ptr<ExpressionNode> Expression::parseTerminal(LexerInterface& lex, Acceptor acceptor, unordered_set<VarRef>& variables,
                                                      unordered_set<ConstVal>& constants) {
 	string token = lex.readToken();
 	if (OperatorAcceptor::acceptUnaryLogical(token)) {

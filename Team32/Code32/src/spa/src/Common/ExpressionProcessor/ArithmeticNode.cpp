@@ -20,6 +20,6 @@ bool Common::ExpressionProcessor::ArithmeticNode::equals(shared_ptr<ExpressionNo
 	return other->op == this->op && other->lhs->equals(this->lhs) && other->rhs->equals(this->rhs);
 }
 
-bool Common::ExpressionProcessor::ArithmeticNode::contains(shared_ptr<ExpressionNode> other) {
-	return equals(other) || this->lhs->contains(other) || this->rhs->contains(other);
+bool Common::ExpressionProcessor::ArithmeticNode::contains(shared_ptr<ExpressionNode> object) {
+	return equals(object) || this->lhs->contains(object) || this->rhs->contains(object);
 }

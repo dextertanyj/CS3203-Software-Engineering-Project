@@ -8,23 +8,23 @@
 
 using namespace std;
 
-typedef bool (*Acceptor)(string op);
+typedef bool (*Acceptor)(const string& op);
 
 namespace Common::ExpressionProcessor::OperatorAcceptor {
 Acceptor getAcceptor(ExpressionType type);
-bool acceptArithmetic(string op);
+bool acceptArithmetic(const string& op);
 bool acceptArithmetic(MathematicalOperator op);
-bool acceptRelational(string op);
+bool acceptRelational(const string& op);
 bool acceptRelational(MathematicalOperator op);
-bool acceptRelationalStrict(string op);
+bool acceptRelationalStrict(const string& op);
 bool acceptRelationalStrict(MathematicalOperator op);
-bool acceptLogical(string op);
+bool acceptLogical(const string& op);
 bool acceptLogical(MathematicalOperator op);
-bool acceptUnaryLogical(string op);
+bool acceptUnaryLogical(const string& op);
 bool acceptUnaryLogical(MathematicalOperator op);
-bool acceptBinaryLogical(string op);
+bool acceptBinaryLogical(const string& op);
 bool acceptBinaryLogical(MathematicalOperator op);
-bool acceptLogicalStrict(string op);
+bool acceptLogicalStrict(const string& op);
 bool acceptLogicalStrict(MathematicalOperator op);
 };  // namespace Common::ExpressionProcessor::OperatorAcceptor
 

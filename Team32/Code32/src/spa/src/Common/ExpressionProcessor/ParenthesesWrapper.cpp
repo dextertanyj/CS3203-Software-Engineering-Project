@@ -11,10 +11,10 @@ shared_ptr<Common::ExpressionProcessor::ExpressionNode> Common::ExpressionProces
 	return expression;
 }
 
-bool Common::ExpressionProcessor::ParenthesesWrapper::equals(shared_ptr<ExpressionNode> object) {
+bool Common::ExpressionProcessor::ParenthesesWrapper::equals(shared_ptr<ExpressionNode> /*object*/) {
 	throw ExpressionProcessorException("Logic error");
 }
 
-bool Common::ExpressionProcessor::ParenthesesWrapper::contains(shared_ptr<ExpressionNode> object) {
+bool Common::ExpressionProcessor::ParenthesesWrapper::contains(shared_ptr<ExpressionNode> /*object*/) {
 	throw ExpressionProcessorException("Logic error");
 }

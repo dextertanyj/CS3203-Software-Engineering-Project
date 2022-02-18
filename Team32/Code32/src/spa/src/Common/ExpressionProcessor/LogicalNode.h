@@ -6,7 +6,7 @@
 
 class Common::ExpressionProcessor::LogicalNode : public ExpressionNode {
 public:
-	virtual ~LogicalNode() = default;
+	~LogicalNode() override = default;
 };
 
 #endif  // SPA_LOGICALNODE_H

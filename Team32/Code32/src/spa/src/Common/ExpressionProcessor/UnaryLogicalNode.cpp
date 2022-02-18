@@ -20,6 +20,6 @@ bool Common::ExpressionProcessor::UnaryLogicalNode::equals(shared_ptr<Expression
 	return other->op == this->op && other->expression->equals(this->expression);
 }
 
-bool Common::ExpressionProcessor::UnaryLogicalNode::contains(shared_ptr<ExpressionNode> other) {
-	return equals(other) || expression->contains(other);
+bool Common::ExpressionProcessor::UnaryLogicalNode::contains(shared_ptr<ExpressionNode> object) {
+	return equals(object) || expression->contains(object);
 }
