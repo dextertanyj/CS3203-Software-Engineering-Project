@@ -15,6 +15,9 @@ COMBINED_RESULT="$RESULT_PATH"/combined.txt;
 mkdir -p "$RESULT_PATH";
 rm "$COMBINED_RESULT"
 
+TESTNAMES=();
+RESULT=();
+
 for FILE in "$SCRIPT_PATH/"*_source.txt
 do
   TESTNAME=${FILE#"$SCRIPT_PATH/"};
@@ -26,11 +29,23 @@ do
   "$AUTOTESTER_PATH" "$TEST_SOURCE" "$TEST_QUERIES" "$TEST_OUTPUT" | \
     grep -E "(Evaluating query|answer|exception|Missing:|Additional:)" | \
     grep -B 4 -E "(Additional:)" >> "$COMBINED_RESULT";
+  RESULT[${#RESULT[@]}]=${PIPESTATUS[0]};
+  TESTNAMES[${#TESTNAMES[@]}]="$TESTNAME";
+done
+
+SUCCESS=0;
+
+for IDX in "${!RESULT[@]}"
+do
+  if [ "${RESULT[$IDX]}" -ne 0 ]; then
+    echo "${TESTNAMES[$IDX]} test failed exceptionally";
+    SUCCESS=1;
+  fi
 done
 
 if ! grep -E "(Evaluating)" "$COMBINED_RESULT" ; then
-  exit 0;
+  exit $SUCCESS;
 else
   cat "$COMBINED_RESULT";
-  exit 1;
+  exit "$((SUCCESS + 1))";
 fi
