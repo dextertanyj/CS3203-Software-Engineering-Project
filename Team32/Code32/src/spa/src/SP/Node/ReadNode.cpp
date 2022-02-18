@@ -1,6 +1,6 @@
 #include "SP/Node/ReadNode.h"
 
-SP::Node::ReadNode::ReadNode(StmtRef stmtNo, unique_ptr<VariableNode> variable) : StatementNode(stmtNo), variable(move(variable)) {}
+SP::Node::ReadNode::ReadNode(StmtRef stmt_no, unique_ptr<VariableNode> variable) : StatementNode(stmt_no), variable(move(variable)) {}
 
 StmtRef SP::Node::ReadNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();

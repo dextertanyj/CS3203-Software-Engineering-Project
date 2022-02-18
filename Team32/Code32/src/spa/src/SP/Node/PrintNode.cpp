@@ -2,7 +2,7 @@
 
 using namespace std;
 
-SP::Node::PrintNode::PrintNode(StmtRef stmtNo, unique_ptr<VariableNode> variable) : StatementNode(stmtNo), variable(move(variable)) {}
+SP::Node::PrintNode::PrintNode(StmtRef stmt_no, unique_ptr<VariableNode> variable) : StatementNode(stmt_no), variable(move(variable)) {}
 
 StmtRef SP::Node::PrintNode::extract(PKB &pkb) {
 	StmtRef stmt_ref = getStmtRef();

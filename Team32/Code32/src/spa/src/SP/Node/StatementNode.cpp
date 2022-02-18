@@ -9,7 +9,7 @@
 #include "SP/Node/WhileNode.h"
 #include "SP/SP.h"
 
-SP::Node::StatementNode::StatementNode(StmtRef stmtNo) : stmtNo(stmtNo) {}
+SP::Node::StatementNode::StatementNode(StmtRef stmt_no) : stmt_no(stmt_no) {}
 
 unique_ptr<SP::Node::StatementNode> SP::Node::StatementNode::parseStatement(Lexer& lex, StmtRef& statement_count) {
 	string token = lex.readToken();
@@ -36,4 +36,4 @@ unique_ptr<SP::Node::StatementNode> SP::Node::StatementNode::parseStatement(Lexe
 	throw SP::ParseException("Unknown statement type encountered" + token);
 }
 
-StmtRef SP::Node::StatementNode::getStmtRef() const { return stmtNo; }
+StmtRef SP::Node::StatementNode::getStmtRef() const { return stmt_no; }

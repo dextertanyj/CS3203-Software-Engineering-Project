@@ -4,8 +4,8 @@
 
 using namespace std;
 
-SP::Node::ProcedureNode::ProcedureNode(string name, unique_ptr<StatementListNode> stmtLst, StmtRef start, StmtRef end)
-    : name(move(name)), start(start), end(end), stmtLst(move(stmtLst)) {}
+SP::Node::ProcedureNode::ProcedureNode(string name, unique_ptr<StatementListNode> stmt_list, StmtRef start, StmtRef end)
+	: name(move(name)), start(start), end(end), stmt_list(move(stmt_list)) {}
 
 unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parseProcedure(Lexer& lex, StmtRef& statement_count) {
 	lex.nextIf("procedure");
@@ -22,10 +22,10 @@ unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parseProcedure(Lexe
 }
 
 void SP::Node::ProcedureNode::extract(PKB& pkb) {
-	stmtLst->extract(pkb);
+	stmt_list->extract(pkb);
 }
 
 bool SP::Node::ProcedureNode::equals(const shared_ptr<ProcedureNode>& object) {
-	return this->name == object->name && this->stmtLst->equals(object->stmtLst) && this->start == object->start
+	return this->name == object->name && this->stmt_list->equals(object->stmt_list) && this->start == object->start
         && this->end == object->end;
 }

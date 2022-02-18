@@ -15,7 +15,7 @@ using namespace std;
 
 class SP::Node::AssignmentNode : public StatementNode {
 public:
-	AssignmentNode(StmtRef stmtNo, unique_ptr<VariableNode> assignee, unique_ptr<ExpressionNode> expression);
+	AssignmentNode(StmtRef stmt_no, unique_ptr<VariableNode> assignee, unique_ptr<ExpressionNode> expression);
 	static unique_ptr<AssignmentNode> parseAssignmentStatement(Lexer& lex, StmtRef& statement_count, string token);
 	StmtRef extract(PKB& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;

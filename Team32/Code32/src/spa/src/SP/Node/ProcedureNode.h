@@ -13,7 +13,7 @@ using namespace std;
 
 class SP::Node::ProcedureNode {
 public:
-	ProcedureNode(string name, unique_ptr<StatementListNode> stmtLst, StmtRef start, StmtRef end);
+	ProcedureNode(string name, unique_ptr<StatementListNode> stmt_list, StmtRef start, StmtRef end);
 	static unique_ptr<ProcedureNode> parseProcedure(Lexer& lex, StmtRef& statement_count);
 	void extract(PKB& pkb);
 	bool equals(const shared_ptr<ProcedureNode>& object);
@@ -22,7 +22,7 @@ private:
 	ProcRef name;
     StmtRef start;
     StmtRef end;
-	shared_ptr<StatementListNode> stmtLst;
+	shared_ptr<StatementListNode> stmt_list;
 };
 
 #endif  // SPA_PROCEDURENODE_H

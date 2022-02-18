@@ -21,7 +21,7 @@ public:
 	vector<shared_ptr<StatementNode>> getStatementList();
 
 private:
-	vector<shared_ptr<StatementNode>> stmtList;
+	vector<shared_ptr<StatementNode>> stmt_list;
 };
 
 #endif  // SPA_STATEMENTLISTNODE_H

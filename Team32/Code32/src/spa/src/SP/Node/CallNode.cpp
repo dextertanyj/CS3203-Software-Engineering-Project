@@ -2,7 +2,7 @@
 
 #include "Common/Validator.h"
 
-SP::Node::CallNode::CallNode(StmtRef stmtNo, ProcRef procedure) : StatementNode(stmtNo), procedure(move(procedure)) {}
+SP::Node::CallNode::CallNode(StmtRef stmt_no, ProcRef procedure) : StatementNode(stmt_no), procedure(move(procedure)) {}
 
 StmtRef SP::Node::CallNode::extract(PKB &pkb) {
 	StmtRef stmt_ref = getStmtRef();

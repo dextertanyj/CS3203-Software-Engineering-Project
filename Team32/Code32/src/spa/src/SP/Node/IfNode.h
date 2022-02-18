@@ -15,16 +15,16 @@ using namespace std;
 
 class SP::Node::IfNode : public StatementNode {
 public:
-	IfNode(StmtRef stmtNo, unique_ptr<ExpressionNode> condExpr, unique_ptr<StatementListNode> ifStmtLst,
-	       unique_ptr<StatementListNode> elseStmtLst);
+	IfNode(StmtRef stmt_no, unique_ptr<ExpressionNode> cond_expr, unique_ptr<StatementListNode> if_stmt_list,
+	       unique_ptr<StatementListNode> else_stmt_list);
 	static unique_ptr<IfNode> parseIfStatement(Lexer& lex, StmtRef& statement_count);
 	StmtRef extract(PKB& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
 
 private:
-	shared_ptr<ExpressionNode> condExpr;
-	shared_ptr<StatementListNode> ifStmtLst;
-	shared_ptr<StatementListNode> elseStmtLst;
+	shared_ptr<ExpressionNode> cond_expr;
+	shared_ptr<StatementListNode> if_stmt_list;
+	shared_ptr<StatementListNode> else_stmt_list;
 };
 
 #endif  // SPA_IFNODE_H
