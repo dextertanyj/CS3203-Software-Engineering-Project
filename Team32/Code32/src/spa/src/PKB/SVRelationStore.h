@@ -3,8 +3,7 @@
 
 #pragma once
 
-#include <stdio.h>
-
+#include <cstdio>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -21,9 +20,9 @@ public:
 	SVRelationStore();
 	void set(shared_ptr<StmtInfo> statement, VarRef variable);
 	void set(shared_ptr<StmtInfo> statement, unordered_set<VarRef> variables);
-	bool check(StmtRef index, VarRef variable);
+	bool check(StmtRef index, const VarRef& variable);
 	unordered_set<VarRef> getByStmt(StmtRef index);
-	unordered_set<shared_ptr<StmtInfo>> getByVar(VarRef variable);
+	unordered_set<shared_ptr<StmtInfo>> getByVar(const VarRef& variable);
 	void clear();
 
 private:

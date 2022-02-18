@@ -20,17 +20,15 @@ void SP::Node::ProgramNode::extract(PKB& pkb) {
 }
 
 bool SP::Node::ProgramNode::equals(const shared_ptr<ProgramNode>& object) {
-    if (this->procedures.size() != object->procedures.size()) {
-        return false;
-    }
-    for (size_t i = 0; i < this->procedures.size(); i++) {
-        if (!this->procedures[i]->equals(object->procedures[i])) {
-            return false;
-        }
-    }
-    return true;
+	if (this->procedures.size() != object->procedures.size()) {
+		return false;
+	}
+	for (size_t i = 0; i < this->procedures.size(); i++) {
+		if (!this->procedures[i]->equals(object->procedures[i])) {
+			return false;
+		}
+	}
+	return true;
 }
 
-vector<shared_ptr<SP::Node::ProcedureNode>> SP::Node::ProgramNode::getProcedures() {
-    return this->procedures;
-}
+vector<shared_ptr<SP::Node::ProcedureNode>> SP::Node::ProgramNode::getProcedures() { return this->procedures; }

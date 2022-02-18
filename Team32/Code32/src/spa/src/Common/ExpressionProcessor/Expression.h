@@ -7,8 +7,8 @@
 
 #include "Common/ExpressionProcessor/ExpressionNode.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
-#include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "Common/ExpressionProcessor/LexerInterface.h"
+#include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "Common/TypeDefs.h"
 
 using namespace std;

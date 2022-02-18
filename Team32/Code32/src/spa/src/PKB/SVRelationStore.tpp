@@ -1,7 +1,8 @@
+#include "PKB/SVRelationStore.h"
+
 #include <algorithm>
 
 #include "PKB/Modifies.h"
-#include "PKB/SVRelationStore.h"
 #include "PKB/Uses.h"
 
 template <class T>
@@ -65,7 +66,7 @@ void SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRefSet variables
 }
 
 template <class T>
-bool SVRelationStore<T>::check(StmtRef index, VarRef variable) {
+bool SVRelationStore<T>::check(StmtRef index, const VarRef& variable) {
 	if (index <= 0) {
 		throw invalid_argument("Statement number must be a positive integer.");
 	}
@@ -96,7 +97,7 @@ unordered_set<VarRef> SVRelationStore<T>::getByStmt(StmtRef index) {
 }
 
 template <class T>
-unordered_set<shared_ptr<StmtInfo>> SVRelationStore<T>::getByVar(VarRef variable) {
+unordered_set<shared_ptr<StmtInfo>> SVRelationStore<T>::getByVar(const VarRef& variable) {
 	if (variable.length() == 0) {
 		throw invalid_argument("Variable name must have length more than 0.");
 	}

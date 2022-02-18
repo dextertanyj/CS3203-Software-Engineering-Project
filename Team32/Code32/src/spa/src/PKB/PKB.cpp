@@ -12,7 +12,7 @@ void PKB::setStmtType(StmtRef idx, StmtType type) { statement_store.insert(idx, 
 
 void PKB::setConstant(ConstVal value) { constant_store.insert(value); }
 
-void PKB::setConstant(unordered_set<ConstVal> values) { constant_store.insert(values); }
+void PKB::setConstant(const unordered_set<ConstVal>& values) { constant_store.insert(values); }
 
 StmtInfoPtrSet PKB::getStatements() { return statement_store.getAll(); }
 
@@ -82,7 +82,7 @@ void PKB::setModifies(StmtRef idx, VarRef variable) {
 		throw "Statement does not exist";
 	}
 	variable_store.insert(variable);
-	modifies_store.set(std::move(statement), std::move(variable));
+	modifies_store.set(move(statement), move(variable));
 }
 
 void PKB::setModifies(StmtRef idx, VarRefSet variables) {
@@ -91,12 +91,12 @@ void PKB::setModifies(StmtRef idx, VarRefSet variables) {
 		throw "Statement does not exist";
 	}
 	variable_store.insert(variables);
-	modifies_store.set(std::move(statement), std::move(variables));
+	modifies_store.set(move(statement), move(variables));
 }
 
-bool PKB::checkModifies(StmtRef idx, VarRef variable) { return modifies_store.check(idx, std::move(variable)); }
+bool PKB::checkModifies(StmtRef idx, const VarRef& variable) { return modifies_store.check(idx, variable); }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(VarRef variable) { return modifies_store.getByVar(std::move(variable)); }
+unordered_set<shared_ptr<StmtInfo>> PKB::getModifiesByVar(const VarRef& variable) { return modifies_store.getByVar(variable); }
 
 unordered_set<VarRef> PKB::getModifiesByStmt(StmtRef idx) { return modifies_store.getByStmt(idx); }
 
@@ -106,7 +106,7 @@ void PKB::setUses(StmtRef idx, VarRef variable) {
 		throw "Statement does not exist";
 	}
 	variable_store.insert(variable);
-	uses_store.set(statement, std::move(variable));
+	uses_store.set(statement, move(variable));
 }
 
 void PKB::setUses(StmtRef idx, VarRefSet variables) {
@@ -115,32 +115,33 @@ void PKB::setUses(StmtRef idx, VarRefSet variables) {
 		throw "Statement does not exist";
 	}
 	variable_store.insert(variables);
-	uses_store.set(statement, std::move(variables));
+	uses_store.set(statement, move(variables));
 }
 
-bool PKB::checkUses(StmtRef stmt, VarRef variable) { return uses_store.check(stmt, variable); }
+bool PKB::checkUses(StmtRef stmt, const VarRef& variable) { return uses_store.check(stmt, variable); }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::getUsesByVar(VarRef variable) { return uses_store.getByVar(variable); }
+unordered_set<shared_ptr<StmtInfo>> PKB::getUsesByVar(const VarRef& variable) { return uses_store.getByVar(variable); }
 
 unordered_set<VarRef> PKB::getUsesByStmt(StmtRef stmt) { return uses_store.getByStmt(stmt); }
 
 void PKB::setAssign(StmtRef idx, VarRef variable, Common::ExpressionProcessor::Expression expression) {
 	shared_ptr<StmtInfo> statement = statement_store.get(idx);
-	return assign_store.setAssign(statement, variable, expression);
+	return assign_store.setAssign(statement, move(variable), move(expression));
 }
 
-bool PKB::patternExists(VarRef variable, Common::ExpressionProcessor::Expression expression, bool is_exact_match) {
+bool PKB::patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) {
 	return assign_store.patternExists(variable, expression, is_exact_match);
 }
 
-StmtInfoPtrSet PKB::getStmtsWithPattern(VarRef variable, Common::ExpressionProcessor::Expression expression, bool is_exact_match) {
+StmtInfoPtrSet PKB::getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
+                                        bool is_exact_match) {
 	return assign_store.getStmtsWithPattern(variable, expression, is_exact_match);
 }
 
-StmtInfoPtrSet PKB::getStmtsWithPatternLHS(VarRef variable) { return assign_store.getStmtsWithPatternLHS(variable); }
+StmtInfoPtrSet PKB::getStmtsWithPatternLHS(const VarRef& variable) { return assign_store.getStmtsWithPatternLHS(variable); }
 
-vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getStmtsWithPatternRHS(Common::ExpressionProcessor::Expression expression,
-                                                                              bool is_exact_match) {
+vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
+                                                                       bool is_exact_match) {
 	return assign_store.getStmtsWithPatternRHS(expression, is_exact_match);
 }
 

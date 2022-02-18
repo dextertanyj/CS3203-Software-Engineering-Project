@@ -28,12 +28,12 @@ public:
 	void setParent(StmtRef, StmtRef);
 	void setStmtType(StmtRef, StmtType);
 	void setConstant(ConstVal);
-	void setConstant(unordered_set<ConstVal>);
+	void setConstant(const unordered_set<ConstVal>&);
 	void setUses(StmtRef, VarRef);
 	void setModifies(StmtRef, VarRef);
 	void setUses(StmtRef, VarRefSet);
 	void setModifies(StmtRef, VarRefSet);
-	void setAssign(StmtRef, VarRef variableLHS, Common::ExpressionProcessor::Expression opTree);
+	void setAssign(StmtRef, VarRef variable, Common::ExpressionProcessor::Expression expression);
 
 	// Get methods called by PQL
 
@@ -50,28 +50,28 @@ public:
 	StmtInfoPtrSet getChildStar(StmtRef);
 
 	// Follow get methods
-	shared_ptr<StmtInfo> getPreceding(StmtRef stmt);
+	shared_ptr<StmtInfo> getPreceding(StmtRef);
 	shared_ptr<StmtInfo> getFollower(StmtRef);
 	bool checkFollows(StmtRef, StmtRef);
 	StmtInfoPtrSet getFollowerStar(StmtRef);
 	StmtInfoPtrSet getPrecedingStar(StmtRef);
 
 	// Use get methods
-	bool checkUses(StmtRef, VarRef);
-	StmtInfoPtrSet getUsesByVar(VarRef);
+	bool checkUses(StmtRef, const VarRef&);
+	StmtInfoPtrSet getUsesByVar(const VarRef&);
 	VarRefSet getUsesByStmt(StmtRef);
 
 	// Modify get methods
-	bool checkModifies(StmtRef, VarRef);
-	StmtInfoPtrSet getModifiesByVar(VarRef);
+	bool checkModifies(StmtRef, const VarRef&);
+	StmtInfoPtrSet getModifiesByVar(const VarRef&);
 	VarRefSet getModifiesByStmt(StmtRef);
 
 	// Assign get methods
-	bool patternExists(VarRef varName, Common::ExpressionProcessor::Expression e, bool isRHSExactMatchNeeded);
-	StmtInfoPtrSet getStmtsWithPattern(VarRef varName, Common::ExpressionProcessor::Expression e, bool isRHSExactMatchNeeded);
-	StmtInfoPtrSet getStmtsWithPatternLHS(VarRef varName);
-	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(Common::ExpressionProcessor::Expression e,
-	                                                                  bool isRHSExactMatchNeeded);
+	bool patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& e, bool is_exact_match);
+	StmtInfoPtrSet getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& e, bool is_exact_match);
+	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& variable);
+	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& e,
+	                                                                  bool is_exact_match);
 
 	// Others
 	void clear();

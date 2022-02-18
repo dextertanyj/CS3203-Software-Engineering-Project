@@ -16,22 +16,22 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 	pkb.setUses(3, "y");
 
 	unordered_map<string, DesignEntity> map;
-	map.insert({ "s", DesignEntity::stmt });
-	map.insert({ "a", DesignEntity::assign });
-	map.insert({ "if", DesignEntity::if_ });
+	map.insert({ "s", DesignEntity::Stmt });
+	map.insert({ "a", DesignEntity::Assign });
+	map.insert({ "if", DesignEntity::If });
 
-	QueryStmtRef stmtNo1 = { StmtRefType::stmtNumber, "1" };
-	QueryStmtRef stmtNo2 = { StmtRefType::stmtNumber, "2" };
-	QueryStmtRef stmtNo3 = { StmtRefType::stmtNumber, "3" };
-	QueryStmtRef stmtNo4 = { StmtRefType::stmtNumber, "4" };
-	QueryStmtRef stmtSynonym = { StmtRefType::synonym, "s" };
-	QueryStmtRef assignSynonym = { StmtRefType::synonym, "a" };
-	QueryStmtRef ifSynonym = { StmtRefType::synonym, "if" };
-	QueryStmtRef stmtUnderscore = { StmtRefType::underscore, "_"};
-	QueryEntRef x = { EntRefType::varName, "x"};
-	QueryEntRef y = { EntRefType::varName, "y"};
-	QueryEntRef var = { EntRefType::synonym, "var"};
-	QueryEntRef varUnderscore = { EntRefType::underscore, "x"};
+	QueryStmtRef stmtNo1 = { StmtRefType::StmtNumber, "1" };
+	QueryStmtRef stmtNo2 = { StmtRefType::StmtNumber, "2" };
+	QueryStmtRef stmtNo3 = { StmtRefType::StmtNumber, "3" };
+	QueryStmtRef stmtNo4 = { StmtRefType::StmtNumber, "4" };
+	QueryStmtRef stmtSynonym = { StmtRefType::Synonym, "s" };
+	QueryStmtRef assignSynonym = { StmtRefType::Synonym, "a" };
+	QueryStmtRef ifSynonym = { StmtRefType::Synonym, "if" };
+	QueryStmtRef stmtUnderscore = { StmtRefType::Underscore, "_"};
+	QueryEntRef x = { EntRefType::VarName, "x"};
+	QueryEntRef y = { EntRefType::VarName, "y"};
+	QueryEntRef var = { EntRefType::Synonym, "var"};
+	QueryEntRef varUnderscore = { EntRefType::Underscore, "x"};
 
 	SECTION("trivial: stmtNumber & varName") {
 		UsesS uses1 = UsesS(stmtNo1, x);

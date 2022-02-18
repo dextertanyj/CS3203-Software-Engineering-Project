@@ -4,17 +4,17 @@
 #include <memory>
 #include <string>
 
+#include "Common/TypeDefs.h"
 #include "PKB/PKB.h"
 #include "SP/Lexer.h"
 #include "SP/Node/StatementNode.h"
 #include "SP/Node/VariableNode.h"
-#include "Common/TypeDefs.h"
 
 using namespace std;
 
 class SP::Node::PrintNode : public StatementNode {
 public:
-	PrintNode(StmtRef stmtNo, unique_ptr<VariableNode> variable);
+	PrintNode(StmtRef stmt_no, unique_ptr<VariableNode> variable);
 	StmtRef extract(PKB& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
 	static unique_ptr<PrintNode> parsePrintStatement(Lexer& lex, StmtRef& statement_count);

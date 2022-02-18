@@ -6,7 +6,7 @@
 
 class Common::ExpressionProcessor::AtomicNode : public ExpressionNode {
 public:
-	virtual ~AtomicNode() = default;
+	~AtomicNode() override = default;
 };
 
 #endif  // SPA_ATOMICNODE_H

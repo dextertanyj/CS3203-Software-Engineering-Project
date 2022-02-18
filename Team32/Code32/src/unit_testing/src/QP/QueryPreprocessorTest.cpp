@@ -41,36 +41,36 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid declarations") {
 		"if a, b,c; while Select; read such, that;assign pattern;variable CAP3;\nSelect a"
 	);
 	auto declarationList1 = qp1.getDeclarationList();
-    REQUIRE(declarationList1[0].type == DesignEntity::if_);
+    REQUIRE(declarationList1[0].type == DesignEntity::If);
     REQUIRE(declarationList1[0].symbol == "a");
-	REQUIRE(declarationList1[1].type == DesignEntity::if_);
+	REQUIRE(declarationList1[1].type == DesignEntity::If);
 	REQUIRE(declarationList1[1].symbol == "b");
-	REQUIRE(declarationList1[2].type == DesignEntity::if_);
+	REQUIRE(declarationList1[2].type == DesignEntity::If);
 	REQUIRE(declarationList1[2].symbol == "c");
-	REQUIRE(declarationList1[3].type == DesignEntity::while_);
+	REQUIRE(declarationList1[3].type == DesignEntity::While);
 	REQUIRE(declarationList1[3].symbol == "Select");
-	REQUIRE(declarationList1[4].type == DesignEntity::read);
+	REQUIRE(declarationList1[4].type == DesignEntity::Read);
 	REQUIRE(declarationList1[4].symbol == "such");
-	REQUIRE(declarationList1[5].type == DesignEntity::read);
+	REQUIRE(declarationList1[5].type == DesignEntity::Read);
 	REQUIRE(declarationList1[5].symbol == "that");
-	REQUIRE(declarationList1[6].type == DesignEntity::assign);
+	REQUIRE(declarationList1[6].type == DesignEntity::Assign);
 	REQUIRE(declarationList1[6].symbol == "pattern");
-	REQUIRE(declarationList1[7].type == DesignEntity::variable);
+	REQUIRE(declarationList1[7].type == DesignEntity::Variable);
 	REQUIRE(declarationList1[7].symbol == "CAP3");
 	QueryPreprocessor qpp2;
 	QueryProperties qp2 = qpp2.parseQuery(
 		"stmt stmt; read reads;print p1;procedure\nModifies; constant Uses; Select Modifies"
 	);
 	auto declarationList2 = qp2.getDeclarationList();
-	REQUIRE(declarationList2[0].type == DesignEntity::stmt);
+	REQUIRE(declarationList2[0].type == DesignEntity::Stmt);
 	REQUIRE(declarationList2[0].symbol == "stmt");
-	REQUIRE(declarationList2[1].type == DesignEntity::read);
+	REQUIRE(declarationList2[1].type == DesignEntity::Read);
 	REQUIRE(declarationList2[1].symbol == "reads");
-	REQUIRE(declarationList2[2].type == DesignEntity::print);
+	REQUIRE(declarationList2[2].type == DesignEntity::Print);
 	REQUIRE(declarationList2[2].symbol == "p1");
-	REQUIRE(declarationList2[3].type == DesignEntity::procedure);
+	REQUIRE(declarationList2[3].type == DesignEntity::Procedure);
 	REQUIRE(declarationList2[3].symbol == "Modifies");
-	REQUIRE(declarationList2[4].type == DesignEntity::constant);
+	REQUIRE(declarationList2[4].type == DesignEntity::Constant);
 	REQUIRE(declarationList2[4].symbol == "Uses");
 
 	// Multiple declaration clause with same design entity
@@ -79,13 +79,13 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid declarations") {
 		"while stmt; if reads;while p1; while Modifies;Select Modifies"
 	);
 	auto declarationList3 = qp3.getDeclarationList();
-	REQUIRE(declarationList3[0].type == DesignEntity::while_);
+	REQUIRE(declarationList3[0].type == DesignEntity::While);
 	REQUIRE(declarationList3[0].symbol == "stmt");
-	REQUIRE(declarationList3[1].type == DesignEntity::if_);
+	REQUIRE(declarationList3[1].type == DesignEntity::If);
 	REQUIRE(declarationList3[1].symbol == "reads");
-	REQUIRE(declarationList3[2].type == DesignEntity::while_);
+	REQUIRE(declarationList3[2].type == DesignEntity::While);
 	REQUIRE(declarationList3[2].symbol == "p1");
-	REQUIRE(declarationList3[3].type == DesignEntity::while_);
+	REQUIRE(declarationList3[3].type == DesignEntity::While);
 	REQUIRE(declarationList3[3].symbol == "Modifies");
 
 }
@@ -117,12 +117,12 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid declarations") {
 TEST_CASE("QP::QueryPreprocessor::parseQuery Select") {
 	QueryPreprocessor qpp1;
 	QueryProperties qp1 = qpp1.parseQuery("print a; if b; Select a");
-	REQUIRE(qp1.getSelect().type == DesignEntity::print);
+	REQUIRE(qp1.getSelect().type == DesignEntity::Print);
 	REQUIRE(qp1.getSelect().symbol == "a");
 
 	QueryPreprocessor qpp2;
 	QueryProperties qp2 = qpp2.parseQuery("print a; if b; Select b");
-	REQUIRE(qp2.getSelect().type == DesignEntity::if_);
+	REQUIRE(qp2.getSelect().type == DesignEntity::If);
 	REQUIRE(qp2.getSelect().symbol == "b");
 
 	// undeclared synonym
@@ -162,116 +162,116 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 	QueryPreprocessor qpp1;
 	QueryProperties qp1 = qpp1.parseQuery(univDeclarations + "Select s1 such that Follows(s1, s2)");
 	clause = dynamic_pointer_cast<Follows>(qp1.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getLeftStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getLeftStmt().stmtRef == "s1");
-	REQUIRE((*clause).getRightStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getRightStmt().stmtRef == "s2");
+	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getLeftStmt().stmt_ref == "s1");
+	REQUIRE((*clause).getRightStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getRightStmt().stmt_ref == "s2");
 
 	QueryPreprocessor qpp2;
 	QueryProperties qp2 = qpp2.parseQuery(univDeclarations + "Select i1 such that Follows(i1, _)");
 	clause = dynamic_pointer_cast<Follows>(qp2.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getLeftStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getLeftStmt().stmtRef == "i1");
-	REQUIRE((*clause).getRightStmt().type == StmtRefType::underscore);
-	REQUIRE((*clause).getRightStmt().stmtRef == "_");
+	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getLeftStmt().stmt_ref == "i1");
+	REQUIRE((*clause).getRightStmt().type == StmtRefType::Underscore);
+	REQUIRE((*clause).getRightStmt().stmt_ref == "_");
 
 	QueryPreprocessor qpp3;
 	QueryProperties qp3 = qpp3.parseQuery(univDeclarations + "Select r1 such that Follows(r1, 20)");
 	clause = dynamic_pointer_cast<Follows>(qp3.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getLeftStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getLeftStmt().stmtRef == "r1");
-	REQUIRE((*clause).getRightStmt().type == StmtRefType::stmtNumber);
-	REQUIRE((*clause).getRightStmt().stmtRef == "20");
+	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getLeftStmt().stmt_ref == "r1");
+	REQUIRE((*clause).getRightStmt().type == StmtRefType::StmtNumber);
+	REQUIRE((*clause).getRightStmt().stmt_ref == "20");
 
 	QueryPreprocessor qpp4;
 	QueryProperties qp4 = qpp4.parseQuery(univDeclarations + "Select a1 such that Follows(01, a1)");
 	clause = dynamic_pointer_cast<Follows>(qp4.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getLeftStmt().type == StmtRefType::stmtNumber);
-	REQUIRE((*clause).getLeftStmt().stmtRef == "01");
-	REQUIRE((*clause).getRightStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getRightStmt().stmtRef == "a1");
+	REQUIRE((*clause).getLeftStmt().type == StmtRefType::StmtNumber);
+	REQUIRE((*clause).getLeftStmt().stmt_ref == "01");
+	REQUIRE((*clause).getRightStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getRightStmt().stmt_ref == "a1");
 
 	QueryPreprocessor qpp5;
 	QueryProperties qp5 = qpp5.parseQuery(univDeclarations + "Select i1 such that Follows(32, 03)");
 	clause = dynamic_pointer_cast<Follows>(qp5.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getLeftStmt().type == StmtRefType::stmtNumber);
-	REQUIRE((*clause).getLeftStmt().stmtRef == "32");
-	REQUIRE((*clause).getRightStmt().type == StmtRefType::stmtNumber);
-	REQUIRE((*clause).getRightStmt().stmtRef == "03");
+	REQUIRE((*clause).getLeftStmt().type == StmtRefType::StmtNumber);
+	REQUIRE((*clause).getLeftStmt().stmt_ref == "32");
+	REQUIRE((*clause).getRightStmt().type == StmtRefType::StmtNumber);
+	REQUIRE((*clause).getRightStmt().stmt_ref == "03");
 
 	QueryPreprocessor qpp6;
 	QueryProperties qp6 = qpp6.parseQuery(univDeclarations + "Select w2 such that Follows(1010, _)");
 	clause = dynamic_pointer_cast<Follows>(qp6.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getLeftStmt().type == StmtRefType::stmtNumber);
-	REQUIRE((*clause).getLeftStmt().stmtRef == "1010");
-	REQUIRE((*clause).getRightStmt().type == StmtRefType::underscore);
-	REQUIRE((*clause).getRightStmt().stmtRef == "_");
+	REQUIRE((*clause).getLeftStmt().type == StmtRefType::StmtNumber);
+	REQUIRE((*clause).getLeftStmt().stmt_ref == "1010");
+	REQUIRE((*clause).getRightStmt().type == StmtRefType::Underscore);
+	REQUIRE((*clause).getRightStmt().stmt_ref == "_");
 
 	QueryPreprocessor qpp7;
 	QueryProperties qp7 = qpp7.parseQuery(univDeclarations + "Select s1 such that Follows(_, p2)");
 	clause = dynamic_pointer_cast<Follows>(qp7.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getLeftStmt().type == StmtRefType::underscore);
-	REQUIRE((*clause).getLeftStmt().stmtRef == "_");
-	REQUIRE((*clause).getRightStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getRightStmt().stmtRef == "p2");
+	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Underscore);
+	REQUIRE((*clause).getLeftStmt().stmt_ref == "_");
+	REQUIRE((*clause).getRightStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getRightStmt().stmt_ref == "p2");
 
 	QueryPreprocessor qpp8;
 	QueryProperties qp8 = qpp8.parseQuery(univDeclarations + "Select i1 such that Follows(_, 1)");
 	clause = dynamic_pointer_cast<Follows>(qp8.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getLeftStmt().type == StmtRefType::underscore);
-	REQUIRE((*clause).getLeftStmt().stmtRef == "_");
-	REQUIRE((*clause).getRightStmt().type == StmtRefType::stmtNumber);
-	REQUIRE((*clause).getRightStmt().stmtRef == "1");
+	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Underscore);
+	REQUIRE((*clause).getLeftStmt().stmt_ref == "_");
+	REQUIRE((*clause).getRightStmt().type == StmtRefType::StmtNumber);
+	REQUIRE((*clause).getRightStmt().stmt_ref == "1");
 
 	QueryPreprocessor qpp9;
 	QueryProperties qp9 = qpp9.parseQuery(univDeclarations + "Select w2 such that Follows(_, _)");
 	clause = dynamic_pointer_cast<Follows>(qp9.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getLeftStmt().type == StmtRefType::underscore);
-	REQUIRE((*clause).getLeftStmt().stmtRef == "_");
-	REQUIRE((*clause).getRightStmt().type == StmtRefType::underscore);
-	REQUIRE((*clause).getRightStmt().stmtRef == "_");
+	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Underscore);
+	REQUIRE((*clause).getLeftStmt().stmt_ref == "_");
+	REQUIRE((*clause).getRightStmt().type == StmtRefType::Underscore);
+	REQUIRE((*clause).getRightStmt().stmt_ref == "_");
 
 	// Follows*
 	QueryPreprocessor qpp10;
 	QueryProperties qp10 = qpp10.parseQuery(univDeclarations + "Select c2 such that Follows*(w1, c2)");
 	clauseT = dynamic_pointer_cast<FollowsT>(qp10.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clauseT).getLeftStmt().type == StmtRefType::synonym);
-	REQUIRE((*clauseT).getLeftStmt().stmtRef == "w1");
-	REQUIRE((*clauseT).getRightStmt().type == StmtRefType::synonym);
-	REQUIRE((*clauseT).getRightStmt().stmtRef == "c2");
+	REQUIRE((*clauseT).getLeftStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clauseT).getLeftStmt().stmt_ref == "w1");
+	REQUIRE((*clauseT).getRightStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clauseT).getRightStmt().stmt_ref == "c2");
 	QueryPreprocessor qpp11;
 	QueryProperties qp11 = qpp11.parseQuery(univDeclarations + "Select c2 such that Follows*      (   w1  , c2  )");
 	clauseT = dynamic_pointer_cast<FollowsT>(qp11.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clauseT).getLeftStmt().type == StmtRefType::synonym);
-	REQUIRE((*clauseT).getLeftStmt().stmtRef == "w1");
-	REQUIRE((*clauseT).getRightStmt().type == StmtRefType::synonym);
-	REQUIRE((*clauseT).getRightStmt().stmtRef == "c2");
+	REQUIRE((*clauseT).getLeftStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clauseT).getLeftStmt().stmt_ref == "w1");
+	REQUIRE((*clauseT).getRightStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clauseT).getRightStmt().stmt_ref == "c2");
 
 	// Multiple Follows(*) clauses
 	QueryPreprocessor qpp12;
 	QueryProperties qp12 = qpp12.parseQuery(univDeclarations + "Select c2 such that Follows(i1, _) and Follows(w1, c2)");
 	clause = dynamic_pointer_cast<Follows>(qp12.getSuchThatClauseList()[0].relation).get();
 	clause1 = dynamic_pointer_cast<Follows>(qp12.getSuchThatClauseList()[1].relation).get();
-	REQUIRE((*clause).getLeftStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getLeftStmt().stmtRef == "i1");
-	REQUIRE((*clause).getRightStmt().type == StmtRefType::underscore);
-	REQUIRE((*clause).getRightStmt().stmtRef == "_");
-	REQUIRE((*clause1).getLeftStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause1).getLeftStmt().stmtRef == "w1");
-	REQUIRE((*clause1).getRightStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause1).getRightStmt().stmtRef == "c2");
+	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getLeftStmt().stmt_ref == "i1");
+	REQUIRE((*clause).getRightStmt().type == StmtRefType::Underscore);
+	REQUIRE((*clause).getRightStmt().stmt_ref == "_");
+	REQUIRE((*clause1).getLeftStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause1).getLeftStmt().stmt_ref == "w1");
+	REQUIRE((*clause1).getRightStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause1).getRightStmt().stmt_ref == "c2");
 	QueryPreprocessor qpp13;
 	QueryProperties qp13 = qpp13.parseQuery(univDeclarations + "Select c2 such that Follows*(i1, _) and Follows(w1, c2)");
 	clauseT = dynamic_pointer_cast<FollowsT>(qp13.getSuchThatClauseList()[0].relation).get();
 	clause1 = dynamic_pointer_cast<Follows>(qp13.getSuchThatClauseList()[1].relation).get();
-	REQUIRE((*clauseT).getLeftStmt().type == StmtRefType::synonym);
-	REQUIRE((*clauseT).getLeftStmt().stmtRef == "i1");
-	REQUIRE((*clauseT).getRightStmt().type == StmtRefType::underscore);
-	REQUIRE((*clauseT).getRightStmt().stmtRef == "_");
-	REQUIRE((*clause1).getLeftStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause1).getLeftStmt().stmtRef == "w1");
-	REQUIRE((*clause1).getRightStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause1).getRightStmt().stmtRef == "c2");
+	REQUIRE((*clauseT).getLeftStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clauseT).getLeftStmt().stmt_ref == "i1");
+	REQUIRE((*clauseT).getRightStmt().type == StmtRefType::Underscore);
+	REQUIRE((*clauseT).getRightStmt().stmt_ref == "_");
+	REQUIRE((*clause1).getLeftStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause1).getLeftStmt().stmt_ref == "w1");
+	REQUIRE((*clause1).getRightStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause1).getRightStmt().stmt_ref == "c2");
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Follows(*)") {
@@ -299,124 +299,124 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 	QueryPreprocessor qpp1;
 	QueryProperties qp1 = qpp1.parseQuery(univDeclarations + "Select v1 such that Uses(s1, v1)");
 	clause = dynamic_pointer_cast<UsesS>(qp1.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "s1");
-	REQUIRE((*clause).getEnt().type == EntRefType::synonym);
-	REQUIRE((*clause).getEnt().entRef == "v1");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "s1");
+	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause).getEnt().ent_ref == "v1");
 
 	QueryPreprocessor qpp2;
 	QueryProperties qp2 = qpp2.parseQuery(univDeclarations + "Select s1 such that Uses(s1, _)");
 	clause = dynamic_pointer_cast<UsesS>(qp2.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "s1");
-	REQUIRE((*clause).getEnt().type == EntRefType::underscore);
-	REQUIRE((*clause).getEnt().entRef == "_");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "s1");
+	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
+	REQUIRE((*clause).getEnt().ent_ref == "_");
 
 	QueryPreprocessor qpp3;
 	QueryProperties qp3 = qpp3.parseQuery(univDeclarations + "Select s1 such that Uses(s1, \"x\")");
 	clause = dynamic_pointer_cast<UsesS>(qp3.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "s1");
-	REQUIRE((*clause).getEnt().type == EntRefType::varName);
-	REQUIRE((*clause).getEnt().entRef == "x");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "s1");
+	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
+	REQUIRE((*clause).getEnt().ent_ref == "x");
 
 	QueryPreprocessor qpp4;
 	QueryProperties qp4 = qpp4.parseQuery(univDeclarations + "Select v1 such that Uses(i1, v1)");
 	clause = dynamic_pointer_cast<UsesS>(qp4.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "i1");
-	REQUIRE((*clause).getEnt().type == EntRefType::synonym);
-	REQUIRE((*clause).getEnt().entRef == "v1");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "i1");
+	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause).getEnt().ent_ref == "v1");
 
 	QueryPreprocessor qpp5;
 	QueryProperties qp5 = qpp5.parseQuery(univDeclarations + "Select p1 such that Uses(p1, _)");
 	clause = dynamic_pointer_cast<UsesS>(qp5.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "p1");
-	REQUIRE((*clause).getEnt().type == EntRefType::underscore);
-	REQUIRE((*clause).getEnt().entRef == "_");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "p1");
+	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
+	REQUIRE((*clause).getEnt().ent_ref == "_");
 
 	QueryPreprocessor qpp6;
 	QueryProperties qp6 = qpp6.parseQuery(univDeclarations + "Select a1 such that Uses(a1, \"y\")");
 	clause = dynamic_pointer_cast<UsesS>(qp6.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "a1");
-	REQUIRE((*clause).getEnt().type == EntRefType::varName);
-	REQUIRE((*clause).getEnt().entRef == "y");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "a1");
+	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
+	REQUIRE((*clause).getEnt().ent_ref == "y");
 
 	QueryPreprocessor qpp7;
 	QueryProperties qp7 = qpp7.parseQuery(univDeclarations + "Select v1 such that Uses(w2, v1)");
 	clause = dynamic_pointer_cast<UsesS>(qp7.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "w2");
-	REQUIRE((*clause).getEnt().type == EntRefType::synonym);
-	REQUIRE((*clause).getEnt().entRef == "v1");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "w2");
+	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause).getEnt().ent_ref == "v1");
 
 	QueryPreprocessor qpp8;
 	QueryProperties qp8 = qpp8.parseQuery(univDeclarations + "Select i1 such that Uses(i1, _)");
 	clause = dynamic_pointer_cast<UsesS>(qp8.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "i1");
-	REQUIRE((*clause).getEnt().type == EntRefType::underscore);
-	REQUIRE((*clause).getEnt().entRef == "_");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "i1");
+	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
+	REQUIRE((*clause).getEnt().ent_ref == "_");
 
 	QueryPreprocessor qpp9;
 	QueryProperties qp9 = qpp9.parseQuery(univDeclarations + "Select w1 such that Uses(w1, \"z0\")");
 	clause = dynamic_pointer_cast<UsesS>(qp9.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "w1");
-	REQUIRE((*clause).getEnt().type == EntRefType::varName);
-	REQUIRE((*clause).getEnt().entRef == "z0");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "w1");
+	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
+	REQUIRE((*clause).getEnt().ent_ref == "z0");
 
 	QueryPreprocessor qpp10;
 	QueryProperties qp10 = qpp10.parseQuery(univDeclarations + "Select v1 such that Uses(1, v1)");
 	clause = dynamic_pointer_cast<UsesS>(qp10.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::stmtNumber);
-	REQUIRE((*clause).getStmt().stmtRef == "1");
-	REQUIRE((*clause).getEnt().type == EntRefType::synonym);
-	REQUIRE((*clause).getEnt().entRef == "v1");
+	REQUIRE((*clause).getStmt().type == StmtRefType::StmtNumber);
+	REQUIRE((*clause).getStmt().stmt_ref == "1");
+	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause).getEnt().ent_ref == "v1");
 
 	QueryPreprocessor qpp11;
 	QueryProperties qp11 = qpp11.parseQuery(univDeclarations + "Select s1 such that Uses(w2, _)");
 	clause = dynamic_pointer_cast<UsesS>(qp11.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "w2");
-	REQUIRE((*clause).getEnt().type == EntRefType::underscore);
-	REQUIRE((*clause).getEnt().entRef == "_");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "w2");
+	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
+	REQUIRE((*clause).getEnt().ent_ref == "_");
 
 	QueryPreprocessor qpp12;
 	QueryProperties qp12 = qpp12.parseQuery(univDeclarations + "Select s1 such that Uses(w2, \"var\")");
 	clause = dynamic_pointer_cast<UsesS>(qp12.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "w2");
-	REQUIRE((*clause).getEnt().type == EntRefType::varName);
-	REQUIRE((*clause).getEnt().entRef == "var");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "w2");
+	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
+	REQUIRE((*clause).getEnt().ent_ref == "var");
 
 	// UsesP
 	UsesP* clause2;
 	QueryPreprocessor qpp13;
 	QueryProperties qp13 = qpp13.parseQuery(univDeclarations + "Select v1 such that Uses(pc1, v1)");
 	clause2 = dynamic_pointer_cast<UsesP>(qp13.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause2).getLeftEnt().type == EntRefType::synonym);
-	REQUIRE((*clause2).getLeftEnt().entRef == "pc1");
-	REQUIRE((*clause2).getRightEnt().type == EntRefType::synonym);
-	REQUIRE((*clause2).getRightEnt().entRef == "v1");
+	REQUIRE((*clause2).getLeftEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause2).getLeftEnt().ent_ref == "pc1");
+	REQUIRE((*clause2).getRightEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause2).getRightEnt().ent_ref == "v1");
 
 	QueryPreprocessor qpp14;
 	QueryProperties qp14 = qpp14.parseQuery(univDeclarations + "Select v1 such that Uses(c1, _)");
 	clause2 = dynamic_pointer_cast<UsesP>(qp14.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause2).getLeftEnt().type == EntRefType::synonym);
-	REQUIRE((*clause2).getLeftEnt().entRef == "c1");
-	REQUIRE((*clause2).getRightEnt().type == EntRefType::underscore);
-	REQUIRE((*clause2).getRightEnt().entRef == "_");
+	REQUIRE((*clause2).getLeftEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause2).getLeftEnt().ent_ref == "c1");
+	REQUIRE((*clause2).getRightEnt().type == EntRefType::Underscore);
+	REQUIRE((*clause2).getRightEnt().ent_ref == "_");
 
 	QueryPreprocessor qpp15;
 	QueryProperties qp15 = qpp15.parseQuery(univDeclarations + "Select s2 such that Uses(\"procedureName\", \"varName\")");
 	clause2 = dynamic_pointer_cast<UsesP>(qp15.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause2).getLeftEnt().type == EntRefType::varName);
-	REQUIRE((*clause2).getLeftEnt().entRef == "procedureName");
-	REQUIRE((*clause2).getRightEnt().type == EntRefType::varName);
-	REQUIRE((*clause2).getRightEnt().entRef == "varName");
+	REQUIRE((*clause2).getLeftEnt().type == EntRefType::VarName);
+	REQUIRE((*clause2).getLeftEnt().ent_ref == "procedureName");
+	REQUIRE((*clause2).getRightEnt().type == EntRefType::VarName);
+	REQUIRE((*clause2).getRightEnt().ent_ref == "varName");
 
 }
 
@@ -446,124 +446,124 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 	QueryPreprocessor qpp1;
 	QueryProperties qp1 = qpp1.parseQuery(univDeclarations + "Select v1 such that Modifies(s1, v1)");
 	clause = dynamic_pointer_cast<ModifiesS>(qp1.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "s1");
-	REQUIRE((*clause).getEnt().type == EntRefType::synonym);
-	REQUIRE((*clause).getEnt().entRef == "v1");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "s1");
+	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause).getEnt().ent_ref == "v1");
 
 	QueryPreprocessor qpp2;
 	QueryProperties qp2 = qpp2.parseQuery(univDeclarations + "Select s1 such that Modifies(s1, _)");
 	clause = dynamic_pointer_cast<ModifiesS>(qp2.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "s1");
-	REQUIRE((*clause).getEnt().type == EntRefType::underscore);
-	REQUIRE((*clause).getEnt().entRef == "_");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "s1");
+	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
+	REQUIRE((*clause).getEnt().ent_ref == "_");
 
 	QueryPreprocessor qpp3;
 	QueryProperties qp3 = qpp3.parseQuery(univDeclarations + "Select s1 such that Modifies(s1, \"x\")");
 	clause = dynamic_pointer_cast<ModifiesS>(qp3.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "s1");
-	REQUIRE((*clause).getEnt().type == EntRefType::varName);
-	REQUIRE((*clause).getEnt().entRef == "x");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "s1");
+	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
+	REQUIRE((*clause).getEnt().ent_ref == "x");
 
 	QueryPreprocessor qpp4;
 	QueryProperties qp4 = qpp4.parseQuery(univDeclarations + "Select v1 such that Modifies(i1, v1)");
 	clause = dynamic_pointer_cast<ModifiesS>(qp4.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "i1");
-	REQUIRE((*clause).getEnt().type == EntRefType::synonym);
-	REQUIRE((*clause).getEnt().entRef == "v1");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "i1");
+	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause).getEnt().ent_ref == "v1");
 
 	QueryPreprocessor qpp5;
 	QueryProperties qp5 = qpp5.parseQuery(univDeclarations + "Select p1 such that Modifies(r1, _)");
 	clause = dynamic_pointer_cast<ModifiesS>(qp5.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "r1");
-	REQUIRE((*clause).getEnt().type == EntRefType::underscore);
-	REQUIRE((*clause).getEnt().entRef == "_");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "r1");
+	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
+	REQUIRE((*clause).getEnt().ent_ref == "_");
 
 	QueryPreprocessor qpp6;
 	QueryProperties qp6 = qpp6.parseQuery(univDeclarations + "Select a1 such that Modifies(a1, \"y\")");
 	clause = dynamic_pointer_cast<ModifiesS>(qp6.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "a1");
-	REQUIRE((*clause).getEnt().type == EntRefType::varName);
-	REQUIRE((*clause).getEnt().entRef == "y");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "a1");
+	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
+	REQUIRE((*clause).getEnt().ent_ref == "y");
 
 	QueryPreprocessor qpp7;
 	QueryProperties qp7 = qpp7.parseQuery(univDeclarations + "Select v1 such that Modifies(w2, v1)");
 	clause = dynamic_pointer_cast<ModifiesS>(qp7.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "w2");
-	REQUIRE((*clause).getEnt().type == EntRefType::synonym);
-	REQUIRE((*clause).getEnt().entRef == "v1");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "w2");
+	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause).getEnt().ent_ref == "v1");
 
 	QueryPreprocessor qpp8;
 	QueryProperties qp8 = qpp8.parseQuery(univDeclarations + "Select i1 such that Modifies(i1, _)");
 	clause = dynamic_pointer_cast<ModifiesS>(qp8.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "i1");
-	REQUIRE((*clause).getEnt().type == EntRefType::underscore);
-	REQUIRE((*clause).getEnt().entRef == "_");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "i1");
+	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
+	REQUIRE((*clause).getEnt().ent_ref == "_");
 
 	QueryPreprocessor qpp9;
 	QueryProperties qp9 = qpp9.parseQuery(univDeclarations + "Select w1 such that Modifies(w1, \"z0\")");
 	clause = dynamic_pointer_cast<ModifiesS>(qp9.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "w1");
-	REQUIRE((*clause).getEnt().type == EntRefType::varName);
-	REQUIRE((*clause).getEnt().entRef == "z0");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "w1");
+	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
+	REQUIRE((*clause).getEnt().ent_ref == "z0");
 
 	QueryPreprocessor qpp10;
 	QueryProperties qp10 = qpp10.parseQuery(univDeclarations + "Select v1 such that Modifies(1, v1)");
 	clause = dynamic_pointer_cast<ModifiesS>(qp10.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::stmtNumber);
-	REQUIRE((*clause).getStmt().stmtRef == "1");
-	REQUIRE((*clause).getEnt().type == EntRefType::synonym);
-	REQUIRE((*clause).getEnt().entRef == "v1");
+	REQUIRE((*clause).getStmt().type == StmtRefType::StmtNumber);
+	REQUIRE((*clause).getStmt().stmt_ref == "1");
+	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause).getEnt().ent_ref == "v1");
 
 	QueryPreprocessor qpp11;
 	QueryProperties qp11 = qpp11.parseQuery(univDeclarations + "Select s1 such that Modifies(w2, _)");
 	clause = dynamic_pointer_cast<ModifiesS>(qp11.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "w2");
-	REQUIRE((*clause).getEnt().type == EntRefType::underscore);
-	REQUIRE((*clause).getEnt().entRef == "_");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "w2");
+	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
+	REQUIRE((*clause).getEnt().ent_ref == "_");
 
 	QueryPreprocessor qpp12;
 	QueryProperties qp12 = qpp12.parseQuery(univDeclarations + "Select s1 such that Modifies(w2, \"var\")");
 	clause = dynamic_pointer_cast<ModifiesS>(qp12.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getStmt().stmtRef == "w2");
-	REQUIRE((*clause).getEnt().type == EntRefType::varName);
-	REQUIRE((*clause).getEnt().entRef == "var");
+	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getStmt().stmt_ref == "w2");
+	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
+	REQUIRE((*clause).getEnt().ent_ref == "var");
 
 	// ModifiesP
 	ModifiesP* clause2;
 	QueryPreprocessor qpp13;
 	QueryProperties qp13 = qpp13.parseQuery(univDeclarations + "Select v1 such that Modifies(pc1, v1)");
 	clause2 = dynamic_pointer_cast<ModifiesP>(qp13.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause2).getLeftEnt().type == EntRefType::synonym);
-	REQUIRE((*clause2).getLeftEnt().entRef == "pc1");
-	REQUIRE((*clause2).getRightEnt().type == EntRefType::synonym);
-	REQUIRE((*clause2).getRightEnt().entRef == "v1");
+	REQUIRE((*clause2).getLeftEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause2).getLeftEnt().ent_ref == "pc1");
+	REQUIRE((*clause2).getRightEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause2).getRightEnt().ent_ref == "v1");
 
 	QueryPreprocessor qpp14;
 	QueryProperties qp14 = qpp14.parseQuery(univDeclarations + "Select v1 such that Modifies(c1, _)");
 	clause2 = dynamic_pointer_cast<ModifiesP>(qp14.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause2).getLeftEnt().type == EntRefType::synonym);
-	REQUIRE((*clause2).getLeftEnt().entRef == "c1");
-	REQUIRE((*clause2).getRightEnt().type == EntRefType::underscore);
-	REQUIRE((*clause2).getRightEnt().entRef == "_");
+	REQUIRE((*clause2).getLeftEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause2).getLeftEnt().ent_ref == "c1");
+	REQUIRE((*clause2).getRightEnt().type == EntRefType::Underscore);
+	REQUIRE((*clause2).getRightEnt().ent_ref == "_");
 
 	QueryPreprocessor qpp15;
 	QueryProperties qp15 = qpp15.parseQuery(univDeclarations + "Select s2 such that Modifies(\"procedureName\", \"varName\")");
 	clause2 = dynamic_pointer_cast<ModifiesP>(qp15.getSuchThatClauseList()[0].relation).get();
-	REQUIRE((*clause2).getLeftEnt().type == EntRefType::varName);
-	REQUIRE((*clause2).getLeftEnt().entRef == "procedureName");
-	REQUIRE((*clause2).getRightEnt().type == EntRefType::varName);
-	REQUIRE((*clause2).getRightEnt().entRef == "varName");
+	REQUIRE((*clause2).getLeftEnt().type == EntRefType::VarName);
+	REQUIRE((*clause2).getLeftEnt().ent_ref == "procedureName");
+	REQUIRE((*clause2).getRightEnt().type == EntRefType::VarName);
+	REQUIRE((*clause2).getRightEnt().ent_ref == "varName");
 
 }
 
@@ -594,28 +594,28 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that") {
 	QueryProperties qp1 = qpp1.parseQuery(univDeclarations + "Select c2 such that Modifies(c2, _) and Follows(w1, c2)");
 	ModifiesP* clause = dynamic_pointer_cast<ModifiesP>(qp1.getSuchThatClauseList()[0].relation).get();
 	Follows* clause1 = dynamic_pointer_cast<Follows>(qp1.getSuchThatClauseList()[1].relation).get();
-	REQUIRE((*clause).getLeftEnt().type == EntRefType::synonym);
-	REQUIRE((*clause).getLeftEnt().entRef == "c2");
-	REQUIRE((*clause).getRightEnt().type == EntRefType::underscore);
-	REQUIRE((*clause).getRightEnt().entRef == "_");
-	REQUIRE((*clause1).getLeftStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause1).getLeftStmt().stmtRef == "w1");
-	REQUIRE((*clause1).getRightStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause1).getRightStmt().stmtRef == "c2");
+	REQUIRE((*clause).getLeftEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause).getLeftEnt().ent_ref == "c2");
+	REQUIRE((*clause).getRightEnt().type == EntRefType::Underscore);
+	REQUIRE((*clause).getRightEnt().ent_ref == "_");
+	REQUIRE((*clause1).getLeftStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause1).getLeftStmt().stmt_ref == "w1");
+	REQUIRE((*clause1).getRightStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause1).getRightStmt().stmt_ref == "c2");
 
 
 	QueryPreprocessor qpp2;
 	QueryProperties qp2 = qpp2.parseQuery(univDeclarations + "Select w2 such that Parent*(007, _) such that Uses(w2, v1)");
 	ParentT* clause2 = dynamic_pointer_cast<ParentT>(qp2.getSuchThatClauseList()[0].relation).get();
 	UsesS* clause3 = dynamic_pointer_cast<UsesS>(qp2.getSuchThatClauseList()[1].relation).get();
-	REQUIRE((*clause2).getParentStmt().type == StmtRefType::stmtNumber);
-	REQUIRE((*clause2).getParentStmt().stmtRef == "007");
-	REQUIRE((*clause2).getChildStmt().type == StmtRefType::underscore);
-	REQUIRE((*clause2).getChildStmt().stmtRef == "_");
-	REQUIRE((*clause3).getStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause3).getStmt().stmtRef == "w2");
-	REQUIRE((*clause3).getEnt().type == EntRefType::synonym);
-	REQUIRE((*clause3).getEnt().entRef == "v1");
+	REQUIRE((*clause2).getParentStmt().type == StmtRefType::StmtNumber);
+	REQUIRE((*clause2).getParentStmt().stmt_ref == "007");
+	REQUIRE((*clause2).getChildStmt().type == StmtRefType::Underscore);
+	REQUIRE((*clause2).getChildStmt().stmt_ref == "_");
+	REQUIRE((*clause3).getStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause3).getStmt().stmt_ref == "w2");
+	REQUIRE((*clause3).getEnt().type == EntRefType::Synonym);
+	REQUIRE((*clause3).getEnt().ent_ref == "v1");
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid pattern") {
@@ -623,75 +623,75 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid pattern") {
 	QueryPreprocessor qpp1;
 	QueryProperties qp1 = qpp1.parseQuery(univDeclarations + "Select a1 pattern a1(v1, _)");
 	clause1 = dynamic_pointer_cast<Pattern>(qp1.getPatternClauseList()[0].relation).get();
-	REQUIRE((*clause1).getSynAssign().type == DesignEntity::assign);
+	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
-	REQUIRE((*clause1).getEntRef().type == EntRefType::synonym);
-	REQUIRE((*clause1).getEntRef().entRef == "v1");
-	REQUIRE((*clause1).getExpressionType() == ExpressionType::underscore);
+	REQUIRE((*clause1).getEntRef().type == EntRefType::Synonym);
+	REQUIRE((*clause1).getEntRef().ent_ref == "v1");
+	REQUIRE((*clause1).getExpressionType() == ExpressionType::Underscore);
 	QueryPreprocessor qpp2;
 	QueryProperties qp2 = qpp2.parseQuery(univDeclarations + "Select v1 pattern a1(v1, \"x\")");
 	clause1 = dynamic_pointer_cast<Pattern>(qp2.getPatternClauseList()[0].relation).get();
-	REQUIRE((*clause1).getSynAssign().type == DesignEntity::assign);
+	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
-	REQUIRE((*clause1).getEntRef().type == EntRefType::synonym);
-	REQUIRE((*clause1).getEntRef().entRef == "v1");
-	REQUIRE((*clause1).getExpressionType() == ExpressionType::expression);
+	REQUIRE((*clause1).getEntRef().type == EntRefType::Synonym);
+	REQUIRE((*clause1).getEntRef().ent_ref == "v1");
+	REQUIRE((*clause1).getExpressionType() == ExpressionType::Expression);
 	QueryPreprocessor qpp3;
 	QueryProperties qp3 = qpp3.parseQuery(univDeclarations + "Select v1 pattern a2  (v1, _\"x\"_)");
 	clause1 = dynamic_pointer_cast<Pattern>(qp3.getPatternClauseList()[0].relation).get();
-	REQUIRE((*clause1).getSynAssign().type == DesignEntity::assign);
+	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a2");
-	REQUIRE((*clause1).getEntRef().type == EntRefType::synonym);
-	REQUIRE((*clause1).getEntRef().entRef == "v1");
-	REQUIRE((*clause1).getExpressionType() == ExpressionType::expressionUnderscore);
+	REQUIRE((*clause1).getEntRef().type == EntRefType::Synonym);
+	REQUIRE((*clause1).getEntRef().ent_ref == "v1");
+	REQUIRE((*clause1).getExpressionType() == ExpressionType::ExpressionUnderscore);
 	QueryPreprocessor qpp4;
 	QueryProperties qp4 = qpp4.parseQuery(univDeclarations + "Select a1 pattern a1(_, _)");
 	clause1 = dynamic_pointer_cast<Pattern>(qp4.getPatternClauseList()[0].relation).get();
-	REQUIRE((*clause1).getSynAssign().type == DesignEntity::assign);
+	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
-	REQUIRE((*clause1).getEntRef().type == EntRefType::underscore);
-	REQUIRE((*clause1).getEntRef().entRef == "_");
-	REQUIRE((*clause1).getExpressionType() == ExpressionType::underscore);
+	REQUIRE((*clause1).getEntRef().type == EntRefType::Underscore);
+	REQUIRE((*clause1).getEntRef().ent_ref == "_");
+	REQUIRE((*clause1).getExpressionType() == ExpressionType::Underscore);
 	QueryPreprocessor qpp5;
 	QueryProperties qp5 = qpp5.parseQuery(univDeclarations + "Select a2 pattern a1(_, \"x\")");
 	clause1 = dynamic_pointer_cast<Pattern>(qp5.getPatternClauseList()[0].relation).get();
-	REQUIRE((*clause1).getSynAssign().type == DesignEntity::assign);
+	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
-	REQUIRE((*clause1).getEntRef().type == EntRefType::underscore);
-	REQUIRE((*clause1).getEntRef().entRef == "_");
-	REQUIRE((*clause1).getExpressionType() == ExpressionType::expression);
+	REQUIRE((*clause1).getEntRef().type == EntRefType::Underscore);
+	REQUIRE((*clause1).getEntRef().ent_ref == "_");
+	REQUIRE((*clause1).getExpressionType() == ExpressionType::Expression);
 	QueryPreprocessor qpp6;
 	QueryProperties qp6 = qpp6.parseQuery(univDeclarations + "Select a1 pattern a1(_, _\"x + 2\"_)");
 	clause1 = dynamic_pointer_cast<Pattern>(qp6.getPatternClauseList()[0].relation).get();
-	REQUIRE((*clause1).getSynAssign().type == DesignEntity::assign);
+	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
-	REQUIRE((*clause1).getEntRef().type == EntRefType::underscore);
-	REQUIRE((*clause1).getEntRef().entRef == "_");
-	REQUIRE((*clause1).getExpressionType() == ExpressionType::expressionUnderscore);
+	REQUIRE((*clause1).getEntRef().type == EntRefType::Underscore);
+	REQUIRE((*clause1).getEntRef().ent_ref == "_");
+	REQUIRE((*clause1).getExpressionType() == ExpressionType::ExpressionUnderscore);
 	QueryPreprocessor qpp7;
 	QueryProperties qp7 = qpp7.parseQuery(univDeclarations + "Select a1 pattern a1(\"foo\", \"(x+5)*3- y\")");
 	clause1 = dynamic_pointer_cast<Pattern>(qp7.getPatternClauseList()[0].relation).get();
-	REQUIRE((*clause1).getSynAssign().type == DesignEntity::assign);
+	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
-	REQUIRE((*clause1).getEntRef().type == EntRefType::varName);
-	REQUIRE((*clause1).getEntRef().entRef == "foo");
-	REQUIRE((*clause1).getExpressionType() == ExpressionType::expression);
+	REQUIRE((*clause1).getEntRef().type == EntRefType::VarName);
+	REQUIRE((*clause1).getEntRef().ent_ref == "foo");
+	REQUIRE((*clause1).getExpressionType() == ExpressionType::Expression);
 	QueryPreprocessor qpp8;
 	QueryProperties qp8 = qpp8.parseQuery(univDeclarations + "Select a1 pattern a1(\"foo\", _)");
 	clause1 = dynamic_pointer_cast<Pattern>(qp8.getPatternClauseList()[0].relation).get();
-	REQUIRE((*clause1).getSynAssign().type == DesignEntity::assign);
+	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
-	REQUIRE((*clause1).getEntRef().type == EntRefType::varName);
-	REQUIRE((*clause1).getEntRef().entRef == "foo");
-	REQUIRE((*clause1).getExpressionType() == ExpressionType::underscore);
+	REQUIRE((*clause1).getEntRef().type == EntRefType::VarName);
+	REQUIRE((*clause1).getEntRef().ent_ref == "foo");
+	REQUIRE((*clause1).getExpressionType() == ExpressionType::Underscore);
 	QueryPreprocessor qpp9;
 	QueryProperties qp9 = qpp9.parseQuery(univDeclarations + "Select a2 pattern a1(\"foo\", _\"x-2\"_)");
 	clause1 = dynamic_pointer_cast<Pattern>(qp9.getPatternClauseList()[0].relation).get();
-	REQUIRE((*clause1).getSynAssign().type == DesignEntity::assign);
+	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
-	REQUIRE((*clause1).getEntRef().type == EntRefType::varName);
-	REQUIRE((*clause1).getEntRef().entRef == "foo");
-	REQUIRE((*clause1).getExpressionType() == ExpressionType::expressionUnderscore);
+	REQUIRE((*clause1).getEntRef().type == EntRefType::VarName);
+	REQUIRE((*clause1).getEntRef().ent_ref == "foo");
+	REQUIRE((*clause1).getExpressionType() == ExpressionType::ExpressionUnderscore);
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery invalid pattern") {
@@ -727,15 +727,15 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that/pattern clauses"
 	QueryProperties qp12 = qpp12.parseQuery(univDeclarations + "Select a1 such that Follows(w1, a1) pattern a1(v1, _\"2-4\"_)");
 	Follows* clause = dynamic_pointer_cast<Follows>(qp12.getSuchThatClauseList()[0].relation).get();
 	Pattern* clause1 = dynamic_pointer_cast<Pattern>(qp12.getPatternClauseList()[0].relation).get();
-	REQUIRE((*clause1).getSynAssign().type == DesignEntity::assign);
+	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
-	REQUIRE((*clause1).getEntRef().type == EntRefType::synonym);
-	REQUIRE((*clause1).getEntRef().entRef == "v1");
-	REQUIRE((*clause1).getExpressionType() == ExpressionType::expressionUnderscore);
-	REQUIRE((*clause).getLeftStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getLeftStmt().stmtRef == "w1");
-	REQUIRE((*clause).getRightStmt().type == StmtRefType::synonym);
-	REQUIRE((*clause).getRightStmt().stmtRef == "a1");
+	REQUIRE((*clause1).getEntRef().type == EntRefType::Synonym);
+	REQUIRE((*clause1).getEntRef().ent_ref == "v1");
+	REQUIRE((*clause1).getExpressionType() == ExpressionType::ExpressionUnderscore);
+	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getLeftStmt().stmt_ref == "w1");
+	REQUIRE((*clause).getRightStmt().type == StmtRefType::Synonym);
+	REQUIRE((*clause).getRightStmt().stmt_ref == "a1");
 
 
 }

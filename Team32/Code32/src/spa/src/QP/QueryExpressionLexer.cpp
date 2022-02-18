@@ -1,21 +1,23 @@
 #include "QueryExpressionLexer.h"
 
-QueryExpressionLexer::QueryExpressionLexer(vector<string> expressionTokens)
-	: expressionTokens(expressionTokens), idx(0) {}
+#include <utility>
+
+QueryExpressionLexer::QueryExpressionLexer(vector<string> expression_tokens)
+	: expression_tokens(std::move(std::move(expression_tokens))), idx(0) {}
 
 string QueryExpressionLexer::readToken() {
-	if (idx >= expressionTokens.size()) {
+	if (idx >= expression_tokens.size()) {
 		return "";
 	}
-	string token = expressionTokens[idx];
+	string token = expression_tokens[idx];
 	idx++;
 	return token;
 }
 
 string QueryExpressionLexer::peekToken() {
-	if (idx >= expressionTokens.size()) {
+	if (idx >= expression_tokens.size()) {
 		return "";
 	}
 
-	return expressionTokens[idx];
+	return expression_tokens[idx];
 }

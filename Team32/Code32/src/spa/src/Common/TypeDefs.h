@@ -1,10 +1,10 @@
 #ifndef INC_21S2_CP_SPA_TEAM_32_TYPEDEFS_H
 #define INC_21S2_CP_SPA_TEAM_32_TYPEDEFS_H
 
-#include <string>
-#include <vector>
-#include <unordered_set>
 #include <memory>
+#include <string>
+#include <unordered_set>
+#include <vector>
 
 using namespace std;
 
@@ -16,8 +16,8 @@ typedef string ProcRef;
 enum class StmtType { Assign, Print, Call, Read, WhileStmt, IfStmt };
 
 typedef struct StmtInfo {
-    StmtRef reference;
-    StmtType type;
+	StmtRef reference;
+	StmtType type;
 } StmtInfo;
 
 typedef vector<shared_ptr<StmtInfo>> StmtInfoList;
@@ -36,5 +36,3 @@ class ParentRelation;
 class Uses;
 
 #endif
-
-

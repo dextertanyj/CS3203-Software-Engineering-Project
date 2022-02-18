@@ -11,7 +11,7 @@
 
 class SP::Node::CallNode : public StatementNode {
 public:
-	CallNode(StmtRef stmtNo, ProcRef procedure);
+	CallNode(StmtRef stmt_no, ProcRef procedure);
 	StmtRef extract(PKB& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
 	static unique_ptr<CallNode> parseCallStatement(Lexer& lex, StmtRef& statement_count);

@@ -4,26 +4,22 @@
 #include <memory>
 #include <unordered_map>
 
-#include "QP/QueryTypeDefs.h"
 #include "Common/TypeDefs.h"
+#include "QP/QueryTypeDefs.h"
 
 namespace QueryUtils {
-  static unordered_map<DesignEntity, StmtType> designEntToStmtType = {
-		{ DesignEntity::read, StmtType::Read },
-		{ DesignEntity::print, StmtType::Print },
-		{ DesignEntity::call, StmtType::Call },
-		{ DesignEntity::while_, StmtType::WhileStmt },
-		{ DesignEntity::if_, StmtType::IfStmt },
-		{ DesignEntity::assign, StmtType::Assign },
-	};
-
-	inline bool checkStmtTypeMatch(shared_ptr<StmtInfo> stmt, DesignEntity designEntity) {
-		if (stmt.get() == nullptr) {
-			return false;
-		}
-
-		return designEntity == DesignEntity::stmt || stmt.get()->type == designEntToStmtType[designEntity];
-	}
+static unordered_map<DesignEntity, StmtType> design_ent_to_stmt_type = {
+	{DesignEntity::Read, StmtType::Read},       {DesignEntity::Print, StmtType::Print}, {DesignEntity::Call, StmtType::Call},
+	{DesignEntity::While, StmtType::WhileStmt}, {DesignEntity::If, StmtType::IfStmt},   {DesignEntity::Assign, StmtType::Assign},
 };
+
+inline bool checkStmtTypeMatch(const shared_ptr<StmtInfo>& stmt, DesignEntity design_entity) {
+	if (stmt == nullptr) {
+		return false;
+	}
+
+	return design_entity == DesignEntity::Stmt || stmt->type == design_ent_to_stmt_type[design_entity];
+}
+};  // namespace QueryUtils
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYUTILS_H_

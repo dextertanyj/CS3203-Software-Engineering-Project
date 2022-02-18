@@ -4,10 +4,10 @@
 #include <memory>
 #include <vector>
 
+#include "Common/TypeDefs.h"
 #include "PKB/PKB.h"
 #include "SP/Lexer.h"
 #include "SP/Node/ProcedureNode.h"
-#include "Common/TypeDefs.h"
 
 using namespace std;
 

@@ -17,20 +17,18 @@ using namespace std;
 class QueryEvaluator {
 public:
 	explicit QueryEvaluator(PKB& pkb);
-	QueryResult executeQuery(QueryProperties& queryProperties);
-	vector<pair<SuchThatClauseList, PatternClauseList>> splitClauses(QueryProperties& queryProperties,
-                                                                   vector<unordered_set<string>>& synonymsInGroup);
+	QueryResult executeQuery(QueryProperties& query_properties);
+	static vector<pair<SuchThatClauseList, PatternClauseList>> splitClauses(QueryProperties& query_properties,
+	                                                                        vector<unordered_set<string>>& synonyms_in_group);
 
 private:
 	PKB& pkb;
-	unordered_map<string, DesignEntity> symbolToTypeMap;
-	QueryResult executeNoClauses(Declaration select);
-	QueryResult getSpecificStmtType(StmtType type, string symbol);
-	QueryGraph buildGraph(QueryProperties& queryProperties);
-	QueryResult evaluateClauses(SuchThatClauseList& suchThatClauses,
-                              PatternClauseList& patternClauses,
-                              Declaration select,
-                              bool isTrivial);
+	unordered_map<string, DesignEntity> symbol_to_type_map;
+	QueryResult executeNoClauses(const Declaration& select);
+	QueryResult getSpecificStmtType(StmtType type, const string& symbol);
+	static QueryGraph buildGraph(QueryProperties& query_properties);
+	QueryResult evaluateClauses(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses, const Declaration& select,
+	                            bool is_trivial);
 	void createSymbolToTypeMap(const DeclarationList& declarations);
 };
 

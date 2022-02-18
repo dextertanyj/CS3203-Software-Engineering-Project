@@ -4,14 +4,14 @@
 
 using namespace std;
 
-SP::Node::AssignmentNode::AssignmentNode(StmtRef stmtNo, unique_ptr<VariableNode> assignee, unique_ptr<ExpressionNode> expression)
-	: StatementNode(stmtNo), assignee(move(assignee)), expression(move(expression)) {}
+SP::Node::AssignmentNode::AssignmentNode(StmtRef stmt_no, unique_ptr<VariableNode> assignee, unique_ptr<ExpressionNode> expression)
+	: StatementNode(stmt_no), assignee(move(assignee)), expression(move(expression)) {}
 
-unique_ptr<SP::Node::AssignmentNode> SP::Node::AssignmentNode::parseAssignmentStatement(Lexer& lex, StmtRef& statement_count, string token) {
+unique_ptr<SP::Node::AssignmentNode> SP::Node::AssignmentNode::parseAssignmentStatement(Lexer& lex, StmtRef& statement_count,
+                                                                                        string token) {
 	unique_ptr<VariableNode> variable = VariableNode::parseVariable(std::move(token));
 	lex.nextIf("=");
-	unique_ptr<ExpressionNode> expression =
-		ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+	unique_ptr<ExpressionNode> expression = ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	lex.nextIf(";");
 	return make_unique<AssignmentNode>(statement_count++, move(variable), move(expression));
 }

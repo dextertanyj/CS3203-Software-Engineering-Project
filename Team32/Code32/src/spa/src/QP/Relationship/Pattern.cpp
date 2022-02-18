@@ -1,129 +1,109 @@
 #include "QP/Relationship/Pattern.h"
 
-Pattern::Pattern(Declaration synAssign, QueryEntRef entRef, ExpressionType expressionType,
-	optional<Common::ExpressionProcessor::Expression> expression)
-	: synAssign(std::move(synAssign)),
-	  entRef(std::move(entRef)),
-	  expressionType(expressionType),
-	  expression(std::move(expression)) {}
+Pattern::Pattern(Declaration syn_assign, QueryEntRef ent_ref, ExpressionType expression_type,
+                 optional<Common::ExpressionProcessor::Expression> expression)
+	: syn_assign(std::move(syn_assign)), ent_ref(std::move(ent_ref)), expression_type(expression_type), expression(std::move(expression)) {}
 
+Declaration Pattern::getSynAssign() { return this->syn_assign; }
 
-Declaration Pattern::getSynAssign() {
-	return this->synAssign;
-}
+QueryEntRef Pattern::getEntRef() { return this->ent_ref; }
 
-QueryEntRef Pattern::getEntRef() {
-	return this->entRef;
-}
+ExpressionType Pattern::getExpressionType() { return this->expression_type; }
 
-ExpressionType Pattern::getExpressionType() {
-	return this->expressionType;
-}
+Common::ExpressionProcessor::Expression Pattern::getExpression() { return this->expression.value(); }
 
-Common::ExpressionProcessor::Expression Pattern::getExpression() {
-	return this->expression.value();
-}
-
-QueryResult Pattern::execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) {
-	return isTrivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
+QueryResult Pattern::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
 vector<string> Pattern::getDeclarationSymbols() {
-	vector<string> declarationSymbols = {this->synAssign.symbol};
-	if (this->entRef.type == EntRefType::synonym) {
-		declarationSymbols.push_back(this->entRef.entRef);
+	vector<string> declaration_symbols = {this->syn_assign.symbol};
+	if (this->ent_ref.type == EntRefType::Synonym) {
+		declaration_symbols.push_back(this->ent_ref.ent_ref);
 	}
-	return declarationSymbols;
+	return declaration_symbols;
 }
 
-
-QueryResult Pattern::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
-	StmtInfoPtrSet stmtSet;
-	if (this->expressionType != ExpressionType::underscore) {
-		bool isExact = this->expressionType != ExpressionType::expressionUnderscore;
-		if (this->entRef.type == EntRefType::varName) {
-			return QueryResult(pkb.patternExists(this->entRef.entRef, getExpression(), isExact)); 
+QueryResult Pattern::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& /*map*/) {
+	StmtInfoPtrSet stmt_set;
+	if (this->expression_type != ExpressionType::Underscore) {
+		bool is_exact = this->expression_type != ExpressionType::ExpressionUnderscore;
+		if (this->ent_ref.type == EntRefType::VarName) {
+			return QueryResult(pkb.patternExists(this->ent_ref.ent_ref, getExpression(), is_exact));
 		}
-		else {
-			auto stmtPairs = pkb.getStmtsWithPatternRHS(getExpression(), isExact);
-			for (auto stmtPair : stmtPairs) {
-				if (QueryUtils::checkStmtTypeMatch(stmtPair.first, DesignEntity::assign)) {
-					return QueryResult(true);
-				}
+		auto stmt_pairs = pkb.getStmtsWithPatternRHS(getExpression(), is_exact);
+		for (const auto& stmt_pair : stmt_pairs) {
+			if (QueryUtils::checkStmtTypeMatch(stmt_pair.first, DesignEntity::Assign)) {
+				return QueryResult(true);
 			}
 		}
+
+	} else if (this->ent_ref.type == EntRefType::VarName) {
+		stmt_set = pkb.getStmtsWithPatternLHS(this->ent_ref.ent_ref);
+	} else {
+		stmt_set = pkb.getStatements();
 	}
-	else if (this->entRef.type == EntRefType::varName) {
-		stmtSet = pkb.getStmtsWithPatternLHS(this->entRef.entRef);
-	}
-	else {
-		stmtSet = pkb.getStatements();
-	}
-	for (auto const& stmt : stmtSet) {
-		if (QueryUtils::checkStmtTypeMatch(stmt, DesignEntity::assign)) {
+	for (auto const& stmt : stmt_set) {
+		if (QueryUtils::checkStmtTypeMatch(stmt, DesignEntity::Assign)) {
 			return QueryResult(true);
 		}
 	}
 	return QueryResult(false);
 }
 
-QueryResult Pattern::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
+QueryResult Pattern::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& /*map*/) {
 	QueryResult result = QueryResult();
-	
-	if (this->entRef.type == EntRefType::synonym) {
-		vector<string> assignResult;
-		vector<string> varResult;
 
-		if (this->expressionType != ExpressionType::underscore) {
-			bool isExact = this->expressionType != ExpressionType::expressionUnderscore;
-			auto stmtPairs = pkb.getStmtsWithPatternRHS(getExpression(), isExact);
-			for (auto const& pair : stmtPairs) {
-				assignResult.push_back(to_string(pair.first.get()->reference));
-				varResult.push_back(pair.second);
+	if (this->ent_ref.type == EntRefType::Synonym) {
+		vector<string> assign_result;
+		vector<string> var_result;
+
+		if (this->expression_type != ExpressionType::Underscore) {
+			bool is_exact = this->expression_type != ExpressionType::ExpressionUnderscore;
+			auto stmt_pairs = pkb.getStmtsWithPatternRHS(getExpression(), is_exact);
+			for (auto const& pair : stmt_pairs) {
+				assign_result.push_back(to_string(pair.first->reference));
+				var_result.push_back(pair.second);
 			}
-		}
-		else {
-			VarRefSet varSet = pkb.getVariables();
-			for (auto const& varRef : varSet) {
-				StmtInfoPtrSet stmtSet = pkb.getStmtsWithPatternLHS(varRef);
-				for (auto const& stmt : stmtSet) {
-					assignResult.push_back(to_string(stmt.get()->reference));
-					varResult.push_back(varRef);
+		} else {
+			VarRefSet var_set = pkb.getVariables();
+			for (auto const& var_ref : var_set) {
+				StmtInfoPtrSet stmt_set = pkb.getStmtsWithPatternLHS(var_ref);
+				for (auto const& stmt : stmt_set) {
+					assign_result.push_back(to_string(stmt->reference));
+					var_result.push_back(var_ref);
 				}
 			}
 		}
 
-		result.addColumn(this->synAssign.symbol, assignResult);
-		result.addColumn(this->entRef.entRef, varResult);
+		result.addColumn(this->syn_assign.symbol, assign_result);
+		result.addColumn(this->ent_ref.ent_ref, var_result);
 
 		return result;
 	}
 
-	StmtInfoPtrSet stmtSet;
-	if (this->expressionType != ExpressionType::underscore) {
-		bool isExact = this->expressionType != ExpressionType::expressionUnderscore;
-		if (this->entRef.type == EntRefType::varName) {
-			stmtSet = pkb.getStmtsWithPattern(this->entRef.entRef, getExpression(), isExact);
-		}
-		else {
-			auto stmtPairs = pkb.getStmtsWithPatternRHS(getExpression(), isExact);
-			for (auto stmtPair : stmtPairs) {
-				stmtSet.insert(stmtPair.first);
+	StmtInfoPtrSet stmt_set;
+	if (this->expression_type != ExpressionType::Underscore) {
+		bool is_exact = this->expression_type != ExpressionType::ExpressionUnderscore;
+		if (this->ent_ref.type == EntRefType::VarName) {
+			stmt_set = pkb.getStmtsWithPattern(this->ent_ref.ent_ref, getExpression(), is_exact);
+		} else {
+			auto stmt_pairs = pkb.getStmtsWithPatternRHS(getExpression(), is_exact);
+			for (const auto& stmt_pair : stmt_pairs) {
+				stmt_set.insert(stmt_pair.first);
 			}
 		}
+	} else if (this->ent_ref.type == EntRefType::VarName) {
+		stmt_set = pkb.getStmtsWithPatternLHS(this->ent_ref.ent_ref);
+	} else {
+		stmt_set = pkb.getStatements();
 	}
-	else if (this->entRef.type == EntRefType::varName) {
-		stmtSet = pkb.getStmtsWithPatternLHS(this->entRef.entRef);
-	}
-	else {
-		stmtSet = pkb.getStatements();
-	}
-	vector<string> assignStmtStrings;
-	for (auto const& stmt : stmtSet) {
-		if (QueryUtils::checkStmtTypeMatch(stmt, DesignEntity::assign)) {
-			assignStmtStrings.push_back(to_string(stmt.get()->reference));
+	vector<string> assign_stmt_strings;
+	for (auto const& stmt : stmt_set) {
+		if (QueryUtils::checkStmtTypeMatch(stmt, DesignEntity::Assign)) {
+			assign_stmt_strings.push_back(to_string(stmt->reference));
 		}
 	}
-	result.addColumn(this->synAssign.symbol, assignStmtStrings);
+	result.addColumn(this->syn_assign.symbol, assign_stmt_strings);
 	return result;
 }

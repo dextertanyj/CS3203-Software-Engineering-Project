@@ -9,19 +9,19 @@
 #include "catch.hpp"
 
 TEST_CASE("QP::Relationship::Pattern::getDeclarationSymbols") {
-	Declaration synAssign = { DesignEntity::assign, "a" };
+	Declaration synAssign = { DesignEntity::Assign, "a" };
 
 	PKB pkb = PKB();
-	QueryEntRef x = { EntRefType::varName, "x" };
-	QueryEntRef var = { EntRefType::synonym, "var" };
-	QueryEntRef varUnderscore = { EntRefType::underscore, "_" };
+	QueryEntRef x = { EntRefType::VarName, "x" };
+	QueryEntRef var = { EntRefType::Synonym, "var" };
+	QueryEntRef varUnderscore = { EntRefType::Underscore, "_" };
 	vector<string> queryToken = { "0" };
 	QueryExpressionLexer lexer = QueryExpressionLexer(queryToken);
 	auto queryExpression = Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 
-	Pattern pattern1 = Pattern(synAssign, x, ExpressionType::underscore, queryExpression);
-	Pattern pattern2 = Pattern(synAssign, var, ExpressionType::underscore, queryExpression);
-	Pattern pattern3 = Pattern(synAssign, varUnderscore, ExpressionType::underscore, queryExpression);
+	Pattern pattern1 = Pattern(synAssign, x, ExpressionType::Underscore, queryExpression);
+	Pattern pattern2 = Pattern(synAssign, var, ExpressionType::Underscore, queryExpression);
+	Pattern pattern3 = Pattern(synAssign, varUnderscore, ExpressionType::Underscore, queryExpression);
 
 	vector<string> symbols1 = { "a" };
 	vector<string> symbols2 = { "a", "var" };
@@ -59,18 +59,18 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	pkb.setConstant(constants);
 
 	unordered_map<string, DesignEntity> map;
-	map.insert({ "s", DesignEntity::stmt });
-	map.insert({ "a", DesignEntity::assign });
-	map.insert({ "var", DesignEntity::variable });
+	map.insert({ "s", DesignEntity::Stmt });
+	map.insert({ "a", DesignEntity::Assign });
+	map.insert({ "var", DesignEntity::Variable });
 
-	Declaration synAssign = { DesignEntity::assign, "a" };
+	Declaration synAssign = { DesignEntity::Assign, "a" };
 
 
-	QueryEntRef x = { EntRefType::varName, "x" };
-	QueryEntRef y = { EntRefType::varName, "y" };
-	QueryEntRef z = { EntRefType::varName, "z" };
-	QueryEntRef var = { EntRefType::synonym, "var" };
-	QueryEntRef varUnderscore = { EntRefType::underscore, "x" };
+	QueryEntRef x = { EntRefType::VarName, "x" };
+	QueryEntRef y = { EntRefType::VarName, "y" };
+	QueryEntRef z = { EntRefType::VarName, "z" };
+	QueryEntRef var = { EntRefType::Synonym, "var" };
+	QueryEntRef varUnderscore = { EntRefType::Underscore, "x" };
 
 	vector<string> queryToken1 = { "1" };
 	QueryExpressionLexer lexer4 = QueryExpressionLexer(queryToken1);
@@ -83,15 +83,15 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	auto queryExpression3 = Common::ExpressionProcessor::Expression::parse(lexer6, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 
 	SECTION("trivial: _, _") {
-		Pattern pattern1 = Pattern(synAssign, varUnderscore, ExpressionType::underscore, queryExpression1);
+		Pattern pattern1 = Pattern(synAssign, varUnderscore, ExpressionType::Underscore, queryExpression1);
 		QueryResult result1 = pattern1.execute(pkb, true, map);
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("trivial: _, expr") {
-		Pattern pattern1 = Pattern(synAssign, varUnderscore, ExpressionType::expression, queryExpression1);
-		Pattern pattern2 = Pattern(synAssign, varUnderscore, ExpressionType::expression, queryExpression2);
-		Pattern pattern3 = Pattern(synAssign, varUnderscore, ExpressionType::expression, queryExpression3);
+		Pattern pattern1 = Pattern(synAssign, varUnderscore, ExpressionType::Expression, queryExpression1);
+		Pattern pattern2 = Pattern(synAssign, varUnderscore, ExpressionType::Expression, queryExpression2);
+		Pattern pattern3 = Pattern(synAssign, varUnderscore, ExpressionType::Expression, queryExpression3);
 		QueryResult result1 = pattern1.execute(pkb, true, map);
 		QueryResult result2 = pattern2.execute(pkb, true, map);
 		QueryResult result3 = pattern3.execute(pkb, true, map);
@@ -101,9 +101,9 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("trivial: _, _expr_") {
-		Pattern pattern1 = Pattern(synAssign, varUnderscore, ExpressionType::expressionUnderscore, queryExpression1);
-		Pattern pattern2 = Pattern(synAssign, varUnderscore, ExpressionType::expressionUnderscore, queryExpression2);
-		Pattern pattern3 = Pattern(synAssign, varUnderscore, ExpressionType::expressionUnderscore, queryExpression3);
+		Pattern pattern1 = Pattern(synAssign, varUnderscore, ExpressionType::ExpressionUnderscore, queryExpression1);
+		Pattern pattern2 = Pattern(synAssign, varUnderscore, ExpressionType::ExpressionUnderscore, queryExpression2);
+		Pattern pattern3 = Pattern(synAssign, varUnderscore, ExpressionType::ExpressionUnderscore, queryExpression3);
 		QueryResult result1 = pattern1.execute(pkb, true, map);
 		QueryResult result2 = pattern2.execute(pkb, true, map);
 		QueryResult result3 = pattern3.execute(pkb, true, map);
@@ -113,9 +113,9 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("trivial: varName, _") {
-		Pattern pattern1 = Pattern(synAssign, x, ExpressionType::underscore, queryExpression1);
-		Pattern pattern2 = Pattern(synAssign, y, ExpressionType::underscore, queryExpression1);
-		Pattern pattern3 = Pattern(synAssign, z, ExpressionType::underscore, queryExpression1);
+		Pattern pattern1 = Pattern(synAssign, x, ExpressionType::Underscore, queryExpression1);
+		Pattern pattern2 = Pattern(synAssign, y, ExpressionType::Underscore, queryExpression1);
+		Pattern pattern3 = Pattern(synAssign, z, ExpressionType::Underscore, queryExpression1);
 		QueryResult result1 = pattern1.execute(pkb, true, map);
 		QueryResult result2 = pattern2.execute(pkb, true, map);
 		QueryResult result3 = pattern3.execute(pkb, true, map);
@@ -125,15 +125,15 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("trivial: varName, expr") {
-		Pattern pattern1 = Pattern(synAssign, x, ExpressionType::expression, queryExpression1);
-		Pattern pattern2 = Pattern(synAssign, x, ExpressionType::expression, queryExpression2);
-		Pattern pattern3 = Pattern(synAssign, x, ExpressionType::expression, queryExpression3);
-		Pattern pattern4 = Pattern(synAssign, y, ExpressionType::expression, queryExpression1);
-		Pattern pattern5 = Pattern(synAssign, y, ExpressionType::expression, queryExpression2);
-		Pattern pattern6 = Pattern(synAssign, y, ExpressionType::expression, queryExpression3);
-		Pattern pattern7 = Pattern(synAssign, z, ExpressionType::expression, queryExpression1);
-		Pattern pattern8 = Pattern(synAssign, z, ExpressionType::expression, queryExpression2);
-		Pattern pattern9 = Pattern(synAssign, z, ExpressionType::expression, queryExpression3);
+		Pattern pattern1 = Pattern(synAssign, x, ExpressionType::Expression, queryExpression1);
+		Pattern pattern2 = Pattern(synAssign, x, ExpressionType::Expression, queryExpression2);
+		Pattern pattern3 = Pattern(synAssign, x, ExpressionType::Expression, queryExpression3);
+		Pattern pattern4 = Pattern(synAssign, y, ExpressionType::Expression, queryExpression1);
+		Pattern pattern5 = Pattern(synAssign, y, ExpressionType::Expression, queryExpression2);
+		Pattern pattern6 = Pattern(synAssign, y, ExpressionType::Expression, queryExpression3);
+		Pattern pattern7 = Pattern(synAssign, z, ExpressionType::Expression, queryExpression1);
+		Pattern pattern8 = Pattern(synAssign, z, ExpressionType::Expression, queryExpression2);
+		Pattern pattern9 = Pattern(synAssign, z, ExpressionType::Expression, queryExpression3);
 		QueryResult result1 = pattern1.execute(pkb, true, map);
 		QueryResult result2 = pattern2.execute(pkb, true, map);
 		QueryResult result3 = pattern3.execute(pkb, true, map);
@@ -155,15 +155,15 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("trivial: varName, _expr_") {
-		Pattern pattern1 = Pattern(synAssign, x, ExpressionType::expressionUnderscore, queryExpression1);
-		Pattern pattern2 = Pattern(synAssign, x, ExpressionType::expressionUnderscore, queryExpression2);
-		Pattern pattern3 = Pattern(synAssign, x, ExpressionType::expressionUnderscore, queryExpression3);
-		Pattern pattern4 = Pattern(synAssign, y, ExpressionType::expressionUnderscore, queryExpression1);
-		Pattern pattern5 = Pattern(synAssign, y, ExpressionType::expressionUnderscore, queryExpression2);
-		Pattern pattern6 = Pattern(synAssign, y, ExpressionType::expressionUnderscore, queryExpression3);
-		Pattern pattern7 = Pattern(synAssign, z, ExpressionType::expressionUnderscore, queryExpression1);
-		Pattern pattern8 = Pattern(synAssign, z, ExpressionType::expressionUnderscore, queryExpression2);
-		Pattern pattern9 = Pattern(synAssign, z, ExpressionType::expressionUnderscore, queryExpression3);
+		Pattern pattern1 = Pattern(synAssign, x, ExpressionType::ExpressionUnderscore, queryExpression1);
+		Pattern pattern2 = Pattern(synAssign, x, ExpressionType::ExpressionUnderscore, queryExpression2);
+		Pattern pattern3 = Pattern(synAssign, x, ExpressionType::ExpressionUnderscore, queryExpression3);
+		Pattern pattern4 = Pattern(synAssign, y, ExpressionType::ExpressionUnderscore, queryExpression1);
+		Pattern pattern5 = Pattern(synAssign, y, ExpressionType::ExpressionUnderscore, queryExpression2);
+		Pattern pattern6 = Pattern(synAssign, y, ExpressionType::ExpressionUnderscore, queryExpression3);
+		Pattern pattern7 = Pattern(synAssign, z, ExpressionType::ExpressionUnderscore, queryExpression1);
+		Pattern pattern8 = Pattern(synAssign, z, ExpressionType::ExpressionUnderscore, queryExpression2);
+		Pattern pattern9 = Pattern(synAssign, z, ExpressionType::ExpressionUnderscore, queryExpression3);
 		QueryResult result1 = pattern1.execute(pkb, true, map);
 		QueryResult result2 = pattern2.execute(pkb, true, map);
 		QueryResult result3 = pattern3.execute(pkb, true, map);
@@ -185,15 +185,15 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("trivial: synonym, _") {
-		Pattern pattern1 = Pattern(synAssign, var, ExpressionType::underscore, queryExpression1);
+		Pattern pattern1 = Pattern(synAssign, var, ExpressionType::Underscore, queryExpression1);
 		QueryResult result1 = pattern1.execute(pkb, true, map);
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("trivial: synonym, expr") {
-		Pattern pattern1 = Pattern(synAssign, var, ExpressionType::expression, queryExpression1);
-		Pattern pattern2 = Pattern(synAssign, var, ExpressionType::expression, queryExpression2);
-		Pattern pattern3 = Pattern(synAssign, var, ExpressionType::expression, queryExpression3);
+		Pattern pattern1 = Pattern(synAssign, var, ExpressionType::Expression, queryExpression1);
+		Pattern pattern2 = Pattern(synAssign, var, ExpressionType::Expression, queryExpression2);
+		Pattern pattern3 = Pattern(synAssign, var, ExpressionType::Expression, queryExpression3);
 		QueryResult result1 = pattern1.execute(pkb, true, map);
 		QueryResult result2 = pattern2.execute(pkb, true, map);
 		QueryResult result3 = pattern3.execute(pkb, true, map);
@@ -204,9 +204,9 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("trivial: synonym, _expr_") {
-		Pattern pattern1 = Pattern(synAssign, var, ExpressionType::expressionUnderscore, queryExpression1);
-		Pattern pattern2 = Pattern(synAssign, var, ExpressionType::expressionUnderscore, queryExpression2);
-		Pattern pattern3 = Pattern(synAssign, var, ExpressionType::expressionUnderscore, queryExpression3);
+		Pattern pattern1 = Pattern(synAssign, var, ExpressionType::ExpressionUnderscore, queryExpression1);
+		Pattern pattern2 = Pattern(synAssign, var, ExpressionType::ExpressionUnderscore, queryExpression2);
+		Pattern pattern3 = Pattern(synAssign, var, ExpressionType::ExpressionUnderscore, queryExpression3);
 		QueryResult result1 = pattern1.execute(pkb, true, map);
 		QueryResult result2 = pattern2.execute(pkb, true, map);
 		QueryResult result3 = pattern3.execute(pkb, true, map);
@@ -218,7 +218,7 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 
 
 	SECTION("non-trivial: _, _") {
-		Pattern pattern1 = Pattern(synAssign, varUnderscore, ExpressionType::underscore, queryExpression1);
+		Pattern pattern1 = Pattern(synAssign, varUnderscore, ExpressionType::Underscore, queryExpression1);
 		QueryResult result1 = pattern1.execute(pkb, false, map);
 		vector<string> expectedResult = { "1", "2", "3" };
 		REQUIRE(result1.getResult());
@@ -228,9 +228,9 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: _, expr") {
-		Pattern pattern1 = Pattern(synAssign, varUnderscore, ExpressionType::expression, queryExpression1);
-		Pattern pattern2 = Pattern(synAssign, varUnderscore, ExpressionType::expression, queryExpression2);
-		Pattern pattern3 = Pattern(synAssign, varUnderscore, ExpressionType::expression, queryExpression3);
+		Pattern pattern1 = Pattern(synAssign, varUnderscore, ExpressionType::Expression, queryExpression1);
+		Pattern pattern2 = Pattern(synAssign, varUnderscore, ExpressionType::Expression, queryExpression2);
+		Pattern pattern3 = Pattern(synAssign, varUnderscore, ExpressionType::Expression, queryExpression3);
 		QueryResult result1 = pattern1.execute(pkb, false, map);
 		QueryResult result2 = pattern2.execute(pkb, false, map);
 		QueryResult result3 = pattern3.execute(pkb, false, map);
@@ -242,9 +242,9 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: _, _expr_") {
-		Pattern pattern1 = Pattern(synAssign, varUnderscore, ExpressionType::expressionUnderscore, queryExpression1);
-		Pattern pattern2 = Pattern(synAssign, varUnderscore, ExpressionType::expressionUnderscore, queryExpression2);
-		Pattern pattern3 = Pattern(synAssign, varUnderscore, ExpressionType::expressionUnderscore, queryExpression3);
+		Pattern pattern1 = Pattern(synAssign, varUnderscore, ExpressionType::ExpressionUnderscore, queryExpression1);
+		Pattern pattern2 = Pattern(synAssign, varUnderscore, ExpressionType::ExpressionUnderscore, queryExpression2);
+		Pattern pattern3 = Pattern(synAssign, varUnderscore, ExpressionType::ExpressionUnderscore, queryExpression3);
 		QueryResult result1 = pattern1.execute(pkb, false, map);
 		QueryResult result2 = pattern2.execute(pkb, false, map);
 		QueryResult result3 = pattern3.execute(pkb, false, map);
@@ -262,9 +262,9 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: varName, _") {
-		Pattern pattern1 = Pattern(synAssign, x, ExpressionType::underscore, queryExpression1);
-		Pattern pattern2 = Pattern(synAssign, y, ExpressionType::underscore, queryExpression1);
-		Pattern pattern3 = Pattern(synAssign, z, ExpressionType::underscore, queryExpression1);
+		Pattern pattern1 = Pattern(synAssign, x, ExpressionType::Underscore, queryExpression1);
+		Pattern pattern2 = Pattern(synAssign, y, ExpressionType::Underscore, queryExpression1);
+		Pattern pattern3 = Pattern(synAssign, z, ExpressionType::Underscore, queryExpression1);
 
 		QueryResult result1 = pattern1.execute(pkb, false, map);
 		QueryResult result2 = pattern2.execute(pkb, false, map);
@@ -282,15 +282,15 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: varName, expr") {
-		Pattern pattern1 = Pattern(synAssign, x, ExpressionType::expression, queryExpression1);
-		Pattern pattern2 = Pattern(synAssign, x, ExpressionType::expression, queryExpression2);
-		Pattern pattern3 = Pattern(synAssign, x, ExpressionType::expression, queryExpression3);
-		Pattern pattern4 = Pattern(synAssign, y, ExpressionType::expression, queryExpression1);
-		Pattern pattern5 = Pattern(synAssign, y, ExpressionType::expression, queryExpression2);
-		Pattern pattern6 = Pattern(synAssign, y, ExpressionType::expression, queryExpression3);
-		Pattern pattern7 = Pattern(synAssign, z, ExpressionType::expression, queryExpression1);
-		Pattern pattern8 = Pattern(synAssign, z, ExpressionType::expression, queryExpression2);
-		Pattern pattern9 = Pattern(synAssign, z, ExpressionType::expression, queryExpression3);
+		Pattern pattern1 = Pattern(synAssign, x, ExpressionType::Expression, queryExpression1);
+		Pattern pattern2 = Pattern(synAssign, x, ExpressionType::Expression, queryExpression2);
+		Pattern pattern3 = Pattern(synAssign, x, ExpressionType::Expression, queryExpression3);
+		Pattern pattern4 = Pattern(synAssign, y, ExpressionType::Expression, queryExpression1);
+		Pattern pattern5 = Pattern(synAssign, y, ExpressionType::Expression, queryExpression2);
+		Pattern pattern6 = Pattern(synAssign, y, ExpressionType::Expression, queryExpression3);
+		Pattern pattern7 = Pattern(synAssign, z, ExpressionType::Expression, queryExpression1);
+		Pattern pattern8 = Pattern(synAssign, z, ExpressionType::Expression, queryExpression2);
+		Pattern pattern9 = Pattern(synAssign, z, ExpressionType::Expression, queryExpression3);
 		QueryResult result1 = pattern1.execute(pkb, false, map);
 		QueryResult result2 = pattern2.execute(pkb, false, map);
 		QueryResult result3 = pattern3.execute(pkb, false, map);
@@ -314,15 +314,15 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: varName, _expr_") {
-		Pattern pattern1 = Pattern(synAssign, x, ExpressionType::expressionUnderscore, queryExpression1);
-		Pattern pattern2 = Pattern(synAssign, x, ExpressionType::expressionUnderscore, queryExpression2);
-		Pattern pattern3 = Pattern(synAssign, x, ExpressionType::expressionUnderscore, queryExpression3);
-		Pattern pattern4 = Pattern(synAssign, y, ExpressionType::expressionUnderscore, queryExpression1);
-		Pattern pattern5 = Pattern(synAssign, y, ExpressionType::expressionUnderscore, queryExpression2);
-		Pattern pattern6 = Pattern(synAssign, y, ExpressionType::expressionUnderscore, queryExpression3);
-		Pattern pattern7 = Pattern(synAssign, z, ExpressionType::expressionUnderscore, queryExpression1);
-		Pattern pattern8 = Pattern(synAssign, z, ExpressionType::expressionUnderscore, queryExpression2);
-		Pattern pattern9 = Pattern(synAssign, z, ExpressionType::expressionUnderscore, queryExpression3);
+		Pattern pattern1 = Pattern(synAssign, x, ExpressionType::ExpressionUnderscore, queryExpression1);
+		Pattern pattern2 = Pattern(synAssign, x, ExpressionType::ExpressionUnderscore, queryExpression2);
+		Pattern pattern3 = Pattern(synAssign, x, ExpressionType::ExpressionUnderscore, queryExpression3);
+		Pattern pattern4 = Pattern(synAssign, y, ExpressionType::ExpressionUnderscore, queryExpression1);
+		Pattern pattern5 = Pattern(synAssign, y, ExpressionType::ExpressionUnderscore, queryExpression2);
+		Pattern pattern6 = Pattern(synAssign, y, ExpressionType::ExpressionUnderscore, queryExpression3);
+		Pattern pattern7 = Pattern(synAssign, z, ExpressionType::ExpressionUnderscore, queryExpression1);
+		Pattern pattern8 = Pattern(synAssign, z, ExpressionType::ExpressionUnderscore, queryExpression2);
+		Pattern pattern9 = Pattern(synAssign, z, ExpressionType::ExpressionUnderscore, queryExpression3);
 		QueryResult result1 = pattern1.execute(pkb, false, map);
 		QueryResult result2 = pattern2.execute(pkb, false, map);
 		QueryResult result3 = pattern3.execute(pkb, false, map);
@@ -352,7 +352,7 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: synonym, _") {
-		Pattern pattern1 = Pattern(synAssign, var, ExpressionType::underscore, queryExpression1);
+		Pattern pattern1 = Pattern(synAssign, var, ExpressionType::Underscore, queryExpression1);
 		QueryResult result1 = pattern1.execute(pkb, false, map);
 		vector<string> expectedResult1 = { "1", "2", "3" };
 		vector<string> expectedResultVar1 = { "x", "y", "y" };
@@ -366,9 +366,9 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: synonym, expr") {
-		Pattern pattern1 = Pattern(synAssign, var, ExpressionType::expression, queryExpression1);
-		Pattern pattern2 = Pattern(synAssign, var, ExpressionType::expression, queryExpression2);
-		Pattern pattern3 = Pattern(synAssign, var, ExpressionType::expression, queryExpression3);
+		Pattern pattern1 = Pattern(synAssign, var, ExpressionType::Expression, queryExpression1);
+		Pattern pattern2 = Pattern(synAssign, var, ExpressionType::Expression, queryExpression2);
+		Pattern pattern3 = Pattern(synAssign, var, ExpressionType::Expression, queryExpression3);
 		QueryResult result1 = pattern1.execute(pkb, false, map);
 		QueryResult result2 = pattern2.execute(pkb, false, map);
 		QueryResult result3 = pattern3.execute(pkb, false, map);
@@ -385,9 +385,9 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: synonym, _expr_") {
-		Pattern pattern1 = Pattern(synAssign, var, ExpressionType::expressionUnderscore, queryExpression1);
-		Pattern pattern2 = Pattern(synAssign, var, ExpressionType::expressionUnderscore, queryExpression2);
-		Pattern pattern3 = Pattern(synAssign, var, ExpressionType::expressionUnderscore, queryExpression3);
+		Pattern pattern1 = Pattern(synAssign, var, ExpressionType::ExpressionUnderscore, queryExpression1);
+		Pattern pattern2 = Pattern(synAssign, var, ExpressionType::ExpressionUnderscore, queryExpression2);
+		Pattern pattern3 = Pattern(synAssign, var, ExpressionType::ExpressionUnderscore, queryExpression3);
 
 		QueryResult result1 = pattern1.execute(pkb, false, map);
 		QueryResult result2 = pattern2.execute(pkb, false, map);

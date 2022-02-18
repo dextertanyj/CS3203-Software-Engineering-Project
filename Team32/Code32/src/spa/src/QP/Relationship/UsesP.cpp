@@ -1,36 +1,29 @@
 #include "QP/Relationship/UsesP.h"
 
-UsesP::UsesP(QueryEntRef leftEnt, QueryEntRef rightEnt)
-	: leftEnt(leftEnt),
-	  rightEnt(rightEnt) {}
+#include <utility>
 
-QueryEntRef UsesP::getLeftEnt() {
-	return leftEnt;
-}
+UsesP::UsesP(QueryEntRef left_ent, QueryEntRef right_ent)
+	: left_ent(std::move(std::move(left_ent))), right_ent(std::move(std::move(right_ent))) {}
 
-QueryEntRef UsesP::getRightEnt() {
-	return rightEnt;
-}
+QueryEntRef UsesP::getLeftEnt() { return left_ent; }
 
-QueryResult UsesP::execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) {
-	return isTrivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
+QueryEntRef UsesP::getRightEnt() { return right_ent; }
+
+QueryResult UsesP::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
 vector<string> UsesP::getDeclarationSymbols() {
-	vector<string> declarationSymbols;
-	if (this->leftEnt.type == EntRefType::synonym) {
-		declarationSymbols.push_back(this->leftEnt.entRef);
+	vector<string> declaration_symbols;
+	if (this->left_ent.type == EntRefType::Synonym) {
+		declaration_symbols.push_back(this->left_ent.ent_ref);
 	}
-	if (this->rightEnt.type == EntRefType::synonym) {
-		declarationSymbols.push_back(this->rightEnt.entRef);
+	if (this->right_ent.type == EntRefType::Synonym) {
+		declaration_symbols.push_back(this->right_ent.ent_ref);
 	}
-	return declarationSymbols;
+	return declaration_symbols;
 }
 
-QueryResult UsesP::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
-	return QueryResult();
-}
+QueryResult UsesP::executeTrivial(PKB& /*pkb*/, unordered_map<string, DesignEntity>& /*map*/) { return {}; }
 
-QueryResult UsesP::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
-	return QueryResult();
-}
+QueryResult UsesP::executeNonTrivial(PKB& /*pkb*/, unordered_map<string, DesignEntity>& /*map*/) { return {}; }

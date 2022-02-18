@@ -7,7 +7,7 @@ using namespace std;
 
 AssignStore::AssignStore() = default;
 
-void AssignStore::setAssign(shared_ptr<StmtInfo> statement, VarRef variable, Common::ExpressionProcessor::Expression expression) {
+void AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, VarRef variable, Common::ExpressionProcessor::Expression expression) {
 	StmtRef idx = statement->reference;
 	if (statement->type != StmtType::Assign) {
 		throw "Statement type cannot be bound to expression";
@@ -41,18 +41,18 @@ StmtInfoPtrSet AssignStore::getStmtsWithPattern(const VarRef& variable, const Co
 	return result;
 }
 
-StmtInfoPtrSet AssignStore::getStmtsWithPatternLHS(const VarRef& varName) {
+StmtInfoPtrSet AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) {
 	StmtInfoPtrSet result;
 	for (const auto& assignment : store) {
-		if (assignment.second.variable == varName) {
+		if (assignment.second.variable == var_name) {
 			result.insert(assignment.second.node);
 		}
 	}
 	return result;
 }
 
-vector<pair<shared_ptr<StmtInfo>, VarRef>> AssignStore::getStmtsWithPatternRHS(
-	const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) {
+vector<pair<shared_ptr<StmtInfo>, VarRef>> AssignStore::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
+                                                                               bool is_exact_match) {
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> result;
 	for (auto& itr : store) {
 		AssignRelation assign_relation = itr.second;
@@ -65,14 +65,14 @@ vector<pair<shared_ptr<StmtInfo>, VarRef>> AssignStore::getStmtsWithPatternRHS(
 }
 
 bool AssignStore::compareExpressions(AssignRelation& relation, const VarRef& variable,
-                                     const Common::ExpressionProcessor::Expression& opTree, bool is_exact_match) {
+                                     const Common::ExpressionProcessor::Expression& op_tree, bool is_exact_match) {
 	if (!variable.empty() && relation.variable != variable) {
 		return false;
 	}
 	if (is_exact_match) {
-		return relation.expression.equals(opTree);
+		return relation.expression.equals(op_tree);
 	}
-	return relation.expression.contains(opTree);
+	return relation.expression.contains(op_tree);
 }
 
 void AssignStore::clear() { store.clear(); }

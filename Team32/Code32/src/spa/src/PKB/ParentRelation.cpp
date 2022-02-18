@@ -5,7 +5,7 @@
 
 ParentRelation::ParentRelation(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
 
-void ParentRelation::insertForward(shared_ptr<StmtInfo> parent) {
+void ParentRelation::insertForward(const shared_ptr<StmtInfo>& parent) {
 	if (self->reference <= parent->reference) {
 		throw invalid_argument("Statement out of order");
 	}
@@ -63,7 +63,7 @@ void ParentRelation::optimize(StatementRelationStore<ParentRelation>& store) {
 
 unordered_set<shared_ptr<StmtInfo>> ParentRelation::populateTransitive(StatementRelationStore<ParentRelation>& store,
                                                                        ParentRelation& current,
-                                                                  unordered_set<shared_ptr<StmtInfo>> previous) {
+                                                                       unordered_set<shared_ptr<StmtInfo>> previous) {
 	current.appendForwardTransitive(previous);
 	previous.insert(current.self);
 	unordered_set<shared_ptr<StmtInfo>> result;

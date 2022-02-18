@@ -10,7 +10,7 @@ using namespace std;
 
 class QueryFormatter {
 public:
-	static vector<string> formatResult(QueryProperties& queryProperties, QueryResult& queryResult);
+	static vector<string> formatResult(QueryProperties& query_properties, QueryResult& query_result);
 };
 
 #endif  // QUERY_FORMATTER_H_

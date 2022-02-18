@@ -2,6 +2,7 @@
 #define SPA_CONSTANTSTORE_H
 
 #include <unordered_set>
+
 #include "Common/TypeDefs.h"
 
 using namespace std;

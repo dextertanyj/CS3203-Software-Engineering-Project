@@ -16,18 +16,18 @@ TEST_CASE("QP::Relationship::ParentT::execute") {
 	pkb.populateComplexRelations();
 
 	unordered_map<string, DesignEntity> map;
-	map.insert({ "s", DesignEntity::stmt });
-	map.insert({ "a", DesignEntity::assign });
-	map.insert({ "if", DesignEntity::if_ });
+	map.insert({ "s", DesignEntity::Stmt });
+	map.insert({ "a", DesignEntity::Assign });
+	map.insert({ "if", DesignEntity::If });
 
-	QueryStmtRef stmtNo1 = { StmtRefType::stmtNumber, "1" };
-	QueryStmtRef stmtNo2 = { StmtRefType::stmtNumber, "2" };
-	QueryStmtRef stmtNo3 = { StmtRefType::stmtNumber, "3" };
-	QueryStmtRef stmtNo4 = { StmtRefType::stmtNumber, "4" };
-	QueryStmtRef stmtSynonym = { StmtRefType::synonym, "s" };
-	QueryStmtRef assignSynonym = { StmtRefType::synonym, "a" };
-	QueryStmtRef ifSynonym = { StmtRefType::synonym, "if" };
-	QueryStmtRef underscore = { StmtRefType::underscore, "_"};
+	QueryStmtRef stmtNo1 = { StmtRefType::StmtNumber, "1" };
+	QueryStmtRef stmtNo2 = { StmtRefType::StmtNumber, "2" };
+	QueryStmtRef stmtNo3 = { StmtRefType::StmtNumber, "3" };
+	QueryStmtRef stmtNo4 = { StmtRefType::StmtNumber, "4" };
+	QueryStmtRef stmtSynonym = { StmtRefType::Synonym, "s" };
+	QueryStmtRef assignSynonym = { StmtRefType::Synonym, "a" };
+	QueryStmtRef ifSynonym = { StmtRefType::Synonym, "if" };
+	QueryStmtRef underscore = { StmtRefType::Underscore, "_"};
 
 	SECTION("trivial: stmtNumber & stmtNumber") {
 		ParentT parent1 = ParentT(stmtNo1, stmtNo3);

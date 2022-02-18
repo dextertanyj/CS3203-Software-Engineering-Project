@@ -1,27 +1,18 @@
 #include "QP/QueryProperties.h"
 
-QueryProperties::QueryProperties(DeclarationList declarationList,
-	                               Declaration select,
-	                               SuchThatClauseList suchThatClauseList,
-	                               PatternClauseList patternClauseList)
-		: declarationList(declarationList),
-		  select(select),
-		  suchThatClauseList(suchThatClauseList),
-		  patternClauseList(patternClauseList) {
-}
+#include <utility>
 
-DeclarationList QueryProperties::getDeclarationList() {
-	return declarationList;
-}
+QueryProperties::QueryProperties(DeclarationList declaration_list, Declaration select, SuchThatClauseList such_that_clause_list,
+                                 PatternClauseList pattern_clause_list)
+	: declaration_list(std::move(std::move(declaration_list))),
+	  select(std::move(std::move(select))),
+	  such_that_clause_list(std::move(std::move(such_that_clause_list))),
+	  pattern_clause_list(std::move(std::move(pattern_clause_list))) {}
 
-Declaration QueryProperties::getSelect() {
-	return select;
-}
+DeclarationList QueryProperties::getDeclarationList() { return declaration_list; }
 
-SuchThatClauseList QueryProperties::getSuchThatClauseList() {
-	return suchThatClauseList;
-}
+Declaration QueryProperties::getSelect() { return select; }
 
-PatternClauseList QueryProperties::getPatternClauseList() {
-	return patternClauseList;
-}
+SuchThatClauseList QueryProperties::getSuchThatClauseList() { return such_that_clause_list; }
+
+PatternClauseList QueryProperties::getPatternClauseList() { return pattern_clause_list; }

@@ -14,14 +14,14 @@ using namespace std;
 
 class SP::Node::WhileNode : public StatementNode {
 public:
-	WhileNode(StmtRef stmtNo, unique_ptr<ExpressionNode> condExpr, unique_ptr<StatementListNode> stmtLst);
+	WhileNode(StmtRef stmt_no, unique_ptr<ExpressionNode> cond_expr, unique_ptr<StatementListNode> stmt_list);
 	static unique_ptr<WhileNode> parseWhileStatement(Lexer& lex, StmtRef& statement_count);
 	StmtRef extract(PKB& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
 
 private:
-	shared_ptr<ExpressionNode> condExpr;
-	shared_ptr<StatementListNode> stmtLst;
+	shared_ptr<ExpressionNode> cond_expr;
+	shared_ptr<StatementListNode> stmt_list;
 };
 
 #endif  // SPA_WHILENODE_H

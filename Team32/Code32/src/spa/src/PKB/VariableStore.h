@@ -8,8 +8,8 @@
 class VariableStore {
 public:
 	VariableStore();
-	void insert(const VarRef& value);
-	void insert(const VarRefSet& values);
+	void insert(const VarRef& variable);
+	void insert(const VarRefSet& variables);
 	unordered_set<VarRef> getAll();
 
 private:

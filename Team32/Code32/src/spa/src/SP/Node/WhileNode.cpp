@@ -2,12 +2,12 @@
 
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
-SP::Node::WhileNode::WhileNode(StmtRef stmtNo, unique_ptr<ExpressionNode> condExpr, unique_ptr<StatementListNode> stmtLst)
-	: StatementNode(stmtNo), condExpr(move(condExpr)), stmtLst(move(stmtLst)) {}
+SP::Node::WhileNode::WhileNode(StmtRef stmt_no, unique_ptr<ExpressionNode> cond_expr, unique_ptr<StatementListNode> stmt_list)
+	: StatementNode(stmt_no), cond_expr(move(cond_expr)), stmt_list(move(stmt_list)) {}
 
 unique_ptr<SP::Node::WhileNode> SP::Node::WhileNode::parseWhileStatement(Lexer& lex, StmtRef& statement_count) {
-    StmtRef statement_index = statement_count++;
-    lex.nextIf("(");
+	StmtRef statement_index = statement_count++;
+	lex.nextIf("(");
 	unique_ptr<ExpressionNode> condition = ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Logical);
 	lex.nextIf(")");
 	lex.nextIf("{");
@@ -19,10 +19,10 @@ unique_ptr<SP::Node::WhileNode> SP::Node::WhileNode::parseWhileStatement(Lexer& 
 StmtRef SP::Node::WhileNode::extract(PKB& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::WhileStmt);
-	Common::ExpressionProcessor::Expression expression = condExpr->extract();
+	Common::ExpressionProcessor::Expression expression = cond_expr->extract();
 	pkb.setConstant(expression.getConstants());
 	pkb.setUses(stmt_ref, expression.getVariables());
-	vector<StmtRef> children = stmtLst->extract(pkb);
+	vector<StmtRef> children = stmt_list->extract(pkb);
 	for (auto iter = children.begin(); iter < children.end(); ++iter) {
 		pkb.setParent(stmt_ref, *iter);
 	}
@@ -30,10 +30,10 @@ StmtRef SP::Node::WhileNode::extract(PKB& pkb) {
 }
 
 bool SP::Node::WhileNode::equals(const shared_ptr<StatementNode>& object) {
-    shared_ptr<WhileNode> other = dynamic_pointer_cast<WhileNode>(object);
-    if (other == nullptr) {
-        return false;
-    }
-    return this->getStmtRef() == other->getStmtRef() && this->condExpr->equals(other->condExpr)
-           && this->stmtLst->equals(other->stmtLst);
+	shared_ptr<WhileNode> other = dynamic_pointer_cast<WhileNode>(object);
+	if (other == nullptr) {
+		return false;
+	}
+	return this->getStmtRef() == other->getStmtRef() && this->cond_expr->equals(other->cond_expr) &&
+	       this->stmt_list->equals(other->stmt_list);
 }

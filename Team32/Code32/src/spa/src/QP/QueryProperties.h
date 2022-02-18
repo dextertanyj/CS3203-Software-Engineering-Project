@@ -6,8 +6,8 @@
 #include <vector>
 
 #include "Common/ExpressionProcessor/Expression.h"
-#include "QP/Relationship/Pattern.h"
 #include "QP/QueryTypeDefs.h"
+#include "QP/Relationship/Pattern.h"
 #include "QP/Relationship/Relation.h"
 
 using namespace std;
@@ -26,10 +26,8 @@ typedef vector<PatternClause> PatternClauseList;
 
 class QueryProperties {
 public:
-	QueryProperties(DeclarationList declarationList,
-  	              Declaration select,
-  	              SuchThatClauseList suchThatClauseList,
-  	              PatternClauseList patternClauseList);
+	QueryProperties(DeclarationList declaration_list, Declaration select, SuchThatClauseList such_that_clause_list,
+	                PatternClauseList pattern_clause_list);
 
 	DeclarationList getDeclarationList();
 	Declaration getSelect();
@@ -37,10 +35,10 @@ public:
 	PatternClauseList getPatternClauseList();
 
 private:
-	DeclarationList declarationList;
+	DeclarationList declaration_list;
 	Declaration select;
-	SuchThatClauseList suchThatClauseList;
-	PatternClauseList patternClauseList;
+	SuchThatClauseList such_that_clause_list;
+	PatternClauseList pattern_clause_list;
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPROPERTIES_H_

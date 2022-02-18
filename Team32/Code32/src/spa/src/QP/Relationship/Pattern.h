@@ -12,24 +12,24 @@
 
 class Pattern : public Relation {
 public:
-	Pattern(Declaration synonym, QueryEntRef entRef, ExpressionType expressionType, 
-				optional<Common::ExpressionProcessor::Expression> expression);
+	Pattern(Declaration syn_assign, QueryEntRef ent_ref, ExpressionType expression_type,
+	        optional<Common::ExpressionProcessor::Expression> expression);
 
 	Declaration getSynAssign();
 	QueryEntRef getEntRef();
 	ExpressionType getExpressionType();
 	Common::ExpressionProcessor::Expression getExpression();
 
-	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) override;
+	QueryResult execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) override;
 	vector<string> getDeclarationSymbols() override;
 
 private:
 	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
 	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
 
-	Declaration synAssign;
-	QueryEntRef entRef;
-	ExpressionType expressionType;
+	Declaration syn_assign;
+	QueryEntRef ent_ref;
+	ExpressionType expression_type;
 	optional<Common::ExpressionProcessor::Expression> expression;
 };
 
