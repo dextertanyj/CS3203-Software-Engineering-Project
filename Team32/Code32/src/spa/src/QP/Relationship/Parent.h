@@ -1,8 +1,8 @@
 #ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_PARENT_H_
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_PARENT_H_
 
-#include "QP/Relationship/Relation.h"
 #include "QP/QueryTypeDefs.h"
+#include "QP/Relationship/Relation.h"
 
 class Parent : public Relation {
 public:

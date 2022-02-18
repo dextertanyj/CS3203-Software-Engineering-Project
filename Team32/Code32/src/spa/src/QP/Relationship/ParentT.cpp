@@ -13,12 +13,10 @@ QueryResult ParentT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity
 				return QueryResult(true);
 			}
 		}
-	}
-	else if (getParentStmt().type == StmtRefType::StmtNumber && getChildStmt().type == StmtRefType::Underscore) {
+	} else if (getParentStmt().type == StmtRefType::StmtNumber && getChildStmt().type == StmtRefType::Underscore) {
 		StmtInfoPtrSet stmt_set = pkb.getChildStar(stoul(getParentStmt().stmt_ref));
 		return QueryResult(!stmt_set.empty());
-	}
-	else if (getParentStmt().type == StmtRefType::StmtNumber && getChildStmt().type == StmtRefType::Synonym) {
+	} else if (getParentStmt().type == StmtRefType::StmtNumber && getChildStmt().type == StmtRefType::Synonym) {
 		StmtInfoPtrSet stmt_set = pkb.getChildStar(stoul(getParentStmt().stmt_ref));
 		DesignEntity design_entity = map[getChildStmt().stmt_ref];
 
@@ -31,12 +29,10 @@ QueryResult ParentT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity
 				return QueryResult(true);
 			}
 		}
-	}
-	else if (getParentStmt().type == StmtRefType::Underscore && getChildStmt().type == StmtRefType::StmtNumber) {
+	} else if (getParentStmt().type == StmtRefType::Underscore && getChildStmt().type == StmtRefType::StmtNumber) {
 		StmtInfoPtrSet parent_set = pkb.getParentStar(stoul(getChildStmt().stmt_ref));
 		return QueryResult(!parent_set.empty());
-	}
-	else if (getParentStmt().type == StmtRefType::Underscore && getChildStmt().type == StmtRefType::Underscore) {
+	} else if (getParentStmt().type == StmtRefType::Underscore && getChildStmt().type == StmtRefType::Underscore) {
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
 		for (auto const& stmt : stmt_set) {
 			StmtInfoPtrSet children = pkb.getChildStar(stmt->reference);
@@ -44,8 +40,7 @@ QueryResult ParentT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity
 				return QueryResult(true);
 			}
 		}
-	}
-	else if (getParentStmt().type == StmtRefType::Underscore && getChildStmt().type == StmtRefType::Synonym) {
+	} else if (getParentStmt().type == StmtRefType::Underscore && getChildStmt().type == StmtRefType::Synonym) {
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
 		DesignEntity design_entity = map[getChildStmt().stmt_ref];
 		for (auto const& stmt : stmt_set) {
@@ -58,8 +53,7 @@ QueryResult ParentT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity
 				return QueryResult(true);
 			}
 		}
-	}
-	else if (getParentStmt().type == StmtRefType::Synonym && getChildStmt().type == StmtRefType::StmtNumber) {
+	} else if (getParentStmt().type == StmtRefType::Synonym && getChildStmt().type == StmtRefType::StmtNumber) {
 		StmtInfoPtrSet parent_set = pkb.getParentStar(stoul(getChildStmt().stmt_ref));
 		DesignEntity design_entity = map[getParentStmt().stmt_ref];
 		for (auto const& parent : parent_set) {
@@ -67,8 +61,7 @@ QueryResult ParentT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity
 				return QueryResult(true);
 			}
 		}
-	}
-	else if (getParentStmt().type == StmtRefType::Synonym && getChildStmt().type == StmtRefType::Underscore) {
+	} else if (getParentStmt().type == StmtRefType::Synonym && getChildStmt().type == StmtRefType::Underscore) {
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
 		DesignEntity design_entity = map[getParentStmt().stmt_ref];
 		for (auto const& stmt : stmt_set) {
@@ -81,8 +74,7 @@ QueryResult ParentT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity
 				return QueryResult(true);
 			}
 		}
-	}
-	else if (getParentStmt().type == StmtRefType::Synonym && getChildStmt().type == StmtRefType::Synonym) {
+	} else if (getParentStmt().type == StmtRefType::Synonym && getChildStmt().type == StmtRefType::Synonym) {
 		if (getParentStmt().stmt_ref == getChildStmt().stmt_ref) {
 			return {};
 		}

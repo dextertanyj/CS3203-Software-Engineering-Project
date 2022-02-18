@@ -14,18 +14,16 @@ unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parseProcedure(Lexe
 		throw SP::ParseException("Invalid procedure name");
 	}
 	lex.nextIf("{");
-    StmtRef start = statement_count;
+	StmtRef start = statement_count;
 	unique_ptr<StatementListNode> statement_list = StatementListNode::parseStatementList(lex, statement_count);
-    StmtRef end = statement_count - 1;
+	StmtRef end = statement_count - 1;
 	lex.nextIf("}");
 	return make_unique<ProcedureNode>(name, std::move(statement_list), start, end);
 }
 
-void SP::Node::ProcedureNode::extract(PKB& pkb) {
-	stmt_list->extract(pkb);
-}
+void SP::Node::ProcedureNode::extract(PKB& pkb) { stmt_list->extract(pkb); }
 
 bool SP::Node::ProcedureNode::equals(const shared_ptr<ProcedureNode>& object) {
-	return this->name == object->name && this->stmt_list->equals(object->stmt_list) && this->start == object->start
-        && this->end == object->end;
+	return this->name == object->name && this->stmt_list->equals(object->stmt_list) && this->start == object->start &&
+	       this->end == object->end;
 }

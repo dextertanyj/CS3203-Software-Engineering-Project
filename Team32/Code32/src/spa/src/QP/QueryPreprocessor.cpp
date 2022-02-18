@@ -25,21 +25,18 @@ void QueryPreprocessor::tokenizeQuery(string query) {
 	auto words_begin = sregex_iterator(query.begin(), query.end(), query_token_regex);
 
 	/*Check to make sure that there are no spaces between Parent|Follows and *.
-	  If so, combine the tokens into Parent* or Follows* */ 
+	  If so, combine the tokens into Parent* or Follows* */
 	auto words_end = sregex_iterator();
 	size_t prev_pos = 0;
 	for (sregex_iterator i = words_begin; i != words_end; ++i) {
 		smatch match = *i;
-		if (
-			match.str() == "*" && !this->query_tokens.empty() && 
-			(this->query_tokens.back() == "Parent" || this->query_tokens.back() == "Follows") && 
-			prev_pos + this->query_tokens.back().length() == match.position()
-		) {
+		if (match.str() == "*" && !this->query_tokens.empty() &&
+		    (this->query_tokens.back() == "Parent" || this->query_tokens.back() == "Follows") &&
+		    prev_pos + this->query_tokens.back().length() == match.position()) {
 			string combined_token = this->query_tokens.back() + "*";
 			this->query_tokens.pop_back();
 			this->query_tokens.push_back(combined_token);
-		}
-		else {
+		} else {
 			this->query_tokens.push_back(match.str());
 		}
 		prev_pos = match.position();
@@ -247,8 +244,8 @@ unique_ptr<Follows> QueryPreprocessor::parseFollows(int& token_index) {
 	}
 	token_index++;
 	set<DesignEntity> allowed_design_entities = {
-		DesignEntity::Stmt, DesignEntity::Read, DesignEntity::Print,  DesignEntity::Call,
-		DesignEntity::While, DesignEntity::If,  DesignEntity::Assign,
+		DesignEntity::Stmt,  DesignEntity::Read, DesignEntity::Print,  DesignEntity::Call,
+		DesignEntity::While, DesignEntity::If,   DesignEntity::Assign,
 	};
 	matchTokenOrThrow("(", token_index);
 	QueryStmtRef ref1 = parseQueryStmtRef(token_index, allowed_design_entities);
@@ -268,8 +265,8 @@ unique_ptr<Parent> QueryPreprocessor::parseParent(int& token_index) {
 	}
 	token_index++;
 	set<DesignEntity> allowed_design_entities = {
-		DesignEntity::Stmt,   DesignEntity::Read, DesignEntity::Print,  DesignEntity::Call,
-		DesignEntity::While, DesignEntity::If,  DesignEntity::Assign,
+		DesignEntity::Stmt,  DesignEntity::Read, DesignEntity::Print,  DesignEntity::Call,
+		DesignEntity::While, DesignEntity::If,   DesignEntity::Assign,
 	};
 	matchTokenOrThrow("(", token_index);
 	QueryStmtRef ref1 = parseQueryStmtRef(token_index, allowed_design_entities);

@@ -5,13 +5,9 @@
 UsesP::UsesP(QueryEntRef left_ent, QueryEntRef right_ent)
 	: left_ent(std::move(std::move(left_ent))), right_ent(std::move(std::move(right_ent))) {}
 
-QueryEntRef UsesP::getLeftEnt() {
-	return left_ent;
-}
+QueryEntRef UsesP::getLeftEnt() { return left_ent; }
 
-QueryEntRef UsesP::getRightEnt() {
-	return right_ent;
-}
+QueryEntRef UsesP::getRightEnt() { return right_ent; }
 
 QueryResult UsesP::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);

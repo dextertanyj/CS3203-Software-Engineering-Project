@@ -67,7 +67,7 @@ ProcRef ProcedureStore::getProcByCall(const shared_ptr<StmtInfo>& call_stmt) {
 			return itr.first;
 		}
 	}
-    return "";
+	return "";
 }
 
 ProcRef ProcedureStore::getProcByStmt(const shared_ptr<StmtInfo>& stmt_info) {
@@ -98,6 +98,4 @@ unordered_set<ProcRef> ProcedureStore::getProcListByStmtList(const unordered_set
 	return proc_set;
 };
 
-void ProcedureStore::clear() {
-    proc_map.clear();
-}
+void ProcedureStore::clear() { proc_map.clear(); }

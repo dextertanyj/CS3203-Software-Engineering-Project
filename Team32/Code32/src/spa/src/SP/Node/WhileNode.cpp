@@ -6,8 +6,8 @@ SP::Node::WhileNode::WhileNode(StmtRef stmt_no, unique_ptr<ExpressionNode> cond_
 	: StatementNode(stmt_no), cond_expr(move(cond_expr)), stmt_list(move(stmt_list)) {}
 
 unique_ptr<SP::Node::WhileNode> SP::Node::WhileNode::parseWhileStatement(Lexer& lex, StmtRef& statement_count) {
-    StmtRef statement_index = statement_count++;
-    lex.nextIf("(");
+	StmtRef statement_index = statement_count++;
+	lex.nextIf("(");
 	unique_ptr<ExpressionNode> condition = ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Logical);
 	lex.nextIf(")");
 	lex.nextIf("{");
@@ -30,10 +30,10 @@ StmtRef SP::Node::WhileNode::extract(PKB& pkb) {
 }
 
 bool SP::Node::WhileNode::equals(const shared_ptr<StatementNode>& object) {
-    shared_ptr<WhileNode> other = dynamic_pointer_cast<WhileNode>(object);
-    if (other == nullptr) {
-        return false;
-    }
-    return this->getStmtRef() == other->getStmtRef() && this->cond_expr->equals(other->cond_expr)
-           && this->stmt_list->equals(other->stmt_list);
+	shared_ptr<WhileNode> other = dynamic_pointer_cast<WhileNode>(object);
+	if (other == nullptr) {
+		return false;
+	}
+	return this->getStmtRef() == other->getStmtRef() && this->cond_expr->equals(other->cond_expr) &&
+	       this->stmt_list->equals(other->stmt_list);
 }

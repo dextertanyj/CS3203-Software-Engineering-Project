@@ -1,7 +1,8 @@
+#include "PKB/SVRelationStore.h"
+
 #include <algorithm>
 
 #include "PKB/Modifies.h"
-#include "PKB/SVRelationStore.h"
 #include "PKB/Uses.h"
 
 template <class T>

@@ -1,8 +1,8 @@
 #ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWST_H_
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWST_H_
 
-#include "QP/Relationship/Follows.h"
 #include "QP/QueryTypeDefs.h"
+#include "QP/Relationship/Follows.h"
 
 class FollowsT : public Follows {
 public:

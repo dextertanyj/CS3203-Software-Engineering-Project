@@ -62,63 +62,63 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 
 QueryResult QueryEvaluator::executeNoClauses(const Declaration& select) {
 	switch (select.type) {
-	case DesignEntity::Stmt: {
-		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		QueryResult result = QueryResult();
+		case DesignEntity::Stmt: {
+			StmtInfoPtrSet stmt_set = pkb.getStatements();
+			QueryResult result = QueryResult();
 
-		vector<string> result_string;
-		for (auto const& stmt : stmt_set) {
-			result_string.push_back(to_string(stmt->reference));
+			vector<string> result_string;
+			for (auto const& stmt : stmt_set) {
+				result_string.push_back(to_string(stmt->reference));
+			}
+
+			result.addColumn(select.symbol, result_string);
+			return result;
 		}
-
-		result.addColumn(select.symbol, result_string);
-		return result;
-	}
-	case DesignEntity::Read: {
-		return getSpecificStmtType(StmtType::Read, select.symbol);
-	}
-	case DesignEntity::Print: {
-		return getSpecificStmtType(StmtType::Print, select.symbol);
-	}
-	case DesignEntity::Call: {
-		return getSpecificStmtType(StmtType::Call, select.symbol);
-	}
-	case DesignEntity::While: {
-		return getSpecificStmtType(StmtType::WhileStmt, select.symbol);
-	}
-	case DesignEntity::If: {
-		return getSpecificStmtType(StmtType::IfStmt, select.symbol);
-	}
-	case DesignEntity::Assign: {
-		return getSpecificStmtType(StmtType::Assign, select.symbol);
-	}
-	case DesignEntity::Variable: {
-		VarRefSet var_set = pkb.getVariables();
-		QueryResult result = QueryResult();
-
-		vector<string> result_string;
-		for (auto const& var : var_set) {
-			result_string.push_back(var);
+		case DesignEntity::Read: {
+			return getSpecificStmtType(StmtType::Read, select.symbol);
 		}
-
-		result.addColumn(select.symbol, result_string);
-		return result;
-	}
-	case DesignEntity::Constant: {
-		unordered_set<ConstVal> constants = pkb.getConstants();
-		QueryResult result = QueryResult();
-
-		vector<string> result_string;
-		result_string.reserve(constants.size());
-		for (auto const& constant : constants) {
-			result_string.push_back(to_string(constant));
+		case DesignEntity::Print: {
+			return getSpecificStmtType(StmtType::Print, select.symbol);
 		}
+		case DesignEntity::Call: {
+			return getSpecificStmtType(StmtType::Call, select.symbol);
+		}
+		case DesignEntity::While: {
+			return getSpecificStmtType(StmtType::WhileStmt, select.symbol);
+		}
+		case DesignEntity::If: {
+			return getSpecificStmtType(StmtType::IfStmt, select.symbol);
+		}
+		case DesignEntity::Assign: {
+			return getSpecificStmtType(StmtType::Assign, select.symbol);
+		}
+		case DesignEntity::Variable: {
+			VarRefSet var_set = pkb.getVariables();
+			QueryResult result = QueryResult();
 
-		result.addColumn(select.symbol, result_string);
-		return result;
-	}
-	default:
-		return {};
+			vector<string> result_string;
+			for (auto const& var : var_set) {
+				result_string.push_back(var);
+			}
+
+			result.addColumn(select.symbol, result_string);
+			return result;
+		}
+		case DesignEntity::Constant: {
+			unordered_set<ConstVal> constants = pkb.getConstants();
+			QueryResult result = QueryResult();
+
+			vector<string> result_string;
+			result_string.reserve(constants.size());
+			for (auto const& constant : constants) {
+				result_string.push_back(to_string(constant));
+			}
+
+			result.addColumn(select.symbol, result_string);
+			return result;
+		}
+		default:
+			return {};
 	}
 }
 
@@ -229,7 +229,7 @@ vector<pair<SuchThatClauseList, PatternClauseList>> QueryEvaluator::splitClauses
 void QueryEvaluator::createSymbolToTypeMap(const DeclarationList& declarations) {
 	unordered_map<string, DesignEntity> map;
 	for (Declaration const& declaration : declarations) {
-		map.insert({ declaration.symbol, declaration.type });
+		map.insert({declaration.symbol, declaration.type});
 	}
 	this->symbol_to_type_map = map;
 }

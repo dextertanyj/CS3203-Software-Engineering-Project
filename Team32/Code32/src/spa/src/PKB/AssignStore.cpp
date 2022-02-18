@@ -51,8 +51,8 @@ StmtInfoPtrSet AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) {
 	return result;
 }
 
-vector<pair<shared_ptr<StmtInfo>, VarRef>> AssignStore::getStmtsWithPatternRHS(
-	const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) {
+vector<pair<shared_ptr<StmtInfo>, VarRef>> AssignStore::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
+                                                                               bool is_exact_match) {
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> result;
 	for (auto& itr : store) {
 		AssignRelation assign_relation = itr.second;

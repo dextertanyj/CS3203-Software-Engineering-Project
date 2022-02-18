@@ -1,11 +1,11 @@
 #ifndef SPA_READNODE_H
 #define SPA_READNODE_H
 
+#include "Common/TypeDefs.h"
 #include "PKB/PKB.h"
 #include "SP/Lexer.h"
 #include "SP/Node/StatementNode.h"
 #include "SP/Node/VariableNode.h"
-#include "Common/TypeDefs.h"
 
 using namespace std;
 

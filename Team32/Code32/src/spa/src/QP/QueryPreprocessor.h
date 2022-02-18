@@ -26,12 +26,12 @@ using std::set;
 using std::string;
 using std::vector;
 
-//struct QuerySyntaxException : public runtime_error {
-//    using runtime_error::runtime_error;
-//};
+// struct QuerySyntaxException : public runtime_error {
+//     using runtime_error::runtime_error;
+// };
 
 struct QueryException : public runtime_error {
-  using runtime_error::runtime_error;
+	using runtime_error::runtime_error;
 };
 
 struct QueryTokenizationException : public runtime_error {
@@ -46,7 +46,7 @@ private:
 	void tokenizeQuery(string query);
 
 	// Starting point for recursive descent parser
-    QueryProperties parseQuery();
+	QueryProperties parseQuery();
 
 	// Parsing clauses/2nd level nodes
 	void parseDeclaration(int& token_index);
@@ -79,4 +79,4 @@ private:
 	QueryResult query_result;
 };
 
-#endif // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPREPROCESSOR_H_
+#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPREPROCESSOR_H_

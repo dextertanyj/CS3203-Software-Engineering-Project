@@ -4,21 +4,13 @@ Pattern::Pattern(Declaration syn_assign, QueryEntRef ent_ref, ExpressionType exp
                  optional<Common::ExpressionProcessor::Expression> expression)
 	: syn_assign(std::move(syn_assign)), ent_ref(std::move(ent_ref)), expression_type(expression_type), expression(std::move(expression)) {}
 
-Declaration Pattern::getSynAssign() {
-	return this->syn_assign;
-}
+Declaration Pattern::getSynAssign() { return this->syn_assign; }
 
-QueryEntRef Pattern::getEntRef() {
-	return this->ent_ref;
-}
+QueryEntRef Pattern::getEntRef() { return this->ent_ref; }
 
-ExpressionType Pattern::getExpressionType() {
-	return this->expression_type;
-}
+ExpressionType Pattern::getExpressionType() { return this->expression_type; }
 
-Common::ExpressionProcessor::Expression Pattern::getExpression() {
-	return this->expression.value();
-}
+Common::ExpressionProcessor::Expression Pattern::getExpression() { return this->expression.value(); }
 
 QueryResult Pattern::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
@@ -46,11 +38,9 @@ QueryResult Pattern::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity
 			}
 		}
 
-	}
-	else if (this->ent_ref.type == EntRefType::VarName) {
+	} else if (this->ent_ref.type == EntRefType::VarName) {
 		stmt_set = pkb.getStmtsWithPatternLHS(this->ent_ref.ent_ref);
-	}
-	else {
+	} else {
 		stmt_set = pkb.getStatements();
 	}
 	for (auto const& stmt : stmt_set) {
@@ -75,8 +65,7 @@ QueryResult Pattern::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEnt
 				assign_result.push_back(to_string(pair.first->reference));
 				var_result.push_back(pair.second);
 			}
-		}
-		else {
+		} else {
 			VarRefSet var_set = pkb.getVariables();
 			for (auto const& var_ref : var_set) {
 				StmtInfoPtrSet stmt_set = pkb.getStmtsWithPatternLHS(var_ref);
@@ -98,18 +87,15 @@ QueryResult Pattern::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEnt
 		bool is_exact = this->expression_type != ExpressionType::ExpressionUnderscore;
 		if (this->ent_ref.type == EntRefType::VarName) {
 			stmt_set = pkb.getStmtsWithPattern(this->ent_ref.ent_ref, getExpression(), is_exact);
-		}
-		else {
+		} else {
 			auto stmt_pairs = pkb.getStmtsWithPatternRHS(getExpression(), is_exact);
 			for (const auto& stmt_pair : stmt_pairs) {
 				stmt_set.insert(stmt_pair.first);
 			}
 		}
-	}
-	else if (this->ent_ref.type == EntRefType::VarName) {
+	} else if (this->ent_ref.type == EntRefType::VarName) {
 		stmt_set = pkb.getStmtsWithPatternLHS(this->ent_ref.ent_ref);
-	}
-	else {
+	} else {
 		stmt_set = pkb.getStatements();
 	}
 	vector<string> assign_stmt_strings;

@@ -15,7 +15,6 @@ public:
 private:
 	vector<string> expression_tokens;
 	int idx;
-	
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYEXPRESSIONLEXER_H_

@@ -2,9 +2,9 @@
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYGRAPH_H_
 
 #include <string>
-#include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 #include "QP/QueryProperties.h"
 
@@ -22,8 +22,8 @@ public:
 	unordered_map<string, Node> getNodes();
 
 	/*
-	* The first group will contain the selected synonym
-	*/
+	 * The first group will contain the selected synonym
+	 */
 	vector<unordered_set<string>> getSynonymsInGroup(const string& selected_synonym);
 
 private:

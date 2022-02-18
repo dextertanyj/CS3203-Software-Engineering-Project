@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "Common/TypeDefs.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
+#include "Common/TypeDefs.h"
 
 using namespace std;
 

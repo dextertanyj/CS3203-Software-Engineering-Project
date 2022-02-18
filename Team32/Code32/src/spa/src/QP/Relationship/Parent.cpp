@@ -5,13 +5,9 @@
 Parent::Parent(QueryStmtRef parent_stmt, QueryStmtRef child_stmt)
 	: parent_stmt(std::move(std::move(parent_stmt))), child_stmt(std::move(std::move(child_stmt))) {}
 
-QueryStmtRef Parent::getParentStmt() {
-	return parent_stmt;
-}
+QueryStmtRef Parent::getParentStmt() { return parent_stmt; }
 
-QueryStmtRef Parent::getChildStmt() {
-	return child_stmt;
-}
+QueryStmtRef Parent::getChildStmt() { return child_stmt; }
 
 QueryResult Parent::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);

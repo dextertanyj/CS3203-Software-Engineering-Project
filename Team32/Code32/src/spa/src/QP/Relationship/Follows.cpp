@@ -5,13 +5,9 @@
 Follows::Follows(QueryStmtRef left_stmt, QueryStmtRef right_stmt)
 	: left_stmt(std::move(std::move(left_stmt))), right_stmt(std::move(std::move(right_stmt))) {}
 
-QueryStmtRef Follows::getLeftStmt() {
-	return left_stmt;
-}
+QueryStmtRef Follows::getLeftStmt() { return left_stmt; }
 
-QueryStmtRef Follows::getRightStmt() {
-	return right_stmt;
-}
+QueryStmtRef Follows::getRightStmt() { return right_stmt; }
 
 QueryResult Follows::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);

@@ -4,13 +4,13 @@
 #include <memory>
 #include <unordered_map>
 
-#include "QP/QueryTypeDefs.h"
 #include "Common/TypeDefs.h"
+#include "QP/QueryTypeDefs.h"
 
 namespace QueryUtils {
 static unordered_map<DesignEntity, StmtType> design_ent_to_stmt_type = {
-	{DesignEntity::Read, StmtType::Read},        {DesignEntity::Print, StmtType::Print}, {DesignEntity::Call, StmtType::Call},
-	{DesignEntity::While, StmtType::WhileStmt}, {DesignEntity::If, StmtType::IfStmt},  {DesignEntity::Assign, StmtType::Assign},
+	{DesignEntity::Read, StmtType::Read},       {DesignEntity::Print, StmtType::Print}, {DesignEntity::Call, StmtType::Call},
+	{DesignEntity::While, StmtType::WhileStmt}, {DesignEntity::If, StmtType::IfStmt},   {DesignEntity::Assign, StmtType::Assign},
 };
 
 inline bool checkStmtTypeMatch(const shared_ptr<StmtInfo>& stmt, DesignEntity design_entity) {
@@ -20,6 +20,6 @@ inline bool checkStmtTypeMatch(const shared_ptr<StmtInfo>& stmt, DesignEntity de
 
 	return design_entity == DesignEntity::Stmt || stmt->type == design_ent_to_stmt_type[design_entity];
 }
-};
+};  // namespace QueryUtils
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYUTILS_H_

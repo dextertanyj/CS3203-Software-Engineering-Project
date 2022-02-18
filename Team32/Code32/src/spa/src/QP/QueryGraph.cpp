@@ -4,8 +4,8 @@
 
 QueryGraph::QueryGraph(const DeclarationList& declarations) {
 	for (const Declaration& declaration : declarations) {
-		Node node = { declaration.symbol, {} };
-		nodes.insert({ declaration.symbol, node });
+		Node node = {declaration.symbol, {}};
+		nodes.insert({declaration.symbol, node});
 	}
 }
 
@@ -25,9 +25,7 @@ void QueryGraph::setEdges(const SuchThatClauseList& such_that_clause_list, const
 	}
 }
 
-unordered_map<string, Node> QueryGraph::getNodes() {
-	return nodes;
-}
+unordered_map<string, Node> QueryGraph::getNodes() { return nodes; }
 
 void QueryGraph::addEdge(const string& symbol_one, const string& symbol_two) {
 	Node node_one = this->nodes.at(symbol_one);
@@ -49,7 +47,7 @@ vector<unordered_set<string>> QueryGraph::getSynonymsInGroup(const string& selec
 	unordered_set<string> group;
 	unordered_set<string> unvisited_nodes;
 
-	for (auto &node : nodes) {
+	for (auto& node : nodes) {
 		unvisited_nodes.insert(node.first);
 	}
 
@@ -61,7 +59,7 @@ vector<unordered_set<string>> QueryGraph::getSynonymsInGroup(const string& selec
 		group.insert(symbol);
 		unvisited_nodes.erase(symbol);
 		queue.pop();
-		
+
 		Node node = this->nodes.at(symbol);
 		for (const string& adjacent_symbol : node.adjacent_symbols) {
 			if (unvisited_nodes.find(adjacent_symbol) != unvisited_nodes.end()) {

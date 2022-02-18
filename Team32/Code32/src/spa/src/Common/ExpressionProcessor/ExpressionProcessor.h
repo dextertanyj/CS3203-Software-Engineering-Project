@@ -21,7 +21,7 @@ class AtomicNode;
 class ArithmeticNode;
 class ConstantNode;
 class ParenthesesWrapper;
-class VariableNode; // NOLINT(bugprone-forward-declaration-namespace)
+class VariableNode;  // NOLINT(bugprone-forward-declaration-namespace)
 enum class ExpressionType { Arithmetic, Relational, Logical };
 }  // namespace Common::ExpressionProcessor
 

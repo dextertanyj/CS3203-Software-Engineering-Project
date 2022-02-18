@@ -63,7 +63,7 @@ void ParentRelation::optimize(StatementRelationStore<ParentRelation>& store) {
 
 unordered_set<shared_ptr<StmtInfo>> ParentRelation::populateTransitive(StatementRelationStore<ParentRelation>& store,
                                                                        ParentRelation& current,
-                                                                  unordered_set<shared_ptr<StmtInfo>> previous) {
+                                                                       unordered_set<shared_ptr<StmtInfo>> previous) {
 	current.appendForwardTransitive(previous);
 	previous.insert(current.self);
 	unordered_set<shared_ptr<StmtInfo>> result;

@@ -1,10 +1,11 @@
 #ifndef SPA_PROCEDURESTORE_H
 #define SPA_PROCEDURESTORE_H
 
-#include "Common/TypeDefs.h"
+#include <memory>
 #include <unordered_map>
 #include <unordered_set>
-#include <memory>
+
+#include "Common/TypeDefs.h"
 #include "iostream"
 
 using namespace std;
@@ -24,6 +25,7 @@ public:
 	ProcRef getProcByCall(const shared_ptr<StmtInfo>&);
 	unordered_set<ProcRef> getProcListByStmtList(const unordered_set<shared_ptr<StmtInfo>>&);
 	void clear();
+
 private:
 	unordered_map<ProcRef, ProcRelation> proc_map;
 	unordered_map<StmtRef, ProcRef> stmt_to_proc_map;

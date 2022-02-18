@@ -1,8 +1,8 @@
 #ifndef SPA_CONVERTER_H
 #define SPA_CONVERTER_H
 
-#include <string>
 #include <stdexcept>
+#include <string>
 
 #include "Common/TypeDefs.h"
 

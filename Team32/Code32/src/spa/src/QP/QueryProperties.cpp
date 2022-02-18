@@ -9,18 +9,10 @@ QueryProperties::QueryProperties(DeclarationList declaration_list, Declaration s
 	  such_that_clause_list(std::move(std::move(such_that_clause_list))),
 	  pattern_clause_list(std::move(std::move(pattern_clause_list))) {}
 
-DeclarationList QueryProperties::getDeclarationList() {
-	return declaration_list;
-}
+DeclarationList QueryProperties::getDeclarationList() { return declaration_list; }
 
-Declaration QueryProperties::getSelect() {
-	return select;
-}
+Declaration QueryProperties::getSelect() { return select; }
 
-SuchThatClauseList QueryProperties::getSuchThatClauseList() {
-	return such_that_clause_list;
-}
+SuchThatClauseList QueryProperties::getSuchThatClauseList() { return such_that_clause_list; }
 
-PatternClauseList QueryProperties::getPatternClauseList() {
-	return pattern_clause_list;
-}
+PatternClauseList QueryProperties::getPatternClauseList() { return pattern_clause_list; }

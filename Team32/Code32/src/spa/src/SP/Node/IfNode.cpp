@@ -41,13 +41,11 @@ StmtRef SP::Node::IfNode::extract(PKB& pkb) {
 	return stmt_ref;
 }
 
-
 bool SP::Node::IfNode::equals(const shared_ptr<StatementNode>& object) {
-    shared_ptr<IfNode> other = dynamic_pointer_cast<IfNode>(object);
-    if (other == nullptr) {
-        return false;
-    }
-    return this->getStmtRef() == other->getStmtRef() && this->cond_expr->equals(other->cond_expr)
-        && this->if_stmt_list->equals(other->if_stmt_list)
-        && this->else_stmt_list->equals(other->else_stmt_list);
+	shared_ptr<IfNode> other = dynamic_pointer_cast<IfNode>(object);
+	if (other == nullptr) {
+		return false;
+	}
+	return this->getStmtRef() == other->getStmtRef() && this->cond_expr->equals(other->cond_expr) &&
+	       this->if_stmt_list->equals(other->if_stmt_list) && this->else_stmt_list->equals(other->else_stmt_list);
 }

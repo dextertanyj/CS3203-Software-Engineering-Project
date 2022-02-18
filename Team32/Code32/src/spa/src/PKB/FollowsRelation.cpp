@@ -1,7 +1,7 @@
 #include "FollowsRelation.h"
 
-#include <utility>
 #include <iostream>
+#include <utility>
 
 using namespace std;
 
@@ -72,7 +72,7 @@ void FollowsRelation::optimize(StatementRelationStore<FollowsRelation>& store) {
 }
 
 StmtInfoPtrSet FollowsRelation::populateTransitive(StatementRelationStore<FollowsRelation>& store, FollowsRelation& current,
-                                              unordered_set<shared_ptr<StmtInfo>> previous) {
+                                                   unordered_set<shared_ptr<StmtInfo>> previous) {
 	current.appendForwardTransitive(previous);
 	previous.insert(current.self);
 	unordered_set<shared_ptr<StmtInfo>> result;

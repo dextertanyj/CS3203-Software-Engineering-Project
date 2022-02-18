@@ -4,12 +4,12 @@
 #include <memory>
 #include <string>
 
+#include "Common/TypeDefs.h"
 #include "PKB/PKB.h"
 #include "SP/Node/ExpressionNode.h"
 #include "SP/Node/Node.h"
 #include "SP/Node/StatementListNode.h"
 #include "SP/Node/StatementNode.h"
-#include "Common/TypeDefs.h"
 
 using namespace std;
 

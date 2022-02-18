@@ -9,8 +9,8 @@ bool Uses::validate(SVRelationStore<Uses>* store, const shared_ptr<StmtInfo>& st
 	if (statement->type == StmtType::Read) {
 		throw invalid_argument("Read statements cannot use a variable");
 	}
-	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt
-        || statement->type == StmtType::Call || statement->type == StmtType::Assign) {
+	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt || statement->type == StmtType::Call ||
+	    statement->type == StmtType::Assign) {
 		return true;
 	}
 	auto statement_iter = store->statement_key_map.find(idx);
@@ -25,8 +25,8 @@ bool Uses::validate(SVRelationStore<Uses>* store, const shared_ptr<StmtInfo>& st
 	if (statement->type == StmtType::Read) {
 		throw invalid_argument("Read statements cannot use a variable");
 	}
-	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt
-        || statement->type == StmtType::Call || statement->type == StmtType::Assign|| variables.empty()) {
+	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt || statement->type == StmtType::Call ||
+	    statement->type == StmtType::Assign || variables.empty()) {
 		return true;
 	}
 	if (variables.size() > 1) {

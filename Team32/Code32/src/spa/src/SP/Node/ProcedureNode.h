@@ -20,8 +20,8 @@ public:
 
 private:
 	ProcRef name;
-    StmtRef start;
-    StmtRef end;
+	StmtRef start;
+	StmtRef end;
 	shared_ptr<StatementListNode> stmt_list;
 };
 

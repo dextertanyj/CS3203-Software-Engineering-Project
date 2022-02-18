@@ -25,7 +25,7 @@ public:
 	                                   bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& var_name);
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
-	                                                                         bool is_exact_match);
+	                                                                  bool is_exact_match);
 	unordered_map<StmtRef, AssignRelation> getAssignMap();
 	void clear();
 

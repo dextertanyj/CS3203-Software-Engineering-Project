@@ -1,22 +1,14 @@
 #include "QP/QueryResult.h"
 
-QueryResult::QueryResult() {
-	this->result = false;
-}
+QueryResult::QueryResult() { this->result = false; }
 
-QueryResult::QueryResult(bool result) {
-	this->result = result;
-}
+QueryResult::QueryResult(bool result) { this->result = result; }
 
 bool QueryResult::getResult() const { return result; }
 
-unordered_map<string, vector<string>> QueryResult::getTable() {
-	return table;
-}
+unordered_map<string, vector<string>> QueryResult::getTable() { return table; }
 
-unordered_set<string> QueryResult::getSynonymsStored() {
-	return synonyms_stored;
-}
+unordered_set<string> QueryResult::getSynonymsStored() { return synonyms_stored; }
 
 vector<string> QueryResult::getSynonymResult(const string& synonym) { return table.at(synonym); }
 
@@ -28,7 +20,7 @@ void QueryResult::addColumn(const string& synonym, const vector<string>& column)
 
 	result = true;
 	synonyms_stored.insert(synonym);
-	table.insert({ synonym, column });
+	table.insert({synonym, column});
 }
 
 void QueryResult::joinResult(QueryResult& query_result) {
@@ -83,7 +75,7 @@ void QueryResult::joinWithSameSynonym(QueryResult& query_result) {
 	for (int i = 0; i < number_of_rows; i++) {
 		unordered_map<string, string> row;
 		for (const string& synonym : query_result.getSynonymsStored()) {
-			row.insert({ synonym, table.at(synonym)[i] });
+			row.insert({synonym, table.at(synonym)[i]});
 		}
 
 		if (!query_result.contains(row)) {

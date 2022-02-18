@@ -4,13 +4,9 @@
 
 ModifiesS::ModifiesS(QueryStmtRef stmt, QueryEntRef ent) : stmt(std::move(std::move(stmt))), ent(std::move(std::move(ent))) {}
 
-QueryStmtRef ModifiesS::getStmt() {
-	return stmt;
-}
+QueryStmtRef ModifiesS::getStmt() { return stmt; }
 
-QueryEntRef ModifiesS::getEnt() {
-	return ent;
-}
+QueryEntRef ModifiesS::getEnt() { return ent; }
 
 QueryResult ModifiesS::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);

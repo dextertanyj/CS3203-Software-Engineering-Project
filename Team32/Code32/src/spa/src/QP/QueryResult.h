@@ -2,9 +2,9 @@
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYRESULT_H_
 
 #include <string>
-#include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 #include "Common/TypeDefs.h"
 #include "QP/QueryTypeDefs.h"

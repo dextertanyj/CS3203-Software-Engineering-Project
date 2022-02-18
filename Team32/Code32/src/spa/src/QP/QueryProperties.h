@@ -6,8 +6,8 @@
 #include <vector>
 
 #include "Common/ExpressionProcessor/Expression.h"
-#include "QP/Relationship/Pattern.h"
 #include "QP/QueryTypeDefs.h"
+#include "QP/Relationship/Pattern.h"
 #include "QP/Relationship/Relation.h"
 
 using namespace std;

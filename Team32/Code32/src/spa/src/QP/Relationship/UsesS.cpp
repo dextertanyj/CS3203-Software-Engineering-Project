@@ -4,13 +4,9 @@
 
 UsesS::UsesS(QueryStmtRef stmt, QueryEntRef ent) : stmt(std::move(std::move(stmt))), ent(std::move(std::move(ent))) {}
 
-QueryStmtRef UsesS::getStmt() {
-	return stmt;
-}
+QueryStmtRef UsesS::getStmt() { return stmt; }
 
-QueryEntRef UsesS::getEnt() {
-	return ent;
-}
+QueryEntRef UsesS::getEnt() { return ent; }
 
 QueryResult UsesS::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
