@@ -29,6 +29,8 @@ private:
 	static QueryGraph buildGraph(QueryProperties& query_properties);
 	QueryResult evaluateClauses(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses, const Declaration& select,
 	                            bool is_trivial);
+	QueryResult executeClausesWithoutSynonym(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
+	                                         const Declaration& select);
 	void createSymbolToTypeMap(const DeclarationList& declarations);
 };
 
