@@ -1,79 +1,103 @@
 #include "ProcedureStore.h"
 
-ProcedureStore::ProcedureStore() {}
+ProcedureStore::ProcedureStore() = default;
 
-void ProcedureStore::setProc(ProcRef procName, vector<shared_ptr<StmtInfo>> idxList) {
-    for (auto itr : idxList) {
-        StmtRef stmtNo = itr->reference;
-        if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
+void ProcedureStore::setProc(const ProcRef& proc_name, const vector<shared_ptr<StmtInfo>>& idx_list) {
+	for (const auto& itr : idx_list) {
+		StmtRef stmt_no = itr->reference;
+		if (stmt_no <= 0) {
+			throw invalid_argument("Statement number must be a positive integer.");
+		}
 
-        auto keyItr1 = stmtToProcMap.find(stmtNo);
-        if (keyItr1 != stmtToProcMap.end()) throw invalid_argument("Statement is already part of a procedure.");
-        stmtToProcMap.insert(make_pair(stmtNo, procName));
-    }
+		auto key_itr1 = stmt_to_proc_map.find(stmt_no);
+		if (key_itr1 != stmt_to_proc_map.end()) {
+			throw invalid_argument("Statement is already part of a procedure.");
+		}
+		stmt_to_proc_map.insert(make_pair(stmt_no, proc_name));
+	}
 
-    auto keyItr = procMap.find(procName);
-    if (keyItr == procMap.end()) {
-        ProcRelation procRelation = { idxList, NULL };
-        procMap.insert(make_pair(procName, procRelation));
-    } else if (keyItr->second.idxList.empty()) {
-        keyItr->second.idxList = idxList;
-    } else {
-        throw invalid_argument("Procedure already exists in Procedure Map.");
-    }
+	auto key_itr = proc_map.find(proc_name);
+	if (key_itr == proc_map.end()) {
+		ProcRelation proc_relation = {idx_list, nullptr};
+		proc_map.insert(make_pair(proc_name, proc_relation));
+	} else if (key_itr->second.idx_list.empty()) {
+		key_itr->second.idx_list = idx_list;
+	} else {
+		throw invalid_argument("Procedure already exists in Procedure Map.");
+	}
 }
 
-void ProcedureStore::setCall(shared_ptr<StmtInfo> callStmt, ProcRef procName) {
-    if (callStmt->reference <= 0) throw invalid_argument("Statement number must be a positive integer.");
-    if (callStmt->type != StmtType::Call) throw invalid_argument("Statement type must be a call statement.");
+void ProcedureStore::setCall(const shared_ptr<StmtInfo>& call_stmt, const ProcRef& proc_name) {
+	if (call_stmt->reference <= 0) {
+		throw invalid_argument("Statement number must be a positive integer.");
+	}
+	if (call_stmt->type != StmtType::Call) {
+		throw invalid_argument("Statement type must be a call statement.");
+	}
 
-    auto keyItr = procMap.find(procName);
-    if (keyItr == procMap.end()) {
-        ProcRelation procRelation = { vector<shared_ptr<StmtInfo>>() , callStmt };
-        procMap.insert(make_pair(procName, procRelation));
-    } else if (keyItr->second.callStmt == NULL) {
-        keyItr->second.callStmt = callStmt;
-    } else {
-        throw invalid_argument("Procedure already has a call statement.");
-    }
+	auto key_itr = proc_map.find(proc_name);
+	if (key_itr == proc_map.end()) {
+		ProcRelation proc_relation = {vector<shared_ptr<StmtInfo>>(), call_stmt};
+		proc_map.insert(make_pair(proc_name, proc_relation));
+	} else if (key_itr->second.call_stmt == nullptr) {
+		key_itr->second.call_stmt = call_stmt;
+	} else {
+		throw invalid_argument("Procedure already has a call statement.");
+	}
 }
 
-vector<shared_ptr<StmtInfo>> ProcedureStore::getStmtsByProc(ProcRef procName) {
-    auto keyItr = procMap.find(procName);
-    if (keyItr == procMap.end()) return vector<shared_ptr<StmtInfo>>{};
-    return keyItr->second.idxList;
+vector<shared_ptr<StmtInfo>> ProcedureStore::getStmtsByProc(const ProcRef& proc_name) {
+	auto key_itr = proc_map.find(proc_name);
+	if (key_itr == proc_map.end()) {
+		return vector<shared_ptr<StmtInfo>>{};
+	}
+	return key_itr->second.idx_list;
 }
 
-ProcRef ProcedureStore::getProcByCall(shared_ptr<StmtInfo> callStmt) {
-    if (callStmt-> reference <= 0) throw invalid_argument("Statement number must be a positive integer.");
-    if (callStmt->type != StmtType::Call) throw invalid_argument("Statement type must be a call statement.");
+ProcRef ProcedureStore::getProcByCall(const shared_ptr<StmtInfo>& call_stmt) {
+	if (call_stmt->reference <= 0) {
+		throw invalid_argument("Statement number must be a positive integer.");
+	}
+	if (call_stmt->type != StmtType::Call) {
+		throw invalid_argument("Statement type must be a call statement.");
+	}
 
-    for (auto& itr : procMap) {
-        if (itr.second.callStmt == callStmt) return itr.first;
-    }
+	for (auto& itr : proc_map) {
+		if (itr.second.call_stmt == call_stmt) {
+			return itr.first;
+		}
+	}
     return "";
 }
 
-ProcRef ProcedureStore::getProcByStmt(shared_ptr<StmtInfo> stmtInfo) {
-    StmtRef stmtNo = stmtInfo->reference;
-    if (stmtNo <= 0) throw invalid_argument("Statement number must be a positive integer.");
+ProcRef ProcedureStore::getProcByStmt(const shared_ptr<StmtInfo>& stmt_info) {
+	StmtRef stmt_no = stmt_info->reference;
+	if (stmt_no <= 0) {
+		throw invalid_argument("Statement number must be a positive integer.");
+	}
 
-    auto keyItr = stmtToProcMap.find(stmtNo);
-    if (keyItr == stmtToProcMap.end()) return "";
-    return keyItr->second;
+	auto key_itr = stmt_to_proc_map.find(stmt_no);
+	if (key_itr == stmt_to_proc_map.end()) {
+		return "";
+	}
+	return key_itr->second;
 }
 
-unordered_set<ProcRef> ProcedureStore::getProcListByStmtList(unordered_set<shared_ptr<StmtInfo>> stmtInfoList) {
-    unordered_set<ProcRef> procSet;
-    for (auto &itr: stmtInfoList) {
-        if (itr->reference <= 0) throw invalid_argument("Statement number must be a positive integer.");
+unordered_set<ProcRef> ProcedureStore::getProcListByStmtList(const unordered_set<shared_ptr<StmtInfo>>& stmt_info_list) {
+	unordered_set<ProcRef> proc_set;
+	for (const auto& itr : stmt_info_list) {
+		if (itr->reference <= 0) {
+			throw invalid_argument("Statement number must be a positive integer.");
+		}
 
-        ProcRef procName = getProcByStmt(itr);
-        if (!procName.empty()) procSet.insert(procName);
-    }
-    return procSet;
+		ProcRef proc_name = getProcByStmt(itr);
+		if (!proc_name.empty()) {
+			proc_set.insert(proc_name);
+		}
+	}
+	return proc_set;
 };
 
 void ProcedureStore::clear() {
-    procMap.clear();
+    proc_map.clear();
 }

@@ -5,7 +5,7 @@
 
 ParentRelation::ParentRelation(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
 
-void ParentRelation::insertForward(shared_ptr<StmtInfo> parent) {
+void ParentRelation::insertForward(const shared_ptr<StmtInfo>& parent) {
 	if (self->reference <= parent->reference) {
 		throw invalid_argument("Statement out of order");
 	}

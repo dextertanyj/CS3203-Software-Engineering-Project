@@ -4,7 +4,7 @@
 
 #include "PKB/SVRelationStore.tpp"
 
-bool Uses::validate(SVRelationStore<Uses>* store, shared_ptr<StmtInfo> statement, const VarRef& variable) {
+bool Uses::validate(SVRelationStore<Uses>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
 	StmtRef idx = statement->reference;
 	if (statement->type == StmtType::Read) {
 		throw invalid_argument("Read statements cannot use a variable");
@@ -20,7 +20,7 @@ bool Uses::validate(SVRelationStore<Uses>* store, shared_ptr<StmtInfo> statement
 	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& x) { return x != variable; }));
 }
 
-bool Uses::validate(SVRelationStore<Uses>* store, shared_ptr<StmtInfo> statement, const VarRefSet& variables) {
+bool Uses::validate(SVRelationStore<Uses>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
 	StmtRef idx = statement->reference;
 	if (statement->type == StmtType::Read) {
 		throw invalid_argument("Read statements cannot use a variable");

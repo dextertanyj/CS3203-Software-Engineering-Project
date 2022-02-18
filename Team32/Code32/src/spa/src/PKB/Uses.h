@@ -7,8 +7,8 @@
 
 class Uses {
 public:
-	static bool validate(SVRelationStore<Uses>* store, shared_ptr<StmtInfo> statement, const VarRef& variable);
-	static bool validate(SVRelationStore<Uses>* store, shared_ptr<StmtInfo> statement, const VarRefSet& variable);
+	static bool validate(SVRelationStore<Uses>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable);
+	static bool validate(SVRelationStore<Uses>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variable);
 	static void optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store, SVRelationStore<Uses>& store);
 };
 

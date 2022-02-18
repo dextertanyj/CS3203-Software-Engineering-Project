@@ -11,8 +11,8 @@ public:
 	explicit FollowsRelation(shared_ptr<StmtInfo> self);
 	void insertForward(shared_ptr<StmtInfo> following);
 	void insertReverse(shared_ptr<StmtInfo> follower);
-	void appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> followers);
-	void appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> followings);
+	void appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> followings);
+	void appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> followers);
 
 	StmtInfoPtrSet getForward();
 	StmtInfoPtrSet getReverse();

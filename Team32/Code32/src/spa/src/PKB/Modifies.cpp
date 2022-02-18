@@ -44,7 +44,7 @@ void Modifies::optimize(StatementStore& statement_store, StatementRelationStore<
 		if (statement->type == StmtType::IfStmt || statement->type == StmtType::WhileStmt) {
 			auto children = parent_store.getReverseTransitive(statement->reference);
 			unordered_set<VarRef> variables;
-			for (auto child : children) {
+			for (const auto& child : children) {
 				auto iter = store.statement_key_map.find(child->reference);
 				if (iter != store.statement_key_map.end()) {
 					variables.insert(iter->second.begin(), iter->second.end());

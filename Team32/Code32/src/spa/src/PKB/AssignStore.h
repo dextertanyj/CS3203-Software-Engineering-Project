@@ -19,18 +19,18 @@ typedef struct AssignRelation {
 class AssignStore {
 public:
 	AssignStore();
-	void setAssign(shared_ptr<StmtInfo> statement, VarRef variable, Common::ExpressionProcessor::Expression expression);
+	void setAssign(const shared_ptr<StmtInfo>& statement, VarRef variable, Common::ExpressionProcessor::Expression expression);
 	bool patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression, bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
 	                                   bool is_exact_match);
-	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& varName);
+	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& var_name);
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
 	                                                                         bool is_exact_match);
 	unordered_map<StmtRef, AssignRelation> getAssignMap();
 	void clear();
 
 private:
-	static bool compareExpressions(AssignRelation& relation, const VarRef& variable, const Common::ExpressionProcessor::Expression& opTree,
+	static bool compareExpressions(AssignRelation& relation, const VarRef& variable, const Common::ExpressionProcessor::Expression& op_tree,
 	                               bool is_exact_match);
 	unordered_map<StmtRef, AssignRelation> store;
 };
