@@ -1,8 +1,8 @@
 #include "QP/Relationship/ModifiesS.h"
 
-ModifiesS::ModifiesS(QueryStmtRef stmt, QueryEntRef ent)
-	: stmt(stmt),
-	  ent(ent) {}
+#include <utility>
+
+ModifiesS::ModifiesS(QueryStmtRef stmt, QueryEntRef ent) : stmt(std::move(std::move(stmt))), ent(std::move(std::move(ent))) {}
 
 QueryStmtRef ModifiesS::getStmt() {
 	return stmt;
@@ -12,36 +12,34 @@ QueryEntRef ModifiesS::getEnt() {
 	return ent;
 }
 
-QueryResult ModifiesS::execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) {
-	return isTrivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
+QueryResult ModifiesS::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
 vector<string> ModifiesS::getDeclarationSymbols() {
-	vector<string> declarationSymbols;
-	if (this->stmt.type == StmtRefType::synonym) {
-		declarationSymbols.push_back(this->stmt.stmtRef);
+	vector<string> declaration_symbols;
+	if (this->stmt.type == StmtRefType::Synonym) {
+		declaration_symbols.push_back(this->stmt.stmt_ref);
 	}
-	if (this->ent.type == EntRefType::synonym) {
-		declarationSymbols.push_back(this->ent.entRef);
+	if (this->ent.type == EntRefType::Synonym) {
+		declaration_symbols.push_back(this->ent.ent_ref);
 	}
-	return declarationSymbols;
+	return declaration_symbols;
 }
 
 QueryResult ModifiesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
-	if (stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::varName) {
-		return QueryResult(pkb.checkModifies(stoul(stmt.stmtRef), ent.entRef));
+	if (stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::VarName) {
+		return QueryResult(pkb.checkModifies(stoul(stmt.stmt_ref), ent.ent_ref));
 	}
-	else if ((stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::underscore) ||
-	         (stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::synonym)) {
-		VarRefSet varSet = pkb.getModifiesByStmt(stoul(stmt.stmtRef));
+	if ((stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::Underscore) ||
+	    (stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::Synonym)) {
+		VarRefSet varSet = pkb.getModifiesByStmt(stoul(stmt.stmt_ref));
 		return QueryResult(!varSet.empty());
-	}
-	else if (stmt.type == StmtRefType::underscore && ent.type == EntRefType::varName) {
-		StmtInfoPtrSet stmtSet = pkb.getModifiesByVar(ent.entRef);
+	} else if (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::VarName) {
+		StmtInfoPtrSet stmtSet = pkb.getModifiesByVar(ent.ent_ref);
 		return QueryResult(!stmtSet.empty());
-	}
-	else if ((stmt.type == StmtRefType::underscore && ent.type == EntRefType::underscore) ||
-	         (stmt.type == StmtRefType::underscore && ent.type == EntRefType::synonym)) {
+	} else if ((stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Underscore) ||
+	           (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Synonym)) {
 		VarRefSet varSet = pkb.getVariables();
 		for (auto const& var : varSet) {
 			StmtInfoPtrSet stmtSet = pkb.getModifiesByVar(var);
@@ -49,19 +47,17 @@ QueryResult ModifiesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEnti
 				return QueryResult(true);
 			}
 		}
-	}
-	else if (stmt.type == StmtRefType::synonym && ent.type == EntRefType::varName) {
-		StmtInfoPtrSet stmtSet = pkb.getModifiesByVar(ent.entRef);
-		DesignEntity designEntity = map[stmt.stmtRef];
+	} else if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
+		StmtInfoPtrSet stmtSet = pkb.getModifiesByVar(ent.ent_ref);
+		DesignEntity designEntity = map[stmt.stmt_ref];
 		for (auto const& stmt : stmtSet) {
 			if (QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
 				return QueryResult(true);
 			}
 		}
-	}
-	else if (stmt.type == StmtRefType::synonym && ent.type == EntRefType::underscore) {
+	} else if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::Underscore) {
 		StmtInfoPtrSet stmtSet = pkb.getStatements();
-		DesignEntity designEntity = map[stmt.stmtRef];
+		DesignEntity designEntity = map[stmt.stmt_ref];
 		for (auto const& stmt : stmtSet) {
 			if (!QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
 				continue;
@@ -72,10 +68,9 @@ QueryResult ModifiesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEnti
 				return QueryResult(true);
 			}
 		}
-	}
-	else if (stmt.type == StmtRefType::synonym && ent.type == EntRefType::synonym) {
+	} else if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::Synonym) {
 		StmtInfoPtrSet stmtSet = pkb.getStatements();
-		DesignEntity designEntity = map[stmt.stmtRef];
+		DesignEntity designEntity = map[stmt.stmt_ref];
 		vector<string> stmtColumn;
 		vector<string> varColumn;
 		for (auto const& stmt : stmtSet) {
@@ -89,27 +84,27 @@ QueryResult ModifiesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEnti
 			}
 		}
 	}
-	
-	return QueryResult();
+
+	return {};
 }
 
 QueryResult ModifiesS::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
-	if (stmt.type == StmtRefType::synonym && ent.type == EntRefType::varName) {
-		StmtInfoPtrSet stmtSet = pkb.getModifiesByVar(ent.entRef);
-		DesignEntity designEntity = map[stmt.stmtRef];
+	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
+		StmtInfoPtrSet stmt_set = pkb.getModifiesByVar(ent.ent_ref);
+		DesignEntity design_entity = map[stmt.stmt_ref];
 		vector<string> column;
-		for (auto const& stmt : stmtSet) {
-			if (QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
-				column.push_back(to_string(stmt.get()->reference));
+		for (auto const& stmt : stmt_set) {
+			if (QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
+				column.push_back(to_string(stmt->reference));
 			}
 		}
 		QueryResult result = QueryResult();
-		result.addColumn(stmt.stmtRef, column);
+		result.addColumn(stmt.stmt_ref, column);
 		return result;
 	}
-	else if (stmt.type == StmtRefType::synonym && ent.type == EntRefType::underscore) {
+	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::Underscore) {
 		StmtInfoPtrSet stmtSet = pkb.getStatements();
-		DesignEntity designEntity = map[stmt.stmtRef];
+		DesignEntity designEntity = map[stmt.stmt_ref];
 		vector<string> column;
 		for (auto const& stmt : stmtSet) {
 			if (!QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
@@ -122,12 +117,11 @@ QueryResult ModifiesS::executeNonTrivial(PKB& pkb, unordered_map<string, DesignE
 			}
 		}
 		QueryResult result = QueryResult();
-		result.addColumn(stmt.stmtRef, column);
+		result.addColumn(stmt.stmt_ref, column);
 		return result;
-	}
-	else if (stmt.type == StmtRefType::synonym && ent.type == EntRefType::synonym) {
+	} else if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::Synonym) {
 		StmtInfoPtrSet stmtSet = pkb.getStatements();
-		DesignEntity designEntity = map[stmt.stmtRef];
+		DesignEntity designEntity = map[stmt.stmt_ref];
 		vector<string> stmtColumn;
 		vector<string> varColumn;
 		for (auto const& stmt : stmtSet) {
@@ -142,11 +136,10 @@ QueryResult ModifiesS::executeNonTrivial(PKB& pkb, unordered_map<string, DesignE
 			}
 		}
 		QueryResult result = QueryResult();
-		result.addColumn(stmt.stmtRef, stmtColumn);
-		result.addColumn(ent.entRef, varColumn);
+		result.addColumn(stmt.stmt_ref, stmtColumn);
+		result.addColumn(ent.ent_ref, varColumn);
 		return result;
-	}
-	else if (stmt.type == StmtRefType::underscore && ent.type == EntRefType::synonym) {
+	} else if (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Synonym) {
 		VarRefSet varSet = pkb.getVariables();
 		vector<string> column;
 		for (auto const& var : varSet) {
@@ -156,11 +149,10 @@ QueryResult ModifiesS::executeNonTrivial(PKB& pkb, unordered_map<string, DesignE
 			}
 		}
 		QueryResult result = QueryResult();
-		result.addColumn(ent.entRef, column);
+		result.addColumn(ent.ent_ref, column);
 		return result;
-	}
-	else if (stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::synonym) {
-		VarRefSet varSet = pkb.getModifiesByStmt(stoul(stmt.stmtRef));
+	} else if (stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::Synonym) {
+		VarRefSet varSet = pkb.getModifiesByStmt(stoul(stmt.stmt_ref));
 		vector<string> column;
 
 		for (auto const& var : varSet) {
@@ -168,9 +160,9 @@ QueryResult ModifiesS::executeNonTrivial(PKB& pkb, unordered_map<string, DesignE
 		}
 
 		QueryResult result = QueryResult();
-		result.addColumn(ent.entRef, column);
+		result.addColumn(ent.ent_ref, column);
 		return result;
 	}
 
- 	return QueryResult();
+	return {};
 }

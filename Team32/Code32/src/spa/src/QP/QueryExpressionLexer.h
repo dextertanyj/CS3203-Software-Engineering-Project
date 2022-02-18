@@ -8,12 +8,12 @@
 
 class QueryExpressionLexer : public Common::ExpressionProcessor::LexerInterface {
 public:
-	QueryExpressionLexer(vector<string> expressionTokens);
+	explicit QueryExpressionLexer(vector<string> expression_tokens);
 	string readToken() override;
 	string peekToken() override;
 
 private:
-	vector<string> expressionTokens;
+	vector<string> expression_tokens;
 	int idx;
 	
 };

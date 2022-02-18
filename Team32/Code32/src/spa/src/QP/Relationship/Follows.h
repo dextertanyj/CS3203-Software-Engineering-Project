@@ -6,21 +6,21 @@
 
 class Follows : public Relation {
 public:
-	Follows(QueryStmtRef leftStmt, QueryStmtRef rightStmt);
+	Follows(QueryStmtRef left_stmt, QueryStmtRef right_stmt);
 
 	QueryStmtRef getLeftStmt();
 	QueryStmtRef getRightStmt();
 
-	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
-	vector<string> getDeclarationSymbols();
+	QueryResult execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) override;
+	vector<string> getDeclarationSymbols() override;
 
 protected:
-	QueryStmtRef leftStmt;
-	QueryStmtRef rightStmt;
+	QueryStmtRef left_stmt;
+	QueryStmtRef right_stmt;
 
 private:
-	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
-	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
+	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWS_H_

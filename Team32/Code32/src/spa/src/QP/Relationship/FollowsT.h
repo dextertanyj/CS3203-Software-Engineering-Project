@@ -8,11 +8,11 @@ class FollowsT : public Follows {
 public:
 	using Follows::Follows;
 
-	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
+	QueryResult execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) override;
 
 private:
-	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
-	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
+	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWST_H_

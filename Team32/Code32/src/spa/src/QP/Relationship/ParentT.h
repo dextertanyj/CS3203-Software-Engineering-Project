@@ -8,11 +8,11 @@ class ParentT : public Parent {
 public:
 	using Parent::Parent;
 
-	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
+	QueryResult execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) override;
 
 private:
-	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
-	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
+	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_PARENTT_H_

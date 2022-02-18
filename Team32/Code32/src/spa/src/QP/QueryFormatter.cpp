@@ -6,17 +6,17 @@
 
 using namespace std;
 
-vector<string> QueryFormatter::formatResult(QueryProperties& queryProperties, QueryResult& queryResult) {
-	Declaration select = queryProperties.getSelect();
+vector<string> QueryFormatter::formatResult(QueryProperties& query_properties, QueryResult& query_result) {
+	Declaration select = query_properties.getSelect();
 
-	if (!queryResult.getResult()) {
+	if (!query_result.getResult()) {
 		return {};
 	}
 
-	vector<string> result = queryResult.getSynonymResult(select.symbol);
+	vector<string> result = query_result.getSynonymResult(select.symbol);
 	// Remove duplicates from result
 	unordered_set<string> set;
-	for (string value : result) {
+	for (const string& value : result) {
 		set.insert(value);
 	}
 

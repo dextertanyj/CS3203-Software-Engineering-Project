@@ -7,30 +7,30 @@ using std::string;
 
 // while and if are reserved words
 enum class DesignEntity {
-	stmt,
-	read,
-	print,
-	call,
-	while_,
-	if_,
-	assign,
-	variable,
-	constant,
-	procedure,
+	Stmt,
+	Read,
+	Print,
+	Call,
+	While,
+	If,
+	Assign,
+	Variable,
+	Constant,
+	Procedure,
 };
 
-enum class StmtRefType { synonym, underscore, stmtNumber };
-enum class EntRefType { synonym, underscore, varName };
-enum class ExpressionType { expression, underscore, expressionUnderscore };
+enum class StmtRefType { Synonym, Underscore, StmtNumber };
+enum class EntRefType { Synonym, Underscore, VarName };
+enum class ExpressionType { Expression, Underscore, ExpressionUnderscore };
 
 typedef struct QueryStmtRef {
 	StmtRefType type;
-	string stmtRef;
+	string stmt_ref;
 } QueryStmtRef;
 
 typedef struct QueryEntRef {
 	EntRefType type;
-	string entRef;
+	string ent_ref;
 } QueryEntRef;
 
 typedef struct Declaration {

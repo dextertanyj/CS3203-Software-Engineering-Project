@@ -11,20 +11,20 @@
 
 TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 	DeclarationList declarations = {
-		{ DesignEntity::stmt, "s1" },
-		{ DesignEntity::stmt, "s2" },
-		{ DesignEntity::variable, "v" },
-		{ DesignEntity::assign, "a" },
-		{ DesignEntity::if_, "i" },
+		{ DesignEntity::Stmt, "s1" },
+		{ DesignEntity::Stmt, "s2" },
+		{ DesignEntity::Variable, "v" },
+		{ DesignEntity::Assign, "a" },
+		{ DesignEntity::If, "i" },
 	};
-	Declaration select = { DesignEntity::stmt, "s1" };
-	QueryStmtRef s1 = { StmtRefType::synonym, "s1" };
-	QueryStmtRef s2 = { StmtRefType::synonym, "s2" };
-	QueryStmtRef a = { StmtRefType::synonym, "a" };
-	QueryStmtRef i = { StmtRefType::synonym, "i" };
-	QueryStmtRef stmtNo1 = { StmtRefType::stmtNumber, "1" };
-	QueryStmtRef stmtNo2 = { StmtRefType::stmtNumber, "2" };
-	QueryEntRef v = { EntRefType::synonym, "v" };
+	Declaration select = { DesignEntity::Stmt, "s1" };
+	QueryStmtRef s1 = { StmtRefType::Synonym, "s1" };
+	QueryStmtRef s2 = { StmtRefType::Synonym, "s2" };
+	QueryStmtRef a = { StmtRefType::Synonym, "a" };
+	QueryStmtRef i = { StmtRefType::Synonym, "i" };
+	QueryStmtRef stmtNo1 = { StmtRefType::StmtNumber, "1" };
+	QueryStmtRef stmtNo2 = { StmtRefType::StmtNumber, "2" };
+	QueryEntRef v = { EntRefType::Synonym, "v" };
 
 	SuchThatClauseList suchThatClauses = {
 		{ make_unique<Parent>(s1, s2) },
@@ -62,18 +62,18 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	QueryEvaluator evaluator = QueryEvaluator(pkb);
 	
 	DeclarationList declarations = {
-		{ DesignEntity::stmt, "s1" },
-		{ DesignEntity::stmt, "s2" },
-		{ DesignEntity::variable, "v" },
-		{ DesignEntity::assign, "a" },
+		{ DesignEntity::Stmt, "s1" },
+		{ DesignEntity::Stmt, "s2" },
+		{ DesignEntity::Variable, "v" },
+		{ DesignEntity::Assign, "a" },
 	};
-	Declaration assignSynonym = { DesignEntity::assign, "a" };
-	Declaration varSynonym = { DesignEntity::variable, "v" };
-	Declaration stmtSynonym = { DesignEntity::stmt, "s1" };
-	QueryEntRef v = { EntRefType::synonym, "v" };
-	QueryEntRef varUnderscore = { EntRefType::underscore, "_" };
-	QueryStmtRef a = { StmtRefType::synonym, "a" };
-	QueryStmtRef stmtNo1 = { StmtRefType::stmtNumber, "1" };
+	Declaration assignSynonym = { DesignEntity::Assign, "a" };
+	Declaration varSynonym = { DesignEntity::Variable, "v" };
+	Declaration stmtSynonym = { DesignEntity::Stmt, "s1" };
+	QueryEntRef v = { EntRefType::Synonym, "v" };
+	QueryEntRef varUnderscore = { EntRefType::Underscore, "_" };
+	QueryStmtRef a = { StmtRefType::Synonym, "a" };
+	QueryStmtRef stmtNo1 = { StmtRefType::StmtNumber, "1" };
 
 	vector<string> assignToken = { "x", "+", "1" };
 	QueryExpressionLexer lexer = QueryExpressionLexer(assignToken);
@@ -128,7 +128,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 
 	SECTION("One trivial pattern clause") {
 		PatternClauseList patternList = {
-			{ make_unique<Pattern>(assignSynonym, varUnderscore, ExpressionType::expressionUnderscore, queryExpression) }
+			{ make_unique<Pattern>(assignSynonym, varUnderscore, ExpressionType::ExpressionUnderscore, queryExpression) }
 		};
 		QueryProperties properties = QueryProperties(declarations, varSynonym, {}, patternList);
 
@@ -141,7 +141,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 
 	SECTION("One non-trivial pattern clause") {
 		PatternClauseList patternList = {
-			{ make_unique<Pattern>(assignSynonym, v, ExpressionType::expressionUnderscore, queryExpression) }
+			{ make_unique<Pattern>(assignSynonym, v, ExpressionType::ExpressionUnderscore, queryExpression) }
 		};
 		QueryProperties properties = QueryProperties(declarations, varSynonym, {}, patternList);
 
@@ -155,7 +155,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	SECTION("Trivial pattern clause and trival such that clause") {
 		SuchThatClauseList suchThatClauses = { { make_unique<ModifiesS>(stmtNo1, v)} };
 		PatternClauseList patternList = {
-			{ make_unique<Pattern>(assignSynonym, v, ExpressionType::expressionUnderscore, queryExpression) }
+			{ make_unique<Pattern>(assignSynonym, v, ExpressionType::ExpressionUnderscore, queryExpression) }
 		};
 		QueryProperties properties = QueryProperties(declarations, stmtSynonym, suchThatClauses, patternList);
 
@@ -169,7 +169,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 
 	SECTION("Non-trivial pattern clause and such that clause") {
 		SuchThatClauseList suchThatClauses = { { make_unique<ModifiesS>(stmtNo1, v)} };
-		PatternClauseList patternList = { {make_unique<Pattern>(assignSynonym, v, ExpressionType::expressionUnderscore, queryExpression)} };
+		PatternClauseList patternList = { {make_unique<Pattern>(assignSynonym, v, ExpressionType::ExpressionUnderscore, queryExpression)} };
 		QueryProperties properties = QueryProperties(declarations, varSynonym, suchThatClauses, patternList);
 
 		QueryResult result = evaluator.executeQuery(properties);

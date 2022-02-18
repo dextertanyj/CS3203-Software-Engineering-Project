@@ -6,21 +6,21 @@
 
 class Parent : public Relation {
 public:
-	Parent(QueryStmtRef parentStmt, QueryStmtRef childStmt);
+	Parent(QueryStmtRef parent_stmt, QueryStmtRef child_stmt);
 
 	QueryStmtRef getParentStmt();
 	QueryStmtRef getChildStmt();
 
-	QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map);
-	vector<string> getDeclarationSymbols();
+	QueryResult execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) override;
+	vector<string> getDeclarationSymbols() override;
 
 protected:
-	QueryStmtRef parentStmt;
-	QueryStmtRef childStmt;
+	QueryStmtRef parent_stmt;
+	QueryStmtRef child_stmt;
 
 private:
-	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
-	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map);
+	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_PARENT_H_

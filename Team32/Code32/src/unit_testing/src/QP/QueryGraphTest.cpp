@@ -5,17 +5,17 @@
 #include "catch.hpp"
 
 TEST_CASE("QP::QueryGraph::QueryGraph Should initialize nodes") {
-	DeclarationList list = { { DesignEntity::stmt, "s" }, { DesignEntity::variable, "v" } };
+	DeclarationList list = { { DesignEntity::Stmt, "s" }, { DesignEntity::Variable, "v" } };
 	QueryGraph graph = QueryGraph(list);
 	unordered_map<string, Node> nodes = graph.getNodes();
 	REQUIRE(nodes.size() == 2);
 }
 
 TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
-	DeclarationList list = { { DesignEntity::stmt, "s" }, { DesignEntity::variable, "v" }, { DesignEntity::assign, "a" } };
-	QueryStmtRef s = { StmtRefType::synonym, "s" };
-	QueryStmtRef a = { StmtRefType::synonym, "a" };
-	QueryEntRef v = { EntRefType::synonym, "v" };
+	DeclarationList list = { { DesignEntity::Stmt, "s" }, { DesignEntity::Variable, "v" }, { DesignEntity::Assign, "a" } };
+	QueryStmtRef s = { StmtRefType::Synonym, "s" };
+	QueryStmtRef a = { StmtRefType::Synonym, "a" };
+	QueryEntRef v = { EntRefType::Synonym, "v" };
 	SuchThatClauseList suchThatList = {
 		{ make_unique<Parent>(s, a) },
 		{ make_unique<UsesS>(a, v) },
@@ -25,24 +25,24 @@ TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
 	graph.setEdges(suchThatList, {});
 
 	unordered_map<string, Node> nodes = graph.getNodes();
-	REQUIRE(nodes.at("s").adjacentSymbols.size() == 1);
-	REQUIRE(nodes.at("a").adjacentSymbols.size() == 2);
-	REQUIRE(nodes.at("v").adjacentSymbols.size() == 1);
+	REQUIRE(nodes.at("s").adjacent_symbols.size() == 1);
+	REQUIRE(nodes.at("a").adjacent_symbols.size() == 2);
+	REQUIRE(nodes.at("v").adjacent_symbols.size() == 1);
 }
 
 TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connected components") {
 	DeclarationList list = {
-		{ DesignEntity::stmt, "a" },
-		{ DesignEntity::assign, "b" },
-		{ DesignEntity::if_, "c" },
-		{ DesignEntity::assign, "d" },
-		{ DesignEntity::variable, "e" },
+		{ DesignEntity::Stmt, "a" },
+		{ DesignEntity::Assign, "b" },
+		{ DesignEntity::If, "c" },
+		{ DesignEntity::Assign, "d" },
+		{ DesignEntity::Variable, "e" },
 	};
-	QueryStmtRef a = { StmtRefType::synonym, "a" };
-	QueryStmtRef b = { StmtRefType::synonym, "b" };
-	QueryStmtRef c = { StmtRefType::synonym, "c" };
-	QueryStmtRef d = { StmtRefType::synonym, "d" };
-	QueryEntRef e = { EntRefType::synonym, "e" };
+	QueryStmtRef a = { StmtRefType::Synonym, "a" };
+	QueryStmtRef b = { StmtRefType::Synonym, "b" };
+	QueryStmtRef c = { StmtRefType::Synonym, "c" };
+	QueryStmtRef d = { StmtRefType::Synonym, "d" };
+	QueryEntRef e = { EntRefType::Synonym, "e" };
 	SuchThatClauseList suchThatList = {
 		{ make_unique<Parent>(a, b) },
 		{ make_unique<Parent>(a, c) },

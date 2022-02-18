@@ -3,22 +3,22 @@
 #include <queue>
 
 QueryGraph::QueryGraph(const DeclarationList& declarations) {
-	for (Declaration declaration : declarations) {
+	for (const Declaration& declaration : declarations) {
 		Node node = { declaration.symbol, {} };
 		nodes.insert({ declaration.symbol, node });
 	}
 }
 
-void QueryGraph::setEdges(const SuchThatClauseList& suchThatClauseList, const PatternClauseList& patternClauseList) {
-	for (SuchThatClause suchThatClause : suchThatClauseList) {
-		vector<string> declarations = suchThatClause.relation->getDeclarationSymbols();
+void QueryGraph::setEdges(const SuchThatClauseList& such_that_clause_list, const PatternClauseList& pattern_clause_list) {
+	for (const SuchThatClause& such_that_clause : such_that_clause_list) {
+		vector<string> declarations = such_that_clause.relation->getDeclarationSymbols();
 		if (declarations.size() == 2) {
 			addEdge(declarations[0], declarations[1]);
 		}
 	}
 
-	for (PatternClause patternClause : patternClauseList) {
-		vector<string> declarations = patternClause.relation->getDeclarationSymbols();
+	for (const PatternClause& pattern_clause : pattern_clause_list) {
+		vector<string> declarations = pattern_clause.relation->getDeclarationSymbols();
 		if (declarations.size() == 2) {
 			addEdge(declarations[0], declarations[1]);
 		}
@@ -29,52 +29,50 @@ unordered_map<string, Node> QueryGraph::getNodes() {
 	return nodes;
 }
 
-void QueryGraph::addEdge(string symbolOne, string symbolTwo) {
-	Node nodeOne = this->nodes.at(symbolOne);
-	if (find(nodeOne.adjacentSymbols.begin(), nodeOne.adjacentSymbols.end(), symbolTwo) ==
-			nodeOne.adjacentSymbols.end()) {
-		nodeOne.adjacentSymbols.push_back(symbolTwo);
-		nodes[symbolOne] = nodeOne;
+void QueryGraph::addEdge(const string& symbol_one, const string& symbol_two) {
+	Node node_one = this->nodes.at(symbol_one);
+	if (find(node_one.adjacent_symbols.begin(), node_one.adjacent_symbols.end(), symbol_two) == node_one.adjacent_symbols.end()) {
+		node_one.adjacent_symbols.push_back(symbol_two);
+		nodes[symbol_one] = node_one;
 	}
 
-	Node nodeTwo = this->nodes.at(symbolTwo);
-	if (find(nodeTwo.adjacentSymbols.begin(), nodeTwo.adjacentSymbols.end(), symbolOne) ==
-			nodeTwo.adjacentSymbols.end()) {
-		nodeTwo.adjacentSymbols.push_back(symbolOne);
-		nodes[symbolTwo] = nodeTwo;
+	Node node_two = this->nodes.at(symbol_two);
+	if (find(node_two.adjacent_symbols.begin(), node_two.adjacent_symbols.end(), symbol_one) == node_two.adjacent_symbols.end()) {
+		node_two.adjacent_symbols.push_back(symbol_one);
+		nodes[symbol_two] = node_two;
 	}
 }
 
-vector<unordered_set<string>> QueryGraph::getSynonymsInGroup(string selectedSynonym) {
+vector<unordered_set<string>> QueryGraph::getSynonymsInGroup(const string& selected_synonym) {
 	// Run BFS on the selected node
 	vector<unordered_set<string>> result;
 	unordered_set<string> group;
-	unordered_set<string> unvisitedNodes;
+	unordered_set<string> unvisited_nodes;
 
 	for (auto &node : nodes) {
-		unvisitedNodes.insert(node.first);
+		unvisited_nodes.insert(node.first);
 	}
 
 	queue<string> queue;
-	queue.push(selectedSynonym);
-	
+	queue.push(selected_synonym);
+
 	while (!queue.empty()) {
 		string symbol = queue.front();
 		group.insert(symbol);
-		unvisitedNodes.erase(symbol);
+		unvisited_nodes.erase(symbol);
 		queue.pop();
 		
 		Node node = this->nodes.at(symbol);
-		for (string adjacentSymbol : node.adjacentSymbols) {
-			if (unvisitedNodes.find(adjacentSymbol) != unvisitedNodes.end()) {
-				queue.push(adjacentSymbol);
+		for (const string& adjacent_symbol : node.adjacent_symbols) {
+			if (unvisited_nodes.find(adjacent_symbol) != unvisited_nodes.end()) {
+				queue.push(adjacent_symbol);
 			}
 		}
 
 		// If queue is empty but there are still unvisited nodes,
 		// we add an unvisited node to queue
-		if (queue.empty() && !unvisitedNodes.empty()) {
-			queue.push(*unvisitedNodes.begin());
+		if (queue.empty() && !unvisited_nodes.empty()) {
+			queue.push(*unvisited_nodes.begin());
 			result.push_back(group);
 			group.clear();
 		}
