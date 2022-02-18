@@ -56,7 +56,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	pkb.setStmtType(4, StmtType::IfStmt);
 	pkb.setModifies(1, "x");
 	
-	unordered_set<int> constants = { 1 };
+	unordered_set<ConstVal> constants = { 1 };
 	pkb.setConstant(constants);
 	
 	QueryEvaluator evaluator = QueryEvaluator(pkb);
