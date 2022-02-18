@@ -17,7 +17,7 @@ public:
 	void addStatementNode(unique_ptr<StatementNode> statement);
 	static unique_ptr<StatementListNode> parseStatementList(Lexer& lex, StmtRef& statement_count);
 	vector<StmtRef> extract(PKB& pkb);
-	virtual bool equals(const shared_ptr<StatementListNode>& object);
+	bool equals(const shared_ptr<StatementListNode>& object);
 	vector<shared_ptr<StatementNode>> getStatementList();
 
 private:

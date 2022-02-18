@@ -1,4 +1,5 @@
 #include "MockUtilities.h"
+#include <climits>
 
 shared_ptr<StmtInfo> MockUtilities::createStmtInfo(StmtRef stmtNo, StmtType type) {
     StmtInfo s = {stmtNo, type};
@@ -36,7 +37,7 @@ PKB MockUtilities::generateUsesTestPKB() {
     pkb.setStmtType(1, StmtType::Assign);
     pkb.setStmtType(2, StmtType::IfStmt);
     pkb.setStmtType(3, StmtType::Print);
-    pkb.setStmtType(SIZE_T_MAX, StmtType::WhileStmt);
+    pkb.setStmtType(SIZE_MAX, StmtType::WhileStmt);
     return pkb;
 }
 
@@ -45,7 +46,7 @@ PKB MockUtilities::generateModifyTestPKB() {
     pkb.setStmtType(1, StmtType::Assign);
     pkb.setStmtType(2, StmtType::Read);
     pkb.setStmtType(3, StmtType::Call);
-    pkb.setStmtType(SIZE_T_MAX, StmtType::Assign);
+    pkb.setStmtType(SIZE_MAX, StmtType::Assign);
     return pkb;
 }
 

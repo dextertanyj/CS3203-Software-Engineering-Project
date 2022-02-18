@@ -1,0 +1,59 @@
+name: Compile and Test - MacOS
+on: [push, pull_request]
+
+env:
+  BUILD_TYPE: Coverage
+
+jobs:
+  compile-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Create build environment
+        run: cmake -E make_directory ${{runner.workspace}}/build
+
+      - name: Configure CMake
+        shell: bash
+        working-directory: ${{runner.workspace}}/build
+        run: cmake ${{github.workspace}}/Team32/Code32/ -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+      - name: Build project
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run: cmake --build . --config $BUILD_TYPE --parallel 8
+
+      - name: Baseline coverage
+        shell: bash
+        working-directory: ${{runner.workspace}}
+        run: |
+          brew install lcov
+          mkdir ${{runner.workspace}}/coverage
+          lcov -z -d ./build/src/spa/CMakeFiles/spa.dir/src
+          lcov -c -i -d ./build/src/spa/CMakeFiles/spa.dir/src -o ./coverage/coverage_base.info
+
+      - name: Run unit tests
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run: ./src/unit_testing/unit_testing
+
+      - name: Run integration tests
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run: ./src/integration_testing/integration_testing
+
+      - name: Analyse coverage
+        shell: bash
+        working-directory: ${{runner.workspace}}
+        run: |
+          lcov -c -d ./build/src/spa/CMakeFiles/spa.dir/src -o ./coverage/coverage.info
+          lcov -a ./coverage/coverage_base.info -a ./coverage/coverage.info -o ./coverage/coverage_total.info
+          lcov -r ./coverage/coverage_total.info '/Library/Developer/CommandLineTools/SDKs/*' -o ./coverage/coverage_filtered.info
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v2
+        with:
+          files: ${{runner.workspace}}/coverage/coverage_filtered.info

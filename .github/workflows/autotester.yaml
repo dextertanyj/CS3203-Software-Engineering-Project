@@ -1,0 +1,32 @@
+name: Autotester - MacOS
+on: [push, pull_request]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  autotester-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Create build environment
+        run: cmake -E make_directory ${{runner.workspace}}/build
+
+      - name: Configure CMake
+        shell: bash
+        working-directory: ${{runner.workspace}}/build
+        run: cmake ${{github.workspace}}/Team32/Code32/ -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+      - name: Build project
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run: cmake --build . --config $BUILD_TYPE --parallel 8
+
+      - name: Run autotester
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run: ${{github.workspace}}/Team32/Tests32/run_tests.sh ${{runner.workspace}}/build/src/autotester/autotester

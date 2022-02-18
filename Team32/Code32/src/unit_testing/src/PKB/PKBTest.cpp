@@ -2,6 +2,7 @@
 #include "PKB/FollowsRelation.h"
 #include "PKB/PKB.h"
 #include "catch.hpp"
+#include <climits>
 
 TEST_CASE("PKB::PKB Follows Methods Test") {
 	PKB pkb = MockUtilities::generateFollowsTestPKB();
@@ -11,11 +12,11 @@ TEST_CASE("PKB::PKB Follows Methods Test") {
 	StmtRef s_4 = 4;
 	StmtRef s_5 = 5;
 	StmtRef s_6 = 6;
-	StmtRef s_max = SIZE_T_MAX;
+	StmtRef s_max = SIZE_MAX;
 	StmtRef s_zero = 0;
 
 	SECTION("PKB::PKB::setFollows Test") {
-		pkb.setStmtType(SIZE_T_MAX, StmtType::Read);
+		pkb.setStmtType(SIZE_MAX, StmtType::Read);
 		// Invalid setting of negative statement number to statement map.
 		CHECK_THROWS(pkb.setStmtType(0, StmtType::Assign));
 
@@ -61,7 +62,7 @@ TEST_CASE("PKB::PKB Follows Methods Test") {
 	}
 
 	SECTION("PKB::PKB::getFollower Test") {
-		pkb.setStmtType(SIZE_T_MAX, StmtType::Read);
+		pkb.setStmtType(SIZE_MAX, StmtType::Read);
 
 		pkb.setFollows(s_1, s_4);
 		pkb.setFollows(s_2, s_3);
@@ -78,7 +79,7 @@ TEST_CASE("PKB::PKB Follows Methods Test") {
 	}
 
 	SECTION("PKB::PKB::getPreceding Test") {
-		pkb.setStmtType(SIZE_T_MAX, StmtType::Read);
+		pkb.setStmtType(SIZE_MAX, StmtType::Read);
 
 		pkb.setFollows(s_1, s_4);
 		pkb.setFollows(s_2, s_3);
@@ -167,12 +168,12 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 	StmtRef s_7 = 7;
 	StmtRef s_8 = 8;
 	StmtRef s_9 = 9;
-	StmtRef s_max = SIZE_T_MAX;
+	StmtRef s_max = SIZE_MAX;
 	StmtRef s_zero = 0;
 	PKB pkb = MockUtilities::generateParentTestPKB();
 
 	SECTION("PKB::PKB::setParent Test") {
-		pkb.setStmtType(SIZE_T_MAX, StmtType::Read);
+		pkb.setStmtType(SIZE_MAX, StmtType::Read);
 
 		// Verify that normal setting works.
 		CHECK_NOTHROW(pkb.setParent(s_1, s_2));
@@ -351,7 +352,7 @@ TEST_CASE("PKB::Uses Methods Test") {
     StmtRef s2 = 2;
     StmtRef s3 = 3;
     StmtRef s4 = 4;
-    StmtRef s_max = SIZE_T_MAX;
+    StmtRef s_max = SIZE_MAX;
     StmtRef s_zero = 0;
     VarRef x = "x";
     VarRef y = "y";
@@ -467,7 +468,7 @@ TEST_CASE("PKB::Modifies Methods Test") {
     StmtRef s2 = 2;
     StmtRef s3 = 3;
     StmtRef s4 = 4;
-    StmtRef s_max = SIZE_T_MAX;
+    StmtRef s_max = SIZE_MAX;
     StmtRef s_zero = 0;
     VarRef x = "x";
     VarRef y = "y";

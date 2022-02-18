@@ -1,19 +1,28 @@
-name: Lint - Manual Trigger
-on: [workflow_dispatch]
+name: Lint Checks
+on: [pull_request, workflow_dispatch]
 
 env:
   BUILD_TYPE: Coverage
 
 jobs:
-  runner-job:
-    runs-on: [self-hosted, macOS, x64]
+  lint-checks:
+    runs-on: macos-latest
     steps:
-      - name: Cleanup workspace
+      - name: Install dependencies
         shell: bash
-        run: rm -rf ${{github.workspace}}/* && rm -rf ${{runner.workspace}}/build
+        run: |
+          brew install llvm
+          ln -s "$(brew --prefix llvm)/bin/clang-format" "/usr/local/bin/clang-format"
+          ln -s "$(brew --prefix llvm)/bin/clang-tidy" "/usr/local/bin/clang-tidy"
+          ln -s "$(brew --prefix llvm)/bin/clang-apply-replacements" "/usr/local/bin/clang-apply-replacements"
 
       - name: Checkout repository code
         uses: actions/checkout@v2
+
+      - name: Run format check
+        shell: bash
+        working-directory: ${{github.workspace}}/Team32/Code32
+        run: find src/spa/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.tpp' | xargs clang-format -style=file -Werror --dry-run
 
       - name: Create build environment
         run: cmake -E make_directory ${{runner.workspace}}/build

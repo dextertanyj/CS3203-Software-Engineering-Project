@@ -19,8 +19,8 @@ if (CMAKE_BUILD_TYPE MATCHES Coverage)
 endif()
 
 if(NOT MSVC)
-  set(CMAKE_CXX_FLAGS_DEBUG "-g")
-  set(CMAKE_CXX_FLAGS_COVERAGE "-g --coverage")
+  set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Werror")
+  set(CMAKE_CXX_FLAGS_COVERAGE "-g -Wall -Werror --coverage")
   set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif()
 

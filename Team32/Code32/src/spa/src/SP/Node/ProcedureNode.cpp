@@ -5,7 +5,7 @@
 using namespace std;
 
 SP::Node::ProcedureNode::ProcedureNode(string name, unique_ptr<StatementListNode> stmtLst, StmtRef start, StmtRef end)
-    : name(move(name)), stmtLst(move(stmtLst)), start(start), end(end) {}
+    : name(move(name)), start(start), end(end), stmtLst(move(stmtLst)) {}
 
 unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parseProcedure(Lexer& lex, StmtRef& statement_count) {
 	lex.nextIf("procedure");
