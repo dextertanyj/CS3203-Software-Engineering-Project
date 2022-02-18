@@ -33,7 +33,7 @@ jobs:
           brew install lcov
           mkdir ${{runner.workspace}}/coverage
           lcov -z --rc lcov_branch_coverage=1 -d ./build/src/spa/CMakeFiles/spa.dir/src
-          lcov -c -i --rc lcov_branch_coverage=1 -d ./build/src/spa/CMakeFiles/spa.dir/src -o ./coverage/coverage_base.info
+          lcov -c -i --rc lcov_branch_coverage=1 --no-external -d ./build/src/spa/CMakeFiles/spa.dir/src -o ./coverage/coverage_base.info
 
       - name: Run unit tests
         working-directory: ${{runner.workspace}}/build
@@ -49,7 +49,7 @@ jobs:
         shell: bash
         working-directory: ${{runner.workspace}}
         run: |
-          lcov -c --rc lcov_branch_coverage=1 -d ./build/src/spa/CMakeFiles/spa.dir/src -o ./coverage/coverage.info
+          lcov -c --rc lcov_branch_coverage=1 --no-external -d ./build/src/spa/CMakeFiles/spa.dir/src -o ./coverage/coverage.info
           lcov -a --rc lcov_branch_coverage=1 ./coverage/coverage_base.info -a ./coverage/coverage.info -o ./coverage/coverage_total.info
           lcov -r --rc lcov_branch_coverage=1 ./coverage/coverage_total.info '/Library/Developer/CommandLineTools/SDKs/*' -o ./coverage/coverage_filtered.info
 
