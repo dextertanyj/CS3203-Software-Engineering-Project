@@ -118,15 +118,15 @@ TEST_CASE("One pattern clause") {
 	
 	vector<string> assignToken1 = { "90" };
 	QueryExpressionLexer lexer1 = QueryExpressionLexer(assignToken1);
-	auto expression1 = Common::ExpressionProcessor::Expression::parse(lexer1, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto expression1 = Common::ExpressionProcessor::Expression::parse(lexer1, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(1, "x", expression1);
 	vector<string> assignToken2 = { "x", "+", "1" };
 	QueryExpressionLexer lexer2 = QueryExpressionLexer(assignToken2);
-	auto expression2 = Common::ExpressionProcessor::Expression::parse(lexer2, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto expression2 = Common::ExpressionProcessor::Expression::parse(lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(2, "y", expression2);
 	vector<string> assignToken3 = { "x", "+", "y" };
 	QueryExpressionLexer lexer3 = QueryExpressionLexer(assignToken3);
-	auto expression3 = Common::ExpressionProcessor::Expression::parse(lexer3, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto expression3 = Common::ExpressionProcessor::Expression::parse(lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(3, "x", expression3);
 
 	QueryProcessor processor = QueryProcessor(pkb);
@@ -189,15 +189,15 @@ TEST_CASE("One such that and one pattern") {
 	
 	vector<string> assignToken1 = { "90" };
 	QueryExpressionLexer lexer1 = QueryExpressionLexer(assignToken1);
-	auto expression1 = Common::ExpressionProcessor::Expression::parse(lexer1, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto expression1 = Common::ExpressionProcessor::Expression::parse(lexer1, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(1, "x", expression1);
 	vector<string> assignToken2 = { "x", "+", "1" };
 	QueryExpressionLexer lexer2 = QueryExpressionLexer(assignToken2);
-	auto expression2 = Common::ExpressionProcessor::Expression::parse(lexer2, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto expression2 = Common::ExpressionProcessor::Expression::parse(lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(4, "y", expression2);
 	vector<string> assignToken3 = { "x", "+", "y" };
 	QueryExpressionLexer lexer3 = QueryExpressionLexer(assignToken3);
-	auto expression3 = Common::ExpressionProcessor::Expression::parse(lexer3, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto expression3 = Common::ExpressionProcessor::Expression::parse(lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(5, "x", expression3);
 
 	QueryProcessor processor = QueryProcessor(pkb);
