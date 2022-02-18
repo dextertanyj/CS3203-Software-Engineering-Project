@@ -12,7 +12,7 @@
 
 class Pattern : public Relation {
 public:
-	Pattern(Declaration synonym, QueryEntRef ent_ref, ExpressionType expression_type,
+	Pattern(Declaration syn_assign, QueryEntRef ent_ref, ExpressionType expression_type,
 	        optional<Common::ExpressionProcessor::Expression> expression);
 
 	Declaration getSynAssign();

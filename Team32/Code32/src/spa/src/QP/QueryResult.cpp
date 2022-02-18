@@ -58,7 +58,7 @@ void QueryResult::joinWithDifferentSynonym(QueryResult& query_result) {
 	}
 
 	unordered_map<string, vector<string>> final_result = this->table;
-	int number_of_rows = table.begin()->second.size();
+	size_t number_of_rows = table.begin()->second.size();
 	int pos = 0;
 
 	for (int i = 0; i < number_of_rows; i++) {
@@ -76,7 +76,7 @@ void QueryResult::joinWithDifferentSynonym(QueryResult& query_result) {
 }
 
 void QueryResult::joinWithSameSynonym(QueryResult& query_result) {
-	int number_of_rows = table.begin()->second.size();
+	size_t number_of_rows = table.begin()->second.size();
 	unordered_map<string, vector<string>> final_result = this->table;
 	int pos = 0;
 
@@ -99,11 +99,11 @@ void QueryResult::joinWithSameSynonym(QueryResult& query_result) {
 	}
 }
 
-bool QueryResult::contains(unordered_map<string, string> row) {
-	int number_of_rows = table.begin()->second.size();
+bool QueryResult::contains(const unordered_map<string, string>& row) {
+	size_t number_of_rows = table.begin()->second.size();
 	for (int i = 0; i < number_of_rows; i++) {
 		bool has_match = true;
-		for (auto& iterator : row) {
+		for (const auto& iterator : row) {
 			if (table.at(iterator.first)[i] != iterator.second) {
 				has_match = false;
 				break;

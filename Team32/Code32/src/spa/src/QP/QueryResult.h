@@ -13,7 +13,7 @@ class QueryResult {
 public:
 	QueryResult();
 	explicit QueryResult(bool result);
-	bool getResult() const;
+	[[nodiscard]] bool getResult() const;
 	unordered_map<string, vector<string>> getTable();
 	unordered_set<string> getSynonymsStored();
 	vector<string> getSynonymResult(const string& synonym);
@@ -26,7 +26,7 @@ private:
 	unordered_map<string, vector<string>> table;
 	void joinWithDifferentSynonym(QueryResult& query_result);
 	void joinWithSameSynonym(QueryResult& query_result);
-	bool contains(unordered_map<string, string> row);
+	bool contains(const unordered_map<string, string>& row);
 	static void removeRow(unordered_map<string, vector<string>>& table, int row_number);
 };
 

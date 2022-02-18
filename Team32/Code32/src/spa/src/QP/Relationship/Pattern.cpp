@@ -40,7 +40,7 @@ QueryResult Pattern::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity
 			return QueryResult(pkb.patternExists(this->ent_ref.ent_ref, getExpression(), is_exact));
 		}
 		auto stmt_pairs = pkb.getStmtsWithPatternRHS(getExpression(), is_exact);
-		for (auto stmt_pair : stmt_pairs) {
+		for (const auto& stmt_pair : stmt_pairs) {
 			if (QueryUtils::checkStmtTypeMatch(stmt_pair.first, DesignEntity::Assign)) {
 				return QueryResult(true);
 			}

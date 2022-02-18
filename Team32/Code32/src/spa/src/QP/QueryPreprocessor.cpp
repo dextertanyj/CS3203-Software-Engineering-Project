@@ -74,32 +74,32 @@ QueryProperties QueryPreprocessor::parseQuery() {
 	return {this->declaration_list, this->select, this->such_that_clause_list, this->pattern_clause_list};
 }
 
-void QueryPreprocessor::parseDeclaration(int& tokenIndex) {
+void QueryPreprocessor::parseDeclaration(int& token_index) {
 	Declaration declaration;
 	declaration.symbol = "";
-	
-	declaration.type = parseDesignEntity(tokenIndex);
-	while (tokenIndex < this->query_tokens.size()) {
-		if (this->query_tokens[tokenIndex] == ";" && !declaration.symbol.empty()) {
-			tokenIndex++;
+
+	declaration.type = parseDesignEntity(token_index);
+	while (token_index < this->query_tokens.size()) {
+		if (this->query_tokens[token_index] == ";" && !declaration.symbol.empty()) {
+			token_index++;
 			return;
 		}
-		if (this->query_tokens[tokenIndex] == "," && !declaration.symbol.empty()) {
+		if (this->query_tokens[token_index] == "," && !declaration.symbol.empty()) {
 			declaration.symbol = "";
-			tokenIndex++;
+			token_index++;
 		}
 		// if token satisfies "synonym : IDENT" and expecting a synonym
-		else if (isIdentOrName(this->query_tokens[tokenIndex]) && declaration.symbol.empty()) {
-			declaration.symbol = this->query_tokens[tokenIndex];
-			for (Declaration existingDeclaration : this->declaration_list) {
-				if (existingDeclaration.symbol == declaration.symbol) {
+		else if (isIdentOrName(this->query_tokens[token_index]) && declaration.symbol.empty()) {
+			declaration.symbol = this->query_tokens[token_index];
+			for (const Declaration& existing_declaration : this->declaration_list) {
+				if (existing_declaration.symbol == declaration.symbol) {
 					throw QueryException("Duplicate synonym symbol in declarations");
 				}
 			}
-			tokenIndex++;
+			token_index++;
 			this->declaration_list.push_back(declaration);
 		} else {
-			throw QueryException("Unexpected query token design entity: " + this->query_tokens[tokenIndex]);
+			throw QueryException("Unexpected query token design entity: " + this->query_tokens[token_index]);
 		}
 	}
 	throw QueryException("Unexpected end of query");
@@ -128,55 +128,52 @@ void QueryPreprocessor::parseSuchThat(int& token_index) {
 	}
 }
 
-void QueryPreprocessor::parsePattern(int& tokenIndex) {
+void QueryPreprocessor::parsePattern(int& token_index) {
 	Declaration synonym;
 	QueryEntRef ent_ref;
 	ExpressionType expression_type = ExpressionType::Underscore;
 	optional<Common::ExpressionProcessor::Expression> query_expression;
 	bool has_synonym = false;
 	for (const Declaration& declaration : this->declaration_list) {
-		if (declaration.type == DesignEntity::Assign && declaration.symbol == this->query_tokens[tokenIndex]) {
+		if (declaration.type == DesignEntity::Assign && declaration.symbol == this->query_tokens[token_index]) {
 			synonym = declaration;
 			has_synonym = true;
 			break;
 		}
 	}
 	if (!has_synonym) {
-		throw QueryException("Missing query synonym: " + this->query_tokens[tokenIndex]);
+		throw QueryException("Missing query synonym: " + this->query_tokens[token_index]);
 	}
-	tokenIndex++;
+	token_index++;
 
-	matchTokenOrThrow("(", tokenIndex);
+	matchTokenOrThrow("(", token_index);
 	set<DesignEntity> allowed_design_entities = {DesignEntity::Variable};
-	ent_ref = parseQueryEntRef(tokenIndex, allowed_design_entities);
-	matchTokenOrThrow(",", tokenIndex);
-	if (this->query_tokens[tokenIndex] == "_") {
-		tokenIndex++;
-		if (this->query_tokens[tokenIndex] == "\"") {
+	ent_ref = parseQueryEntRef(token_index, allowed_design_entities);
+	matchTokenOrThrow(",", token_index);
+	if (this->query_tokens[token_index] == "_") {
+		token_index++;
+		if (this->query_tokens[token_index] == "\"") {
 			expression_type = ExpressionType::ExpressionUnderscore;
-			Common::ExpressionProcessor::Expression expression = parseExpression(tokenIndex);
+			Common::ExpressionProcessor::Expression expression = parseExpression(token_index);
 			query_expression = expression;
-		}
-		else {
+		} else {
 			expression_type = ExpressionType::Underscore;
 		}
-	}
-	else if (this->query_tokens[tokenIndex] == "\"") {
+	} else if (this->query_tokens[token_index] == "\"") {
 		expression_type = ExpressionType::Expression;
-		Common::ExpressionProcessor::Expression expression = parseExpression(tokenIndex);
+		Common::ExpressionProcessor::Expression expression = parseExpression(token_index);
 		query_expression = expression;
-	}
-	else {
-		throw QueryException("Unexpected query expression: " + this->query_tokens[tokenIndex]);
+	} else {
+		throw QueryException("Unexpected query expression: " + this->query_tokens[token_index]);
 	}
 
 	if (expression_type == ExpressionType::ExpressionUnderscore) {
-		matchTokenOrThrow("_", tokenIndex);
+		matchTokenOrThrow("_", token_index);
 	}
-	matchTokenOrThrow(")", tokenIndex);
+	matchTokenOrThrow(")", token_index);
 
-	if (tokenIndex < this->query_tokens.size() && this->query_tokens[tokenIndex] == "and") {
-		parsePattern(++tokenIndex);
+	if (token_index < this->query_tokens.size() && this->query_tokens[token_index] == "and") {
+		parsePattern(++token_index);
 	}
 	unique_ptr<Relation> relation = make_unique<Pattern>(synonym, ent_ref, expression_type, query_expression);
 	PatternClause pattern_clause = {std::move(relation)};
@@ -212,34 +209,34 @@ DesignEntity QueryPreprocessor::parseDesignEntity(int& token_index) {
 	return design_entity;
 }
 
-unique_ptr<Relation> QueryPreprocessor::parseRelation(int& tokenIndex) {
-	if (this->query_tokens[tokenIndex] == "Follows" || this->query_tokens[tokenIndex] == "Follows*") {
-		return parseFollows(tokenIndex);
+unique_ptr<Relation> QueryPreprocessor::parseRelation(int& token_index) {
+	if (this->query_tokens[token_index] == "Follows" || this->query_tokens[token_index] == "Follows*") {
+		return parseFollows(token_index);
 	}
-	if (this->query_tokens[tokenIndex] == "Modifies") {
-		tokenIndex++;
+	if (this->query_tokens[token_index] == "Modifies") {
+		token_index++;
 		try {
-			int tempTokenIndex = tokenIndex;
-			unique_ptr<Relation> relation = parseModifiesS(tempTokenIndex);
-			tokenIndex = tempTokenIndex;
+			int temp_token_index = token_index;
+			unique_ptr<Relation> relation = parseModifiesS(temp_token_index);
+			token_index = temp_token_index;
 			return relation;
-		} catch (QueryException e) {
-			return parseModifiesP(tokenIndex);
+		} catch (const QueryException& e) {
+			return parseModifiesP(token_index);
 		}
-	} else if (this->query_tokens[tokenIndex] == "Parent" || this->query_tokens[tokenIndex] == "Parent*") {
-		return parseParent(tokenIndex);
-	} else if (this->query_tokens[tokenIndex] == "Uses") {
-		tokenIndex++;
+	} else if (this->query_tokens[token_index] == "Parent" || this->query_tokens[token_index] == "Parent*") {
+		return parseParent(token_index);
+	} else if (this->query_tokens[token_index] == "Uses") {
+		token_index++;
 		try {
-			int tempTokenIndex = tokenIndex;
-			unique_ptr<Relation> relation = parseUsesS(tempTokenIndex);
-			tokenIndex = tempTokenIndex;
+			int temp_token_index = token_index;
+			unique_ptr<Relation> relation = parseUsesS(temp_token_index);
+			token_index = temp_token_index;
 			return relation;
-		} catch (QueryException e) {
-			return parseUsesP(tokenIndex);
+		} catch (const QueryException& e) {
+			return parseUsesP(token_index);
 		}
 	} else {
-		throw QueryException("Unexpected query token relation: " + this->query_tokens[tokenIndex]);
+		throw QueryException("Unexpected query token relation: " + this->query_tokens[token_index]);
 	}
 }
 

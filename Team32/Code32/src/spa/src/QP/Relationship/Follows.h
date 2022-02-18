@@ -14,11 +14,9 @@ public:
 	QueryResult execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) override;
 	vector<string> getDeclarationSymbols() override;
 
-protected:
+private:
 	QueryStmtRef left_stmt;
 	QueryStmtRef right_stmt;
-
-private:
 	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
 	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
 };

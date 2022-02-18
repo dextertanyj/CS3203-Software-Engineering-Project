@@ -33,53 +33,55 @@ QueryResult ModifiesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEnti
 	}
 	if ((stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::Underscore) ||
 	    (stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::Synonym)) {
-		VarRefSet varSet = pkb.getModifiesByStmt(stoul(stmt.stmt_ref));
-		return QueryResult(!varSet.empty());
-	} else if (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::VarName) {
-		StmtInfoPtrSet stmtSet = pkb.getModifiesByVar(ent.ent_ref);
-		return QueryResult(!stmtSet.empty());
-	} else if ((stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Underscore) ||
-	           (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Synonym)) {
-		VarRefSet varSet = pkb.getVariables();
-		for (auto const& var : varSet) {
-			StmtInfoPtrSet stmtSet = pkb.getModifiesByVar(var);
-			if (!stmtSet.empty()) {
+		VarRefSet var_set = pkb.getModifiesByStmt(stoul(stmt.stmt_ref));
+		return QueryResult(!var_set.empty());
+	}
+	if (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::VarName) {
+		StmtInfoPtrSet stmt_set = pkb.getModifiesByVar(ent.ent_ref);
+		return QueryResult(!stmt_set.empty());
+	}
+	if ((stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Underscore) ||
+	    (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Synonym)) {
+		VarRefSet var_set = pkb.getVariables();
+		for (auto const& var : var_set) {
+			StmtInfoPtrSet stmt_set = pkb.getModifiesByVar(var);
+			if (!stmt_set.empty()) {
 				return QueryResult(true);
 			}
 		}
 	} else if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
-		StmtInfoPtrSet stmtSet = pkb.getModifiesByVar(ent.ent_ref);
-		DesignEntity designEntity = map[stmt.stmt_ref];
-		for (auto const& stmt : stmtSet) {
-			if (QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
+		StmtInfoPtrSet stmt_set = pkb.getModifiesByVar(ent.ent_ref);
+		DesignEntity design_entity = map[stmt.stmt_ref];
+		for (auto const& stmt : stmt_set) {
+			if (QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
 				return QueryResult(true);
 			}
 		}
 	} else if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::Underscore) {
-		StmtInfoPtrSet stmtSet = pkb.getStatements();
-		DesignEntity designEntity = map[stmt.stmt_ref];
-		for (auto const& stmt : stmtSet) {
-			if (!QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
+		StmtInfoPtrSet stmt_set = pkb.getStatements();
+		DesignEntity design_entity = map[stmt.stmt_ref];
+		for (auto const& stmt : stmt_set) {
+			if (!QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;
 			}
 
-			VarRefSet varSet = pkb.getModifiesByStmt(stmt.get()->reference);
-			if (!varSet.empty()) {
+			VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
+			if (!var_set.empty()) {
 				return QueryResult(true);
 			}
 		}
 	} else if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::Synonym) {
-		StmtInfoPtrSet stmtSet = pkb.getStatements();
-		DesignEntity designEntity = map[stmt.stmt_ref];
-		vector<string> stmtColumn;
-		vector<string> varColumn;
-		for (auto const& stmt : stmtSet) {
-			if (!QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
+		StmtInfoPtrSet stmt_set = pkb.getStatements();
+		DesignEntity design_entity = map[stmt.stmt_ref];
+		vector<string> stmt_column;
+		vector<string> var_column;
+		for (auto const& stmt : stmt_set) {
+			if (!QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;
 			}
 
-			VarRefSet varSet = pkb.getModifiesByStmt(stmt.get()->reference);
-			if (!varSet.empty()) {
+			VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
+			if (!var_set.empty()) {
 				return QueryResult(true);
 			}
 		}
@@ -103,59 +105,62 @@ QueryResult ModifiesS::executeNonTrivial(PKB& pkb, unordered_map<string, DesignE
 		return result;
 	}
 	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::Underscore) {
-		StmtInfoPtrSet stmtSet = pkb.getStatements();
-		DesignEntity designEntity = map[stmt.stmt_ref];
+		StmtInfoPtrSet stmt_set = pkb.getStatements();
+		DesignEntity design_entity = map[stmt.stmt_ref];
 		vector<string> column;
-		for (auto const& stmt : stmtSet) {
-			if (!QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
+		for (auto const& stmt : stmt_set) {
+			if (!QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;
 			}
 
-			VarRefSet varSet = pkb.getModifiesByStmt(stmt.get()->reference);
-			if (!varSet.empty()) {
-				column.push_back(to_string(stmt.get()->reference));
+			VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
+			if (!var_set.empty()) {
+				column.push_back(to_string(stmt->reference));
 			}
 		}
 		QueryResult result = QueryResult();
 		result.addColumn(stmt.stmt_ref, column);
 		return result;
-	} else if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::Synonym) {
-		StmtInfoPtrSet stmtSet = pkb.getStatements();
-		DesignEntity designEntity = map[stmt.stmt_ref];
-		vector<string> stmtColumn;
-		vector<string> varColumn;
-		for (auto const& stmt : stmtSet) {
-			if (!QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
+	}
+	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::Synonym) {
+		StmtInfoPtrSet stmt_set = pkb.getStatements();
+		DesignEntity design_entity = map[stmt.stmt_ref];
+		vector<string> stmt_column;
+		vector<string> var_column;
+		for (auto const& stmt : stmt_set) {
+			if (!QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;
 			}
 
-			VarRefSet varSet = pkb.getModifiesByStmt(stmt.get()->reference);
-			for (auto const& var : varSet) {
-				stmtColumn.push_back(to_string(stmt.get()->reference));
-				varColumn.push_back(var);
+			VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
+			for (auto const& var : var_set) {
+				stmt_column.push_back(to_string(stmt->reference));
+				var_column.push_back(var);
 			}
 		}
 		QueryResult result = QueryResult();
-		result.addColumn(stmt.stmt_ref, stmtColumn);
-		result.addColumn(ent.ent_ref, varColumn);
+		result.addColumn(stmt.stmt_ref, stmt_column);
+		result.addColumn(ent.ent_ref, var_column);
 		return result;
-	} else if (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Synonym) {
-		VarRefSet varSet = pkb.getVariables();
+	}
+	if (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Synonym) {
+		VarRefSet var_set = pkb.getVariables();
 		vector<string> column;
-		for (auto const& var : varSet) {
-			StmtInfoPtrSet stmtSet = pkb.getModifiesByVar(var);
-			if (!stmtSet.empty()) {
+		for (auto const& var : var_set) {
+			StmtInfoPtrSet stmt_set = pkb.getModifiesByVar(var);
+			if (!stmt_set.empty()) {
 				column.push_back(var);
 			}
 		}
 		QueryResult result = QueryResult();
 		result.addColumn(ent.ent_ref, column);
 		return result;
-	} else if (stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::Synonym) {
-		VarRefSet varSet = pkb.getModifiesByStmt(stoul(stmt.stmt_ref));
+	}
+	if (stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::Synonym) {
+		VarRefSet var_set = pkb.getModifiesByStmt(stoul(stmt.stmt_ref));
 		vector<string> column;
 
-		for (auto const& var : varSet) {
+		for (auto const& var : var_set) {
 			column.push_back(var);
 		}
 

@@ -25,7 +25,7 @@ private:
 	PKB& pkb;
 	unordered_map<string, DesignEntity> symbol_to_type_map;
 	QueryResult executeNoClauses(const Declaration& select);
-	QueryResult getSpecificStmtType(StmtType type, string symbol);
+	QueryResult getSpecificStmtType(StmtType type, const string& symbol);
 	static QueryGraph buildGraph(QueryProperties& query_properties);
 	QueryResult evaluateClauses(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses, const Declaration& select,
 	                            bool is_trivial);

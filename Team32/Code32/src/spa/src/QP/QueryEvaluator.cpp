@@ -13,46 +13,45 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 	QueryGraph graph = buildGraph(query_properties);
 	Declaration select = query_properties.getSelect();
 	vector<unordered_set<string>> synonyms_in_group = graph.getSynonymsInGroup(select.symbol);
-	vector<pair<SuchThatClauseList, PatternClauseList>> clausesInGroup = splitClauses(query_properties, synonyms_in_group);
+	vector<pair<SuchThatClauseList, PatternClauseList>> clauses_in_group = splitClauses(query_properties, synonyms_in_group);
 
 	QueryResult result;
-	if (clausesInGroup[0].first.empty() && clausesInGroup[0].second.empty()) {
+	if (clauses_in_group[0].first.empty() && clauses_in_group[0].second.empty()) {
 		result = executeNoClauses(select);
 	} else {
-		result = evaluateClauses(clausesInGroup[0].first, clausesInGroup[0].second, select, false);
+		result = evaluateClauses(clauses_in_group[0].first, clauses_in_group[0].second, select, false);
 	}
 
-	for (int i = 1; i < clausesInGroup.size(); i++) {
+	for (int i = 1; i < clauses_in_group.size(); i++) {
 		// The clauses in last group should be evaluated independently since they are unrelated
-		if (i == clausesInGroup.size() - 1) {
-			for (const SuchThatClause& such_that_clause : clausesInGroup[i].first) {
+		if (i == clauses_in_group.size() - 1) {
+			for (const SuchThatClause& such_that_clause : clauses_in_group[i].first) {
 				SuchThatClauseList such_that_list = {such_that_clause};
 				PatternClauseList pattern_list = {};
 				if (!evaluateClauses(such_that_list, pattern_list, select, true).getResult()) {
 					return {};
 				}
 			}
-			for (const PatternClause& pattern_clause : clausesInGroup[i].second) {
+			for (const PatternClause& pattern_clause : clauses_in_group[i].second) {
 				SuchThatClauseList such_that_list = {};
 				PatternClauseList pattern_list = {pattern_clause};
 				if (!evaluateClauses(such_that_list, pattern_list, select, true).getResult()) {
 					return {};
 				}
 			}
-		}
-		else {
-			if (clausesInGroup[i].first.size() + clausesInGroup[i].second.size() == 0) {
+		} else {
+			if (clauses_in_group[i].first.size() + clauses_in_group[i].second.size() == 0) {
 				continue;
 			}
-			if (clausesInGroup[i].first.size() + clausesInGroup[i].second.size() == 1) {
-				QueryResult queryResult = evaluateClauses(clausesInGroup[i].first, clausesInGroup[i].second, select, true);
-				if (!queryResult.getResult()) {
-					return QueryResult();
+			if (clauses_in_group[i].first.size() + clauses_in_group[i].second.size() == 1) {
+				QueryResult query_result = evaluateClauses(clauses_in_group[i].first, clauses_in_group[i].second, select, true);
+				if (!query_result.getResult()) {
+					return {};
 				}
 			} else {
-				QueryResult queryResult = evaluateClauses(clausesInGroup[i].first, clausesInGroup[i].second, select, false);
-				if (!queryResult.getResult()) {
-					return QueryResult();
+				QueryResult query_result = evaluateClauses(clauses_in_group[i].first, clauses_in_group[i].second, select, false);
+				if (!query_result.getResult()) {
+					return {};
 				}
 			}
 		}
@@ -123,7 +122,7 @@ QueryResult QueryEvaluator::executeNoClauses(const Declaration& select) {
 	}
 }
 
-QueryResult QueryEvaluator::getSpecificStmtType(StmtType type, string symbol) {
+QueryResult QueryEvaluator::getSpecificStmtType(StmtType type, const string& symbol) {
 	StmtInfoPtrSet stmt_set = pkb.getStatements();
 	QueryResult result = QueryResult();
 
@@ -134,7 +133,7 @@ QueryResult QueryEvaluator::getSpecificStmtType(StmtType type, string symbol) {
 		}
 	}
 
-	result.addColumn(std::move(symbol), result_string);
+	result.addColumn(symbol, result_string);
 	return result;
 }
 
@@ -147,14 +146,14 @@ QueryGraph QueryEvaluator::buildGraph(QueryProperties& query_properties) {
 
 QueryResult QueryEvaluator::evaluateClauses(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
                                             const Declaration& select, bool is_trivial) {
-	vector<QueryResult> resultList;
+	vector<QueryResult> result_list;
 
 	for (const SuchThatClause& such_that_clause : such_that_clauses) {
 		QueryResult result = such_that_clause.relation->execute(pkb, is_trivial, symbol_to_type_map);
 		if (!result.getResult()) {
 			return {};
 		}
-		resultList.push_back(result);
+		result_list.push_back(result);
 	}
 
 	for (const PatternClause& pattern_clause : pattern_clauses) {
@@ -162,31 +161,31 @@ QueryResult QueryEvaluator::evaluateClauses(SuchThatClauseList& such_that_clause
 		if (!result.getResult()) {
 			return {};
 		}
-		resultList.push_back(result);
+		result_list.push_back(result);
 	}
 	// For iteration one, the size of resultList is at most 2
-	if (resultList.size() == 1) {
-		return resultList[0];
+	if (result_list.size() == 1) {
+		return result_list[0];
 	}
 
 	// Merge the table without selected synonym to the one with selected synonym.
 	// If both does not contain selected synonym, we merge the smaller table to larger table.
-	if (resultList[0].getSynonymsStored().find(select.symbol) != resultList[0].getSynonymsStored().end()) {
-		resultList[0].joinResult(resultList[1]);
-		return resultList[0];
+	if (result_list[0].getSynonymsStored().find(select.symbol) != result_list[0].getSynonymsStored().end()) {
+		result_list[0].joinResult(result_list[1]);
+		return result_list[0];
 	}
 
-	if (resultList[1].getSynonymsStored().find(select.symbol) != resultList[1].getSynonymsStored().end()) {
-		resultList[1].joinResult(resultList[0]);
-		return resultList[1];
+	if (result_list[1].getSynonymsStored().find(select.symbol) != result_list[1].getSynonymsStored().end()) {
+		result_list[1].joinResult(result_list[0]);
+		return result_list[1];
 	}
 
-	if (resultList[0].getSynonymsStored().size() >= resultList[1].getSynonymsStored().size()) {
-		resultList[0].joinResult(resultList[1]);
-		return resultList[0];
+	if (result_list[0].getSynonymsStored().size() >= result_list[1].getSynonymsStored().size()) {
+		result_list[0].joinResult(result_list[1]);
+		return result_list[0];
 	}
-	resultList[1].joinResult(resultList[0]);
-	return resultList[1];
+	result_list[1].joinResult(result_list[0]);
+	return result_list[1];
 }
 
 // First element contains clauses with the selected synonym.
