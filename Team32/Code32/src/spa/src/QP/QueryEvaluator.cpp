@@ -23,12 +23,12 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 	}
 
 	// Execute clauses without synonyms first
-	unsigned int last_group = clauses_in_group.size() - 1;
+	size_t last_group = clauses_in_group.size() - 1;
 	if (!executeClausesWithoutSynonym(clauses_in_group[last_group].first, clauses_in_group[last_group].second, select).getResult()) {
 		return {};
 	}
 
-	for (int i = 1; i < last_group; i++) {
+	for (size_t i = 1; i < last_group; i++) {
 		if (clauses_in_group[i].first.size() + clauses_in_group[i].second.size() == 0) {
 			continue;
 		}
