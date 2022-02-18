@@ -22,42 +22,51 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 		result = evaluateClauses(clauses_in_group[0].first, clauses_in_group[0].second, select, false);
 	}
 
-	for (int i = 1; i < clauses_in_group.size(); i++) {
-		// The clauses in last group should be evaluated independently since they are unrelated
-		if (i == clauses_in_group.size() - 1) {
-			for (const SuchThatClause& such_that_clause : clauses_in_group[i].first) {
-				SuchThatClauseList such_that_list = {such_that_clause};
-				PatternClauseList pattern_list = {};
-				if (!evaluateClauses(such_that_list, pattern_list, select, true).getResult()) {
-					return {};
-				}
-			}
-			for (const PatternClause& pattern_clause : clauses_in_group[i].second) {
-				SuchThatClauseList such_that_list = {};
-				PatternClauseList pattern_list = {pattern_clause};
-				if (!evaluateClauses(such_that_list, pattern_list, select, true).getResult()) {
-					return {};
-				}
+	// Execute clauses without synonyms first
+	size_t last_group = clauses_in_group.size() - 1;
+	if (!executeClausesWithoutSynonym(clauses_in_group[last_group].first, clauses_in_group[last_group].second, select).getResult()) {
+		return {};
+	}
+
+	for (size_t i = 1; i < last_group; i++) {
+		if (clauses_in_group[i].first.size() + clauses_in_group[i].second.size() == 0) {
+			continue;
+		}
+		if (clauses_in_group[i].first.size() + clauses_in_group[i].second.size() == 1) {
+			QueryResult query_result = evaluateClauses(clauses_in_group[i].first, clauses_in_group[i].second, select, true);
+			if (!query_result.getResult()) {
+				return {};
 			}
 		} else {
-			if (clauses_in_group[i].first.size() + clauses_in_group[i].second.size() == 0) {
-				continue;
-			}
-			if (clauses_in_group[i].first.size() + clauses_in_group[i].second.size() == 1) {
-				QueryResult query_result = evaluateClauses(clauses_in_group[i].first, clauses_in_group[i].second, select, true);
-				if (!query_result.getResult()) {
-					return {};
-				}
-			} else {
-				QueryResult query_result = evaluateClauses(clauses_in_group[i].first, clauses_in_group[i].second, select, false);
-				if (!query_result.getResult()) {
-					return {};
-				}
+			QueryResult query_result = evaluateClauses(clauses_in_group[i].first, clauses_in_group[i].second, select, false);
+			if (!query_result.getResult()) {
+				return {};
 			}
 		}
 	}
 
 	return result;
+}
+
+QueryResult QueryEvaluator::executeClausesWithoutSynonym(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
+                                                         const Declaration& select) {
+	// These clauses should be evaluated independently since they are unrelated
+	for (const SuchThatClause& such_that_clause : such_that_clauses) {
+		SuchThatClauseList such_that_list = {such_that_clause};
+		PatternClauseList pattern_list = {};
+		if (!evaluateClauses(such_that_list, pattern_list, select, true).getResult()) {
+			return {};
+		}
+	}
+	for (const PatternClause& pattern_clause : pattern_clauses) {
+		SuchThatClauseList such_that_list = {};
+		PatternClauseList pattern_list = {pattern_clause};
+		if (!evaluateClauses(such_that_list, pattern_list, select, true).getResult()) {
+			return {};
+		}
+	}
+
+	return QueryResult(true);
 }
 
 QueryResult QueryEvaluator::executeNoClauses(const Declaration& select) {
