@@ -1,4 +1,5 @@
 #include "MockUtilities.h"
+#include <climits>
 
 shared_ptr<StmtInfo> MockUtilities::createStmtInfo(StmtRef stmtNo, StmtType type) {
     StmtInfo s = {stmtNo, type};

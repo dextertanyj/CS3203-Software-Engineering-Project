@@ -2,6 +2,7 @@
 #include "PKB/FollowsRelation.h"
 #include "PKB/PKB.h"
 #include "catch.hpp"
+#include <climits>
 
 TEST_CASE("PKB::PKB Follows Methods Test") {
 	PKB pkb = MockUtilities::generateFollowsTestPKB();

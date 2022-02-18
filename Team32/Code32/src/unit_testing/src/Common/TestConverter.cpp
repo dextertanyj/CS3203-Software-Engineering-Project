@@ -1,5 +1,6 @@
 #include "Common/Converter.h"
 #include "catch_tools.h"
+#include <climits>
 
 TEST_CASE("Common::Converter::convertMathematical Test") {
 	REQUIRE_EQUALS(Common::Converter::convertMathematical("+"), MathematicalOperator::Plus);
