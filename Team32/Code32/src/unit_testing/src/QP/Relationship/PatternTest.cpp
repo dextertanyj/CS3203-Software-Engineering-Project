@@ -17,7 +17,7 @@ TEST_CASE("QP::Relationship::Pattern::getDeclarationSymbols") {
 	QueryEntRef varUnderscore = { EntRefType::underscore, "_" };
 	vector<string> queryToken = { "0" };
 	QueryExpressionLexer lexer = QueryExpressionLexer(queryToken);
-	auto queryExpression = Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto queryExpression = Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 
 	Pattern pattern1 = Pattern(synAssign, x, ExpressionType::underscore, queryExpression);
 	Pattern pattern2 = Pattern(synAssign, var, ExpressionType::underscore, queryExpression);
@@ -40,15 +40,15 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 
 	vector<string> assignToken1 = { "1" };
 	QueryExpressionLexer lexer1 = QueryExpressionLexer(assignToken1);
-	auto expression1 = Common::ExpressionProcessor::Expression::parse(lexer1, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto expression1 = Common::ExpressionProcessor::Expression::parse(lexer1, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(1, "x", expression1);
 	vector<string> assignToken2 = { "x", "+", "1" };
 	QueryExpressionLexer lexer2 = QueryExpressionLexer(assignToken2);
-	auto expression2 = Common::ExpressionProcessor::Expression::parse(lexer2, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto expression2 = Common::ExpressionProcessor::Expression::parse(lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(2, "y", expression2);
 	vector<string> assignToken3 = { "x", "+", "y" };
 	QueryExpressionLexer lexer3 = QueryExpressionLexer(assignToken3);
-	auto expression3 = Common::ExpressionProcessor::Expression::parse(lexer3, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto expression3 = Common::ExpressionProcessor::Expression::parse(lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(3, "y", expression3);
 
 	pkb.setModifies(1, "x");
@@ -74,13 +74,13 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 
 	vector<string> queryToken1 = { "1" };
 	QueryExpressionLexer lexer4 = QueryExpressionLexer(queryToken1);
-	auto queryExpression1 = Common::ExpressionProcessor::Expression::parse(lexer4, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto queryExpression1 = Common::ExpressionProcessor::Expression::parse(lexer4, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	vector<string> queryToken2 = { "0" };
 	QueryExpressionLexer lexer5 = QueryExpressionLexer(queryToken2);
-	auto queryExpression2 = Common::ExpressionProcessor::Expression::parse(lexer5, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto queryExpression2 = Common::ExpressionProcessor::Expression::parse(lexer5, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	vector<string> queryToken3 = { "x" };
 	QueryExpressionLexer lexer6 = QueryExpressionLexer(queryToken3);
-	auto queryExpression3 = Common::ExpressionProcessor::Expression::parse(lexer6, Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic);
+	auto queryExpression3 = Common::ExpressionProcessor::Expression::parse(lexer6, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 
 	SECTION("trivial: _, _") {
 		Pattern pattern1 = Pattern(synAssign, varUnderscore, ExpressionType::underscore, queryExpression1);

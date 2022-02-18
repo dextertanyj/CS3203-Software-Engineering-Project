@@ -21,15 +21,25 @@ using namespace Common::ExpressionProcessor;
 Expression::Expression(shared_ptr<ExpressionNode> root, unordered_set<VarRef> variables, unordered_set<ConstVal> constants)
 	: root(move(root)), variables(move(variables)), constants(move(constants)) {}
 
-Expression Expression::parse(LexerInterface& lex, bool (*acceptor)(string op)) {
+Expression Expression::parse(LexerInterface& lex, ExpressionType type) {
+	Acceptor acceptor = OperatorAcceptor::getAcceptor(type);
 	unordered_set<VarRef> variables;
 	unordered_set<ConstVal> constants;
-	shared_ptr<ExpressionNode> lhs = parseTerminalSafe(lex, acceptor, variables, constants);
+	shared_ptr<ExpressionNode> lhs = parseTerminal(lex, acceptor, variables, constants);
 	shared_ptr<ExpressionNode> expression = Expression::construct(lex, acceptor, variables, constants, lhs, 0);
+	if (dynamic_pointer_cast<ParenthesesWrapper>(expression) != nullptr) {
+		expression = dynamic_pointer_cast<ParenthesesWrapper>(expression)->getExpression();
+		if (dynamic_pointer_cast<RelationalNode>(expression) != nullptr || dynamic_pointer_cast<LogicalNode>(expression) != nullptr) {
+			throw ExpressionProcessorException("Unsupported nested parentheses");
+		}
+	}
+	if (!checkExpressionType(expression, type)) {
+		throw ExpressionProcessorException("Expression invalid");
+	}
 	return Expression(expression, variables, constants);
 }
 
-shared_ptr<ExpressionNode> Expression::construct(LexerInterface& lex, bool (*acceptor)(string op), unordered_set<VarRef>& variables,
+shared_ptr<ExpressionNode> Expression::construct(LexerInterface& lex, Acceptor acceptor, unordered_set<VarRef>& variables,
                                                  unordered_set<ConstVal>& constants, shared_ptr<ExpressionNode> lhs, int precedence) {
 	string lookahead = lex.peekToken();
 	if (!acceptor(lookahead)) {
@@ -80,7 +90,7 @@ shared_ptr<ExpressionNode> Expression::construct(LexerInterface& lex, bool (*acc
 	return lhs;
 }
 
-shared_ptr<ExpressionNode> Expression::parseTerminalSafe(LexerInterface& lex, bool (*acceptor)(string), unordered_set<VarRef>& variables,
+shared_ptr<ExpressionNode> Expression::parseTerminalSafe(LexerInterface& lex, Acceptor acceptor, unordered_set<VarRef>& variables,
                                                          unordered_set<ConstVal>& constants) {
 	shared_ptr<ExpressionNode> expression = parseTerminal(lex, acceptor, variables, constants);
 	if (dynamic_pointer_cast<ParenthesesWrapper>(expression) != nullptr) {
@@ -152,10 +162,22 @@ int Expression::getPrecedence(MathematicalOperator op) {
 	return 3;
 }
 
+bool Expression::checkExpressionType(const shared_ptr<ExpressionNode>& expression, ExpressionType type) {
+	switch (type) {
+		case ExpressionType::Arithmetic:
+			return dynamic_pointer_cast<AtomicNode>(expression) != nullptr;
+		case ExpressionType::Relational:
+			return dynamic_pointer_cast<RelationalNode>(expression) != nullptr;
+		case ExpressionType::Logical:
+			return dynamic_pointer_cast<LogicalNode>(expression) != nullptr || dynamic_pointer_cast<RelationalNode>(expression) != nullptr;
+		default:
+			throw ExpressionProcessorException("Unknown expression type received");
+	}
+}
+
 bool Expression::contains(const Expression& other) { return root->contains(other.root); }
 
 bool Expression::equals(const Expression& other) { return root->equals(other.root); }
 
 unordered_set<ConstVal> Expression::getConstants() { return constants; }
-
 unordered_set<VarRef> Expression::getVariables() { return variables; }

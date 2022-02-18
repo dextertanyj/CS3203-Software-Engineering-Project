@@ -12,11 +12,9 @@ shared_ptr<Common::ExpressionProcessor::ExpressionNode> Common::ExpressionProces
 }
 
 bool Common::ExpressionProcessor::ParenthesesWrapper::equals(shared_ptr<ExpressionNode> object) {
-	assert(false);
-	return false;
+	throw ExpressionProcessorException("Logic error");
 }
 
 bool Common::ExpressionProcessor::ParenthesesWrapper::contains(shared_ptr<ExpressionNode> object) {
-	assert(false);
-	return false;
+	throw ExpressionProcessorException("Logic error");
 }
