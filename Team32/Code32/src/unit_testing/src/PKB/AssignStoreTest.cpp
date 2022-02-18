@@ -15,7 +15,7 @@ Expression getBasicOpTree() {
     shared_ptr<ExpressionNode> root =
             make_shared<ArithmeticNode>(MathematicalOperator::Plus, make_shared<ConstantNode>("1"), make_shared<ConstantNode>("2"));
     unordered_set<VarRef> variables = unordered_set<VarRef>();
-    unordered_set<int> constants = unordered_set<int>({1, 2});
+    unordered_set<ConstVal> constants = unordered_set<ConstVal>({1, 2});
 	Expression node = Expression(root, variables, constants);
     return node;
 }
@@ -23,7 +23,7 @@ Expression getBasicOpTree() {
 Expression getPartialOpTree() {
     shared_ptr<ExpressionNode> root = make_shared<ConstantNode>("2");
     unordered_set<VarRef> variables = unordered_set<VarRef>();
-    unordered_set<int> constants = unordered_set<int>({2});
+    unordered_set<ConstVal> constants = unordered_set<ConstVal>({2});
 	Expression node = Expression(root, variables, constants);
     return node;
 }

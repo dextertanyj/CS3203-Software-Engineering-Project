@@ -29,11 +29,11 @@ vector<string> UsesS::getDeclarationSymbols() {
 
 QueryResult UsesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
 	if (stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::varName) {
-		return QueryResult(pkb.checkUses(stoi(stmt.stmtRef), ent.entRef));
+		return QueryResult(pkb.checkUses(stoul(stmt.stmtRef), ent.entRef));
 	}
 	else if (stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::underscore ||
 	         stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::synonym) {
-		VarRefSet varSet = pkb.getUsesByStmt(stoi(stmt.stmtRef));
+		VarRefSet varSet = pkb.getUsesByStmt(stoul(stmt.stmtRef));
 		return QueryResult(!varSet.empty());
 	}
 	else if (stmt.type == StmtRefType::underscore && ent.type == EntRefType::varName) {
@@ -160,7 +160,7 @@ QueryResult UsesS::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntit
 		return result;
 	}
 	else if (stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::synonym) {
-		VarRefSet varSet = pkb.getUsesByStmt(stoi(stmt.stmtRef));
+		VarRefSet varSet = pkb.getUsesByStmt(stoul(stmt.stmtRef));
 		vector<string> column;
 
 		for (auto const& var : varSet) {

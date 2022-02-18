@@ -1,4 +1,6 @@
 #include "SP/Node/ProgramNode.h"
+#include "SP/Node/ReadNode.h"
+#include "SP/Node/CallNode.h"
 #include "../Node/MockUtilities.h"
 #include "SP/SP.h"
 
@@ -90,5 +92,33 @@ TEST_CASE("SP::Node::ProgramNode::parseProgram") {
         REQUIRE_THROWS_AS(ProgramNode::parseProgram(lex, statement_count), SP::TokenizationException);
         REQUIRE_EQUALS(lex.peekToken(), "");
     }
+}
 
+TEST_CASE("SP::Node::ProgramNode::extract Test") {
+	PKB pkb;
+
+	SECTION("Single procedure") {
+		ProgramNode node = ProgramNode();
+		StmtRef statement_number = 1;
+		unique_ptr<StatementListNode> first_procedure = make_unique<StatementListNode>();
+		first_procedure->addStatementNode(make_unique<ReadNode>(statement_number, make_unique<VariableNode>("A")));
+		node.addProcedureNode(make_unique<ProcedureNode>("First", move(first_procedure), statement_number, statement_number));
+		node.extract(pkb);
+		REQUIRE(pkb.checkModifies(statement_number, "A"));
+	}
+
+	SECTION("Multiple procedures") {
+		ProgramNode node = ProgramNode();
+		StmtRef first_statement_number = 1;
+		unique_ptr<StatementListNode> first_procedure = make_unique<StatementListNode>();
+		first_procedure->addStatementNode(make_unique<ReadNode>(first_statement_number, make_unique<VariableNode>("A")));
+		node.addProcedureNode(make_unique<ProcedureNode>("First", move(first_procedure), first_statement_number, first_statement_number));
+		StmtRef second_statement_number = 2;
+		unique_ptr<StatementListNode> second_procedure = make_unique<StatementListNode>();
+		second_procedure->addStatementNode(make_unique<ReadNode>(second_statement_number, make_unique<VariableNode>("B")));
+		node.addProcedureNode(make_unique<ProcedureNode>("Second", move(second_procedure), second_statement_number, second_statement_number));
+		node.extract(pkb);
+		REQUIRE(pkb.checkModifies(first_statement_number, "A"));
+		REQUIRE(pkb.checkModifies(second_statement_number, "B"));
+	}
 }

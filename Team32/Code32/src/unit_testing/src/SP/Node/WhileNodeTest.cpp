@@ -2,6 +2,8 @@
 
 #include "../Node/MockUtilities.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
+#include "SP/Node/ReadNode.h"
+#include "SP/Node/PrintNode.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/WhileNode.h"
 #include "SP/SP.h"
@@ -113,11 +115,44 @@ TEST_CASE("SP::Node::WhileNode::parseWhileStatement") {
     }
 }
 
-TEST_CASE("WhileNode::extract Test") {
+TEST_CASE("SP::Node::WhileNode::extract Test") {
 	PKB pkb;
-	unique_ptr<ExpressionNode> condition = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "<", "0" ,")"})));
-	unique_ptr<StatementListNode> body = createStatementList("read x; print y; }", 2);
-	WhileNode node = WhileNode(1, std::move(condition), std::move(body));
-	StmtRef result = node.extract(pkb);
-	REQUIRE_EQUALS(result, 1);
+
+	SECTION("Single enclosed statement") {
+		StmtRef statement_number = 2;
+		StmtRef innner_statement = 3;
+		unique_ptr<ExpressionNode> condition = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "<", "0"})));
+		unique_ptr<StatementListNode> body = make_unique<StatementListNode>();
+		body->addStatementNode(make_unique<CallNode>(innner_statement, "Procedure"));
+		WhileNode node = WhileNode(statement_number, std::move(condition), std::move(body));
+		StmtRef result = node.extract(pkb);
+		REQUIRE_EQUALS(result, statement_number);
+
+		REQUIRE(pkb.checkParents(statement_number, innner_statement));
+		REQUIRE_FALSE(pkb.checkFollows(statement_number, innner_statement));
+	}
+
+	SECTION("Multiple enclosed statements") {
+		StmtRef statement_number = 2;
+		StmtRef first_innner_statement = 3;
+		StmtRef second_innner_statement = 5;
+		StmtRef third_innner_statement = 8;
+		unique_ptr<ExpressionNode> condition = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "<", "0", ")"})));
+		unique_ptr<StatementListNode> body = make_unique<StatementListNode>();
+		body->addStatementNode(make_unique<CallNode>(first_innner_statement, "Procedure"));
+		body->addStatementNode(make_unique<ReadNode>(second_innner_statement, make_unique<VariableNode>("A")));
+		body->addStatementNode(make_unique<PrintNode>(third_innner_statement, make_unique<VariableNode>("B")));
+		WhileNode node = WhileNode(statement_number, std::move(condition), std::move(body));
+		StmtRef result = node.extract(pkb);
+		REQUIRE_EQUALS(result, statement_number);
+
+		REQUIRE(pkb.checkParents(statement_number, first_innner_statement));
+		REQUIRE(pkb.checkParents(statement_number, second_innner_statement));
+		REQUIRE(pkb.checkParents(statement_number, third_innner_statement));
+		REQUIRE_FALSE(pkb.checkParents(first_innner_statement, second_innner_statement));
+
+		REQUIRE(pkb.checkFollows(first_innner_statement, second_innner_statement));
+		REQUIRE(pkb.checkFollows(second_innner_statement, third_innner_statement));
+		REQUIRE_FALSE(pkb.checkFollows(statement_number, first_innner_statement));
+	}
 }

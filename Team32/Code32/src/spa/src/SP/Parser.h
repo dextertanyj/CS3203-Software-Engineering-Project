@@ -16,5 +16,5 @@ public:
 
 private:
 	SP::Lexer lex;
-	int statement_count;
+	StmtRef statement_count;
 };

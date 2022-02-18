@@ -146,10 +146,31 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList") {
     }
 }
 
-TEST_CASE("StatementListNode::extract Test") {
+TEST_CASE("SP::Node::StatementListNode::extract Test") {
 	PKB pkb;
-	StatementListNode node = *createStatementList("read x; print y; }", 1).release();
-	vector<StmtRef> result = node.extract(pkb);
-	vector<StmtRef> expected = vector<StmtRef>({1, 2});
-	REQUIRE_EQUALS(expected, result);
+
+	SECTION("Single enclosed statement") {
+		StmtRef statement_number = 2;
+		StatementListNode node = StatementListNode();
+		node.addStatementNode(make_unique<PrintNode>(statement_number, make_unique<VariableNode>("A")));
+		vector<StmtRef> result = node.extract(pkb);
+		vector<StmtRef> expected = vector<StmtRef>({statement_number});
+		REQUIRE_EQUALS(expected, result);
+		REQUIRE(pkb.checkUses(statement_number, "A"));
+	}
+
+	SECTION("Multiple enclosed statements") {
+		StmtRef first_statement = 2;
+		StmtRef second_statement = 4;
+		StmtRef third_statement = 6;
+		StatementListNode node = StatementListNode();
+		node.addStatementNode(make_unique<PrintNode>(first_statement, make_unique<VariableNode>("A")));
+		node.addStatementNode(make_unique<CallNode>(second_statement, "Procedure"));
+		node.addStatementNode(make_unique<ReadNode>(third_statement, make_unique<VariableNode>("B")));
+		vector<StmtRef> result = node.extract(pkb);
+		vector<StmtRef> expected = vector<StmtRef>({first_statement, second_statement, third_statement});
+		REQUIRE_EQUALS(expected, result);
+		REQUIRE(pkb.checkUses(first_statement, "A"));
+		REQUIRE(pkb.checkModifies(third_statement, "B"));
+	}
 }

@@ -34,9 +34,32 @@ TEST_CASE("SP::Node::ExpressionNode::equals") {
     }
 }
 
-TEST_CASE("ExpressionNode::extract Test") {
-	Common::ExpressionProcessor::Expression expression = createArithmeticExpression(vector<string>({"A", "+", "B", ";"}));
-	ExpressionNode node = ExpressionNode(expression);
-	Common::ExpressionProcessor::Expression result = node.extract();
-	REQUIRE(result.equals(expression));
+TEST_CASE("SP::Node::ExpressionNode::extract Test") {
+
+	SECTION("Arithmetic Expressions") {
+		vector<string> tokens = vector<string>({"A", "+", "B"});
+		Common::ExpressionProcessor::Expression expression = createArithmeticExpression(tokens);
+		Common::ExpressionProcessor::Expression expected = createArithmeticExpression(tokens);
+		ExpressionNode node = ExpressionNode(expression);
+		Common::ExpressionProcessor::Expression result = node.extract();
+		REQUIRE(result.equals(expression));
+	}
+
+	SECTION("Relational Expressions") {
+		vector<string> tokens = vector<string>({"A", "<", "B"});
+		Common::ExpressionProcessor::Expression expression = createRelationalExpression(tokens);
+		Common::ExpressionProcessor::Expression expected = createRelationalExpression(tokens);
+		ExpressionNode node = ExpressionNode(expression);
+		Common::ExpressionProcessor::Expression result = node.extract();
+		REQUIRE(result.equals(expression));
+	}
+
+	SECTION("Logical Expressions") {
+		vector<string> tokens = vector<string>({"!", "(", "A", "<", "A", ")"});
+		Common::ExpressionProcessor::Expression expression = createConditionalExpression(tokens);
+		Common::ExpressionProcessor::Expression expected = createConditionalExpression(tokens);
+		ExpressionNode node = ExpressionNode(expression);
+		Common::ExpressionProcessor::Expression result = node.extract();
+		REQUIRE(result.equals(expression));
+	}
 }

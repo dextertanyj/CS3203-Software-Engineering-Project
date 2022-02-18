@@ -5,7 +5,7 @@
 SP::Node::WhileNode::WhileNode(StmtRef stmtNo, unique_ptr<ExpressionNode> condExpr, unique_ptr<StatementListNode> stmtLst)
 	: StatementNode(stmtNo), condExpr(move(condExpr)), stmtLst(move(stmtLst)) {}
 
-unique_ptr<SP::Node::WhileNode> SP::Node::WhileNode::parseWhileStatement(Lexer& lex, int& statement_count) {
+unique_ptr<SP::Node::WhileNode> SP::Node::WhileNode::parseWhileStatement(Lexer& lex, StmtRef& statement_count) {
     StmtRef statement_index = statement_count++;
     lex.nextIf("(");
 	unique_ptr<ExpressionNode> condition = ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptLogical);

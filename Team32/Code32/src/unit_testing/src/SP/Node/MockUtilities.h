@@ -10,7 +10,8 @@
 #include "SP/SP.h"
 
 Common::ExpressionProcessor::Expression createArithmeticExpression(vector<string> str_list);
+Common::ExpressionProcessor::Expression createRelationalExpression(vector<string> str_list);
 Common::ExpressionProcessor::Expression createConditionalExpression(vector<string> str_list);
-unique_ptr<SP::Node::StatementListNode> createStatementList(string str, int statement_count);
+unique_ptr<SP::Node::StatementListNode> createStatementList(string str, StmtRef statement_count);
 
 #endif  // SPA_MOCKUTILITIES_H

@@ -58,7 +58,7 @@ TEST_CASE("PKB::SVRelationStore") {
         uses_store.set(s3, v2);
 
         // StmtRef index less than or equal to 0
-        REQUIRE_THROWS_AS(uses_store.check(-1, "x"), invalid_argument);
+        REQUIRE_THROWS_AS(uses_store.check(0, "x"), invalid_argument);
         // Variable as an empty string
         REQUIRE_THROWS_AS(uses_store.check(2, ""), invalid_argument);
         // Check negative cases

@@ -6,8 +6,8 @@ QueryResult FollowsT::execute(PKB& pkb, bool isTrivial, unordered_map<string, De
 
 QueryResult FollowsT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
 	if (leftStmt.type == StmtRefType::stmtNumber && rightStmt.type == StmtRefType::stmtNumber) {
-		StmtInfoPtrSet followersSet = pkb.getFollowerStar(stoi(leftStmt.stmtRef));
-		int rightStmtNo = stoi(rightStmt.stmtRef);
+		StmtInfoPtrSet followersSet = pkb.getFollowerStar(stoul(leftStmt.stmtRef));
+		StmtRef rightStmtNo = stoul(rightStmt.stmtRef);
 		for (auto const& follower : followersSet) {
 			if (follower.get()->reference == rightStmtNo) {
 				return QueryResult(true);
@@ -15,11 +15,11 @@ QueryResult FollowsT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntit
 		}
 	}
 	else if (leftStmt.type == StmtRefType::stmtNumber && rightStmt.type == StmtRefType::underscore) {
-		StmtInfoPtrSet stmtSet = pkb.getFollowerStar(stoi(leftStmt.stmtRef));
+		StmtInfoPtrSet stmtSet = pkb.getFollowerStar(stoul(leftStmt.stmtRef));
 		return QueryResult(!stmtSet.empty());
 	}
 	else if (leftStmt.type == StmtRefType::stmtNumber && rightStmt.type == StmtRefType::synonym) {
-		StmtInfoPtrSet stmtSet = pkb.getFollowerStar(stoi(leftStmt.stmtRef));
+		StmtInfoPtrSet stmtSet = pkb.getFollowerStar(stoul(leftStmt.stmtRef));
 		DesignEntity designEntity = map[rightStmt.stmtRef];
 		for (auto const& stmt : stmtSet) {
 			if (QueryUtils::checkStmtTypeMatch(stmt, designEntity)) {
@@ -28,7 +28,7 @@ QueryResult FollowsT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntit
 		}
 	}
 	else if (leftStmt.type == StmtRefType::underscore && rightStmt.type == StmtRefType::stmtNumber) {
-		StmtInfoPtrSet stmtSet = pkb.getPrecedingStar(stoi(rightStmt.stmtRef));
+		StmtInfoPtrSet stmtSet = pkb.getPrecedingStar(stoul(rightStmt.stmtRef));
 		return QueryResult(!stmtSet.empty());
 	}
 	else if (leftStmt.type == StmtRefType::underscore && rightStmt.type == StmtRefType::underscore) {
@@ -55,7 +55,7 @@ QueryResult FollowsT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntit
 		}
 	}
 	else if (leftStmt.type == StmtRefType::synonym && rightStmt.type == StmtRefType::stmtNumber) {
-		StmtInfoPtrSet precedingSet = pkb.getPrecedingStar(stoi(rightStmt.stmtRef));
+		StmtInfoPtrSet precedingSet = pkb.getPrecedingStar(stoul(rightStmt.stmtRef));
 		DesignEntity designEntity = map[leftStmt.stmtRef];
 		for (auto const& preceding : precedingSet) {
 			if (QueryUtils::checkStmtTypeMatch(preceding, designEntity)) {
@@ -104,7 +104,7 @@ QueryResult FollowsT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntit
 
 QueryResult FollowsT::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
 	if (leftStmt.type == StmtRefType::synonym && rightStmt.type == StmtRefType::stmtNumber) {
-		StmtInfoPtrSet precedingSet = pkb.getPrecedingStar(stoi(rightStmt.stmtRef));
+		StmtInfoPtrSet precedingSet = pkb.getPrecedingStar(stoul(rightStmt.stmtRef));
 		DesignEntity designEntity = map[leftStmt.stmtRef];
 		vector<string> column;
 		for (auto const& preceding : precedingSet) {
@@ -181,7 +181,7 @@ QueryResult FollowsT::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEn
 		return result;
 	}
 	else if (leftStmt.type == StmtRefType::stmtNumber && rightStmt.type == StmtRefType::synonym) {
-		StmtInfoPtrSet stmtSet = pkb.getFollowerStar(stoi(leftStmt.stmtRef));
+		StmtInfoPtrSet stmtSet = pkb.getFollowerStar(stoul(leftStmt.stmtRef));
 		DesignEntity designEntity = map[rightStmt.stmtRef];
 		vector<string> column;
 

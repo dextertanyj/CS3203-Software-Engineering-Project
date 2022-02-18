@@ -27,8 +27,8 @@ public:
 	void setFollows(StmtRef, StmtRef);
 	void setParent(StmtRef, StmtRef);
 	void setStmtType(StmtRef, StmtType);
-	void setConstant(int);
-	void setConstant(unordered_set<int>);
+	void setConstant(ConstVal);
+	void setConstant(unordered_set<ConstVal>);
 	void setUses(StmtRef, VarRef);
 	void setModifies(StmtRef, VarRef);
 	void setUses(StmtRef, VarRefSet);
@@ -40,7 +40,7 @@ public:
 	// General get methods
 	StmtInfoPtrSet getStatements();
 	VarRefSet getVariables();
-	unordered_set<int> getConstants();
+	unordered_set<ConstVal> getConstants();
 
 	// Parent get methods
 	shared_ptr<StmtInfo> getParent(StmtRef);

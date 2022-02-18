@@ -6,7 +6,7 @@
 
 class MockUtilities {
 public:
-    static shared_ptr<StmtInfo> createStmtInfo(int stmtNo, StmtType type);
+    static shared_ptr<StmtInfo> createStmtInfo(StmtRef stmtNo, StmtType type);
 	static PKB generateFollowsTestPKB();
 	static PKB generateParentTestPKB();
     static PKB generateUsesTestPKB();

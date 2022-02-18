@@ -2,8 +2,8 @@
 
 ConstantStore::ConstantStore() = default;
 
-void ConstantStore::insert(int value) { store.insert(value); }
+void ConstantStore::insert(ConstVal value) { store.insert(value); }
 
-void ConstantStore::insert(const unordered_set<int>& values) { store.insert(values.begin(), values.end()); }
+void ConstantStore::insert(const unordered_set<ConstVal>& values) { store.insert(values.begin(), values.end()); }
 
-unordered_set<int> ConstantStore::getAll() { return store; }
+unordered_set<ConstVal> ConstantStore::getAll() { return store; }

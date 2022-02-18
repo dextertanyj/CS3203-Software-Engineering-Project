@@ -18,7 +18,7 @@ bool SP::Node::CallNode::equals(const shared_ptr<StatementNode>& object) {
 	return this->getStmtRef() == other->getStmtRef() && this->procedure == other->procedure;
 }
 
-unique_ptr<SP::Node::CallNode> SP::Node::CallNode::parseCallStatement(Lexer& lex, int& statement_count) {
+unique_ptr<SP::Node::CallNode> SP::Node::CallNode::parseCallStatement(Lexer& lex, StmtRef& statement_count) {
 	ProcRef name = lex.readToken();
 	if (!Common::Validator::validateName(name)) {
 		throw SP::ParseException("Invalid procedure name");

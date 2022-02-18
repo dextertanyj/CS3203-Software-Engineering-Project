@@ -13,6 +13,13 @@ Common::ExpressionProcessor::Expression createArithmeticExpression(vector<string
     return expression;
 }
 
+Common::ExpressionProcessor::Expression createRelationalExpression(vector<string> str_list) {
+	MockLexer lex = MockLexer(move(str_list));
+	Common::ExpressionProcessor::Expression expression =
+		Common::ExpressionProcessor::Expression::parse(lex, Common::ExpressionProcessor::OperatorAcceptor::acceptRelational);
+	return expression;
+}
+
 Common::ExpressionProcessor::Expression createConditionalExpression(vector<string> str_list) {
 	MockLexer lex = MockLexer(move(str_list));
 	Common::ExpressionProcessor::Expression expression =
@@ -20,7 +27,7 @@ Common::ExpressionProcessor::Expression createConditionalExpression(vector<strin
 	return expression;
 }
 
-unique_ptr<SP::Node::StatementListNode> createStatementList(string str, int statement_count) {
+unique_ptr<SP::Node::StatementListNode> createStatementList(string str, StmtRef statement_count) {
     SP::Lexer lex;
     lex.initialize(move(str));
     unique_ptr<SP::Node::StatementListNode> node = SP::Node::StatementListNode::parseStatementList(lex, statement_count);

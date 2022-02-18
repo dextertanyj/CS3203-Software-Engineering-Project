@@ -15,7 +15,7 @@ using namespace std;
 class SP::Node::WhileNode : public StatementNode {
 public:
 	WhileNode(StmtRef stmtNo, unique_ptr<ExpressionNode> condExpr, unique_ptr<StatementListNode> stmtLst);
-	static unique_ptr<WhileNode> parseWhileStatement(Lexer& lex, int& statement_count);
+	static unique_ptr<WhileNode> parseWhileStatement(Lexer& lex, StmtRef& statement_count);
 	StmtRef extract(PKB& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
 

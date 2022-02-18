@@ -15,10 +15,6 @@ struct ParseException : public runtime_error {
 struct TokenizationException : public runtime_error {
 	using runtime_error::runtime_error;
 };
-struct UsageInfo {
-	unordered_set<VarRef> variables;
-	unordered_set<int> constants;
-};
 namespace Node {};
 class Processor;
 class Lexer;
