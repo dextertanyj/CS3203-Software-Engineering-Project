@@ -170,8 +170,8 @@ Select a pattern a("y", _) such that Parent*(i, a)
 5000
 35 - Pattern such that positive 2
 assign a; stmt s; variable v;
-Select s pattern a(v, _"1"_) such that Uses(s, v) 
-6, 7, 8, 9, 10, 12
+Select s pattern a(v, _"2"_) such that Uses(s, v) 
+3, 4, 6
 5000
 36 - Pattern such that trivial
 assign a; stmt s; variable v;
