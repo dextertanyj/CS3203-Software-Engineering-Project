@@ -243,7 +243,6 @@ TEST_CASE("One such that and one pattern") {
 
 	SECTION("Both non-trivial") {
 		string query = "assign a; variable v; Select a such that Uses(a, v) pattern a(v, _\"x\"_)";
-		//string query = "assign a; variable v; Select a such that Uses(a, v)";
 
 		vector<string> result = processor.processQuery(query);
 
