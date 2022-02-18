@@ -14,6 +14,7 @@ public:
 	*/
 	virtual QueryResult execute(PKB& pkb, bool isTrivial, unordered_map<string, DesignEntity>& map) = 0;
 	virtual vector<string> getDeclarationSymbols() = 0;
+	virtual ~Relation() = default;
 
 private:
 	virtual	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) = 0;

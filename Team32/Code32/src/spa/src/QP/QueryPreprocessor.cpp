@@ -138,7 +138,7 @@ void QueryPreprocessor::parseSelect(int& tokenIndex) {
 }
 
 void QueryPreprocessor::parseSuchThat(int& tokenIndex) {
-	SuchThatClause suchThatClause = { std::move(parseRelation(tokenIndex)) };
+	SuchThatClause suchThatClause = { parseRelation(tokenIndex) };
 	this->suchThatClauseList.push_back(suchThatClause);
 	if (tokenIndex < this->queryTokens.size() && this->queryTokens[tokenIndex] == "and") {
 		parseSuchThat(++tokenIndex);

@@ -31,8 +31,8 @@ QueryResult UsesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>&
 	if (stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::varName) {
 		return QueryResult(pkb.checkUses(stoul(stmt.stmtRef), ent.entRef));
 	}
-	else if (stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::underscore ||
-	         stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::synonym) {
+	else if ((stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::underscore) ||
+	         (stmt.type == StmtRefType::stmtNumber && ent.type == EntRefType::synonym)) {
 		VarRefSet varSet = pkb.getUsesByStmt(stoul(stmt.stmtRef));
 		return QueryResult(!varSet.empty());
 	}
@@ -40,8 +40,8 @@ QueryResult UsesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>&
 		StmtInfoPtrSet stmtSet = pkb.getUsesByVar(ent.entRef);
 		return QueryResult(!stmtSet.empty());
 	}
-	else if (stmt.type == StmtRefType::underscore && ent.type == EntRefType::underscore ||
-	         stmt.type == StmtRefType::underscore && ent.type == EntRefType::synonym) {
+	else if ((stmt.type == StmtRefType::underscore && ent.type == EntRefType::underscore) ||
+	         (stmt.type == StmtRefType::underscore && ent.type == EntRefType::synonym)) {
 		VarRefSet varSet = pkb.getVariables();
 		for (auto const& var : varSet) {
 			StmtInfoPtrSet stmtSet = pkb.getUsesByVar(var);

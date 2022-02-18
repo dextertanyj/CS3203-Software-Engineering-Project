@@ -295,7 +295,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Follows(*)") {
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 
 	// Valid UsesS
-	UsesS* clause, * clause1;
+	UsesS* clause;
 	QueryPreprocessor qpp1;
 	QueryProperties qp1 = qpp1.parseQuery(univDeclarations + "Select v1 such that Uses(s1, v1)");
 	clause = dynamic_pointer_cast<UsesS>(qp1.getSuchThatClauseList()[0].relation).get();
@@ -442,7 +442,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that UsesS/P") {
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 	// Valid ModifiesS
-	ModifiesS* clause, * clause1;
+	ModifiesS* clause;
 	QueryPreprocessor qpp1;
 	QueryProperties qp1 = qpp1.parseQuery(univDeclarations + "Select v1 such that Modifies(s1, v1)");
 	clause = dynamic_pointer_cast<ModifiesS>(qp1.getSuchThatClauseList()[0].relation).get();
