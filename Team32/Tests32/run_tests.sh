@@ -25,10 +25,11 @@ do
   TEST_SOURCE="$SCRIPT_PATH"/"$TESTNAME"_source.txt;
   TEST_QUERIES="$SCRIPT_PATH"/"$TESTNAME"_queries.txt;
   TEST_OUTPUT="$RESULT_PATH"/"$TESTNAME"_out.xml;
-  echo "$TESTNAME" "Test" >> "$COMBINED_RESULT";
+  echo "$TESTNAME Test" >> "$COMBINED_RESULT";
   "$AUTOTESTER_PATH" "$TEST_SOURCE" "$TEST_QUERIES" "$TEST_OUTPUT" | \
     grep -E "(Evaluating query|answer|exception|Missing:|Additional:)" | \
     grep -B 4 -E "(Additional:)" >> "$COMBINED_RESULT";
+  echo "" >> "$COMBINED_RESULT";
   RESULT[${#RESULT[@]}]=${PIPESTATUS[0]};
   TESTNAMES[${#TESTNAMES[@]}]="$TESTNAME";
 done
@@ -38,12 +39,12 @@ SUCCESS=0;
 for IDX in "${!RESULT[@]}"
 do
   if [ "${RESULT[$IDX]}" -ne 0 ]; then
-    echo "${TESTNAMES[$IDX]} test failed exceptionally";
+    echo "ERROR: ${TESTNAMES[$IDX]} test failed exceptionally";
     SUCCESS=1;
   fi
 done
 
-if ! grep -E "(Evaluating)" "$COMBINED_RESULT" ; then
+if ! grep -E "(Evaluating)" "$COMBINED_RESULT" &> /dev/null ; then
   exit $SUCCESS;
 else
   cat "$COMBINED_RESULT";
