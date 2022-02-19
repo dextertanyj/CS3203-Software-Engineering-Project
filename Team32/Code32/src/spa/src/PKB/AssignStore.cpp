@@ -1,6 +1,6 @@
 #include "AssignStore.h"
 
-#include <cassert>
+#include <stdexcept>
 #include <utility>
 
 using namespace std;
@@ -10,7 +10,7 @@ AssignStore::AssignStore() = default;
 void AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, VarRef variable, Common::ExpressionProcessor::Expression expression) {
 	StmtRef idx = statement->reference;
 	if (statement->type != StmtType::Assign) {
-		throw "Statement type cannot be bound to expression";
+		throw invalid_argument("Statement type cannot be bound to expression");
 	}
 
 	auto iter = store.find(idx);

@@ -33,7 +33,7 @@ unique_ptr<SP::Node::StatementNode> SP::Node::StatementNode::parseStatement(Lexe
 	if (token == "if") {
 		return IfNode::parseIfStatement(lex, statement_count);
 	}
-	throw SP::ParseException("Unknown statement type encountered" + token);
+	throw SP::ParseException("Unknown statement type encountered: " + token + ".");
 }
 
 StmtRef SP::Node::StatementNode::getStmtRef() const { return stmt_no; }

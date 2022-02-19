@@ -11,7 +11,7 @@ Acceptor Common::ExpressionProcessor::OperatorAcceptor::getAcceptor(ExpressionTy
 		case ExpressionType::Logical:
 			return Common::ExpressionProcessor::OperatorAcceptor::acceptLogical;
 		default:
-			throw ExpressionProcessorException("Unknown expression type received");
+			throw ExpressionProcessorException("Unknown expression type received.");
 	}
 }
 

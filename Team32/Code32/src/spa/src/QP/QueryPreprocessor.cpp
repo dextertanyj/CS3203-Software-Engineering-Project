@@ -19,7 +19,7 @@ void QueryPreprocessor::tokenizeQuery(string query) {
 	regex query_token_regex = regex(R"([a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\+|-|\*|\/|%|_|,|\")");
 
 	if (regex_search(query, invalid_chars_regex)) {
-		throw QueryTokenizationException("Query included invalid characters");
+		throw QueryTokenizationException("Illegal token encountered.");
 	}
 
 	auto words_begin = sregex_iterator(query.begin(), query.end(), query_token_regex);
@@ -61,12 +61,12 @@ QueryProperties QueryPreprocessor::parseQuery() {
 		} else if (this->query_tokens[token_index] == "pattern") {
 			parsePattern(++token_index);
 		} else {
-			throw QueryException("Unexpected token: " + this->query_tokens[token_index]);
+			throw QueryException("Unexpected token encountered: " + this->query_tokens[token_index] + ".");
 		}
 	}
 
 	if (this->select.symbol.empty()) {
-		throw QueryException("Missing Select statement");
+		throw QueryException("Missing Select clause.");
 	}
 	return {this->declaration_list, this->select, this->such_that_clause_list, this->pattern_clause_list};
 }
@@ -90,21 +90,21 @@ void QueryPreprocessor::parseDeclaration(int& token_index) {
 			declaration.symbol = this->query_tokens[token_index];
 			for (const Declaration& existing_declaration : this->declaration_list) {
 				if (existing_declaration.symbol == declaration.symbol) {
-					throw QueryException("Duplicate synonym symbol in declarations");
+					throw QueryException("Duplicate synonym symbol in declarations.");
 				}
 			}
 			token_index++;
 			this->declaration_list.push_back(declaration);
 		} else {
-			throw QueryException("Unexpected query token design entity: " + this->query_tokens[token_index]);
+			throw QueryException("Unexpected query token design entity: " + this->query_tokens[token_index] + ".");
 		}
 	}
-	throw QueryException("Unexpected end of query");
+	throw QueryException("Unexpected end of query.");
 }
 
 void QueryPreprocessor::parseSelect(int& token_index) {
 	if (token_index >= this->query_tokens.size()) {
-		throw QueryException("Unexpected end of query");
+		throw QueryException("Unexpected end of query.");
 	}
 	for (const Declaration& declaration : this->declaration_list) {
 		if (declaration.symbol == this->query_tokens[token_index]) {
@@ -114,7 +114,7 @@ void QueryPreprocessor::parseSelect(int& token_index) {
 			return;
 		}
 	}
-	throw QueryException("Undeclared query synonym");
+	throw QueryException("Undeclared query synonym.");
 }
 
 void QueryPreprocessor::parseSuchThat(int& token_index) {
@@ -139,7 +139,7 @@ void QueryPreprocessor::parsePattern(int& token_index) {
 		}
 	}
 	if (!has_synonym) {
-		throw QueryException("Missing query synonym: " + this->query_tokens[token_index]);
+		throw QueryException("Missing query synonym: " + this->query_tokens[token_index] + ".");
 	}
 	token_index++;
 
@@ -161,7 +161,7 @@ void QueryPreprocessor::parsePattern(int& token_index) {
 		Common::ExpressionProcessor::Expression expression = parseExpression(token_index);
 		query_expression = expression;
 	} else {
-		throw QueryException("Unexpected query expression: " + this->query_tokens[token_index]);
+		throw QueryException("Unexpected query expression: " + this->query_tokens[token_index] + ".");
 	}
 
 	if (expression_type == ExpressionType::ExpressionUnderscore) {
@@ -200,7 +200,7 @@ DesignEntity QueryPreprocessor::parseDesignEntity(int& token_index) {
 	} else if (this->query_tokens[token_index] == "procedure") {
 		design_entity = DesignEntity::Procedure;
 	} else {
-		throw QueryException("Unexpected query design entity: " + this->query_tokens[token_index]);
+		throw QueryException("Unexpected query design entity: " + this->query_tokens[token_index] + ".");
 	}
 	token_index++;
 	return design_entity;
@@ -233,7 +233,7 @@ unique_ptr<Relation> QueryPreprocessor::parseRelation(int& token_index) {
 			return parseUsesP(token_index);
 		}
 	} else {
-		throw QueryException("Unexpected query token relation: " + this->query_tokens[token_index]);
+		throw QueryException("Unexpected query token relation: " + this->query_tokens[token_index] + ".");
 	}
 }
 
@@ -285,7 +285,7 @@ unique_ptr<UsesP> QueryPreprocessor::parseUsesP(int& token_index) {
 	QueryEntRef ref1 = parseQueryEntRef(token_index, ref1_allowed_design_entities);
 	// 1st entRef cannot be a wildcard
 	if (ref1.type == EntRefType::Underscore) {
-		throw QueryException("Ambiguous wildcard _");
+		throw QueryException("Ambiguous wildcard _.");
 	}
 	matchTokenOrThrow(",", token_index);
 	set<DesignEntity> ref2_allowed_design_entities = {DesignEntity::Variable};
@@ -301,7 +301,7 @@ unique_ptr<UsesS> QueryPreprocessor::parseUsesS(int& token_index) {
 	QueryStmtRef ref1 = parseQueryStmtRef(token_index, ref1_allowed_design_entities);
 	// 1st stmeRef cannot be a wildcard
 	if (ref1.type == StmtRefType::Underscore) {
-		throw QueryException("Ambiguous wildcard _");
+		throw QueryException("Ambiguous wildcard _.");
 	}
 	matchTokenOrThrow(",", token_index);
 	set<DesignEntity> ref2_allowed_design_entities = {DesignEntity::Variable};
@@ -316,7 +316,7 @@ unique_ptr<ModifiesP> QueryPreprocessor::parseModifiesP(int& token_index) {
 	QueryEntRef ref1 = parseQueryEntRef(token_index, ref1_allowed_design_entities);
 	// 1st entRef cannot be a wildcard
 	if (ref1.type == EntRefType::Underscore) {
-		throw QueryException("Ambiguous wildcard _");
+		throw QueryException("Ambiguous wildcard _.");
 	}
 	matchTokenOrThrow(",", token_index);
 	set<DesignEntity> ref2_allowed_design_entities = {DesignEntity::Variable};
@@ -332,7 +332,7 @@ unique_ptr<ModifiesS> QueryPreprocessor::parseModifiesS(int& token_index) {
 	QueryStmtRef ref1 = parseQueryStmtRef(token_index, ref1_allowed_design_entities);
 	// 1st stmeRef cannot be a wildcard
 	if (ref1.type == StmtRefType::Underscore) {
-		throw QueryException("Ambiguous wildcard _");
+		throw QueryException("Ambiguous wildcard _.");
 	}
 	matchTokenOrThrow(",", token_index);
 	set<DesignEntity> ref2_allowed_design_entities = {DesignEntity::Variable};
@@ -362,7 +362,7 @@ QueryEntRef QueryPreprocessor::parseQueryEntRef(int& token_index, const set<Desi
 			}
 		}
 		if (!has_synonym) {
-			throw QueryException("Unexpected query token entref " + this->query_tokens[token_index]);
+			throw QueryException("Unexpected query entity reference: " + this->query_tokens[token_index] + ".");
 		}
 	}
 
@@ -389,7 +389,7 @@ QueryStmtRef QueryPreprocessor::parseQueryStmtRef(int& token_index, const set<De
 			}
 		}
 		if (!has_synonym) {
-			throw QueryException("Unexpected query token stmtref " + this->query_tokens[token_index]);
+			throw QueryException("Unexpected query statement reference: " + this->query_tokens[token_index] + ".");
 		}
 	}
 	token_index++;
@@ -407,7 +407,7 @@ Common::ExpressionProcessor::Expression QueryPreprocessor::parseExpression(int& 
 	Common::ExpressionProcessor::Expression arithmetic_expression =
 		Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	if (!lexer.readToken().empty()) {
-		throw QueryException("Incomplete expression parsing likely implies incorrect expression");
+		throw QueryException("Invalid expression.");
 	}
 
 	matchTokenOrThrow("\"", token_index);
@@ -420,7 +420,7 @@ void QueryPreprocessor::matchTokenOrThrow(const string& token, int& token_index)
 	if (token_index < this->query_tokens.size() && this->query_tokens[token_index] == token) {
 		token_index++;  // Skip token
 	} else {
-		throw QueryException("Missing token " + token + this->query_tokens[token_index - 1] + this->query_tokens[token_index] +
-		                     this->query_tokens[token_index + 1]);
+		throw QueryException("Missing token: " + token + this->query_tokens[token_index - 1] + this->query_tokens[token_index] +
+		                     this->query_tokens[token_index + 1] + ".");
 	}
 }

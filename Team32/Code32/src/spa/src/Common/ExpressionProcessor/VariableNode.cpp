@@ -6,7 +6,7 @@ using namespace std;
 
 Common::ExpressionProcessor::VariableNode::VariableNode(VarRef name) {
 	if (!Validator::validateName(name)) {
-		throw ExpressionProcessorException("Invalid variable name");
+		throw ExpressionProcessorException("Invalid variable name.");
 	}
 	this->name = move(name);
 }
