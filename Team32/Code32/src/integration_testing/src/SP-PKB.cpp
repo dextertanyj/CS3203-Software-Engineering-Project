@@ -3,13 +3,10 @@
 #include "PKB/PKB.h"
 #include "SP/Processor.h"
 #include "Common/ExpressionProcessor/ArithmeticNode.h"
-#include "Common/ExpressionProcessor/BinaryLogicalNode.h"
 #include "Common/ExpressionProcessor/ConstantNode.h"
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
-#include "Common/ExpressionProcessor/RelationalNode.h"
-#include "Common/ExpressionProcessor/UnaryLogicalNode.h"
 #include "Common/ExpressionProcessor/VariableNode.h"
 
 #include <string>
@@ -17,9 +14,6 @@
 #define variable(name) make_shared<Common::ExpressionProcessor::VariableNode>(name)
 #define constant(value) make_shared<Common::ExpressionProcessor::ConstantNode>(value)
 #define arithmetic(op, lhs, rhs) make_shared<Common::ExpressionProcessor::ArithmeticNode>(op, lhs, rhs)
-#define relational(op, lhs, rhs) make_shared<Common::ExpressionProcessor::RelationalNode>(op, lhs, rhs)
-#define unarylogical(op, exp) make_shared<Common::ExpressionProcessor::UnaryLogicalNode>(op, exp)
-#define binarylogical(op, lhs, rhs) make_shared<Common::ExpressionProcessor::BinaryLogicalNode>(op, lhs, rhs)
 
 using namespace std;
 
