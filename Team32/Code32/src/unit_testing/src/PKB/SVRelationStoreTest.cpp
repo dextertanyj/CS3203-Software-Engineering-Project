@@ -3,33 +3,32 @@
 #include "MockUtilities.h"
 #include "PKB/PKB.h"
 #include "catch.hpp"
-#include "catch_tools.h"
 
 TEST_CASE("PKB::SVRelationStore") {
     SVRelationStore uses_store = SVRelationStore<Uses>();
-    shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(5, StmtType::Print);
-    shared_ptr<StmtInfo> s2 = MockUtilities::createStmtInfo(6, StmtType::Assign);
-    shared_ptr<StmtInfo> s3 = MockUtilities::createStmtInfo(7, StmtType::IfStmt);
-    shared_ptr<StmtInfo> s4 = MockUtilities::createStmtInfo(1, StmtType::Read);
+    shared_ptr<StmtInfo> s_1 = MockUtilities::createStmtInfo(5, StmtType::Print);
+    shared_ptr<StmtInfo> s_2 = MockUtilities::createStmtInfo(6, StmtType::Assign);
+    shared_ptr<StmtInfo> s_3 = MockUtilities::createStmtInfo(7, StmtType::IfStmt);
+    shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(1, StmtType::Read);
 
-    VarRefSet v1 = {"x", "y", "z"};
-    VarRefSet v2 = {"a", "b"};
-    VarRefSet v3 = {"a", ""};
-    VarRefSet v4 = {};
-    VarRefSet v5 = {"a"};
+    VarRefSet v_1 = {"x", "y", "z"};
+    VarRefSet v_2 = {"a", "b"};
+    VarRefSet v_3 = {"a", ""};
+    VarRefSet v_4 = {};
+    VarRefSet v_5 = {"a"};
 
     SECTION("PKB::SVRelationStore::set by VarRef Test") {
         // Variable length less than 1
-        REQUIRE_THROWS_AS(uses_store.set(s1, ""), invalid_argument);
+        REQUIRE_THROWS_AS(uses_store.set(s_1, ""), invalid_argument);
         // Read statement does not use a variable
-        REQUIRE_THROWS_AS(uses_store.set(s4, "x"), invalid_argument);
-        CHECK_NOTHROW(uses_store.set(s1, "x"));
-        CHECK_NOTHROW(uses_store.set(s2, "y"));
-        CHECK_NOTHROW(uses_store.set(s2, "a"));
-        CHECK_NOTHROW(uses_store.set(s3, "x"));
+        REQUIRE_THROWS_AS(uses_store.set(s_4, "x"), invalid_argument);
+        CHECK_NOTHROW(uses_store.set(s_1, "x"));
+        CHECK_NOTHROW(uses_store.set(s_2, "y"));
+        CHECK_NOTHROW(uses_store.set(s_2, "a"));
+        CHECK_NOTHROW(uses_store.set(s_3, "x"));
 
         // Print statement cannot use more than one variable
-        CHECK_THROWS(uses_store.set(s1, "a"));
+        CHECK_THROWS(uses_store.set(s_1, "a"));
         CHECK(uses_store.check(5, "x"));
         CHECK(uses_store.check(6, "y"));
         CHECK(uses_store.check(6, "a"));
@@ -38,14 +37,14 @@ TEST_CASE("PKB::SVRelationStore") {
 
     SECTION("PKB::SVRelationStore::set by VarRefSet Test") {
         // Variable set contains empty string
-        REQUIRE_THROWS_AS(uses_store.set(s2, v3), invalid_argument);
+        REQUIRE_THROWS_AS(uses_store.set(s_2, v_3), invalid_argument);
         // Read statement does not use variables
-        REQUIRE_THROWS_AS(uses_store.set(s4, v2), invalid_argument);
-        uses_store.set(s1, v5);
-        uses_store.set(s2, v1);
-        uses_store.set(s3, v4);
+        REQUIRE_THROWS_AS(uses_store.set(s_4, v_2), invalid_argument);
+		uses_store.set(s_1, v_5);
+		uses_store.set(s_2, v_1);
+		uses_store.set(s_3, v_4);
         // Print statement cannot use more than one variable
-        CHECK_THROWS(uses_store.set(s1, v1));
+        CHECK_THROWS(uses_store.set(s_1, v_1));
         CHECK(uses_store.check(5, "a"));
         CHECK(uses_store.check(6, "x"));
         CHECK(uses_store.check(6, "y"));
@@ -53,9 +52,9 @@ TEST_CASE("PKB::SVRelationStore") {
     }
 
     SECTION("PKB::SVRelationStore::check Test") {
-        uses_store.set(s1, "x");
-        uses_store.set(s2, v1);
-        uses_store.set(s3, v2);
+		uses_store.set(s_1, "x");
+		uses_store.set(s_2, v_1);
+		uses_store.set(s_3, v_2);
 
         // StmtRef index less than or equal to 0
         REQUIRE_THROWS_AS(uses_store.check(0, "x"), invalid_argument);
@@ -74,29 +73,29 @@ TEST_CASE("PKB::SVRelationStore") {
     }
 
     SECTION("PKB::SVRelationStore::getByStmt Test") {
-        uses_store.set(s1, "a");
-        uses_store.set(s2, v1);
-        uses_store.set(s3, v2);
+		uses_store.set(s_1, "a");
+		uses_store.set(s_2, v_1);
+		uses_store.set(s_3, v_2);
 
         // StmtRef index less than or equal to 0
         REQUIRE_THROWS_AS(uses_store.getByStmt(0), invalid_argument);
-        CHECK(uses_store.getByStmt(5) == v5);
-        CHECK(uses_store.getByStmt(6) == v1);
-        CHECK(uses_store.getByStmt(7) == v2);
+        CHECK(uses_store.getByStmt(5) == v_5);
+        CHECK(uses_store.getByStmt(6) == v_1);
+        CHECK(uses_store.getByStmt(7) == v_2);
         CHECK(uses_store.getByStmt(2).empty());
     }
 
     SECTION("PKB::SVRelationStore::getByVar Test") {
-        uses_store.set(s1, "a");
-        uses_store.set(s2, v1);
-        uses_store.set(s3, v2);
+		uses_store.set(s_1, "a");
+		uses_store.set(s_2, v_1);
+		uses_store.set(s_3, v_2);
 
         // Variable as an empty string
         REQUIRE_THROWS_AS(uses_store.getByVar(""), invalid_argument);
-        unordered_set<shared_ptr<StmtInfo>> expected_set_a = { s1, s3 };
-        unordered_set<shared_ptr<StmtInfo>> expected_set_x = { s2 };
-        unordered_set<shared_ptr<StmtInfo>> expected_set_y = { s2 };
-        unordered_set<shared_ptr<StmtInfo>> expected_set_b = { s3 };
+        unordered_set<shared_ptr<StmtInfo>> expected_set_a = {s_1, s_3};
+        unordered_set<shared_ptr<StmtInfo>> expected_set_x = {s_2};
+        unordered_set<shared_ptr<StmtInfo>> expected_set_y = {s_2};
+        unordered_set<shared_ptr<StmtInfo>> expected_set_b = {s_3};
         CHECK(uses_store.getByVar("a") == expected_set_a);
         CHECK(uses_store.getByVar("x") == expected_set_x);
         CHECK(uses_store.getByVar("y") == expected_set_y);
