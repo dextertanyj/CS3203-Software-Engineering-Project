@@ -67,10 +67,10 @@ public:
 	VarRefSet getModifiesByStmt(StmtRef);
 
 	// Assign get methods
-	bool patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& e, bool is_exact_match);
-	StmtInfoPtrSet getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& e, bool is_exact_match);
+	bool patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& exp, bool is_exact_match);
+	StmtInfoPtrSet getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& exp, bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& variable);
-	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& e,
+	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& exp,
 	                                                                  bool is_exact_match);
 
 	// Others

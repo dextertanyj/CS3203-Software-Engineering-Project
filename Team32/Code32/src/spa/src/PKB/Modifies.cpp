@@ -13,10 +13,11 @@ bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtI
 		return true;
 	}
 	auto statement_iter = store->statement_key_map.find(idx);
+	// If the statement reference is not found in the SVRelationStore, then setModifies is valid.
 	if (statement_iter == store->statement_key_map.end()) {
 		return true;
 	}
-	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& x) { return x != variable; }));
+	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& existing_var) { return existing_var != variable; }));
 }
 
 bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
@@ -35,7 +36,7 @@ bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtI
 	if (statement_iter == store->statement_key_map.end()) {
 		return true;
 	}
-	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& x) { return x == variable; }));
+	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& existing_var) { return existing_var == variable; }));
 }
 
 void Modifies::optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,

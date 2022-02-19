@@ -5,39 +5,39 @@
 
 ParentRelation::ParentRelation(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
 
-void ParentRelation::insertForward(const shared_ptr<StmtInfo>& parent) {
-	if (self->reference <= parent->reference) {
+void ParentRelation::insertForward(const shared_ptr<StmtInfo>& parent_to_insert) {
+	if (self->reference <= parent_to_insert->reference) {
 		throw invalid_argument("Statement out of order");
 	}
 	if (this->parent != nullptr) {
-		throw invalid_argument("This statement already has a parent");
+		throw invalid_argument("This statement already has a parent_to_insert");
 	}
-	this->parent = parent;
+	this->parent = parent_to_insert;
 }
 
-void ParentRelation::insertReverse(const shared_ptr<StmtInfo>& child) {
-	if (self->reference >= child->reference) {
+void ParentRelation::insertReverse(const shared_ptr<StmtInfo>& child_to_insert) {
+	if (self->reference >= child_to_insert->reference) {
 		throw invalid_argument("Statement out of order");
 	}
-	this->children.insert(child);
+	this->children.insert(child_to_insert);
 }
 
-void ParentRelation::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> parents) {
-	for (const auto& parent : parents) {
+void ParentRelation::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> parents_to_insert) {
+	for (const auto& parent : parents_to_insert) {
 		if (self->reference <= parent->reference) {
 			throw invalid_argument("Statement out of order");
 		}
 	}
-	this->parent_transitive.insert(parents.begin(), parents.end());
+	this->parent_transitive.insert(parents_to_insert.begin(), parents_to_insert.end());
 }
 
-void ParentRelation::appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> children) {
-	for (const auto& child : children) {
+void ParentRelation::appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> children_to_insert) {
+	for (const auto& child : children_to_insert) {
 		if (self->reference >= child->reference) {
 			throw invalid_argument("Statement out of order");
 		}
 	}
-	this->children_transitive.insert(children.begin(), children.end());
+	this->children_transitive.insert(children_to_insert.begin(), children_to_insert.end());
 }
 
 unordered_set<shared_ptr<StmtInfo>> ParentRelation::getForward() {
