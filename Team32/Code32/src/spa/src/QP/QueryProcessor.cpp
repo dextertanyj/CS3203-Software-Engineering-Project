@@ -1,6 +1,5 @@
 #include "QP/QueryProcessor.h"
 
-#include <cstdlib>
 #include <exception>
 #include <iostream>
 #include <utility>
@@ -17,6 +16,6 @@ vector<string> QueryProcessor::processQuery(string query) {
 		return QueryFormatter::formatResult(query_properties, result);
 	} catch (const exception& e) {
 		cout << e.what() << endl;
-		exit(1);
+		return {};
 	}
 }
