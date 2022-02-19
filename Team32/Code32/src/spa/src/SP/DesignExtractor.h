@@ -11,11 +11,11 @@ using namespace std;
 
 class SP::DesignExtractor {
 public:
-	explicit DesignExtractor(PKB &pkb);
+	explicit DesignExtractor(PKB& pkb);
 	void extract(unique_ptr<Node::ProgramNode> ast);
 
 private:
-	PKB &pkb;
+	PKB& pkb;
 };
 
 #endif  // SPA_DESIGNEXTRACTOR_H

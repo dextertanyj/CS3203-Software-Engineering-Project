@@ -4,7 +4,7 @@
 
 using namespace std;
 
-SP::DesignExtractor::DesignExtractor(PKB &pkb) : pkb(pkb) {}
+SP::DesignExtractor::DesignExtractor(PKB& pkb) : pkb(pkb) {}
 
 void SP::DesignExtractor::extract(unique_ptr<Node::ProgramNode> ast) {
 	ast->extract(pkb);

@@ -1,14 +1,22 @@
 #include "SP/Processor.h"
 
+#include <cstdlib>
+#include <exception>
+#include <iostream>
 #include <memory>
 
 #include "SP/Lexer.h"
 
 using namespace std;
 
-SP::Processor::Processor(PKB &pkb) : parser(SP::Lexer()), extractor(pkb) {}
+SP::Processor::Processor(PKB& pkb) : parser(SP::Lexer()), extractor(pkb) {}
 
 void SP::Processor::process(string source) {
-	unique_ptr<Node::ProgramNode> ast = parser.parse(std::move(source));
-	extractor.extract(std::move(ast));
+	try {
+		unique_ptr<Node::ProgramNode> ast = parser.parse(std::move(source));
+		extractor.extract(std::move(ast));
+	} catch (const exception& e) {
+		cout << e.what() << endl;
+		exit(1);
+	}
 }

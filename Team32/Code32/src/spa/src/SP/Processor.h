@@ -10,7 +10,7 @@
 
 class SP::Processor {
 public:
-	explicit Processor(PKB &pkb);
+	explicit Processor(PKB& pkb);
 	void process(string source);
 
 private:
