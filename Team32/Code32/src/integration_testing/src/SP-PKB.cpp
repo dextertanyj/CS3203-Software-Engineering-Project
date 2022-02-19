@@ -77,10 +77,12 @@ TEST_CASE("SP::Processor::process Basic Test") {
             REQUIRE_EQUALS(pkb.getParent(5)->reference, 1);
             REQUIRE(pkb.checkParents(1, 2));
             REQUIRE_FALSE(pkb.checkParents(2, 1));
-            std::unordered_set<shared_ptr<StmtInfo>> expected_children = {};
-            for (shared_ptr<StmtInfo> ptr : pkb.getStatements()){
-                if (ptr->reference != 1) expected_children.insert(ptr);
-            }
+            std::unordered_set<shared_ptr<StmtInfo>> expected_children = {
+                    stmt_map.find(2)->second,
+                    stmt_map.find(3)->second,
+                    stmt_map.find(4)->second,
+                    stmt_map.find(5)->second
+            };
             REQUIRE_EQUALS(pkb.getChildren(1), expected_children);
         }
 
@@ -173,10 +175,10 @@ TEST_CASE("SP::Processor::process Basic Test") {
             REQUIRE_EQUALS(pkb.getParent(3)->reference, 1);
             REQUIRE(pkb.checkParents(1, 2));
             REQUIRE_FALSE(pkb.checkParents(2, 1));
-            std::unordered_set<shared_ptr<StmtInfo>> expected_children = {};
-            for (shared_ptr<StmtInfo> ptr : pkb.getStatements()){
-                if (ptr->reference != 1) expected_children.insert(ptr);
-            }
+            std::unordered_set<shared_ptr<StmtInfo>> expected_children = {
+                    stmt_map.find(2)->second,
+                    stmt_map.find(3)->second,
+            };
             REQUIRE_EQUALS(pkb.getChildren(1), expected_children);
         }
 
