@@ -179,17 +179,20 @@ QueryResult QueryEvaluator::evaluateClauses(SuchThatClauseList& such_that_clause
 
 	// Merge the table without selected synonym to the one with selected synonym.
 	// If both does not contain selected synonym, we merge the smaller table to larger table.
-	if (result_list[0].getSynonymsStored().find(select.symbol) != result_list[0].getSynonymsStored().end()) {
+	const unordered_set<string> synonyms_in_first_result = result_list[0].getSynonymsStored();
+	const unordered_set<string> synonyms_in_second_result = result_list[1].getSynonymsStored();
+
+	if (synonyms_in_first_result.find(select.symbol) != synonyms_in_first_result.end()) {
 		result_list[0].joinResult(result_list[1]);
 		return result_list[0];
 	}
 
-	if (result_list[1].getSynonymsStored().find(select.symbol) != result_list[1].getSynonymsStored().end()) {
+	if (synonyms_in_second_result.find(select.symbol) != synonyms_in_second_result.end()) {
 		result_list[1].joinResult(result_list[0]);
 		return result_list[1];
 	}
 
-	if (result_list[0].getSynonymsStored().size() >= result_list[1].getSynonymsStored().size()) {
+	if (synonyms_in_first_result.size() >= synonyms_in_second_result.size()) {
 		result_list[0].joinResult(result_list[1]);
 		return result_list[0];
 	}
