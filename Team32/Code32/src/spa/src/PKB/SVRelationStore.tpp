@@ -46,7 +46,7 @@ void SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRefSet variables
 	}
 
 	if (!T::validate(this, statement, variables)) {
-		throw invalid_argument("Relationship set error");
+		throw invalid_argument("Relationship set error.");
 	}
 
 	auto statement_iter = statement_key_map.find(index);
