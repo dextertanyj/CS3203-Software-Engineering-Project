@@ -7,7 +7,7 @@ SP::Node::VariableNode::VariableNode(VarRef name) : name(move(name)) {}
 unique_ptr<SP::Node::VariableNode> SP::Node::VariableNode::parseVariable(SP::Lexer& lex) {
 	VarRef name = lex.readToken();
 	if (!Common::Validator::validateName(name)) {
-		throw SP::ParseException("Invalid variable name");
+		throw SP::ParseException("Invalid variable name.");
 	}
 	return make_unique<VariableNode>(name);
 }
@@ -15,7 +15,7 @@ unique_ptr<SP::Node::VariableNode> SP::Node::VariableNode::parseVariable(SP::Lex
 unique_ptr<SP::Node::VariableNode> SP::Node::VariableNode::parseVariable(string token) {
 	VarRef name = std::move(token);
 	if (!Common::Validator::validateName(name)) {
-		throw SP::ParseException("Invalid variable name");
+		throw SP::ParseException("Invalid variable name.");
 	}
 	return make_unique<VariableNode>(name);
 }

@@ -7,7 +7,7 @@ using namespace std;
 Common::ExpressionProcessor::ArithmeticNode::ArithmeticNode(MathematicalOperator op, shared_ptr<AtomicNode> lhs, shared_ptr<AtomicNode> rhs)
 	: lhs(move(lhs)), rhs(move(rhs)) {
 	if (!OperatorAcceptor::acceptArithmetic(op)) {
-		throw ExpressionProcessorException("Expected arithmetic operator");
+		throw ExpressionProcessorException("Expected arithmetic operator.");
 	}
 	this->op = op;
 }

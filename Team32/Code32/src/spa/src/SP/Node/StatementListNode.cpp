@@ -22,7 +22,7 @@ vector<StmtRef> SP::Node::StatementListNode::extract(PKB& pkb) {
 		children.push_back(iter->get()->extract(pkb));
 	}
 	if (children.empty()) {
-		throw logic_error("Statement list is empty");
+		throw logic_error("Statement list is empty.");
 	}
 	StmtRef previous = children.at(0);
 	for (auto iter = ++children.begin(); iter < children.end(); ++iter) {

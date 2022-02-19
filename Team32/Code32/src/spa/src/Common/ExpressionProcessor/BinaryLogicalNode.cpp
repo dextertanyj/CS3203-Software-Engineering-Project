@@ -8,7 +8,7 @@ Common::ExpressionProcessor::BinaryLogicalNode::BinaryLogicalNode(MathematicalOp
                                                                   shared_ptr<LogicalNode> rhs)
 	: lhs(move(lhs)), rhs(move(rhs)) {
 	if (!OperatorAcceptor::acceptBinaryLogical(op)) {
-		throw ExpressionProcessorException("Expected binary logical operator");
+		throw ExpressionProcessorException("Expected binary logical operator.");
 	}
 	this->op = op;
 }

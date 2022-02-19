@@ -30,11 +30,11 @@ Expression Expression::parse(LexerInterface& lex, ExpressionType type) {
 	if (dynamic_pointer_cast<ParenthesesWrapper>(expression) != nullptr) {
 		expression = dynamic_pointer_cast<ParenthesesWrapper>(expression)->getExpression();
 		if (dynamic_pointer_cast<RelationalNode>(expression) != nullptr || dynamic_pointer_cast<LogicalNode>(expression) != nullptr) {
-			throw ExpressionProcessorException("Unsupported nested parentheses");
+			throw ExpressionProcessorException("Unsupported nested parentheses in expression.");
 		}
 	}
 	if (!checkExpressionType(expression, type)) {
-		throw ExpressionProcessorException("Expression invalid");
+		throw ExpressionProcessorException("Invalid expression type received.");
 	}
 	return {expression, variables, constants};
 }
@@ -62,7 +62,7 @@ shared_ptr<ExpressionNode> Expression::construct(LexerInterface& lex, Acceptor a
 		shared_ptr<ExpressionNode> rhs = parseTerminalSafe(lex, acceptor, variables, constants);
 		shared_ptr<LogicalNode> rhs_logical = dynamic_pointer_cast<LogicalNode>(rhs);
 		if (lhs_logical == nullptr || rhs_logical == nullptr) {
-			throw ExpressionProcessorException("Expected conditional expression");
+			throw ExpressionProcessorException("Expected conditional expression.");
 		}
 		return make_shared<BinaryLogicalNode>(op, lhs_logical, rhs_logical);
 	}
@@ -79,7 +79,7 @@ shared_ptr<ExpressionNode> Expression::construct(LexerInterface& lex, Acceptor a
 		shared_ptr<AtomicNode> lhs_atomic = dynamic_pointer_cast<AtomicNode>(lhs);
 		shared_ptr<AtomicNode> rhs_atomic = dynamic_pointer_cast<AtomicNode>(rhs);
 		if (lhs_atomic == nullptr || rhs_atomic == nullptr) {
-			throw ExpressionProcessorException("Expected atomic expression");
+			throw ExpressionProcessorException("Expected atomic expression.");
 		}
 		if (OperatorAcceptor::acceptRelationalStrict(token)) {
 			lhs = make_shared<RelationalNode>(op, lhs_atomic, rhs_atomic);
@@ -104,17 +104,17 @@ shared_ptr<ExpressionNode> Expression::parseTerminal(LexerInterface& lex, Accept
 	string token = lex.readToken();
 	if (OperatorAcceptor::acceptUnaryLogical(token)) {
 		if (!acceptor(token)) {
-			throw ExpressionProcessorException("Unexpected token received: " + token);
+			throw ExpressionProcessorException("Unexpected token received: " + token + ".");
 		}
 		token = lex.peekToken();  // Do not consume this parenthesis since the subsequent call to parseTerminal will consume it.
 		if (token != "(") {
-			throw ExpressionProcessorException("Unexpected token received: " + token);
+			throw ExpressionProcessorException("Unexpected token received: " + token + ".");
 		}
 		shared_ptr<ExpressionNode> expression = parseTerminalSafe(lex, acceptor, variables, constants);
 
 		shared_ptr<LogicalNode> logical_expression = dynamic_pointer_cast<LogicalNode>(expression);
 		if (logical_expression == nullptr) {
-			throw ExpressionProcessorException("Expected conditional expression");
+			throw ExpressionProcessorException("Expected conditional expression.");
 		}
 		// No check for ')' since we asserted there is an '(' and parseTerminal will throw an error for mismatched parentheses.
 		return make_shared<UnaryLogicalNode>(MathematicalOperator::Not, logical_expression);
@@ -127,12 +127,12 @@ shared_ptr<ExpressionNode> Expression::parseTerminal(LexerInterface& lex, Accept
 		if (dynamic_pointer_cast<ParenthesesWrapper>(expression) != nullptr) {
 			expression = dynamic_pointer_cast<ParenthesesWrapper>(expression)->getExpression();
 			if (dynamic_pointer_cast<RelationalNode>(expression) != nullptr || dynamic_pointer_cast<LogicalNode>(expression) != nullptr) {
-				throw ExpressionProcessorException("Unsupported nested parentheses");
+				throw ExpressionProcessorException("Unsupported nested parentheses in expression.");
 			}
 		}
 		token = lex.readToken();
 		if (token != ")") {
-			throw ExpressionProcessorException("Unexpected token received: " + token);
+			throw ExpressionProcessorException("Unexpected token received: " + token + ".");
 		}
 		return make_shared<ParenthesesWrapper>(expression);
 	}
@@ -144,7 +144,7 @@ shared_ptr<ExpressionNode> Expression::parseTerminal(LexerInterface& lex, Accept
 		constants.insert(Converter::convertInteger(token));
 		return make_shared<ConstantNode>(token);
 	}
-	throw ExpressionProcessorException("Unknown token received: " + token);
+	throw ExpressionProcessorException("Unexpected token received: " + token + ".");
 }
 
 int Expression::getPrecedence(MathematicalOperator op) {
@@ -171,7 +171,7 @@ bool Expression::checkExpressionType(const shared_ptr<ExpressionNode>& expressio
 		case ExpressionType::Logical:
 			return dynamic_pointer_cast<LogicalNode>(expression) != nullptr || dynamic_pointer_cast<RelationalNode>(expression) != nullptr;
 		default:
-			throw ExpressionProcessorException("Unknown expression type received");
+			throw ExpressionProcessorException("Unknown expression type received.");
 	}
 }
 

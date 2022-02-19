@@ -1,6 +1,7 @@
 #include "PKB/SVRelationStore.h"
 
 #include <algorithm>
+#include <stdexcept>
 
 #include "PKB/Modifies.h"
 #include "PKB/Uses.h"
@@ -16,7 +17,7 @@ void SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRef variable) {
 	}
 
 	if (!T::validate(this, statement, variable)) {
-		throw "Relationship set error";
+		throw invalid_argument("Relationship set error.");
 	}
 
 	auto variable_iter = variable_key_map.find(variable);
@@ -45,7 +46,7 @@ void SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRefSet variables
 	}
 
 	if (!T::validate(this, statement, variables)) {
-		throw "Relationship set error";
+		throw invalid_argument("Relationship set error.");
 	}
 
 	auto statement_iter = statement_key_map.find(index);

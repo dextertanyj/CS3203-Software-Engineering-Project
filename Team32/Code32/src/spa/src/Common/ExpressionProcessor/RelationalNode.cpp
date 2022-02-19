@@ -7,7 +7,7 @@ using namespace std;
 Common::ExpressionProcessor::RelationalNode::RelationalNode(MathematicalOperator op, shared_ptr<AtomicNode> lhs, shared_ptr<AtomicNode> rhs)
 	: lhs(move(lhs)), rhs(move(rhs)) {
 	if (!OperatorAcceptor::acceptRelationalStrict(op)) {
-		throw ExpressionProcessorException("Expected relational operator");
+		throw ExpressionProcessorException("Expected relational operator.");
 	}
 	this->op = op;
 }

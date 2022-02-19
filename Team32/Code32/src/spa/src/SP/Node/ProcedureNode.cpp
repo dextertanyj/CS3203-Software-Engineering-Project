@@ -11,7 +11,7 @@ unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parseProcedure(Lexe
 	lex.nextIf("procedure");
 	ProcRef name = lex.readToken();
 	if (!Common::Validator::validateName(name)) {
-		throw SP::ParseException("Invalid procedure name");
+		throw SP::ParseException("Invalid procedure name.");
 	}
 	lex.nextIf("{");
 	StmtRef start = statement_count;
