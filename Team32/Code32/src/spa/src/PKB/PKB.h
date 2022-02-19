@@ -10,7 +10,7 @@
 #include "PKB/AssignStore.h"
 #include "PKB/ConstantStore.h"
 #include "PKB/FollowsRelation.h"
-#include "PKB/Modifies.h"
+#include "PKB/ModifiesRelation.h"
 #include "PKB/ParentRelation.h"
 #include "PKB/SVRelationStore.tpp"
 #include "PKB/StatementRelationStore.tpp"
@@ -86,7 +86,7 @@ private:
 	StatementStore statement_store;
 	StatementRelationStore<ParentRelation> parent_store;
 	StatementRelationStore<FollowsRelation> follows_store;
-	SVRelationStore<Uses> uses_store;
-	SVRelationStore<Modifies> modifies_store;
+	SVRelationStore<UsesRelation> uses_store;
+	SVRelationStore<ModifiesRelation> modifies_store;
 	AssignStore assign_store;
 };

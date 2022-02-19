@@ -1,11 +1,11 @@
-#include "PKB/Uses.h"
+#include "PKB/UsesRelation.h"
 
 #include "MockUtilities.h"
 #include "catch.hpp"
 #include "catch_tools.h"
 
-TEST_CASE("PKB::Uses") {
-    SVRelationStore<Uses> store = SVRelationStore<Uses>();
+TEST_CASE("PKB::UsesRelation") {
+    SVRelationStore<UsesRelation> store = SVRelationStore<UsesRelation>();
     shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(1, StmtType::WhileStmt);
     shared_ptr<StmtInfo> s2 = MockUtilities::createStmtInfo(2, StmtType::IfStmt);
     shared_ptr<StmtInfo> s3 = MockUtilities::createStmtInfo(3, StmtType::Assign);
@@ -13,37 +13,37 @@ TEST_CASE("PKB::Uses") {
     shared_ptr<StmtInfo> s5 = MockUtilities::createStmtInfo(5, StmtType::Print);
     shared_ptr<StmtInfo> s6 = MockUtilities::createStmtInfo(6, StmtType::Read);
 
-    SECTION("PKB::Uses::validate One Var Test") {
-        REQUIRE(Uses::validate(&store, s1, "x"));
-        REQUIRE(Uses::validate(&store, s2, "x"));
-        REQUIRE(Uses::validate(&store, s3, "x"));
-        REQUIRE(Uses::validate(&store, s4, "x"));
-        REQUIRE(Uses::validate(&store, s5, "x"));
-        REQUIRE_THROWS_AS(Uses::validate(&store, s6, "x"), invalid_argument);
+    SECTION("PKB::UsesRelation::validate One Var Test") {
+        REQUIRE(UsesRelation::validate(&store, s1, "x"));
+        REQUIRE(UsesRelation::validate(&store, s2, "x"));
+        REQUIRE(UsesRelation::validate(&store, s3, "x"));
+        REQUIRE(UsesRelation::validate(&store, s4, "x"));
+        REQUIRE(UsesRelation::validate(&store, s5, "x"));
+        REQUIRE_THROWS_AS(UsesRelation::validate(&store, s6, "x"), invalid_argument);
         store.set(s1, "x");
         store.set(s2, "x");
         store.set(s3, "x");
         store.set(s4, "x");
         store.set(s5, "x");
-        REQUIRE(Uses::validate(&store, s1, "x"));
-        REQUIRE(Uses::validate(&store, s1, "y"));
-        REQUIRE(Uses::validate(&store, s2, "y"));
-        REQUIRE(Uses::validate(&store, s3, "y"));
-        REQUIRE(Uses::validate(&store, s4, "y"));
-        REQUIRE_FALSE(Uses::validate(&store, s5, "y"));
+        REQUIRE(UsesRelation::validate(&store, s1, "x"));
+        REQUIRE(UsesRelation::validate(&store, s1, "y"));
+        REQUIRE(UsesRelation::validate(&store, s2, "y"));
+        REQUIRE(UsesRelation::validate(&store, s3, "y"));
+        REQUIRE(UsesRelation::validate(&store, s4, "y"));
+        REQUIRE_FALSE(UsesRelation::validate(&store, s5, "y"));
     }
 
-    SECTION("PKB::Uses::validate Multiple Var Test") {
+    SECTION("PKB::UsesRelation::validate Multiple Var Test") {
         unordered_set<VarRef> var_refs = unordered_set<VarRef>({"x", "y", "z"});
-        REQUIRE(Uses::validate(&store, s1, var_refs));
-        REQUIRE(Uses::validate(&store, s2, var_refs));
-        REQUIRE(Uses::validate(&store, s3, var_refs));
-        REQUIRE(Uses::validate(&store, s4, var_refs));
-        REQUIRE_FALSE(Uses::validate(&store, s5, var_refs));
-        REQUIRE_THROWS_AS(Uses::validate(&store, s6, var_refs), invalid_argument);
+        REQUIRE(UsesRelation::validate(&store, s1, var_refs));
+        REQUIRE(UsesRelation::validate(&store, s2, var_refs));
+        REQUIRE(UsesRelation::validate(&store, s3, var_refs));
+        REQUIRE(UsesRelation::validate(&store, s4, var_refs));
+        REQUIRE_FALSE(UsesRelation::validate(&store, s5, var_refs));
+        REQUIRE_THROWS_AS(UsesRelation::validate(&store, s6, var_refs), invalid_argument);
     }
 
-    SECTION("PKB::Uses::optimize Test") {
+    SECTION("PKB::UsesRelation::optimize Test") {
         StatementStore statement_store = MockUtilities::generateStatementStore();
         StatementRelationStore<ParentRelation> parent_store = StatementRelationStore<ParentRelation>();
         unordered_set<VarRef> var_refs = unordered_set<VarRef>({"e", "f", "g"});
@@ -64,7 +64,7 @@ TEST_CASE("PKB::Uses") {
         parent_store.set(p2, p5);
 
         ParentRelation::optimize(parent_store);
-        Uses::optimize(statement_store, parent_store, store);
+		UsesRelation::optimize(statement_store, parent_store, store);
         VarRefSet expected_set_1 = { "x", "e", "a", "f", "g" };
         VarRefSet expected_set_2 = { "y", "b" };
         unordered_set<shared_ptr<StmtInfo>> expected_set_3 = { p1, p4 };
@@ -77,7 +77,7 @@ TEST_CASE("PKB::Uses") {
     }
 
         // If statement (index 2) is nested within while statement (index 1)
-    SECTION("PKB::Uses::optimize Nested Test") {
+    SECTION("PKB::UsesRelation::optimize Nested Test") {
         StatementStore statement_store = MockUtilities::generateStatementStore();
         StatementRelationStore<ParentRelation> parent_store = StatementRelationStore<ParentRelation>();
         unordered_set<VarRef> var_refs = unordered_set<VarRef>({"e", "f", "g"});
@@ -99,7 +99,7 @@ TEST_CASE("PKB::Uses") {
         parent_store.set(p2, p3);
 
         ParentRelation::optimize(parent_store);
-        Uses::optimize(statement_store, parent_store, store);
+		UsesRelation::optimize(statement_store, parent_store, store);
 
         VarRefSet expected_set_1 = { "x", "e", "a", "y", "b", "f", "g" };
         VarRefSet expected_set_2 = { "y", "a", "e", "f", "g" };

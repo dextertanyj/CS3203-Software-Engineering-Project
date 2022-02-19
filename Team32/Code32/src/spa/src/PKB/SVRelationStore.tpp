@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "PKB/Modifies.h"
-#include "PKB/Uses.h"
+#include "PKB/ModifiesRelation.h"
+#include "PKB/UsesRelation.h"
 
 template <class T>
 SVRelationStore<T>::SVRelationStore() = default;

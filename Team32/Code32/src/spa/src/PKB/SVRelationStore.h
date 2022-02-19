@@ -29,8 +29,8 @@ private:
 	unordered_map<StmtRef, unordered_set<VarRef>> statement_key_map;
 	unordered_map<VarRef, unordered_set<shared_ptr<StmtInfo>>> variable_key_map;
 
-	friend class Uses;
-	friend class Modifies;
+	friend class UsesRelation;
+	friend class ModifiesRelation;
 };
 
 #endif  // INC_21S2_CP_SPA_TEAM_32_MODIFYSTORE_H

@@ -6,7 +6,7 @@
 #include "catch_tools.h"
 
 TEST_CASE("PKB::SVRelationStore") {
-    SVRelationStore uses_store = SVRelationStore<Uses>();
+    SVRelationStore uses_store = SVRelationStore<UsesRelation>();
     shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(5, StmtType::Print);
     shared_ptr<StmtInfo> s2 = MockUtilities::createStmtInfo(6, StmtType::Assign);
     shared_ptr<StmtInfo> s3 = MockUtilities::createStmtInfo(7, StmtType::IfStmt);
