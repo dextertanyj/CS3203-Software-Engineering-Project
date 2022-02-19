@@ -12,7 +12,9 @@ void AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, VarRef variab
 	if (statement->type != StmtType::Assign) {
 		throw invalid_argument("Statement type cannot be bound to expression.");
 	}
-
+	if (variable.empty()) {
+		throw invalid_argument("Variable cannot be an empty string.");
+	}
 	auto iter = store.find(idx);
 	if (iter != store.end()) {
 		throw invalid_argument("Statement already bound to existing expression");
@@ -54,10 +56,10 @@ StmtInfoPtrSet AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) {
 vector<pair<shared_ptr<StmtInfo>, VarRef>> AssignStore::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
                                                                                bool is_exact_match) {
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> result;
-	for (auto& itr : store) {
-		AssignRelation assign_relation = itr.second;
+	for (auto& assignment : store) {
+		AssignRelation assign_relation = assignment.second;
 		if (compareExpressions(assign_relation, "", expression, is_exact_match)) {
-			pair<shared_ptr<StmtInfo>, VarRef> pair = make_pair(itr.second.node, itr.second.variable);
+			pair<shared_ptr<StmtInfo>, VarRef> pair = make_pair(assignment.second.node, assignment.second.variable);
 			result.push_back(pair);
 		}
 	}
