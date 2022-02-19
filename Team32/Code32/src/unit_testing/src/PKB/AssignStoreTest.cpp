@@ -127,7 +127,7 @@ TEST_CASE("PKB::AssignStore::getStmtsWithPattern Variable LHS Test") {
 	StmtInfoPtrSet lst_2 = store.getStmtsWithPattern("x", getPartialOpTree(), false);
 	REQUIRE_EQUALS(lst_2.size(), 2);
 	REQUIRE(find(lst_2.begin(), lst_2.end(), s_1) != lst_2.end());
-	REQUIRE_FALSE(find(lst.begin(), lst.end(), s_4) != lst_2.end());
+	REQUIRE_FALSE(find(lst_2.begin(), lst_2.end(), s_4) != lst_2.end());
 	REQUIRE(find(lst_2.begin(), lst_2.end(), s_3) != lst_2.end());
 }
 
