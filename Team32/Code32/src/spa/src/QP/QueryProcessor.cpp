@@ -1,7 +1,6 @@
 #include "QP/QueryProcessor.h"
 
 #include <exception>
-#include <iostream>
 #include <utility>
 
 #include "QP/QueryPreprocessor.h"
@@ -15,7 +14,6 @@ vector<string> QueryProcessor::processQuery(string query) {
 		QueryResult result = evaluator.executeQuery(query_properties);
 		return QueryFormatter::formatResult(query_properties, result);
 	} catch (const exception& e) {
-		cout << e.what() << endl;
 		return {};
 	}
 }
