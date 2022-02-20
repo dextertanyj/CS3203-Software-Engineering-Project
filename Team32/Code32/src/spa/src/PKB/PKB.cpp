@@ -133,8 +133,7 @@ bool PKB::patternExists(const VarRef& variable, const Common::ExpressionProcesso
 	return assign_store.patternExists(variable, exp, is_exact_match);
 }
 
-StmtInfoPtrSet PKB::getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& exp,
-                                        bool is_exact_match) {
+StmtInfoPtrSet PKB::getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& exp, bool is_exact_match) {
 	return assign_store.getStmtsWithPattern(variable, exp, is_exact_match);
 }
 
