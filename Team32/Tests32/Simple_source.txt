@@ -1,0 +1,3 @@
+procedure none {
+    read VAR;
+}
