@@ -69,9 +69,9 @@ TEST_CASE("PKB::StatementRelationStore::getForward Test") {
 		CHECK(follows_store.getForward(4) == unordered_set<shared_ptr<StmtInfo>>{s_3});
 
 		// Check negative cases.
-		CHECK_FALSE(follows_store.getForward(5).empty());
+		CHECK(follows_store.getForward(5).empty());
 		// Check transitive relation was not created.
-		CHECK_FALSE(follows_store.getForward(4).size() == 1);
+		CHECK_FALSE(follows_store.getForward(4).size() > 1);
 		follows_store.clear();
 	}
 
@@ -90,9 +90,9 @@ TEST_CASE("PKB::StatementRelationStore::getForward Test") {
 		CHECK(parents_store.getForward(4) == unordered_set<shared_ptr<StmtInfo>>{s_3});
 
 		// Check negative cases.
-		CHECK_FALSE(parents_store.getForward(5).empty());
+		CHECK(parents_store.getForward(5).empty());
 		// Check transitive relation was not created.
-		CHECK_FALSE(parents_store.getForward(4).size() == 1);
+		CHECK_FALSE(parents_store.getForward(4).size() > 1);
 	}
 }
 
@@ -117,9 +117,9 @@ TEST_CASE("PKB::StatementRelationStore::getReverse Test") {
 		CHECK(follows_store.getReverse(1) == unordered_set<shared_ptr<StmtInfo>>{s_2});
 
 		// Check negative cases.
-		CHECK_FALSE(follows_store.getReverse(5).empty());
+		CHECK(follows_store.getReverse(5).empty());
 		// Check transitive relation was not created.
-		CHECK_FALSE(follows_store.getReverse(1).size() == 1);
+		CHECK_FALSE(follows_store.getReverse(1).size() > 1);
 		follows_store.clear();
 	}
 
@@ -138,9 +138,9 @@ TEST_CASE("PKB::StatementRelationStore::getReverse Test") {
 		CHECK(parents_store.getReverse(4).empty());
 
 		// Check negative cases.
-		CHECK_FALSE(parents_store.getReverse(5).empty());
+		CHECK(parents_store.getReverse(5).empty());
 		// Check transitive relation was not created.
-		CHECK_FALSE(parents_store.getReverse(1).size() == 2);
+		CHECK_FALSE(parents_store.getReverse(1).size() == 3);
 	}
 }
 TEST_CASE("PKB::StatementRelationStore::getForwardTransitive Test") {
@@ -241,15 +241,17 @@ TEST_CASE("PKB::StatementRelationStore::isRelated Test") {
 
 		// StmtRef index must be less than or equal to 0. Front statement number must be < back statement number.
 		REQUIRE_THROWS_AS(follows_store.isRelated(1, 0), invalid_argument);
-		REQUIRE_THROWS_AS(follows_store.isRelated(3, 2), invalid_argument);
 
 		CHECK(follows_store.isRelated(1, 2));
 		CHECK(follows_store.isRelated(2, 3));
 		CHECK(follows_store.isRelated(3, 4));
+
 		// Transitive relations should not be captured by isRelated. Only direct relations.
 		CHECK_FALSE(follows_store.isRelated(1, 3));
 		CHECK_FALSE(follows_store.isRelated(1, 4));
 		CHECK_FALSE(follows_store.isRelated(2, 4));
+
+		CHECK_FALSE(follows_store.isRelated(3, 2));
 	}
 
 	SECTION("PKB::StatementRelationStore::isRelated Parents Test") {
@@ -262,13 +264,13 @@ TEST_CASE("PKB::StatementRelationStore::isRelated Test") {
 
 		// StmtRef index must be less than or equal to 0. Front statement number must be < back statement number.
 		REQUIRE_THROWS_AS(parents_store.isRelated(1, 0), invalid_argument);
-		REQUIRE_THROWS_AS(parents_store.isRelated(3, 2), invalid_argument);
 
 		CHECK(parents_store.isRelated(1, 2));
 		CHECK(parents_store.isRelated(1, 3));
 		CHECK(parents_store.isRelated(3, 4));
 
 		// Negative case.
+		CHECK_FALSE(parents_store.isRelated(3, 2));
 		CHECK_FALSE(parents_store.isRelated(2, 4));
 
 		// Transitive relations should not be captured by isRelated. Only direct relations.
