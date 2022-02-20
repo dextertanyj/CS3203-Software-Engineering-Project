@@ -61,7 +61,6 @@ TEST_CASE("PKB::StatementRelationStore::getForward Test") {
 		follows_store.set(s_3, s_4);
 
 		// StmtRef index less than or equal to 0 throws an error
-		REQUIRE_THROWS_AS(follows_store.getForward(-1), invalid_argument);
 		REQUIRE_THROWS_AS(follows_store.getForward(0), invalid_argument);
 
 		CHECK(follows_store.getForward(1).empty());
@@ -83,7 +82,6 @@ TEST_CASE("PKB::StatementRelationStore::getForward Test") {
 		parents_store.set(s_3, s_4);
 
 		// StmtRef index less than or equal to 0 throws an error
-		REQUIRE_THROWS_AS(parents_store.getForward(-1), invalid_argument);
 		REQUIRE_THROWS_AS(parents_store.getForward(0), invalid_argument);
 
 		CHECK(parents_store.getForward(1).empty());
@@ -111,7 +109,6 @@ TEST_CASE("PKB::StatementRelationStore::getReverse Test") {
 		follows_store.set(s_3, s_4);
 
 		// StmtRef index less than or equal to 0 throws an error
-		REQUIRE_THROWS_AS(follows_store.getReverse(-1), invalid_argument);
 		REQUIRE_THROWS_AS(follows_store.getReverse(0), invalid_argument);
 
 		CHECK(follows_store.getReverse(4).empty());
@@ -133,7 +130,6 @@ TEST_CASE("PKB::StatementRelationStore::getReverse Test") {
 		parents_store.set(s_3, s_4);
 
 		// StmtRef index less than or equal to 0 throws an error
-		REQUIRE_THROWS_AS(parents_store.getReverse(-1), invalid_argument);
 		REQUIRE_THROWS_AS(parents_store.getReverse(0), invalid_argument);
 
 		CHECK(parents_store.getReverse(1) == unordered_set<shared_ptr<StmtInfo>>{s_2, s_3});
@@ -163,7 +159,6 @@ TEST_CASE("PKB::StatementRelationStore::getForwardTransitive Test") {
 
 		// StmtRef index less than or equal to 0
 		REQUIRE_THROWS_AS(follows_store.getForwardTransitive(0), invalid_argument);
-		REQUIRE_THROWS_AS(follows_store.getForwardTransitive(-1), invalid_argument);
 
 		CHECK(follows_store.getForwardTransitive(4) == unordered_set<shared_ptr<StmtInfo>>{s_1, s_2, s_3});
 		CHECK(follows_store.getForwardTransitive(3) == unordered_set<shared_ptr<StmtInfo>>{s_1, s_2});
@@ -181,7 +176,6 @@ TEST_CASE("PKB::StatementRelationStore::getForwardTransitive Test") {
 
 		// StmtRef index less than or equal to 0
 		REQUIRE_THROWS_AS(parents_store.getForwardTransitive(0), invalid_argument);
-		REQUIRE_THROWS_AS(parents_store.getForwardTransitive(-1), invalid_argument);
 
 		CHECK(parents_store.getForwardTransitive(4) == unordered_set<shared_ptr<StmtInfo>>{s_1, s_3});
 		CHECK(parents_store.getForwardTransitive(3) == unordered_set<shared_ptr<StmtInfo>>{s_1});
@@ -206,7 +200,6 @@ TEST_CASE("PKB::StatementRelationStore::getReverseTransitive Test") {
 
 		// StmtRef index less than or equal to 0
 		REQUIRE_THROWS_AS(follows_store.getReverseTransitive(0), invalid_argument);
-		REQUIRE_THROWS_AS(follows_store.getReverseTransitive(-1), invalid_argument);
 
 		CHECK(follows_store.getReverseTransitive(1) == unordered_set<shared_ptr<StmtInfo>>{s_2, s_3, s_4});
 		CHECK(follows_store.getReverseTransitive(2) == unordered_set<shared_ptr<StmtInfo>>{s_3, s_4});
@@ -224,7 +217,6 @@ TEST_CASE("PKB::StatementRelationStore::getReverseTransitive Test") {
 
 		// StmtRef index less than or equal to 0
 		REQUIRE_THROWS_AS(parents_store.getReverseTransitive(0), invalid_argument);
-		REQUIRE_THROWS_AS(parents_store.getReverseTransitive(-1), invalid_argument);
 
 		CHECK(parents_store.getReverseTransitive(1) == unordered_set<shared_ptr<StmtInfo>>{s_2, s_3, s_4});
 		CHECK(parents_store.getReverseTransitive(2).empty());
@@ -249,7 +241,6 @@ TEST_CASE("PKB::StatementRelationStore::isRelated Test") {
 
 		// StmtRef index must be less than or equal to 0. Front statement number must be < back statement number.
 		REQUIRE_THROWS_AS(follows_store.isRelated(1, 0), invalid_argument);
-		REQUIRE_THROWS_AS(follows_store.isRelated(-1, 1), invalid_argument);
 		REQUIRE_THROWS_AS(follows_store.isRelated(3, 2), invalid_argument);
 
 		CHECK(follows_store.isRelated(1, 2));
@@ -271,7 +262,6 @@ TEST_CASE("PKB::StatementRelationStore::isRelated Test") {
 
 		// StmtRef index must be less than or equal to 0. Front statement number must be < back statement number.
 		REQUIRE_THROWS_AS(parents_store.isRelated(1, 0), invalid_argument);
-		REQUIRE_THROWS_AS(parents_store.isRelated(-1, 1), invalid_argument);
 		REQUIRE_THROWS_AS(parents_store.isRelated(3, 2), invalid_argument);
 
 		CHECK(parents_store.isRelated(1, 2));
