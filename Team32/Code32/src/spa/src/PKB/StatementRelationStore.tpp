@@ -22,7 +22,7 @@ void StatementRelationStore<T>::set(shared_ptr<StmtInfo> front, shared_ptr<StmtI
 	auto front_iter = map.find(front_idx);
 	auto back_iter = map.find(back_idx);
 
-	if (back_iter != map.end() && !getForward(back_iter->second).empty()) {
+	if (back_iter != map.end() && !(back_iter->second).getForward().empty()) {
 		throw invalid_argument("Back statement already has a forward statement");
 	}
 
