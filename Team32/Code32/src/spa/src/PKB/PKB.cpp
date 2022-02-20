@@ -148,8 +148,8 @@ vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getStmtsWithPatternRHS(const Com
 void PKB::populateComplexRelations() {
 	ParentRelation::optimize(parent_store);
 	FollowsRelation::optimize(follows_store);
-	Modifies::optimize(statement_store, parent_store, modifies_store);
-	Uses::optimize(statement_store, parent_store, uses_store);
+	ModifiesRelation::optimize(statement_store, parent_store, modifies_store);
+	UsesRelation::optimize(statement_store, parent_store, uses_store);
 }
 
 void PKB::clear() {

@@ -1,31 +1,32 @@
-#include "PKB/Modifies.h"
+#include "PKB/UsesRelation.h"
 
 #include <algorithm>
 
 #include "PKB/SVRelationStore.tpp"
 
-bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
+bool UsesRelation::validate(SVRelationStore<UsesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
 	StmtRef idx = statement->reference;
-	if (statement->type == StmtType::Print) {
-		throw invalid_argument("Print statements cannot modify a variable");
+	if (statement->type == StmtType::Read) {
+		throw invalid_argument("Read statements cannot use a variable");
 	}
-	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt || statement->type == StmtType::Call) {
+	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt || statement->type == StmtType::Call ||
+	    statement->type == StmtType::Assign) {
 		return true;
 	}
 	auto statement_iter = store->statement_key_map.find(idx);
-	// If the statement reference is not found in the SVRelationStore, then setModifies is valid.
 	if (statement_iter == store->statement_key_map.end()) {
 		return true;
 	}
 	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& existing_var) { return existing_var != variable; }));
 }
 
-bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
+bool UsesRelation::validate(SVRelationStore<UsesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
 	StmtRef idx = statement->reference;
-	if (statement->type == StmtType::Print) {
-		throw invalid_argument("Print statements cannot modify a variable");
+	if (statement->type == StmtType::Read) {
+		throw invalid_argument("Read statements cannot use a variable");
 	}
-	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt || statement->type == StmtType::Call) {
+	if (statement->type == StmtType::WhileStmt || statement->type == StmtType::IfStmt || statement->type == StmtType::Call ||
+	    statement->type == StmtType::Assign || variables.empty()) {
 		return true;
 	}
 	if (variables.size() > 1) {
@@ -39,8 +40,8 @@ bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtI
 	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& existing_var) { return existing_var == variable; }));
 }
 
-void Modifies::optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
-                        SVRelationStore<Modifies>& store) {
+void UsesRelation::optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
+                            SVRelationStore<UsesRelation>& store) {
 	for (const auto& statement : statement_store.getAll()) {
 		if (statement->type == StmtType::IfStmt || statement->type == StmtType::WhileStmt) {
 			auto children = parent_store.getReverseTransitive(statement->reference);
