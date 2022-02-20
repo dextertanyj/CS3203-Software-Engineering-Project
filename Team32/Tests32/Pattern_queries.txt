@@ -216,7 +216,7 @@ Select a pattern a(v, _"(x+1)-(x-1)*x"_) such that Modifies(a, v)
 44 - Pattern positive such that trivial
 assign a; variable v; if 1;
 Select a pattern a(v, _"(x+1)-(x-1)*x"_) such that Parent*(i, i)
-11
+
 5000
 45 - Pattern trivial such that positive
 assign a; variable v		;
