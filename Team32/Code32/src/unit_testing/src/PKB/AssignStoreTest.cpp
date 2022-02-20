@@ -90,7 +90,7 @@ TEST_CASE("PKB::AssignStore::getStmtsWithPattern Test") {
     unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
     REQUIRE_EQUALS(map.size(), 3);
 
-	// Requesting exact match should return only 1 result.
+	// Requesting exact match should return 2 results.
 	StmtInfoPtrSet lst = store.getStmtsWithPattern("x", getPartialOpTree(), true);
     REQUIRE_EQUALS(lst.size(), 2);
     REQUIRE(find(lst.begin(), lst.end(), s_1) != lst.end());
