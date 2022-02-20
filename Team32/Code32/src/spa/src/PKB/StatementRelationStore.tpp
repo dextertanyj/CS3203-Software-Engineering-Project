@@ -2,9 +2,6 @@
 
 #include "PKB/StatementRelationStore.h"
 
-#include "PKB/FollowsRelation.h"
-#include "PKB/ParentRelation.h"
-
 using namespace std;
 
 template <class T>
