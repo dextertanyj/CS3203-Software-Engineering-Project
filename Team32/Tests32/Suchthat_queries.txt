@@ -608,3 +608,43 @@ stmt s;
 Select s such that Uses(s, "0")
 
 5000
+1 - Special case: Parent(s, s) trivial
+stmt s;
+Select s such that Parent(s, s)
+
+5000
+1 - Special case: ParentT(s, s) trivial
+stmt s;
+Select s such that Parent*(s, s)
+
+5000
+1 - Special case: Follows(s, s) trivial
+stmt s;
+Select s such that Follows(s, s)
+
+5000
+1 - Special case: FollowsT(s, s) trivial
+stmt s;
+Select s such that Follows*(s, s)
+
+5000
+2 - Special case: Parent(stmtNo, stmtNo) trivial
+stmt s;
+Select s such that Parent(1, 1)
+
+5000
+3 - Special case: OOB stmtNo 1
+variable v;
+Select v such that Uses(0, v)
+
+5000
+4 - Special case: OOB stmtNo 2
+stmt s;
+Select s such that Follows(s, -1)
+
+5000
+5 - Special case: OOB stmtNo 3
+stmt s;
+Select s such that Parent*(s, 2147483649)
+
+5000

@@ -1,7 +1,7 @@
 1 - Statement count
 stmt s;
 Select s
-1, 2, 3, 4, 5, 6, 7, 8
+1, 2, 3, 4, 5, 6, 7, 8, 9
 5000
 2 - read count
 read r, s;
@@ -26,17 +26,17 @@ Select ifs
 6 - assign count
 assign a, a1;
 Select a1
-6
+6, 9
 5000
 7 - variable list
 variable v;
 Select v
-x, y
+x, y, z
 5000
 8 - constant list
 constant c;
 Select c
-0, 1
+0, 1, 5, 3000000000
 5000
 10 - invalid synonym
 stmt 1;
