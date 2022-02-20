@@ -96,6 +96,6 @@ unordered_set<ProcRef> ProcedureStore::getProcListByStmtList(const unordered_set
 		}
 	}
 	return proc_set;
-};
+}
 
 void ProcedureStore::clear() { proc_map.clear(); }

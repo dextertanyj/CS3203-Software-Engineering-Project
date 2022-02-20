@@ -129,20 +129,20 @@ void PKB::setAssign(StmtRef idx, VarRef variable, Common::ExpressionProcessor::E
 	return assign_store.setAssign(statement, move(variable), move(expression));
 }
 
-bool PKB::patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) {
-	return assign_store.patternExists(variable, expression, is_exact_match);
+bool PKB::patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& exp, bool is_exact_match) {
+	return assign_store.patternExists(variable, exp, is_exact_match);
 }
 
-StmtInfoPtrSet PKB::getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
+StmtInfoPtrSet PKB::getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& exp,
                                         bool is_exact_match) {
-	return assign_store.getStmtsWithPattern(variable, expression, is_exact_match);
+	return assign_store.getStmtsWithPattern(variable, exp, is_exact_match);
 }
 
 StmtInfoPtrSet PKB::getStmtsWithPatternLHS(const VarRef& variable) { return assign_store.getStmtsWithPatternLHS(variable); }
 
-vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
+vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& exp,
                                                                        bool is_exact_match) {
-	return assign_store.getStmtsWithPatternRHS(expression, is_exact_match);
+	return assign_store.getStmtsWithPatternRHS(exp, is_exact_match);
 }
 
 void PKB::populateComplexRelations() {

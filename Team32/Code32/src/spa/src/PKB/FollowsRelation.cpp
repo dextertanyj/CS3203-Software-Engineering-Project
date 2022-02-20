@@ -7,29 +7,29 @@ using namespace std;
 
 FollowsRelation::FollowsRelation(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
 
-void FollowsRelation::insertForward(shared_ptr<StmtInfo> following) {
-	if (self->reference <= following->reference) {
+void FollowsRelation::insertForward(shared_ptr<StmtInfo> following_to_insert) {
+	if (self->reference <= following_to_insert->reference) {
 		throw invalid_argument("Statement out of order");
 	}
 	if (this->following != nullptr) {
-		throw invalid_argument("This statement is already following a statement");
+		throw invalid_argument("This statement is already following_to_insert a statement");
 	}
-	this->following = move(following);
+	this->following = move(following_to_insert);
 }
 
-void FollowsRelation::insertReverse(shared_ptr<StmtInfo> follower) {
-	if (self->reference >= follower->reference) {
+void FollowsRelation::insertReverse(shared_ptr<StmtInfo> follower_to_insert) {
+	if (self->reference >= follower_to_insert->reference) {
 		throw invalid_argument("Statement out of order");
 	}
 	if (this->follower != nullptr) {
 		throw invalid_argument("This statement is already following a statement");
 	}
-	this->follower = move(follower);
+	this->follower = move(follower_to_insert);
 }
 
 void FollowsRelation::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> followings) {
-	for (const auto& following : followings) {
-		if (self->reference <= following->reference) {
+	for (const auto& following_to_insert : followings) {
+		if (self->reference <= following_to_insert->reference) {
 			throw invalid_argument("Statement out of order");
 		}
 	}
@@ -37,8 +37,8 @@ void FollowsRelation::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>
 }
 
 void FollowsRelation::appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> followers) {
-	for (const auto& follower : followers) {
-		if (self->reference >= follower->reference) {
+	for (const auto& follower_to_insert : followers) {
+		if (self->reference >= follower_to_insert->reference) {
 			throw invalid_argument("Statement out of order");
 		}
 	}

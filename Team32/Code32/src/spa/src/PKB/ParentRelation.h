@@ -9,10 +9,10 @@
 class ParentRelation {
 public:
 	explicit ParentRelation(shared_ptr<StmtInfo> self);
-	void insertForward(const shared_ptr<StmtInfo>& parent);
-	void insertReverse(const shared_ptr<StmtInfo>& child);
-	void appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> parents);
-	void appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> children);
+	void insertForward(const shared_ptr<StmtInfo>& parent_to_insert);
+	void insertReverse(const shared_ptr<StmtInfo>& child_to_insert);
+	void appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> parents_to_insert);
+	void appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> children_to_insert);
 
 	unordered_set<shared_ptr<StmtInfo>> getForward();
 	unordered_set<shared_ptr<StmtInfo>> getReverse();
