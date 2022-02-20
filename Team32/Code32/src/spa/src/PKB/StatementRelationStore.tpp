@@ -12,7 +12,7 @@ StatementRelationStore<T>::StatementRelationStore() = default;
 
 template <class T>
 void StatementRelationStore<T>::set(shared_ptr<StmtInfo> front,
-                                    shared_ptr<StmtInfo> back) { // NOLINT(bugprone-easily-swappable-parameters)
+                                    shared_ptr<StmtInfo> back) {  // NOLINT(bugprone-easily-swappable-parameters)
 	StmtRef front_idx = front->reference;
 	StmtRef back_idx = back->reference;
 
