@@ -1,10 +1,10 @@
-#include "PKB/Modifies.h"
+#include "PKB/ModifiesRelation.h"
 
 #include <algorithm>
 
 #include "PKB/SVRelationStore.tpp"
 
-bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
+bool ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
 	StmtRef idx = statement->reference;
 	if (statement->type == StmtType::Print) {
 		throw invalid_argument("Print statements cannot modify a variable");
@@ -19,7 +19,8 @@ bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtI
 	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& x) { return x != variable; }));
 }
 
-bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
+bool ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement,
+                                const VarRefSet& variables) {
 	StmtRef idx = statement->reference;
 	if (statement->type == StmtType::Print) {
 		throw invalid_argument("Print statements cannot modify a variable");
@@ -38,8 +39,8 @@ bool Modifies::validate(SVRelationStore<Modifies>* store, const shared_ptr<StmtI
 	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& x) { return x == variable; }));
 }
 
-void Modifies::optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
-                        SVRelationStore<Modifies>& store) {
+void ModifiesRelation::optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
+                                SVRelationStore<ModifiesRelation>& store) {
 	for (const auto& statement : statement_store.getAll()) {
 		if (statement->type == StmtType::IfStmt || statement->type == StmtType::WhileStmt) {
 			auto children = parent_store.getReverseTransitive(statement->reference);

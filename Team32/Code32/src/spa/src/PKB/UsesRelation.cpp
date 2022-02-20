@@ -1,10 +1,10 @@
-#include "PKB/Uses.h"
+#include "PKB/UsesRelation.h"
 
 #include <algorithm>
 
 #include "PKB/SVRelationStore.tpp"
 
-bool Uses::validate(SVRelationStore<Uses>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
+bool UsesRelation::validate(SVRelationStore<UsesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
 	StmtRef idx = statement->reference;
 	if (statement->type == StmtType::Read) {
 		throw invalid_argument("Read statements cannot use a variable");
@@ -20,7 +20,7 @@ bool Uses::validate(SVRelationStore<Uses>* store, const shared_ptr<StmtInfo>& st
 	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& x) { return x != variable; }));
 }
 
-bool Uses::validate(SVRelationStore<Uses>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
+bool UsesRelation::validate(SVRelationStore<UsesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
 	StmtRef idx = statement->reference;
 	if (statement->type == StmtType::Read) {
 		throw invalid_argument("Read statements cannot use a variable");
@@ -40,7 +40,8 @@ bool Uses::validate(SVRelationStore<Uses>* store, const shared_ptr<StmtInfo>& st
 	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& x) { return x == variable; }));
 }
 
-void Uses::optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store, SVRelationStore<Uses>& store) {
+void UsesRelation::optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
+                            SVRelationStore<UsesRelation>& store) {
 	for (const auto& statement : statement_store.getAll()) {
 		if (statement->type == StmtType::IfStmt || statement->type == StmtType::WhileStmt) {
 			auto children = parent_store.getReverseTransitive(statement->reference);
