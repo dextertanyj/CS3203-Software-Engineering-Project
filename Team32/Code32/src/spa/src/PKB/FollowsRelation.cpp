@@ -22,7 +22,7 @@ void FollowsRelation::insertReverse(shared_ptr<StmtInfo> follower_to_insert) {
 		throw invalid_argument("Statement out of order");
 	}
 	if (this->follower != nullptr) {
-		throw invalid_argument("This statement is already following a statement");
+		throw invalid_argument("This statement already has a follower statement");
 	}
 	this->follower = move(follower_to_insert);
 }

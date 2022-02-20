@@ -17,7 +17,8 @@ bool ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const 
 	if (statement_iter == store->statement_key_map.end()) {
 		return true;
 	}
-	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& existing_var) { return existing_var != variable; }));
+	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(),
+	                [variable](const VarRef& existing_var) { return existing_var != variable; }));
 }
 
 bool ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement,
@@ -37,7 +38,8 @@ bool ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const 
 	if (statement_iter == store->statement_key_map.end()) {
 		return true;
 	}
-	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(), [variable](const VarRef& existing_var) { return existing_var == variable; }));
+	return !(any_of(statement_iter->second.begin(), statement_iter->second.end(),
+	                [variable](const VarRef& existing_var) { return existing_var == variable; }));
 }
 
 void ModifiesRelation::optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,

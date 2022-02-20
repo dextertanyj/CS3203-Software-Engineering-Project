@@ -11,7 +11,8 @@ template <class T>
 StatementRelationStore<T>::StatementRelationStore() = default;
 
 template <class T>
-void StatementRelationStore<T>::set(shared_ptr<StmtInfo> front, shared_ptr<StmtInfo> back) {  // NOLINT(bugprone-easily-swappable-parameters)
+void StatementRelationStore<T>::set(shared_ptr<StmtInfo> front,
+                                    shared_ptr<StmtInfo> back) {  // NOLINT(bugprone-easily-swappable-parameters)
 	StmtRef front_idx = front->reference;
 	StmtRef back_idx = back->reference;
 
@@ -20,6 +21,12 @@ void StatementRelationStore<T>::set(shared_ptr<StmtInfo> front, shared_ptr<StmtI
 	}
 
 	auto front_iter = map.find(front_idx);
+	auto back_iter = map.find(back_idx);
+
+	if (back_iter != map.end() && !(back_iter->second).getForward().empty()) {
+		throw invalid_argument("Back statement already has a forward statement");
+	}
+
 	if (front_iter == map.end()) {
 		T relation = T(front);
 		relation.insertReverse(back);
@@ -28,7 +35,6 @@ void StatementRelationStore<T>::set(shared_ptr<StmtInfo> front, shared_ptr<StmtI
 		front_iter->second.insertReverse(back);
 	}
 
-	auto back_iter = map.find(back_idx);
 	if (back_iter == map.end()) {
 		T relation = T(back);
 		relation.insertForward(front);
