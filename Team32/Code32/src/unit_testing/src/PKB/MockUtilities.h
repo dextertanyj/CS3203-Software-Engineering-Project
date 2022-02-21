@@ -2,15 +2,15 @@
 #define SPA_MOCKUTILITIES_H
 
 #include "Common/TypeDefs.h"
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
 
 class MockUtilities {
 public:
     static shared_ptr<StmtInfo> createStmtInfo(StmtRef stmtNo, StmtType type);
-	static PKB generateFollowsTestPKB();
-	static PKB generateParentTestPKB();
-    static PKB generateUsesTestPKB();
-    static PKB generateModifyTestPKB();
+	static Storage generateFollowsTestPKB();
+	static Storage generateParentTestPKB();
+    static Storage generateUsesTestPKB();
+    static Storage generateModifyTestPKB();
     static StatementStore generateStatementStore();
 };
 

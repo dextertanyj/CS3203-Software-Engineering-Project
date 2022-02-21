@@ -38,7 +38,7 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 		{"a", "v", "i"},
 	};
 
-	PKB pkb = PKB();
+	Storage pkb = Storage();
 	vector<pair<SuchThatClauseList, PatternClauseList>> clausesInGroup =
 		QueryEvaluator(pkb).splitClauses(properties, synonymsInGroup);
 
@@ -49,7 +49,7 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 };
 
 TEST_CASE("QP::QueryEvaluator::execute") {
-	PKB pkb = PKB();
+	Storage pkb = Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::Assign);

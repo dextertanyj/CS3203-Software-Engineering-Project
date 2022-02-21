@@ -16,7 +16,7 @@ unique_ptr<SP::Node::WhileNode> SP::Node::WhileNode::parseWhileStatement(Lexer& 
 	return make_unique<WhileNode>(statement_index, move(condition), move(statements));
 }
 
-StmtRef SP::Node::WhileNode::extract(PKB& pkb) {
+StmtRef SP::Node::WhileNode::extract(PKB::Storage& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::WhileStmt);
 	Common::ExpressionProcessor::Expression expression = cond_expr->extract();

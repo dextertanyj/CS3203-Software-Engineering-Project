@@ -5,12 +5,12 @@
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "QP/QueryExpressionLexer.h"
 #include "QP/QueryProcessor.h"
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
 
 #include "catch.hpp"
 
 TEST_CASE("Basic select") {
-	PKB pkb = PKB();
+	Storage pkb = Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::WhileStmt);
@@ -60,7 +60,7 @@ TEST_CASE("Basic select") {
 };
 
 TEST_CASE("One such that clause") {
-	PKB pkb = PKB();
+	Storage pkb = Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::WhileStmt);
 	pkb.setStmtType(3, StmtType::Read);
@@ -110,7 +110,7 @@ TEST_CASE("One such that clause") {
 };
 
 TEST_CASE("One pattern clause") {
-	PKB pkb = PKB();
+	Storage pkb = Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Assign);
 	pkb.setStmtType(3, StmtType::Assign);
@@ -170,7 +170,7 @@ TEST_CASE("One pattern clause") {
 };
 
 TEST_CASE("One such that and one pattern") {
-	PKB pkb = PKB();
+	Storage pkb = Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::WhileStmt);
 	pkb.setStmtType(3, StmtType::Read);

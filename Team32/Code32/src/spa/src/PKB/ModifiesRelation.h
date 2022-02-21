@@ -4,8 +4,9 @@
 #include "PKB/SVRelationStore.h"
 #include "PKB/StatementRelationStore.tpp"
 #include "PKB/StatementStore.h"
+#include "PKB/PKB.h"
 
-class ModifiesRelation {
+class PKB::ModifiesRelation {
 public:
 	static bool validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable);
 	static bool validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables);

@@ -24,7 +24,7 @@ unique_ptr<SP::Node::IfNode> SP::Node::IfNode::parseIfStatement(Lexer& lex, Stmt
 	return make_unique<IfNode>(statement_index, move(condition), move(then_statements), move(else_statements));
 }
 
-StmtRef SP::Node::IfNode::extract(PKB& pkb) {
+StmtRef SP::Node::IfNode::extract(PKB::Storage& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::IfStmt);
 	Common::ExpressionProcessor::Expression expression = cond_expr->extract();

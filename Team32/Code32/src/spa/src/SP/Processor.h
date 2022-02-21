@@ -3,14 +3,14 @@
 
 #include <string>
 
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
 #include "SP/DesignExtractor.h"
 #include "SP/Parser.h"
 #include "SP/SP.h"
 
 class SP::Processor {
 public:
-	explicit Processor(PKB& pkb);
+	explicit Processor(PKB::Storage& pkb);
 	void process(string source);
 
 private:

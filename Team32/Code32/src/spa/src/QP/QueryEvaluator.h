@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
 #include "QP/QueryGraph.h"
 #include "QP/QueryProperties.h"
 #include "QP/QueryResult.h"
@@ -16,13 +16,13 @@ using namespace std;
 
 class QueryEvaluator {
 public:
-	explicit QueryEvaluator(PKB& pkb);
+	explicit QueryEvaluator(PKB::Storage& pkb);
 	QueryResult executeQuery(QueryProperties& query_properties);
 	static vector<pair<SuchThatClauseList, PatternClauseList>> splitClauses(QueryProperties& query_properties,
 	                                                                        vector<unordered_set<string>>& synonyms_in_group);
 
 private:
-	PKB& pkb;
+	PKB::Storage& pkb;
 	unordered_map<string, DesignEntity> symbol_to_type_map;
 	QueryResult executeNoClauses(const Declaration& select);
 	QueryResult getSpecificStmtType(StmtType type, const string& symbol);

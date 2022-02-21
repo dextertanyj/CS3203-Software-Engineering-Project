@@ -1,6 +1,6 @@
 #include "QP/Relationship/Pattern.h"
 
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "Common/TypeDefs.h"
@@ -11,7 +11,7 @@
 TEST_CASE("QP::Relationship::Pattern::getDeclarationSymbols") {
 	Declaration synAssign = { DesignEntity::Assign, "a" };
 
-	PKB pkb = PKB();
+	Storage pkb = Storage();
 	QueryEntRef x = { EntRefType::VarName, "x" };
 	QueryEntRef var = { EntRefType::Synonym, "var" };
 	QueryEntRef varUnderscore = { EntRefType::Underscore, "_" };
@@ -32,7 +32,7 @@ TEST_CASE("QP::Relationship::Pattern::getDeclarationSymbols") {
 }
 
 TEST_CASE("QP::Relationship::Pattern::execute") {
-	PKB pkb = PKB();
+	Storage pkb = Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Assign);
 	pkb.setStmtType(3, StmtType::Assign);

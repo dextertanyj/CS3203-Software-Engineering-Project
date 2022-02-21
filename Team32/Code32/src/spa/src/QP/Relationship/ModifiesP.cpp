@@ -9,7 +9,7 @@ QueryEntRef ModifiesP::getLeftEnt() { return left_ent; }
 
 QueryEntRef ModifiesP::getRightEnt() { return right_ent; }
 
-QueryResult ModifiesP::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QueryResult ModifiesP::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
@@ -24,6 +24,6 @@ vector<string> ModifiesP::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QueryResult ModifiesP::executeTrivial(PKB& /*pkb*/, unordered_map<string, DesignEntity>& /*map*/) { return {}; }
+QueryResult ModifiesP::executeTrivial(PKB::Storage& /*pkb*/, unordered_map<string, DesignEntity>& /*map*/) { return {}; }
 
-QueryResult ModifiesP::executeNonTrivial(PKB& /*pkb*/, unordered_map<string, DesignEntity>& /*map*/) { return {}; }
+QueryResult ModifiesP::executeNonTrivial(PKB::Storage& /*pkb*/, unordered_map<string, DesignEntity>& /*map*/) { return {}; }

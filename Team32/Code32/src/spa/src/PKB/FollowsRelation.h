@@ -3,10 +3,11 @@
 
 #include <unordered_set>
 
+#include "PKB/PKB.h"
 #include "Common/TypeDefs.h"
 #include "PKB/StatementRelationStore.h"
 
-class FollowsRelation {
+class PKB::FollowsRelation {
 public:
 	explicit FollowsRelation(shared_ptr<StmtInfo> self);
 	void insertForward(shared_ptr<StmtInfo> following_to_insert);

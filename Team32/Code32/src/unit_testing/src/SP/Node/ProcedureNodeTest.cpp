@@ -139,7 +139,7 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure") {
 }
 
 TEST_CASE("SP::Node::ProcedureNode::extract Test") {
-	PKB pkb;
+	Storage pkb;
 
 	SECTION("Single statement") {
 		StmtRef statement_number = 1;

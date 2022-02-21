@@ -12,7 +12,7 @@ ExpressionType Pattern::getExpressionType() { return this->expression_type; }
 
 Common::ExpressionProcessor::Expression Pattern::getExpression() { return this->expression.value(); }
 
-QueryResult Pattern::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QueryResult Pattern::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
@@ -24,7 +24,7 @@ vector<string> Pattern::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QueryResult Pattern::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& /*map*/) {
+QueryResult Pattern::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& /*map*/) {
 	StmtInfoPtrSet stmt_set;
 	if (this->expression_type != ExpressionType::Underscore) {
 		bool is_exact = this->expression_type != ExpressionType::ExpressionUnderscore;
@@ -51,7 +51,7 @@ QueryResult Pattern::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity
 	return QueryResult(false);
 }
 
-QueryResult Pattern::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& /*map*/) {
+QueryResult Pattern::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& /*map*/) {
 	QueryResult result = QueryResult();
 
 	if (this->ent_ref.type == EntRefType::Synonym) {

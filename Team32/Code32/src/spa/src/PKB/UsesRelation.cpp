@@ -4,7 +4,7 @@
 
 #include "PKB/SVRelationStore.tpp"
 
-bool UsesRelation::validate(SVRelationStore<UsesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
+bool PKB::UsesRelation::validate(SVRelationStore<UsesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
 	StmtRef idx = statement->reference;
 	if (statement->type == StmtType::Read) {
 		throw invalid_argument("Read statements cannot use a variable");
@@ -21,7 +21,7 @@ bool UsesRelation::validate(SVRelationStore<UsesRelation>* store, const shared_p
 	                [variable](const VarRef& existing_var) { return existing_var != variable; }));
 }
 
-bool UsesRelation::validate(SVRelationStore<UsesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
+bool PKB::UsesRelation::validate(SVRelationStore<UsesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
 	StmtRef idx = statement->reference;
 	if (statement->type == StmtType::Read) {
 		throw invalid_argument("Read statements cannot use a variable");
@@ -42,7 +42,7 @@ bool UsesRelation::validate(SVRelationStore<UsesRelation>* store, const shared_p
 	                [variable](const VarRef& existing_var) { return existing_var == variable; }));
 }
 
-void UsesRelation::optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
+void PKB::UsesRelation::optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
                             SVRelationStore<UsesRelation>& store) {
 	for (const auto& statement : statement_store.getAll()) {
 		if (statement->type == StmtType::IfStmt || statement->type == StmtType::WhileStmt) {

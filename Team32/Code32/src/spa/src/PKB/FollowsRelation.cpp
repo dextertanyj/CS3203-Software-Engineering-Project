@@ -1,13 +1,12 @@
 #include "FollowsRelation.h"
 
-#include <iostream>
 #include <utility>
 
 using namespace std;
 
-FollowsRelation::FollowsRelation(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
+PKB::FollowsRelation::FollowsRelation(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
 
-void FollowsRelation::insertForward(shared_ptr<StmtInfo> following_to_insert) {
+void PKB::FollowsRelation::insertForward(shared_ptr<StmtInfo> following_to_insert) {
 	if (self->reference <= following_to_insert->reference) {
 		throw invalid_argument("Statement out of order");
 	}
@@ -17,7 +16,7 @@ void FollowsRelation::insertForward(shared_ptr<StmtInfo> following_to_insert) {
 	this->following = move(following_to_insert);
 }
 
-void FollowsRelation::insertReverse(shared_ptr<StmtInfo> follower_to_insert) {
+void PKB::FollowsRelation::insertReverse(shared_ptr<StmtInfo> follower_to_insert) {
 	if (self->reference >= follower_to_insert->reference) {
 		throw invalid_argument("Statement out of order");
 	}
@@ -27,7 +26,7 @@ void FollowsRelation::insertReverse(shared_ptr<StmtInfo> follower_to_insert) {
 	this->follower = move(follower_to_insert);
 }
 
-void FollowsRelation::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> followings) {
+void PKB::FollowsRelation::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> followings) {
 	for (const auto& following_to_insert : followings) {
 		if (self->reference <= following_to_insert->reference) {
 			throw invalid_argument("Statement out of order");
@@ -36,7 +35,7 @@ void FollowsRelation::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>
 	this->following_transitive.insert(followings.begin(), followings.end());
 }
 
-void FollowsRelation::appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> followers) {
+void PKB::FollowsRelation::appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> followers) {
 	for (const auto& follower_to_insert : followers) {
 		if (self->reference >= follower_to_insert->reference) {
 			throw invalid_argument("Statement out of order");
@@ -45,33 +44,33 @@ void FollowsRelation::appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>
 	this->followers_transitive.insert(followers.begin(), followers.end());
 }
 
-StmtInfoPtrSet FollowsRelation::getForward() {
+StmtInfoPtrSet PKB::FollowsRelation::getForward() {
 	if (following == nullptr) {
 		return {};
 	}
 	return {following};
 }
 
-StmtInfoPtrSet FollowsRelation::getReverse() {
+StmtInfoPtrSet PKB::FollowsRelation::getReverse() {
 	if (follower == nullptr) {
 		return {};
 	}
 	return {follower};
 }
 
-StmtInfoPtrSet FollowsRelation::getForwardTransitive() { return following_transitive; }
+StmtInfoPtrSet PKB::FollowsRelation::getForwardTransitive() { return following_transitive; }
 
-StmtInfoPtrSet FollowsRelation::getReverseTransitive() { return followers_transitive; }
+StmtInfoPtrSet PKB::FollowsRelation::getReverseTransitive() { return followers_transitive; }
 
-void FollowsRelation::optimize(StatementRelationStore<FollowsRelation>& store) {
+void PKB::FollowsRelation::optimize(PKB::StatementRelationStore<PKB::FollowsRelation>& store) {
 	for (auto& item : store.map) {
 		if (item.second.getForward().empty()) {
-			FollowsRelation::populateTransitive(store, item.second, {});
+			PKB::FollowsRelation::populateTransitive(store, item.second, {});
 		}
 	}
 }
 
-StmtInfoPtrSet FollowsRelation::populateTransitive(StatementRelationStore<FollowsRelation>& store, FollowsRelation& current,
+StmtInfoPtrSet PKB::FollowsRelation::populateTransitive(PKB::StatementRelationStore<PKB::FollowsRelation>& store, PKB::FollowsRelation& current,
                                                    unordered_set<shared_ptr<StmtInfo>> previous) {
 	current.appendForwardTransitive(previous);
 	previous.insert(current.self);

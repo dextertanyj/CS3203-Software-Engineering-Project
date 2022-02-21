@@ -1,10 +1,10 @@
 #include "FollowsT.h"
 
-QueryResult FollowsT::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QueryResult FollowsT::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
-QueryResult FollowsT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
+QueryResult FollowsT::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
 	if (getLeftStmt().type == StmtRefType::StmtNumber && getRightStmt().type == StmtRefType::StmtNumber) {
 		StmtInfoPtrSet followers_set = pkb.getFollowerStar(stoul(getLeftStmt().stmt_ref));
 		StmtRef right_stmt_no = stoul(getRightStmt().stmt_ref);
@@ -94,7 +94,7 @@ QueryResult FollowsT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntit
 	return {};
 }
 
-QueryResult FollowsT::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
+QueryResult FollowsT::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
 	if (getLeftStmt().type == StmtRefType::Synonym && getRightStmt().type == StmtRefType::StmtNumber) {
 		StmtInfoPtrSet preceding_set = pkb.getPrecedingStar(stoul(getRightStmt().stmt_ref));
 		DesignEntity design_entity = map[getLeftStmt().stmt_ref];

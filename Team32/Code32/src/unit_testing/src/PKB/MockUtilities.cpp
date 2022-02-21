@@ -6,8 +6,8 @@ shared_ptr<StmtInfo> MockUtilities::createStmtInfo(StmtRef stmtNo, StmtType type
     return stmt_info;
 }
 
-PKB MockUtilities::generateFollowsTestPKB() {
-	PKB pkb = PKB();
+Storage MockUtilities::generateFollowsTestPKB() {
+	Storage pkb = Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::IfStmt);
 	pkb.setStmtType(3, StmtType::Print);
@@ -17,8 +17,8 @@ PKB MockUtilities::generateFollowsTestPKB() {
 	return pkb;
 }
 
-PKB MockUtilities::generateParentTestPKB() {
-	PKB pkb = PKB();
+Storage MockUtilities::generateParentTestPKB() {
+	Storage pkb = Storage();
 	pkb.setStmtType(1, StmtType::WhileStmt);
 	pkb.setStmtType(2, StmtType::IfStmt);
 	pkb.setStmtType(3, StmtType::Call);
@@ -31,8 +31,8 @@ PKB MockUtilities::generateParentTestPKB() {
 	return pkb;
 }
 
-PKB MockUtilities::generateUsesTestPKB() {
-    PKB pkb = PKB();
+Storage MockUtilities::generateUsesTestPKB() {
+	Storage pkb = Storage();
     pkb.setStmtType(1, StmtType::Assign);
     pkb.setStmtType(2, StmtType::IfStmt);
     pkb.setStmtType(3, StmtType::Print);
@@ -40,8 +40,8 @@ PKB MockUtilities::generateUsesTestPKB() {
     return pkb;
 }
 
-PKB MockUtilities::generateModifyTestPKB() {
-    PKB pkb = PKB();
+Storage MockUtilities::generateModifyTestPKB() {
+	Storage pkb = Storage();
     pkb.setStmtType(1, StmtType::Assign);
     pkb.setStmtType(2, StmtType::Read);
     pkb.setStmtType(3, StmtType::Call);

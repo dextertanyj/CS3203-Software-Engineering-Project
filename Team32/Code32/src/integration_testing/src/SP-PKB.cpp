@@ -1,6 +1,6 @@
 #include "catch_tools.h"
 
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
 #include "SP/Processor.h"
 #include "Common/ExpressionProcessor/ArithmeticNode.h"
 #include "Common/ExpressionProcessor/ConstantNode.h"
@@ -18,7 +18,7 @@
 using namespace std;
 
 TEST_CASE("SP::Processor::process Basic Test") {
-    PKB pkb;
+	Storage pkb;
     SP::Processor source_processor = SP::Processor(pkb);
 
     SECTION("Basic Print Test") {

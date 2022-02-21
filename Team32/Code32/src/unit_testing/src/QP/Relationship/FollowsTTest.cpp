@@ -1,11 +1,11 @@
 #include "QP/Relationship/FollowsT.h"
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
 #include "Common/TypeDefs.h"
 
 #include "catch.hpp"
 
 TEST_CASE("QP::Relationship::FollowsT::execute") {
-	PKB pkb = PKB();
+	Storage pkb = Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::WhileStmt);

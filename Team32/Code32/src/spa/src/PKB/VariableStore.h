@@ -3,9 +3,10 @@
 
 #include <unordered_set>
 
+#include "PKB/PKB.h"
 #include "Common/TypeDefs.h"
 
-class VariableStore {
+class PKB::VariableStore {
 public:
 	VariableStore();
 	void insert(const VarRef& variable);

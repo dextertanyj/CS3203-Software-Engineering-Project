@@ -21,7 +21,7 @@ unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parseProcedure(Lexe
 	return make_unique<ProcedureNode>(name, std::move(statement_list), start, end);
 }
 
-void SP::Node::ProcedureNode::extract(PKB& pkb) { stmt_list->extract(pkb); }
+void SP::Node::ProcedureNode::extract(PKB::Storage& pkb) { stmt_list->extract(pkb); }
 
 bool SP::Node::ProcedureNode::equals(const shared_ptr<ProcedureNode>& object) {
 	return this->name == object->name && this->stmt_list->equals(object->stmt_list) && this->start == object->start &&

@@ -4,10 +4,11 @@
 #include <unordered_set>
 
 #include "Common/TypeDefs.h"
+#include "PKB/PKB.h"
 
 using namespace std;
 
-class ConstantStore {
+class PKB::ConstantStore {
 public:
 	ConstantStore();
 	void insert(ConstVal value);

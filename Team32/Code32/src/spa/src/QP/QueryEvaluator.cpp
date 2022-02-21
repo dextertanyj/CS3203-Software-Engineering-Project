@@ -2,7 +2,7 @@
 
 #include <utility>
 
-QueryEvaluator::QueryEvaluator(PKB& pkb) : pkb(pkb) {}
+QueryEvaluator::QueryEvaluator(PKB::Storage& pkb) : pkb(pkb) {}
 
 QueryResult QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 	if (query_properties.getSuchThatClauseList().empty() && query_properties.getPatternClauseList().empty()) {

@@ -4,10 +4,11 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "PKB/PKB.h"
 #include "Common/TypeDefs.h"
 
 template <class T>
-class StatementRelationStore {
+class PKB::StatementRelationStore {
 public:
 	StatementRelationStore();
 	void set(shared_ptr<StmtInfo>, shared_ptr<StmtInfo>);

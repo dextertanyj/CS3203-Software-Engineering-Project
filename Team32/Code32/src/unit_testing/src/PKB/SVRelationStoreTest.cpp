@@ -1,7 +1,7 @@
 #include "PKB/SVRelationStore.h"
 
 #include "MockUtilities.h"
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
 #include "catch.hpp"
 
 TEST_CASE("PKB::SVRelationStore") {

@@ -5,7 +5,7 @@
 #include <string>
 
 #include "Common/TypeDefs.h"
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
 #include "SP/Lexer.h"
 #include "SP/Node/StatementNode.h"
 #include "SP/Node/VariableNode.h"
@@ -15,7 +15,7 @@ using namespace std;
 class SP::Node::PrintNode : public StatementNode {
 public:
 	PrintNode(StmtRef stmt_no, unique_ptr<VariableNode> variable);
-	StmtRef extract(PKB& pkb) override;
+	StmtRef extract(PKB::Storage& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
 	static unique_ptr<PrintNode> parsePrintStatement(Lexer& lex, StmtRef& statement_count);
 

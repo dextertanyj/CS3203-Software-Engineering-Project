@@ -11,14 +11,14 @@ public:
 	QueryStmtRef getLeftStmt();
 	QueryStmtRef getRightStmt();
 
-	QueryResult execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) override;
+	QueryResult execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) override;
 	vector<string> getDeclarationSymbols() override;
 
 private:
 	QueryStmtRef left_stmt;
 	QueryStmtRef right_stmt;
-	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
-	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) override;
 };
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWS_H_

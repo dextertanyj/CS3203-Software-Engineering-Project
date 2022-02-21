@@ -110,7 +110,7 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement") {
 
 TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 	SP::Lexer lex;
-	PKB pkb;
+	Storage pkb;
 
 	SECTION("Single constant assignment") {
 		lex.initialize("1;");

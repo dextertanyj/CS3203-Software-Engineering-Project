@@ -116,7 +116,7 @@ TEST_CASE("SP::Node::WhileNode::parseWhileStatement") {
 }
 
 TEST_CASE("SP::Node::WhileNode::extract Test") {
-	PKB pkb;
+	Storage pkb;
 
 	SECTION("Single enclosed statement") {
 		StmtRef statement_number = 2;

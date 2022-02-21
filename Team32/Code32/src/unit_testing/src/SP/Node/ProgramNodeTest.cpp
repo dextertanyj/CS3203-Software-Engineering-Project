@@ -95,7 +95,7 @@ TEST_CASE("SP::Node::ProgramNode::parseProgram") {
 }
 
 TEST_CASE("SP::Node::ProgramNode::extract Test") {
-	PKB pkb;
+	Storage pkb;
 
 	SECTION("Single procedure") {
 		ProgramNode node = ProgramNode();

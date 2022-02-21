@@ -4,9 +4,10 @@
 #include <unordered_set>
 
 #include "Common/TypeDefs.h"
+#include "PKB/PKB.h"
 #include "PKB/StatementRelationStore.h"
 
-class ParentRelation {
+class PKB::ParentRelation {
 public:
 	explicit ParentRelation(shared_ptr<StmtInfo> self);
 	void insertForward(const shared_ptr<StmtInfo>& parent_to_insert);

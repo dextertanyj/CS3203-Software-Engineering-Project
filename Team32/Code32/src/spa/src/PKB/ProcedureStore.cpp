@@ -1,8 +1,8 @@
 #include "ProcedureStore.h"
 
-ProcedureStore::ProcedureStore() = default;
+PKB::ProcedureStore::ProcedureStore() = default;
 
-void ProcedureStore::setProc(const ProcRef& proc_name, const vector<shared_ptr<StmtInfo>>& idx_list) {
+void PKB::ProcedureStore::setProc(const ProcRef& proc_name, const vector<shared_ptr<StmtInfo>>& idx_list) {
 	for (const auto& itr : idx_list) {
 		StmtRef stmt_no = itr->reference;
 		if (stmt_no <= 0) {
@@ -27,7 +27,7 @@ void ProcedureStore::setProc(const ProcRef& proc_name, const vector<shared_ptr<S
 	}
 }
 
-void ProcedureStore::setCall(const shared_ptr<StmtInfo>& call_stmt, const ProcRef& proc_name) {
+void PKB::ProcedureStore::setCall(const shared_ptr<StmtInfo>& call_stmt, const ProcRef& proc_name) {
 	if (call_stmt->reference <= 0) {
 		throw invalid_argument("Statement number must be a positive integer.");
 	}
@@ -46,7 +46,7 @@ void ProcedureStore::setCall(const shared_ptr<StmtInfo>& call_stmt, const ProcRe
 	}
 }
 
-vector<shared_ptr<StmtInfo>> ProcedureStore::getStmtsByProc(const ProcRef& proc_name) {
+vector<shared_ptr<StmtInfo>> PKB::ProcedureStore::getStmtsByProc(const ProcRef& proc_name) {
 	auto key_itr = proc_map.find(proc_name);
 	if (key_itr == proc_map.end()) {
 		return vector<shared_ptr<StmtInfo>>{};
@@ -54,7 +54,7 @@ vector<shared_ptr<StmtInfo>> ProcedureStore::getStmtsByProc(const ProcRef& proc_
 	return key_itr->second.idx_list;
 }
 
-ProcRef ProcedureStore::getProcByCall(const shared_ptr<StmtInfo>& call_stmt) {
+ProcRef PKB::ProcedureStore::getProcByCall(const shared_ptr<StmtInfo>& call_stmt) {
 	if (call_stmt->reference <= 0) {
 		throw invalid_argument("Statement number must be a positive integer.");
 	}
@@ -70,7 +70,7 @@ ProcRef ProcedureStore::getProcByCall(const shared_ptr<StmtInfo>& call_stmt) {
 	return "";
 }
 
-ProcRef ProcedureStore::getProcByStmt(const shared_ptr<StmtInfo>& stmt_info) {
+ProcRef PKB::ProcedureStore::getProcByStmt(const shared_ptr<StmtInfo>& stmt_info) {
 	StmtRef stmt_no = stmt_info->reference;
 	if (stmt_no <= 0) {
 		throw invalid_argument("Statement number must be a positive integer.");
@@ -83,7 +83,7 @@ ProcRef ProcedureStore::getProcByStmt(const shared_ptr<StmtInfo>& stmt_info) {
 	return key_itr->second;
 }
 
-unordered_set<ProcRef> ProcedureStore::getProcListByStmtList(const unordered_set<shared_ptr<StmtInfo>>& stmt_info_list) {
+unordered_set<ProcRef> PKB::ProcedureStore::getProcListByStmtList(const unordered_set<shared_ptr<StmtInfo>>& stmt_info_list) {
 	unordered_set<ProcRef> proc_set;
 	for (const auto& itr : stmt_info_list) {
 		if (itr->reference <= 0) {
@@ -98,4 +98,4 @@ unordered_set<ProcRef> ProcedureStore::getProcListByStmtList(const unordered_set
 	return proc_set;
 }
 
-void ProcedureStore::clear() { proc_map.clear(); }
+void PKB::ProcedureStore::clear() { proc_map.clear(); }

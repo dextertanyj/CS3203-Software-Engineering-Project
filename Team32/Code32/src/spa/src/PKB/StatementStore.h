@@ -5,11 +5,12 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "PKB/PKB.h"
 #include "Common/TypeDefs.h"
 
 using namespace std;
 
-class StatementStore {
+class PKB::StatementStore {
 public:
 	StatementStore();
 	void insert(StmtRef idx, StmtType type);

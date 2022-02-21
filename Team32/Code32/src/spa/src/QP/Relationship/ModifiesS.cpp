@@ -8,7 +8,7 @@ QueryStmtRef ModifiesS::getStmt() { return stmt; }
 
 QueryEntRef ModifiesS::getEnt() { return ent; }
 
-QueryResult ModifiesS::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QueryResult ModifiesS::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
@@ -23,7 +23,7 @@ vector<string> ModifiesS::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QueryResult ModifiesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
+QueryResult ModifiesS::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
 	if (stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::VarName) {
 		return QueryResult(pkb.checkModifies(stoul(stmt.stmt_ref), ent.ent_ref));
 	}
@@ -86,7 +86,7 @@ QueryResult ModifiesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEnti
 	return {};
 }
 
-QueryResult ModifiesS::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
+QueryResult ModifiesS::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
 	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
 		StmtInfoPtrSet stmt_set = pkb.getModifiesByVar(ent.ent_ref);
 		DesignEntity design_entity = map[stmt.stmt_ref];

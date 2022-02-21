@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Common/TypeDefs.h"
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
 #include "SP/Lexer.h"
 #include "SP/Node/ProcedureNode.h"
 
@@ -16,7 +16,7 @@ public:
 	ProgramNode();
 	void addProcedureNode(unique_ptr<ProcedureNode> procedure);
 	static unique_ptr<ProgramNode> parseProgram(Lexer& lex, StmtRef& statement_count);
-	void extract(PKB& pkb);
+	void extract(PKB::Storage& pkb);
 	bool equals(const shared_ptr<ProgramNode>& object);
 	vector<shared_ptr<ProcedureNode>> getProcedures();
 

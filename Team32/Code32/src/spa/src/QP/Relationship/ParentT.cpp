@@ -1,10 +1,10 @@
 #include "ParentT.h"
 
-QueryResult ParentT::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QueryResult ParentT::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
-QueryResult ParentT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
+QueryResult ParentT::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
 	if (getParentStmt().type == StmtRefType::StmtNumber && getChildStmt().type == StmtRefType::StmtNumber) {
 		StmtInfoPtrSet children_set = pkb.getChildStar(stoul(getParentStmt().stmt_ref));
 		StmtRef child_stmt_no = stoul(getChildStmt().stmt_ref);
@@ -99,7 +99,7 @@ QueryResult ParentT::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity
 	return {};
 }
 
-QueryResult ParentT::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
+QueryResult ParentT::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
 	if (getParentStmt().type == StmtRefType::Synonym && getChildStmt().type == StmtRefType::StmtNumber) {
 		StmtInfoPtrSet parent_set = pkb.getParentStar(stoul(getChildStmt().stmt_ref));
 		DesignEntity design_entity = map[getParentStmt().stmt_ref];

@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "Common/TypeDefs.h"
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
 #include "SP/Lexer.h"
 #include "SP/Node/Node.h"
 #include "SP/Node/StatementNode.h"
@@ -12,7 +12,7 @@
 class SP::Node::CallNode : public StatementNode {
 public:
 	CallNode(StmtRef stmt_no, ProcRef procedure);
-	StmtRef extract(PKB& pkb) override;
+	StmtRef extract(PKB::Storage& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
 	static unique_ptr<CallNode> parseCallStatement(Lexer& lex, StmtRef& statement_count);
 

@@ -8,7 +8,7 @@ QueryStmtRef UsesS::getStmt() { return stmt; }
 
 QueryEntRef UsesS::getEnt() { return ent; }
 
-QueryResult UsesS::execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QueryResult UsesS::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
@@ -23,7 +23,7 @@ vector<string> UsesS::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QueryResult UsesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
+QueryResult UsesS::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
 	if (stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::VarName) {
 		return QueryResult(pkb.checkUses(stoul(stmt.stmt_ref), ent.ent_ref));
 	}
@@ -86,7 +86,7 @@ QueryResult UsesS::executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>&
 	return {};
 }
 
-QueryResult UsesS::executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) {
+QueryResult UsesS::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
 	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
 		StmtInfoPtrSet stmt_set = pkb.getUsesByVar(ent.ent_ref);
 		DesignEntity design_entity = map[stmt.stmt_ref];
