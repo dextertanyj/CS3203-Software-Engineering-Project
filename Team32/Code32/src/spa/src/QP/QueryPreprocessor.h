@@ -26,19 +26,9 @@ using std::set;
 using std::string;
 using std::vector;
 
-// struct QuerySyntaxException : public runtime_error {
-//     using runtime_error::runtime_error;
-// };
 
-struct QueryException : public runtime_error {
-	using runtime_error::runtime_error;
-};
 
-struct QueryTokenizationException : public runtime_error {
-	using runtime_error::runtime_error;
-};
-
-class QueryPreprocessor {
+class QP::QueryPreprocessor {
 public:
 	QueryProperties parseQuery(string query);
 
@@ -56,13 +46,13 @@ private:
 
 	// Parsing Rules
 	DesignEntity parseDesignEntity(int& token_index);
-	unique_ptr<Relation> parseRelation(int& token_index);
-	unique_ptr<Follows> parseFollows(int& token_index);
-	unique_ptr<Parent> parseParent(int& token_index);
-	unique_ptr<UsesP> parseUsesP(int& token_index);
-	unique_ptr<UsesS> parseUsesS(int& token_index);
-	unique_ptr<ModifiesP> parseModifiesP(int& token_index);
-	unique_ptr<ModifiesS> parseModifiesS(int& token_index);
+	unique_ptr<Relationship::Relation> parseRelation(int& token_index);
+	unique_ptr<Relationship::Follows> parseFollows(int& token_index);
+	unique_ptr<Relationship::Parent> parseParent(int& token_index);
+	unique_ptr<Relationship::UsesP> parseUsesP(int& token_index);
+	unique_ptr<Relationship::UsesS> parseUsesS(int& token_index);
+	unique_ptr<Relationship::ModifiesP> parseModifiesP(int& token_index);
+	unique_ptr<Relationship::ModifiesS> parseModifiesS(int& token_index);
 	QueryEntRef parseQueryEntRef(int& token_index, const set<DesignEntity>& accepted_design_entities);
 	QueryStmtRef parseQueryStmtRef(int& token_index, const set<DesignEntity>& accepted_design_entities);
 	Common::ExpressionProcessor::Expression parseExpression(int& token_index);

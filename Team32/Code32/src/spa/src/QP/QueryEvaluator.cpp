@@ -2,9 +2,9 @@
 
 #include <utility>
 
-QueryEvaluator::QueryEvaluator(PKB::Storage& pkb) : pkb(pkb) {}
+QP::QueryEvaluator::QueryEvaluator(PKB::Storage& pkb) : pkb(pkb) {}
 
-QueryResult QueryEvaluator::executeQuery(QueryProperties& query_properties) {
+QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 	if (query_properties.getSuchThatClauseList().empty() && query_properties.getPatternClauseList().empty()) {
 		return executeNoClauses(query_properties.getSelect());
 	}
@@ -48,7 +48,7 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 	return result;
 }
 
-QueryResult QueryEvaluator::executeClausesWithoutSynonym(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
+QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
                                                          const Declaration& select) {
 	// These clauses should be evaluated independently since they are unrelated
 	for (const SuchThatClause& such_that_clause : such_that_clauses) {
@@ -69,7 +69,7 @@ QueryResult QueryEvaluator::executeClausesWithoutSynonym(SuchThatClauseList& suc
 	return QueryResult(true);
 }
 
-QueryResult QueryEvaluator::executeNoClauses(const Declaration& select) {
+QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) {
 	switch (select.type) {
 		case DesignEntity::Stmt: {
 			StmtInfoPtrSet stmt_set = pkb.getStatements();
@@ -131,7 +131,7 @@ QueryResult QueryEvaluator::executeNoClauses(const Declaration& select) {
 	}
 }
 
-QueryResult QueryEvaluator::getSpecificStmtType(StmtType type, const string& symbol) {
+QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(StmtType type, const string& symbol) {
 	StmtInfoPtrSet stmt_set = pkb.getStatements();
 	QueryResult result = QueryResult();
 
@@ -146,14 +146,14 @@ QueryResult QueryEvaluator::getSpecificStmtType(StmtType type, const string& sym
 	return result;
 }
 
-QueryGraph QueryEvaluator::buildGraph(QueryProperties& query_properties) {
+QP::QueryGraph QP::QueryEvaluator::buildGraph(QueryProperties& query_properties) {
 	QueryGraph graph = QueryGraph(query_properties.getDeclarationList());
 	graph.setEdges(query_properties.getSuchThatClauseList(), query_properties.getPatternClauseList());
 
 	return graph;
 }
 
-QueryResult QueryEvaluator::evaluateClauses(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
+QP::QueryResult QP::QueryEvaluator::evaluateClauses(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
                                             const Declaration& select, bool is_trivial) {
 	vector<QueryResult> result_list;
 
@@ -202,7 +202,7 @@ QueryResult QueryEvaluator::evaluateClauses(SuchThatClauseList& such_that_clause
 
 // First element contains clauses with the selected synonym.
 // Last element contains clauses without synonyms.
-vector<pair<SuchThatClauseList, PatternClauseList>> QueryEvaluator::splitClauses(QueryProperties& query_properties,
+vector<pair<SuchThatClauseList, PatternClauseList>> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties,
                                                                                  vector<unordered_set<string>>& synonyms_in_group) {
 	vector<pair<SuchThatClauseList, PatternClauseList>> result(synonyms_in_group.size() + 1);
 
@@ -238,7 +238,7 @@ vector<pair<SuchThatClauseList, PatternClauseList>> QueryEvaluator::splitClauses
 	return result;
 }
 
-void QueryEvaluator::createSymbolToTypeMap(const DeclarationList& declarations) {
+void QP::QueryEvaluator::createSymbolToTypeMap(const DeclarationList& declarations) {
 	unordered_map<string, DesignEntity> map;
 	for (Declaration const& declaration : declarations) {
 		map.insert({declaration.symbol, declaration.type});

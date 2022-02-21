@@ -7,10 +7,10 @@
 
 #include "Common/ExpressionProcessor/Expression.h"
 #include "QP/QueryExpressionLexer.h"
-#include "QP/QueryTypeDefs.h"
+#include "QP/QueryTypes.h"
 #include "QP/Relationship/Relation.h"
 
-class Pattern : public Relation {
+class QP::Relationship::Pattern : public Relation {
 public:
 	Pattern(Declaration syn_assign, QueryEntRef ent_ref, ExpressionType expression_type,
 	        optional<Common::ExpressionProcessor::Expression> expression);

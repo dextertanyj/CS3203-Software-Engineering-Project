@@ -7,9 +7,10 @@
 #include <vector>
 
 #include "Common/TypeDefs.h"
-#include "QP/QueryTypeDefs.h"
+#include "QP/QP.h"
+#include "QP/QueryTypes.h"
 
-class QueryResult {
+class QP::QueryResult {
 public:
 	QueryResult();
 	explicit QueryResult(bool result);

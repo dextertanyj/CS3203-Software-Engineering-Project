@@ -10,12 +10,7 @@
 
 using namespace std;
 
-struct Node {
-	string declaration_symbol;
-	vector<string> adjacent_symbols;
-};
-
-class QueryGraph {
+class QP::QueryGraph {
 public:
 	explicit QueryGraph(const DeclarationList& declarations);
 	void setEdges(const SuchThatClauseList& such_that_clause_list, const PatternClauseList& pattern_clause_list);

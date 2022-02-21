@@ -27,7 +27,7 @@ class TestWrapper : public AbstractWrapper {
   private:
 	  PKB::Storage pkb;
 	  SP::Processor source_processor;
-	  QueryProcessor query_processor;
+	  QP::QueryProcessor query_processor;
 };
 
 #endif

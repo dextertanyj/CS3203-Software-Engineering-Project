@@ -2,14 +2,14 @@
 
 #include <queue>
 
-QueryGraph::QueryGraph(const DeclarationList& declarations) {
+QP::QueryGraph::QueryGraph(const DeclarationList& declarations) {
 	for (const Declaration& declaration : declarations) {
 		Node node = {declaration.symbol, {}};
 		nodes.insert({declaration.symbol, node});
 	}
 }
 
-void QueryGraph::setEdges(const SuchThatClauseList& such_that_clause_list, const PatternClauseList& pattern_clause_list) {
+void QP::QueryGraph::setEdges(const SuchThatClauseList& such_that_clause_list, const PatternClauseList& pattern_clause_list) {
 	for (const SuchThatClause& such_that_clause : such_that_clause_list) {
 		vector<string> declarations = such_that_clause.relation->getDeclarationSymbols();
 		if (declarations.size() == 2) {
@@ -25,9 +25,9 @@ void QueryGraph::setEdges(const SuchThatClauseList& such_that_clause_list, const
 	}
 }
 
-unordered_map<string, Node> QueryGraph::getNodes() { return nodes; }
+unordered_map<string, Node> QP::QueryGraph::getNodes() { return nodes; }
 
-void QueryGraph::addEdge(const string& symbol_one, const string& symbol_two) {
+void QP::QueryGraph::addEdge(const string& symbol_one, const string& symbol_two) {
 	Node node_one = this->nodes.at(symbol_one);
 	if (find(node_one.adjacent_symbols.begin(), node_one.adjacent_symbols.end(), symbol_two) == node_one.adjacent_symbols.end()) {
 		node_one.adjacent_symbols.push_back(symbol_two);
@@ -41,7 +41,7 @@ void QueryGraph::addEdge(const string& symbol_one, const string& symbol_two) {
 	}
 }
 
-vector<unordered_set<string>> QueryGraph::getSynonymsInGroup(const string& selected_synonym) {
+vector<unordered_set<string>> QP::QueryGraph::getSynonymsInGroup(const string& selected_synonym) {
 	// Run BFS on the selected node
 	vector<unordered_set<string>> result;
 	unordered_set<string> group;

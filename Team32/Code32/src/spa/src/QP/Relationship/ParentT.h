@@ -1,10 +1,10 @@
 #ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_PARENTT_H_
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_PARENTT_H_
 
-#include "QP/QueryTypeDefs.h"
+#include "QP/QueryTypes.h"
 #include "QP/Relationship/Parent.h"
 
-class ParentT : public Parent {
+class QP::Relationship::ParentT : public Parent {
 public:
 	using Parent::Parent;
 

@@ -1,10 +1,10 @@
 #ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_USESP_H_
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_USESP_H_
 
-#include "QP/QueryTypeDefs.h"
+#include "QP/QueryTypes.h"
 #include "QP/Relationship/Relation.h"
 
-class UsesP : public Relation {
+class QP::Relationship::UsesP : public Relation {
 public:
 	UsesP(QueryEntRef left_ent, QueryEntRef right_ent);
 

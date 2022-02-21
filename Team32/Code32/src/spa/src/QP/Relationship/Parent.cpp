@@ -2,18 +2,18 @@
 
 #include <utility>
 
-Parent::Parent(QueryStmtRef parent_stmt, QueryStmtRef child_stmt)
+QP::Relationship::Parent::Parent(QueryStmtRef parent_stmt, QueryStmtRef child_stmt)
 	: parent_stmt(std::move(std::move(parent_stmt))), child_stmt(std::move(std::move(child_stmt))) {}
 
-QueryStmtRef Parent::getParentStmt() { return parent_stmt; }
+QueryStmtRef QP::Relationship::Parent::getParentStmt() { return parent_stmt; }
 
-QueryStmtRef Parent::getChildStmt() { return child_stmt; }
+QueryStmtRef QP::Relationship::Parent::getChildStmt() { return child_stmt; }
 
-QueryResult Parent::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Parent::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
-vector<string> Parent::getDeclarationSymbols() {
+vector<string> QP::Relationship::Parent::getDeclarationSymbols() {
 	vector<string> declaration_symbols;
 	if (this->parent_stmt.type == StmtRefType::Synonym) {
 		declaration_symbols.push_back(this->parent_stmt.stmt_ref);
@@ -24,7 +24,7 @@ vector<string> Parent::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QueryResult Parent::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
 	if (parent_stmt.type == StmtRefType::StmtNumber && child_stmt.type == StmtRefType::StmtNumber) {
 		return QueryResult(pkb.checkParents(stoul(parent_stmt.stmt_ref), stoul(child_stmt.stmt_ref)));
 	}
@@ -41,7 +41,7 @@ QueryResult Parent::executeTrivial(PKB::Storage& pkb, unordered_map<string, Desi
 		}
 
 		for (auto const& stmt : stmt_set) {
-			if (QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
+			if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				return QueryResult(true);
 			}
 		}
@@ -60,7 +60,7 @@ QueryResult Parent::executeTrivial(PKB::Storage& pkb, unordered_map<string, Desi
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
 		DesignEntity design_entity = map[child_stmt.stmt_ref];
 		for (auto const& stmt : stmt_set) {
-			if (!QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
+			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;
 			}
 
@@ -72,7 +72,7 @@ QueryResult Parent::executeTrivial(PKB::Storage& pkb, unordered_map<string, Desi
 	} else if (parent_stmt.type == StmtRefType::Synonym && child_stmt.type == StmtRefType::StmtNumber) {
 		shared_ptr<StmtInfo> parent = pkb.getParent(stoul(child_stmt.stmt_ref));
 		DesignEntity design_entity = map[parent_stmt.stmt_ref];
-		if (!QueryUtils::checkStmtTypeMatch(parent, design_entity)) {
+		if (!Utilities::checkStmtTypeMatch(parent, design_entity)) {
 			return {};
 		}
 		return QueryResult(true);
@@ -80,7 +80,7 @@ QueryResult Parent::executeTrivial(PKB::Storage& pkb, unordered_map<string, Desi
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
 		DesignEntity design_entity = map[parent_stmt.stmt_ref];
 		for (auto const& stmt : stmt_set) {
-			if (!QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
+			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;
 			}
 
@@ -98,13 +98,13 @@ QueryResult Parent::executeTrivial(PKB::Storage& pkb, unordered_map<string, Desi
 		DesignEntity parent_design_entity = map[parent_stmt.stmt_ref];
 		DesignEntity child_design_entity = map[child_stmt.stmt_ref];
 		for (auto const& stmt : stmt_set) {
-			if (!QueryUtils::checkStmtTypeMatch(stmt, parent_design_entity)) {
+			if (!Utilities::checkStmtTypeMatch(stmt, parent_design_entity)) {
 				continue;
 			}
 
 			StmtInfoPtrSet children = pkb.getChildren(stmt->reference);
 			for (auto const& child : children) {
-				if (QueryUtils::checkStmtTypeMatch(child, child_design_entity)) {
+				if (Utilities::checkStmtTypeMatch(child, child_design_entity)) {
 					return QueryResult(true);
 				}
 			}
@@ -114,12 +114,12 @@ QueryResult Parent::executeTrivial(PKB::Storage& pkb, unordered_map<string, Desi
 	return {};
 }
 
-QueryResult Parent::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
 	if (parent_stmt.type == StmtRefType::Synonym && child_stmt.type == StmtRefType::StmtNumber) {
 		shared_ptr<StmtInfo> parent = pkb.getParent(stoul(child_stmt.stmt_ref));
 		DesignEntity design_entity = map[parent_stmt.stmt_ref];
 		vector<string> column;
-		if (!QueryUtils::checkStmtTypeMatch(parent, design_entity)) {
+		if (!Utilities::checkStmtTypeMatch(parent, design_entity)) {
 			return {};
 		}
 		column.push_back(to_string(parent->reference));
@@ -132,7 +132,7 @@ QueryResult Parent::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, D
 		DesignEntity design_entity = map[parent_stmt.stmt_ref];
 		vector<string> column;
 		for (auto const& stmt : stmt_set) {
-			if (!QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
+			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;
 			}
 
@@ -156,13 +156,13 @@ QueryResult Parent::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, D
 		vector<string> parent_column;
 		vector<string> child_column;
 		for (auto const& stmt : stmt_set) {
-			if (!QueryUtils::checkStmtTypeMatch(stmt, parent_design_entity)) {
+			if (!Utilities::checkStmtTypeMatch(stmt, parent_design_entity)) {
 				continue;
 			}
 
 			StmtInfoPtrSet children = pkb.getChildren(stmt->reference);
 			for (auto const& child : children) {
-				if (QueryUtils::checkStmtTypeMatch(child, child_design_entity)) {
+				if (Utilities::checkStmtTypeMatch(child, child_design_entity)) {
 					parent_column.push_back(to_string(stmt->reference));
 					child_column.push_back(to_string(child->reference));
 				}
@@ -178,7 +178,7 @@ QueryResult Parent::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, D
 		DesignEntity design_entity = map[child_stmt.stmt_ref];
 		vector<string> column;
 		for (auto const& stmt : stmt_set) {
-			if (!QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
+			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;
 			}
 
@@ -197,7 +197,7 @@ QueryResult Parent::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, D
 		vector<string> column;
 
 		for (auto const& stmt : stmt_set) {
-			if (QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
+			if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				column.push_back(to_string(stmt->reference));
 			}
 		}

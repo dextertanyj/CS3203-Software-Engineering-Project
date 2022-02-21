@@ -2,10 +2,14 @@
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYTYPEDEFS_H_
 
 #include <string>
+#include <vector>
+#include <memory>
 
-using std::string;
+#include "QP/Relationship/Relationship.h"
 
-// while and if are reserved words
+using namespace std;
+
+namespace QP::Types {
 enum class DesignEntity {
 	Stmt,
 	Read,
@@ -37,5 +41,23 @@ typedef struct Declaration {
 	DesignEntity type;
 	string symbol;
 } Declaration;
+
+typedef struct PatternClause {
+	shared_ptr<Relationship::Relation> relation;
+} PatternClause;
+
+typedef struct SuchThatClause {
+	shared_ptr<Relationship::Relation> relation;
+} SuchThatClause;
+
+typedef struct Node {
+	string declaration_symbol;
+	vector<string> adjacent_symbols;
+} Node;
+
+typedef vector<Declaration> DeclarationList;
+typedef vector<SuchThatClause> SuchThatClauseList;
+typedef vector<PatternClause> PatternClauseList;
+}  // namespace QP::Types
 
 #endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYTYPEDEFS_H_

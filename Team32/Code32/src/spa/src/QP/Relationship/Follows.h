@@ -1,10 +1,11 @@
 #ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWS_H_
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_FOLLOWS_H_
 
-#include "QP/QueryTypeDefs.h"
+#include "QP/QueryTypes.h"
+#include "QP/Relationship/Relationship.h"
 #include "QP/Relationship/Relation.h"
 
-class Follows : public Relation {
+class QP::Relationship::Follows : public Relation {
 public:
 	Follows(QueryStmtRef left_stmt, QueryStmtRef right_stmt);
 

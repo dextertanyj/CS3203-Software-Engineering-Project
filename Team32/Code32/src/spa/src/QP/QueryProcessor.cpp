@@ -5,9 +5,9 @@
 
 #include "QP/QueryPreprocessor.h"
 
-QueryProcessor::QueryProcessor(PKB::Storage& pkb) : evaluator(QueryEvaluator(pkb)) {}
+QP::QueryProcessor::QueryProcessor(PKB::Storage& pkb) : evaluator(QueryEvaluator(pkb)) {}
 
-vector<string> QueryProcessor::processQuery(string query) {
+vector<string> QP::QueryProcessor::processQuery(string query) {
 	try {
 		QueryPreprocessor preprocessor;
 		QueryProperties query_properties = preprocessor.parseQuery(std::move(query));

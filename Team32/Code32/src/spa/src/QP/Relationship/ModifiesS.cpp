@@ -2,17 +2,17 @@
 
 #include <utility>
 
-ModifiesS::ModifiesS(QueryStmtRef stmt, QueryEntRef ent) : stmt(std::move(std::move(stmt))), ent(std::move(std::move(ent))) {}
+QP::Relationship::ModifiesS::ModifiesS(QueryStmtRef stmt, QueryEntRef ent) : stmt(std::move(std::move(stmt))), ent(std::move(std::move(ent))) {}
 
-QueryStmtRef ModifiesS::getStmt() { return stmt; }
+QueryStmtRef QP::Relationship::ModifiesS::getStmt() { return stmt; }
 
-QueryEntRef ModifiesS::getEnt() { return ent; }
+QueryEntRef QP::Relationship::ModifiesS::getEnt() { return ent; }
 
-QueryResult ModifiesS::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::ModifiesS::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
-vector<string> ModifiesS::getDeclarationSymbols() {
+vector<string> QP::Relationship::ModifiesS::getDeclarationSymbols() {
 	vector<string> declaration_symbols;
 	if (this->stmt.type == StmtRefType::Synonym) {
 		declaration_symbols.push_back(this->stmt.stmt_ref);
@@ -23,7 +23,7 @@ vector<string> ModifiesS::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QueryResult ModifiesS::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::ModifiesS::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
 	if (stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::VarName) {
 		return QueryResult(pkb.checkModifies(stoul(stmt.stmt_ref), ent.ent_ref));
 	}
@@ -49,7 +49,7 @@ QueryResult ModifiesS::executeTrivial(PKB::Storage& pkb, unordered_map<string, D
 		StmtInfoPtrSet stmt_set = pkb.getModifiesByVar(ent.ent_ref);
 		DesignEntity design_entity = map[stmt.stmt_ref];
 		for (auto const& stmt : stmt_set) {
-			if (QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
+			if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				return QueryResult(true);
 			}
 		}
@@ -57,7 +57,7 @@ QueryResult ModifiesS::executeTrivial(PKB::Storage& pkb, unordered_map<string, D
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
 		DesignEntity design_entity = map[stmt.stmt_ref];
 		for (auto const& stmt : stmt_set) {
-			if (!QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
+			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;
 			}
 
@@ -72,7 +72,7 @@ QueryResult ModifiesS::executeTrivial(PKB::Storage& pkb, unordered_map<string, D
 		vector<string> stmt_column;
 		vector<string> var_column;
 		for (auto const& stmt : stmt_set) {
-			if (!QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
+			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;
 			}
 
@@ -86,13 +86,13 @@ QueryResult ModifiesS::executeTrivial(PKB::Storage& pkb, unordered_map<string, D
 	return {};
 }
 
-QueryResult ModifiesS::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
 	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
 		StmtInfoPtrSet stmt_set = pkb.getModifiesByVar(ent.ent_ref);
 		DesignEntity design_entity = map[stmt.stmt_ref];
 		vector<string> column;
 		for (auto const& stmt : stmt_set) {
-			if (QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
+			if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				column.push_back(to_string(stmt->reference));
 			}
 		}
@@ -105,7 +105,7 @@ QueryResult ModifiesS::executeNonTrivial(PKB::Storage& pkb, unordered_map<string
 		DesignEntity design_entity = map[stmt.stmt_ref];
 		vector<string> column;
 		for (auto const& stmt : stmt_set) {
-			if (!QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
+			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;
 			}
 
@@ -124,7 +124,7 @@ QueryResult ModifiesS::executeNonTrivial(PKB::Storage& pkb, unordered_map<string
 		vector<string> stmt_column;
 		vector<string> var_column;
 		for (auto const& stmt : stmt_set) {
-			if (!QueryUtils::checkStmtTypeMatch(stmt, design_entity)) {
+			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;
 			}
 

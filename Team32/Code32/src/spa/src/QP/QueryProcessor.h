@@ -10,7 +10,7 @@
 using std::string;
 using std::vector;
 
-class QueryProcessor {
+class QP::QueryProcessor {
 public:
 	explicit QueryProcessor(PKB::Storage& pkb);
 	vector<string> processQuery(string query);

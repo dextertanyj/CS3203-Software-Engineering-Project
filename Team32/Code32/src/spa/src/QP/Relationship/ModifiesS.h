@@ -1,10 +1,10 @@
 #ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_MODIFIESS_H_
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_MODIFIESS_H_
 
-#include "QP/QueryTypeDefs.h"
+#include "QP/QueryTypes.h"
 #include "QP/Relationship/Relation.h"
 
-class ModifiesS : public Relation {
+class QP::Relationship::ModifiesS : public Relation {
 public:
 	ModifiesS(QueryStmtRef stmt, QueryEntRef ent);
 

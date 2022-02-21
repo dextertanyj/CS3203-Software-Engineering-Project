@@ -4,11 +4,12 @@
 #include <string>
 
 #include "QP/QueryProperties.h"
+#include "QP/QP.h"
 #include "QP/QueryResult.h"
 
 using namespace std;
 
-class QueryFormatter {
+class QP::QueryFormatter {
 public:
 	static vector<string> formatResult(QueryProperties& query_properties, QueryResult& query_result);
 };

@@ -3,10 +3,11 @@
 
 #include "PKB/Storage.h"
 #include "QP/QueryResult.h"
-#include "QP/QueryTypeDefs.h"
+#include "QP/Relationship/Relationship.h"
+#include "QP/QueryTypes.h"
 #include "QP/QueryUtils.h"
 
-class Relation {
+class QP::Relationship::Relation {
 public:
 	/*
 	 * A trivial relation is one that does not contain synonym or contains

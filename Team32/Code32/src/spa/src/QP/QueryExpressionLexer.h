@@ -4,9 +4,10 @@
 #include <string>
 #include <vector>
 
+#include "QP/QP.h"
 #include "Common/ExpressionProcessor/LexerInterface.h"
 
-class QueryExpressionLexer : public Common::ExpressionProcessor::LexerInterface {
+class QP::QueryExpressionLexer : public Common::ExpressionProcessor::LexerInterface {
 public:
 	explicit QueryExpressionLexer(vector<string> expression_tokens);
 	string readToken() override;

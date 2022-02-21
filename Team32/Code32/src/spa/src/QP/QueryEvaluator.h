@@ -8,16 +8,17 @@
 #include <vector>
 
 #include "PKB/Storage.h"
+#include "QP/QP.h"
 #include "QP/QueryGraph.h"
 #include "QP/QueryProperties.h"
 #include "QP/QueryResult.h"
 
 using namespace std;
 
-class QueryEvaluator {
+class QP::QueryEvaluator {
 public:
 	explicit QueryEvaluator(PKB::Storage& pkb);
-	QueryResult executeQuery(QueryProperties& query_properties);
+	QP::QueryResult executeQuery(QueryProperties& query_properties);
 	static vector<pair<SuchThatClauseList, PatternClauseList>> splitClauses(QueryProperties& query_properties,
 	                                                                        vector<unordered_set<string>>& synonyms_in_group);
 
