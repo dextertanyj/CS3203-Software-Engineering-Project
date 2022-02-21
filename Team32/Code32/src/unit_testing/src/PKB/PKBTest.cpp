@@ -5,7 +5,7 @@
 #include <climits>
 
 TEST_CASE("PKB::PKB Follows Methods Test") {
-	Storage pkb = MockUtilities::generateFollowsTestPKB();
+	PKB::Storage pkb = MockUtilities::generateFollowsTestPKB();
 	StmtRef s_1 = 1;
 	StmtRef s_2 = 2;
 	StmtRef s_3 = 3;
@@ -170,7 +170,7 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 	StmtRef s_9 = 9;
 	StmtRef s_max = SIZE_MAX;
 	StmtRef s_zero = 0;
-	Storage pkb = MockUtilities::generateParentTestPKB();
+	PKB::Storage pkb = MockUtilities::generateParentTestPKB();
 
 	SECTION("PKB::PKB::setParent Test") {
 		pkb.setStmtType(SIZE_MAX, StmtType::Read);
@@ -346,7 +346,7 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 }
 
 TEST_CASE("PKB::Uses Methods Test") {
-	Storage pkb = MockUtilities::generateUsesTestPKB();
+	PKB::Storage pkb = MockUtilities::generateUsesTestPKB();
     unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
     StmtRef s1 = 1;
     StmtRef s2 = 2;
@@ -462,7 +462,7 @@ TEST_CASE("PKB::Uses Methods Test") {
 }
 
 TEST_CASE("PKB::Modifies Methods Test") {
-	Storage pkb = MockUtilities::generateModifyTestPKB();
+	PKB::Storage pkb = MockUtilities::generateModifyTestPKB();
     unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
     StmtRef s1 = 1;
     StmtRef s2 = 2;

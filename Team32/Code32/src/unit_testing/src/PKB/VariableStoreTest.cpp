@@ -4,7 +4,7 @@
 #include "catch_tools.h"
 
 TEST_CASE("PKB::VariableStore::insert Value Test") {
-    VariableStore store = VariableStore();
+	PKB::VariableStore store = PKB::VariableStore();
     store.insert("x");
     store.insert("y");
     unordered_set<VarRef> set = store.getAll();
@@ -15,7 +15,7 @@ TEST_CASE("PKB::VariableStore::insert Value Test") {
 }
 
 TEST_CASE("PKB::VariableStore::insert Set Test") {
-    VariableStore store = VariableStore();
+	PKB::VariableStore store = PKB::VariableStore();
     unordered_set<VarRef> constants = unordered_set<VarRef>();
     store.insert(constants);
     unordered_set<VarRef> set = store.getAll();

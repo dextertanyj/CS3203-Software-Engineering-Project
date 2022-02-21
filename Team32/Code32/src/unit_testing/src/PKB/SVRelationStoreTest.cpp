@@ -5,7 +5,7 @@
 #include "catch.hpp"
 
 TEST_CASE("PKB::SVRelationStore") {
-    SVRelationStore uses_store = SVRelationStore<UsesRelation>();
+	PKB::SVRelationStore uses_store = PKB::SVRelationStore<PKB::UsesRelation>();
     shared_ptr<StmtInfo> s_1 = MockUtilities::createStmtInfo(5, StmtType::Print);
     shared_ptr<StmtInfo> s_2 = MockUtilities::createStmtInfo(6, StmtType::Assign);
     shared_ptr<StmtInfo> s_3 = MockUtilities::createStmtInfo(7, StmtType::IfStmt);

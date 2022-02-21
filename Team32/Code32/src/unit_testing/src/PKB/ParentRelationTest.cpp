@@ -5,7 +5,7 @@
 #include "catch_tools.h"
 
 TEST_CASE("PKB::ParentRelation::insertForward Test") {
-	ParentRelation relation = ParentRelation(MockUtilities::createStmtInfo(3, StmtType::Read));
+	PKB::ParentRelation relation = PKB::ParentRelation(MockUtilities::createStmtInfo(3, StmtType::Read));
 	REQUIRE_NOTHROW(relation.insertForward(MockUtilities::createStmtInfo(2, StmtType::Print)));
     REQUIRE_THROWS_AS(relation.insertForward(MockUtilities::createStmtInfo(2, StmtType::Assign)), std::exception);
     REQUIRE_THROWS_AS(relation.insertForward(MockUtilities::createStmtInfo(4, StmtType::Assign)), std::exception);
@@ -13,7 +13,7 @@ TEST_CASE("PKB::ParentRelation::insertForward Test") {
 }
 
 TEST_CASE("PKB::ParentRelation::insertReverse Test") {
-	ParentRelation relation = ParentRelation(MockUtilities::createStmtInfo(2, StmtType::Read));
+	PKB::ParentRelation relation = PKB::ParentRelation(MockUtilities::createStmtInfo(2, StmtType::Read));
 	REQUIRE_NOTHROW(relation.insertReverse(MockUtilities::createStmtInfo(3, StmtType::Print)));
     REQUIRE_THROWS_AS(relation.insertReverse(MockUtilities::createStmtInfo(1, StmtType::Assign)), std::exception);
     REQUIRE_THROWS_AS(relation.insertReverse(MockUtilities::createStmtInfo(2, StmtType::Read)), std::exception);
@@ -25,7 +25,7 @@ TEST_CASE("PKB::ParentRelation::appendReverseTransitive Test") {
     shared_ptr<StmtInfo> s3 = MockUtilities::createStmtInfo(7, StmtType::IfStmt);
     shared_ptr<StmtInfo> s4 = MockUtilities::createStmtInfo(1, StmtType::Print);
     unordered_set<shared_ptr<StmtInfo>> set ({s1, s2, s3 });
-	ParentRelation relation = ParentRelation(MockUtilities::createStmtInfo(4, StmtType::Read));
+	PKB::ParentRelation relation = PKB::ParentRelation(MockUtilities::createStmtInfo(4, StmtType::Read));
 	REQUIRE_NOTHROW(relation.appendReverseTransitive(set));
     REQUIRE_THROWS_AS(relation.appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> ({s4})), std::exception);
     unordered_set<shared_ptr<StmtInfo>> set2 ;
@@ -38,7 +38,7 @@ TEST_CASE("PKB::ParentRelation::appendForwardTransitive Test") {
     shared_ptr<StmtInfo> s3 = MockUtilities::createStmtInfo(3, StmtType::IfStmt);
     shared_ptr<StmtInfo> s4 = MockUtilities::createStmtInfo(7, StmtType::Print);
     unordered_set<shared_ptr<StmtInfo>> set ({s1, s2, s3 });
-	ParentRelation relation = ParentRelation(MockUtilities::createStmtInfo(6, StmtType::Read));
+	PKB::ParentRelation relation = PKB::ParentRelation(MockUtilities::createStmtInfo(6, StmtType::Read));
     REQUIRE_EQUALS(relation.getForwardTransitive().size(), 0);
 	REQUIRE_NOTHROW(relation.appendForwardTransitive(set));
     REQUIRE_EQUALS(relation.getForwardTransitive().size(), 3);
@@ -50,7 +50,7 @@ TEST_CASE("PKB::ParentRelation::appendForwardTransitive Test") {
 }
 
 TEST_CASE("PKB::ParentRelation::getForward Test") {
-	ParentRelation relation = ParentRelation(MockUtilities::createStmtInfo(3, StmtType::Read));
+	PKB::ParentRelation relation = PKB::ParentRelation(MockUtilities::createStmtInfo(3, StmtType::Read));
     REQUIRE_EQUALS(relation.getForward(), unordered_set<shared_ptr<StmtInfo>>());
     shared_ptr<StmtInfo> node = MockUtilities::createStmtInfo(2, StmtType::Print);
 	REQUIRE_NOTHROW(relation.insertForward(node));
@@ -59,7 +59,7 @@ TEST_CASE("PKB::ParentRelation::getForward Test") {
 }
 
 TEST_CASE("PKB::ParentRelation::getReverse Test") {
-	ParentRelation relation = ParentRelation(MockUtilities::createStmtInfo(2, StmtType::Read));
+	PKB::ParentRelation relation = PKB::ParentRelation(MockUtilities::createStmtInfo(2, StmtType::Read));
     REQUIRE_EQUALS(relation.getReverse(), unordered_set<shared_ptr<StmtInfo>>());
     shared_ptr<StmtInfo> node = MockUtilities::createStmtInfo(3, StmtType::Print);
 	REQUIRE_NOTHROW(relation.insertReverse(node));
@@ -73,7 +73,7 @@ TEST_CASE("PKB::ParentRelation::getForwardTransitive Test") {
     shared_ptr<StmtInfo> s3 = MockUtilities::createStmtInfo(3, StmtType::IfStmt);
     shared_ptr<StmtInfo> s4 = MockUtilities::createStmtInfo(7, StmtType::Print);
     unordered_set<shared_ptr<StmtInfo>> set ({s1, s2, s3 });
-	ParentRelation relation = ParentRelation(MockUtilities::createStmtInfo(6, StmtType::Read));
+	PKB::ParentRelation relation = PKB::ParentRelation(MockUtilities::createStmtInfo(6, StmtType::Read));
     REQUIRE_EQUALS(relation.getForwardTransitive().size(), 0);
 	REQUIRE_NOTHROW(relation.appendForwardTransitive(set));
     REQUIRE_EQUALS(relation.getForwardTransitive().size(), 3);
@@ -90,7 +90,7 @@ TEST_CASE("PKB::ParentRelation::getReverseTransitive Test") {
     shared_ptr<StmtInfo> s3 = MockUtilities::createStmtInfo(5, StmtType::IfStmt);
     shared_ptr<StmtInfo> s4 = MockUtilities::createStmtInfo(1, StmtType::Assign);
     unordered_set<shared_ptr<StmtInfo>> set ({s1, s2, s3 });
-	ParentRelation relation = ParentRelation(MockUtilities::createStmtInfo(2, StmtType::Read));
+	PKB::ParentRelation relation = PKB::ParentRelation(MockUtilities::createStmtInfo(2, StmtType::Read));
     REQUIRE_EQUALS(relation.getReverseTransitive().size(), 0);
 	REQUIRE_NOTHROW(relation.appendReverseTransitive(set));
     REQUIRE_EQUALS(relation.getReverseTransitive().size(), 3);
@@ -109,7 +109,7 @@ TEST_CASE("PKB::ParentRelation Overall Test") {
     unordered_set<shared_ptr<StmtInfo>> forward ({s1, s2 });
     unordered_set<shared_ptr<StmtInfo>> reverse ({ s3, s4 });
     shared_ptr<StmtInfo> self = MockUtilities::createStmtInfo(3, StmtType::Read);
-	ParentRelation relation = ParentRelation(self);
+	PKB::ParentRelation relation = PKB::ParentRelation(self);
 	REQUIRE_NOTHROW(relation.insertForward(s2));
     REQUIRE_EQUALS(relation.getForward().size(), 1);
     REQUIRE(relation.getForward().find(s2) != relation.getForward().end());
@@ -131,7 +131,7 @@ TEST_CASE("PKB::ParentRelation Overall Test") {
 
 
 TEST_CASE("PKB::ParentRelation::optimize Test") {
-    StatementRelationStore<ParentRelation> store = StatementRelationStore<ParentRelation>();
+	PKB::StatementRelationStore<PKB::ParentRelation> store = PKB::StatementRelationStore<PKB::ParentRelation>();
     shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(2, StmtType::WhileStmt);
     shared_ptr<StmtInfo> s2 = MockUtilities::createStmtInfo(7, StmtType::Assign);
     shared_ptr<StmtInfo> s3 = MockUtilities::createStmtInfo(3, StmtType::IfStmt);
@@ -146,7 +146,7 @@ TEST_CASE("PKB::ParentRelation::optimize Test") {
     REQUIRE(find(store.getReverse(2).begin(), store.getReverse(2).end(), s3) != store.getReverse(2).end());
     REQUIRE(find(store.getForward(3).begin(), store.getForward(3).end(), s1) != store.getForward(3).end());
     REQUIRE_EQUALS(store.getReverseTransitive(2).size(), 0);
-	REQUIRE_NOTHROW(ParentRelation::optimize(store));
+	REQUIRE_NOTHROW(PKB::ParentRelation::optimize(store));
     REQUIRE_EQUALS(store.getReverseTransitive(2).size(), 5);
     REQUIRE_EQUALS(store.getForwardTransitive(4).size(), 2);
     REQUIRE(find(store.getForwardTransitive(4).begin(), store.getForwardTransitive(4).end(), s3) != store.getForwardTransitive(4).end());

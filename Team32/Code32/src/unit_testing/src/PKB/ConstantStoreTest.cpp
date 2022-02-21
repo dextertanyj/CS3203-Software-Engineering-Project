@@ -4,7 +4,7 @@
 #include "catch_tools.h"
 
 TEST_CASE("PKB::ConstantStore::insert Value Test") {
-    ConstantStore store = ConstantStore();
+	PKB::ConstantStore store = PKB::ConstantStore();
     store.insert(0);
     store.insert(5);
     unordered_set<ConstVal> set = store.getAll();
@@ -15,7 +15,7 @@ TEST_CASE("PKB::ConstantStore::insert Value Test") {
 }
 
 TEST_CASE("PKB::ConstantStore::insert Set Test") {
-    ConstantStore store = ConstantStore();
+	PKB::ConstantStore store = PKB::ConstantStore();
     unordered_set<ConstVal> constants = unordered_set<ConstVal>();
     store.insert(constants);
     unordered_set<ConstVal> set = store.getAll();

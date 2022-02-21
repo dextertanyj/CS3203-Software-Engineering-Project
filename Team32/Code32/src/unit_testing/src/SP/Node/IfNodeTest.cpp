@@ -157,7 +157,7 @@ TEST_CASE("SP::Node::IfNode::parseIfStatement") {
 }
 
 TEST_CASE("SP::Node::IfNode::extract Test") {
-	Storage pkb;
+	PKB::Storage pkb;
 
 	SECTION("Single enclosed statement") {
 		StmtRef statement_number = 2;

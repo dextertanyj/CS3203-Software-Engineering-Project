@@ -76,7 +76,7 @@ TEST_CASE("SP::Node::CallNode::parseCallStatement") {
 }
 
 TEST_CASE("SP::Node::CallNode::extract Test") {
-	Storage pkb;
+	PKB::Storage pkb;
 
 	StmtRef statement_number = 1;
 	CallNode node = CallNode(1, "Procedure");

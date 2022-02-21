@@ -18,7 +18,7 @@
 using namespace std;
 
 TEST_CASE("SP::Processor::process Basic Test") {
-	Storage pkb;
+	PKB::Storage pkb;
     SP::Processor source_processor = SP::Processor(pkb);
 
     SECTION("Basic Print Test") {

@@ -10,7 +10,7 @@
 #include "catch.hpp"
 
 TEST_CASE("Basic select") {
-	Storage pkb = Storage();
+	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::WhileStmt);
@@ -60,7 +60,7 @@ TEST_CASE("Basic select") {
 };
 
 TEST_CASE("One such that clause") {
-	Storage pkb = Storage();
+	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::WhileStmt);
 	pkb.setStmtType(3, StmtType::Read);
@@ -110,7 +110,7 @@ TEST_CASE("One such that clause") {
 };
 
 TEST_CASE("One pattern clause") {
-	Storage pkb = Storage();
+	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Assign);
 	pkb.setStmtType(3, StmtType::Assign);
@@ -170,7 +170,7 @@ TEST_CASE("One pattern clause") {
 };
 
 TEST_CASE("One such that and one pattern") {
-	Storage pkb = Storage();
+	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::WhileStmt);
 	pkb.setStmtType(3, StmtType::Read);

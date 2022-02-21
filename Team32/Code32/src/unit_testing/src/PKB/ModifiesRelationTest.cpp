@@ -5,7 +5,7 @@
 #include "catch_tools.h"
 
 TEST_CASE("PKB::Modifies") {
-    SVRelationStore<ModifiesRelation> store = SVRelationStore<ModifiesRelation>();
+	PKB::SVRelationStore<PKB::ModifiesRelation> store = PKB::SVRelationStore<PKB::ModifiesRelation>();
     shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(1, StmtType::WhileStmt);
     shared_ptr<StmtInfo> s2 = MockUtilities::createStmtInfo(2, StmtType::IfStmt);
     shared_ptr<StmtInfo> s3 = MockUtilities::createStmtInfo(3, StmtType::Assign);
@@ -14,37 +14,37 @@ TEST_CASE("PKB::Modifies") {
     shared_ptr<StmtInfo> s6 = MockUtilities::createStmtInfo(6, StmtType::Read);
 
     SECTION("PKB::ModifiesRelation::validate One Var Test") {
-        REQUIRE(ModifiesRelation::validate(&store, s1, "x"));
-        REQUIRE(ModifiesRelation::validate(&store, s2, "x"));
-        REQUIRE(ModifiesRelation::validate(&store, s3, "x"));
-        REQUIRE(ModifiesRelation::validate(&store, s4, "x"));
-        REQUIRE_THROWS_AS(ModifiesRelation::validate(&store, s5, "x"), invalid_argument);
-        REQUIRE(ModifiesRelation::validate(&store, s6, "x"));
+        REQUIRE(PKB::ModifiesRelation::validate(&store, s1, "x"));
+        REQUIRE(PKB::ModifiesRelation::validate(&store, s2, "x"));
+        REQUIRE(PKB::ModifiesRelation::validate(&store, s3, "x"));
+        REQUIRE(PKB::ModifiesRelation::validate(&store, s4, "x"));
+        REQUIRE_THROWS_AS(PKB::ModifiesRelation::validate(&store, s5, "x"), invalid_argument);
+        REQUIRE(PKB::ModifiesRelation::validate(&store, s6, "x"));
         store.set(s1, "x");
         store.set(s2, "x");
         store.set(s3, "x");
         store.set(s4, "x");
         store.set(s6, "x");
-        REQUIRE(ModifiesRelation::validate(&store, s1, "y"));
-        REQUIRE(ModifiesRelation::validate(&store, s2, "y"));
-        REQUIRE_FALSE(ModifiesRelation::validate(&store, s3, "y"));
-        REQUIRE(ModifiesRelation::validate(&store, s4, "y"));
-        REQUIRE_FALSE(ModifiesRelation::validate(&store, s6, "y"));
+        REQUIRE(PKB::ModifiesRelation::validate(&store, s1, "y"));
+        REQUIRE(PKB::ModifiesRelation::validate(&store, s2, "y"));
+        REQUIRE_FALSE(PKB::ModifiesRelation::validate(&store, s3, "y"));
+        REQUIRE(PKB::ModifiesRelation::validate(&store, s4, "y"));
+        REQUIRE_FALSE(PKB::ModifiesRelation::validate(&store, s6, "y"));
     }
 
     SECTION("PKB::ModifiesRelation::validate Multiple Var Test") {
         unordered_set<VarRef> varRefs = unordered_set<VarRef>({"x", "y", "z"});
-        REQUIRE(ModifiesRelation::validate(&store, s1, varRefs));
-        REQUIRE(ModifiesRelation::validate(&store, s2, varRefs));
-        REQUIRE_FALSE(ModifiesRelation::validate(&store, s3, varRefs));
-        REQUIRE(ModifiesRelation::validate(&store, s4, varRefs));
-        REQUIRE_THROWS_AS(ModifiesRelation::validate(&store, s5, varRefs), invalid_argument);
-        REQUIRE_FALSE(ModifiesRelation::validate(&store, s6, varRefs));
+        REQUIRE(PKB::ModifiesRelation::validate(&store, s1, varRefs));
+        REQUIRE(PKB::ModifiesRelation::validate(&store, s2, varRefs));
+        REQUIRE_FALSE(PKB::ModifiesRelation::validate(&store, s3, varRefs));
+        REQUIRE(PKB::ModifiesRelation::validate(&store, s4, varRefs));
+        REQUIRE_THROWS_AS(PKB::ModifiesRelation::validate(&store, s5, varRefs), invalid_argument);
+        REQUIRE_FALSE(PKB::ModifiesRelation::validate(&store, s6, varRefs));
     }
 
     SECTION("PKB::ModifiesRelation::optimize Test") {
-        StatementStore statement_store = MockUtilities::generateStatementStore();
-        StatementRelationStore<ParentRelation> parent_store = StatementRelationStore<ParentRelation>();
+		PKB::StatementStore statement_store = MockUtilities::generateStatementStore();
+		PKB::StatementRelationStore<PKB::ParentRelation> parent_store = PKB::StatementRelationStore<PKB::ParentRelation>();
 
         shared_ptr<StmtInfo> p1 = statement_store.get(1);
         shared_ptr<StmtInfo> p2 = statement_store.get(2);
@@ -61,8 +61,8 @@ TEST_CASE("PKB::Modifies") {
         parent_store.set(p1, p4);
         parent_store.set(p2, p6);
 
-        ParentRelation::optimize(parent_store);
-		ModifiesRelation::optimize(statement_store, parent_store, store);
+		PKB::ParentRelation::optimize(parent_store);
+		PKB::ModifiesRelation::optimize(statement_store, parent_store, store);
         VarRefSet expected_set_1 = { "x", "z", "a" };
         VarRefSet expected_set_2 = { "y", "b" };
         unordered_set<shared_ptr<StmtInfo>> expected_set_3 = { p1, p4 };
@@ -76,8 +76,8 @@ TEST_CASE("PKB::Modifies") {
 
     // If statement (index 2) is nested within while statement (index 1)
     SECTION("PKB::ModifiesRelation::optimize Nested Test") {
-        StatementStore statement_store = MockUtilities::generateStatementStore();
-        StatementRelationStore<ParentRelation> parent_store = StatementRelationStore<ParentRelation>();
+		PKB::StatementStore statement_store = MockUtilities::generateStatementStore();
+		PKB::StatementRelationStore<PKB::ParentRelation> parent_store = PKB::StatementRelationStore<PKB::ParentRelation>();
 
         shared_ptr<StmtInfo> p1 = statement_store.get(1);
         shared_ptr<StmtInfo> p2 = statement_store.get(2);
@@ -95,8 +95,8 @@ TEST_CASE("PKB::Modifies") {
         parent_store.set(p2, p4);
         parent_store.set(p2, p3);
 
-        ParentRelation::optimize(parent_store);
-		ModifiesRelation::optimize(statement_store, parent_store, store);
+		PKB::ParentRelation::optimize(parent_store);
+		PKB::ModifiesRelation::optimize(statement_store, parent_store, store);
 
         VarRefSet expected_set_1 = { "x", "z", "a", "y", "b" };
         VarRefSet expected_set_2 = { "y", "a", "z" };

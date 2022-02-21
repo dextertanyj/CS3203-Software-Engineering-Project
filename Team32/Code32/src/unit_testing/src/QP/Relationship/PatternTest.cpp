@@ -11,7 +11,7 @@
 TEST_CASE("QP::Relationship::Pattern::getDeclarationSymbols") {
 	Declaration synAssign = { DesignEntity::Assign, "a" };
 
-	Storage pkb = Storage();
+	PKB::Storage pkb = PKB::Storage();
 	QueryEntRef x = { EntRefType::VarName, "x" };
 	QueryEntRef var = { EntRefType::Synonym, "var" };
 	QueryEntRef varUnderscore = { EntRefType::Underscore, "_" };
@@ -32,7 +32,7 @@ TEST_CASE("QP::Relationship::Pattern::getDeclarationSymbols") {
 }
 
 TEST_CASE("QP::Relationship::Pattern::execute") {
-	Storage pkb = Storage();
+	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Assign);
 	pkb.setStmtType(3, StmtType::Assign);

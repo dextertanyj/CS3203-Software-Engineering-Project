@@ -5,7 +5,7 @@
 #include "catch.hpp"
 
 TEST_CASE("QP::Relationship::ParentT::execute") {
-	Storage pkb = Storage();
+	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::WhileStmt);

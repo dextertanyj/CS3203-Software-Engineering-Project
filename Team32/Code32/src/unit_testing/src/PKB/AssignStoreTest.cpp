@@ -29,35 +29,35 @@ Expression getPartialOpTree() {
 }
 
 TEST_CASE("PKB::AssignStore::setAssign Success Test") {
-    AssignStore store = AssignStore();
-    store.setAssign(MockUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree());
-    unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
-    auto obj = map.find(1);
-    REQUIRE_EQUALS(map.size(), 1);
+	PKB::AssignStore store = PKB::AssignStore();
+	store.setAssign(MockUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree());
+	unordered_map<StmtRef, PKB::AssignRelation> map = store.getAssignMap();
+	auto obj = map.find(1);
+	REQUIRE_EQUALS(map.size(), 1);
     REQUIRE_EQUALS(obj->first, 1);
     REQUIRE_EQUALS(obj->second.variable, "x");
     REQUIRE(obj->second.expression.equals(getBasicOpTree()));
 }
 
 TEST_CASE("PKB::AssignStore::setAssign Duplicate StmtNo Test") {
-    AssignStore store = AssignStore();
-    store.setAssign(MockUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree());
+	PKB::AssignStore store = PKB::AssignStore();
+	store.setAssign(MockUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree());
     REQUIRE_THROWS_AS(store.setAssign(MockUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree()), invalid_argument);
 }
 
 TEST_CASE("PKB::AssignStore::setAssign Invalid VarRef Test") {
-	AssignStore store = AssignStore();
+	PKB::AssignStore store = PKB::AssignStore();
 	REQUIRE_THROWS_AS(store.setAssign(MockUtilities::createStmtInfo(2, StmtType::Assign), "", getBasicOpTree()), invalid_argument);
 }
 
 TEST_CASE("PKB::AssignStore::setAssign Invalid Statement Type Test") {
-	AssignStore store = AssignStore();
+	PKB::AssignStore store = PKB::AssignStore();
 	REQUIRE_THROWS_AS(store.setAssign(MockUtilities::createStmtInfo(3, StmtType::Print), "", getBasicOpTree()), invalid_argument);
 }
 
 TEST_CASE("PKB::AssignStore::patternExists Exact Match Test") {
-    AssignStore store = AssignStore();
-    store.setAssign(MockUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree());
+	PKB::AssignStore store = PKB::AssignStore();
+	store.setAssign(MockUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree());
     REQUIRE(store.patternExists("x", getBasicOpTree(), true));
 	// Different LHS Variable should return false.
 	REQUIRE_FALSE(store.patternExists("y", getBasicOpTree(), true));
@@ -66,29 +66,29 @@ TEST_CASE("PKB::AssignStore::patternExists Exact Match Test") {
 }
 
 TEST_CASE("PKB::AssignStore::patternExists Partial Match Test") {
-    AssignStore store = AssignStore();
-    store.setAssign(MockUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree());
+	PKB::AssignStore store = PKB::AssignStore();
+	store.setAssign(MockUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree());
     REQUIRE(store.patternExists("x", getPartialOpTree(), false));
 	// Different LHS Variable should return false.
 	REQUIRE_FALSE(store.patternExists("y", getPartialOpTree(), false));
 }
 
 TEST_CASE("PKB::AssignStore::patternExists Partial Match RHS No Match Test") {
-    AssignStore store = AssignStore();
-    store.setAssign(MockUtilities::createStmtInfo(1, StmtType::Assign), "x", getPartialOpTree());
+	PKB::AssignStore store = PKB::AssignStore();
+	store.setAssign(MockUtilities::createStmtInfo(1, StmtType::Assign), "x", getPartialOpTree());
     REQUIRE_FALSE(store.patternExists("x", getBasicOpTree(), false));
 }
 
 TEST_CASE("PKB::AssignStore::getStmtsWithPattern Test") {
-    AssignStore store = AssignStore();
+	PKB::AssignStore store = PKB::AssignStore();
 	shared_ptr<StmtInfo> s_1 = MockUtilities::createStmtInfo(1, StmtType::Assign);
 	shared_ptr<StmtInfo> s_3 = MockUtilities::createStmtInfo(3, StmtType::Assign);
 	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Assign);
     store.setAssign(s_1, "x", getPartialOpTree());
 	store.setAssign(s_3, "x", getBasicOpTree());
 	store.setAssign(s_4, "x", getPartialOpTree());
-    unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
-    REQUIRE_EQUALS(map.size(), 3);
+	unordered_map<StmtRef, PKB::AssignRelation> map = store.getAssignMap();
+	REQUIRE_EQUALS(map.size(), 3);
 
 	// Requesting exact match should return 2 results.
 	StmtInfoPtrSet lst = store.getStmtsWithPattern("x", getPartialOpTree(), true);
@@ -106,15 +106,15 @@ TEST_CASE("PKB::AssignStore::getStmtsWithPattern Test") {
 }
 
 TEST_CASE("PKB::AssignStore::getStmtsWithPattern Variable LHS Test") {
-    AssignStore store = AssignStore();
+	PKB::AssignStore store = PKB::AssignStore();
 	shared_ptr<StmtInfo> s_1 = MockUtilities::createStmtInfo(1, StmtType::Assign);
 	shared_ptr<StmtInfo> s_3 = MockUtilities::createStmtInfo(3, StmtType::Assign);
 	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Assign);
     store.setAssign(s_1, "x", getPartialOpTree());
     store.setAssign(s_4, "y", getPartialOpTree());
     store.setAssign(s_3, "x", getBasicOpTree());
-    unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
-    REQUIRE_EQUALS(map.size(), 3);
+	unordered_map<StmtRef, PKB::AssignRelation> map = store.getAssignMap();
+	REQUIRE_EQUALS(map.size(), 3);
 
 	// Requesting exact match should return only 1 result.
 	StmtInfoPtrSet lst = store.getStmtsWithPattern("x", getPartialOpTree(), true);
@@ -132,15 +132,15 @@ TEST_CASE("PKB::AssignStore::getStmtsWithPattern Variable LHS Test") {
 }
 
 TEST_CASE("PKB::AssignStore::getStmtsWithPatternLHS Test") {
-    AssignStore store = AssignStore();
+	PKB::AssignStore store = PKB::AssignStore();
 	shared_ptr<StmtInfo> s_1 = MockUtilities::createStmtInfo(1, StmtType::Assign);
 	shared_ptr<StmtInfo> s_3 = MockUtilities::createStmtInfo(3, StmtType::Assign);
 	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Assign);
     store.setAssign(s_1, "x", getBasicOpTree());
     store.setAssign(s_4, "y", getBasicOpTree());
     store.setAssign(s_3, "x", getPartialOpTree());
-    unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
-    REQUIRE_EQUALS(map.size(), 3);
+	unordered_map<StmtRef, PKB::AssignRelation> map = store.getAssignMap();
+	REQUIRE_EQUALS(map.size(), 3);
 	StmtInfoPtrSet lst = store.getStmtsWithPatternLHS("x");
     REQUIRE_EQUALS(lst.size(), 2);
     REQUIRE(find(lst.begin(), lst.end(), s_1) != lst.end());
@@ -153,15 +153,15 @@ TEST_CASE("PKB::AssignStore::getStmtsWithPatternLHS Test") {
 
 
 TEST_CASE("PKB::AssignStore::getStmtsWithPatternRHS Exact Match Test") {
-    AssignStore store = AssignStore();
+	PKB::AssignStore store = PKB::AssignStore();
 	shared_ptr<StmtInfo> s_1 = MockUtilities::createStmtInfo(1, StmtType::Assign);
 	shared_ptr<StmtInfo> s_3 = MockUtilities::createStmtInfo(3, StmtType::Assign);
 	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Assign);
     store.setAssign(s_1, "x", getBasicOpTree());
     store.setAssign(s_4, "y", getBasicOpTree());
     store.setAssign(s_3, "z", getPartialOpTree());
-    unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
-    REQUIRE_EQUALS(map.size(), 3);
+	unordered_map<StmtRef, PKB::AssignRelation> map = store.getAssignMap();
+	REQUIRE_EQUALS(map.size(), 3);
 
 
 	// Exact match of partialOpTree- only statement 3 should be in the list
@@ -194,14 +194,14 @@ TEST_CASE("PKB::AssignStore::getStmtsWithPatternRHS Exact Match Test") {
 }
 
 TEST_CASE("PKB::AssignStore::getStmtsWithPatternRHS Partial Match Test") {
-    AssignStore store = AssignStore();
+	PKB::AssignStore store = PKB::AssignStore();
 	shared_ptr<StmtInfo> s_1 = MockUtilities::createStmtInfo(1, StmtType::Assign);
 	shared_ptr<StmtInfo> s_3 = MockUtilities::createStmtInfo(3, StmtType::Assign);
 	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Assign);
     store.setAssign(s_1, "x", getBasicOpTree());
     store.setAssign(s_4, "y", getBasicOpTree());
     store.setAssign(s_3, "z", getPartialOpTree());
-    unordered_map<StmtRef, AssignRelation> map = store.getAssignMap();
-    REQUIRE_EQUALS(map.size(), 3);
+	unordered_map<StmtRef, PKB::AssignRelation> map = store.getAssignMap();
+	REQUIRE_EQUALS(map.size(), 3);
 
 }
