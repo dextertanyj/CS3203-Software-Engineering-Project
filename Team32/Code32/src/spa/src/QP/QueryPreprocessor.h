@@ -21,7 +21,6 @@
 #include "QP/Relationship/UsesP.h"
 #include "QP/Relationship/UsesS.h"
 
-using std::runtime_error;
 using std::set;
 using std::string;
 using std::vector;

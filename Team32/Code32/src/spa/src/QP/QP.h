@@ -1,6 +1,8 @@
 #ifndef SPA_SRC_QP_QP_H
 #define SPA_SRC_QP_QP_H
 
+#include <stdexcept>
+
 using namespace std;
 
 namespace QP {
