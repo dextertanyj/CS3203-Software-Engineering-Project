@@ -27,6 +27,6 @@ struct QueryTokenizationException : public runtime_error {
 // struct QuerySyntaxException : public runtime_error {
 //     using runtime_error::runtime_error;
 // };
-}
+}  // namespace QP
 
 #endif  // SPA_QP_H

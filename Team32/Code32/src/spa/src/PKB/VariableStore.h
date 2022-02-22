@@ -3,8 +3,8 @@
 
 #include <unordered_set>
 
-#include "PKB/PKB.h"
 #include "Common/TypeDefs.h"
+#include "PKB/PKB.h"
 
 class PKB::VariableStore {
 public:

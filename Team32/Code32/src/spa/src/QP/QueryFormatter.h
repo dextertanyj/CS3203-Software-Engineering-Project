@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "QP/QueryProperties.h"
 #include "QP/QP.h"
+#include "QP/QueryProperties.h"
 #include "QP/QueryResult.h"
 
 using namespace std;

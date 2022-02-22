@@ -70,8 +70,8 @@ void PKB::FollowsRelation::optimize(PKB::StatementRelationStore<PKB::FollowsRela
 	}
 }
 
-StmtInfoPtrSet PKB::FollowsRelation::populateTransitive(PKB::StatementRelationStore<PKB::FollowsRelation>& store, PKB::FollowsRelation& current,
-                                                   unordered_set<shared_ptr<StmtInfo>> previous) {
+StmtInfoPtrSet PKB::FollowsRelation::populateTransitive(PKB::StatementRelationStore<PKB::FollowsRelation>& store,
+                                                        PKB::FollowsRelation& current, unordered_set<shared_ptr<StmtInfo>> previous) {
 	current.appendForwardTransitive(previous);
 	previous.insert(current.self);
 	unordered_set<shared_ptr<StmtInfo>> result;

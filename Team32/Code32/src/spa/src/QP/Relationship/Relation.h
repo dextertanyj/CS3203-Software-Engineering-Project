@@ -3,9 +3,9 @@
 
 #include "PKB/Storage.h"
 #include "QP/QueryResult.h"
-#include "QP/Relationship/Relationship.h"
 #include "QP/QueryTypes.h"
 #include "QP/QueryUtils.h"
+#include "QP/Relationship/Relationship.h"
 
 class QP::Relationship::Relation {
 public:

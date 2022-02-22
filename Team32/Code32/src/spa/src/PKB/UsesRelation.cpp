@@ -43,7 +43,7 @@ bool PKB::UsesRelation::validate(SVRelationStore<UsesRelation>* store, const sha
 }
 
 void PKB::UsesRelation::optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
-                            SVRelationStore<UsesRelation>& store) {
+                                 SVRelationStore<UsesRelation>& store) {
 	for (const auto& statement : statement_store.getAll()) {
 		if (statement->type == StmtType::IfStmt || statement->type == StmtType::WhileStmt) {
 			auto children = parent_store.getReverseTransitive(statement->reference);

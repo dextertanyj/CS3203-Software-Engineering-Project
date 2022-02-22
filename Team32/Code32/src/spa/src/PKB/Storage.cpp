@@ -133,14 +133,15 @@ bool PKB::Storage::patternExists(const VarRef& variable, const Common::Expressio
 	return assign_store.patternExists(variable, exp, is_exact_match);
 }
 
-StmtInfoPtrSet PKB::Storage::getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& exp, bool is_exact_match) {
+StmtInfoPtrSet PKB::Storage::getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& exp,
+                                                 bool is_exact_match) {
 	return assign_store.getStmtsWithPattern(variable, exp, is_exact_match);
 }
 
 StmtInfoPtrSet PKB::Storage::getStmtsWithPatternLHS(const VarRef& variable) { return assign_store.getStmtsWithPatternLHS(variable); }
 
 vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::Storage::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& exp,
-                                                                       bool is_exact_match) {
+                                                                                bool is_exact_match) {
 	return assign_store.getStmtsWithPatternRHS(exp, is_exact_match);
 }
 

@@ -1,10 +1,10 @@
 #ifndef SPA_MODIFES_H
 #define SPA_MODIFES_H
 
+#include "PKB/PKB.h"
 #include "PKB/SVRelationStore.h"
 #include "PKB/StatementRelationStore.tpp"
 #include "PKB/StatementStore.h"
-#include "PKB/PKB.h"
 
 class PKB::ModifiesRelation {
 public:

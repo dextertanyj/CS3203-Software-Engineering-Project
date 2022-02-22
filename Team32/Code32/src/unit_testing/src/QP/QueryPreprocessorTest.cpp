@@ -5,10 +5,11 @@
 #include "catch.hpp"
 #include "catch_tools.h"
 
-const string univDeclarations = "stmt s1, s2; read r1, r2; print p1, p2; "
-								"call c1, c2; while w1, w2; if i1, i2; "
-								"assign a1, a2; variable v1, v2; "
-								"constant ct1, ct2; procedure pc1, pc2;";
+const string univDeclarations =
+	"stmt s1, s2; read r1, r2; print p1, p2; "
+	"call c1, c2; while w1, w2; if i1, i2; "
+	"assign a1, a2; variable v1, v2; "
+	"constant ct1, ct2; procedure pc1, pc2;";
 
 TEST_CASE("QP::QueryPreprocessor::tokenizeQuery Invalid tokenizer input") {
 	QP::QueryPreprocessor qpp1;
@@ -32,17 +33,13 @@ TEST_CASE("QP::QueryPreprocessor::tokenizeQuery Invalid tokenizer input") {
 	REQUIRE_THROWS_AS(qpp1.parseQuery("<"), QP::QueryTokenizationException);
 }
 
-
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid declarations") {
-
-	// Test design entities 
+	// Test design entities
 	QP::QueryPreprocessor qpp1;
-	QP::QueryProperties qp1 = qpp1.parseQuery(
-		"if a, b,c; while Select; read such, that;assign pattern;variable CAP3;\nSelect a"
-	);
+	QP::QueryProperties qp1 = qpp1.parseQuery("if a, b,c; while Select; read such, that;assign pattern;variable CAP3;\nSelect a");
 	auto declarationList1 = qp1.getDeclarationList();
-    REQUIRE(declarationList1[0].type == DesignEntity::If);
-    REQUIRE(declarationList1[0].symbol == "a");
+	REQUIRE(declarationList1[0].type == DesignEntity::If);
+	REQUIRE(declarationList1[0].symbol == "a");
 	REQUIRE(declarationList1[1].type == DesignEntity::If);
 	REQUIRE(declarationList1[1].symbol == "b");
 	REQUIRE(declarationList1[2].type == DesignEntity::If);
@@ -58,9 +55,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid declarations") {
 	REQUIRE(declarationList1[7].type == DesignEntity::Variable);
 	REQUIRE(declarationList1[7].symbol == "CAP3");
 	QP::QueryPreprocessor qpp2;
-	QP::QueryProperties qp2 = qpp2.parseQuery(
-		"stmt stmt; read reads;print p1;procedure\nModifies; constant Uses; Select Modifies"
-	);
+	QP::QueryProperties qp2 = qpp2.parseQuery("stmt stmt; read reads;print p1;procedure\nModifies; constant Uses; Select Modifies");
 	auto declarationList2 = qp2.getDeclarationList();
 	REQUIRE(declarationList2[0].type == DesignEntity::Stmt);
 	REQUIRE(declarationList2[0].symbol == "stmt");
@@ -75,9 +70,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid declarations") {
 
 	// Multiple declaration clause with same design entity
 	QP::QueryPreprocessor qpp3;
-	QP::QueryProperties qp3 = qpp3.parseQuery(
-		"while stmt; if reads;while p1; while Modifies;Select Modifies"
-	);
+	QP::QueryProperties qp3 = qpp3.parseQuery("while stmt; if reads;while p1; while Modifies;Select Modifies");
 	auto declarationList3 = qp3.getDeclarationList();
 	REQUIRE(declarationList3[0].type == DesignEntity::While);
 	REQUIRE(declarationList3[0].symbol == "stmt");
@@ -87,9 +80,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid declarations") {
 	REQUIRE(declarationList3[2].symbol == "p1");
 	REQUIRE(declarationList3[3].type == DesignEntity::While);
 	REQUIRE(declarationList3[3].symbol == "Modifies");
-
 }
-
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery invalid declarations") {
 	// wrong spelling / case
@@ -113,7 +104,6 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid declarations") {
 	REQUIRE_THROWS_AS(qpp7.parseQuery("read a; print b; procedure a; Select a"), QP::QueryException);
 }
 
-
 TEST_CASE("QP::QueryPreprocessor::parseQuery Select") {
 	QP::QueryPreprocessor qpp1;
 	QP::QueryProperties qp1 = qpp1.parseQuery("print a; if b; Select a");
@@ -136,7 +126,6 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Select") {
 	REQUIRE_THROWS_AS(qpp5.parseQuery("print a; if b; Select a Select b"), QP::QueryException);
 }
 
-
 TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Parent(*)") {
 	// disjoint *
 	QP::QueryPreprocessor qpp1;
@@ -154,9 +143,8 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Parent(*)") {
 	REQUIRE_THROWS_AS(qpp5.parseQuery(univDeclarations + "Select s1 such that Parents(s1, \"x\")"), QP::QueryException);
 }
 
-
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
-	QP::Relationship::Follows* clause, * clause1;
+	QP::Relationship::Follows *clause, *clause1;
 	QP::Relationship::FollowsT* clauseT;
 	// Combinations of stmtRef : synonym | '_' | INTEGER for Follows
 	QP::QueryPreprocessor qpp1;
@@ -293,7 +281,6 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Follows(*)") {
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
-
 	// Valid UsesS
 	QP::Relationship::UsesS* clause;
 	QP::QueryPreprocessor qpp1;
@@ -417,7 +404,6 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 	REQUIRE((*clause2).getLeftEnt().ent_ref == "procedureName");
 	REQUIRE((*clause2).getRightEnt().type == EntRefType::VarName);
 	REQUIRE((*clause2).getRightEnt().ent_ref == "varName");
-
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that UsesS/P") {
@@ -564,7 +550,6 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 	REQUIRE((*clause2).getLeftEnt().ent_ref == "procedureName");
 	REQUIRE((*clause2).getRightEnt().type == EntRefType::VarName);
 	REQUIRE((*clause2).getRightEnt().ent_ref == "varName");
-
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that ModifiesS/P") {
@@ -602,7 +587,6 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that") {
 	REQUIRE((*clause1).getLeftStmt().stmt_ref == "w1");
 	REQUIRE((*clause1).getRightStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause1).getRightStmt().stmt_ref == "c2");
-
 
 	QP::QueryPreprocessor qpp2;
 	QP::QueryProperties qp2 = qpp2.parseQuery(univDeclarations + "Select w2 such that Parent*(007, _) such that Uses(w2, v1)");
@@ -722,7 +706,6 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid pattern") {
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that/pattern clauses") {
-
 	QP::QueryPreprocessor qpp12;
 	QP::QueryProperties qp12 = qpp12.parseQuery(univDeclarations + "Select a1 such that Follows(w1, a1) pattern a1(v1, _\"2-4\"_)");
 	QP::Relationship::Follows* clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp12.getSuchThatClauseList()[0].relation).get();
@@ -736,6 +719,4 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that/pattern clauses"
 	REQUIRE((*clause).getLeftStmt().stmt_ref == "w1");
 	REQUIRE((*clause).getRightStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getRightStmt().stmt_ref == "a1");
-
-
 }

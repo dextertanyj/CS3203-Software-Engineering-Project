@@ -26,8 +26,6 @@ using std::set;
 using std::string;
 using std::vector;
 
-
-
 class QP::QueryPreprocessor {
 public:
 	QueryProperties parseQuery(string query);

@@ -1,4 +1,5 @@
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
+
 #include "catch_tools.h"
 
 using namespace Common::ExpressionProcessor::OperatorAcceptor;

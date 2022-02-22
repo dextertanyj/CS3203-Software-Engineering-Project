@@ -1,7 +1,7 @@
 #include "QP/Relationship/Follows.h"
-#include "PKB/Storage.h"
-#include "Common/TypeDefs.h"
 
+#include "Common/TypeDefs.h"
+#include "PKB/Storage.h"
 #include "catch.hpp"
 
 TEST_CASE("QP::Relationship::Follows::execute") {
@@ -15,18 +15,18 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 	pkb.setFollows(3, 4);
 
 	unordered_map<string, DesignEntity> map;
-	map.insert({ "s", DesignEntity::Stmt });
-	map.insert({ "a", DesignEntity::Assign });
-	map.insert({ "if", DesignEntity::If });
+	map.insert({"s", DesignEntity::Stmt});
+	map.insert({"a", DesignEntity::Assign});
+	map.insert({"if", DesignEntity::If});
 
-	QueryStmtRef stmtNo1 = { StmtRefType::StmtNumber, "1" };
-	QueryStmtRef stmtNo2 = { StmtRefType::StmtNumber, "2" };
-	QueryStmtRef stmtNo3 = { StmtRefType::StmtNumber, "3" };
-	QueryStmtRef stmtNo4 = { StmtRefType::StmtNumber, "4" };
-	QueryStmtRef stmtSynonym = { StmtRefType::Synonym, "s" };
-	QueryStmtRef assignSynonym = { StmtRefType::Synonym, "a" };
-	QueryStmtRef ifSynonym = { StmtRefType::Synonym, "if" };
-	QueryStmtRef underscore = { StmtRefType::Underscore, "_"};
+	QueryStmtRef stmtNo1 = {StmtRefType::StmtNumber, "1"};
+	QueryStmtRef stmtNo2 = {StmtRefType::StmtNumber, "2"};
+	QueryStmtRef stmtNo3 = {StmtRefType::StmtNumber, "3"};
+	QueryStmtRef stmtNo4 = {StmtRefType::StmtNumber, "4"};
+	QueryStmtRef stmtSynonym = {StmtRefType::Synonym, "s"};
+	QueryStmtRef assignSynonym = {StmtRefType::Synonym, "a"};
+	QueryStmtRef ifSynonym = {StmtRefType::Synonym, "if"};
+	QueryStmtRef underscore = {StmtRefType::Underscore, "_"};
 
 	SECTION("trivial: stmtNumber & stmtNumber") {
 		QP::Relationship::Follows follows1 = QP::Relationship::Follows(stmtNo1, stmtNo2);
@@ -131,7 +131,7 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 		QP::QueryResult result1 = follows1.execute(pkb, false, map);
 		QP::QueryResult result2 = follows2.execute(pkb, false, map);
 
-		vector<string> expectedResult = { "1" };
+		vector<string> expectedResult = {"1"};
 		REQUIRE(result1.getSynonymResult("a") == expectedResult);
 		REQUIRE(!result2.getResult());
 	}
@@ -143,7 +143,7 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 		QP::QueryResult result1 = follows1.execute(pkb, false, map);
 		QP::QueryResult result2 = follows2.execute(pkb, false, map);
 
-		vector<string> expectedResult = { "1", "2", "3" };
+		vector<string> expectedResult = {"1", "2", "3"};
 		vector<string> actualResult = result1.getSynonymResult("s");
 		sort(actualResult.begin(), actualResult.end());
 		REQUIRE(actualResult == expectedResult);
@@ -157,8 +157,8 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 		QP::QueryResult result1 = follows1.execute(pkb, false, map);
 		QP::QueryResult result2 = follows2.execute(pkb, false, map);
 
-		vector<string> expectedStmtResult = { "3" };
-		vector<string> expectedIfResult = { "4" };
+		vector<string> expectedStmtResult = {"3"};
+		vector<string> expectedIfResult = {"4"};
 		REQUIRE(result1.getSynonymResult("s") == expectedStmtResult);
 		REQUIRE(result1.getSynonymResult("if") == expectedIfResult);
 		REQUIRE(!result2.getResult());
@@ -171,7 +171,7 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 		QP::QueryResult result1 = follows1.execute(pkb, false, map);
 		QP::QueryResult result2 = follows2.execute(pkb, false, map);
 
-		vector<string> expectedResult = { "4" };
+		vector<string> expectedResult = {"4"};
 		REQUIRE(result1.getSynonymResult("if") == expectedResult);
 		REQUIRE(!result2.getResult());
 	}
@@ -183,7 +183,7 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 		QP::QueryResult result1 = follows1.execute(pkb, false, map);
 		QP::QueryResult result2 = follows2.execute(pkb, false, map);
 
-		vector<string> expectedResult = { "2" };
+		vector<string> expectedResult = {"2"};
 		REQUIRE(result1.getSynonymResult("s") == expectedResult);
 		REQUIRE(!result2.getResult());
 	}

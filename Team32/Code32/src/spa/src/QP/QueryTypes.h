@@ -1,9 +1,9 @@
 #ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYTYPEDEFS_H_
 #define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYTYPEDEFS_H_
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 #include "QP/Relationship/Relationship.h"
 

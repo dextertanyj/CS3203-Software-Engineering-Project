@@ -7,7 +7,8 @@ using namespace std;
 
 PKB::AssignStore::AssignStore() = default;
 
-void PKB::AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, VarRef variable, Common::ExpressionProcessor::Expression expression) {
+void PKB::AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, VarRef variable,
+                                 Common::ExpressionProcessor::Expression expression) {
 	StmtRef idx = statement->reference;
 	if (statement->type != StmtType::Assign) {
 		throw invalid_argument("Statement type cannot be bound to expression.");
@@ -23,7 +24,8 @@ void PKB::AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, VarRef v
 	store.insert({idx, relation});
 }
 
-bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) {
+bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
+                                     bool is_exact_match) {
 	for (auto& assignment : store) {
 		if (compareExpressions(assignment.second, variable, expression, is_exact_match)) {
 			return true;
@@ -33,7 +35,7 @@ bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::Expre
 }
 
 StmtInfoPtrSet PKB::AssignStore::getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
-                                                bool is_exact_match) {
+                                                     bool is_exact_match) {
 	StmtInfoPtrSet result;
 	for (auto& assignment : store) {
 		if (compareExpressions(assignment.second, variable, expression, is_exact_match)) {
@@ -53,8 +55,8 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) 
 	return result;
 }
 
-vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::AssignStore::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
-                                                                               bool is_exact_match) {
+vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::AssignStore::getStmtsWithPatternRHS(
+	const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) {
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> result;
 	for (auto& assignment : store) {
 		AssignRelation assign_relation = assignment.second;
@@ -67,7 +69,7 @@ vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::AssignStore::getStmtsWithPattern
 }
 
 bool PKB::AssignStore::compareExpressions(PKB::AssignRelation& relation, const VarRef& variable,
-                                     const Common::ExpressionProcessor::Expression& op_tree, bool is_exact_match) {
+                                          const Common::ExpressionProcessor::Expression& op_tree, bool is_exact_match) {
 	if (!variable.empty() && relation.variable != variable) {
 		return false;
 	}

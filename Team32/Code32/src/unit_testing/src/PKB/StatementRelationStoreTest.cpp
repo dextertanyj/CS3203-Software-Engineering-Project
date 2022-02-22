@@ -277,4 +277,3 @@ TEST_CASE("PKB::StatementRelationStore::isRelated Test") {
 		CHECK_FALSE(parents_store.isRelated(1, 4));
 	}
 }
-

@@ -1,4 +1,5 @@
 #include "Common/ExpressionProcessor/BinaryLogicalNode.h"
+
 #include "Common/ExpressionProcessor/ConstantNode.h"
 #include "Common/ExpressionProcessor/RelationalNode.h"
 #include "Common/ExpressionProcessor/VariableNode.h"

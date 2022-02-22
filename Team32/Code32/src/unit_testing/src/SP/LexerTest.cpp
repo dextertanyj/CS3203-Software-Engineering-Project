@@ -1,8 +1,8 @@
 #include "SP/Lexer.h"
 
+#include "SP/SP.h"
 #include "catch.hpp"
 #include "catch_tools.h"
-#include "SP/SP.h"
 
 using namespace std;
 

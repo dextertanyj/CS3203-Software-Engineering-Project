@@ -1,10 +1,10 @@
 #ifndef SPA_MOCKLEXER_H
 #define SPA_MOCKLEXER_H
 
-#include "Common/ExpressionProcessor/LexerInterface.h"
-
 #include <string>
 #include <vector>
+
+#include "Common/ExpressionProcessor/LexerInterface.h"
 
 using namespace std;
 

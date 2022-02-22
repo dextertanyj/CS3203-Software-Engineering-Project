@@ -4,8 +4,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "PKB/PKB.h"
 #include "Common/TypeDefs.h"
+#include "PKB/PKB.h"
 
 template <class T>
 class PKB::StatementRelationStore {

@@ -1,7 +1,7 @@
 #include "QP/Relationship/UsesS.h"
-#include "PKB/Storage.h"
-#include "Common/TypeDefs.h"
 
+#include "Common/TypeDefs.h"
+#include "PKB/Storage.h"
 #include "catch.hpp"
 
 TEST_CASE("QP::Relationship::UsesS::execute") {
@@ -16,22 +16,22 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 	pkb.setUses(3, "y");
 
 	unordered_map<string, DesignEntity> map;
-	map.insert({ "s", DesignEntity::Stmt });
-	map.insert({ "a", DesignEntity::Assign });
-	map.insert({ "if", DesignEntity::If });
+	map.insert({"s", DesignEntity::Stmt});
+	map.insert({"a", DesignEntity::Assign});
+	map.insert({"if", DesignEntity::If});
 
-	QueryStmtRef stmtNo1 = { StmtRefType::StmtNumber, "1" };
-	QueryStmtRef stmtNo2 = { StmtRefType::StmtNumber, "2" };
-	QueryStmtRef stmtNo3 = { StmtRefType::StmtNumber, "3" };
-	QueryStmtRef stmtNo4 = { StmtRefType::StmtNumber, "4" };
-	QueryStmtRef stmtSynonym = { StmtRefType::Synonym, "s" };
-	QueryStmtRef assignSynonym = { StmtRefType::Synonym, "a" };
-	QueryStmtRef ifSynonym = { StmtRefType::Synonym, "if" };
-	QueryStmtRef stmtUnderscore = { StmtRefType::Underscore, "_"};
-	QueryEntRef x = { EntRefType::VarName, "x"};
-	QueryEntRef y = { EntRefType::VarName, "y"};
-	QueryEntRef var = { EntRefType::Synonym, "var"};
-	QueryEntRef varUnderscore = { EntRefType::Underscore, "x"};
+	QueryStmtRef stmtNo1 = {StmtRefType::StmtNumber, "1"};
+	QueryStmtRef stmtNo2 = {StmtRefType::StmtNumber, "2"};
+	QueryStmtRef stmtNo3 = {StmtRefType::StmtNumber, "3"};
+	QueryStmtRef stmtNo4 = {StmtRefType::StmtNumber, "4"};
+	QueryStmtRef stmtSynonym = {StmtRefType::Synonym, "s"};
+	QueryStmtRef assignSynonym = {StmtRefType::Synonym, "a"};
+	QueryStmtRef ifSynonym = {StmtRefType::Synonym, "if"};
+	QueryStmtRef stmtUnderscore = {StmtRefType::Underscore, "_"};
+	QueryEntRef x = {EntRefType::VarName, "x"};
+	QueryEntRef y = {EntRefType::VarName, "y"};
+	QueryEntRef var = {EntRefType::Synonym, "var"};
+	QueryEntRef varUnderscore = {EntRefType::Underscore, "x"};
 
 	SECTION("trivial: stmtNumber & varName") {
 		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmtNo1, x);
@@ -130,7 +130,7 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 		QP::QueryResult result1 = uses1.execute(pkb, false, map);
 		QP::QueryResult result2 = uses2.execute(pkb, false, map);
 
-		vector<string> expectedResult = { "1" };
+		vector<string> expectedResult = {"1"};
 		REQUIRE(result1.getSynonymResult("a") == expectedResult);
 		REQUIRE(!result2.getResult());
 	}
@@ -142,7 +142,7 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 		QP::QueryResult result1 = uses1.execute(pkb, false, map);
 		QP::QueryResult result2 = uses2.execute(pkb, false, map);
 
-		vector<string> expectedResult = { "1", "2", "3" };
+		vector<string> expectedResult = {"1", "2", "3"};
 		vector<string> actualResult = result1.getSynonymResult("s");
 		sort(actualResult.begin(), actualResult.end());
 		REQUIRE(actualResult == expectedResult);
@@ -156,8 +156,8 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 		QP::QueryResult result1 = uses1.execute(pkb, false, map);
 		QP::QueryResult result2 = uses2.execute(pkb, false, map);
 
-		vector<string> expectedStmtResult = { "1", "1", "2", "3" };
-		vector<string> expectedVarResult = { "x", "x", "y", "z" };
+		vector<string> expectedStmtResult = {"1", "1", "2", "3"};
+		vector<string> expectedVarResult = {"x", "x", "y", "z"};
 		vector<string> actualVarResult = result1.getSynonymResult("var");
 		vector<string> actualStmtResult = result1.getSynonymResult("s");
 		sort(actualVarResult.begin(), actualVarResult.end());
@@ -172,7 +172,7 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 
 		QP::QueryResult result = uses.execute(pkb, false, map);
 
-		vector<string> expectedResult = { "x", "y", "z" };
+		vector<string> expectedResult = {"x", "y", "z"};
 		vector<string> actualVarResult = result.getSynonymResult("var");
 		sort(actualVarResult.begin(), actualVarResult.end());
 		REQUIRE(actualVarResult == expectedResult);
@@ -185,11 +185,10 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 		QP::QueryResult result1 = uses1.execute(pkb, false, map);
 		QP::QueryResult result2 = uses2.execute(pkb, false, map);
 
-		vector<string> expectedResult = { "x", "z" };
+		vector<string> expectedResult = {"x", "z"};
 		vector<string> actualResult = result1.getSynonymResult("var");
 		sort(actualResult.begin(), actualResult.end());
 		REQUIRE(actualResult == expectedResult);
 		REQUIRE(!result2.getResult());
 	}
 };
-

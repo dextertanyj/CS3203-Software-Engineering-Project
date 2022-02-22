@@ -49,7 +49,7 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 }
 
 QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
-                                                         const Declaration& select) {
+                                                                 const Declaration& select) {
 	// These clauses should be evaluated independently since they are unrelated
 	for (const SuchThatClause& such_that_clause : such_that_clauses) {
 		SuchThatClauseList such_that_list = {such_that_clause};
@@ -154,7 +154,7 @@ QP::QueryGraph QP::QueryEvaluator::buildGraph(QueryProperties& query_properties)
 }
 
 QP::QueryResult QP::QueryEvaluator::evaluateClauses(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
-                                            const Declaration& select, bool is_trivial) {
+                                                    const Declaration& select, bool is_trivial) {
 	vector<QueryResult> result_list;
 
 	for (const SuchThatClause& such_that_clause : such_that_clauses) {
@@ -203,7 +203,7 @@ QP::QueryResult QP::QueryEvaluator::evaluateClauses(SuchThatClauseList& such_tha
 // First element contains clauses with the selected synonym.
 // Last element contains clauses without synonyms.
 vector<pair<SuchThatClauseList, PatternClauseList>> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties,
-                                                                                 vector<unordered_set<string>>& synonyms_in_group) {
+                                                                                     vector<unordered_set<string>>& synonyms_in_group) {
 	vector<pair<SuchThatClauseList, PatternClauseList>> result(synonyms_in_group.size() + 1);
 
 	for (const SuchThatClause& such_that_clause : query_properties.getSuchThatClauseList()) {

@@ -1,7 +1,7 @@
 #include "QP/Relationship/Pattern.h"
 
 QP::Relationship::Pattern::Pattern(Declaration syn_assign, QueryEntRef ent_ref, ExpressionType expression_type,
-                 optional<Common::ExpressionProcessor::Expression> expression)
+                                   optional<Common::ExpressionProcessor::Expression> expression)
 	: syn_assign(std::move(syn_assign)), ent_ref(std::move(ent_ref)), expression_type(expression_type), expression(std::move(expression)) {}
 
 Declaration QP::Relationship::Pattern::getSynAssign() { return this->syn_assign; }

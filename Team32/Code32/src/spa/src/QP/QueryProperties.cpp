@@ -3,7 +3,7 @@
 #include <utility>
 
 QP::QueryProperties::QueryProperties(DeclarationList declaration_list, Declaration select, SuchThatClauseList such_that_clause_list,
-                                 PatternClauseList pattern_clause_list)
+                                     PatternClauseList pattern_clause_list)
 	: declaration_list(std::move(std::move(declaration_list))),
 	  select(std::move(std::move(select))),
 	  such_that_clause_list(std::move(std::move(such_that_clause_list))),

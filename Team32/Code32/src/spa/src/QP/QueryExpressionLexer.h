@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "QP/QP.h"
 #include "Common/ExpressionProcessor/LexerInterface.h"
+#include "QP/QP.h"
 
 class QP::QueryExpressionLexer : public Common::ExpressionProcessor::LexerInterface {
 public:

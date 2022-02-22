@@ -3,10 +3,9 @@
 
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
+#include "PKB/Storage.h"
 #include "QP/QueryExpressionLexer.h"
 #include "QP/QueryProcessor.h"
-#include "PKB/Storage.h"
-
 #include "catch.hpp"
 
 TEST_CASE("Basic select") {
@@ -15,7 +14,7 @@ TEST_CASE("Basic select") {
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::WhileStmt);
 	pkb.setStmtType(4, StmtType::IfStmt);
-	pkb.setConstant({ 1, 4, 90, 2000 });
+	pkb.setConstant({1, 4, 90, 2000});
 	pkb.setUses(3, "x");
 
 	QP::QueryProcessor processor = QP::QueryProcessor(pkb);
@@ -25,7 +24,7 @@ TEST_CASE("Basic select") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = { "1", "2", "3", "4" };
+		vector<string> expectedResult = {"1", "2", "3", "4"};
 		sort(result.begin(), result.end());
 		REQUIRE(result == expectedResult);
 	}
@@ -35,7 +34,7 @@ TEST_CASE("Basic select") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = { "4" };
+		vector<string> expectedResult = {"4"};
 		REQUIRE(result == expectedResult);
 	}
 
@@ -44,7 +43,7 @@ TEST_CASE("Basic select") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = { "x" };
+		vector<string> expectedResult = {"x"};
 		REQUIRE(result == expectedResult);
 	}
 
@@ -53,7 +52,7 @@ TEST_CASE("Basic select") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = { "1", "2000", "4", "90" };
+		vector<string> expectedResult = {"1", "2000", "4", "90"};
 		sort(result.begin(), result.end());
 		REQUIRE(result == expectedResult);
 	}
@@ -64,7 +63,7 @@ TEST_CASE("One such that clause") {
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::WhileStmt);
 	pkb.setStmtType(3, StmtType::Read);
-	pkb.setConstant({ 1, 4, 90, 2000 });
+	pkb.setConstant({1, 4, 90, 2000});
 	pkb.setUses(1, "x");
 	pkb.setParent(2, 3);
 	pkb.setFollows(1, 2);
@@ -76,7 +75,7 @@ TEST_CASE("One such that clause") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = { "1", "2000", "4", "90" };
+		vector<string> expectedResult = {"1", "2000", "4", "90"};
 		sort(result.begin(), result.end());
 		REQUIRE(result == expectedResult);
 	}
@@ -95,7 +94,7 @@ TEST_CASE("One such that clause") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = { "x" };
+		vector<string> expectedResult = {"x"};
 		REQUIRE(result == expectedResult);
 	}
 
@@ -114,17 +113,17 @@ TEST_CASE("One pattern clause") {
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Assign);
 	pkb.setStmtType(3, StmtType::Assign);
-	pkb.setConstant({ 1, 90 });
-	
-	vector<string> assignToken1 = { "90" };
+	pkb.setConstant({1, 90});
+
+	vector<string> assignToken1 = {"90"};
 	QP::QueryExpressionLexer lexer1 = QP::QueryExpressionLexer(assignToken1);
 	auto expression1 = Common::ExpressionProcessor::Expression::parse(lexer1, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(1, "x", expression1);
-	vector<string> assignToken2 = { "x", "+", "1" };
+	vector<string> assignToken2 = {"x", "+", "1"};
 	QP::QueryExpressionLexer lexer2 = QP::QueryExpressionLexer(assignToken2);
 	auto expression2 = Common::ExpressionProcessor::Expression::parse(lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(2, "y", expression2);
-	vector<string> assignToken3 = { "x", "+", "y" };
+	vector<string> assignToken3 = {"x", "+", "y"};
 	QP::QueryExpressionLexer lexer3 = QP::QueryExpressionLexer(assignToken3);
 	auto expression3 = Common::ExpressionProcessor::Expression::parse(lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(3, "x", expression3);
@@ -136,7 +135,7 @@ TEST_CASE("One pattern clause") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = { "1", "90" };
+		vector<string> expectedResult = {"1", "90"};
 		sort(result.begin(), result.end());
 		REQUIRE(result == expectedResult);
 	};
@@ -155,7 +154,7 @@ TEST_CASE("One pattern clause") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = { "2", "3" };
+		vector<string> expectedResult = {"2", "3"};
 		REQUIRE(result == expectedResult);
 	}
 
@@ -176,26 +175,26 @@ TEST_CASE("One such that and one pattern") {
 	pkb.setStmtType(3, StmtType::Read);
 	pkb.setStmtType(4, StmtType::Assign);
 	pkb.setStmtType(5, StmtType::Assign);
-	
-	pkb.setConstant({ 1, 90 });
+
+	pkb.setConstant({1, 90});
 	pkb.setParent(2, 3);
 	pkb.setFollows(1, 2);
 	pkb.setFollows(3, 4);
 	pkb.setFollows(4, 5);
-	
+
 	pkb.setUses(4, "x");
 	pkb.setUses(5, "x");
 	pkb.setUses(5, "y");
-	
-	vector<string> assignToken1 = { "90" };
+
+	vector<string> assignToken1 = {"90"};
 	QP::QueryExpressionLexer lexer1 = QP::QueryExpressionLexer(assignToken1);
 	auto expression1 = Common::ExpressionProcessor::Expression::parse(lexer1, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(1, "x", expression1);
-	vector<string> assignToken2 = { "x", "+", "1" };
+	vector<string> assignToken2 = {"x", "+", "1"};
 	QP::QueryExpressionLexer lexer2 = QP::QueryExpressionLexer(assignToken2);
 	auto expression2 = Common::ExpressionProcessor::Expression::parse(lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(4, "y", expression2);
-	vector<string> assignToken3 = { "x", "+", "y" };
+	vector<string> assignToken3 = {"x", "+", "y"};
 	QP::QueryExpressionLexer lexer3 = QP::QueryExpressionLexer(assignToken3);
 	auto expression3 = Common::ExpressionProcessor::Expression::parse(lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(5, "x", expression3);
@@ -207,7 +206,7 @@ TEST_CASE("One such that and one pattern") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = { "1", "90" };
+		vector<string> expectedResult = {"1", "90"};
 		sort(result.begin(), result.end());
 		REQUIRE(result == expectedResult);
 	};
@@ -226,7 +225,7 @@ TEST_CASE("One such that and one pattern") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = { "1", "3", "4" };
+		vector<string> expectedResult = {"1", "3", "4"};
 		sort(result.begin(), result.end());
 		REQUIRE(result == expectedResult);
 	}
@@ -236,7 +235,7 @@ TEST_CASE("One such that and one pattern") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = { "4", "5" };
+		vector<string> expectedResult = {"4", "5"};
 		sort(result.begin(), result.end());
 		REQUIRE(result == expectedResult);
 	}
@@ -246,7 +245,7 @@ TEST_CASE("One such that and one pattern") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = { "5" };
+		vector<string> expectedResult = {"5"};
 		REQUIRE(result == expectedResult);
 	}
 }

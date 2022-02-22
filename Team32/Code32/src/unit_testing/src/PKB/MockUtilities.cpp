@@ -1,9 +1,9 @@
 #include "MockUtilities.h"
 
 shared_ptr<StmtInfo> MockUtilities::createStmtInfo(StmtRef stmtNo, StmtType type) {
-    StmtInfo s = {stmtNo, type};
-    shared_ptr<StmtInfo> stmt_info = make_shared<StmtInfo>(s);
-    return stmt_info;
+	StmtInfo s = {stmtNo, type};
+	shared_ptr<StmtInfo> stmt_info = make_shared<StmtInfo>(s);
+	return stmt_info;
 }
 
 PKB::Storage MockUtilities::generateFollowsTestPKB() {
@@ -33,29 +33,29 @@ PKB::Storage MockUtilities::generateParentTestPKB() {
 
 PKB::Storage MockUtilities::generateUsesTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
-    pkb.setStmtType(1, StmtType::Assign);
-    pkb.setStmtType(2, StmtType::IfStmt);
-    pkb.setStmtType(3, StmtType::Print);
-    pkb.setStmtType(SIZE_MAX, StmtType::WhileStmt);
-    return pkb;
+	pkb.setStmtType(1, StmtType::Assign);
+	pkb.setStmtType(2, StmtType::IfStmt);
+	pkb.setStmtType(3, StmtType::Print);
+	pkb.setStmtType(SIZE_MAX, StmtType::WhileStmt);
+	return pkb;
 }
 
 PKB::Storage MockUtilities::generateModifyTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
-    pkb.setStmtType(1, StmtType::Assign);
-    pkb.setStmtType(2, StmtType::Read);
-    pkb.setStmtType(3, StmtType::Call);
-    pkb.setStmtType(SIZE_MAX, StmtType::Assign);
-    return pkb;
+	pkb.setStmtType(1, StmtType::Assign);
+	pkb.setStmtType(2, StmtType::Read);
+	pkb.setStmtType(3, StmtType::Call);
+	pkb.setStmtType(SIZE_MAX, StmtType::Assign);
+	return pkb;
 }
 
 PKB::StatementStore MockUtilities::generateStatementStore() {
 	PKB::StatementStore statement_store = PKB::StatementStore();
-    statement_store.insert(1, StmtType::WhileStmt);
-    statement_store.insert(2, StmtType::IfStmt);
-    statement_store.insert(3, StmtType::Assign);
-    statement_store.insert(4, StmtType::Call);
-    statement_store.insert(5, StmtType::Print);
-    statement_store.insert(6, StmtType::Read);
-    return statement_store;
+	statement_store.insert(1, StmtType::WhileStmt);
+	statement_store.insert(2, StmtType::IfStmt);
+	statement_store.insert(3, StmtType::Assign);
+	statement_store.insert(4, StmtType::Call);
+	statement_store.insert(5, StmtType::Print);
+	statement_store.insert(6, StmtType::Read);
+	return statement_store;
 }

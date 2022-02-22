@@ -4,9 +4,9 @@
 #include <memory>
 #include <unordered_map>
 
-#include "PKB/PKB.h"
-#include "Common/TypeDefs.h"
 #include "Common/ExpressionProcessor/Expression.h"
+#include "Common/TypeDefs.h"
+#include "PKB/PKB.h"
 
 using namespace std;
 
