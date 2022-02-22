@@ -1,5 +1,5 @@
-#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYEVALUATOR_H_
-#define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYEVALUATOR_H_
+#ifndef SPA_SRC_QP_QUERYEVALUATOR_H
+#define SPA_SRC_QP_QUERYEVALUATOR_H
 
 #include <string>
 #include <unordered_map>
@@ -35,4 +35,4 @@ private:
 	void createSymbolToTypeMap(const DeclarationList& declarations);
 };
 
-#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYEVALUATOR_H_
+#endif  // SPA_SRC_QP_QUERYEVALUATOR_H

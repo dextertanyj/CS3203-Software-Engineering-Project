@@ -1,5 +1,5 @@
-#ifndef SPA_OPERATORACCEPTOR_H
-#define SPA_OPERATORACCEPTOR_H
+#ifndef SPA_SRC_COMMON_EXPRESSIONPROCESSOR_OPERATORACCEPTOR_H
+#define SPA_SRC_COMMON_EXPRESSIONPROCESSOR_OPERATORACCEPTOR_H
 
 #include <string>
 
@@ -28,4 +28,4 @@ bool acceptLogicalStrict(const string& op);
 bool acceptLogicalStrict(MathematicalOperator op);
 };  // namespace Common::ExpressionProcessor::OperatorAcceptor
 
-#endif  // SPA_OPERATORACCEPTOR_H
+#endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_OPERATORACCEPTOR_H

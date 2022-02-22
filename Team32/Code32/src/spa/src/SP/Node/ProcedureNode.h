@@ -1,5 +1,5 @@
-#ifndef SPA_PROCEDURENODE_H
-#define SPA_PROCEDURENODE_H
+#ifndef SPA_SRC_SP_NODE_PROCEDURENODE_H
+#define SPA_SRC_SP_NODE_PROCEDURENODE_H
 
 #include <memory>
 #include <string>
@@ -25,4 +25,4 @@ private:
 	shared_ptr<StatementListNode> stmt_list;
 };
 
-#endif  // SPA_PROCEDURENODE_H
+#endif  // SPA_SRC_SP_NODE_PROCEDURENODE_H

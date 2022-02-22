@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SPA_SRC_PKB_STATEMENTRELATIONSTORE_TPP
+#define SPA_SRC_PKB_STATEMENTRELATIONSTORE_TPP
 
 #include "PKB/StatementRelationStore.h"
 
@@ -118,3 +119,5 @@ template <class T>
 void PKB::StatementRelationStore<T>::clear() {
 	map.clear();
 }
+
+#endif  // SPA_SRC_PKB_STATEMENTRELATIONSTORE_TPP

@@ -1,5 +1,5 @@
-#ifndef SPA_CONSTANTSTORE_H
-#define SPA_CONSTANTSTORE_H
+#ifndef SPA_SRC_PKB_CONSTANTSTORE_H
+#define SPA_SRC_PKB_CONSTANTSTORE_H
 
 #include <unordered_set>
 
@@ -19,4 +19,4 @@ private:
 	unordered_set<ConstVal> store;
 };
 
-#endif  // SPA_CONSTANTSTORE_H
+#endif  // SPA_SRC_PKB_CONSTANTSTORE_H

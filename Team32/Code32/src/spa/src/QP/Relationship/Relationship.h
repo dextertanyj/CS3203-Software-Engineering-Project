@@ -1,5 +1,5 @@
-#ifndef SPA_RELATIONSHIP_H
-#define SPA_RELATIONSHIP_H
+#ifndef SPA_SRC_QP_RELATIONSHIP_RELATIONSHIP_H
+#define SPA_SRC_QP_RELATIONSHIP_RELATIONSHIP_H
 
 namespace QP::Relationship {
 class Follows;
@@ -14,4 +14,4 @@ class UsesP;
 class UsesS;
 }  // namespace QP::Relationship
 
-#endif  // SPA_RELATIONSHIP_H
+#endif  // SPA_SRC_QP_RELATIONSHIP_RELATIONSHIP_H

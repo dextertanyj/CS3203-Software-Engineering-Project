@@ -1,5 +1,5 @@
-#ifndef SPA_IFNODE_H
-#define SPA_IFNODE_H
+#ifndef SPA_SRC_SP_NODE_IFNODE_H
+#define SPA_SRC_SP_NODE_IFNODE_H
 
 #include <memory>
 #include <string>
@@ -27,4 +27,4 @@ private:
 	shared_ptr<StatementListNode> else_stmt_list;
 };
 
-#endif  // SPA_IFNODE_H
+#endif  // SPA_SRC_SP_NODE_IFNODE_H

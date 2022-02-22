@@ -1,5 +1,5 @@
-#ifndef SPA_PRINTNODE_H
-#define SPA_PRINTNODE_H
+#ifndef SPA_SRC_SP_NODE_PRINTNODE_H
+#define SPA_SRC_SP_NODE_PRINTNODE_H
 
 #include <memory>
 #include <string>
@@ -23,4 +23,4 @@ private:
 	shared_ptr<VariableNode> variable;
 };
 
-#endif  // SPA_PRINTNODE_H
+#endif  // SPA_SRC_SP_NODE_PRINTNODE_H

@@ -1,3 +1,6 @@
+#ifndef SPA_SRC_PKB_SVRELATIONSTORE_TPP
+#define SPA_SRC_PKB_SVRELATIONSTORE_TPP
+
 #include "PKB/SVRelationStore.h"
 
 #include <algorithm>
@@ -115,3 +118,5 @@ void PKB::SVRelationStore<T>::clear() {
 	variable_key_map.clear();
 	statement_key_map.clear();
 }
+
+#endif  // SPA_SRC_PKB_SVRELATIONSTORE_TPP

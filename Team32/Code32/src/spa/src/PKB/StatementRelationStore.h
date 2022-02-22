@@ -1,5 +1,5 @@
-#ifndef SPA_STATEMENTRELATIONSTORE_H
-#define SPA_STATEMENTRELATIONSTORE_H
+#ifndef SPA_SRC_PKB_STATEMENTRELATIONSTORE_H
+#define SPA_SRC_PKB_STATEMENTRELATIONSTORE_H
 
 #include <unordered_map>
 #include <unordered_set>
@@ -27,4 +27,4 @@ private:
 	friend class FollowsRelation;
 };
 
-#endif  // SPA_STATEMENTRELATIONSTORE_H
+#endif  // SPA_SRC_PKB_STATEMENTRELATIONSTORE_H

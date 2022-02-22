@@ -1,5 +1,5 @@
-#ifndef SPA_STATEMENTNODE_H
-#define SPA_STATEMENTNODE_H
+#ifndef SPA_SRC_SP_NODE_STATEMENTNODE_H
+#define SPA_SRC_SP_NODE_STATEMENTNODE_H
 
 #include <memory>
 
@@ -23,4 +23,4 @@ private:
 	StmtRef stmt_no;
 };
 
-#endif  // SPA_STATEMENTNODE_H
+#endif  // SPA_SRC_SP_NODE_STATEMENTNODE_H

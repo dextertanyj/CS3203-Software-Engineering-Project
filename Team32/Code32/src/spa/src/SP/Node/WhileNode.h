@@ -1,5 +1,5 @@
-#ifndef SPA_WHILENODE_H
-#define SPA_WHILENODE_H
+#ifndef SPA_SRC_SP_NODE_WHILENODE_H
+#define SPA_SRC_SP_NODE_WHILENODE_H
 
 #include <memory>
 #include <string>
@@ -24,4 +24,4 @@ private:
 	shared_ptr<StatementListNode> stmt_list;
 };
 
-#endif  // SPA_WHILENODE_H
+#endif  // SPA_SRC_SP_NODE_WHILENODE_H

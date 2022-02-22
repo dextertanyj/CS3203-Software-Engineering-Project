@@ -1,5 +1,5 @@
-#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_USESS_H_
-#define TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_USESS_H_
+#ifndef SPA_SRC_QP_RELATIONSHIP_USESS_H
+#define SPA_SRC_QP_RELATIONSHIP_USESS_H
 
 #include "QP/QueryTypes.h"
 #include "QP/Relationship/Relation.h"
@@ -22,4 +22,4 @@ private:
 	QueryResult executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) override;
 };
 
-#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_USESS_H_
+#endif  // SPA_SRC_QP_RELATIONSHIP_USESS_H

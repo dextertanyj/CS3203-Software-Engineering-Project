@@ -1,5 +1,5 @@
-#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYUTILS_H_
-#define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYUTILS_H_
+#ifndef SPA_SRC_QP_QUERYUTILS_H
+#define SPA_SRC_QP_QUERYUTILS_H
 
 #include <memory>
 #include <unordered_map>
@@ -25,4 +25,4 @@ inline bool checkStmtTypeMatch(const shared_ptr<StmtInfo>& stmt, DesignEntity de
 }
 };  // namespace QP::Utilities
 
-#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYUTILS_H_
+#endif  // SPA_SRC_QP_QUERYUTILS_H

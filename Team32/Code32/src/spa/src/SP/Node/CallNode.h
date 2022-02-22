@@ -1,5 +1,5 @@
-#ifndef SPA_CALLNODE_H
-#define SPA_CALLNODE_H
+#ifndef SPA_SRC_SP_NODE_CALLNODE_H
+#define SPA_SRC_SP_NODE_CALLNODE_H
 
 #include <memory>
 
@@ -20,4 +20,4 @@ private:
 	ProcRef procedure;
 };
 
-#endif  // SPA_CALLNODE_H
+#endif  // SPA_SRC_SP_NODE_CALLNODE_H

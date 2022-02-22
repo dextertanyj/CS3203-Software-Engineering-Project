@@ -1,5 +1,5 @@
-#ifndef SPA_QP_H
-#define SPA_QP_H
+#ifndef SPA_SRC_QP_QP_H
+#define SPA_SRC_QP_QP_H
 
 using namespace std;
 
@@ -29,4 +29,4 @@ struct QueryTokenizationException : public runtime_error {
 // };
 }  // namespace QP
 
-#endif  // SPA_QP_H
+#endif  // SPA_SRC_QP_QP_H

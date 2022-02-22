@@ -1,5 +1,5 @@
-#ifndef SPA_DESIGNEXTRACTOR_H
-#define SPA_DESIGNEXTRACTOR_H
+#ifndef SPA_SRC_SP_DESIGNEXTRACTOR_H
+#define SPA_SRC_SP_DESIGNEXTRACTOR_H
 
 #include <memory>
 
@@ -18,4 +18,4 @@ private:
 	PKB::Storage& pkb;
 };
 
-#endif  // SPA_DESIGNEXTRACTOR_H
+#endif  // SPA_SRC_SP_DESIGNEXTRACTOR_H

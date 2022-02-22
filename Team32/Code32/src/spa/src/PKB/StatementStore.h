@@ -1,5 +1,5 @@
-#ifndef SPA_STATEMENTSTORE_H
-#define SPA_STATEMENTSTORE_H
+#ifndef SPA_SRC_PKB_STATEMENTSTORE_H
+#define SPA_SRC_PKB_STATEMENTSTORE_H
 
 #include <memory>
 #include <unordered_map>
@@ -22,4 +22,4 @@ private:
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> store;
 };
 
-#endif  // SPA_STATEMENTSTORE_H
+#endif  // SPA_SRC_PKB_STATEMENTSTORE_H

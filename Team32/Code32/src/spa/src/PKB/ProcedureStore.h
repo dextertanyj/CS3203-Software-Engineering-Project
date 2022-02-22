@@ -1,5 +1,5 @@
-#ifndef SPA_PROCEDURESTORE_H
-#define SPA_PROCEDURESTORE_H
+#ifndef SPA_SRC_PKB_PROCEDURESTORE_H
+#define SPA_SRC_PKB_PROCEDURESTORE_H
 
 #include <memory>
 #include <unordered_map>

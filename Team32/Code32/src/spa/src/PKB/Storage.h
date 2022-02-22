@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SPA_SRC_PKB_STORAGE_H
+#define SPA_SRC_PKB_STORAGE_H
 
 #include <memory>
 #include <string>
@@ -91,3 +92,5 @@ private:
 	SVRelationStore<ModifiesRelation> modifies_store;
 	AssignStore assign_store;
 };
+
+#endif

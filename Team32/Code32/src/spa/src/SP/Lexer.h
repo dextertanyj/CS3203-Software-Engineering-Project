@@ -1,5 +1,5 @@
-#ifndef SPA_LEXER_H
-#define SPA_LEXER_H
+#ifndef SPA_SRC_SP_LEXER_H
+#define SPA_SRC_SP_LEXER_H
 
 #include <regex>
 #include <string>
@@ -26,4 +26,4 @@ private:
 	sregex_iterator iterator;
 };
 
-#endif  // SPA_LEXER_H
+#endif  // SPA_SRC_SP_LEXER_H

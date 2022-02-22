@@ -1,5 +1,5 @@
-#ifndef SPA_ASSIGNMENTNODE_H
-#define SPA_ASSIGNMENTNODE_H
+#ifndef SPA_SRC_SP_NODE_ASSIGNMENTNODE_H
+#define SPA_SRC_SP_NODE_ASSIGNMENTNODE_H
 
 #include <memory>
 #include <string>
@@ -25,4 +25,4 @@ private:
 	shared_ptr<ExpressionNode> expression;
 };
 
-#endif  // SPA_ASSIGNMENTNODE_H
+#endif  // SPA_SRC_SP_NODE_ASSIGNMENTNODE_H

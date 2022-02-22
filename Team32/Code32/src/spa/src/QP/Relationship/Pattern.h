@@ -1,5 +1,5 @@
-#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPATTERN_H_
-#define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPATTERN_H_
+#ifndef SPA_SRC_QP_RELATIONSHIP_PATTERN_H
+#define SPA_SRC_QP_RELATIONSHIP_PATTERN_H
 
 #include <optional>
 #include <string>
@@ -33,4 +33,4 @@ private:
 	optional<Common::ExpressionProcessor::Expression> expression;
 };
 
-#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPATTERN_H_
+#endif  // SPA_SRC_QP_RELATIONSHIP_PATTERN_H

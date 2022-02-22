@@ -1,5 +1,5 @@
-#ifndef SPA_VARIABLESTORE_H
-#define SPA_VARIABLESTORE_H
+#ifndef SPA_SRC_PKB_VARIABLESTORE_H
+#define SPA_SRC_PKB_VARIABLESTORE_H
 
 #include <unordered_set>
 
@@ -17,4 +17,4 @@ private:
 	unordered_set<VarRef> store;
 };
 
-#endif  // SPA_VARIABLESTORE_H
+#endif  // SPA_SRC_PKB_VARIABLESTORE_H

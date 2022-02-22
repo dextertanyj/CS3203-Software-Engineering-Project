@@ -1,5 +1,5 @@
-#ifndef SPA_MODIFES_H
-#define SPA_MODIFES_H
+#ifndef SPA_SRC_PKB_MODIFIESRELATION_H
+#define SPA_SRC_PKB_MODIFIESRELATION_H
 
 #include "PKB/PKB.h"
 #include "PKB/SVRelationStore.h"
@@ -14,4 +14,4 @@ public:
 	                     SVRelationStore<ModifiesRelation>& store);
 };
 
-#endif  // SPA_MODIFES_H
+#endif  // SPA_SRC_PKB_MODIFIESRELATION_H

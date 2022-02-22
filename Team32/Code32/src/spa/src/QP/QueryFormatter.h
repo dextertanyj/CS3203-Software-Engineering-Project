@@ -1,5 +1,5 @@
-#ifndef QUERY_FORMATTER_H_
-#define QUERY_FORMATTER_H_
+#ifndef SPA_SRC_QP_QUERYFORMATTER_H
+#define SPA_SRC_QP_QUERYFORMATTER_H
 
 #include <string>
 
@@ -14,4 +14,4 @@ public:
 	static vector<string> formatResult(QueryProperties& query_properties, QueryResult& query_result);
 };
 
-#endif  // QUERY_FORMATTER_H_
+#endif  // SPA_SRC_QP_QUERYFORMATTER_H

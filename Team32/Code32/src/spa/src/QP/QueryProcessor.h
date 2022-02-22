@@ -1,5 +1,5 @@
-#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPROCESSOR_H_
-#define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPROCESSOR_H_
+#ifndef SPA_SRC_QP_QUERYPROCESSOR_H
+#define SPA_SRC_QP_QUERYPROCESSOR_H
 
 #include <string>
 #include <vector>
@@ -19,4 +19,4 @@ private:
 	QueryEvaluator evaluator;
 };
 
-#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPROCESSOR_H_
+#endif  // SPA_SRC_QP_QUERYPROCESSOR_H

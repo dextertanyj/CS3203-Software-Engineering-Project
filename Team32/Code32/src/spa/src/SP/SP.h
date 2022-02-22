@@ -1,5 +1,5 @@
-#ifndef SPA_SP_H
-#define SPA_SP_H
+#ifndef SPA_SRC_SP_SP_H
+#define SPA_SRC_SP_SP_H
 
 #include <stdexcept>
 #include <unordered_set>
@@ -22,4 +22,4 @@ class Parser;
 class DesignExtractor;
 }  // namespace SP
 
-#endif  // SPA_SP_H
+#endif  // SPA_SRC_SP_SP_H

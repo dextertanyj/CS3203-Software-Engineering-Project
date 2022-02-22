@@ -1,5 +1,5 @@
-#ifndef SPA_READNODE_H
-#define SPA_READNODE_H
+#ifndef SPA_SRC_SP_NODE_READNODE_H
+#define SPA_SRC_SP_NODE_READNODE_H
 
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
@@ -20,4 +20,4 @@ private:
 	shared_ptr<VariableNode> variable;
 };
 
-#endif  // SPA_READNODE_H
+#endif  // SPA_SRC_SP_NODE_READNODE_H

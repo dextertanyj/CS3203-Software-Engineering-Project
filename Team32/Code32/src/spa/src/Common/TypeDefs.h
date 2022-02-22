@@ -1,5 +1,5 @@
-#ifndef INC_21S2_CP_SPA_TEAM_32_TYPEDEFS_H
-#define INC_21S2_CP_SPA_TEAM_32_TYPEDEFS_H
+#ifndef SPA_SRC_COMMON_TYPEDEFS_H
+#define SPA_SRC_COMMON_TYPEDEFS_H
 
 #include <memory>
 #include <string>

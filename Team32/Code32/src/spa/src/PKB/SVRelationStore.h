@@ -1,5 +1,5 @@
-#ifndef INC_21S2_CP_SPA_TEAM_32_MODIFYSTORE_H
-#define INC_21S2_CP_SPA_TEAM_32_MODIFYSTORE_H
+#ifndef SPA_SRC_PKB_SVRELATIONSTORE_H
+#define SPA_SRC_PKB_SVRELATIONSTORE_H
 
 #include <cstdio>
 #include <string>
@@ -31,4 +31,4 @@ private:
 	friend class ModifiesRelation;
 };
 
-#endif  // INC_21S2_CP_SPA_TEAM_32_MODIFYSTORE_H
+#endif  // SPA_SRC_PKB_SVRELATIONSTORE_H

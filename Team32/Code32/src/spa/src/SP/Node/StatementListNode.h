@@ -1,5 +1,5 @@
-#ifndef SPA_STATEMENTLISTNODE_H
-#define SPA_STATEMENTLISTNODE_H
+#ifndef SPA_SRC_SP_NODE_STATEMENTLISTNODE_H
+#define SPA_SRC_SP_NODE_STATEMENTLISTNODE_H
 
 #include <memory>
 #include <vector>
@@ -24,4 +24,4 @@ private:
 	vector<shared_ptr<StatementNode>> stmt_list;
 };
 
-#endif  // SPA_STATEMENTLISTNODE_H
+#endif  // SPA_SRC_SP_NODE_STATEMENTLISTNODE_H

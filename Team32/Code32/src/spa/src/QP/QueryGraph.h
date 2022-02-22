@@ -1,5 +1,5 @@
-#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYGRAPH_H_
-#define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYGRAPH_H_
+#ifndef SPA_SRC_QP_QUERYGRAPH_H
+#define SPA_SRC_QP_QUERYGRAPH_H
 
 #include <string>
 #include <unordered_map>
@@ -26,4 +26,4 @@ private:
 	void addEdge(const string& symbol_one, const string& symbol_two);
 };
 
-#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYGRAPH_H_
+#endif  // SPA_SRC_QP_QUERYGRAPH_H

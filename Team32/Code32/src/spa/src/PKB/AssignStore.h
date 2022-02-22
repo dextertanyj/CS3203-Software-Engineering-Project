@@ -1,5 +1,5 @@
-#ifndef INC_21S2_CP_SPA_TEAM_32_ASSIGNSTORE_H
-#define INC_21S2_CP_SPA_TEAM_32_ASSIGNSTORE_H
+#ifndef SPA_SRC_PKB_ASSIGNSTORE_H
+#define SPA_SRC_PKB_ASSIGNSTORE_H
 
 #include <memory>
 #include <unordered_map>

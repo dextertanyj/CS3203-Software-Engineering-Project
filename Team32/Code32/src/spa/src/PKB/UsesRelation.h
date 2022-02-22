@@ -1,5 +1,5 @@
-#ifndef SPA_USESRELATION_H
-#define SPA_USESRELATION_H
+#ifndef SPA_SRC_PKB_USESRELATION_H
+#define SPA_SRC_PKB_USESRELATION_H
 
 #include "PKB/SVRelationStore.h"
 #include "PKB/StatementRelationStore.tpp"
@@ -13,4 +13,4 @@ public:
 	                     SVRelationStore<UsesRelation>& store);
 };
 
-#endif  // SPA_USESRELATION_H
+#endif  // SPA_SRC_PKB_USESRELATION_H

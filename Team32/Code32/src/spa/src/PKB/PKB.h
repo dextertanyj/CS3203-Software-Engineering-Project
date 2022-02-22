@@ -1,5 +1,5 @@
-#ifndef SPA_PKB_H
-#define SPA_PKB_H
+#ifndef SPA_SRC_PKB_PKB_H
+#define SPA_SRC_PKB_PKB_H
 
 #include <memory>
 #include <vector>
@@ -37,4 +37,4 @@ typedef struct ProcRelation {
 } ProcRelation;
 }  // namespace PKB
 
-#endif  // SPA_PKB_H
+#endif  // SPA_SRC_PKB_PKB_H

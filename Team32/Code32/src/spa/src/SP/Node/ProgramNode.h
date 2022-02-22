@@ -1,5 +1,5 @@
-#ifndef SPA_PROGRAMNODE_H
-#define SPA_PROGRAMNODE_H
+#ifndef SPA_SRC_SP_NODE_PROGRAMNODE_H
+#define SPA_SRC_SP_NODE_PROGRAMNODE_H
 
 #include <memory>
 #include <vector>
@@ -24,4 +24,4 @@ private:
 	vector<shared_ptr<ProcedureNode>> procedures;
 };
 
-#endif  // SPA_PROGRAMNODE_H
+#endif  // SPA_SRC_SP_NODE_PROGRAMNODE_H

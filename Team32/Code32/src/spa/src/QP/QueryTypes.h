@@ -1,5 +1,5 @@
-#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYTYPEDEFS_H_
-#define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYTYPEDEFS_H_
+#ifndef SPA_SRC_QP_QUERYTYPES_H
+#define SPA_SRC_QP_QUERYTYPES_H
 
 #include <memory>
 #include <string>
@@ -60,4 +60,4 @@ typedef vector<SuchThatClause> SuchThatClauseList;
 typedef vector<PatternClause> PatternClauseList;
 }  // namespace QP::Types
 
-#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYTYPEDEFS_H_
+#endif  // SPA_SRC_QP_QUERYTYPES_H

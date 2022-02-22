@@ -1,5 +1,5 @@
-#ifndef SPA_PARENTRELATION_H
-#define SPA_PARENTRELATION_H
+#ifndef SPA_SRC_PKB_PARENTRELATION_H
+#define SPA_SRC_PKB_PARENTRELATION_H
 
 #include <unordered_set>
 
@@ -31,4 +31,4 @@ private:
 	                                                              unordered_set<shared_ptr<StmtInfo>> previous);
 };
 
-#endif  // SPA_PARENTRELATION_H
+#endif  // SPA_SRC_PKB_PARENTRELATION_H

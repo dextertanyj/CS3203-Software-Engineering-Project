@@ -1,5 +1,5 @@
-#ifndef SPA_FOLLOWSRELATION_H
-#define SPA_FOLLOWSRELATION_H
+#ifndef SPA_SRC_PKB_FOLLOWSRELATION_H
+#define SPA_SRC_PKB_FOLLOWSRELATION_H
 
 #include <unordered_set>
 
@@ -31,4 +31,4 @@ private:
 	                                                              unordered_set<shared_ptr<StmtInfo>> previous);
 };
 
-#endif  // SPA_FOLLOWSRELATION_H
+#endif  // SPA_SRC_PKB_FOLLOWSRELATION_H

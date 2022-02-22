@@ -1,5 +1,5 @@
-#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPROPERTIES_H_
-#define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPROPERTIES_H_
+#ifndef SPA_SRC_QP_QUERYPROPERTIES_H
+#define SPA_SRC_QP_QUERYPROPERTIES_H
 
 #include <memory>
 #include <string>
@@ -29,4 +29,4 @@ private:
 	PatternClauseList pattern_clause_list;
 };
 
-#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYPROPERTIES_H_
+#endif  // SPA_SRC_QP_QUERYPROPERTIES_H

@@ -1,5 +1,5 @@
-#ifndef SPA_SOURCEPROCESSOR_H
-#define SPA_SOURCEPROCESSOR_H
+#ifndef SPA_SRC_SP_PROCESSOR_H
+#define SPA_SRC_SP_PROCESSOR_H
 
 #include <string>
 
@@ -18,4 +18,4 @@ private:
 	SP::DesignExtractor extractor;
 };
 
-#endif  // SPA_SOURCEPROCESSOR_H
+#endif  // SPA_SRC_SP_PROCESSOR_H

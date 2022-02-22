@@ -1,5 +1,5 @@
-#ifndef SPA_VARIABLENODE_H
-#define SPA_VARIABLENODE_H
+#ifndef SPA_SRC_SP_NODE_VARIABLENODE_H
+#define SPA_SRC_SP_NODE_VARIABLENODE_H
 
 #include <memory>
 #include <string>
@@ -22,4 +22,4 @@ private:
 	VarRef name;
 };
 
-#endif  // SPA_VARIABLENODE_H
+#endif  // SPA_SRC_SP_NODE_VARIABLENODE_H
