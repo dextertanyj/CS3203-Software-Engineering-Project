@@ -10,7 +10,7 @@ using namespace std;
 
 class MockLexer : public Common::ExpressionProcessor::LexerInterface {
 public:
-	MockLexer(vector<string> tokens);
+	explicit MockLexer(vector<string> tokens);
 	string readToken() override;
 	string peekToken() override;
 

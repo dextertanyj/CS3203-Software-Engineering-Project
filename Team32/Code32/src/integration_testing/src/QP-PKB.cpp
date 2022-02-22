@@ -24,9 +24,9 @@ TEST_CASE("Basic select") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {"1", "2", "3", "4"};
+		vector<string> expected_result = {"1", "2", "3", "4"};
 		sort(result.begin(), result.end());
-		REQUIRE(result == expectedResult);
+		REQUIRE(result == expected_result);
 	}
 
 	SECTION("Select if statement") {
@@ -34,8 +34,8 @@ TEST_CASE("Basic select") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {"4"};
-		REQUIRE(result == expectedResult);
+		vector<string> expected_result = {"4"};
+		REQUIRE(result == expected_result);
 	}
 
 	SECTION("Select variable") {
@@ -43,8 +43,8 @@ TEST_CASE("Basic select") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {"x"};
-		REQUIRE(result == expectedResult);
+		vector<string> expected_result = {"x"};
+		REQUIRE(result == expected_result);
 	}
 
 	SECTION("Select constant") {
@@ -52,9 +52,9 @@ TEST_CASE("Basic select") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {"1", "2000", "4", "90"};
+		vector<string> expected_result = {"1", "2000", "4", "90"};
 		sort(result.begin(), result.end());
-		REQUIRE(result == expectedResult);
+		REQUIRE(result == expected_result);
 	}
 };
 
@@ -75,9 +75,9 @@ TEST_CASE("One such that clause") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {"1", "2000", "4", "90"};
+		vector<string> expected_result = {"1", "2000", "4", "90"};
 		sort(result.begin(), result.end());
-		REQUIRE(result == expectedResult);
+		REQUIRE(result == expected_result);
 	}
 
 	SECTION("Trivial clause, no result") {
@@ -85,8 +85,8 @@ TEST_CASE("One such that clause") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {};
-		REQUIRE(result == expectedResult);
+		vector<string> expected_result = {};
+		REQUIRE(result == expected_result);
 	}
 
 	SECTION("Non trivial clause") {
@@ -94,8 +94,8 @@ TEST_CASE("One such that clause") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {"x"};
-		REQUIRE(result == expectedResult);
+		vector<string> expected_result = {"x"};
+		REQUIRE(result == expected_result);
 	}
 
 	SECTION("Non trivial clause, no result") {
@@ -103,8 +103,8 @@ TEST_CASE("One such that clause") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {};
-		REQUIRE(result == expectedResult);
+		vector<string> expected_result = {};
+		REQUIRE(result == expected_result);
 	}
 };
 
@@ -115,16 +115,16 @@ TEST_CASE("One pattern clause") {
 	pkb.setStmtType(3, StmtType::Assign);
 	pkb.setConstant({1, 90});
 
-	vector<string> assignToken1 = {"90"};
-	QP::QueryExpressionLexer lexer1 = QP::QueryExpressionLexer(assignToken1);
+	vector<string> assign_token1 = {"90"};
+	QP::QueryExpressionLexer lexer1 = QP::QueryExpressionLexer(assign_token1);
 	auto expression1 = Common::ExpressionProcessor::Expression::parse(lexer1, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(1, "x", expression1);
-	vector<string> assignToken2 = {"x", "+", "1"};
-	QP::QueryExpressionLexer lexer2 = QP::QueryExpressionLexer(assignToken2);
+	vector<string> assign_token2 = {"x", "+", "1"};
+	QP::QueryExpressionLexer lexer2 = QP::QueryExpressionLexer(assign_token2);
 	auto expression2 = Common::ExpressionProcessor::Expression::parse(lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(2, "y", expression2);
-	vector<string> assignToken3 = {"x", "+", "y"};
-	QP::QueryExpressionLexer lexer3 = QP::QueryExpressionLexer(assignToken3);
+	vector<string> assign_token3 = {"x", "+", "y"};
+	QP::QueryExpressionLexer lexer3 = QP::QueryExpressionLexer(assign_token3);
 	auto expression3 = Common::ExpressionProcessor::Expression::parse(lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(3, "x", expression3);
 
@@ -135,9 +135,9 @@ TEST_CASE("One pattern clause") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {"1", "90"};
+		vector<string> expected_result = {"1", "90"};
 		sort(result.begin(), result.end());
-		REQUIRE(result == expectedResult);
+		REQUIRE(result == expected_result);
 	};
 
 	SECTION("Trivial clause, no result") {
@@ -145,8 +145,8 @@ TEST_CASE("One pattern clause") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {};
-		REQUIRE(result == expectedResult);
+		vector<string> expected_result = {};
+		REQUIRE(result == expected_result);
 	}
 
 	SECTION("Non-trivial clause") {
@@ -154,8 +154,8 @@ TEST_CASE("One pattern clause") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {"2", "3"};
-		REQUIRE(result == expectedResult);
+		vector<string> expected_result = {"2", "3"};
+		REQUIRE(result == expected_result);
 	}
 
 	SECTION("Non-trivial clause, no result") {
@@ -163,8 +163,8 @@ TEST_CASE("One pattern clause") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {};
-		REQUIRE(result == expectedResult);
+		vector<string> expected_result = {};
+		REQUIRE(result == expected_result);
 	}
 };
 
@@ -186,16 +186,16 @@ TEST_CASE("One such that and one pattern") {
 	pkb.setUses(5, "x");
 	pkb.setUses(5, "y");
 
-	vector<string> assignToken1 = {"90"};
-	QP::QueryExpressionLexer lexer1 = QP::QueryExpressionLexer(assignToken1);
+	vector<string> assign_token1 = {"90"};
+	QP::QueryExpressionLexer lexer1 = QP::QueryExpressionLexer(assign_token1);
 	auto expression1 = Common::ExpressionProcessor::Expression::parse(lexer1, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(1, "x", expression1);
-	vector<string> assignToken2 = {"x", "+", "1"};
-	QP::QueryExpressionLexer lexer2 = QP::QueryExpressionLexer(assignToken2);
+	vector<string> assign_token2 = {"x", "+", "1"};
+	QP::QueryExpressionLexer lexer2 = QP::QueryExpressionLexer(assign_token2);
 	auto expression2 = Common::ExpressionProcessor::Expression::parse(lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(4, "y", expression2);
-	vector<string> assignToken3 = {"x", "+", "y"};
-	QP::QueryExpressionLexer lexer3 = QP::QueryExpressionLexer(assignToken3);
+	vector<string> assign_token3 = {"x", "+", "y"};
+	QP::QueryExpressionLexer lexer3 = QP::QueryExpressionLexer(assign_token3);
 	auto expression3 = Common::ExpressionProcessor::Expression::parse(lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(5, "x", expression3);
 
@@ -206,9 +206,9 @@ TEST_CASE("One such that and one pattern") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {"1", "90"};
+		vector<string> expected_result = {"1", "90"};
 		sort(result.begin(), result.end());
-		REQUIRE(result == expectedResult);
+		REQUIRE(result == expected_result);
 	};
 
 	SECTION("Forms a trivial group") {
@@ -216,8 +216,8 @@ TEST_CASE("One such that and one pattern") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {};
-		REQUIRE(result == expectedResult);
+		vector<string> expected_result = {};
+		REQUIRE(result == expected_result);
 	}
 
 	SECTION("Non-trivial such that, trivial pattern") {
@@ -225,9 +225,9 @@ TEST_CASE("One such that and one pattern") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {"1", "3", "4"};
+		vector<string> expected_result = {"1", "3", "4"};
 		sort(result.begin(), result.end());
-		REQUIRE(result == expectedResult);
+		REQUIRE(result == expected_result);
 	}
 
 	SECTION("Trivial such that, non-trivial pattern") {
@@ -235,9 +235,9 @@ TEST_CASE("One such that and one pattern") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {"4", "5"};
+		vector<string> expected_result = {"4", "5"};
 		sort(result.begin(), result.end());
-		REQUIRE(result == expectedResult);
+		REQUIRE(result == expected_result);
 	}
 
 	SECTION("Both non-trivial") {
@@ -245,7 +245,7 @@ TEST_CASE("One such that and one pattern") {
 
 		vector<string> result = processor.processQuery(query);
 
-		vector<string> expectedResult = {"5"};
-		REQUIRE(result == expectedResult);
+		vector<string> expected_result = {"5"};
+		REQUIRE(result == expected_result);
 	}
 }

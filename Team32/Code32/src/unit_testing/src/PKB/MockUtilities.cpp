@@ -1,7 +1,7 @@
 #include "MockUtilities.h"
 
-shared_ptr<StmtInfo> MockUtilities::createStmtInfo(StmtRef stmtNo, StmtType type) {
-	StmtInfo s = {stmtNo, type};
+shared_ptr<StmtInfo> MockUtilities::createStmtInfo(StmtRef stmt_no, StmtType type) {
+	StmtInfo s = {stmt_no, type};
 	shared_ptr<StmtInfo> stmt_info = make_shared<StmtInfo>(s);
 	return stmt_info;
 }

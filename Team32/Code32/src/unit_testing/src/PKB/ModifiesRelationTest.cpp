@@ -33,13 +33,13 @@ TEST_CASE("PKB::Modifies") {
 	}
 
 	SECTION("PKB::ModifiesRelation::validate Multiple Var Test") {
-		unordered_set<VarRef> varRefs = unordered_set<VarRef>({"x", "y", "z"});
-		REQUIRE(PKB::ModifiesRelation::validate(&store, s1, varRefs));
-		REQUIRE(PKB::ModifiesRelation::validate(&store, s2, varRefs));
-		REQUIRE_FALSE(PKB::ModifiesRelation::validate(&store, s3, varRefs));
-		REQUIRE(PKB::ModifiesRelation::validate(&store, s4, varRefs));
-		REQUIRE_THROWS_AS(PKB::ModifiesRelation::validate(&store, s5, varRefs), invalid_argument);
-		REQUIRE_FALSE(PKB::ModifiesRelation::validate(&store, s6, varRefs));
+		unordered_set<VarRef> var_refs = unordered_set<VarRef>({"x", "y", "z"});
+		REQUIRE(PKB::ModifiesRelation::validate(&store, s1, var_refs));
+		REQUIRE(PKB::ModifiesRelation::validate(&store, s2, var_refs));
+		REQUIRE_FALSE(PKB::ModifiesRelation::validate(&store, s3, var_refs));
+		REQUIRE(PKB::ModifiesRelation::validate(&store, s4, var_refs));
+		REQUIRE_THROWS_AS(PKB::ModifiesRelation::validate(&store, s5, var_refs), invalid_argument);
+		REQUIRE_FALSE(PKB::ModifiesRelation::validate(&store, s6, var_refs));
 	}
 
 	SECTION("PKB::ModifiesRelation::optimize Test") {

@@ -69,7 +69,7 @@ TEST_CASE("SP::Node::IfNode::equals") {
 
 	SECTION("Different Node Type Test") {
 		shared_ptr<CallNode> other = make_shared<CallNode>(1, "test");
-		REQUIRE_FALSE(node->equals(move(other)));
+		REQUIRE_FALSE(node->equals(other));
 	}
 }
 

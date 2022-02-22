@@ -17,33 +17,33 @@ TEST_CASE("SP::Node::AssignmentNode::equals") {
 	unique_ptr<VariableNode> assignee_a = make_unique<VariableNode>("A");
 	unique_ptr<ExpressionNode> expression_a = make_unique<ExpressionNode>(createArithmeticExpression(vector<string>({"A", ";"})));
 
-	SECTION("Same Object Test") { REQUIRE(node->equals(move(node))); }
+	SECTION("Same Object Test") { REQUIRE(node->equals(node)); }
 
 	SECTION("Same Node Test") {
 		shared_ptr<AssignmentNode> other = make_shared<AssignmentNode>(1, move(assignee_a), move(expression_a));
-		REQUIRE(node->equals(move(other)));
+		REQUIRE(node->equals(other));
 	}
 
 	SECTION("Different StmtNo Node Test") {
 		shared_ptr<AssignmentNode> other = make_shared<AssignmentNode>(2, move(assignee_a), move(expression_a));
-		REQUIRE_FALSE(node->equals(move(other)));
+		REQUIRE_FALSE(node->equals(other));
 	}
 
 	SECTION("Different Assignee Node Test") {
 		unique_ptr<VariableNode> assignee_b = make_unique<VariableNode>("B");
 		shared_ptr<AssignmentNode> other = make_shared<AssignmentNode>(1, move(assignee_b), move(expression_a));
-		REQUIRE_FALSE(node->equals(move(other)));
+		REQUIRE_FALSE(node->equals(other));
 	}
 
 	SECTION("Different Expression Node Test") {
 		unique_ptr<ExpressionNode> expression_b = make_unique<ExpressionNode>(createArithmeticExpression(vector<string>({"B", ";"})));
 		shared_ptr<AssignmentNode> other = make_shared<AssignmentNode>(1, move(assignee_a), move(expression_b));
-		REQUIRE_FALSE(node->equals(move(other)));
+		REQUIRE_FALSE(node->equals(other));
 	}
 
 	SECTION("Different Node Type Test") {
 		shared_ptr<CallNode> other = make_shared<CallNode>(1, "test");
-		REQUIRE_FALSE(node->equals(move(other)));
+		REQUIRE_FALSE(node->equals(other));
 	}
 }
 

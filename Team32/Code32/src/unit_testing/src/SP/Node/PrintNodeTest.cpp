@@ -9,32 +9,32 @@ using namespace SP::Node;
 TEST_CASE("SP::Node::PrintNode::equals") {
 	shared_ptr<PrintNode> node = make_shared<PrintNode>(1, make_unique<VariableNode>("a"));
 
-	SECTION("Same Object Test") { REQUIRE(node->equals(move(node))); }
+	SECTION("Same Object Test") { REQUIRE(node->equals(node)); }
 
 	SECTION("Same Node Test") {
 		shared_ptr<PrintNode> other = make_shared<PrintNode>(1, make_unique<VariableNode>("a"));
-		REQUIRE(node->equals(move(other)));
+		REQUIRE(node->equals(other));
 	}
 
 	SECTION("Different Node Test") {
 		shared_ptr<PrintNode> other = make_shared<PrintNode>(1, make_unique<VariableNode>("b"));
-		REQUIRE_FALSE(node->equals(move(other)));
+		REQUIRE_FALSE(node->equals(other));
 		node = make_shared<PrintNode>(1, make_unique<VariableNode>("a"));
 		other = make_shared<PrintNode>(2, make_unique<VariableNode>("a"));
-		REQUIRE_FALSE(node->equals(move(other)));
+		REQUIRE_FALSE(node->equals(other));
 		node = make_shared<PrintNode>(1, make_unique<VariableNode>("a"));
 		other = make_shared<PrintNode>(2, make_unique<VariableNode>("b"));
-		REQUIRE_FALSE(node->equals(move(other)));
+		REQUIRE_FALSE(node->equals(other));
 	}
 
 	SECTION("Case-Sensitivity Test") {
-		unique_ptr<PrintNode> other = make_unique<PrintNode>(1, make_unique<VariableNode>("A"));
-		REQUIRE_FALSE(node->equals(move(other)));
+		shared_ptr<PrintNode> other = make_shared<PrintNode>(1, make_unique<VariableNode>("A"));
+		REQUIRE_FALSE(node->equals(other));
 	}
 
 	SECTION("Different Node Type Test") {
 		shared_ptr<CallNode> other = make_shared<CallNode>(1, "test");
-		REQUIRE_FALSE(node->equals(move(other)));
+		REQUIRE_FALSE(node->equals(other));
 	}
 }
 

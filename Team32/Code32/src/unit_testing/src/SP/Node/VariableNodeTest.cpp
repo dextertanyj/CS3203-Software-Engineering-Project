@@ -8,23 +8,23 @@ using namespace std;
 using namespace SP::Node;
 
 TEST_CASE("SP::Node::VariableNode::equals") {
-	unique_ptr<VariableNode> node = make_unique<VariableNode>("A");
+	shared_ptr<VariableNode> node = make_shared<VariableNode>("A");
 
-	SECTION("Same Object Test") { REQUIRE(node->equals(move(node))); }
+	SECTION("Same Object Test") { REQUIRE(node->equals(node)); }
 
 	SECTION("Same Variable Name Test") {
-		unique_ptr<VariableNode> other = make_unique<VariableNode>("A");
-		REQUIRE(node->equals(move(other)));
+		shared_ptr<VariableNode> other = make_shared<VariableNode>("A");
+		REQUIRE(node->equals(other));
 	}
 
 	SECTION("Different Variable Name Test") {
-		unique_ptr<VariableNode> other = make_unique<VariableNode>("B");
-		REQUIRE_FALSE(node->equals(move(other)));
+		shared_ptr<VariableNode> other = make_shared<VariableNode>("B");
+		REQUIRE_FALSE(node->equals(other));
 	}
 
 	SECTION("Case-Sensitivity Test") {
-		unique_ptr<VariableNode> other = make_unique<VariableNode>("a");
-		REQUIRE_FALSE(node->equals(move(other)));
+		shared_ptr<VariableNode> other = make_shared<VariableNode>("a");
+		REQUIRE_FALSE(node->equals(other));
 	}
 }
 
@@ -33,21 +33,21 @@ TEST_CASE("SP::Node::VariableNode::parseVariable") {
 
 	SECTION("Parse Valid Only Letters Name Token") {
 		lex.initialize("test");
-		unique_ptr<VariableNode> node = VariableNode::parseVariable(lex);
-		unique_ptr<VariableNode> other = make_unique<VariableNode>(VariableNode("test"));
-		REQUIRE(node->equals(move(other)));
+		shared_ptr<VariableNode> node = VariableNode::parseVariable(lex);
+		shared_ptr<VariableNode> other = make_shared<VariableNode>(VariableNode("test"));
+		REQUIRE(node->equals(other));
 		REQUIRE_EQUALS(lex.peekToken(), "");
 	}
 
 	SECTION("Parse Valid Name Token") {
 		lex.initialize("test123 t1est23");
-		unique_ptr<VariableNode> node = VariableNode::parseVariable(lex);
-		unique_ptr<VariableNode> other = make_unique<VariableNode>(VariableNode("test123"));
-		REQUIRE(node->equals(move(other)));
+		shared_ptr<VariableNode> node = VariableNode::parseVariable(lex);
+		shared_ptr<VariableNode> other = make_shared<VariableNode>(VariableNode("test123"));
+		REQUIRE(node->equals(other));
 		REQUIRE_EQUALS(lex.peekToken(), "t1est23");
 		node = VariableNode::parseVariable(lex);
-		other = make_unique<VariableNode>(VariableNode("t1est23"));
-		REQUIRE(node->equals(move(other)));
+		other = make_shared<VariableNode>(VariableNode("t1est23"));
+		REQUIRE(node->equals(other));
 		REQUIRE_EQUALS(lex.peekToken(), "");
 	}
 
@@ -58,18 +58,18 @@ TEST_CASE("SP::Node::VariableNode::parseVariable") {
 	}
 
 	SECTION("Parse Valid Only Letters Name String") {
-		unique_ptr<VariableNode> node = VariableNode::parseVariable("test");
-		unique_ptr<VariableNode> other = make_unique<VariableNode>(VariableNode("test"));
-		REQUIRE(node->equals(move(other)));
+		shared_ptr<VariableNode> node = VariableNode::parseVariable("test");
+		shared_ptr<VariableNode> other = make_shared<VariableNode>(VariableNode("test"));
+		REQUIRE(node->equals(other));
 	}
 
 	SECTION("Parse Valid Name String") {
-		unique_ptr<VariableNode> node = VariableNode::parseVariable("test123");
-		unique_ptr<VariableNode> other = make_unique<VariableNode>(VariableNode("test123"));
-		REQUIRE(node->equals(move(other)));
+		shared_ptr<VariableNode> node = VariableNode::parseVariable("test123");
+		shared_ptr<VariableNode> other = make_shared<VariableNode>(VariableNode("test123"));
+		REQUIRE(node->equals(other));
 		node = VariableNode::parseVariable("t1est23");
-		other = make_unique<VariableNode>(VariableNode("t1est23"));
-		REQUIRE(node->equals(move(other)));
+		other = make_shared<VariableNode>(VariableNode("t1est23"));
+		REQUIRE(node->equals(other));
 	}
 
 	SECTION("Parse Invalid Name String") {
