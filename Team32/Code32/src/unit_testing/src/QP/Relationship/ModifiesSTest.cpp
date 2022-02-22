@@ -33,101 +33,101 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	QueryEntRef varUnderscore = { EntRefType::Underscore, "x"};
 
 	SECTION("trivial: stmtNumber & varName") {
-		ModifiesS modifies1 = ModifiesS(stmtNo1, x);
-		ModifiesS modifies2 = ModifiesS(stmtNo1, y);
+		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmtNo1, x);
+		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(stmtNo1, y);
 
-		QueryResult result1 = modifies1.execute(pkb, true, map);
-		QueryResult result2 = modifies2.execute(pkb, true, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
+		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: stmtNumber & underscore") {
-		ModifiesS modifies1 = ModifiesS(stmtNo1, varUnderscore);
-		ModifiesS modifies2 = ModifiesS(stmtNo4, varUnderscore);
+		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmtNo1, varUnderscore);
+		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(stmtNo4, varUnderscore);
 
-		QueryResult result1 = modifies1.execute(pkb, true, map);
-		QueryResult result2 = modifies2.execute(pkb, true, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
+		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: stmtNumber & synonym") {
-		ModifiesS modifies1 = ModifiesS(stmtNo1, var);
-		ModifiesS modifies2 = ModifiesS(stmtNo4, var);
+		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmtNo1, var);
+		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(stmtNo4, var);
 
-		QueryResult result1 = modifies1.execute(pkb, true, map);
-		QueryResult result2 = modifies2.execute(pkb, true, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
+		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: underscore & varName") {
-		ModifiesS modifies = ModifiesS(stmtUnderscore, var);
+		QP::Relationship::ModifiesS modifies = QP::Relationship::ModifiesS(stmtUnderscore, var);
 
-		QueryResult result = modifies.execute(pkb, true, map);
+		QP::QueryResult result = modifies.execute(pkb, true, map);
 
 		REQUIRE(result.getResult());
 	}
 
 	SECTION("trivial: underscore & underscore") {
-		ModifiesS parent = ModifiesS(stmtUnderscore, varUnderscore);
+		QP::Relationship::ModifiesS parent = QP::Relationship::ModifiesS(stmtUnderscore, varUnderscore);
 
-		QueryResult result = parent.execute(pkb, true, map);
+		QP::QueryResult result = parent.execute(pkb, true, map);
 
 		REQUIRE(result.getResult());
 	}
 
 	SECTION("trivial: underscore & synonym") {
-		ModifiesS modifies = ModifiesS(stmtUnderscore, var);
+		QP::Relationship::ModifiesS modifies = QP::Relationship::ModifiesS(stmtUnderscore, var);
 
-		QueryResult result = modifies.execute(pkb, true, map);
+		QP::QueryResult result = modifies.execute(pkb, true, map);
 
 		REQUIRE(result.getResult());
 	}
 
 	SECTION("trivial: synonym & varName") {
-		ModifiesS modifies1 = ModifiesS(assignSynonym, x);
-		ModifiesS modifies2 = ModifiesS(assignSynonym, y);
+		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(assignSynonym, x);
+		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(assignSynonym, y);
 
-		QueryResult result1 = modifies1.execute(pkb, true, map);
-		QueryResult result2 = modifies2.execute(pkb, true, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
+		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: synonym & underscore") {
-		ModifiesS modifies1 = ModifiesS(stmtSynonym, varUnderscore);
-		ModifiesS modifies2 = ModifiesS(ifSynonym, varUnderscore);
+		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmtSynonym, varUnderscore);
+		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(ifSynonym, varUnderscore);
 
-		QueryResult result1 = modifies1.execute(pkb, true, map);
-		QueryResult result2 = modifies2.execute(pkb, true, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
+		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: synonym & synonym") {
-		ModifiesS modifies1 = ModifiesS(stmtSynonym, var);
-		ModifiesS modifies2 = ModifiesS(ifSynonym, var);
+		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmtSynonym, var);
+		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(ifSynonym, var);
 
-		QueryResult result1 = modifies1.execute(pkb, true, map);
-		QueryResult result2 = modifies2.execute(pkb, true, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
+		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("non-trivial: synonym & varName") {
-		ModifiesS modifies1 = ModifiesS(assignSynonym, x);
-		ModifiesS modifies2 = ModifiesS(ifSynonym, y);
+		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(assignSynonym, x);
+		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(ifSynonym, y);
 
-		QueryResult result1 = modifies1.execute(pkb, false, map);
-		QueryResult result2 = modifies2.execute(pkb, false, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, false, map);
+		QP::QueryResult result2 = modifies2.execute(pkb, false, map);
 
 		vector<string> expectedResult = { "1" };
 		REQUIRE(result1.getSynonymResult("a") == expectedResult);
@@ -135,11 +135,11 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	}
 
 	SECTION("non-trivial: synonym & underscore") {
-		ModifiesS modifies1 = ModifiesS(stmtSynonym, varUnderscore);
-		ModifiesS modifies2 = ModifiesS(ifSynonym, varUnderscore);
+		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmtSynonym, varUnderscore);
+		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(ifSynonym, varUnderscore);
 
-		QueryResult result1 = modifies1.execute(pkb, false, map);
-		QueryResult result2 = modifies2.execute(pkb, false, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, false, map);
+		QP::QueryResult result2 = modifies2.execute(pkb, false, map);
 
 		vector<string> expectedResult = { "1", "2", "3" };
 		vector<string> actualResult = result1.getSynonymResult("s");
@@ -149,11 +149,11 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	}
 
 	SECTION("non-trivial: synonym & synonym") {
-		ModifiesS modifies1 = ModifiesS(stmtSynonym, var);
-		ModifiesS modifies2 = ModifiesS(ifSynonym, var);
+		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmtSynonym, var);
+		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(ifSynonym, var);
 
-		QueryResult result1 = modifies1.execute(pkb, false, map);
-		QueryResult result2 = modifies2.execute(pkb, false, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, false, map);
+		QP::QueryResult result2 = modifies2.execute(pkb, false, map);
 
 		vector<string> expectedStmtResult = { "1", "2", "3" };
 		vector<string> expectedVarResult = { "x", "x", "y" };
@@ -167,9 +167,9 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	}
 
 	SECTION("non-trivial: underscore & synonym") {
-		ModifiesS modifies = ModifiesS(stmtUnderscore, var);
+		QP::Relationship::ModifiesS modifies = QP::Relationship::ModifiesS(stmtUnderscore, var);
 
-		QueryResult result = modifies.execute(pkb, false, map);
+		QP::QueryResult result = modifies.execute(pkb, false, map);
 
 		vector<string> expectedResult = { "x", "y" };
 		vector<string> actualVarResult = result.getSynonymResult("var");
@@ -178,11 +178,11 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	}
 
 	SECTION("non-trivial: stmtNumber & synonym") {
-		ModifiesS modifies1 = ModifiesS(stmtNo1, var);
-		ModifiesS modifies2 = ModifiesS(stmtNo4, var);
+		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmtNo1, var);
+		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(stmtNo4, var);
 
-		QueryResult result1 = modifies1.execute(pkb, false, map);
-		QueryResult result2 = modifies2.execute(pkb, false, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, false, map);
+		QP::QueryResult result2 = modifies2.execute(pkb, false, map);
 
 		vector<string> expectedResult = { "x" };
 		vector<string> actualResult = result1.getSynonymResult("var");

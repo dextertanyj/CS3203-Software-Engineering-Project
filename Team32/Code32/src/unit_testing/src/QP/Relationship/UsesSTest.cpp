@@ -34,101 +34,101 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 	QueryEntRef varUnderscore = { EntRefType::Underscore, "x"};
 
 	SECTION("trivial: stmtNumber & varName") {
-		UsesS uses1 = UsesS(stmtNo1, x);
-		UsesS uses2 = UsesS(stmtNo1, y);
+		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmtNo1, x);
+		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(stmtNo1, y);
 
-		QueryResult result1 = uses1.execute(pkb, true, map);
-		QueryResult result2 = uses2.execute(pkb, true, map);
+		QP::QueryResult result1 = uses1.execute(pkb, true, map);
+		QP::QueryResult result2 = uses2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: stmtNumber & underscore") {
-		UsesS uses1 = UsesS(stmtNo1, varUnderscore);
-		UsesS uses2 = UsesS(stmtNo4, varUnderscore);
+		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmtNo1, varUnderscore);
+		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(stmtNo4, varUnderscore);
 
-		QueryResult result1 = uses1.execute(pkb, true, map);
-		QueryResult result2 = uses2.execute(pkb, true, map);
+		QP::QueryResult result1 = uses1.execute(pkb, true, map);
+		QP::QueryResult result2 = uses2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: stmtNumber & synonym") {
-		UsesS uses1 = UsesS(stmtNo1, var);
-		UsesS uses2 = UsesS(stmtNo4, var);
+		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmtNo1, var);
+		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(stmtNo4, var);
 
-		QueryResult result1 = uses1.execute(pkb, true, map);
-		QueryResult result2 = uses2.execute(pkb, true, map);
+		QP::QueryResult result1 = uses1.execute(pkb, true, map);
+		QP::QueryResult result2 = uses2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: underscore & varName") {
-		UsesS uses = UsesS(stmtUnderscore, var);
+		QP::Relationship::UsesS uses = QP::Relationship::UsesS(stmtUnderscore, var);
 
-		QueryResult result = uses.execute(pkb, true, map);
+		QP::QueryResult result = uses.execute(pkb, true, map);
 
 		REQUIRE(result.getResult());
 	}
 
 	SECTION("trivial: underscore & underscore") {
-		UsesS parent = UsesS(stmtUnderscore, varUnderscore);
+		QP::Relationship::UsesS parent = QP::Relationship::UsesS(stmtUnderscore, varUnderscore);
 
-		QueryResult result = parent.execute(pkb, true, map);
+		QP::QueryResult result = parent.execute(pkb, true, map);
 
 		REQUIRE(result.getResult());
 	}
 
 	SECTION("trivial: underscore & synonym") {
-		UsesS uses = UsesS(stmtUnderscore, var);
+		QP::Relationship::UsesS uses = QP::Relationship::UsesS(stmtUnderscore, var);
 
-		QueryResult result = uses.execute(pkb, true, map);
+		QP::QueryResult result = uses.execute(pkb, true, map);
 
 		REQUIRE(result.getResult());
 	}
 
 	SECTION("trivial: synonym & varName") {
-		UsesS uses1 = UsesS(assignSynonym, x);
-		UsesS uses2 = UsesS(assignSynonym, y);
+		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(assignSynonym, x);
+		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(assignSynonym, y);
 
-		QueryResult result1 = uses1.execute(pkb, true, map);
-		QueryResult result2 = uses2.execute(pkb, true, map);
+		QP::QueryResult result1 = uses1.execute(pkb, true, map);
+		QP::QueryResult result2 = uses2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: synonym & underscore") {
-		UsesS uses1 = UsesS(stmtSynonym, varUnderscore);
-		UsesS uses2 = UsesS(ifSynonym, varUnderscore);
+		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmtSynonym, varUnderscore);
+		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(ifSynonym, varUnderscore);
 
-		QueryResult result1 = uses1.execute(pkb, true, map);
-		QueryResult result2 = uses2.execute(pkb, true, map);
+		QP::QueryResult result1 = uses1.execute(pkb, true, map);
+		QP::QueryResult result2 = uses2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("trivial: synonym & synonym") {
-		UsesS uses1 = UsesS(stmtSynonym, var);
-		UsesS uses2 = UsesS(ifSynonym, var);
+		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmtSynonym, var);
+		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(ifSynonym, var);
 
-		QueryResult result1 = uses1.execute(pkb, true, map);
-		QueryResult result2 = uses2.execute(pkb, true, map);
+		QP::QueryResult result1 = uses1.execute(pkb, true, map);
+		QP::QueryResult result2 = uses2.execute(pkb, true, map);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("non-trivial: synonym & varName") {
-		UsesS uses1 = UsesS(assignSynonym, x);
-		UsesS uses2 = UsesS(ifSynonym, y);
+		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(assignSynonym, x);
+		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(ifSynonym, y);
 
-		QueryResult result1 = uses1.execute(pkb, false, map);
-		QueryResult result2 = uses2.execute(pkb, false, map);
+		QP::QueryResult result1 = uses1.execute(pkb, false, map);
+		QP::QueryResult result2 = uses2.execute(pkb, false, map);
 
 		vector<string> expectedResult = { "1" };
 		REQUIRE(result1.getSynonymResult("a") == expectedResult);
@@ -136,11 +136,11 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 	}
 
 	SECTION("non-trivial: synonym & underscore") {
-		UsesS uses1 = UsesS(stmtSynonym, varUnderscore);
-		UsesS uses2 = UsesS(ifSynonym, varUnderscore);
+		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmtSynonym, varUnderscore);
+		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(ifSynonym, varUnderscore);
 
-		QueryResult result1 = uses1.execute(pkb, false, map);
-		QueryResult result2 = uses2.execute(pkb, false, map);
+		QP::QueryResult result1 = uses1.execute(pkb, false, map);
+		QP::QueryResult result2 = uses2.execute(pkb, false, map);
 
 		vector<string> expectedResult = { "1", "2", "3" };
 		vector<string> actualResult = result1.getSynonymResult("s");
@@ -150,11 +150,11 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 	}
 
 	SECTION("non-trivial: synonym & synonym") {
-		UsesS uses1 = UsesS(stmtSynonym, var);
-		UsesS uses2 = UsesS(ifSynonym, var);
+		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmtSynonym, var);
+		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(ifSynonym, var);
 
-		QueryResult result1 = uses1.execute(pkb, false, map);
-		QueryResult result2 = uses2.execute(pkb, false, map);
+		QP::QueryResult result1 = uses1.execute(pkb, false, map);
+		QP::QueryResult result2 = uses2.execute(pkb, false, map);
 
 		vector<string> expectedStmtResult = { "1", "1", "2", "3" };
 		vector<string> expectedVarResult = { "x", "x", "y", "z" };
@@ -168,9 +168,9 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 	}
 
 	SECTION("non-trivial: underscore & synonym") {
-		UsesS uses = UsesS(stmtUnderscore, var);
+		QP::Relationship::UsesS uses = QP::Relationship::UsesS(stmtUnderscore, var);
 
-		QueryResult result = uses.execute(pkb, false, map);
+		QP::QueryResult result = uses.execute(pkb, false, map);
 
 		vector<string> expectedResult = { "x", "y", "z" };
 		vector<string> actualVarResult = result.getSynonymResult("var");
@@ -179,11 +179,11 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 	}
 
 	SECTION("non-trivial: stmtNumber & synonym") {
-		UsesS uses1 = UsesS(stmtNo1, var);
-		UsesS uses2 = UsesS(stmtNo4, var);
+		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmtNo1, var);
+		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(stmtNo4, var);
 
-		QueryResult result1 = uses1.execute(pkb, false, map);
-		QueryResult result2 = uses2.execute(pkb, false, map);
+		QP::QueryResult result1 = uses1.execute(pkb, false, map);
+		QP::QueryResult result2 = uses2.execute(pkb, false, map);
 
 		vector<string> expectedResult = { "x", "z" };
 		vector<string> actualResult = result1.getSynonymResult("var");
