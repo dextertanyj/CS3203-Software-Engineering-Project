@@ -1,5 +1,5 @@
-#ifndef SPA_CONVERTER_H
-#define SPA_CONVERTER_H
+#ifndef SPA_SRC_COMMON_CONVERTER_H
+#define SPA_SRC_COMMON_CONVERTER_H
 
 #include <stdexcept>
 #include <string>
@@ -16,4 +16,4 @@ MathematicalOperator convertMathematical(const string& op);
 ConstVal convertInteger(const string& integer);
 }  // namespace Common::Converter
 
-#endif  // SPA_CONVERTER_H
+#endif  // SPA_SRC_COMMON_CONVERTER_H

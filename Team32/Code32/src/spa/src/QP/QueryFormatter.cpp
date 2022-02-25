@@ -2,11 +2,11 @@
 
 #include <string>
 
-#include "QP/QueryTypeDefs.h"
+#include "QP/QueryTypes.h"
 
 using namespace std;
 
-vector<string> QueryFormatter::formatResult(QueryProperties& query_properties, QueryResult& query_result) {
+vector<string> QP::QueryFormatter::formatResult(QueryProperties& query_properties, QueryResult& query_result) {
 	Declaration select = query_properties.getSelect();
 
 	if (!query_result.getResult()) {

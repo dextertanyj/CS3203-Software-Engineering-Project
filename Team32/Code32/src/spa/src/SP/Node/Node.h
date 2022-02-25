@@ -1,5 +1,5 @@
-#ifndef SPA_NODE_H
-#define SPA_NODE_H
+#ifndef SPA_SRC_SP_NODE_NODE_H
+#define SPA_SRC_SP_NODE_NODE_H
 
 #include "SP/SP.h"
 
@@ -18,4 +18,4 @@ class VariableNode;
 class WhileNode;
 }  // namespace SP::Node
 
-#endif  // SPA_NODE_H
+#endif  // SPA_SRC_SP_NODE_NODE_H

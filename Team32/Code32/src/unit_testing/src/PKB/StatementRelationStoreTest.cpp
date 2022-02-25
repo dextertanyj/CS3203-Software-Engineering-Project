@@ -1,7 +1,7 @@
 #include "PKB/StatementRelationStore.h"
 
 #include "MockUtilities.h"
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
 #include "catch.hpp"
 
 TEST_CASE("PKB::StatementRelationStore::set Test") {
@@ -11,7 +11,7 @@ TEST_CASE("PKB::StatementRelationStore::set Test") {
 	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Read);
 
 	SECTION("PKB::StatementRelationStore::set Follows Test") {
-		StatementRelationStore follows_store = StatementRelationStore<FollowsRelation>();
+		PKB::StatementRelationStore follows_store = PKB::StatementRelationStore<PKB::FollowsRelation>();
 		// Second statement must come after the first statement.
 		REQUIRE_THROWS_AS(follows_store.set(s_2, s_1), invalid_argument);
 		REQUIRE_THROWS_AS(follows_store.set(s_3, s_3), invalid_argument);
@@ -29,7 +29,7 @@ TEST_CASE("PKB::StatementRelationStore::set Test") {
 	}
 
 	SECTION("PKB::StatementRelationStore::set Parents Test") {
-		StatementRelationStore parents_store = StatementRelationStore<ParentRelation>();
+		PKB::StatementRelationStore parents_store = PKB::StatementRelationStore<PKB::ParentRelation>();
 		// Second statement must come after the first statement.
 		REQUIRE_THROWS_AS(parents_store.set(s_2, s_1), invalid_argument);
 		REQUIRE_THROWS_AS(parents_store.set(s_3, s_3), invalid_argument);
@@ -55,7 +55,7 @@ TEST_CASE("PKB::StatementRelationStore::getForward Test") {
 	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Read);
 
 	SECTION("PKB::StatementRelationStore::getForward Follows Test") {
-		StatementRelationStore follows_store = StatementRelationStore<FollowsRelation>();
+		PKB::StatementRelationStore follows_store = PKB::StatementRelationStore<PKB::FollowsRelation>();
 		follows_store.set(s_1, s_2);
 		follows_store.set(s_2, s_3);
 		follows_store.set(s_3, s_4);
@@ -76,7 +76,7 @@ TEST_CASE("PKB::StatementRelationStore::getForward Test") {
 	}
 
 	SECTION("PKB::StatementRelationStore::getForward Parents Test") {
-		StatementRelationStore parents_store = StatementRelationStore<ParentRelation>();
+		PKB::StatementRelationStore parents_store = PKB::StatementRelationStore<PKB::ParentRelation>();
 		parents_store.set(s_1, s_2);
 		parents_store.set(s_1, s_3);
 		parents_store.set(s_3, s_4);
@@ -103,7 +103,7 @@ TEST_CASE("PKB::StatementRelationStore::getReverse Test") {
 	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Read);
 
 	SECTION("PKB::StatementRelationStore::getReverse Follows Test") {
-		StatementRelationStore follows_store = StatementRelationStore<FollowsRelation>();
+		PKB::StatementRelationStore follows_store = PKB::StatementRelationStore<PKB::FollowsRelation>();
 		follows_store.set(s_1, s_2);
 		follows_store.set(s_2, s_3);
 		follows_store.set(s_3, s_4);
@@ -124,7 +124,7 @@ TEST_CASE("PKB::StatementRelationStore::getReverse Test") {
 	}
 
 	SECTION("PKB::StatementRelationStore::getReverse Parents Test") {
-		StatementRelationStore parents_store = StatementRelationStore<ParentRelation>();
+		PKB::StatementRelationStore parents_store = PKB::StatementRelationStore<PKB::ParentRelation>();
 		parents_store.set(s_1, s_2);
 		parents_store.set(s_1, s_3);
 		parents_store.set(s_3, s_4);
@@ -150,12 +150,12 @@ TEST_CASE("PKB::StatementRelationStore::getForwardTransitive Test") {
 	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Read);
 
 	SECTION("PKB::StatementRelationStore::getForwardTransitive Follows Test") {
-		StatementRelationStore follows_store = StatementRelationStore<FollowsRelation>();
+		PKB::StatementRelationStore follows_store = PKB::StatementRelationStore<PKB::FollowsRelation>();
 
 		follows_store.set(s_1, s_2);
 		follows_store.set(s_2, s_3);
 		follows_store.set(s_3, s_4);
-		FollowsRelation::optimize(follows_store);
+		PKB::FollowsRelation::optimize(follows_store);
 
 		// StmtRef index less than or equal to 0
 		REQUIRE_THROWS_AS(follows_store.getForwardTransitive(0), invalid_argument);
@@ -167,12 +167,12 @@ TEST_CASE("PKB::StatementRelationStore::getForwardTransitive Test") {
 	}
 
 	SECTION("PKB::StatementRelationStore::getForwardTransitive Parents Test") {
-		StatementRelationStore parents_store = StatementRelationStore<ParentRelation>();
+		PKB::StatementRelationStore parents_store = PKB::StatementRelationStore<PKB::ParentRelation>();
 
 		parents_store.set(s_1, s_2);
 		parents_store.set(s_1, s_3);
 		parents_store.set(s_3, s_4);
-		ParentRelation::optimize(parents_store);
+		PKB::ParentRelation::optimize(parents_store);
 
 		// StmtRef index less than or equal to 0
 		REQUIRE_THROWS_AS(parents_store.getForwardTransitive(0), invalid_argument);
@@ -191,12 +191,12 @@ TEST_CASE("PKB::StatementRelationStore::getReverseTransitive Test") {
 	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Read);
 
 	SECTION("PKB::StatementRelationStore::getReverseTransitive Follows Test") {
-		StatementRelationStore follows_store = StatementRelationStore<FollowsRelation>();
+		PKB::StatementRelationStore follows_store = PKB::StatementRelationStore<PKB::FollowsRelation>();
 
 		follows_store.set(s_1, s_2);
 		follows_store.set(s_2, s_3);
 		follows_store.set(s_3, s_4);
-		FollowsRelation::optimize(follows_store);
+		PKB::FollowsRelation::optimize(follows_store);
 
 		// StmtRef index less than or equal to 0
 		REQUIRE_THROWS_AS(follows_store.getReverseTransitive(0), invalid_argument);
@@ -208,12 +208,12 @@ TEST_CASE("PKB::StatementRelationStore::getReverseTransitive Test") {
 	}
 
 	SECTION("PKB::StatementRelationStore::getForwardTransitive Parents Test") {
-		StatementRelationStore parents_store = StatementRelationStore<ParentRelation>();
+		PKB::StatementRelationStore parents_store = PKB::StatementRelationStore<PKB::ParentRelation>();
 
 		parents_store.set(s_1, s_2);
 		parents_store.set(s_1, s_3);
 		parents_store.set(s_3, s_4);
-		ParentRelation::optimize(parents_store);
+		PKB::ParentRelation::optimize(parents_store);
 
 		// StmtRef index less than or equal to 0
 		REQUIRE_THROWS_AS(parents_store.getReverseTransitive(0), invalid_argument);
@@ -232,12 +232,12 @@ TEST_CASE("PKB::StatementRelationStore::isRelated Test") {
 	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Read);
 
 	SECTION("PKB::StatementRelationStore::isRelated Follows Test") {
-		StatementRelationStore follows_store = StatementRelationStore<FollowsRelation>();
+		PKB::StatementRelationStore follows_store = PKB::StatementRelationStore<PKB::FollowsRelation>();
 
 		follows_store.set(s_1, s_2);
 		follows_store.set(s_2, s_3);
 		follows_store.set(s_3, s_4);
-		FollowsRelation::optimize(follows_store);
+		PKB::FollowsRelation::optimize(follows_store);
 
 		// StmtRef index must be less than or equal to 0. Front statement number must be < back statement number.
 		REQUIRE_THROWS_AS(follows_store.isRelated(1, 0), invalid_argument);
@@ -255,12 +255,12 @@ TEST_CASE("PKB::StatementRelationStore::isRelated Test") {
 	}
 
 	SECTION("PKB::StatementRelationStore::isRelated Parents Test") {
-		StatementRelationStore parents_store = StatementRelationStore<ParentRelation>();
+		PKB::StatementRelationStore parents_store = PKB::StatementRelationStore<PKB::ParentRelation>();
 
 		parents_store.set(s_1, s_2);
 		parents_store.set(s_1, s_3);
 		parents_store.set(s_3, s_4);
-		ParentRelation::optimize(parents_store);
+		PKB::ParentRelation::optimize(parents_store);
 
 		// StmtRef index must be less than or equal to 0. Front statement number must be < back statement number.
 		REQUIRE_THROWS_AS(parents_store.isRelated(1, 0), invalid_argument);
@@ -277,4 +277,3 @@ TEST_CASE("PKB::StatementRelationStore::isRelated Test") {
 		CHECK_FALSE(parents_store.isRelated(1, 4));
 	}
 }
-

@@ -2,7 +2,7 @@
 
 SP::Node::ReadNode::ReadNode(StmtRef stmt_no, unique_ptr<VariableNode> variable) : StatementNode(stmt_no), variable(move(variable)) {}
 
-StmtRef SP::Node::ReadNode::extract(PKB& pkb) {
+StmtRef SP::Node::ReadNode::extract(PKB::Storage& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Read);
 	pkb.setModifies(stmt_ref, variable->extract());

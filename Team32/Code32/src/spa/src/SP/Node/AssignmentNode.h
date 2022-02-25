@@ -1,5 +1,5 @@
-#ifndef SPA_ASSIGNMENTNODE_H
-#define SPA_ASSIGNMENTNODE_H
+#ifndef SPA_SRC_SP_NODE_ASSIGNMENTNODE_H
+#define SPA_SRC_SP_NODE_ASSIGNMENTNODE_H
 
 #include <memory>
 #include <string>
@@ -17,7 +17,7 @@ class SP::Node::AssignmentNode : public StatementNode {
 public:
 	AssignmentNode(StmtRef stmt_no, unique_ptr<VariableNode> assignee, unique_ptr<ExpressionNode> expression);
 	static unique_ptr<AssignmentNode> parseAssignmentStatement(Lexer& lex, StmtRef& statement_count, string token);
-	StmtRef extract(PKB& pkb) override;
+	StmtRef extract(PKB::Storage& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
 
 private:
@@ -25,4 +25,4 @@ private:
 	shared_ptr<ExpressionNode> expression;
 };
 
-#endif  // SPA_ASSIGNMENTNODE_H
+#endif  // SPA_SRC_SP_NODE_ASSIGNMENTNODE_H

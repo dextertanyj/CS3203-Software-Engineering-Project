@@ -1,21 +1,19 @@
-#ifndef INC_21S2_CP_SPA_TEAM_32_MODIFYSTORE_H
-#define INC_21S2_CP_SPA_TEAM_32_MODIFYSTORE_H
-
-#pragma once
+#ifndef SPA_SRC_PKB_SVRELATIONSTORE_H
+#define SPA_SRC_PKB_SVRELATIONSTORE_H
 
 #include <cstdio>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 
-#include "../Common/TypeDefs.h"
-#include "iostream"
+#include "Common/TypeDefs.h"
+#include "PKB/PKB.h"
 #include "memory"
 
 using namespace std;
 
 template <class T>
-class SVRelationStore {
+class PKB::SVRelationStore {
 public:
 	SVRelationStore();
 	void set(shared_ptr<StmtInfo> statement, VarRef variable);
@@ -33,4 +31,4 @@ private:
 	friend class ModifiesRelation;
 };
 
-#endif  // INC_21S2_CP_SPA_TEAM_32_MODIFYSTORE_H
+#endif  // SPA_SRC_PKB_SVRELATIONSTORE_H

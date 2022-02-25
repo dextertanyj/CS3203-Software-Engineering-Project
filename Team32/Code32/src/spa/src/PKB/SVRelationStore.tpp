@@ -1,3 +1,6 @@
+#ifndef SPA_SRC_PKB_SVRELATIONSTORE_TPP
+#define SPA_SRC_PKB_SVRELATIONSTORE_TPP
+
 #include "PKB/SVRelationStore.h"
 
 #include <algorithm>
@@ -7,10 +10,10 @@
 #include "PKB/UsesRelation.h"
 
 template <class T>
-SVRelationStore<T>::SVRelationStore() = default;
+PKB::SVRelationStore<T>::SVRelationStore() = default;
 
 template <class T>
-void SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRef variable) {
+void PKB::SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRef variable) {
 	StmtRef index = statement->reference;
 	if (variable.length() == 0) {
 		throw invalid_argument("Variable name must have length more than 0.");
@@ -37,7 +40,7 @@ void SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRef variable) {
 }
 
 template <class T>
-void SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRefSet variables) {
+void PKB::SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRefSet variables) {
 	StmtRef index = statement->reference;
 	for (const VarRef& variable : variables) {
 		if (variable.length() == 0) {
@@ -67,7 +70,7 @@ void SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRefSet variables
 }
 
 template <class T>
-bool SVRelationStore<T>::check(StmtRef index, const VarRef& variable) {
+bool PKB::SVRelationStore<T>::check(StmtRef index, const VarRef& variable) {
 	if (index <= 0) {
 		throw invalid_argument("Statement number must be a positive integer.");
 	}
@@ -85,7 +88,7 @@ bool SVRelationStore<T>::check(StmtRef index, const VarRef& variable) {
 }
 
 template <class T>
-unordered_set<VarRef> SVRelationStore<T>::getByStmt(StmtRef index) {
+unordered_set<VarRef> PKB::SVRelationStore<T>::getByStmt(StmtRef index) {
 	if (index <= 0) {
 		throw invalid_argument("Statement number must be a positive integer.");
 	}
@@ -98,7 +101,7 @@ unordered_set<VarRef> SVRelationStore<T>::getByStmt(StmtRef index) {
 }
 
 template <class T>
-unordered_set<shared_ptr<StmtInfo>> SVRelationStore<T>::getByVar(const VarRef& variable) {
+unordered_set<shared_ptr<StmtInfo>> PKB::SVRelationStore<T>::getByVar(const VarRef& variable) {
 	if (variable.length() == 0) {
 		throw invalid_argument("Variable name must have length more than 0.");
 	}
@@ -111,7 +114,9 @@ unordered_set<shared_ptr<StmtInfo>> SVRelationStore<T>::getByVar(const VarRef& v
 }
 
 template <class T>
-void SVRelationStore<T>::clear() {
+void PKB::SVRelationStore<T>::clear() {
 	variable_key_map.clear();
 	statement_key_map.clear();
 }
+
+#endif  // SPA_SRC_PKB_SVRELATIONSTORE_TPP

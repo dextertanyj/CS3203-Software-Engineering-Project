@@ -1,5 +1,5 @@
-#ifndef INC_21S2_CP_SPA_TEAM_32_TYPEDEFS_H
-#define INC_21S2_CP_SPA_TEAM_32_TYPEDEFS_H
+#ifndef SPA_SRC_COMMON_TYPEDEFS_H
+#define SPA_SRC_COMMON_TYPEDEFS_H
 
 #include <memory>
 #include <string>
@@ -29,10 +29,5 @@ typedef unordered_set<VarRef> VarRefSet;
 typedef unordered_set<StmtRef> StmtRefSet;
 
 enum class MathematicalOperator { Plus, Minus, Times, Divide, Modulo, EQ, NEQ, LT, LTE, GT, GTE, And, Or, Not };
-
-class ModifiesRelation;
-class FollowsRelation;
-class ParentRelation;
-class UsesRelation;
 
 #endif

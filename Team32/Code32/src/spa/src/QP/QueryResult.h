@@ -1,5 +1,5 @@
-#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYRESULT_H_
-#define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYRESULT_H_
+#ifndef SPA_SRC_QP_QUERYRESULT_H
+#define SPA_SRC_QP_QUERYRESULT_H
 
 #include <string>
 #include <unordered_map>
@@ -7,9 +7,10 @@
 #include <vector>
 
 #include "Common/TypeDefs.h"
-#include "QP/QueryTypeDefs.h"
+#include "QP/QP.h"
+#include "QP/QueryTypes.h"
 
-class QueryResult {
+class QP::QueryResult {
 public:
 	QueryResult();
 	explicit QueryResult(bool result);
@@ -30,4 +31,4 @@ private:
 	static void removeRow(unordered_map<string, vector<string>>& table, int row_number);
 };
 
-#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYRESULT_H_
+#endif  // SPA_SRC_QP_QUERYRESULT_H

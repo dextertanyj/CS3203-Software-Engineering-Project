@@ -1,5 +1,5 @@
-#ifndef SPA_ARITHMETICEXPRESSIONNODE_H
-#define SPA_ARITHMETICEXPRESSIONNODE_H
+#ifndef SPA_SRC_SP_NODE_EXPRESSIONNODE_H
+#define SPA_SRC_SP_NODE_EXPRESSIONNODE_H
 
 #include <memory>
 
@@ -20,4 +20,4 @@ private:
 	Common::ExpressionProcessor::Expression expression;
 };
 
-#endif  // SPA_EXPRESSIONNODE_H
+#endif  // SPA_SRC_SP_NODE_EXPRESSIONNODE_H

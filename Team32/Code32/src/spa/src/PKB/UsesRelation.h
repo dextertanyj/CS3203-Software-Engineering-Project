@@ -1,11 +1,11 @@
-#ifndef SPA_USESRELATION_H
-#define SPA_USESRELATION_H
+#ifndef SPA_SRC_PKB_USESRELATION_H
+#define SPA_SRC_PKB_USESRELATION_H
 
 #include "PKB/SVRelationStore.h"
 #include "PKB/StatementRelationStore.tpp"
 #include "PKB/StatementStore.h"
 
-class UsesRelation {
+class PKB::UsesRelation {
 public:
 	static bool validate(SVRelationStore<UsesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable);
 	static bool validate(SVRelationStore<UsesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variable);
@@ -13,4 +13,4 @@ public:
 	                     SVRelationStore<UsesRelation>& store);
 };
 
-#endif  // SPA_USESRELATION_H
+#endif  // SPA_SRC_PKB_USESRELATION_H

@@ -1,11 +1,11 @@
-#ifndef SPA_IFNODE_H
-#define SPA_IFNODE_H
+#ifndef SPA_SRC_SP_NODE_IFNODE_H
+#define SPA_SRC_SP_NODE_IFNODE_H
 
 #include <memory>
 #include <string>
 
 #include "Common/TypeDefs.h"
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
 #include "SP/Node/ExpressionNode.h"
 #include "SP/Node/Node.h"
 #include "SP/Node/StatementListNode.h"
@@ -18,7 +18,7 @@ public:
 	IfNode(StmtRef stmt_no, unique_ptr<ExpressionNode> cond_expr, unique_ptr<StatementListNode> if_stmt_list,
 	       unique_ptr<StatementListNode> else_stmt_list);
 	static unique_ptr<IfNode> parseIfStatement(Lexer& lex, StmtRef& statement_count);
-	StmtRef extract(PKB& pkb) override;
+	StmtRef extract(PKB::Storage& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
 
 private:
@@ -27,4 +27,4 @@ private:
 	shared_ptr<StatementListNode> else_stmt_list;
 };
 
-#endif  // SPA_IFNODE_H
+#endif  // SPA_SRC_SP_NODE_IFNODE_H

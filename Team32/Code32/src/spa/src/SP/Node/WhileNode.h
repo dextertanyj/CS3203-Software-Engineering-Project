@@ -1,11 +1,11 @@
-#ifndef SPA_WHILENODE_H
-#define SPA_WHILENODE_H
+#ifndef SPA_SRC_SP_NODE_WHILENODE_H
+#define SPA_SRC_SP_NODE_WHILENODE_H
 
 #include <memory>
 #include <string>
 
 #include "Common/TypeDefs.h"
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
 #include "SP/Node/ExpressionNode.h"
 #include "SP/Node/StatementListNode.h"
 #include "SP/Node/StatementNode.h"
@@ -16,7 +16,7 @@ class SP::Node::WhileNode : public StatementNode {
 public:
 	WhileNode(StmtRef stmt_no, unique_ptr<ExpressionNode> cond_expr, unique_ptr<StatementListNode> stmt_list);
 	static unique_ptr<WhileNode> parseWhileStatement(Lexer& lex, StmtRef& statement_count);
-	StmtRef extract(PKB& pkb) override;
+	StmtRef extract(PKB::Storage& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
 
 private:
@@ -24,4 +24,4 @@ private:
 	shared_ptr<StatementListNode> stmt_list;
 };
 
-#endif  // SPA_WHILENODE_H
+#endif  // SPA_SRC_SP_NODE_WHILENODE_H

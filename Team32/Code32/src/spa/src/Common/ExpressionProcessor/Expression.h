@@ -1,5 +1,5 @@
-#ifndef SPA_EXPRESSION_H
-#define SPA_EXPRESSION_H
+#ifndef SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSION_H
+#define SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSION_H
 
 #include <memory>
 #include <string>
@@ -38,4 +38,4 @@ private:
 	static int getPrecedence(MathematicalOperator op);
 };
 
-#endif  // SPA_EXPRESSION_H
+#endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSION_H

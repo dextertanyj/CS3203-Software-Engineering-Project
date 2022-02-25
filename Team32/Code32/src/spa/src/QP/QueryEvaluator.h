@@ -1,5 +1,5 @@
-#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYEVALUATOR_H_
-#define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYEVALUATOR_H_
+#ifndef SPA_SRC_QP_QUERYEVALUATOR_H
+#define SPA_SRC_QP_QUERYEVALUATOR_H
 
 #include <string>
 #include <unordered_map>
@@ -7,22 +7,23 @@
 #include <utility>
 #include <vector>
 
-#include "PKB/PKB.h"
+#include "PKB/Storage.h"
+#include "QP/QP.h"
 #include "QP/QueryGraph.h"
 #include "QP/QueryProperties.h"
 #include "QP/QueryResult.h"
 
 using namespace std;
 
-class QueryEvaluator {
+class QP::QueryEvaluator {
 public:
-	explicit QueryEvaluator(PKB& pkb);
-	QueryResult executeQuery(QueryProperties& query_properties);
+	explicit QueryEvaluator(PKB::Storage& pkb);
+	QP::QueryResult executeQuery(QueryProperties& query_properties);
 	static vector<pair<SuchThatClauseList, PatternClauseList>> splitClauses(QueryProperties& query_properties,
 	                                                                        vector<unordered_set<string>>& synonyms_in_group);
 
 private:
-	PKB& pkb;
+	PKB::Storage& pkb;
 	unordered_map<string, DesignEntity> symbol_to_type_map;
 	QueryResult executeNoClauses(const Declaration& select);
 	QueryResult getSpecificStmtType(StmtType type, const string& symbol);
@@ -34,4 +35,4 @@ private:
 	void createSymbolToTypeMap(const DeclarationList& declarations);
 };
 
-#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYEVALUATOR_H_
+#endif  // SPA_SRC_QP_QUERYEVALUATOR_H

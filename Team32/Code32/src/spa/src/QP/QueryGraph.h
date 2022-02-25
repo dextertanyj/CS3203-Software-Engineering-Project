@@ -1,5 +1,5 @@
-#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYGRAPH_H_
-#define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYGRAPH_H_
+#ifndef SPA_SRC_QP_QUERYGRAPH_H
+#define SPA_SRC_QP_QUERYGRAPH_H
 
 #include <string>
 #include <unordered_map>
@@ -10,12 +10,7 @@
 
 using namespace std;
 
-struct Node {
-	string declaration_symbol;
-	vector<string> adjacent_symbols;
-};
-
-class QueryGraph {
+class QP::QueryGraph {
 public:
 	explicit QueryGraph(const DeclarationList& declarations);
 	void setEdges(const SuchThatClauseList& such_that_clause_list, const PatternClauseList& pattern_clause_list);
@@ -31,4 +26,4 @@ private:
 	void addEdge(const string& symbol_one, const string& symbol_two);
 };
 
-#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYGRAPH_H_
+#endif  // SPA_SRC_QP_QUERYGRAPH_H

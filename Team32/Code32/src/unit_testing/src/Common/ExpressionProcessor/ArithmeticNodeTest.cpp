@@ -1,4 +1,5 @@
 #include "Common/ExpressionProcessor/ArithmeticNode.h"
+
 #include "Common/ExpressionProcessor/ConstantNode.h"
 #include "Common/ExpressionProcessor/VariableNode.h"
 #include "catch_tools.h"

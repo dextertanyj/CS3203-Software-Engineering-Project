@@ -1,12 +1,13 @@
-#ifndef SPA_FOLLOWSRELATION_H
-#define SPA_FOLLOWSRELATION_H
+#ifndef SPA_SRC_PKB_FOLLOWSRELATION_H
+#define SPA_SRC_PKB_FOLLOWSRELATION_H
 
 #include <unordered_set>
 
 #include "Common/TypeDefs.h"
+#include "PKB/PKB.h"
 #include "PKB/StatementRelationStore.h"
 
-class FollowsRelation {
+class PKB::FollowsRelation {
 public:
 	explicit FollowsRelation(shared_ptr<StmtInfo> self);
 	void insertForward(shared_ptr<StmtInfo> following_to_insert);
@@ -30,4 +31,4 @@ private:
 	                                                              unordered_set<shared_ptr<StmtInfo>> previous);
 };
 
-#endif  // SPA_FOLLOWSRELATION_H
+#endif  // SPA_SRC_PKB_FOLLOWSRELATION_H

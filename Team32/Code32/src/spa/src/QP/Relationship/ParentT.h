@@ -1,18 +1,18 @@
-#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_PARENTT_H_
-#define TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_PARENTT_H_
+#ifndef SPA_SRC_QP_RELATIONSHIP_PARENTT_H
+#define SPA_SRC_QP_RELATIONSHIP_PARENTT_H
 
-#include "QP/QueryTypeDefs.h"
+#include "QP/QueryTypes.h"
 #include "QP/Relationship/Parent.h"
 
-class ParentT : public Parent {
+class QP::Relationship::ParentT : public Parent {
 public:
 	using Parent::Parent;
 
-	QueryResult execute(PKB& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) override;
+	QueryResult execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) override;
 
 private:
-	QueryResult executeTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
-	QueryResult executeNonTrivial(PKB& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) override;
 };
 
-#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_RELATIONSHIP_PARENTT_H_
+#endif  // SPA_SRC_QP_RELATIONSHIP_PARENTT_H

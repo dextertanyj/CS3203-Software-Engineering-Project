@@ -1,11 +1,12 @@
-#include "MockUtilities.h"
-#include "PKB/FollowsRelation.h"
-#include "PKB/PKB.h"
-#include "catch.hpp"
 #include <climits>
 
+#include "MockUtilities.h"
+#include "PKB/FollowsRelation.h"
+#include "PKB/Storage.h"
+#include "catch.hpp"
+
 TEST_CASE("PKB::PKB Follows Methods Test") {
-	PKB pkb = MockUtilities::generateFollowsTestPKB();
+	PKB::Storage pkb = MockUtilities::generateFollowsTestPKB();
 	StmtRef s_1 = 1;
 	StmtRef s_2 = 2;
 	StmtRef s_3 = 3;
@@ -170,7 +171,7 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 	StmtRef s_9 = 9;
 	StmtRef s_max = SIZE_MAX;
 	StmtRef s_zero = 0;
-	PKB pkb = MockUtilities::generateParentTestPKB();
+	PKB::Storage pkb = MockUtilities::generateParentTestPKB();
 
 	SECTION("PKB::PKB::setParent Test") {
 		pkb.setStmtType(SIZE_MAX, StmtType::Read);
@@ -346,220 +347,216 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 }
 
 TEST_CASE("PKB::Uses Methods Test") {
-    PKB pkb = MockUtilities::generateUsesTestPKB();
-    unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
-    StmtRef s1 = 1;
-    StmtRef s2 = 2;
-    StmtRef s3 = 3;
-    StmtRef s4 = 4;
-    StmtRef s_max = SIZE_MAX;
-    StmtRef s_zero = 0;
-    VarRef x = "x";
-    VarRef y = "y";
-    VarRef z = "z";
-    VarRef a = "a";
-    VarRef xyz = "xyz";
-    VarRefSet v1 = { x, y, z };
-    VarRefSet v2 = { "a" };
-    VarRefSet v3 = { x, "" };
-    shared_ptr<StmtInfo> p1 = stmt_info_map.at(s1);
-    shared_ptr<StmtInfo> p2 = stmt_info_map.at(s2);
-    shared_ptr<StmtInfo> p3 = stmt_info_map.at(s3);
+	PKB::Storage pkb = MockUtilities::generateUsesTestPKB();
+	unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
+	StmtRef s1 = 1;
+	StmtRef s2 = 2;
+	StmtRef s3 = 3;
+	StmtRef s4 = 4;
+	StmtRef s_max = SIZE_MAX;
+	StmtRef s_zero = 0;
+	VarRef x = "x";
+	VarRef y = "y";
+	VarRef z = "z";
+	VarRef a = "a";
+	VarRef xyz = "xyz";
+	VarRefSet v1 = {x, y, z};
+	VarRefSet v2 = {"a"};
+	VarRefSet v3 = {x, ""};
+	shared_ptr<StmtInfo> p1 = stmt_info_map.at(s1);
+	shared_ptr<StmtInfo> p2 = stmt_info_map.at(s2);
+	shared_ptr<StmtInfo> p3 = stmt_info_map.at(s3);
 
-    SECTION("PKB::setUses by Var Test") {
-        // Invalid arguments should throw an error
-        REQUIRE_THROWS_AS(pkb.setUses(s_zero, x), invalid_argument);
-        REQUIRE_THROWS_AS(pkb.setUses(s1, ""), invalid_argument);
+	SECTION("PKB::setUses by Var Test") {
+		// Invalid arguments should throw an error
+		REQUIRE_THROWS_AS(pkb.setUses(s_zero, x), invalid_argument);
+		REQUIRE_THROWS_AS(pkb.setUses(s1, ""), invalid_argument);
 
-        // StmtRef does not exist in Statement Store
-        CHECK_THROWS(pkb.setUses(s4, x));
+		// StmtRef does not exist in Statement Store
+		CHECK_THROWS(pkb.setUses(s4, x));
 
-        // 1 statement, multiple vars.
-        CHECK_NOTHROW(pkb.setUses(s1, x));
-        CHECK_NOTHROW(pkb.setUses(s1, y));
-        CHECK_NOTHROW(pkb.setUses(s1, z));
+		// 1 statement, multiple vars.
+		CHECK_NOTHROW(pkb.setUses(s1, x));
+		CHECK_NOTHROW(pkb.setUses(s1, y));
+		CHECK_NOTHROW(pkb.setUses(s1, z));
 
-        // 1 var, multiple statements.
-        CHECK_NOTHROW(pkb.setUses(s2, x));
-        CHECK_NOTHROW(pkb.setUses(s3, x));
-    }
+		// 1 var, multiple statements.
+		CHECK_NOTHROW(pkb.setUses(s2, x));
+		CHECK_NOTHROW(pkb.setUses(s3, x));
+	}
 
-    SECTION("PKB::setUses by VarSet Test") {
-        REQUIRE_THROWS_AS(pkb.setUses(s_zero, v2), invalid_argument);
-        REQUIRE_THROWS_AS(pkb.setUses(s1, v3), invalid_argument);
+	SECTION("PKB::setUses by VarSet Test") {
+		REQUIRE_THROWS_AS(pkb.setUses(s_zero, v2), invalid_argument);
+		REQUIRE_THROWS_AS(pkb.setUses(s1, v3), invalid_argument);
 
-        // StmtRef does not exist in Statement Store
-        CHECK_THROWS(pkb.setUses(s4, v1));
+		// StmtRef does not exist in Statement Store
+		CHECK_THROWS(pkb.setUses(s4, v1));
 
-        // 1 statement, multiple vars.
-        CHECK_NOTHROW(pkb.setUses(s1, v1));
-        CHECK_NOTHROW(pkb.setUses(s1, v2));
-        CHECK_NOTHROW(pkb.setUses(s2, v2));
+		// 1 statement, multiple vars.
+		CHECK_NOTHROW(pkb.setUses(s1, v1));
+		CHECK_NOTHROW(pkb.setUses(s1, v2));
+		CHECK_NOTHROW(pkb.setUses(s2, v2));
 
-        // Multiple vars for print statement
-        CHECK_THROWS(pkb.setUses(s3, v1));
-    }
+		// Multiple vars for print statement
+		CHECK_THROWS(pkb.setUses(s3, v1));
+	}
 
-    SECTION("PKB::checkUses Test") {
-        pkb.setUses(s1, v1);
-        pkb.setUses(s2, x);
-        pkb.setUses(s3, x);
+	SECTION("PKB::checkUses Test") {
+		pkb.setUses(s1, v1);
+		pkb.setUses(s2, x);
+		pkb.setUses(s3, x);
 
-        CHECK(pkb.checkUses(s1,x));
-        CHECK(pkb.checkUses(s1,y));
-        CHECK(pkb.checkUses(s1,z));
-        CHECK(pkb.checkUses(s2,x));
-        CHECK(pkb.checkUses(s3,x));
+		CHECK(pkb.checkUses(s1, x));
+		CHECK(pkb.checkUses(s1, y));
+		CHECK(pkb.checkUses(s1, z));
+		CHECK(pkb.checkUses(s2, x));
+		CHECK(pkb.checkUses(s3, x));
 
-        // Negative Cases
-        CHECK_FALSE(pkb.checkUses(s_max, x));
-        CHECK_FALSE(pkb.checkUses(s2, y));
-        CHECK_FALSE(pkb.checkUses(s3, z));
+		// Negative Cases
+		CHECK_FALSE(pkb.checkUses(s_max, x));
+		CHECK_FALSE(pkb.checkUses(s2, y));
+		CHECK_FALSE(pkb.checkUses(s3, z));
 
-        // Invalid arguments
-        CHECK_THROWS(pkb.checkUses(s_zero, x));
-        CHECK_THROWS(pkb.checkUses(s_max, ""));
-    }
+		// Invalid arguments
+		CHECK_THROWS(pkb.checkUses(s_zero, x));
+		CHECK_THROWS(pkb.checkUses(s_max, ""));
+	}
 
-    SECTION("PKB::getUsesByVar Test") {
-        pkb.setUses(s1, v1);
-        pkb.setUses(s2, x);
-        pkb.setUses(s3, x);
+	SECTION("PKB::getUsesByVar Test") {
+		pkb.setUses(s1, v1);
+		pkb.setUses(s2, x);
+		pkb.setUses(s3, x);
 
-        unordered_set<shared_ptr<StmtInfo>> expected_set_1 = {p1, p2, p3};
-        unordered_set<shared_ptr<StmtInfo>> expected_set_2 = {p1};
-        unordered_set<shared_ptr<StmtInfo>> expected_set_3 = {p1};
+		unordered_set<shared_ptr<StmtInfo>> expected_set_1 = {p1, p2, p3};
+		unordered_set<shared_ptr<StmtInfo>> expected_set_2 = {p1};
+		unordered_set<shared_ptr<StmtInfo>> expected_set_3 = {p1};
 
-        CHECK(pkb.getUsesByVar(x) == expected_set_1);
-        CHECK(pkb.getUsesByVar(y) == expected_set_2);
-        CHECK(pkb.getUsesByVar(z) == expected_set_3);
+		CHECK(pkb.getUsesByVar(x) == expected_set_1);
+		CHECK(pkb.getUsesByVar(y) == expected_set_2);
+		CHECK(pkb.getUsesByVar(z) == expected_set_3);
 
-        CHECK(pkb.getUsesByVar(xyz).empty());
-        CHECK_THROWS(pkb.getUsesByVar(""));
-    }
+		CHECK(pkb.getUsesByVar(xyz).empty());
+		CHECK_THROWS(pkb.getUsesByVar(""));
+	}
 
-    SECTION("PKB::getUsesByStmt Test") {
-        pkb.setUses(s1, v1);
-        pkb.setUses(s2, y);
-        pkb.setUses(s2, z);
-        pkb.setUses(s3, x);
-        pkb.setUses(s_max, xyz);
+	SECTION("PKB::getUsesByStmt Test") {
+		pkb.setUses(s1, v1);
+		pkb.setUses(s2, y);
+		pkb.setUses(s2, z);
+		pkb.setUses(s3, x);
+		pkb.setUses(s_max, xyz);
 
-        unordered_set<VarRef> used_by_s1 = {x, y, z};
-        unordered_set<VarRef> used_by_s2 = {y, z};
-        unordered_set<VarRef> used_by_s3 = {x};
-        unordered_set<VarRef> used_by_s_max = {xyz};
+		unordered_set<VarRef> used_by_s1 = {x, y, z};
+		unordered_set<VarRef> used_by_s2 = {y, z};
+		unordered_set<VarRef> used_by_s3 = {x};
+		unordered_set<VarRef> used_by_s_max = {xyz};
 
-        CHECK(pkb.getUsesByStmt(s1) == used_by_s1);
-        CHECK(pkb.getUsesByStmt(s2) == used_by_s2);
-        CHECK(pkb.getUsesByStmt(s3) == used_by_s3);
-        CHECK(pkb.getUsesByStmt(s_max) == used_by_s_max);
+		CHECK(pkb.getUsesByStmt(s1) == used_by_s1);
+		CHECK(pkb.getUsesByStmt(s2) == used_by_s2);
+		CHECK(pkb.getUsesByStmt(s3) == used_by_s3);
+		CHECK(pkb.getUsesByStmt(s_max) == used_by_s_max);
 
-        // Invalid arguments
-        CHECK_THROWS(pkb.getUsesByStmt(s_zero));
-        CHECK_THROWS(pkb.getUsesByStmt(0));
-    }
+		// Invalid arguments
+		CHECK_THROWS(pkb.getUsesByStmt(s_zero));
+		CHECK_THROWS(pkb.getUsesByStmt(0));
+	}
 }
 
 TEST_CASE("PKB::Modifies Methods Test") {
-    PKB pkb = MockUtilities::generateModifyTestPKB();
-    unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
-    StmtRef s1 = 1;
-    StmtRef s2 = 2;
-    StmtRef s3 = 3;
-    StmtRef s4 = 4;
-    StmtRef s_max = SIZE_MAX;
-    StmtRef s_zero = 0;
-    VarRef x = "x";
-    VarRef y = "y";
-    VarRef z = "z";
-    VarRef xyz = "xyz";
-    VarRefSet v1 = { x, y, z };
-    VarRefSet v2 = { "x" };
-    VarRefSet v3 = { x, "" };
-    shared_ptr<StmtInfo> p1 = stmt_info_map.at(s1);
-    shared_ptr<StmtInfo> p2 = stmt_info_map.at(s2);
-    shared_ptr<StmtInfo> p3 = stmt_info_map.at(s3);
+	PKB::Storage pkb = MockUtilities::generateModifyTestPKB();
+	unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
+	StmtRef s1 = 1;
+	StmtRef s2 = 2;
+	StmtRef s3 = 3;
+	StmtRef s4 = 4;
+	StmtRef s_max = SIZE_MAX;
+	StmtRef s_zero = 0;
+	VarRef x = "x";
+	VarRef y = "y";
+	VarRef z = "z";
+	VarRef xyz = "xyz";
+	VarRefSet v1 = {x, y, z};
+	VarRefSet v2 = {"x"};
+	VarRefSet v3 = {x, ""};
+	shared_ptr<StmtInfo> p1 = stmt_info_map.at(s1);
+	shared_ptr<StmtInfo> p2 = stmt_info_map.at(s2);
+	shared_ptr<StmtInfo> p3 = stmt_info_map.at(s3);
 
-    SECTION("PKB::setModifies by Var Test") {
-        // StmtRef does not exist in Statement Store
-        CHECK_THROWS(pkb.setModifies(s4, v1));
+	SECTION("PKB::setModifies by Var Test") {
+		// StmtRef does not exist in Statement Store
+		CHECK_THROWS(pkb.setModifies(s4, v1));
 
-        // Throw error for invalid arguments
-        CHECK_THROWS(pkb.setModifies(s_zero, x));
-        CHECK_THROWS(pkb.setModifies(s1, ""));
-        CHECK_THROWS(pkb.setModifies(s_zero, ""));
+		// Throw error for invalid arguments
+		CHECK_THROWS(pkb.setModifies(s_zero, x));
+		CHECK_THROWS(pkb.setModifies(s1, ""));
+		CHECK_THROWS(pkb.setModifies(s_zero, ""));
 
-        CHECK_NOTHROW(pkb.setModifies(s1, x));
-        // Same variable can be modified by different statements
-        CHECK_NOTHROW(pkb.setModifies(s2, x));
-        CHECK_NOTHROW(pkb.setModifies(s3, z));
+		CHECK_NOTHROW(pkb.setModifies(s1, x));
+		// Same variable can be modified by different statements
+		CHECK_NOTHROW(pkb.setModifies(s2, x));
+		CHECK_NOTHROW(pkb.setModifies(s3, z));
 
-        // Same statement cannot modify more than one variable
-        CHECK_THROWS(pkb.setModifies(s1, y));
-    }
+		// Same statement cannot modify more than one variable
+		CHECK_THROWS(pkb.setModifies(s1, y));
+	}
 
-    SECTION("PKB::setModifies by VarSet Test") {
-        REQUIRE_THROWS_AS(pkb.setModifies(s_zero, v2), invalid_argument);
-        REQUIRE_THROWS_AS(pkb.setModifies(s1, v3), invalid_argument);
+	SECTION("PKB::setModifies by VarSet Test") {
+		REQUIRE_THROWS_AS(pkb.setModifies(s_zero, v2), invalid_argument);
+		REQUIRE_THROWS_AS(pkb.setModifies(s1, v3), invalid_argument);
 
-        // StmtRef does not exist in Statement Store
-        CHECK_THROWS(pkb.setModifies(s4, v1));
+		// StmtRef does not exist in Statement Store
+		CHECK_THROWS(pkb.setModifies(s4, v1));
 
-        // More than one variable in varset
-        CHECK_THROWS(pkb.setModifies(s1, v1));
+		// More than one variable in varset
+		CHECK_THROWS(pkb.setModifies(s1, v1));
 
-        CHECK_NOTHROW(pkb.setModifies(s1, v2));
-        CHECK_NOTHROW(pkb.setModifies(s2, v2));
-    }
+		CHECK_NOTHROW(pkb.setModifies(s1, v2));
+		CHECK_NOTHROW(pkb.setModifies(s2, v2));
+	}
 
-    SECTION("PKB::checkModifies Test") {
-        pkb.setModifies(s1, v2);
-        pkb.setModifies(s2, y);
-        pkb.setModifies(s3, z);
-        pkb.setModifies(s_max, x);
+	SECTION("PKB::checkModifies Test") {
+		pkb.setModifies(s1, v2);
+		pkb.setModifies(s2, y);
+		pkb.setModifies(s3, z);
+		pkb.setModifies(s_max, x);
 
-        CHECK(pkb.checkModifies(s1, x));
-        CHECK(pkb.checkModifies(s2, y));
-        CHECK(pkb.checkModifies(s3, z));
-        CHECK(pkb.checkModifies(s_max, x));
+		CHECK(pkb.checkModifies(s1, x));
+		CHECK(pkb.checkModifies(s2, y));
+		CHECK(pkb.checkModifies(s3, z));
+		CHECK(pkb.checkModifies(s_max, x));
 
-        // Negative Cases
-        CHECK_FALSE(pkb.checkModifies(s_max, z));
-        CHECK_FALSE(pkb.checkModifies(s2, x));
-        CHECK_FALSE(pkb.checkModifies(s3, y));
+		// Negative Cases
+		CHECK_FALSE(pkb.checkModifies(s_max, z));
+		CHECK_FALSE(pkb.checkModifies(s2, x));
+		CHECK_FALSE(pkb.checkModifies(s3, y));
 
-        // Invalid arguments
-        CHECK_THROWS(pkb.checkModifies(s_zero, x));
-        CHECK_THROWS(pkb.checkModifies(s_max, ""));
-    }
+		// Invalid arguments
+		CHECK_THROWS(pkb.checkModifies(s_zero, x));
+		CHECK_THROWS(pkb.checkModifies(s_max, ""));
+	}
 
-    SECTION("PKB::getModifiesByVar Test") {
-        pkb.setModifies(s1, v2);
-        pkb.setModifies(s2, x);
-        pkb.setModifies(s3, y);
+	SECTION("PKB::getModifiesByVar Test") {
+		pkb.setModifies(s1, v2);
+		pkb.setModifies(s2, x);
+		pkb.setModifies(s3, y);
 
-        unordered_set<shared_ptr<StmtInfo>> expected_set_1 = {p1, p2};
-        unordered_set<shared_ptr<StmtInfo>> expected_set_2 = {p3};
+		unordered_set<shared_ptr<StmtInfo>> expected_set_1 = {p1, p2};
+		unordered_set<shared_ptr<StmtInfo>> expected_set_2 = {p3};
 
-        CHECK(pkb.getModifiesByVar(x) == expected_set_1);
-        CHECK(pkb.getModifiesByVar(y) == expected_set_2);
-        CHECK(pkb.getModifiesByVar(xyz).empty());
-    }
+		CHECK(pkb.getModifiesByVar(x) == expected_set_1);
+		CHECK(pkb.getModifiesByVar(y) == expected_set_2);
+		CHECK(pkb.getModifiesByVar(xyz).empty());
+	}
 
-    SECTION("PKB::getModifiesByStmt Test") {
-        pkb.setModifies(s1, v2);
-        pkb.setModifies(s2, x);
-        pkb.setModifies(s3, y);
+	SECTION("PKB::getModifiesByStmt Test") {
+		pkb.setModifies(s1, v2);
+		pkb.setModifies(s2, x);
+		pkb.setModifies(s3, y);
 
-        CHECK(pkb.getModifiesByStmt(s1) == unordered_set<VarRef>{x});
-        CHECK(pkb.getModifiesByStmt(s2) == unordered_set<VarRef>{x});
-        CHECK(pkb.getModifiesByStmt(s3) == unordered_set<VarRef>{y});
+		CHECK(pkb.getModifiesByStmt(s1) == unordered_set<VarRef>{x});
+		CHECK(pkb.getModifiesByStmt(s2) == unordered_set<VarRef>{x});
+		CHECK(pkb.getModifiesByStmt(s3) == unordered_set<VarRef>{y});
 
-        CHECK(pkb.getModifiesByStmt(s4).empty());
-    }
-
-
-
-
+		CHECK(pkb.getModifiesByStmt(s4).empty());
+	}
 }

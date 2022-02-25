@@ -2,9 +2,9 @@
 
 #include <stdexcept>
 
-StatementStore::StatementStore() = default;
+PKB::StatementStore::StatementStore() = default;
 
-void StatementStore::insert(StmtRef idx, StmtType type) {
+void PKB::StatementStore::insert(StmtRef idx, StmtType type) {
 	if (idx <= 0) {
 		throw invalid_argument("Statement index must be positive");
 	}
@@ -20,7 +20,7 @@ void StatementStore::insert(StmtRef idx, StmtType type) {
 	this->store.insert({idx, info});
 }
 
-shared_ptr<StmtInfo> StatementStore::get(StmtRef idx) {
+shared_ptr<StmtInfo> PKB::StatementStore::get(StmtRef idx) {
 	if (idx <= 0) {
 		throw invalid_argument("Statement index must be positive");
 	}
@@ -31,7 +31,7 @@ shared_ptr<StmtInfo> StatementStore::get(StmtRef idx) {
 	return iter->second;
 }
 
-unordered_set<shared_ptr<StmtInfo>> StatementStore::getAll() {
+unordered_set<shared_ptr<StmtInfo>> PKB::StatementStore::getAll() {
 	unordered_set<shared_ptr<StmtInfo>> result;
 	for (const auto& key_value : store) {
 		result.insert(key_value.second);
@@ -39,4 +39,4 @@ unordered_set<shared_ptr<StmtInfo>> StatementStore::getAll() {
 	return result;
 }
 
-void StatementStore::clear() { store.clear(); }
+void PKB::StatementStore::clear() { store.clear(); }

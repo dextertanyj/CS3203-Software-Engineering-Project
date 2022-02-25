@@ -1,12 +1,13 @@
-#ifndef TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYEXPRESSIONLEXER_H_
-#define TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYEXPRESSIONLEXER_H_
+#ifndef SPA_SRC_QP_QUERYEXPRESSIONLEXER_H
+#define SPA_SRC_QP_QUERYEXPRESSIONLEXER_H
 
 #include <string>
 #include <vector>
 
 #include "Common/ExpressionProcessor/LexerInterface.h"
+#include "QP/QP.h"
 
-class QueryExpressionLexer : public Common::ExpressionProcessor::LexerInterface {
+class QP::QueryExpressionLexer : public Common::ExpressionProcessor::LexerInterface {
 public:
 	explicit QueryExpressionLexer(vector<string> expression_tokens);
 	string readToken() override;
@@ -17,4 +18,4 @@ private:
 	int idx;
 };
 
-#endif  // TEAM32_CODE32_SRC_SPA_SRC_QP_QUERYEXPRESSIONLEXER_H_
+#endif  // SPA_SRC_QP_QUERYEXPRESSIONLEXER_H

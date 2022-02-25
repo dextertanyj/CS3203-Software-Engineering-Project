@@ -1,11 +1,12 @@
-#ifndef SPA_VARIABLESTORE_H
-#define SPA_VARIABLESTORE_H
+#ifndef SPA_SRC_PKB_VARIABLESTORE_H
+#define SPA_SRC_PKB_VARIABLESTORE_H
 
 #include <unordered_set>
 
 #include "Common/TypeDefs.h"
+#include "PKB/PKB.h"
 
-class VariableStore {
+class PKB::VariableStore {
 public:
 	VariableStore();
 	void insert(const VarRef& variable);
@@ -16,4 +17,4 @@ private:
 	unordered_set<VarRef> store;
 };
 
-#endif  // SPA_VARIABLESTORE_H
+#endif  // SPA_SRC_PKB_VARIABLESTORE_H

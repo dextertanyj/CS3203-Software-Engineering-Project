@@ -1,16 +1,17 @@
-#ifndef QUERY_FORMATTER_H_
-#define QUERY_FORMATTER_H_
+#ifndef SPA_SRC_QP_QUERYFORMATTER_H
+#define SPA_SRC_QP_QUERYFORMATTER_H
 
 #include <string>
 
+#include "QP/QP.h"
 #include "QP/QueryProperties.h"
 #include "QP/QueryResult.h"
 
 using namespace std;
 
-class QueryFormatter {
+class QP::QueryFormatter {
 public:
 	static vector<string> formatResult(QueryProperties& query_properties, QueryResult& query_result);
 };
 
-#endif  // QUERY_FORMATTER_H_
+#endif  // SPA_SRC_QP_QUERYFORMATTER_H

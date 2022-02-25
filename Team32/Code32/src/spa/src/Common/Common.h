@@ -1,5 +1,5 @@
-#ifndef SPA_COMMON_H
-#define SPA_COMMON_H
+#ifndef SPA_SRC_COMMON_COMMON_H
+#define SPA_SRC_COMMON_COMMON_H
 
 namespace Common {
 namespace Converter {};
@@ -7,4 +7,4 @@ namespace Validator {};
 namespace ExpressionProcessor {};
 }  // namespace Common
 
-#endif  // SPA_COMMON_H
+#endif  // SPA_SRC_COMMON_COMMON_H

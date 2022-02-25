@@ -5,9 +5,10 @@
 
 using namespace std;
 
-AssignStore::AssignStore() = default;
+PKB::AssignStore::AssignStore() = default;
 
-void AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, VarRef variable, Common::ExpressionProcessor::Expression expression) {
+void PKB::AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, VarRef variable,
+                                 Common::ExpressionProcessor::Expression expression) {
 	StmtRef idx = statement->reference;
 	if (statement->type != StmtType::Assign) {
 		throw invalid_argument("Statement type cannot be bound to expression.");
@@ -23,7 +24,8 @@ void AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, VarRef variab
 	store.insert({idx, relation});
 }
 
-bool AssignStore::patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) {
+bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
+                                     bool is_exact_match) {
 	for (auto& assignment : store) {
 		if (compareExpressions(assignment.second, variable, expression, is_exact_match)) {
 			return true;
@@ -32,8 +34,8 @@ bool AssignStore::patternExists(const VarRef& variable, const Common::Expression
 	return false;
 }
 
-StmtInfoPtrSet AssignStore::getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
-                                                bool is_exact_match) {
+StmtInfoPtrSet PKB::AssignStore::getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
+                                                     bool is_exact_match) {
 	StmtInfoPtrSet result;
 	for (auto& assignment : store) {
 		if (compareExpressions(assignment.second, variable, expression, is_exact_match)) {
@@ -43,7 +45,7 @@ StmtInfoPtrSet AssignStore::getStmtsWithPattern(const VarRef& variable, const Co
 	return result;
 }
 
-StmtInfoPtrSet AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) {
+StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) {
 	StmtInfoPtrSet result;
 	for (const auto& assignment : store) {
 		if (assignment.second.variable == var_name) {
@@ -53,8 +55,8 @@ StmtInfoPtrSet AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) {
 	return result;
 }
 
-vector<pair<shared_ptr<StmtInfo>, VarRef>> AssignStore::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
-                                                                               bool is_exact_match) {
+vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::AssignStore::getStmtsWithPatternRHS(
+	const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) {
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> result;
 	for (auto& assignment : store) {
 		AssignRelation assign_relation = assignment.second;
@@ -66,8 +68,8 @@ vector<pair<shared_ptr<StmtInfo>, VarRef>> AssignStore::getStmtsWithPatternRHS(c
 	return result;
 }
 
-bool AssignStore::compareExpressions(AssignRelation& relation, const VarRef& variable,
-                                     const Common::ExpressionProcessor::Expression& op_tree, bool is_exact_match) {
+bool PKB::AssignStore::compareExpressions(PKB::AssignRelation& relation, const VarRef& variable,
+                                          const Common::ExpressionProcessor::Expression& op_tree, bool is_exact_match) {
 	if (!variable.empty() && relation.variable != variable) {
 		return false;
 	}
@@ -77,6 +79,6 @@ bool AssignStore::compareExpressions(AssignRelation& relation, const VarRef& var
 	return relation.expression.contains(op_tree);
 }
 
-void AssignStore::clear() { store.clear(); }
+void PKB::AssignStore::clear() { store.clear(); }
 
-unordered_map<StmtRef, AssignRelation> AssignStore::getAssignMap() { return store; }
+unordered_map<StmtRef, PKB::AssignRelation> PKB::AssignStore::getAssignMap() { return store; }

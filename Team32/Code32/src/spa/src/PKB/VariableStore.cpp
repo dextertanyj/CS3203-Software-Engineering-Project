@@ -1,9 +1,9 @@
 #include "VariableStore.h"
 
-VariableStore::VariableStore() = default;
+PKB::VariableStore::VariableStore() = default;
 
-void VariableStore::insert(const VarRef& variable) { store.insert(variable); }
+void PKB::VariableStore::insert(const VarRef& variable) { store.insert(variable); }
 
-void VariableStore::insert(const VarRefSet& variables) { store.insert(variables.begin(), variables.end()); }
+void PKB::VariableStore::insert(const VarRefSet& variables) { store.insert(variables.begin(), variables.end()); }
 
-unordered_set<VarRef> VariableStore::getAll() { return store; }
+unordered_set<VarRef> PKB::VariableStore::getAll() { return store; }

@@ -1,13 +1,14 @@
-#ifndef SPA_STATEMENTRELATIONSTORE_H
-#define SPA_STATEMENTRELATIONSTORE_H
+#ifndef SPA_SRC_PKB_STATEMENTRELATIONSTORE_H
+#define SPA_SRC_PKB_STATEMENTRELATIONSTORE_H
 
 #include <unordered_map>
 #include <unordered_set>
 
 #include "Common/TypeDefs.h"
+#include "PKB/PKB.h"
 
 template <class T>
-class StatementRelationStore {
+class PKB::StatementRelationStore {
 public:
 	StatementRelationStore();
 	void set(shared_ptr<StmtInfo>, shared_ptr<StmtInfo>);
@@ -26,4 +27,4 @@ private:
 	friend class FollowsRelation;
 };
 
-#endif  // SPA_STATEMENTRELATIONSTORE_H
+#endif  // SPA_SRC_PKB_STATEMENTRELATIONSTORE_H

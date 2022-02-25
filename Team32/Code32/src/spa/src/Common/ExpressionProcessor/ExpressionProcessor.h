@@ -1,5 +1,5 @@
-#ifndef SPA_EXPRESSIONPROCESSOR_H
-#define SPA_EXPRESSIONPROCESSOR_H
+#ifndef SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSIONPROCESSOR_H
+#define SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSIONPROCESSOR_H
 
 #include <stdexcept>
 
@@ -25,4 +25,4 @@ class VariableNode;  // NOLINT(bugprone-forward-declaration-namespace)
 enum class ExpressionType { Arithmetic, Relational, Logical };
 }  // namespace Common::ExpressionProcessor
 
-#endif  // SPA_EXPRESSIONPROCESSOR_H
+#endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSIONPROCESSOR_H

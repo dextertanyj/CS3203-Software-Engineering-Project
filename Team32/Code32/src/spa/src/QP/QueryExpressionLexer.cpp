@@ -2,10 +2,10 @@
 
 #include <utility>
 
-QueryExpressionLexer::QueryExpressionLexer(vector<string> expression_tokens)
+QP::QueryExpressionLexer::QueryExpressionLexer(vector<string> expression_tokens)
 	: expression_tokens(std::move(std::move(expression_tokens))), idx(0) {}
 
-string QueryExpressionLexer::readToken() {
+string QP::QueryExpressionLexer::readToken() {
 	if (idx >= expression_tokens.size()) {
 		return "";
 	}
@@ -14,7 +14,7 @@ string QueryExpressionLexer::readToken() {
 	return token;
 }
 
-string QueryExpressionLexer::peekToken() {
+string QP::QueryExpressionLexer::peekToken() {
 	if (idx >= expression_tokens.size()) {
 		return "";
 	}

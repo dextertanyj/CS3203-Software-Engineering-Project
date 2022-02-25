@@ -16,7 +16,7 @@ unique_ptr<SP::Node::StatementListNode> SP::Node::StatementListNode::parseStatem
 	return statement_list;
 }
 
-vector<StmtRef> SP::Node::StatementListNode::extract(PKB& pkb) {
+vector<StmtRef> SP::Node::StatementListNode::extract(PKB::Storage& pkb) {
 	vector<StmtRef> children;
 	for (auto iter = stmt_list.begin(); iter < stmt_list.end(); ++iter) {
 		children.push_back(iter->get()->extract(pkb));

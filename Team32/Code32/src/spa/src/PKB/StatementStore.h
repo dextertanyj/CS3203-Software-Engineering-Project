@@ -1,15 +1,16 @@
-#ifndef SPA_STATEMENTSTORE_H
-#define SPA_STATEMENTSTORE_H
+#ifndef SPA_SRC_PKB_STATEMENTSTORE_H
+#define SPA_SRC_PKB_STATEMENTSTORE_H
 
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
 
 #include "Common/TypeDefs.h"
+#include "PKB/PKB.h"
 
 using namespace std;
 
-class StatementStore {
+class PKB::StatementStore {
 public:
 	StatementStore();
 	void insert(StmtRef idx, StmtType type);
@@ -21,4 +22,4 @@ private:
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> store;
 };
 
-#endif  // SPA_STATEMENTSTORE_H
+#endif  // SPA_SRC_PKB_STATEMENTSTORE_H

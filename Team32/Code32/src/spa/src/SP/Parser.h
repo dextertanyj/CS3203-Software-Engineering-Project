@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SPA_SRC_SP_PARSER_H
+#define SPA_SRC_SP_PARSER_H
 
 #include <memory>
 #include <string>
@@ -18,3 +19,5 @@ private:
 	SP::Lexer lex;
 	StmtRef statement_count;
 };
+
+#endif

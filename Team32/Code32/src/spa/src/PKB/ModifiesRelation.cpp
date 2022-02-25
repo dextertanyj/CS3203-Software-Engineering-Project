@@ -4,7 +4,8 @@
 
 #include "PKB/SVRelationStore.tpp"
 
-bool ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
+bool PKB::ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement,
+                                     const VarRef& variable) {
 	StmtRef idx = statement->reference;
 	if (statement->type == StmtType::Print) {
 		throw invalid_argument("Print statements cannot modify a variable");
@@ -21,8 +22,8 @@ bool ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const 
 	                [variable](const VarRef& existing_var) { return existing_var != variable; }));
 }
 
-bool ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement,
-                                const VarRefSet& variables) {
+bool PKB::ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement,
+                                     const VarRefSet& variables) {
 	StmtRef idx = statement->reference;
 	if (statement->type == StmtType::Print) {
 		throw invalid_argument("Print statements cannot modify a variable");
@@ -42,8 +43,8 @@ bool ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const 
 	                [variable](const VarRef& existing_var) { return existing_var == variable; }));
 }
 
-void ModifiesRelation::optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
-                                SVRelationStore<ModifiesRelation>& store) {
+void PKB::ModifiesRelation::optimize(StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
+                                     SVRelationStore<ModifiesRelation>& store) {
 	for (const auto& statement : statement_store.getAll()) {
 		if (statement->type == StmtType::IfStmt || statement->type == StmtType::WhileStmt) {
 			auto children = parent_store.getReverseTransitive(statement->reference);

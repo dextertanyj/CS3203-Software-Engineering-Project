@@ -13,7 +13,7 @@ unique_ptr<SP::Node::ProgramNode> SP::Node::ProgramNode::parseProgram(Lexer& lex
 	} while (!lex.peekToken().empty());
 	return program;
 }
-void SP::Node::ProgramNode::extract(PKB& pkb) {
+void SP::Node::ProgramNode::extract(PKB::Storage& pkb) {
 	for (auto iter = procedures.begin(); iter < procedures.end(); ++iter) {
 		iter->get()->extract(pkb);
 	}

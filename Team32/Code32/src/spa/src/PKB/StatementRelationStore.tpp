@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SPA_SRC_PKB_STATEMENTRELATIONSTORE_TPP
+#define SPA_SRC_PKB_STATEMENTRELATIONSTORE_TPP
 
 #include "PKB/StatementRelationStore.h"
 
@@ -8,11 +9,11 @@
 using namespace std;
 
 template <class T>
-StatementRelationStore<T>::StatementRelationStore() = default;
+PKB::StatementRelationStore<T>::StatementRelationStore() = default;
 
 template <class T>
-void StatementRelationStore<T>::set(shared_ptr<StmtInfo> front,
-                                    shared_ptr<StmtInfo> back) {  // NOLINT(bugprone-easily-swappable-parameters)
+void PKB::StatementRelationStore<T>::set(shared_ptr<StmtInfo> front,
+                                         shared_ptr<StmtInfo> back) {  // NOLINT(bugprone-easily-swappable-parameters)
 	StmtRef front_idx = front->reference;
 	StmtRef back_idx = back->reference;
 
@@ -45,7 +46,7 @@ void StatementRelationStore<T>::set(shared_ptr<StmtInfo> front,
 }
 
 template <class T>
-bool StatementRelationStore<T>::isRelated(StmtRef front, StmtRef back) {
+bool PKB::StatementRelationStore<T>::isRelated(StmtRef front, StmtRef back) {
 	if (front <= 0 || back <= 0) {
 		throw invalid_argument("Statement number must be a positive integer.");
 	}
@@ -65,7 +66,7 @@ bool StatementRelationStore<T>::isRelated(StmtRef front, StmtRef back) {
 }
 
 template <class T>
-unordered_set<shared_ptr<StmtInfo>> StatementRelationStore<T>::getForward(StmtRef index) {
+unordered_set<shared_ptr<StmtInfo>> PKB::StatementRelationStore<T>::getForward(StmtRef index) {
 	if (index <= 0) {
 		throw invalid_argument("Statement number must be a positive integer.");
 	}
@@ -77,7 +78,7 @@ unordered_set<shared_ptr<StmtInfo>> StatementRelationStore<T>::getForward(StmtRe
 }
 
 template <class T>
-unordered_set<shared_ptr<StmtInfo>> StatementRelationStore<T>::getReverse(StmtRef index) {
+unordered_set<shared_ptr<StmtInfo>> PKB::StatementRelationStore<T>::getReverse(StmtRef index) {
 	if (index <= 0) {
 		throw invalid_argument("Statement number must be a positive integer.");
 	}
@@ -89,7 +90,7 @@ unordered_set<shared_ptr<StmtInfo>> StatementRelationStore<T>::getReverse(StmtRe
 }
 
 template <class T>
-unordered_set<shared_ptr<StmtInfo>> StatementRelationStore<T>::getForwardTransitive(StmtRef index) {
+unordered_set<shared_ptr<StmtInfo>> PKB::StatementRelationStore<T>::getForwardTransitive(StmtRef index) {
 	if (index <= 0) {
 		throw invalid_argument("Statement number must be a positive integer.");
 	}
@@ -102,7 +103,7 @@ unordered_set<shared_ptr<StmtInfo>> StatementRelationStore<T>::getForwardTransit
 }
 
 template <class T>
-unordered_set<shared_ptr<StmtInfo>> StatementRelationStore<T>::getReverseTransitive(StmtRef index) {
+unordered_set<shared_ptr<StmtInfo>> PKB::StatementRelationStore<T>::getReverseTransitive(StmtRef index) {
 	if (index <= 0) {
 		throw invalid_argument("Statement number must be a positive integer.");
 	}
@@ -115,6 +116,8 @@ unordered_set<shared_ptr<StmtInfo>> StatementRelationStore<T>::getReverseTransit
 }
 
 template <class T>
-void StatementRelationStore<T>::clear() {
+void PKB::StatementRelationStore<T>::clear() {
 	map.clear();
 }
+
+#endif  // SPA_SRC_PKB_STATEMENTRELATIONSTORE_TPP

@@ -1,21 +1,16 @@
-#ifndef SPA_PROCEDURESTORE_H
-#define SPA_PROCEDURESTORE_H
+#ifndef SPA_SRC_PKB_PROCEDURESTORE_H
+#define SPA_SRC_PKB_PROCEDURESTORE_H
 
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
 
 #include "Common/TypeDefs.h"
-#include "iostream"
+#include "PKB/PKB.h"
 
 using namespace std;
 
-struct ProcRelation {
-	vector<shared_ptr<StmtInfo>> idx_list;
-	shared_ptr<StmtInfo> call_stmt;
-};
-
-class ProcedureStore {
+class PKB::ProcedureStore {
 public:
 	ProcedureStore();
 	void setProc(const ProcRef&, const vector<shared_ptr<StmtInfo>>&);

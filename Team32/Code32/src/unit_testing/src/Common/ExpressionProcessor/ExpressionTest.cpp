@@ -1,9 +1,10 @@
+#include "Common/ExpressionProcessor/Expression.h"
+
 #include <unordered_set>
 
 #include "Common/ExpressionProcessor/ArithmeticNode.h"
 #include "Common/ExpressionProcessor/BinaryLogicalNode.h"
 #include "Common/ExpressionProcessor/ConstantNode.h"
-#include "Common/ExpressionProcessor/Expression.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "Common/ExpressionProcessor/RelationalNode.h"

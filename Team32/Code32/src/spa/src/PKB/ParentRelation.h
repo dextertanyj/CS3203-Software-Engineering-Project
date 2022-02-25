@@ -1,12 +1,13 @@
-#ifndef SPA_PARENTRELATION_H
-#define SPA_PARENTRELATION_H
+#ifndef SPA_SRC_PKB_PARENTRELATION_H
+#define SPA_SRC_PKB_PARENTRELATION_H
 
 #include <unordered_set>
 
 #include "Common/TypeDefs.h"
+#include "PKB/PKB.h"
 #include "PKB/StatementRelationStore.h"
 
-class ParentRelation {
+class PKB::ParentRelation {
 public:
 	explicit ParentRelation(shared_ptr<StmtInfo> self);
 	void insertForward(const shared_ptr<StmtInfo>& parent_to_insert);
@@ -30,4 +31,4 @@ private:
 	                                                              unordered_set<shared_ptr<StmtInfo>> previous);
 };
 
-#endif  // SPA_PARENTRELATION_H
+#endif  // SPA_SRC_PKB_PARENTRELATION_H
