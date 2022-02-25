@@ -86,7 +86,9 @@ public:
 	// Call get methods
 	bool checkCall(const ProcRef& caller, const ProcRef& callee);
 	ProcRefSet getCallee(const ProcRef& caller);
+	ProcRefSet getCalleeStar(const ProcRef& caller);
 	ProcRefSet getCaller(const ProcRef& callee);
+	ProcRefSet getCallerStar(const ProcRef& callee);
 
 	// Others
 	void clear();
