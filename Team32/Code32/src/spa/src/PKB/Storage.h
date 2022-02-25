@@ -26,6 +26,8 @@ public:
 	Storage();
 
 	// Set methods called by Source processor
+	void setProc(ProcRef, StmtRef, StmtRef);
+	void setCall(StmtRef, ProcRef);
 	void setFollows(StmtRef, StmtRef);
 	void setParent(StmtRef, StmtRef);
 	void setStmtType(StmtRef, StmtType);
@@ -60,13 +62,19 @@ public:
 
 	// Use get methods
 	bool checkUses(StmtRef, const VarRef&);
-	StmtInfoPtrSet getUsesByVar(const VarRef&);
+	bool checkUses(const ProcRef&, const VarRef&);
+	StmtInfoPtrSet getStmtUsesByVar(const VarRef&);
+	ProcRefSet getProcUsesByVar(const VarRef&);
 	VarRefSet getUsesByStmt(StmtRef);
+	VarRefSet getUsesByProc(const ProcRef&);
 
 	// Modify get methods
 	bool checkModifies(StmtRef, const VarRef&);
-	StmtInfoPtrSet getModifiesByVar(const VarRef&);
+	bool checkModifies(const ProcRef&, const VarRef&);
+	StmtInfoPtrSet getStmtModifiesByVar(const VarRef&);
+	ProcRefSet getProcModifiesByVar(const VarRef&);
 	VarRefSet getModifiesByStmt(StmtRef);
+	VarRefSet getModifiesByProc(const ProcRef&);
 
 	// Assign get methods
 	bool patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& exp, bool is_exact_match);
@@ -74,6 +82,11 @@ public:
 	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& variable);
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& exp,
 	                                                                  bool is_exact_match);
+
+	// Call get methods
+	bool checkCall(const ProcRef& caller, const ProcRef& callee);
+	ProcRefSet getCallee(const ProcRef& caller);
+	ProcRefSet getCaller(const ProcRef& callee);
 
 	// Others
 	void clear();

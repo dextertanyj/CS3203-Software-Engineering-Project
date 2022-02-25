@@ -96,7 +96,7 @@ void PKB::Storage::setModifies(StmtRef idx, VarRefSet variables) {
 
 bool PKB::Storage::checkModifies(StmtRef idx, const VarRef& variable) { return modifies_store.check(idx, variable); }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::Storage::getModifiesByVar(const VarRef& variable) { return modifies_store.getByVar(variable); }
+unordered_set<shared_ptr<StmtInfo>> PKB::Storage::getStmtModifiesByVar(const VarRef& variable) { return modifies_store.getByVar(variable); }
 
 unordered_set<VarRef> PKB::Storage::getModifiesByStmt(StmtRef idx) { return modifies_store.getByStmt(idx); }
 
@@ -120,7 +120,7 @@ void PKB::Storage::setUses(StmtRef idx, VarRefSet variables) {
 
 bool PKB::Storage::checkUses(StmtRef stmt, const VarRef& variable) { return uses_store.check(stmt, variable); }
 
-unordered_set<shared_ptr<StmtInfo>> PKB::Storage::getUsesByVar(const VarRef& variable) { return uses_store.getByVar(variable); }
+unordered_set<shared_ptr<StmtInfo>> PKB::Storage::getStmtUsesByVar(const VarRef& variable) { return uses_store.getByVar(variable); }
 
 unordered_set<VarRef> PKB::Storage::getUsesByStmt(StmtRef stmt) { return uses_store.getByStmt(stmt); }
 
