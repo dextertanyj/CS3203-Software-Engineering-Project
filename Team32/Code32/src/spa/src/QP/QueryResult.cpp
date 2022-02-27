@@ -24,8 +24,6 @@ void QP::QueryResult::addColumn(const string& synonym, const vector<string>& col
 }
 
 void QP::QueryResult::joinResult(QueryResult& query_result) {
-	// Evaluator will ensure that queryResult has less columns when joining.
-	// Check whether all synonyms in the smaller table is in the larger table.
 	for (string const& synonym : query_result.getSynonymsStored()) {
 		if (this->synonyms_stored.find(synonym) == synonyms_stored.end()) {
 			joinWithDifferentSynonym(query_result);
@@ -61,8 +59,6 @@ void QP::QueryResult::joinWithDifferentSynonym(QueryResult& query_result) {
 	}
 
 	size_t number_of_rows = table.begin()->second.size();
-	int pos = 0;
-
 	for (int i = 0; i < number_of_rows; i++) {
 		unordered_map<string, string> row;
 		for (string const& common_syn : common_synonyms) {
@@ -101,17 +97,29 @@ void QP::QueryResult::joinWithDifferentSynonym(QueryResult& query_result) {
 }
 
 void QP::QueryResult::joinWithSameSynonym(QueryResult& query_result) {
-	size_t number_of_rows = table.begin()->second.size();
-	unordered_map<string, vector<string>> final_result = this->table;
-	int pos = 0;
+	unordered_map<string, vector<string>> final_result;
+	unordered_map<string, vector<string>> smaller_table;
+	unordered_set<string> synonyms;
+	if (this->table.size() > query_result.getTable().size()) {
+		final_result = this->table;
+		smaller_table = query_result.getTable();
+		synonyms = query_result.getSynonymsStored();
+	} else {
+		final_result = query_result.getTable();
+		smaller_table = this->table;
+		synonyms = this->synonyms_stored;
+	}
 
+	size_t number_of_rows = final_result.begin()->second.size();
+	unordered_map<string, vector<string>> temp = final_result;
+	int pos = 0;
 	for (int i = 0; i < number_of_rows; i++) {
 		unordered_map<string, string> row;
-		for (const string& synonym : query_result.getSynonymsStored()) {
-			row.insert({synonym, table.at(synonym)[i]});
+		for (const string& synonym : synonyms) {
+			row.insert({synonym, temp.at(synonym)[i]});
 		}
 
-		if (!query_result.contains(row)) {
+		if (!contains(smaller_table, row)) {
 			removeRow(final_result, pos);
 		} else {
 			pos++;
@@ -124,7 +132,7 @@ void QP::QueryResult::joinWithSameSynonym(QueryResult& query_result) {
 	}
 }
 
-bool QP::QueryResult::contains(const unordered_map<string, string>& row) {
+bool QP::QueryResult::contains(unordered_map<string, vector<string>>& table, const unordered_map<string, string>& row) {
 	size_t number_of_rows = table.begin()->second.size();
 	for (int i = 0; i < number_of_rows; i++) {
 		if (isRowMatch(row, table, i)) {

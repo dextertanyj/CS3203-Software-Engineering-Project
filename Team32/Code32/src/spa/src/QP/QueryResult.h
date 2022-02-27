@@ -27,7 +27,7 @@ private:
 	unordered_map<string, vector<string>> table;
 	void joinWithDifferentSynonym(QueryResult& query_result);
 	void joinWithSameSynonym(QueryResult& query_result);
-	bool contains(const unordered_map<string, string>& row);
+	static bool contains(unordered_map<string, vector<string>>& table, const unordered_map<string, string>& row);
 	static bool isRowMatch(const unordered_map<string, string>& row, unordered_map<string, vector<string>>& table, int row_number);
 	static void removeRow(unordered_map<string, vector<string>>& table, int row_number);
 	unordered_map<string, vector<string>> getSubTableWithRow(const unordered_map<string, string>& row);

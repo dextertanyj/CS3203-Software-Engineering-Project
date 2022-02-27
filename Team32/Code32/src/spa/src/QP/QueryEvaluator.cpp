@@ -58,7 +58,8 @@ QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(SuchThatClauseL
 	return QueryResult(true);
 }
 
-bool QP::QueryEvaluator::executeGroup(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses, const Declaration& select) {
+bool QP::QueryEvaluator::executeGroup(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
+                                      const Declaration& select) {
 	if (such_that_clauses.size() + pattern_clauses.size() == 0) {
 		return true;
 	}
@@ -163,28 +164,11 @@ QP::QueryResult QP::QueryEvaluator::evaluateClauses(SuchThatClauseList& such_tha
 		}
 		result_list.push_back(result);
 	}
-	// For iteration one, the size of resultList is at most 2
-	if (result_list.size() == 1) {
-		return result_list[0];
+
+	for (int i = 1; i < result_list.size(); i++) {
+		result_list[0].joinResult(result_list[i]);
 	}
-
-	// Merge the table without selected synonym to the one with selected synonym.
-	// If both does not contain selected synonym, we merge the smaller table to larger table.
-	const unordered_set<string> synonyms_in_first_result = result_list[0].getSynonymsStored();
-	const unordered_set<string> synonyms_in_second_result = result_list[1].getSynonymsStored();
-
-	if (synonyms_in_second_result.find(select.symbol) != synonyms_in_second_result.end()) {
-		result_list[1].joinResult(result_list[0]);
-		return result_list[1];
-	}
-
-	if (synonyms_in_first_result.size() >= synonyms_in_second_result.size()) {
-		result_list[0].joinResult(result_list[1]);
-		return result_list[0];
-	}
-
-	result_list[1].joinResult(result_list[0]);
-	return result_list[1];
+	return result_list[0];
 }
 
 // First element contains clauses with the selected synonym.
