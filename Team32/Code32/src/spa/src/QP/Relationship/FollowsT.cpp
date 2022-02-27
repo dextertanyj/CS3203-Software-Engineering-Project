@@ -1,9 +1,5 @@
 #include "FollowsT.h"
 
-QP::QueryResult QP::Relationship::FollowsT::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
-	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
-}
-
 QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
 	if (getLeftStmt().type == StmtRefType::StmtNumber && getRightStmt().type == StmtRefType::StmtNumber) {
 		StmtInfoPtrSet followers_set = pkb.getFollowerStar(stoul(getLeftStmt().stmt_ref));

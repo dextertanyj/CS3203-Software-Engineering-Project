@@ -29,19 +29,8 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	}
 
 	for (size_t i = 1; i < last_group; i++) {
-		if (clauses_in_group[i].first.size() + clauses_in_group[i].second.size() == 0) {
-			continue;
-		}
-		if (clauses_in_group[i].first.size() + clauses_in_group[i].second.size() == 1) {
-			QueryResult query_result = evaluateClauses(clauses_in_group[i].first, clauses_in_group[i].second, select, true);
-			if (!query_result.getResult()) {
-				return {};
-			}
-		} else {
-			QueryResult query_result = evaluateClauses(clauses_in_group[i].first, clauses_in_group[i].second, select, false);
-			if (!query_result.getResult()) {
-				return {};
-			}
+		if (!executeGroup(clauses_in_group[i].first, clauses_in_group[i].second, select)) {
+			return {};
 		}
 	}
 
@@ -69,77 +58,79 @@ QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(SuchThatClauseL
 	return QueryResult(true);
 }
 
+bool QP::QueryEvaluator::executeGroup(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses, const Declaration& select) {
+	if (such_that_clauses.size() + pattern_clauses.size() == 0) {
+		return true;
+	}
+
+	QueryResult query_result;
+	if (such_that_clauses.size() + pattern_clauses.size() == 1) {
+		query_result = evaluateClauses(such_that_clauses, pattern_clauses, select, true);
+	} else {
+		query_result = evaluateClauses(such_that_clauses, pattern_clauses, select, false);
+	}
+
+	return query_result.getResult();
+}
+
 QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) {
 	switch (select.type) {
-		case DesignEntity::Stmt: {
-			StmtInfoPtrSet stmt_set = pkb.getStatements();
-			QueryResult result = QueryResult();
-
-			vector<string> result_string;
-			for (auto const& stmt : stmt_set) {
-				result_string.push_back(to_string(stmt->reference));
-			}
-
-			result.addColumn(select.symbol, result_string);
-			return result;
-		}
-		case DesignEntity::Read: {
-			return getSpecificStmtType(StmtType::Read, select.symbol);
-		}
-		case DesignEntity::Print: {
-			return getSpecificStmtType(StmtType::Print, select.symbol);
-		}
-		case DesignEntity::Call: {
-			return getSpecificStmtType(StmtType::Call, select.symbol);
-		}
-		case DesignEntity::While: {
-			return getSpecificStmtType(StmtType::WhileStmt, select.symbol);
-		}
-		case DesignEntity::If: {
-			return getSpecificStmtType(StmtType::IfStmt, select.symbol);
-		}
+		case DesignEntity::Stmt:
+		case DesignEntity::Read:
+		case DesignEntity::Print:
+		case DesignEntity::Call:
+		case DesignEntity::While:
+		case DesignEntity::If:
 		case DesignEntity::Assign: {
-			return getSpecificStmtType(StmtType::Assign, select.symbol);
+			return getSpecificStmtType(select.type, select.symbol);
 		}
 		case DesignEntity::Variable: {
-			VarRefSet var_set = pkb.getVariables();
-			QueryResult result = QueryResult();
-
-			vector<string> result_string;
-			for (auto const& var : var_set) {
-				result_string.push_back(var);
-			}
-
-			result.addColumn(select.symbol, result_string);
-			return result;
+			return getVariables(select.symbol);
 		}
 		case DesignEntity::Constant: {
-			unordered_set<ConstVal> constants = pkb.getConstants();
-			QueryResult result = QueryResult();
-
-			vector<string> result_string;
-			result_string.reserve(constants.size());
-			for (auto const& constant : constants) {
-				result_string.push_back(to_string(constant));
-			}
-
-			result.addColumn(select.symbol, result_string);
-			return result;
+			return getConstants(select.symbol);
 		}
 		default:
 			return {};
 	}
 }
 
-QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(StmtType type, const string& symbol) {
+QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(DesignEntity design_entity, const string& symbol) {
 	StmtInfoPtrSet stmt_set = pkb.getStatements();
 	QueryResult result = QueryResult();
 
 	vector<string> result_string;
 	for (auto const& stmt : stmt_set) {
-		if (stmt->type == type) {
+		if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 			result_string.push_back(to_string(stmt->reference));
 		}
+	}
+
+	result.addColumn(symbol, result_string);
+	return result;
+}
+
+QP::QueryResult QP::QueryEvaluator::getConstants(const string& symbol) {
+	unordered_set<ConstVal> constants = pkb.getConstants();
+	QueryResult result = QueryResult();
+
+	vector<string> result_string;
+	result_string.reserve(constants.size());
+	for (auto const& constant : constants) {
+		result_string.push_back(to_string(constant));
+	}
+
+	result.addColumn(symbol, result_string);
+	return result;
+}
+
+QP::QueryResult QP::QueryEvaluator::getVariables(const string& symbol) {
+	VarRefSet var_set = pkb.getVariables();
+	QueryResult result = QueryResult();
+
+	vector<string> result_string;
+	for (auto const& var : var_set) {
+		result_string.push_back(var);
 	}
 
 	result.addColumn(symbol, result_string);
@@ -182,11 +173,6 @@ QP::QueryResult QP::QueryEvaluator::evaluateClauses(SuchThatClauseList& such_tha
 	const unordered_set<string> synonyms_in_first_result = result_list[0].getSynonymsStored();
 	const unordered_set<string> synonyms_in_second_result = result_list[1].getSynonymsStored();
 
-	if (synonyms_in_first_result.find(select.symbol) != synonyms_in_first_result.end()) {
-		result_list[0].joinResult(result_list[1]);
-		return result_list[0];
-	}
-
 	if (synonyms_in_second_result.find(select.symbol) != synonyms_in_second_result.end()) {
 		result_list[1].joinResult(result_list[0]);
 		return result_list[1];
@@ -196,6 +182,7 @@ QP::QueryResult QP::QueryEvaluator::evaluateClauses(SuchThatClauseList& such_tha
 		result_list[0].joinResult(result_list[1]);
 		return result_list[0];
 	}
+
 	result_list[1].joinResult(result_list[0]);
 	return result_list[1];
 }

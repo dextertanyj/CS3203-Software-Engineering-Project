@@ -13,7 +13,9 @@ public:
 	 * A trivial relation is one that does not contain synonym or contains
 	 * synonyms that only appear in one clause.
 	 */
-	virtual QueryResult execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) = 0;
+	inline QueryResult execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+		return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
+	};
 	virtual vector<string> getDeclarationSymbols() = 0;
 	virtual ~Relation() = default;
 

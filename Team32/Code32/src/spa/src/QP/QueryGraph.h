@@ -23,6 +23,7 @@ public:
 
 private:
 	unordered_map<string, Node> nodes;
+	void setEdge(shared_ptr<Relationship::Relation> relation);
 	void addEdge(const string& symbol_one, const string& symbol_two);
 };
 

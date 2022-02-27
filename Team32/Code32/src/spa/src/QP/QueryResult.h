@@ -28,7 +28,9 @@ private:
 	void joinWithDifferentSynonym(QueryResult& query_result);
 	void joinWithSameSynonym(QueryResult& query_result);
 	bool contains(const unordered_map<string, string>& row);
+	static bool isRowMatch(const unordered_map<string, string>& row, unordered_map<string, vector<string>>& table, int row_number);
 	static void removeRow(unordered_map<string, vector<string>>& table, int row_number);
+	unordered_map<string, vector<string>> getSubTableWithRow(const unordered_map<string, string>& row);
 };
 
 #endif  // SPA_SRC_QP_QUERYRESULT_H

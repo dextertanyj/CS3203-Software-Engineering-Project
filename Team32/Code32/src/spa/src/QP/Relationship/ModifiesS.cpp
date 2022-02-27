@@ -9,10 +9,6 @@ QueryStmtRef QP::Relationship::ModifiesS::getStmt() { return stmt; }
 
 QueryEntRef QP::Relationship::ModifiesS::getEnt() { return ent; }
 
-QP::QueryResult QP::Relationship::ModifiesS::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
-	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
-}
-
 vector<string> QP::Relationship::ModifiesS::getDeclarationSymbols() {
 	vector<string> declaration_symbols;
 	if (this->stmt.type == StmtRefType::Synonym) {
