@@ -19,17 +19,17 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	if (clauses_in_group[0].first.empty() && clauses_in_group[0].second.empty()) {
 		result = executeNoClauses(select);
 	} else {
-		result = evaluateClauses(clauses_in_group[0].first, clauses_in_group[0].second, select, false);
+		result = evaluateClauses(clauses_in_group[0].first, clauses_in_group[0].second, false);
 	}
 
 	// Execute clauses without synonyms first
 	size_t last_group = clauses_in_group.size() - 1;
-	if (!executeClausesWithoutSynonym(clauses_in_group[last_group].first, clauses_in_group[last_group].second, select).getResult()) {
+	if (!executeClausesWithoutSynonym(clauses_in_group[last_group].first, clauses_in_group[last_group].second).getResult()) {
 		return {};
 	}
 
 	for (size_t i = 1; i < last_group; i++) {
-		if (!executeGroup(clauses_in_group[i].first, clauses_in_group[i].second, select)) {
+		if (!executeGroup(clauses_in_group[i].first, clauses_in_group[i].second)) {
 			return {};
 		}
 	}
@@ -37,20 +37,20 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	return result;
 }
 
-QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
-                                                                 const Declaration& select) {
+QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(SuchThatClauseList& such_that_clauses,
+                                                                 PatternClauseList& pattern_clauses) {
 	// These clauses should be evaluated independently since they are unrelated
 	for (const SuchThatClause& such_that_clause : such_that_clauses) {
 		SuchThatClauseList such_that_list = {such_that_clause};
 		PatternClauseList pattern_list = {};
-		if (!evaluateClauses(such_that_list, pattern_list, select, true).getResult()) {
+		if (!evaluateClauses(such_that_list, pattern_list, true).getResult()) {
 			return {};
 		}
 	}
 	for (const PatternClause& pattern_clause : pattern_clauses) {
 		SuchThatClauseList such_that_list = {};
 		PatternClauseList pattern_list = {pattern_clause};
-		if (!evaluateClauses(such_that_list, pattern_list, select, true).getResult()) {
+		if (!evaluateClauses(such_that_list, pattern_list, true).getResult()) {
 			return {};
 		}
 	}
@@ -58,17 +58,16 @@ QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(SuchThatClauseL
 	return QueryResult(true);
 }
 
-bool QP::QueryEvaluator::executeGroup(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
-                                      const Declaration& select) {
+bool QP::QueryEvaluator::executeGroup(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses) {
 	if (such_that_clauses.size() + pattern_clauses.size() == 0) {
 		return true;
 	}
 
 	QueryResult query_result;
 	if (such_that_clauses.size() + pattern_clauses.size() == 1) {
-		query_result = evaluateClauses(such_that_clauses, pattern_clauses, select, true);
+		query_result = evaluateClauses(such_that_clauses, pattern_clauses, true);
 	} else {
-		query_result = evaluateClauses(such_that_clauses, pattern_clauses, select, false);
+		query_result = evaluateClauses(such_that_clauses, pattern_clauses, false);
 	}
 
 	return query_result.getResult();
@@ -146,7 +145,7 @@ QP::QueryGraph QP::QueryEvaluator::buildGraph(QueryProperties& query_properties)
 }
 
 QP::QueryResult QP::QueryEvaluator::evaluateClauses(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
-                                                    const Declaration& select, bool is_trivial) {
+                                                    bool is_trivial) {
 	vector<QueryResult> result_list;
 
 	for (const SuchThatClause& such_that_clause : such_that_clauses) {

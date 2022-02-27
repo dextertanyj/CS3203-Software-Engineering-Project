@@ -67,7 +67,7 @@ void QP::QueryResult::joinWithDifferentSynonym(QueryResult& query_result) {
 
 		unordered_map<string, vector<string>> sub_table = query_result.getSubTableWithRow(row);
 		if (!sub_table.begin()->second.empty()) {
-			int sub_table_size = sub_table.begin()->second.size();
+			size_t sub_table_size = sub_table.begin()->second.size();
 
 			// Common synonyms
 			for (string const& common_syn : common_synonyms) {

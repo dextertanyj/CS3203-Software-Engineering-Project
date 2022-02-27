@@ -21,18 +21,18 @@ void QP::QueryGraph::setEdges(const SuchThatClauseList& such_that_clause_list, c
 
 unordered_map<string, Node> QP::QueryGraph::getNodes() { return nodes; }
 
-void QP::QueryGraph::setEdge(shared_ptr<Relationship::Relation> relation) {
+void QP::QueryGraph::setEdge(const shared_ptr<Relationship::Relation>& relation) {
 	vector<string> declarations = relation->getDeclarationSymbols();
 	if (declarations.size() == 2) {
-		addEdge(declarations[0], declarations[1]);
-		addEdge(declarations[1], declarations[0]);
+		addEdge({declarations[0], declarations[1]});
+		addEdge({declarations[1], declarations[0]});
 	}
 }
 
-void QP::QueryGraph::addEdge(const string& symbol_from, const string& symbol_to) {
-	Node& node = this->nodes.at(symbol_from);
-	if (find(node.adjacent_symbols.begin(), node.adjacent_symbols.end(), symbol_to) == node.adjacent_symbols.end()) {
-		node.adjacent_symbols.push_back(symbol_to);
+void QP::QueryGraph::addEdge(const pair<string, string>& symbols) {
+	Node& node = this->nodes.at(symbols.first);
+	if (find(node.adjacent_symbols.begin(), node.adjacent_symbols.end(), symbols.second) == node.adjacent_symbols.end()) {
+		node.adjacent_symbols.push_back(symbols.second);
 	}
 }
 
