@@ -10,7 +10,7 @@
 
 class SP::Processor {
 public:
-	explicit Processor(PKB::Storage& pkb);
+	explicit Processor(PKB::StorageUpdateInterface& pkb);
 	void process(string source);
 
 private:

@@ -9,7 +9,8 @@ QueryStmtRef QP::Relationship::ModifiesS::getStmt() { return stmt; }
 
 QueryEntRef QP::Relationship::ModifiesS::getEnt() { return ent; }
 
-QP::QueryResult QP::Relationship::ModifiesS::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::ModifiesS::execute(PKB::StorageAccessInterface& pkb, bool is_trivial,
+                                                     unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
@@ -24,7 +25,7 @@ vector<string> QP::Relationship::ModifiesS::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QP::QueryResult QP::Relationship::ModifiesS::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::ModifiesS::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
 	if (stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::VarName) {
 		return QueryResult(pkb.checkModifies(stoul(stmt.stmt_ref), ent.ent_ref));
 	}
@@ -87,7 +88,7 @@ QP::QueryResult QP::Relationship::ModifiesS::executeTrivial(PKB::Storage& pkb, u
 	return {};
 }
 
-QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
 	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
 		StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(ent.ent_ref);
 		DesignEntity design_entity = map[stmt.stmt_ref];

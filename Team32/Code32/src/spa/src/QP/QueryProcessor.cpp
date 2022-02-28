@@ -5,7 +5,7 @@
 
 #include "QP/QueryPreprocessor.h"
 
-QP::QueryProcessor::QueryProcessor(PKB::Storage& pkb) : evaluator(QueryEvaluator(pkb)) {}
+QP::QueryProcessor::QueryProcessor(PKB::StorageAccessInterface& pkb) : evaluator(QueryEvaluator(pkb)) {}
 
 vector<string> QP::QueryProcessor::processQuery(string query) {
 	try {

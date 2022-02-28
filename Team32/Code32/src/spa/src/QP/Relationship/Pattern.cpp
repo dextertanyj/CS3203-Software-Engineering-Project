@@ -12,7 +12,8 @@ ExpressionType QP::Relationship::Pattern::getExpressionType() { return this->exp
 
 Common::ExpressionProcessor::Expression QP::Relationship::Pattern::getExpression() { return this->expression.value(); }
 
-QP::QueryResult QP::Relationship::Pattern::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Pattern::execute(PKB::StorageAccessInterface& pkb, bool is_trivial,
+                                                   unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
@@ -24,7 +25,7 @@ vector<string> QP::Relationship::Pattern::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QP::QueryResult QP::Relationship::Pattern::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::Pattern::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& /*map*/) {
 	StmtInfoPtrSet stmt_set;
 	if (this->expression_type != ExpressionType::Underscore) {
 		bool is_exact = this->expression_type != ExpressionType::ExpressionUnderscore;
@@ -51,7 +52,8 @@ QP::QueryResult QP::Relationship::Pattern::executeTrivial(PKB::Storage& pkb, uno
 	return QueryResult(false);
 }
 
-QP::QueryResult QP::Relationship::Pattern::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::Pattern::executeNonTrivial(PKB::StorageAccessInterface& pkb,
+                                                             unordered_map<string, DesignEntity>& /*map*/) {
 	QueryResult result = QueryResult();
 
 	if (this->ent_ref.type == EntRefType::Synonym) {

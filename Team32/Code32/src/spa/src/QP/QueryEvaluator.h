@@ -17,13 +17,13 @@ using namespace std;
 
 class QP::QueryEvaluator {
 public:
-	explicit QueryEvaluator(PKB::Storage& pkb);
+	explicit QueryEvaluator(PKB::StorageAccessInterface& pkb);
 	QP::QueryResult executeQuery(QueryProperties& query_properties);
 	static vector<pair<SuchThatClauseList, PatternClauseList>> splitClauses(QueryProperties& query_properties,
 	                                                                        vector<unordered_set<string>>& synonyms_in_group);
 
 private:
-	PKB::Storage& pkb;
+	PKB::StorageAccessInterface& pkb;
 	unordered_map<string, DesignEntity> symbol_to_type_map;
 	QueryResult executeNoClauses(const Declaration& select);
 	QueryResult getSpecificStmtType(StmtType type, const string& symbol);

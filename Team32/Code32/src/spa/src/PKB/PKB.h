@@ -8,6 +8,8 @@
 #include "Common/TypeDefs.h"
 
 namespace PKB {
+class StorageUpdateInterface;
+class StorageAccessInterface;
 class Storage;
 
 class AssignStore;

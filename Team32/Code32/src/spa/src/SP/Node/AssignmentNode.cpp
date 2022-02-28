@@ -16,7 +16,7 @@ unique_ptr<SP::Node::AssignmentNode> SP::Node::AssignmentNode::parseAssignmentSt
 	return make_unique<AssignmentNode>(statement_count++, move(variable), move(expression));
 }
 
-StmtRef SP::Node::AssignmentNode::extract(PKB::Storage& pkb) {
+StmtRef SP::Node::AssignmentNode::extract(PKB::StorageUpdateInterface& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Assign);
 	VarRef lhs = assignee->extract();
