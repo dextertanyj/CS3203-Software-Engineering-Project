@@ -46,6 +46,7 @@ public:
 	StmtInfoPtrSet getStatements() override;
 	VarRefSet getVariables() override;
 	unordered_set<ConstVal> getConstants() override;
+	unordered_set<ProcRef> getProcedures() override;
 
 	// Parent get methods
 	shared_ptr<StmtInfo> getParent(StmtRef index) override;

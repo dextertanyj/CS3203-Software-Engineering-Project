@@ -9,6 +9,7 @@ public:
 	virtual StmtInfoPtrSet getStatements() = 0;
 	virtual VarRefSet getVariables() = 0;
 	virtual unordered_set<ConstVal> getConstants() = 0;
+	virtual unordered_set<ProcRef> getProcedures() = 0;
 
 	// Parent get methods
 	virtual shared_ptr<StmtInfo> getParent(StmtRef index) = 0;

@@ -75,12 +75,13 @@ void PKB::Storage::setAssign(StmtRef idx, VarRef variable, Common::ExpressionPro
 	return assign_store.setAssign(statement, move(variable), move(expression));
 }
 
-
 StmtInfoPtrSet PKB::Storage::getStatements() { return statement_store.getAll(); }
 
 VarRefSet PKB::Storage::getVariables() { return variable_store.getAll(); }
 
 unordered_set<ConstVal> PKB::Storage::getConstants() { return constant_store.getAll(); }
+
+unordered_set<ProcRef> PKB::Storage::getProcedures() { return unordered_set<ProcRef>(); }
 
 bool PKB::Storage::checkParents(StmtRef parent, StmtRef child) { return parent_store.isRelated(parent, child); }
 
