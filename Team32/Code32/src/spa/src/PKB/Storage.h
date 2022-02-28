@@ -9,17 +9,22 @@
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
 #include "PKB/AssignStore.h"
+#include "PKB/CallRelation.h"
+#include "PKB/CallStatementStore.h"
 #include "PKB/ConstantStore.h"
 #include "PKB/FollowsRelation.h"
 #include "PKB/ModifiesRelation.h"
 #include "PKB/PKB.h"
 #include "PKB/ParentRelation.h"
+#include "PKB/TransitiveRelationStore.tpp"
+#include "PKB/TopologicalSort.tpp"
 #include "PKB/SVRelationStore.tpp"
 #include "PKB/StatementRelationStore.tpp"
 #include "PKB/StatementStore.h"
 #include "PKB/StorageAccessInterface.h"
 #include "PKB/StorageUpdateInterface.h"
 #include "PKB/VariableStore.h"
+#include "PKB/ProcedureStore.h"
 
 using namespace std;
 
@@ -103,11 +108,17 @@ private:
 	ConstantStore constant_store;
 	VariableStore variable_store;
 	StatementStore statement_store;
+	ProcedureStore procedure_store;
+	CallStatementStore call_statement_store;
+	TopologicalSort<ProcedureInfo> call_graph;
+	TransitiveRelationStore<ProcRef, ProcedureInfo, CallRelation> call_store;
 	StatementRelationStore<ParentRelation> parent_store;
 	StatementRelationStore<FollowsRelation> follows_store;
 	SVRelationStore<UsesRelation> uses_store;
 	SVRelationStore<ModifiesRelation> modifies_store;
 	AssignStore assign_store;
+
+	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
 };
 
 #endif
