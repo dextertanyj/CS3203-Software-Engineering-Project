@@ -9,7 +9,7 @@ QueryStmtRef QP::Relationship::Parent::getParentStmt() { return parent_stmt; }
 
 QueryStmtRef QP::Relationship::Parent::getChildStmt() { return child_stmt; }
 
-QP::QueryResult QP::Relationship::Parent::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Parent::execute(PKB::StorageAccessInterface& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
@@ -24,7 +24,7 @@ vector<string> QP::Relationship::Parent::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
 	if (parent_stmt.type == StmtRefType::StmtNumber && child_stmt.type == StmtRefType::StmtNumber) {
 		return QueryResult(pkb.checkParents(stoul(parent_stmt.stmt_ref), stoul(child_stmt.stmt_ref)));
 	}
@@ -114,7 +114,7 @@ QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::Storage& pkb, unor
 	return {};
 }
 
-QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
 	if (parent_stmt.type == StmtRefType::Synonym && child_stmt.type == StmtRefType::StmtNumber) {
 		shared_ptr<StmtInfo> parent = pkb.getParent(stoul(child_stmt.stmt_ref));
 		DesignEntity design_entity = map[parent_stmt.stmt_ref];

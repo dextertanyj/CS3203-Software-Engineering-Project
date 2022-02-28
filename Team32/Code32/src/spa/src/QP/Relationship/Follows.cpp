@@ -9,7 +9,7 @@ QueryStmtRef QP::Relationship::Follows::getLeftStmt() { return left_stmt; }
 
 QueryStmtRef QP::Relationship::Follows::getRightStmt() { return right_stmt; }
 
-QP::QueryResult QP::Relationship::Follows::execute(PKB::Storage& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Follows::execute(PKB::StorageAccessInterface& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
@@ -24,7 +24,7 @@ vector<string> QP::Relationship::Follows::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QP::QueryResult QP::Relationship::Follows::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Follows::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
 	if (left_stmt.type == StmtRefType::StmtNumber && right_stmt.type == StmtRefType::StmtNumber) {
 		return QueryResult(pkb.checkFollows(stoul(left_stmt.stmt_ref), stoul(right_stmt.stmt_ref)));
 	}
@@ -106,7 +106,7 @@ QP::QueryResult QP::Relationship::Follows::executeTrivial(PKB::Storage& pkb, uno
 	return {};
 }
 
-QP::QueryResult QP::Relationship::Follows::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Follows::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
 	if (left_stmt.type == StmtRefType::Synonym && right_stmt.type == StmtRefType::StmtNumber) {
 		shared_ptr<StmtInfo> preceding = pkb.getPreceding(stoul(right_stmt.stmt_ref));
 		DesignEntity design_entity = map[left_stmt.stmt_ref];
