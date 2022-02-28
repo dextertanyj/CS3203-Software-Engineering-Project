@@ -35,8 +35,6 @@ void QP::QueryResult::joinResult(QueryResult& query_result) {
 }
 
 void QP::QueryResult::joinWithDifferentSynonym(QueryResult& query_result) {
-	// There exists an order when joining tables such that the two tables contain at
-	// least one common synonym.
 	unordered_set<string> common_synonyms;
 	unordered_set<string> old_synonyms;
 	unordered_set<string> new_synonyms;
@@ -164,6 +162,10 @@ void QP::QueryResult::removeRow(unordered_map<string, vector<string>>& table, in
 }
 
 unordered_map<string, vector<string>> QP::QueryResult::getSubTableWithRow(const unordered_map<string, string>& row) {
+	if (row.empty()) {
+		return table;
+	}
+
 	unordered_map<string, vector<string>> sub_table = this->table;
 	size_t number_of_rows = table.begin()->second.size();
 

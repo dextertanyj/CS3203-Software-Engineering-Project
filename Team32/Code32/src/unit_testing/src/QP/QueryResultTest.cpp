@@ -47,6 +47,25 @@ TEST_CASE("QP::QueryResult::joinResult Should join tables with different synonym
 	REQUIRE(table.at("c") == vector<string>({"5", "9", "7", "4"}));
 }
 
+TEST_CASE("QP::QueryResult::joinResult Should join tables without any common synonym") {
+	QP::QueryResult result_one = QP::QueryResult();
+	QP::QueryResult result_two = QP::QueryResult();
+	result_one.addColumn("a", {"3", "1"});
+	result_one.addColumn("b", {"7", "1"});
+	result_two.addColumn("c", {"1", "2", "2"});
+	result_two.addColumn("d", {"5", "5", "6"});
+	result_two.addColumn("e", {"9", "8", "7"});
+
+	result_one.joinResult(result_two);
+
+	unordered_map<string, vector<string>> table = result_one.getTable();
+	REQUIRE(table.at("a") == vector<string>({"3", "3", "3", "1", "1", "1"}));
+	REQUIRE(table.at("b") == vector<string>({"7", "7", "7", "1", "1", "1"}));
+	REQUIRE(table.at("c") == vector<string>({"1", "2", "2", "1", "2", "2"}));
+	REQUIRE(table.at("d") == vector<string>({"5", "5", "6", "5", "5", "6"}));
+	REQUIRE(table.at("e") == vector<string>({"9", "8", "7", "9", "8", "7"}));
+}
+
 TEST_CASE("QP::QueryResult::joinResult Should set result to false when all rows are removed") {
 	QP::QueryResult result_one = QP::QueryResult();
 	QP::QueryResult result_two = QP::QueryResult();
