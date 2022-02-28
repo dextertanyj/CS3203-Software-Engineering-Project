@@ -34,20 +34,20 @@ QP::QueryResult QP::Relationship::ModifiesS::executeTrivial(PKB::Storage& pkb, u
 		return QueryResult(!var_set.empty());
 	}
 	if (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::VarName) {
-		StmtInfoPtrSet stmt_set = pkb.getModifiesByVar(ent.ent_ref);
+		StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(ent.ent_ref);
 		return QueryResult(!stmt_set.empty());
 	}
 	if ((stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Underscore) ||
 	    (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Synonym)) {
 		VarRefSet var_set = pkb.getVariables();
 		for (auto const& var : var_set) {
-			StmtInfoPtrSet stmt_set = pkb.getModifiesByVar(var);
+			StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(var);
 			if (!stmt_set.empty()) {
 				return QueryResult(true);
 			}
 		}
 	} else if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
-		StmtInfoPtrSet stmt_set = pkb.getModifiesByVar(ent.ent_ref);
+		StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(ent.ent_ref);
 		DesignEntity design_entity = map[stmt.stmt_ref];
 		for (auto const& stmt : stmt_set) {
 			if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
@@ -89,7 +89,7 @@ QP::QueryResult QP::Relationship::ModifiesS::executeTrivial(PKB::Storage& pkb, u
 
 QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
 	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
-		StmtInfoPtrSet stmt_set = pkb.getModifiesByVar(ent.ent_ref);
+		StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(ent.ent_ref);
 		DesignEntity design_entity = map[stmt.stmt_ref];
 		vector<string> column;
 		for (auto const& stmt : stmt_set) {
@@ -144,7 +144,7 @@ QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivial(PKB::Storage& pkb
 		VarRefSet var_set = pkb.getVariables();
 		vector<string> column;
 		for (auto const& var : var_set) {
-			StmtInfoPtrSet stmt_set = pkb.getModifiesByVar(var);
+			StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(var);
 			if (!stmt_set.empty()) {
 				column.push_back(var);
 			}

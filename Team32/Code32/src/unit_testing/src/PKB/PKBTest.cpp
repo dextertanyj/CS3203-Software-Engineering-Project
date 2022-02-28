@@ -422,7 +422,7 @@ TEST_CASE("PKB::Uses Methods Test") {
 		CHECK_THROWS(pkb.checkUses(s_max, ""));
 	}
 
-	SECTION("PKB::getUsesByVar Test") {
+	SECTION("PKB::getStmtUsesByVar Test") {
 		pkb.setUses(s1, v1);
 		pkb.setUses(s2, x);
 		pkb.setUses(s3, x);
@@ -431,12 +431,12 @@ TEST_CASE("PKB::Uses Methods Test") {
 		unordered_set<shared_ptr<StmtInfo>> expected_set_2 = {p1};
 		unordered_set<shared_ptr<StmtInfo>> expected_set_3 = {p1};
 
-		CHECK(pkb.getUsesByVar(x) == expected_set_1);
-		CHECK(pkb.getUsesByVar(y) == expected_set_2);
-		CHECK(pkb.getUsesByVar(z) == expected_set_3);
+		CHECK(pkb.getStmtUsesByVar(x) == expected_set_1);
+		CHECK(pkb.getStmtUsesByVar(y) == expected_set_2);
+		CHECK(pkb.getStmtUsesByVar(z) == expected_set_3);
 
-		CHECK(pkb.getUsesByVar(xyz).empty());
-		CHECK_THROWS(pkb.getUsesByVar(""));
+		CHECK(pkb.getStmtUsesByVar(xyz).empty());
+		CHECK_THROWS(pkb.getStmtUsesByVar(""));
 	}
 
 	SECTION("PKB::getUsesByStmt Test") {
@@ -535,7 +535,7 @@ TEST_CASE("PKB::Modifies Methods Test") {
 		CHECK_THROWS(pkb.checkModifies(s_max, ""));
 	}
 
-	SECTION("PKB::getModifiesByVar Test") {
+	SECTION("PKB::getStmtModifiesByVar Test") {
 		pkb.setModifies(s1, v2);
 		pkb.setModifies(s2, x);
 		pkb.setModifies(s3, y);
@@ -543,9 +543,9 @@ TEST_CASE("PKB::Modifies Methods Test") {
 		unordered_set<shared_ptr<StmtInfo>> expected_set_1 = {p1, p2};
 		unordered_set<shared_ptr<StmtInfo>> expected_set_2 = {p3};
 
-		CHECK(pkb.getModifiesByVar(x) == expected_set_1);
-		CHECK(pkb.getModifiesByVar(y) == expected_set_2);
-		CHECK(pkb.getModifiesByVar(xyz).empty());
+		CHECK(pkb.getStmtModifiesByVar(x) == expected_set_1);
+		CHECK(pkb.getStmtModifiesByVar(y) == expected_set_2);
+		CHECK(pkb.getStmtModifiesByVar(xyz).empty());
 	}
 
 	SECTION("PKB::getModifiesByStmt Test") {
