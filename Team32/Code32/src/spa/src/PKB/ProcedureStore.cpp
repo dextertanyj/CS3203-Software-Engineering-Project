@@ -1,5 +1,7 @@
 #include "PKB/ProcedureStore.h"
 
+#include <stdexcept>
+
 PKB::ProcedureStore::ProcedureStore() = default;
 
 void PKB::ProcedureStore::insert(const ProcRef& procedure, vector<shared_ptr<StmtInfo>> statements) {

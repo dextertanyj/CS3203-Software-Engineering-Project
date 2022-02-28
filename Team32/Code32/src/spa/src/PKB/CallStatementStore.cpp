@@ -1,5 +1,7 @@
 #include "PKB/CallStatementStore.h"
 
+#include <stdexcept>
+
 PKB::CallStatementStore::CallStatementStore() = default;
 
 void PKB::CallStatementStore::set(const shared_ptr<StmtInfo>& statement, ProcRef procedure) {

@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include "Common/ExpressionProcessor/Expression.h"
@@ -16,15 +17,15 @@
 #include "PKB/ModifiesRelation.h"
 #include "PKB/PKB.h"
 #include "PKB/ParentRelation.h"
-#include "PKB/TransitiveRelationStore.tpp"
-#include "PKB/TopologicalSort.tpp"
+#include "PKB/ProcedureStore.h"
 #include "PKB/SVRelationStore.tpp"
 #include "PKB/StatementRelationStore.tpp"
 #include "PKB/StatementStore.h"
 #include "PKB/StorageAccessInterface.h"
 #include "PKB/StorageUpdateInterface.h"
+#include "PKB/TopologicalSort.tpp"
+#include "PKB/TransitiveRelationStore.tpp"
 #include "PKB/VariableStore.h"
-#include "PKB/ProcedureStore.h"
 
 using namespace std;
 
