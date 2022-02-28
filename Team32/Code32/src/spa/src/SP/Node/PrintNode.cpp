@@ -4,7 +4,7 @@ using namespace std;
 
 SP::Node::PrintNode::PrintNode(StmtRef stmt_no, unique_ptr<VariableNode> variable) : StatementNode(stmt_no), variable(move(variable)) {}
 
-StmtRef SP::Node::PrintNode::extract(PKB::Storage& pkb) {
+StmtRef SP::Node::PrintNode::extract(PKB::StorageUpdateInterface& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Print);
 	pkb.setUses(stmt_ref, variable->extract());

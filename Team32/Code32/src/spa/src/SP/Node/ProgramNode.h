@@ -16,7 +16,7 @@ public:
 	ProgramNode();
 	void addProcedureNode(unique_ptr<ProcedureNode> procedure);
 	static unique_ptr<ProgramNode> parseProgram(Lexer& lex, StmtRef& statement_count);
-	void extract(PKB::Storage& pkb);
+	void extract(PKB::StorageUpdateInterface& pkb);
 	bool equals(const shared_ptr<ProgramNode>& object);
 	vector<shared_ptr<ProcedureNode>> getProcedures();
 
