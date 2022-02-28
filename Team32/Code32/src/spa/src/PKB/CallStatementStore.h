@@ -15,7 +15,7 @@ class PKB::CallStatementStore {
 public:
 	CallStatementStore();
 	void set(const shared_ptr<StmtInfo>& statement, ProcRef procedure);
-	[[nodiscard]] ProcRef getProcedure(const shared_ptr<StmtInfo>& index) const;
+	[[nodiscard]] ProcRef getProcedure(const shared_ptr<StmtInfo>& statement) const;
 	void populate(const ProcedureStore& procedures, TransitiveRelationStore<ProcRef, ProcedureInfo, CallRelation>& store) const;
 
 private:
