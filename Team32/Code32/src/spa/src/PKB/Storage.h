@@ -25,7 +25,6 @@ using namespace std;
 
 class PKB::Storage : public PKB::StorageUpdateInterface, public PKB::StorageAccessInterface {
 public:
-
 	// Set methods called by Source processor
 	void setProc(ProcRef procedure, StmtRef start, StmtRef end) override;
 	void setCall(StmtRef index, ProcRef name) override;

@@ -12,7 +12,8 @@ ExpressionType QP::Relationship::Pattern::getExpressionType() { return this->exp
 
 Common::ExpressionProcessor::Expression QP::Relationship::Pattern::getExpression() { return this->expression.value(); }
 
-QP::QueryResult QP::Relationship::Pattern::execute(PKB::StorageAccessInterface& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Pattern::execute(PKB::StorageAccessInterface& pkb, bool is_trivial,
+                                                   unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
@@ -51,7 +52,8 @@ QP::QueryResult QP::Relationship::Pattern::executeTrivial(PKB::StorageAccessInte
 	return QueryResult(false);
 }
 
-QP::QueryResult QP::Relationship::Pattern::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::Pattern::executeNonTrivial(PKB::StorageAccessInterface& pkb,
+                                                             unordered_map<string, DesignEntity>& /*map*/) {
 	QueryResult result = QueryResult();
 
 	if (this->ent_ref.type == EntRefType::Synonym) {

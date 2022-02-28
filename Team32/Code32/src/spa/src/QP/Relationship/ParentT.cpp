@@ -1,6 +1,7 @@
 #include "ParentT.h"
 
-QP::QueryResult QP::Relationship::ParentT::execute(PKB::StorageAccessInterface& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::ParentT::execute(PKB::StorageAccessInterface& pkb, bool is_trivial,
+                                                   unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 

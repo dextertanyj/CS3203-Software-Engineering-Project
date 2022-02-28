@@ -9,7 +9,8 @@ QueryStmtRef QP::Relationship::Follows::getLeftStmt() { return left_stmt; }
 
 QueryStmtRef QP::Relationship::Follows::getRightStmt() { return right_stmt; }
 
-QP::QueryResult QP::Relationship::Follows::execute(PKB::StorageAccessInterface& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Follows::execute(PKB::StorageAccessInterface& pkb, bool is_trivial,
+                                                   unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 

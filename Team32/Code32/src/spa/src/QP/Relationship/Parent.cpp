@@ -9,7 +9,8 @@ QueryStmtRef QP::Relationship::Parent::getParentStmt() { return parent_stmt; }
 
 QueryStmtRef QP::Relationship::Parent::getChildStmt() { return child_stmt; }
 
-QP::QueryResult QP::Relationship::Parent::execute(PKB::StorageAccessInterface& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Parent::execute(PKB::StorageAccessInterface& pkb, bool is_trivial,
+                                                  unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 

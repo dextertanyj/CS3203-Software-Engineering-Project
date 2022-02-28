@@ -8,7 +8,8 @@ QueryStmtRef QP::Relationship::UsesS::getStmt() { return stmt; }
 
 QueryEntRef QP::Relationship::UsesS::getEnt() { return ent; }
 
-QP::QueryResult QP::Relationship::UsesS::execute(PKB::StorageAccessInterface& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::UsesS::execute(PKB::StorageAccessInterface& pkb, bool is_trivial,
+                                                 unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 

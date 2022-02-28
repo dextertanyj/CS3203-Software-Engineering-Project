@@ -9,7 +9,8 @@ QueryEntRef QP::Relationship::UsesP::getLeftEnt() { return left_ent; }
 
 QueryEntRef QP::Relationship::UsesP::getRightEnt() { return right_ent; }
 
-QP::QueryResult QP::Relationship::UsesP::execute(PKB::StorageAccessInterface& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::UsesP::execute(PKB::StorageAccessInterface& pkb, bool is_trivial,
+                                                 unordered_map<string, DesignEntity>& map) {
 	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
 }
 
@@ -24,8 +25,12 @@ vector<string> QP::Relationship::UsesP::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QP::QueryResult QP::Relationship::UsesP::executeTrivial(PKB::StorageAccessInterface& /*pkb*/, unordered_map<string, DesignEntity>& /*map*/) { return {}; }
+QP::QueryResult QP::Relationship::UsesP::executeTrivial(PKB::StorageAccessInterface& /*pkb*/,
+                                                        unordered_map<string, DesignEntity>& /*map*/) {
+	return {};
+}
 
-QP::QueryResult QP::Relationship::UsesP::executeNonTrivial(PKB::StorageAccessInterface& /*pkb*/, unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::UsesP::executeNonTrivial(PKB::StorageAccessInterface& /*pkb*/,
+                                                           unordered_map<string, DesignEntity>& /*map*/) {
 	return {};
 }
