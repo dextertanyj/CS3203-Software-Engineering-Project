@@ -18,26 +18,25 @@ vector<string> QP::Relationship::Calls::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QP::QueryResult QP::Relationship::Calls::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Calls::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& /*map*/) {
 	if (caller_ent.type == EntRefType::VarName) {
-		return executeTrivialCallerVarName(pkb, map);
+		return executeTrivialCallerVarName(pkb);
 	} else {
-		return executeTrivialCallerUnderscoreSynonym(pkb, map);
+		return executeTrivialCallerUnderscoreSynonym(pkb);
 	}
 }
 
-QP::QueryResult QP::Relationship::Calls::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Calls::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& /*map*/) {
 	if (caller_ent.type == EntRefType::VarName) {
-		return executeNonTrivialCallerVarName(pkb, map);
+		return executeNonTrivialCallerVarName(pkb);
 	} else if (caller_ent.type == EntRefType::Underscore) {
-		return executeNonTrivialCallerUnderscore(pkb, map);
+		return executeNonTrivialCallerUnderscore(pkb);
 	} else {
-		return executeNonTrivialCallerSynonym(pkb, map);
+		return executeNonTrivialCallerSynonym(pkb);
 	}
 }
 
-QP::QueryResult QP::Relationship::Calls::executeTrivialCallerVarName(PKB::StorageAccessInterface& pkb,
-                                                                     unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Calls::executeTrivialCallerVarName(PKB::StorageAccessInterface& pkb) {
 	if (callee_ent.type == EntRefType::VarName) {
 		return QueryResult(pkb.checkCall(caller_ent.ent_ref, callee_ent.ent_ref));
 	} else {
@@ -46,8 +45,7 @@ QP::QueryResult QP::Relationship::Calls::executeTrivialCallerVarName(PKB::Storag
 	}
 }
 
-QP::QueryResult QP::Relationship::Calls::executeTrivialCallerUnderscoreSynonym(PKB::StorageAccessInterface& pkb,
-                                                                               unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Calls::executeTrivialCallerUnderscoreSynonym(PKB::StorageAccessInterface& pkb) {
 	if (callee_ent.type == EntRefType::VarName) {
 		ProcRefSet proc_set = pkb.getCaller(callee_ent.ent_ref);
 		return QueryResult(!proc_set.empty());
@@ -64,8 +62,7 @@ QP::QueryResult QP::Relationship::Calls::executeTrivialCallerUnderscoreSynonym(P
 	}
 }
 
-QP::QueryResult QP::Relationship::Calls::executeNonTrivialCallerVarName(PKB::StorageAccessInterface& pkb,
-                                                                        unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Calls::executeNonTrivialCallerVarName(PKB::StorageAccessInterface& pkb) {
 	if (callee_ent.type == EntRefType::Synonym) {
 		vector<string> column;
 		ProcRefSet callee_set = pkb.getCallee(caller_ent.ent_ref);
@@ -81,8 +78,7 @@ QP::QueryResult QP::Relationship::Calls::executeNonTrivialCallerVarName(PKB::Sto
 	return {};
 }
 
-QP::QueryResult QP::Relationship::Calls::executeNonTrivialCallerUnderscore(PKB::StorageAccessInterface& pkb,
-                                                                           unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Calls::executeNonTrivialCallerUnderscore(PKB::StorageAccessInterface& pkb) {
 	if (callee_ent.type == EntRefType::Synonym) {
 		vector<string> column;
 		ProcRefSet proc_set = pkb.getProcedures();
@@ -101,8 +97,7 @@ QP::QueryResult QP::Relationship::Calls::executeNonTrivialCallerUnderscore(PKB::
 	return {};
 }
 
-QP::QueryResult QP::Relationship::Calls::executeNonTrivialCallerSynonym(PKB::StorageAccessInterface& pkb,
-                                                                        unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::Calls::executeNonTrivialCallerSynonym(PKB::StorageAccessInterface& pkb) {
 	QueryResult result = QueryResult();
 	vector<string> caller_column;
 

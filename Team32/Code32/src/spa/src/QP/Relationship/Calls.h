@@ -22,12 +22,12 @@ private:
 	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
 	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
 
-	QueryResult executeTrivialCallerVarName(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map);
-	QueryResult executeTrivialCallerUnderscoreSynonym(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map);
+	QueryResult executeTrivialCallerVarName(PKB::StorageAccessInterface& pkb);
+	QueryResult executeTrivialCallerUnderscoreSynonym(PKB::StorageAccessInterface& pkb);
 
-	QueryResult executeNonTrivialCallerVarName(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map);
-	QueryResult executeNonTrivialCallerUnderscore(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map);
-	QueryResult executeNonTrivialCallerSynonym(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map);
+	QueryResult executeNonTrivialCallerVarName(PKB::StorageAccessInterface& pkb);
+	QueryResult executeNonTrivialCallerUnderscore(PKB::StorageAccessInterface& pkb);
+	QueryResult executeNonTrivialCallerSynonym(PKB::StorageAccessInterface& pkb);
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_CALLS_H
