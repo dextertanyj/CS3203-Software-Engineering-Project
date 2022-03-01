@@ -17,7 +17,8 @@ void PKB::CallRelation::insertReverse(const shared_ptr<ProcedureInfo>& callee) {
 	if (self == callee) {
 		throw invalid_argument("Recursive call detected.");
 	}
-	this->callees.insert(callee); }
+	this->callees.insert(callee);
+}
 
 void PKB::CallRelation::appendForwardTransitive(unordered_set<shared_ptr<ProcedureInfo>> new_callers) {
 	if (new_callers.find(self) != new_callers.end()) {
