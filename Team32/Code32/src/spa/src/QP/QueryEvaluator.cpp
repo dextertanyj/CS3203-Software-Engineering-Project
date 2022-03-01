@@ -19,49 +19,38 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	if (clauses_in_group[0].first.empty() && clauses_in_group[0].second.empty()) {
 		result = executeNoClauses(select);
 	} else {
-		result = evaluateClauses(clauses_in_group[0].first, clauses_in_group[0].second, select, false);
+		result = evaluateClauses(clauses_in_group[0].first, clauses_in_group[0].second, false);
 	}
 
 	// Execute clauses without synonyms first
 	size_t last_group = clauses_in_group.size() - 1;
-	if (!executeClausesWithoutSynonym(clauses_in_group[last_group].first, clauses_in_group[last_group].second, select).getResult()) {
+	if (!executeClausesWithoutSynonym(clauses_in_group[last_group].first, clauses_in_group[last_group].second).getResult()) {
 		return {};
 	}
 
 	for (size_t i = 1; i < last_group; i++) {
-		if (clauses_in_group[i].first.size() + clauses_in_group[i].second.size() == 0) {
-			continue;
-		}
-		if (clauses_in_group[i].first.size() + clauses_in_group[i].second.size() == 1) {
-			QueryResult query_result = evaluateClauses(clauses_in_group[i].first, clauses_in_group[i].second, select, true);
-			if (!query_result.getResult()) {
-				return {};
-			}
-		} else {
-			QueryResult query_result = evaluateClauses(clauses_in_group[i].first, clauses_in_group[i].second, select, false);
-			if (!query_result.getResult()) {
-				return {};
-			}
+		if (!executeGroup(clauses_in_group[i].first, clauses_in_group[i].second)) {
+			return {};
 		}
 	}
 
 	return result;
 }
 
-QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
-                                                                 const Declaration& select) {
+QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(SuchThatClauseList& such_that_clauses,
+                                                                 PatternClauseList& pattern_clauses) {
 	// These clauses should be evaluated independently since they are unrelated
 	for (const SuchThatClause& such_that_clause : such_that_clauses) {
 		SuchThatClauseList such_that_list = {such_that_clause};
 		PatternClauseList pattern_list = {};
-		if (!evaluateClauses(such_that_list, pattern_list, select, true).getResult()) {
+		if (!evaluateClauses(such_that_list, pattern_list, true).getResult()) {
 			return {};
 		}
 	}
 	for (const PatternClause& pattern_clause : pattern_clauses) {
 		SuchThatClauseList such_that_list = {};
 		PatternClauseList pattern_list = {pattern_clause};
-		if (!evaluateClauses(such_that_list, pattern_list, select, true).getResult()) {
+		if (!evaluateClauses(such_that_list, pattern_list, true).getResult()) {
 			return {};
 		}
 	}
@@ -69,77 +58,79 @@ QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(SuchThatClauseL
 	return QueryResult(true);
 }
 
+bool QP::QueryEvaluator::executeGroup(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses) {
+	if (such_that_clauses.size() + pattern_clauses.size() == 0) {
+		return true;
+	}
+
+	QueryResult query_result;
+	if (such_that_clauses.size() + pattern_clauses.size() == 1) {
+		query_result = evaluateClauses(such_that_clauses, pattern_clauses, true);
+	} else {
+		query_result = evaluateClauses(such_that_clauses, pattern_clauses, false);
+	}
+
+	return query_result.getResult();
+}
+
 QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) {
 	switch (select.type) {
-		case DesignEntity::Stmt: {
-			StmtInfoPtrSet stmt_set = pkb.getStatements();
-			QueryResult result = QueryResult();
-
-			vector<string> result_string;
-			for (auto const& stmt : stmt_set) {
-				result_string.push_back(to_string(stmt->reference));
-			}
-
-			result.addColumn(select.symbol, result_string);
-			return result;
-		}
-		case DesignEntity::Read: {
-			return getSpecificStmtType(StmtType::Read, select.symbol);
-		}
-		case DesignEntity::Print: {
-			return getSpecificStmtType(StmtType::Print, select.symbol);
-		}
-		case DesignEntity::Call: {
-			return getSpecificStmtType(StmtType::Call, select.symbol);
-		}
-		case DesignEntity::While: {
-			return getSpecificStmtType(StmtType::WhileStmt, select.symbol);
-		}
-		case DesignEntity::If: {
-			return getSpecificStmtType(StmtType::IfStmt, select.symbol);
-		}
+		case DesignEntity::Stmt:
+		case DesignEntity::Read:
+		case DesignEntity::Print:
+		case DesignEntity::Call:
+		case DesignEntity::While:
+		case DesignEntity::If:
 		case DesignEntity::Assign: {
-			return getSpecificStmtType(StmtType::Assign, select.symbol);
+			return getSpecificStmtType(select.type, select.symbol);
 		}
 		case DesignEntity::Variable: {
-			VarRefSet var_set = pkb.getVariables();
-			QueryResult result = QueryResult();
-
-			vector<string> result_string;
-			for (auto const& var : var_set) {
-				result_string.push_back(var);
-			}
-
-			result.addColumn(select.symbol, result_string);
-			return result;
+			return getVariables(select.symbol);
 		}
 		case DesignEntity::Constant: {
-			unordered_set<ConstVal> constants = pkb.getConstants();
-			QueryResult result = QueryResult();
-
-			vector<string> result_string;
-			result_string.reserve(constants.size());
-			for (auto const& constant : constants) {
-				result_string.push_back(to_string(constant));
-			}
-
-			result.addColumn(select.symbol, result_string);
-			return result;
+			return getConstants(select.symbol);
 		}
 		default:
 			return {};
 	}
 }
 
-QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(StmtType type, const string& symbol) {
+QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(DesignEntity design_entity, const string& symbol) {
 	StmtInfoPtrSet stmt_set = pkb.getStatements();
 	QueryResult result = QueryResult();
 
 	vector<string> result_string;
 	for (auto const& stmt : stmt_set) {
-		if (stmt->type == type) {
+		if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 			result_string.push_back(to_string(stmt->reference));
 		}
+	}
+
+	result.addColumn(symbol, result_string);
+	return result;
+}
+
+QP::QueryResult QP::QueryEvaluator::getConstants(const string& symbol) {
+	unordered_set<ConstVal> constants = pkb.getConstants();
+	QueryResult result = QueryResult();
+
+	vector<string> result_string;
+	result_string.reserve(constants.size());
+	for (auto const& constant : constants) {
+		result_string.push_back(to_string(constant));
+	}
+
+	result.addColumn(symbol, result_string);
+	return result;
+}
+
+QP::QueryResult QP::QueryEvaluator::getVariables(const string& symbol) {
+	VarRefSet var_set = pkb.getVariables();
+	QueryResult result = QueryResult();
+
+	vector<string> result_string;
+	for (auto const& var : var_set) {
+		result_string.push_back(var);
 	}
 
 	result.addColumn(symbol, result_string);
@@ -154,7 +145,7 @@ QP::QueryGraph QP::QueryEvaluator::buildGraph(QueryProperties& query_properties)
 }
 
 QP::QueryResult QP::QueryEvaluator::evaluateClauses(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
-                                                    const Declaration& select, bool is_trivial) {
+                                                    bool is_trivial) {
 	vector<QueryResult> result_list;
 
 	for (const SuchThatClause& such_that_clause : such_that_clauses) {
@@ -172,32 +163,11 @@ QP::QueryResult QP::QueryEvaluator::evaluateClauses(SuchThatClauseList& such_tha
 		}
 		result_list.push_back(result);
 	}
-	// For iteration one, the size of resultList is at most 2
-	if (result_list.size() == 1) {
-		return result_list[0];
-	}
 
-	// Merge the table without selected synonym to the one with selected synonym.
-	// If both does not contain selected synonym, we merge the smaller table to larger table.
-	const unordered_set<string> synonyms_in_first_result = result_list[0].getSynonymsStored();
-	const unordered_set<string> synonyms_in_second_result = result_list[1].getSynonymsStored();
-
-	if (synonyms_in_first_result.find(select.symbol) != synonyms_in_first_result.end()) {
-		result_list[0].joinResult(result_list[1]);
-		return result_list[0];
+	for (int i = 1; i < result_list.size(); i++) {
+		result_list[0].joinResult(result_list[i]);
 	}
-
-	if (synonyms_in_second_result.find(select.symbol) != synonyms_in_second_result.end()) {
-		result_list[1].joinResult(result_list[0]);
-		return result_list[1];
-	}
-
-	if (synonyms_in_first_result.size() >= synonyms_in_second_result.size()) {
-		result_list[0].joinResult(result_list[1]);
-		return result_list[0];
-	}
-	result_list[1].joinResult(result_list[0]);
-	return result_list[1];
+	return result_list[0];
 }
 
 // First element contains clauses with the selected synonym.

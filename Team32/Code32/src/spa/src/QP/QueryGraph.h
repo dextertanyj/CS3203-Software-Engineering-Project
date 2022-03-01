@@ -23,7 +23,8 @@ public:
 
 private:
 	unordered_map<string, Node> nodes;
-	void addEdge(const string& symbol_one, const string& symbol_two);
+	void setEdge(const shared_ptr<Relationship::Relation>& relation);
+	void addEdge(const pair<string, string>& symbols);
 };
 
 #endif  // SPA_SRC_QP_QUERYGRAPH_H

@@ -1,10 +1,5 @@
 #include "ParentT.h"
 
-QP::QueryResult QP::Relationship::ParentT::execute(PKB::StorageAccessInterface& pkb, bool is_trivial,
-                                                   unordered_map<string, DesignEntity>& map) {
-	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
-}
-
 QP::QueryResult QP::Relationship::ParentT::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
 	if (getParentStmt().type == StmtRefType::StmtNumber && getChildStmt().type == StmtRefType::StmtNumber) {
 		StmtInfoPtrSet children_set = pkb.getChildStar(stoul(getParentStmt().stmt_ref));

@@ -9,11 +9,6 @@ QueryEntRef QP::Relationship::ModifiesP::getLeftEnt() { return left_ent; }
 
 QueryEntRef QP::Relationship::ModifiesP::getRightEnt() { return right_ent; }
 
-QP::QueryResult QP::Relationship::ModifiesP::execute(PKB::StorageAccessInterface& pkb, bool is_trivial,
-                                                     unordered_map<string, DesignEntity>& map) {
-	return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
-}
-
 vector<string> QP::Relationship::ModifiesP::getDeclarationSymbols() {
 	vector<string> declaration_symbols;
 	if (this->left_ent.type == EntRefType::Synonym) {

@@ -26,12 +26,13 @@ private:
 	PKB::StorageAccessInterface& pkb;
 	unordered_map<string, DesignEntity> symbol_to_type_map;
 	QueryResult executeNoClauses(const Declaration& select);
-	QueryResult getSpecificStmtType(StmtType type, const string& symbol);
+	QueryResult getSpecificStmtType(DesignEntity design_entity, const string& symbol);
+	QueryResult getConstants(const string& symbol);
+	QueryResult getVariables(const string& symbol);
 	static QueryGraph buildGraph(QueryProperties& query_properties);
-	QueryResult evaluateClauses(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses, const Declaration& select,
-	                            bool is_trivial);
-	QueryResult executeClausesWithoutSynonym(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses,
-	                                         const Declaration& select);
+	QueryResult evaluateClauses(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses, bool is_trivial);
+	QueryResult executeClausesWithoutSynonym(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses);
+	bool executeGroup(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses);
 	void createSymbolToTypeMap(const DeclarationList& declarations);
 };
 

@@ -11,7 +11,6 @@ public:
 	QueryStmtRef getStmt();
 	QueryEntRef getEnt();
 
-	QueryResult execute(PKB::StorageAccessInterface& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) override;
 	vector<string> getDeclarationSymbols() override;
 
 private:

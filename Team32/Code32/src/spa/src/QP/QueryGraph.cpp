@@ -11,33 +11,28 @@ QP::QueryGraph::QueryGraph(const DeclarationList& declarations) {
 
 void QP::QueryGraph::setEdges(const SuchThatClauseList& such_that_clause_list, const PatternClauseList& pattern_clause_list) {
 	for (const SuchThatClause& such_that_clause : such_that_clause_list) {
-		vector<string> declarations = such_that_clause.relation->getDeclarationSymbols();
-		if (declarations.size() == 2) {
-			addEdge(declarations[0], declarations[1]);
-		}
+		setEdge(such_that_clause.relation);
 	}
 
 	for (const PatternClause& pattern_clause : pattern_clause_list) {
-		vector<string> declarations = pattern_clause.relation->getDeclarationSymbols();
-		if (declarations.size() == 2) {
-			addEdge(declarations[0], declarations[1]);
-		}
+		setEdge(pattern_clause.relation);
 	}
 }
 
 unordered_map<string, Node> QP::QueryGraph::getNodes() { return nodes; }
 
-void QP::QueryGraph::addEdge(const string& symbol_one, const string& symbol_two) {
-	Node node_one = this->nodes.at(symbol_one);
-	if (find(node_one.adjacent_symbols.begin(), node_one.adjacent_symbols.end(), symbol_two) == node_one.adjacent_symbols.end()) {
-		node_one.adjacent_symbols.push_back(symbol_two);
-		nodes[symbol_one] = node_one;
+void QP::QueryGraph::setEdge(const shared_ptr<Relationship::Relation>& relation) {
+	vector<string> declarations = relation->getDeclarationSymbols();
+	if (declarations.size() == 2) {
+		addEdge({declarations[0], declarations[1]});
+		addEdge({declarations[1], declarations[0]});
 	}
+}
 
-	Node node_two = this->nodes.at(symbol_two);
-	if (find(node_two.adjacent_symbols.begin(), node_two.adjacent_symbols.end(), symbol_one) == node_two.adjacent_symbols.end()) {
-		node_two.adjacent_symbols.push_back(symbol_one);
-		nodes[symbol_two] = node_two;
+void QP::QueryGraph::addEdge(const pair<string, string>& symbols) {
+	Node& node = this->nodes.at(symbols.first);
+	if (find(node.adjacent_symbols.begin(), node.adjacent_symbols.end(), symbols.second) == node.adjacent_symbols.end()) {
+		node.adjacent_symbols.push_back(symbols.second);
 	}
 }
 
