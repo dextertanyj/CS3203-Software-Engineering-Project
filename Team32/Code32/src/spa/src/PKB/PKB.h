@@ -26,7 +26,6 @@ template <class T>
 class SVRelationStore;
 template <class T>
 class PVRelationStore;
-class VariableStore;
 
 template <class TInfo>
 class TopologicalSort;
