@@ -171,7 +171,11 @@ StmtInfoPtrSet PKB::Storage::getStmtModifiesByVar(const VarRef &name) { return m
 
 ProcRefSet PKB::Storage::getProcModifiesByVar(const VarRef &name) { return modifies_p_store.getByVar(name); }
 
+<<<<<<< HEAD
 unordered_set<VarRef> PKB::Storage::getModifiesByStmt(StmtRef index) { return modifies_s_store.getByStmt(index); }
+=======
+VarRefSet PKB::Storage::getModifiesByStmt(StmtRef index) { return modifies_store.getByStmt(index); }
+>>>>>>> Refactor type names
 
 VarRefSet PKB::Storage::getModifiesByProc(const ProcRef &name) { return modifies_p_store.getByProc(name); }
 
@@ -183,7 +187,7 @@ StmtInfoPtrSet PKB::Storage::getStmtUsesByVar(const VarRef &name) { return uses_
 
 ProcRefSet PKB::Storage::getProcUsesByVar(const VarRef &name) { return uses_p_store.getByVar(name); }
 
-unordered_set<VarRef> PKB::Storage::getUsesByStmt(StmtRef index) { return uses_s_store.getByStmt(index); }
+VarRefSet PKB::Storage::getUsesByStmt(StmtRef index) { return uses_s_store.getByStmt(index); }
 
 VarRefSet PKB::Storage::getUsesByProc(const ProcRef &name) { return uses_p_store.getByProc(name); }
 

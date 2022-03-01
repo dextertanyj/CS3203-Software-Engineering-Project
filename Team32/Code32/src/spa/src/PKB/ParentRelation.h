@@ -12,23 +12,23 @@ public:
 	explicit ParentRelation(shared_ptr<StmtInfo> self);
 	void insertForward(const shared_ptr<StmtInfo>& parent_to_insert);
 	void insertReverse(const shared_ptr<StmtInfo>& child_to_insert);
-	void appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> parents_to_insert);
-	void appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> children_to_insert);
+	void appendForwardTransitive(StmtInfoPtrSet parents_to_insert);
+	void appendReverseTransitive(StmtInfoPtrSet children_to_insert);
 
-	unordered_set<shared_ptr<StmtInfo>> getForward();
-	unordered_set<shared_ptr<StmtInfo>> getReverse();
-	unordered_set<shared_ptr<StmtInfo>> getForwardTransitive();
-	unordered_set<shared_ptr<StmtInfo>> getReverseTransitive();
+	StmtInfoPtrSet getForward();
+	StmtInfoPtrSet getReverse();
+	StmtInfoPtrSet getForwardTransitive();
+	StmtInfoPtrSet getReverseTransitive();
 	static void optimize(StatementRelationStore<ParentRelation>& store);
 
 private:
 	shared_ptr<StmtInfo> self;
 	shared_ptr<StmtInfo> parent;
-	unordered_set<shared_ptr<StmtInfo>> children;
-	unordered_set<shared_ptr<StmtInfo>> parent_transitive;
-	unordered_set<shared_ptr<StmtInfo>> children_transitive;
-	static unordered_set<shared_ptr<StmtInfo>> populateTransitive(StatementRelationStore<ParentRelation>& store, ParentRelation& current,
-	                                                              unordered_set<shared_ptr<StmtInfo>> previous);
+	StmtInfoPtrSet children;
+	StmtInfoPtrSet parent_transitive;
+	StmtInfoPtrSet children_transitive;
+	static StmtInfoPtrSet populateTransitive(StatementRelationStore<ParentRelation>& store, ParentRelation& current,
+	                                                              StmtInfoPtrSet previous);
 };
 
 #endif  // SPA_SRC_PKB_PARENTRELATION_H
