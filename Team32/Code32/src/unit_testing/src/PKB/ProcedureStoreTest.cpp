@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "MockUtilities.h"
+#include "TestUtilities.h"
 #include "catch.hpp"
 #include "catch_tools.h"
 
@@ -11,10 +11,10 @@ TEST_CASE("PKB::ProcedureStore Test") {
 	PKB::ProcedureStore store;
 	ProcRef name_1 = "procedure";
 	ProcRef name_2 = "main";
-	vector<shared_ptr<StmtInfo>> single_statement = {MockUtilities::createStmtInfo(1, StmtType::Read)};
-	vector<shared_ptr<StmtInfo>> statements = {MockUtilities::createStmtInfo(2, StmtType::Read),
-	                                           MockUtilities::createStmtInfo(3, StmtType::Print),
-	                                           MockUtilities::createStmtInfo(4, StmtType::Call)};
+	vector<shared_ptr<StmtInfo>> single_statement = {TestUtilities::createStmtInfo(1, StmtType::Read)};
+	vector<shared_ptr<StmtInfo>> statements = {TestUtilities::createStmtInfo(2, StmtType::Read),
+	                                           TestUtilities::createStmtInfo(3, StmtType::Print),
+	                                           TestUtilities::createStmtInfo(4, StmtType::Call)};
 
 	SECTION("Insert Single Statement") {
 		store.insert(name_1, single_statement);
