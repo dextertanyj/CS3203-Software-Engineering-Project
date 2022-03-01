@@ -19,7 +19,7 @@ vector<string> QP::Relationship::UsesS::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QP::QueryResult QP::Relationship::UsesS::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::UsesS::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
 	if (stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::VarName) {
 		return QueryResult(pkb.checkUses(stoul(stmt.stmt_ref), ent.ent_ref));
 	}
@@ -29,20 +29,20 @@ QP::QueryResult QP::Relationship::UsesS::executeTrivial(PKB::Storage& pkb, unord
 		return QueryResult(!var_set.empty());
 	}
 	if (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::VarName) {
-		StmtInfoPtrSet stmt_set = pkb.getUsesByVar(ent.ent_ref);
+		StmtInfoPtrSet stmt_set = pkb.getStmtUsesByVar(ent.ent_ref);
 		return QueryResult(!stmt_set.empty());
 	}
 	if ((stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Underscore) ||
 	    (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Synonym)) {
 		VarRefSet var_set = pkb.getVariables();
 		for (auto const& var : var_set) {
-			StmtInfoPtrSet stmt_set = pkb.getUsesByVar(var);
+			StmtInfoPtrSet stmt_set = pkb.getStmtUsesByVar(var);
 			if (!stmt_set.empty()) {
 				return QueryResult(true);
 			}
 		}
 	} else if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
-		StmtInfoPtrSet stmt_set = pkb.getUsesByVar(ent.ent_ref);
+		StmtInfoPtrSet stmt_set = pkb.getStmtUsesByVar(ent.ent_ref);
 		DesignEntity design_entity = map[stmt.stmt_ref];
 		for (auto const& stmt : stmt_set) {
 			if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
@@ -82,9 +82,9 @@ QP::QueryResult QP::Relationship::UsesS::executeTrivial(PKB::Storage& pkb, unord
 	return {};
 }
 
-QP::QueryResult QP::Relationship::UsesS::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::UsesS::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
 	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
-		StmtInfoPtrSet stmt_set = pkb.getUsesByVar(ent.ent_ref);
+		StmtInfoPtrSet stmt_set = pkb.getStmtUsesByVar(ent.ent_ref);
 		DesignEntity design_entity = map[stmt.stmt_ref];
 		vector<string> column;
 		for (auto const& stmt : stmt_set) {
@@ -139,7 +139,7 @@ QP::QueryResult QP::Relationship::UsesS::executeNonTrivial(PKB::Storage& pkb, un
 		VarRefSet var_set = pkb.getVariables();
 		vector<string> column;
 		for (auto const& var : var_set) {
-			StmtInfoPtrSet stmt_set = pkb.getUsesByVar(var);
+			StmtInfoPtrSet stmt_set = pkb.getStmtUsesByVar(var);
 			if (!stmt_set.empty()) {
 				column.push_back(var);
 			}

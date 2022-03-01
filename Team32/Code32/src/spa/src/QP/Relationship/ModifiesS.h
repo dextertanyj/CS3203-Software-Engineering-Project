@@ -17,8 +17,8 @@ private:
 	QueryStmtRef stmt;
 	QueryEntRef ent;
 
-	QueryResult executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) override;
-	QueryResult executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_MODIFIESS_H

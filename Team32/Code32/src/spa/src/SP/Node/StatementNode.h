@@ -12,7 +12,7 @@ class SP::Node::StatementNode {
 public:
 	explicit StatementNode(StmtRef stmt_no);
 	static unique_ptr<StatementNode> parseStatement(Lexer& lex, StmtRef& statement_count);
-	virtual StmtRef extract(PKB::Storage& pkb) = 0;
+	virtual StmtRef extract(PKB::StorageUpdateInterface& pkb) = 0;
 	virtual bool equals(const shared_ptr<StatementNode>& object) = 0;
 	virtual ~StatementNode() = default;
 

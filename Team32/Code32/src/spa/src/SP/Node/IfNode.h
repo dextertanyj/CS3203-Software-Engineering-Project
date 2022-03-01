@@ -18,7 +18,7 @@ public:
 	IfNode(StmtRef stmt_no, unique_ptr<ExpressionNode> cond_expr, unique_ptr<StatementListNode> if_stmt_list,
 	       unique_ptr<StatementListNode> else_stmt_list);
 	static unique_ptr<IfNode> parseIfStatement(Lexer& lex, StmtRef& statement_count);
-	StmtRef extract(PKB::Storage& pkb) override;
+	StmtRef extract(PKB::StorageUpdateInterface& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
 
 private:

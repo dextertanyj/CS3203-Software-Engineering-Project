@@ -20,10 +20,12 @@ vector<string> QP::Relationship::ModifiesP::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QP::QueryResult QP::Relationship::ModifiesP::executeTrivial(PKB::Storage& /*pkb*/, unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::ModifiesP::executeTrivial(PKB::StorageAccessInterface& /*pkb*/,
+                                                            unordered_map<string, DesignEntity>& /*map*/) {
 	return {};
 }
 
-QP::QueryResult QP::Relationship::ModifiesP::executeNonTrivial(PKB::Storage& /*pkb*/, unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::ModifiesP::executeNonTrivial(PKB::StorageAccessInterface& /*pkb*/,
+                                                               unordered_map<string, DesignEntity>& /*map*/) {
 	return {};
 }

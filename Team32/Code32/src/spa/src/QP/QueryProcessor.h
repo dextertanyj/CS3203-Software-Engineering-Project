@@ -12,7 +12,7 @@ using std::vector;
 
 class QP::QueryProcessor {
 public:
-	explicit QueryProcessor(PKB::Storage& pkb);
+	explicit QueryProcessor(PKB::StorageAccessInterface& pkb);
 	vector<string> processQuery(string query);
 
 private:

@@ -15,7 +15,7 @@ using namespace std;
 class SP::Node::PrintNode : public StatementNode {
 public:
 	PrintNode(StmtRef stmt_no, unique_ptr<VariableNode> variable);
-	StmtRef extract(PKB::Storage& pkb) override;
+	StmtRef extract(PKB::StorageUpdateInterface& pkb) override;
 	bool equals(const shared_ptr<StatementNode>& object) override;
 	static unique_ptr<PrintNode> parsePrintStatement(Lexer& lex, StmtRef& statement_count);
 

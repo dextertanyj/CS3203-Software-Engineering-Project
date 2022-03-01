@@ -2,7 +2,7 @@
 
 #include <utility>
 
-QP::QueryEvaluator::QueryEvaluator(PKB::Storage& pkb) : pkb(pkb) {}
+QP::QueryEvaluator::QueryEvaluator(PKB::StorageAccessInterface& pkb) : pkb(pkb) {}
 
 QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 	if (query_properties.getSuchThatClauseList().empty() && query_properties.getPatternClauseList().empty()) {

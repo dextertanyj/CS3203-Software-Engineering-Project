@@ -9,7 +9,7 @@
 
 using namespace std;
 
-SP::Processor::Processor(PKB::Storage& pkb) : parser(SP::Lexer()), extractor(pkb) {}
+SP::Processor::Processor(PKB::StorageUpdateInterface& pkb) : parser(SP::Lexer()), extractor(pkb) {}
 
 void SP::Processor::process(string source) {
 	try {

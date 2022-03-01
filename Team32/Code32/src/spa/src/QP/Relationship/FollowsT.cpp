@@ -1,6 +1,6 @@
 #include "FollowsT.h"
 
-QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
 	if (getLeftStmt().type == StmtRefType::StmtNumber && getRightStmt().type == StmtRefType::StmtNumber) {
 		StmtInfoPtrSet followers_set = pkb.getFollowerStar(stoul(getLeftStmt().stmt_ref));
 		StmtRef right_stmt_no = stoul(getRightStmt().stmt_ref);
@@ -90,7 +90,7 @@ QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::Storage& pkb, un
 	return {};
 }
 
-QP::QueryResult QP::Relationship::FollowsT::executeNonTrivial(PKB::Storage& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::FollowsT::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
 	if (getLeftStmt().type == StmtRefType::Synonym && getRightStmt().type == StmtRefType::StmtNumber) {
 		StmtInfoPtrSet preceding_set = pkb.getPrecedingStar(stoul(getRightStmt().stmt_ref));
 		DesignEntity design_entity = map[getLeftStmt().stmt_ref];

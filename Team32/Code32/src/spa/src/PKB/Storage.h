@@ -17,67 +17,84 @@
 #include "PKB/SVRelationStore.tpp"
 #include "PKB/StatementRelationStore.tpp"
 #include "PKB/StatementStore.h"
+#include "PKB/StorageAccessInterface.h"
+#include "PKB/StorageUpdateInterface.h"
 #include "PKB/VariableStore.h"
 
 using namespace std;
 
-class PKB::Storage {
+class PKB::Storage : public PKB::StorageUpdateInterface, public PKB::StorageAccessInterface {
 public:
-	Storage();
-
 	// Set methods called by Source processor
-	void setFollows(StmtRef, StmtRef);
-	void setParent(StmtRef, StmtRef);
-	void setStmtType(StmtRef, StmtType);
-	void setConstant(ConstVal);
-	void setConstant(const unordered_set<ConstVal>&);
-	void setUses(StmtRef, VarRef);
-	void setModifies(StmtRef, VarRef);
-	void setUses(StmtRef, VarRefSet);
-	void setModifies(StmtRef, VarRefSet);
-	void setAssign(StmtRef, VarRef variable, Common::ExpressionProcessor::Expression expression);
+	void setProc(ProcRef procedure, StmtRef start, StmtRef end) override;
+	void setCall(StmtRef index, ProcRef name) override;
+	void setFollows(StmtRef front, StmtRef back) override;
+	void setParent(StmtRef parent, StmtRef child) override;
+	void setStmtType(StmtRef index, StmtType type) override;
+	void setConstant(ConstVal value) override;
+	void setConstant(const unordered_set<ConstVal>& values) override;
+	void setUses(StmtRef index, VarRef name) override;
+	void setModifies(StmtRef index, VarRef name) override;
+	void setUses(StmtRef index, VarRefSet names) override;
+	void setModifies(StmtRef index, VarRefSet names) override;
+	void setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) override;
 
 	// Get methods called by PQL
 
 	// General get methods
-	StmtInfoPtrSet getStatements();
-	VarRefSet getVariables();
-	unordered_set<ConstVal> getConstants();
+	StmtInfoPtrSet getStatements() override;
+	VarRefSet getVariables() override;
+	unordered_set<ConstVal> getConstants() override;
+	unordered_set<ProcRef> getProcedures() override;
 
 	// Parent get methods
-	shared_ptr<StmtInfo> getParent(StmtRef);
-	StmtInfoPtrSet getChildren(StmtRef);
-	bool checkParents(StmtRef, StmtRef);
-	StmtInfoPtrSet getParentStar(StmtRef);
-	StmtInfoPtrSet getChildStar(StmtRef);
+	shared_ptr<StmtInfo> getParent(StmtRef index) override;
+	StmtInfoPtrSet getChildren(StmtRef index) override;
+	bool checkParents(StmtRef parent, StmtRef child) override;
+	StmtInfoPtrSet getParentStar(StmtRef index) override;
+	StmtInfoPtrSet getChildStar(StmtRef index) override;
 
 	// Follow get methods
-	shared_ptr<StmtInfo> getPreceding(StmtRef);
-	shared_ptr<StmtInfo> getFollower(StmtRef);
-	bool checkFollows(StmtRef, StmtRef);
-	StmtInfoPtrSet getFollowerStar(StmtRef);
-	StmtInfoPtrSet getPrecedingStar(StmtRef);
+	shared_ptr<StmtInfo> getPreceding(StmtRef index) override;
+	shared_ptr<StmtInfo> getFollower(StmtRef index) override;
+	bool checkFollows(StmtRef front, StmtRef back) override;
+	StmtInfoPtrSet getFollowerStar(StmtRef index) override;
+	StmtInfoPtrSet getPrecedingStar(StmtRef index) override;
 
 	// Use get methods
-	bool checkUses(StmtRef, const VarRef&);
-	StmtInfoPtrSet getUsesByVar(const VarRef&);
-	VarRefSet getUsesByStmt(StmtRef);
+	bool checkUses(StmtRef index, const VarRef& name) override;
+	bool checkUses(const ProcRef& procedure_name, const VarRef& variable_name) override;
+	StmtInfoPtrSet getStmtUsesByVar(const VarRef& name) override;
+	ProcRefSet getProcUsesByVar(const VarRef& name) override;
+	VarRefSet getUsesByStmt(StmtRef index) override;
+	VarRefSet getUsesByProc(const ProcRef& name) override;
 
 	// Modify get methods
-	bool checkModifies(StmtRef, const VarRef&);
-	StmtInfoPtrSet getModifiesByVar(const VarRef&);
-	VarRefSet getModifiesByStmt(StmtRef);
+	bool checkModifies(StmtRef index, const VarRef& name) override;
+	bool checkModifies(const ProcRef& procedure_name, const VarRef& variable_name) override;
+	StmtInfoPtrSet getStmtModifiesByVar(const VarRef& name) override;
+	ProcRefSet getProcModifiesByVar(const VarRef& name) override;
+	VarRefSet getModifiesByStmt(StmtRef index) override;
+	VarRefSet getModifiesByProc(const ProcRef& name) override;
 
 	// Assign get methods
-	bool patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& exp, bool is_exact_match);
-	StmtInfoPtrSet getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& exp, bool is_exact_match);
-	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& variable);
-	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& exp,
-	                                                                  bool is_exact_match);
+	bool patternExists(const VarRef& name, const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) override;
+	StmtInfoPtrSet getStmtsWithPattern(const VarRef& name, const Common::ExpressionProcessor::Expression& expression,
+	                                   bool is_exact_match) override;
+	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& name) override;
+	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
+	                                                                  bool is_exact_match) override;
+
+	// Call get methods
+	bool checkCall(const ProcRef& caller, const ProcRef& callee) override;
+	ProcRefSet getCallee(const ProcRef& caller) override;
+	ProcRefSet getCalleeStar(const ProcRef& caller) override;
+	ProcRefSet getCaller(const ProcRef& callee) override;
+	ProcRefSet getCallerStar(const ProcRef& callee) override;
 
 	// Others
+	void populateComplexRelations() override;
 	void clear();
-	void populateComplexRelations();
 
 	// For testing
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> getStmtInfoMap();
