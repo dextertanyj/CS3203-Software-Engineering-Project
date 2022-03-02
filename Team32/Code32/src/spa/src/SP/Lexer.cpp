@@ -34,14 +34,25 @@ bool SP::Lexer::nextToken() {
 }
 
 string SP::Lexer::readToken() {
+	if (this->iterator == sregex_iterator()) {
+		return "";
+	}
 	string token = this->iterator->str();
 	nextToken();
 	return token;
 }
 
-string SP::Lexer::peekToken() { return this->iterator->str(); }
+string SP::Lexer::peekToken() {
+	if (this->iterator == sregex_iterator()) {
+		return "";
+	}
+	return this->iterator->str();
+}
 
 bool SP::Lexer::nextIf(const string& token) {
+	if (this->iterator == sregex_iterator()) {
+		throw SP::TokenizationException("Unexpected end of sequence.");
+	}
 	if (this->iterator->str() == token) {
 		return nextToken();
 	}
@@ -51,10 +62,7 @@ bool SP::Lexer::nextIf(const string& token) {
 bool SP::Lexer::nextIf(initializer_list<string> tokens) {
 	bool last;
 	for (const string& token : tokens) {
-		if (this->iterator->str() != token) {
-			throw SP::TokenizationException("Unexpected token encountered: " + this->iterator->str() + ".");
-		}
-		last = nextToken();
+		last = nextIf(token);
 	}
 	return last;
 }
