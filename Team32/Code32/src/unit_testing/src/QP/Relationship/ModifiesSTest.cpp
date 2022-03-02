@@ -65,30 +65,6 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: underscore & varName") {
-		QP::Relationship::ModifiesS modifies = QP::Relationship::ModifiesS(stmt_underscore, var);
-
-		QP::QueryResult result = modifies.execute(pkb, true, map);
-
-		REQUIRE_FALSE(result.getResult());
-	}
-
-	SECTION("trivial: underscore & underscore") {
-		QP::Relationship::ModifiesS parent = QP::Relationship::ModifiesS(stmt_underscore, var_underscore);
-
-		QP::QueryResult result = parent.execute(pkb, true, map);
-
-		REQUIRE_FALSE(result.getResult());
-	}
-
-	SECTION("trivial: underscore & synonym") {
-		QP::Relationship::ModifiesS modifies = QP::Relationship::ModifiesS(stmt_underscore, var);
-
-		QP::QueryResult result = modifies.execute(pkb, true, map);
-
-		REQUIRE_FALSE(result.getResult());
-	}
-
 	SECTION("trivial: synonym & varName") {
 		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(assign_synonym, x);
 		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(assign_synonym, y);
@@ -164,14 +140,6 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		REQUIRE(actual_var_result == expected_var_result);
 		REQUIRE(actual_stmt_result == expected_stmt_result);
 		REQUIRE(!result2.getResult());
-	}
-
-	SECTION("non-trivial: underscore & synonym") {
-		QP::Relationship::ModifiesS modifies = QP::Relationship::ModifiesS(stmt_underscore, var);
-
-		QP::QueryResult result = modifies.execute(pkb, false, map);
-
-		REQUIRE(result.getTable().empty());
 	}
 
 	SECTION("non-trivial: stmtNumber & synonym") {

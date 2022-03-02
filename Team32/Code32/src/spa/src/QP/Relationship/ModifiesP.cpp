@@ -2,8 +2,13 @@
 
 #include <utility>
 
-QP::Relationship::ModifiesP::ModifiesP(QueryEntRef left_ent, QueryEntRef right_ent)
-	: left_ent(std::move(std::move(left_ent))), right_ent(std::move(std::move(right_ent))) {}
+QP::Relationship::ModifiesP::ModifiesP(QueryEntRef left_ent, QueryEntRef right_ent) {
+	if (left_ent.type == EntRefType::Underscore) {
+		throw QueryException("Ambiguous wildcard _.");
+	}
+	this->left_ent = std::move(std::move(left_ent));
+	this->right_ent = std::move(std::move(right_ent));
+}
 
 QueryEntRef QP::Relationship::ModifiesP::getLeftEnt() { return left_ent; }
 
