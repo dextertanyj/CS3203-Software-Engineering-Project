@@ -48,6 +48,8 @@ void PKB::TopologicalSort<TInfo>::sort(const TStore& truth_store,
 	if (!edges.empty()) {
 		throw invalid_argument("Recursive call detected.");
 	}
+	// Reverse order so that lowest level node is first in the list (optimize will start from the lowest level and work towards the root).
+	std::reverse(order.begin(), order.end());
 }
 
 template <class TInfo>
