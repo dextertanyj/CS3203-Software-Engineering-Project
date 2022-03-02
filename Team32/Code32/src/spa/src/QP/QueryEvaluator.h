@@ -29,6 +29,7 @@ private:
 	QueryResult getSpecificStmtType(DesignEntity design_entity, const string& symbol);
 	QueryResult getConstants(const string& symbol);
 	QueryResult getVariables(const string& symbol);
+	QueryResult getProcedures(const string& symbol);
 	static QueryGraph buildGraph(QueryProperties& query_properties);
 	QueryResult evaluateClauses(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses, bool is_trivial);
 	QueryResult executeClausesWithoutSynonym(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses);
