@@ -21,6 +21,13 @@ template <typename T>
 class SetStore;
 template <typename TIdent, class TInfo, class TRelation>
 class TransitiveRelationStore;
+class CallStatementStore;
+template <class T>
+class SVRelationStore;
+template <class T>
+class PVRelationStore;
+class VariableStore;
+
 template <class TInfo>
 class TopologicalSort;
 template <class T>
