@@ -42,8 +42,8 @@ bool PKB::UsesRelation::validate(SVRelationStore<UsesRelation>* store, const sha
 	                [variable](const VarRef& existing_var) { return existing_var == variable; }));
 }
 
-void PKB::UsesRelation::optimize(Types::StatementStore& statement_store,
-                                 StatementRelationStore<ParentRelation>& parent_store, SVRelationStore<UsesRelation>& store) {
+void PKB::UsesRelation::optimize(Types::StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
+                                 SVRelationStore<UsesRelation>& store) {
 	for (const auto& statement : statement_store.getAll()) {
 		if (statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::WhileStmt) {
 			auto children = parent_store.getReverseTransitive(statement->getIdentifier());

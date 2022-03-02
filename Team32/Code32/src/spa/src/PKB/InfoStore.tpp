@@ -39,6 +39,8 @@ shared_ptr<TInfo> PKB::InfoStore<TIdent, TContent, TInfo>::get(const TIdent& ide
 }
 
 template <typename TIdent, typename TContent, class TInfo>
-void PKB::InfoStore<TIdent, TContent, TInfo>::clear() { store.clear(); }
+void PKB::InfoStore<TIdent, TContent, TInfo>::clear() {
+	store.clear();
+}
 
 #endif  // SPA_SRC_PKB_INFOSTORE_TPP
