@@ -43,5 +43,6 @@ jobs:
       - name: Run valgrind
         shell: bash
         working-directory: ${{runner.workspace}}/build
-        run: valgrind --leak-check=full --error-exitcode=1 ./src/profiler/profiler \
-          ${{github.workspace}}/Team32/Tests32/Basic_source.txt ${{github.workspace}}/Team32/Tests32/Basic_queries.txt
+        run: |
+          valgrind --leak-check=full --error-exitcode=1 ./src/profiler/profiler \
+           ${{github.workspace}}/Team32/Tests32/Basic_source.txt ${{github.workspace}}/Team32/Tests32/Basic_queries.txt
