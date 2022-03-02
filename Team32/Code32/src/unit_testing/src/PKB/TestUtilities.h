@@ -47,7 +47,9 @@ inline PKB::Storage generateUsesTestPKB() {
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::IfStmt);
 	pkb.setStmtType(3, StmtType::Print);
-	pkb.setStmtType(SIZE_MAX, StmtType::WhileStmt);
+	pkb.setStmtType(4, StmtType::Call);
+	pkb.setStmtType(5, StmtType::Call);
+	pkb.setStmtType(6, StmtType::WhileStmt);
 	return pkb;
 };
 
