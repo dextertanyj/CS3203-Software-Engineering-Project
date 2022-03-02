@@ -61,9 +61,8 @@ void PKB::ParentRelation::optimize(StatementRelationStore<ParentRelation>& store
 	}
 }
 
-StmtInfoPtrSet PKB::ParentRelation::populateTransitive(StatementRelationStore<ParentRelation>& store,
-                                                                            ParentRelation& current,
-                                                                            StmtInfoPtrSet previous) {
+StmtInfoPtrSet PKB::ParentRelation::populateTransitive(StatementRelationStore<ParentRelation>& store, ParentRelation& current,
+                                                       StmtInfoPtrSet previous) {
 	current.appendForwardTransitive(previous);
 	previous.insert(current.self);
 	StmtInfoPtrSet result;

@@ -28,7 +28,7 @@ private:
 	StmtInfoPtrSet parent_transitive;
 	StmtInfoPtrSet children_transitive;
 	static StmtInfoPtrSet populateTransitive(StatementRelationStore<ParentRelation>& store, ParentRelation& current,
-	                                                              StmtInfoPtrSet previous);
+	                                         StmtInfoPtrSet previous);
 };
 
 #endif  // SPA_SRC_PKB_PARENTRELATION_H
