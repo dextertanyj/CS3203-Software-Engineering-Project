@@ -12,20 +12,19 @@
 #include "PKB/AssignStore.h"
 #include "PKB/CallRelation.h"
 #include "PKB/CallStatementStore.h"
-#include "PKB/ConstantStore.h"
 #include "PKB/FollowsRelation.h"
 #include "PKB/InfoStore.h"
 #include "PKB/ModifiesRelation.h"
 #include "PKB/PKB.h"
 #include "PKB/ParentRelation.h"
 #include "PKB/SVRelationStore.tpp"
+#include "PKB/SetStore.tpp"
 #include "PKB/StatementInfo.h"
 #include "PKB/StatementRelationStore.tpp"
 #include "PKB/StorageAccessInterface.h"
 #include "PKB/StorageUpdateInterface.h"
 #include "PKB/TopologicalSort.tpp"
 #include "PKB/TransitiveRelationStore.tpp"
-#include "PKB/VariableStore.h"
 
 using namespace std;
 
@@ -106,8 +105,8 @@ public:
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> getStmtInfoMap();
 
 private:
-	ConstantStore constant_store;
-	VariableStore variable_store;
+	SetStore<ConstVal> constant_store;
+	SetStore<VarRef> variable_store;
 	Types::StatementStore statement_store;
 	Types::ProcedureStore procedure_store;
 	CallStatementStore call_statement_store;
