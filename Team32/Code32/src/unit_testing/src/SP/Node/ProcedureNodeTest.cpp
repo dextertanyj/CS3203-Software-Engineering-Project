@@ -1,6 +1,6 @@
 #include "SP/Node/ProcedureNode.h"
 
-#include "../Node/MockUtilities.h"
+#include "../TestUtilities.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/PrintNode.h"
 #include "SP/Node/ReadNode.h"
@@ -15,37 +15,37 @@ TEST_CASE("SP::Node::ProcedureNode::equals") {
 	ProcRef name_2 = "testName2";
 	string stmt_1 = "print flag; call x; }";
 	string stmt_2 = "cenX = 0; cenY = 0; }";
-	unique_ptr<StatementListNode> stmt_lst = createStatementList(stmt_1, 2);
+	unique_ptr<StatementListNode> stmt_lst = SP::TestUtilities::createStatementList(stmt_1, 2);
 	shared_ptr<ProcedureNode> node = make_shared<ProcedureNode>(name_1, move(stmt_lst), 1, 2);
 
 	SECTION("Same Object Test") { REQUIRE(node->equals(node)); }
 
 	SECTION("Same Node Test") {
-		unique_ptr<StatementListNode> stmt_lst_2 = createStatementList(stmt_1, 2);
+		unique_ptr<StatementListNode> stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_1, 2);
 		shared_ptr<ProcedureNode> other = make_shared<ProcedureNode>(name_1, move(stmt_lst_2), 1, 2);
 		REQUIRE(node->equals(other));
 	}
 
 	SECTION("Different Name Test") {
-		unique_ptr<StatementListNode> stmt_lst_2 = createStatementList(stmt_1, 2);
+		unique_ptr<StatementListNode> stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_1, 2);
 		shared_ptr<ProcedureNode> other = make_shared<ProcedureNode>(name_2, move(stmt_lst_2), 1, 2);
 		REQUIRE_FALSE(node->equals(other));
 	}
 
 	SECTION("Different StmtLst Test") {
-		unique_ptr<StatementListNode> stmt_lst_2 = createStatementList(stmt_2, 2);
+		unique_ptr<StatementListNode> stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_2, 2);
 		shared_ptr<ProcedureNode> other = make_shared<ProcedureNode>(name_1, move(stmt_lst_2), 1, 2);
 		REQUIRE_FALSE(node->equals(other));
 	}
 
 	SECTION("Different Start Line Number Test") {
-		unique_ptr<StatementListNode> stmt_lst_2 = createStatementList(stmt_1, 2);
+		unique_ptr<StatementListNode> stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_1, 2);
 		shared_ptr<ProcedureNode> other = make_shared<ProcedureNode>(name_1, move(stmt_lst_2), 2, 2);
 		REQUIRE_FALSE(node->equals(other));
 	}
 
 	SECTION("Different End Line Number Test") {
-		unique_ptr<StatementListNode> stmt_lst_2 = createStatementList(stmt_1, 2);
+		unique_ptr<StatementListNode> stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_1, 2);
 		shared_ptr<ProcedureNode> other = make_shared<ProcedureNode>(name_1, move(stmt_lst_2), 1, 3);
 		REQUIRE_FALSE(node->equals(other));
 	}
@@ -58,7 +58,7 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure") {
 	SECTION("Valid Token Test") {
 		lex.initialize("procedure testName { count = 0; }");
 		unique_ptr<ProcedureNode> node = ProcedureNode::parseProcedure(lex, statement_count);
-		unique_ptr<StatementListNode> stmt_lst_2 = createStatementList("count = 0; }", 1);
+		unique_ptr<StatementListNode> stmt_lst_2 = SP::TestUtilities::createStatementList("count = 0; }", 1);
 		shared_ptr<ProcedureNode> expected = make_shared<ProcedureNode>("testName", move(stmt_lst_2), 1, 1);
 		REQUIRE(node->equals(expected));
 		REQUIRE_EQUALS(statement_count, 2);
@@ -68,7 +68,7 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure") {
 	SECTION("Keyword As Name Test") {
 		lex.initialize("procedure procedure { count = 0; }");
 		unique_ptr<ProcedureNode> node = ProcedureNode::parseProcedure(lex, statement_count);
-		unique_ptr<StatementListNode> stmt_lst_2 = createStatementList("count = 0; }", 1);
+		unique_ptr<StatementListNode> stmt_lst_2 = SP::TestUtilities::createStatementList("count = 0; }", 1);
 		shared_ptr<ProcedureNode> expected = make_shared<ProcedureNode>("procedure", move(stmt_lst_2), 1, 1);
 		REQUIRE(node->equals(expected));
 		REQUIRE_EQUALS(statement_count, 2);
@@ -79,7 +79,7 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure") {
 		lex.initialize("procedure testName { while ((x != 0) && (y != 0)) { cenX = cenX + 1; call readPoint; }}");
 		unique_ptr<ProcedureNode> node = ProcedureNode::parseProcedure(lex, statement_count);
 		unique_ptr<StatementListNode> stmt_lst_2 =
-			createStatementList("while ((x != 0) && (y != 0)) { cenX = cenX + 1; call readPoint; }}", 1);
+			SP::TestUtilities::createStatementList("while ((x != 0) && (y != 0)) { cenX = cenX + 1; call readPoint; }}", 1);
 		shared_ptr<ProcedureNode> expected = make_shared<ProcedureNode>("testName", move(stmt_lst_2), 1, 3);
 		REQUIRE(node->equals(expected));
 		REQUIRE_EQUALS(statement_count, 4);

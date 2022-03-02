@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "../Node/MockUtilities.h"
+#include "../TestUtilities.h"
 #include "SP/Lexer.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/PrintNode.h"

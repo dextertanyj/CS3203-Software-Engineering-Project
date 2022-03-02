@@ -1,6 +1,6 @@
 #include "SP/Node/AssignmentNode.h"
 
-#include "../Node/MockUtilities.h"
+#include "../TestUtilities.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "SP/Node/CallNode.h"
@@ -12,10 +12,12 @@ using namespace SP::Node;
 
 TEST_CASE("SP::Node::AssignmentNode::equals") {
 	unique_ptr<VariableNode> assignee = make_unique<VariableNode>("A");
-	unique_ptr<ExpressionNode> expression = make_unique<ExpressionNode>(createArithmeticExpression(vector<string>({"A", ";"})));
+	unique_ptr<ExpressionNode> expression =
+		make_unique<ExpressionNode>(SP::TestUtilities::createArithmeticExpression(vector<string>({"A", ";"})));
 	shared_ptr<AssignmentNode> node = make_shared<AssignmentNode>(1, move(assignee), move(expression));
 	unique_ptr<VariableNode> assignee_a = make_unique<VariableNode>("A");
-	unique_ptr<ExpressionNode> expression_a = make_unique<ExpressionNode>(createArithmeticExpression(vector<string>({"A", ";"})));
+	unique_ptr<ExpressionNode> expression_a =
+		make_unique<ExpressionNode>(SP::TestUtilities::createArithmeticExpression(vector<string>({"A", ";"})));
 
 	SECTION("Same Object Test") { REQUIRE(node->equals(node)); }
 
@@ -36,7 +38,8 @@ TEST_CASE("SP::Node::AssignmentNode::equals") {
 	}
 
 	SECTION("Different Expression Node Test") {
-		unique_ptr<ExpressionNode> expression_b = make_unique<ExpressionNode>(createArithmeticExpression(vector<string>({"B", ";"})));
+		unique_ptr<ExpressionNode> expression_b =
+			make_unique<ExpressionNode>(SP::TestUtilities::createArithmeticExpression(vector<string>({"B", ";"})));
 		shared_ptr<AssignmentNode> other = make_shared<AssignmentNode>(1, move(assignee_a), move(expression_b));
 		REQUIRE_FALSE(node->equals(other));
 	}
@@ -56,7 +59,7 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement") {
 		unique_ptr<AssignmentNode> node = AssignmentNode::parseAssignmentStatement(lex, statement_count, "count");
 		unique_ptr<VariableNode> assignee = make_unique<VariableNode>("count");
 		unique_ptr<ExpressionNode> expression =
-			make_unique<ExpressionNode>(createArithmeticExpression(vector<string>({"(", "x", "+", "6", ")", ";"})));
+			make_unique<ExpressionNode>(SP::TestUtilities::createArithmeticExpression(vector<string>({"(", "x", "+", "6", ")", ";"})));
 		shared_ptr<AssignmentNode> expected = make_shared<AssignmentNode>(1, move(assignee), move(expression));
 		REQUIRE(node->equals(expected));
 		REQUIRE_EQUALS(statement_count, 2);
@@ -68,7 +71,7 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement") {
 		unique_ptr<AssignmentNode> node = AssignmentNode::parseAssignmentStatement(lex, statement_count, "count");
 		unique_ptr<VariableNode> assignee = make_unique<VariableNode>("count");
 		unique_ptr<ExpressionNode> expression = make_unique<ExpressionNode>(
-			createArithmeticExpression(vector<string>({"(", "x", "+", "6", ")", "*", "(", "3", "-", "8", ")", ";"})));
+			SP::TestUtilities::createArithmeticExpression(vector<string>({"(", "x", "+", "6", ")", "*", "(", "3", "-", "8", ")", ";"})));
 		shared_ptr<AssignmentNode> expected = make_shared<AssignmentNode>(1, move(assignee), move(expression));
 		REQUIRE(node->equals(expected));
 		REQUIRE_EQUALS(statement_count, 2);
@@ -119,7 +122,7 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		REQUIRE_EQUALS(result, statement_number);
 		REQUIRE_EQUALS(pkb.getConstants(), unordered_set<ConstVal>({1}));
 		REQUIRE(pkb.checkModifies(statement_number, "A"));
-		REQUIRE(pkb.patternExists("A", createArithmeticExpression(vector<string>({"1"})), true));
+		REQUIRE(pkb.patternExists("A", SP::TestUtilities::createArithmeticExpression(vector<string>({"1"})), true));
 	}
 
 	SECTION("Single variable assignment") {
@@ -133,7 +136,7 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		REQUIRE(pkb.getConstants().empty());
 		REQUIRE(pkb.checkModifies(statement_number, "A"));
 		REQUIRE(pkb.checkUses(statement_number, "B"));
-		REQUIRE(pkb.patternExists("A", createArithmeticExpression(vector<string>({"B"})), true));
+		REQUIRE(pkb.patternExists("A", SP::TestUtilities::createArithmeticExpression(vector<string>({"B"})), true));
 	}
 
 	SECTION("Multiple terminal assignment") {
@@ -148,6 +151,7 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		REQUIRE(pkb.checkModifies(statement_number, "A"));
 		REQUIRE(pkb.checkUses(statement_number, "B"));
 		REQUIRE(pkb.checkUses(statement_number, "C"));
-		REQUIRE(pkb.patternExists("A", createArithmeticExpression(vector<string>({"1", "+", "B", "*", "2", "/", "C"})), true));
+		REQUIRE(pkb.patternExists("A", SP::TestUtilities::createArithmeticExpression(vector<string>({"1", "+", "B", "*", "2", "/", "C"})),
+		                          true));
 	}
 }

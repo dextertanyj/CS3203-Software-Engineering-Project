@@ -1,6 +1,6 @@
 #include "SP/Node/IfNode.h"
 
-#include "../Node/MockUtilities.h"
+#include "../TestUtilities.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/PrintNode.h"
@@ -15,54 +15,55 @@ TEST_CASE("SP::Node::IfNode::equals") {
 	string stmt_1 = "print flag; call x; }";
 	string stmt_2 = "cenX = 0; read x; }";
 	string stmt_3 = "read y; x = 10; }";
-	unique_ptr<ExpressionNode> cond_expr = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
-	unique_ptr<StatementListNode> if_stmt_lst = createStatementList(stmt_1, 2);
-	unique_ptr<StatementListNode> else_stmt_lst = createStatementList(stmt_2, 4);
+	unique_ptr<ExpressionNode> cond_expr =
+		make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
+	unique_ptr<StatementListNode> if_stmt_lst = SP::TestUtilities::createStatementList(stmt_1, 2);
+	unique_ptr<StatementListNode> else_stmt_lst = SP::TestUtilities::createStatementList(stmt_2, 4);
 	shared_ptr<IfNode> node = make_shared<IfNode>(1, move(cond_expr), move(if_stmt_lst), move(else_stmt_lst));
 
 	SECTION("Same Object Test") { REQUIRE(node->equals(node)); }
 
 	SECTION("Same Node Test") {
 		unique_ptr<ExpressionNode> cond_expr_2 =
-			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
-		unique_ptr<StatementListNode> if_stmt_lst_2 = createStatementList(stmt_1, 2);
-		unique_ptr<StatementListNode> else_stmt_lst_2 = createStatementList(stmt_2, 4);
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
+		unique_ptr<StatementListNode> if_stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_1, 2);
+		unique_ptr<StatementListNode> else_stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_2, 4);
 		shared_ptr<IfNode> other = make_shared<IfNode>(1, move(cond_expr_2), move(if_stmt_lst_2), move(else_stmt_lst_2));
 		REQUIRE(node->equals(other));
 	}
 
 	SECTION("Different StmtNo Test") {
 		unique_ptr<ExpressionNode> cond_expr_2 =
-			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
-		unique_ptr<StatementListNode> if_stmt_lst_2 = createStatementList(stmt_1, 3);
-		unique_ptr<StatementListNode> else_stmt_lst_2 = createStatementList(stmt_2, 5);
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
+		unique_ptr<StatementListNode> if_stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_1, 3);
+		unique_ptr<StatementListNode> else_stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_2, 5);
 		shared_ptr<IfNode> other = make_shared<IfNode>(2, move(cond_expr_2), move(if_stmt_lst_2), move(else_stmt_lst_2));
 		REQUIRE_FALSE(node->equals(other));
 	}
 
 	SECTION("Different CondExpr Test") {
 		unique_ptr<ExpressionNode> cond_expr_2 =
-			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "==", "0", ")"})));
-		unique_ptr<StatementListNode> if_stmt_lst_2 = createStatementList(stmt_1, 2);
-		unique_ptr<StatementListNode> else_stmt_lst_2 = createStatementList(stmt_2, 4);
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "==", "0", ")"})));
+		unique_ptr<StatementListNode> if_stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_1, 2);
+		unique_ptr<StatementListNode> else_stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_2, 4);
 		shared_ptr<IfNode> other = make_shared<IfNode>(1, move(cond_expr_2), move(if_stmt_lst_2), move(else_stmt_lst_2));
 		REQUIRE_FALSE(node->equals(other));
 	}
 
 	SECTION("Different IfStmtLst Test") {
 		unique_ptr<ExpressionNode> cond_expr_2 =
-			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
-		unique_ptr<StatementListNode> if_stmt_lst_2 = createStatementList(stmt_3, 2);
-		unique_ptr<StatementListNode> else_stmt_lst_2 = createStatementList(stmt_2, 4);
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
+		unique_ptr<StatementListNode> if_stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_3, 2);
+		unique_ptr<StatementListNode> else_stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_2, 4);
 		shared_ptr<IfNode> other = make_shared<IfNode>(1, move(cond_expr_2), move(if_stmt_lst_2), move(else_stmt_lst_2));
 		REQUIRE_FALSE(node->equals(other));
 	}
 
 	SECTION("Different ElseStmtLst Test") {
 		unique_ptr<ExpressionNode> cond_expr_2 =
-			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
-		unique_ptr<StatementListNode> if_stmt_lst_2 = createStatementList(stmt_1, 2);
-		unique_ptr<StatementListNode> else_stmt_lst_2 = createStatementList(stmt_3, 4);
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
+		unique_ptr<StatementListNode> if_stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_1, 2);
+		unique_ptr<StatementListNode> else_stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_3, 4);
 		shared_ptr<IfNode> other = make_shared<IfNode>(1, move(cond_expr_2), move(if_stmt_lst_2), move(else_stmt_lst_2));
 		REQUIRE_FALSE(node->equals(other));
 	}
@@ -81,9 +82,9 @@ TEST_CASE("SP::Node::IfNode::parseIfStatement") {
 		lex.initialize("( x > 0 ) then { read y; } else { x = 10; }");
 		unique_ptr<IfNode> node = IfNode::parseIfStatement(lex, statement_count);
 		unique_ptr<ExpressionNode> cond_expr =
-			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", ">", "0", ")"})));
-		unique_ptr<StatementListNode> if_stmt_lst = createStatementList("read y; }", 2);
-		unique_ptr<StatementListNode> else_stmt_lst = createStatementList("x = 10; }", 3);
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", ">", "0", ")"})));
+		unique_ptr<StatementListNode> if_stmt_lst = SP::TestUtilities::createStatementList("read y; }", 2);
+		unique_ptr<StatementListNode> else_stmt_lst = SP::TestUtilities::createStatementList("x = 10; }", 3);
 		shared_ptr<IfNode> expected = make_shared<IfNode>(1, move(cond_expr), move(if_stmt_lst), move(else_stmt_lst));
 		REQUIRE(node->equals(expected));
 		REQUIRE_EQUALS(statement_count, 4);
@@ -161,7 +162,8 @@ TEST_CASE("SP::Node::IfNode::extract Test") {
 		StmtRef statement_number = 2;
 		StmtRef then_statement = 3;
 		StmtRef else_statement = 8;
-		unique_ptr<ExpressionNode> condition = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "<", "0"})));
+		unique_ptr<ExpressionNode> condition =
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "<", "0"})));
 		unique_ptr<StatementListNode> then_body = make_unique<StatementListNode>();
 		then_body->addStatementNode(make_unique<CallNode>(then_statement, "Procedure"));
 		unique_ptr<StatementListNode> else_body = make_unique<StatementListNode>();
@@ -187,7 +189,8 @@ TEST_CASE("SP::Node::IfNode::extract Test") {
 		StmtRef first_else_statement = 10;
 		StmtRef second_else_statement = 13;
 		StmtRef third_else_statement = 16;
-		unique_ptr<ExpressionNode> condition = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "<", "0"})));
+		unique_ptr<ExpressionNode> condition =
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "<", "0"})));
 		unique_ptr<StatementListNode> then_body = make_unique<StatementListNode>();
 		then_body->addStatementNode(make_unique<CallNode>(first_then_statement, "Procedure"));
 		then_body->addStatementNode(make_unique<ReadNode>(second_then_statement, make_unique<VariableNode>("A")));
