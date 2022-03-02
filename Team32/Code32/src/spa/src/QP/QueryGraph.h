@@ -12,7 +12,7 @@ using namespace std;
 class QP::QueryGraph {
 public:
 	explicit QueryGraph(const DeclarationList& declarations);
-	void setEdges(const SuchThatClauseList& such_that_clause_list, const PatternClauseList& pattern_clause_list);
+	void setEdges(const ClauseList& clause_list);
 	unordered_map<string, Node> getNodes();
 	unordered_map<string, int> getSynonymsInGroup(const string& selected_synonym);
 

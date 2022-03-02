@@ -18,8 +18,7 @@ class QP::QueryEvaluator {
 public:
 	explicit QueryEvaluator(PKB::StorageAccessInterface& pkb);
 	QP::QueryResult executeQuery(QueryProperties& query_properties);
-	static vector<pair<SuchThatClauseList, PatternClauseList>> splitClauses(QueryProperties& query_properties,
-	                                                                        unordered_map<string, int>& synonyms_in_group);
+	static vector<ClauseList> splitClauses(QueryProperties& query_properties, unordered_map<string, int>& synonyms_in_group);
 
 private:
 	PKB::StorageAccessInterface& pkb;
@@ -29,9 +28,9 @@ private:
 	QueryResult getConstants(const string& symbol);
 	QueryResult getVariables(const string& symbol);
 	static QueryGraph buildGraph(QueryProperties& query_properties);
-	QueryResult evaluateClauses(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses, bool is_trivial);
-	QueryResult executeClausesWithoutSynonym(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses);
-	bool executeGroup(SuchThatClauseList& such_that_clauses, PatternClauseList& pattern_clauses);
+	QueryResult evaluateClauses(ClauseList& clauses, bool is_trivial);
+	QueryResult executeClausesWithoutSynonym(ClauseList& clauses);
+	bool executeGroup(ClauseList& clauses);
 	void createSymbolToTypeMap(const DeclarationList& declarations);
 };
 

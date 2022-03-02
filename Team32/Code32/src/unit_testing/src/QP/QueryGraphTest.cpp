@@ -16,13 +16,13 @@ TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
 	QueryStmtRef s = {StmtRefType::Synonym, "s"};
 	QueryStmtRef a = {StmtRefType::Synonym, "a"};
 	QueryEntRef v = {EntRefType::Synonym, "v"};
-	SuchThatClauseList such_that_list = {
+	ClauseList clause_list = {
 		{make_unique<QP::Relationship::Parent>(s, a)},
 		{make_unique<QP::Relationship::UsesS>(a, v)},
 	};
 
 	QP::QueryGraph graph = QP::QueryGraph(list);
-	graph.setEdges(such_that_list, {});
+	graph.setEdges(clause_list);
 
 	unordered_map<string, Node> nodes = graph.getNodes();
 	REQUIRE(nodes.at("s").adjacent_symbols.size() == 1);
@@ -40,14 +40,14 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 	QueryStmtRef c = {StmtRefType::Synonym, "c"};
 	QueryStmtRef d = {StmtRefType::Synonym, "d"};
 	QueryEntRef e = {EntRefType::Synonym, "e"};
-	SuchThatClauseList such_that_list = {
+	ClauseList clause_list = {
 		{make_unique<QP::Relationship::Parent>(a, b)},
 		{make_unique<QP::Relationship::Parent>(a, c)},
 		{make_unique<QP::Relationship::UsesS>(d, e)},
 	};
 
 	QP::QueryGraph graph = QP::QueryGraph(list);
-	graph.setEdges(such_that_list, {});
+	graph.setEdges(clause_list);
 	unordered_map<string, int> synonyms = graph.getSynonymsInGroup("a");
 
 	REQUIRE(synonyms["a"] == 0);

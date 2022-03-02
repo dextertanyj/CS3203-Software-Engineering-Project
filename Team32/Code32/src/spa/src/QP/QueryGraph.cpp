@@ -9,13 +9,9 @@ QP::QueryGraph::QueryGraph(const DeclarationList& declarations) {
 	}
 }
 
-void QP::QueryGraph::setEdges(const SuchThatClauseList& such_that_clause_list, const PatternClauseList& pattern_clause_list) {
-	for (const SuchThatClause& such_that_clause : such_that_clause_list) {
-		setEdge(such_that_clause.relation);
-	}
-
-	for (const PatternClause& pattern_clause : pattern_clause_list) {
-		setEdge(pattern_clause.relation);
+void QP::QueryGraph::setEdges(const ClauseList& clause_list) {
+	for (const Clause& clause : clause_list) {
+		setEdge(clause.relation);
 	}
 }
 
