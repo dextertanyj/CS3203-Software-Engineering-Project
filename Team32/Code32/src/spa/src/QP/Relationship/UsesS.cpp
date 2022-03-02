@@ -31,7 +31,7 @@ QP::QueryResult QP::Relationship::UsesS::executeTrivial(PKB::StorageAccessInterf
 	if (stmt.type == StmtRefType::Underscore) {
 		return QueryResult(false);
 	}
-    if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
+	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
 		StmtInfoPtrSet stmt_set = pkb.getStmtUsesByVar(ent.ent_ref);
 		DesignEntity design_entity = map[stmt.stmt_ref];
 		for (auto const& stmt : stmt_set) {
@@ -137,9 +137,9 @@ QP::QueryResult QP::Relationship::UsesS::executeNonTrivial(PKB::StorageAccessInt
 		result.addColumn(ent.ent_ref, column);
 		return result;
 	}
-    if (stmt.type == StmtRefType::Underscore) {
-        QueryResult result = QueryResult();
-        return result;
-    }
+	if (stmt.type == StmtRefType::Underscore) {
+		QueryResult result = QueryResult();
+		return result;
+	}
 	return {};
 }
