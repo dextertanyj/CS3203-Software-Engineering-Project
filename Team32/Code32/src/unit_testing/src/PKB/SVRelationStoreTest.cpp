@@ -1,15 +1,15 @@
 #include "PKB/SVRelationStore.h"
 
-#include "MockUtilities.h"
 #include "PKB/Storage.h"
+#include "TestUtilities.h"
 #include "catch.hpp"
 
 TEST_CASE("PKB::SVRelationStore") {
 	PKB::SVRelationStore uses_store = PKB::SVRelationStore<PKB::UsesRelation>();
-	shared_ptr<StmtInfo> s_1 = MockUtilities::createStmtInfo(5, StmtType::Print);
-	shared_ptr<StmtInfo> s_2 = MockUtilities::createStmtInfo(6, StmtType::Assign);
-	shared_ptr<StmtInfo> s_3 = MockUtilities::createStmtInfo(7, StmtType::IfStmt);
-	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(1, StmtType::Read);
+	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(5, StmtType::Print);
+	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(6, StmtType::Assign);
+	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(7, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s_4 = TestUtilities::createStmtInfo(1, StmtType::Read);
 
 	VarRefSet v_1 = {"x", "y", "z"};
 	VarRefSet v_2 = {"a", "b"};

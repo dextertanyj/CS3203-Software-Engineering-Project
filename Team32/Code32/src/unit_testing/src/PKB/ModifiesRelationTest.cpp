@@ -1,17 +1,17 @@
 #include "PKB/ModifiesRelation.h"
 
-#include "MockUtilities.h"
+#include "TestUtilities.h"
 #include "catch.hpp"
 #include "catch_tools.h"
 
 TEST_CASE("PKB::Modifies") {
 	PKB::SVRelationStore<PKB::ModifiesRelation> store = PKB::SVRelationStore<PKB::ModifiesRelation>();
-	shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(1, StmtType::WhileStmt);
-	shared_ptr<StmtInfo> s2 = MockUtilities::createStmtInfo(2, StmtType::IfStmt);
-	shared_ptr<StmtInfo> s3 = MockUtilities::createStmtInfo(3, StmtType::Assign);
-	shared_ptr<StmtInfo> s4 = MockUtilities::createStmtInfo(4, StmtType::Call);
-	shared_ptr<StmtInfo> s5 = MockUtilities::createStmtInfo(5, StmtType::Print);
-	shared_ptr<StmtInfo> s6 = MockUtilities::createStmtInfo(6, StmtType::Read);
+	shared_ptr<StmtInfo> s1 = TestUtilities::createStmtInfo(1, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> s2 = TestUtilities::createStmtInfo(2, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s3 = TestUtilities::createStmtInfo(3, StmtType::Assign);
+	shared_ptr<StmtInfo> s4 = TestUtilities::createStmtInfo(4, StmtType::Call);
+	shared_ptr<StmtInfo> s5 = TestUtilities::createStmtInfo(5, StmtType::Print);
+	shared_ptr<StmtInfo> s6 = TestUtilities::createStmtInfo(6, StmtType::Read);
 
 	SECTION("PKB::ModifiesRelation::validate One Var Test") {
 		REQUIRE(PKB::ModifiesRelation::validate(&store, s1, "x"));
@@ -43,7 +43,7 @@ TEST_CASE("PKB::Modifies") {
 	}
 
 	SECTION("PKB::ModifiesRelation::optimize Test") {
-		PKB::StatementStore statement_store = MockUtilities::generateStatementStore();
+		PKB::StatementStore statement_store = TestUtilities::generateStatementStore();
 		PKB::StatementRelationStore<PKB::ParentRelation> parent_store = PKB::StatementRelationStore<PKB::ParentRelation>();
 
 		shared_ptr<StmtInfo> p1 = statement_store.get(1);
@@ -76,7 +76,7 @@ TEST_CASE("PKB::Modifies") {
 
 	// If statement (index 2) is nested within while statement (index 1)
 	SECTION("PKB::ModifiesRelation::optimize Nested Test") {
-		PKB::StatementStore statement_store = MockUtilities::generateStatementStore();
+		PKB::StatementStore statement_store = TestUtilities::generateStatementStore();
 		PKB::StatementRelationStore<PKB::ParentRelation> parent_store = PKB::StatementRelationStore<PKB::ParentRelation>();
 
 		shared_ptr<StmtInfo> p1 = statement_store.get(1);

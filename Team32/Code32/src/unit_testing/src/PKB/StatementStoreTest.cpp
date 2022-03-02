@@ -1,6 +1,6 @@
 #include "PKB/StatementStore.h"
 
-#include "MockUtilities.h"
+#include "TestUtilities.h"
 #include "catch.hpp"
 #include "catch_tools.h"
 

@@ -36,6 +36,9 @@ void PKB::CallStatementStore::populate(const ProcedureStore& procedures,
 			}
 			ProcRef callee_name = getProcedure(statement);
 			shared_ptr<ProcedureInfo> callee = procedures.get(callee_name);
+			if (callee == nullptr) {
+				throw logic_error("Procedure does not exist.");
+			}
 			call_store.set(procedure, callee);
 		}
 	}

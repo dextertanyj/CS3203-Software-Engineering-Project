@@ -1,12 +1,12 @@
 #include <climits>
 
-#include "MockUtilities.h"
 #include "PKB/FollowsRelation.h"
 #include "PKB/Storage.h"
+#include "TestUtilities.h"
 #include "catch.hpp"
 
 TEST_CASE("PKB::PKB Follows Methods Test") {
-	PKB::Storage pkb = MockUtilities::generateFollowsTestPKB();
+	PKB::Storage pkb = TestUtilities::generateFollowsTestPKB();
 	StmtRef s_1 = 1;
 	StmtRef s_2 = 2;
 	StmtRef s_3 = 3;
@@ -24,17 +24,17 @@ TEST_CASE("PKB::PKB Follows Methods Test") {
 		// Verify that normal setting works.
 		CHECK_NOTHROW(pkb.setFollows(s_1, s_2));
 		CHECK_NOTHROW(pkb.setFollows(s_2, s_3));
-		pkb = MockUtilities::generateFollowsTestPKB();
+		pkb = TestUtilities::generateFollowsTestPKB();
 
 		// If s_1 already has a follower, it should not be able to have a new direct follower.
 		CHECK_NOTHROW(pkb.setFollows(s_1, s_2));
 		CHECK_THROWS(pkb.setFollows(s_1, s_max));
-		pkb = MockUtilities::generateFollowsTestPKB();
+		pkb = TestUtilities::generateFollowsTestPKB();
 
 		// If s_3 already follows s_2, then it should not be allowed to follow s_1.
 		CHECK_NOTHROW(pkb.setFollows(s_2, s_3));
 		CHECK_THROWS(pkb.setFollows(s_1, s_3));
-		pkb = MockUtilities::generateFollowsTestPKB();
+		pkb = TestUtilities::generateFollowsTestPKB();
 
 		// Verify that improper arguments lead to an exception thrown.
 		CHECK_THROWS(pkb.setFollows(s_1, s_1));
@@ -171,7 +171,7 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 	StmtRef s_9 = 9;
 	StmtRef s_max = SIZE_MAX;
 	StmtRef s_zero = 0;
-	PKB::Storage pkb = MockUtilities::generateParentTestPKB();
+	PKB::Storage pkb = TestUtilities::generateParentTestPKB();
 
 	SECTION("PKB::PKB::setParent Test") {
 		pkb.setStmtType(SIZE_MAX, StmtType::Read);
@@ -190,7 +190,7 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 		// A child cannot have multiple parents.
 		CHECK_THROWS(pkb.setParent(s_2, s_max));
 		CHECK_THROWS(pkb.setParent(s_1, s_3));
-		pkb = MockUtilities::generateParentTestPKB();
+		pkb = TestUtilities::generateParentTestPKB();
 
 		// Verify that improper arguments lead to an exception thrown.
 		CHECK_THROWS(pkb.setParent(s_zero, s_1));
@@ -347,7 +347,7 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 }
 
 TEST_CASE("PKB::Uses Methods Test") {
-	PKB::Storage pkb = MockUtilities::generateUsesTestPKB();
+	PKB::Storage pkb = TestUtilities::generateUsesTestPKB();
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
 	StmtRef s1 = 1;
 	StmtRef s2 = 2;
@@ -463,7 +463,7 @@ TEST_CASE("PKB::Uses Methods Test") {
 }
 
 TEST_CASE("PKB::Modifies Methods Test") {
-	PKB::Storage pkb = MockUtilities::generateModifyTestPKB();
+	PKB::Storage pkb = TestUtilities::generateModifyTestPKB();
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
 	StmtRef s1 = 1;
 	StmtRef s2 = 2;
