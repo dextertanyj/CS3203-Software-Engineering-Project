@@ -29,20 +29,10 @@ QP::QueryResult QP::Relationship::ModifiesS::executeTrivial(PKB::StorageAccessIn
 		VarRefSet var_set = pkb.getModifiesByStmt(stoul(stmt.stmt_ref));
 		return QueryResult(!var_set.empty());
 	}
-	if (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::VarName) {
-		StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(ent.ent_ref);
-		return QueryResult(!stmt_set.empty());
+	if (stmt.type == StmtRefType::Underscore) {
+		return QueryResult(false);
 	}
-	if ((stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Underscore) ||
-	    (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Synonym)) {
-		VarRefSet var_set = pkb.getVariables();
-		for (auto const& var : var_set) {
-			StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(var);
-			if (!stmt_set.empty()) {
-				return QueryResult(true);
-			}
-		}
-	} else if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
+    if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
 		StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(ent.ent_ref);
 		DesignEntity design_entity = map[stmt.stmt_ref];
 		for (auto const& stmt : stmt_set) {
@@ -136,19 +126,6 @@ QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivial(PKB::StorageAcces
 		result.addColumn(ent.ent_ref, var_column);
 		return result;
 	}
-	if (stmt.type == StmtRefType::Underscore && ent.type == EntRefType::Synonym) {
-		VarRefSet var_set = pkb.getVariables();
-		vector<string> column;
-		for (auto const& var : var_set) {
-			StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(var);
-			if (!stmt_set.empty()) {
-				column.push_back(var);
-			}
-		}
-		QueryResult result = QueryResult();
-		result.addColumn(ent.ent_ref, column);
-		return result;
-	}
 	if (stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::Synonym) {
 		VarRefSet var_set = pkb.getModifiesByStmt(stoul(stmt.stmt_ref));
 		vector<string> column;
@@ -161,6 +138,10 @@ QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivial(PKB::StorageAcces
 		result.addColumn(ent.ent_ref, column);
 		return result;
 	}
+    if (stmt.type == StmtRefType::Underscore) {
+        QueryResult result = QueryResult();
+        return result;
+    }
 
 	return {};
 }

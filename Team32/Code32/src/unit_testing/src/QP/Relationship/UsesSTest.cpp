@@ -71,7 +71,7 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 
 		QP::QueryResult result = uses.execute(pkb, true, map);
 
-		REQUIRE(result.getResult());
+		REQUIRE_FALSE(result.getResult());
 	}
 
 	SECTION("trivial: underscore & underscore") {
@@ -79,7 +79,7 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 
 		QP::QueryResult result = parent.execute(pkb, true, map);
 
-		REQUIRE(result.getResult());
+		REQUIRE_FALSE(result.getResult());
 	}
 
 	SECTION("trivial: underscore & synonym") {
@@ -87,7 +87,7 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 
 		QP::QueryResult result = uses.execute(pkb, true, map);
 
-		REQUIRE(result.getResult());
+		REQUIRE_FALSE(result.getResult());
 	}
 
 	SECTION("trivial: synonym & varName") {
@@ -172,10 +172,7 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 
 		QP::QueryResult result = uses.execute(pkb, false, map);
 
-		vector<string> expected_result = {"x", "y", "z"};
-		vector<string> actual_var_result = result.getSynonymResult("var");
-		sort(actual_var_result.begin(), actual_var_result.end());
-		REQUIRE(actual_var_result == expected_result);
+		REQUIRE(result.getTable().empty());
 	}
 
 	SECTION("non-trivial: stmtNumber & synonym") {
