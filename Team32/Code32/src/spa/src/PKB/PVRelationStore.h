@@ -25,6 +25,9 @@ public:
 private:
     unordered_map<ProcRef, unordered_set<VarRef>> proc_key_map;
     unordered_map<VarRef, unordered_set<ProcRef>> variable_key_map;
+
+    friend class UsesPRelation;
+    friend class ModifiesPRelation;
 };
 
 #endif //SPA_PVRELATIONSTORE_H

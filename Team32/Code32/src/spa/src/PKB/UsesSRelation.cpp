@@ -1,10 +1,10 @@
-#include "PKB/UsesRelation.h"
+#include "PKB/UsesSRelation.h"
 
 #include <algorithm>
 
 #include "PKB/SVRelationStore.tpp"
 
-bool PKB::UsesRelation::validate(SVRelationStore<UsesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
+bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Read) {
 		throw invalid_argument("Read statements cannot use a variable");
@@ -21,7 +21,7 @@ bool PKB::UsesRelation::validate(SVRelationStore<UsesRelation>* store, const sha
 	                [variable](const VarRef& existing_var) { return existing_var != variable; }));
 }
 
-bool PKB::UsesRelation::validate(SVRelationStore<UsesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
+bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Read) {
 		throw invalid_argument("Read statements cannot use a variable");
@@ -42,8 +42,8 @@ bool PKB::UsesRelation::validate(SVRelationStore<UsesRelation>* store, const sha
 	                [variable](const VarRef& existing_var) { return existing_var == variable; }));
 }
 
-void PKB::UsesRelation::optimize(Types::StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
-                                 SVRelationStore<UsesRelation>& store) {
+void PKB::UsesSRelation::optimize(Types::StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
+                                 SVRelationStore<UsesSRelation>& store) {
 	for (const auto& statement : statement_store.getAll()) {
 		if (statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::WhileStmt) {
 			auto children = parent_store.getReverseTransitive(statement->getIdentifier());

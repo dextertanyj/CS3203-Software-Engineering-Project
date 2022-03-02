@@ -40,9 +40,11 @@ class CallStatementStore;
 
 class CallRelation;
 class FollowsRelation;
-class ModifiesRelation;
+class ModifiesSRelation;
+class ModifiesPRelation;
 class ParentRelation;
-class UsesRelation;
+class UsesSRelation;
+class UsesPRelation;
 
 typedef struct AssignRelation {
 	shared_ptr<StmtInfo> node;

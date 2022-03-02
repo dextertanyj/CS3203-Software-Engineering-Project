@@ -54,7 +54,7 @@ void PKB::Storage::setModifies(StmtRef index, VarRef name) {
 		throw invalid_argument("Statement does not exist.");
 	}
 	variable_store.insert(name);
-	modifies_store.set(move(statement), move(name));
+	modifies_s_store.set(move(statement), move(name));
 }
 
 void PKB::Storage::setModifies(StmtRef index, VarRefSet names) {
@@ -63,7 +63,7 @@ void PKB::Storage::setModifies(StmtRef index, VarRefSet names) {
 		throw invalid_argument("Statement does not exist.");
 	}
 	variable_store.insert(names);
-	modifies_store.set(move(statement), move(names));
+	modifies_s_store.set(move(statement), move(names));
 }
 
 void PKB::Storage::setUses(StmtRef index, VarRef name) {
@@ -72,7 +72,7 @@ void PKB::Storage::setUses(StmtRef index, VarRef name) {
 		throw invalid_argument("Statement does not exist.");
 	}
 	variable_store.insert(name);
-	uses_store.set(statement, move(name));
+	uses_s_store.set(statement, move(name));
 }
 
 void PKB::Storage::setUses(StmtRef index, VarRefSet names) {
@@ -81,7 +81,7 @@ void PKB::Storage::setUses(StmtRef index, VarRefSet names) {
 		throw invalid_argument("Statement does not exist.");
 	}
 	variable_store.insert(names);
-	uses_store.set(statement, move(names));
+	uses_s_store.set(statement, move(names));
 }
 
 void PKB::Storage::setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) {
@@ -163,27 +163,27 @@ ProcRefSet PKB::Storage::getCallerStar(const ProcRef& callee) {
 	return procedureInfoToProcRef(callers);
 }
 
-bool PKB::Storage::checkModifies(StmtRef index, const VarRef& name) { return modifies_store.check(index, name); }
+bool PKB::Storage::checkModifies(StmtRef index, const VarRef& name) { return modifies_s_store.check(index, name); }
 
 bool PKB::Storage::checkModifies(const ProcRef& /*procedure_name*/, const VarRef& /*variable_name*/) { return false; }
 
-StmtInfoPtrSet PKB::Storage::getStmtModifiesByVar(const VarRef& name) { return modifies_store.getByVar(name); }
+StmtInfoPtrSet PKB::Storage::getStmtModifiesByVar(const VarRef& name) { return modifies_s_store.getByVar(name); }
 
 ProcRefSet PKB::Storage::getProcModifiesByVar(const VarRef& /*name*/) { return {}; }
 
-unordered_set<VarRef> PKB::Storage::getModifiesByStmt(StmtRef index) { return modifies_store.getByStmt(index); }
+unordered_set<VarRef> PKB::Storage::getModifiesByStmt(StmtRef index) { return modifies_s_store.getByStmt(index); }
 
 VarRefSet PKB::Storage::getModifiesByProc(const ProcRef& /*name*/) { return {}; }
 
-bool PKB::Storage::checkUses(StmtRef index, const VarRef& name) { return uses_store.check(index, name); }
+bool PKB::Storage::checkUses(StmtRef index, const VarRef& name) { return uses_s_store.check(index, name); }
 
 bool PKB::Storage::checkUses(const ProcRef& /*procedure_name*/, const VarRef& /*variable_name*/) { return false; }
 
-StmtInfoPtrSet PKB::Storage::getStmtUsesByVar(const VarRef& name) { return uses_store.getByVar(name); }
+StmtInfoPtrSet PKB::Storage::getStmtUsesByVar(const VarRef& name) { return uses_s_store.getByVar(name); }
 
 ProcRefSet PKB::Storage::getProcUsesByVar(const VarRef& /*name*/) { return {}; }
 
-unordered_set<VarRef> PKB::Storage::getUsesByStmt(StmtRef index) { return uses_store.getByStmt(index); }
+unordered_set<VarRef> PKB::Storage::getUsesByStmt(StmtRef index) { return uses_s_store.getByStmt(index); }
 
 VarRefSet PKB::Storage::getUsesByProc(const ProcRef& /*name*/) { return {}; }
 
@@ -209,16 +209,19 @@ void PKB::Storage::populateComplexRelations() {
 	call_graph.sort(procedure_store, call_store);
 	ParentRelation::optimize(parent_store);
 	FollowsRelation::optimize(follows_store);
-	ModifiesRelation::optimize(statement_store, parent_store, modifies_store);
-	UsesRelation::optimize(statement_store, parent_store, uses_store);
+	ModifiesSRelation::optimize(statement_store, parent_store, modifies_s_store);
+	UsesSRelation::optimize(statement_store, parent_store, uses_s_store);
+	UsesPRelation::optimize(call_store, uses_p_store, uses_s_store, call_graph);
+    ModifiesPRelation::optimize(call_store, modifies_p_store, modifies_s_store, call_graph);
 }
 
 void PKB::Storage::clear() {
 	parent_store.clear();
 	follows_store.clear();
 	assign_store.clear();
-	uses_store.clear();
-	modifies_store.clear();
+	uses_s_store.clear();
+	uses_p_store.clear();
+	modifies_s_store.clear();
 	statement_store.clear();
 }
 

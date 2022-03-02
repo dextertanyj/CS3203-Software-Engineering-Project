@@ -1,10 +1,10 @@
-#include "PKB/ModifiesRelation.h"
+#include "PKB/ModifiesSRelation.h"
 
 #include <algorithm>
 
 #include "PKB/SVRelationStore.tpp"
 
-bool PKB::ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement,
+bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store, const shared_ptr<StmtInfo>& statement,
                                      const VarRef& variable) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Print) {
@@ -22,7 +22,7 @@ bool PKB::ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, c
 	                [variable](const VarRef& existing_var) { return existing_var != variable; }));
 }
 
-bool PKB::ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement,
+bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store, const shared_ptr<StmtInfo>& statement,
                                      const VarRefSet& variables) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Print) {
@@ -43,8 +43,8 @@ bool PKB::ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, c
 	                [variable](const VarRef& existing_var) { return existing_var == variable; }));
 }
 
-void PKB::ModifiesRelation::optimize(Types::StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
-                                     SVRelationStore<ModifiesRelation>& store) {
+void PKB::ModifiesSRelation::optimize(Types::StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
+                                     SVRelationStore<ModifiesSRelation>& store) {
 	for (const auto& statement : statement_store.getAll()) {
 		if (statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::WhileStmt) {
 			auto children = parent_store.getReverseTransitive(statement->getIdentifier());
