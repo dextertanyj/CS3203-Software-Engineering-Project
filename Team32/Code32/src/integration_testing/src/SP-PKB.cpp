@@ -70,10 +70,10 @@ TEST_CASE("SP::Processor::process Basic Test") {
 
 		SECTION("Parent") {
 			REQUIRE_EQUALS(pkb.getParent(1), nullptr);
-			REQUIRE_EQUALS(pkb.getParent(2)->reference, 1);
-			REQUIRE_EQUALS(pkb.getParent(3)->reference, 1);
-			REQUIRE_EQUALS(pkb.getParent(4)->reference, 1);
-			REQUIRE_EQUALS(pkb.getParent(5)->reference, 1);
+			REQUIRE_EQUALS(pkb.getParent(2)->getIdentifier(), 1);
+			REQUIRE_EQUALS(pkb.getParent(3)->getIdentifier(), 1);
+			REQUIRE_EQUALS(pkb.getParent(4)->getIdentifier(), 1);
+			REQUIRE_EQUALS(pkb.getParent(5)->getIdentifier(), 1);
 			REQUIRE(pkb.checkParents(1, 2));
 			REQUIRE_FALSE(pkb.checkParents(2, 1));
 			std::unordered_set<shared_ptr<StmtInfo>> expected_children = {stmt_map.find(2)->second, stmt_map.find(3)->second,
@@ -163,8 +163,8 @@ TEST_CASE("SP::Processor::process Basic Test") {
 
 		SECTION("Parent") {
 			REQUIRE_EQUALS(pkb.getParent(1), nullptr);
-			REQUIRE_EQUALS(pkb.getParent(2)->reference, 1);
-			REQUIRE_EQUALS(pkb.getParent(3)->reference, 1);
+			REQUIRE_EQUALS(pkb.getParent(2)->getIdentifier(), 1);
+			REQUIRE_EQUALS(pkb.getParent(3)->getIdentifier(), 1);
 			REQUIRE(pkb.checkParents(1, 2));
 			REQUIRE_FALSE(pkb.checkParents(2, 1));
 			std::unordered_set<shared_ptr<StmtInfo>> expected_children = {

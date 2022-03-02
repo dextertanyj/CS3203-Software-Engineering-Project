@@ -9,8 +9,8 @@ PKB::AssignStore::AssignStore() = default;
 
 void PKB::AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, VarRef variable,
                                  Common::ExpressionProcessor::Expression expression) {
-	StmtRef idx = statement->reference;
-	if (statement->type != StmtType::Assign) {
+	StmtRef idx = statement->getIdentifier();
+	if (statement->getType() != StmtType::Assign) {
 		throw invalid_argument("Statement type cannot be bound to expression.");
 	}
 	if (variable.empty()) {

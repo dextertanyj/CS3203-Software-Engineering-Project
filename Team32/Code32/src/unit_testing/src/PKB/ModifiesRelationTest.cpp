@@ -43,7 +43,7 @@ TEST_CASE("PKB::Modifies") {
 	}
 
 	SECTION("PKB::ModifiesRelation::optimize Test") {
-		PKB::StatementStore statement_store = TestUtilities::generateStatementStore();
+		PKB::Types::StatementStore statement_store = TestUtilities::generateStatementStore();
 		PKB::StatementRelationStore<PKB::ParentRelation> parent_store = PKB::StatementRelationStore<PKB::ParentRelation>();
 
 		shared_ptr<StmtInfo> p1 = statement_store.get(1);
@@ -76,7 +76,7 @@ TEST_CASE("PKB::Modifies") {
 
 	// If statement (index 2) is nested within while statement (index 1)
 	SECTION("PKB::ModifiesRelation::optimize Nested Test") {
-		PKB::StatementStore statement_store = TestUtilities::generateStatementStore();
+		PKB::Types::StatementStore statement_store = TestUtilities::generateStatementStore();
 		PKB::StatementRelationStore<PKB::ParentRelation> parent_store = PKB::StatementRelationStore<PKB::ParentRelation>();
 
 		shared_ptr<StmtInfo> p1 = statement_store.get(1);

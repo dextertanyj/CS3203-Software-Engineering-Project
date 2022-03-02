@@ -12,15 +12,19 @@ class StorageUpdateInterface;
 class StorageAccessInterface;
 class Storage;
 
+class StatementInfo;
+class ProcedureInfo;
+
+template <typename TIdent, typename TContent, class TInfo>
+class InfoStore;
+
 class AssignStore;
 class ConstantStore;
-class ProcedureStore;
 template <class T>
 class StatementRelationStore;
 template <typename TIdent, class TInfo, class TRelation>
 class TransitiveRelationStore;
 class CallStatementStore;
-class StatementStore;
 template <class T>
 class SVRelationStore;
 class VariableStore;
@@ -40,7 +44,7 @@ typedef struct AssignRelation {
 	Common::ExpressionProcessor::Expression expression;
 } AssignRelation;
 
-class ProcedureInfo;
+namespace Types {};
 }  // namespace PKB
 
 #endif  // SPA_SRC_PKB_PKB_H

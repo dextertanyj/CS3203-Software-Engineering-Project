@@ -66,8 +66,8 @@ TEST_CASE("PKB::CallRelation Tests") {
 }
 
 TEST_CASE("PKB::TransitiveRelationStore<...,...,Call...>::optimize Test") {
-	PKB::StatementStore statements;
-	PKB::ProcedureStore procedures;
+	PKB::Types::StatementStore statements;
+	PKB::Types::ProcedureStore procedures;
 	PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation> store;
 
 	SECTION("Chain Test") {

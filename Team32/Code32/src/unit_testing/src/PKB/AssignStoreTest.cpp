@@ -165,7 +165,7 @@ TEST_CASE("PKB::AssignStore::getStmtsWithPatternRHS Exact Match Test") {
 	vector<pair<shared_ptr<StmtInfo>, VarRef>> lst = store.getStmtsWithPatternRHS(getPartialOpTree(), true);
 	REQUIRE_EQUALS(lst.size(), 1);
 	REQUIRE(find_if(lst.begin(), lst.end(), [](const pair<shared_ptr<StmtInfo>, VarRef>& node) {
-				return node.first->reference == 3 && node.second == "z";
+				return node.first->getIdentifier() == 3 && node.second == "z";
 			}) != lst.end());
 
 	// Partial match of partialOpTree- all 3 statements should be in the list
@@ -176,13 +176,13 @@ TEST_CASE("PKB::AssignStore::getStmtsWithPatternRHS Exact Match Test") {
 	lst = store.getStmtsWithPatternRHS(getBasicOpTree(), true);
 	REQUIRE_EQUALS(lst.size(), 2);
 	REQUIRE_FALSE(find_if(lst.begin(), lst.end(),
-	                      [](const pair<shared_ptr<StmtInfo>, VarRef>& node) { return node.first->reference == 3; }) != lst.end());
+	                      [](const pair<shared_ptr<StmtInfo>, VarRef>& node) { return node.first->getIdentifier() == 3; }) != lst.end());
 
 	// Partial match of basicOpTree - statements 1 and 2 should be in the list
 	lst = store.getStmtsWithPatternRHS(getBasicOpTree(), false);
 	REQUIRE_EQUALS(lst.size(), 2);
 	REQUIRE_FALSE(find_if(lst.begin(), lst.end(),
-	                      [](const pair<shared_ptr<StmtInfo>, VarRef>& node) { return node.first->reference == 3; }) != lst.end());
+	                      [](const pair<shared_ptr<StmtInfo>, VarRef>& node) { return node.first->getIdentifier() == 3; }) != lst.end());
 }
 
 TEST_CASE("PKB::AssignStore::getStmtsWithPatternRHS Partial Match Test") {

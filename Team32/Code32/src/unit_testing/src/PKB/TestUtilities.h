@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef UNIT_TESTING_SRC_PKB_TESTUTILITIES_H
 #define UNIT_TESTING_SRC_PKB_TESTUTILITIES_H
 
@@ -8,13 +6,13 @@
 
 namespace TestUtilities {
 inline shared_ptr<StmtInfo> createStmtInfo(StmtRef stmt_no, StmtType type) {
-	StmtInfo s = {stmt_no, type};
-	shared_ptr<StmtInfo> stmt_info = make_shared<StmtInfo>(s);
-	return stmt_info;
-};
+	PKB::Types::StatementStore store;
+	store.insert(stmt_no, type);
+	return store.get(stmt_no);
+}
 
 inline shared_ptr<PKB::ProcedureInfo> createProcedureInfo(ProcRef name) {
-	PKB::ProcedureStore store;
+	PKB::Types::ProcedureStore store;
 	store.insert(name, {});
 	return store.get(name);
 };
@@ -62,8 +60,8 @@ inline PKB::Storage generateModifyTestPKB() {
 	return pkb;
 };
 
-inline PKB::StatementStore generateStatementStore() {
-	PKB::StatementStore statement_store = PKB::StatementStore();
+inline PKB::Types::StatementStore generateStatementStore() {
+	PKB::Types::StatementStore statement_store = PKB::Types::StatementStore();
 	statement_store.insert(1, StmtType::WhileStmt);
 	statement_store.insert(2, StmtType::IfStmt);
 	statement_store.insert(3, StmtType::Assign);

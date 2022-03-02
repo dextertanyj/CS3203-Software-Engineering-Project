@@ -14,7 +14,7 @@ PKB::SVRelationStore<T>::SVRelationStore() = default;
 
 template <class T>
 void PKB::SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRef variable) {
-	StmtRef index = statement->reference;
+	StmtRef index = statement->getIdentifier();
 	if (variable.length() == 0) {
 		throw invalid_argument("Variable name must have length more than 0.");
 	}
@@ -41,7 +41,7 @@ void PKB::SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRef variabl
 
 template <class T>
 void PKB::SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRefSet variables) {
-	StmtRef index = statement->reference;
+	StmtRef index = statement->getIdentifier();
 	for (const VarRef& variable : variables) {
 		if (variable.length() == 0) {
 			throw invalid_argument("Variable name must have length more than 0.");
@@ -84,7 +84,7 @@ bool PKB::SVRelationStore<T>::check(StmtRef index, const VarRef& variable) {
 	}
 
 	return any_of(iter->second.begin(), iter->second.end(),
-	              [index](const shared_ptr<StmtInfo>& statement) { return statement->reference == index; });
+	              [index](const shared_ptr<StmtInfo>& statement) { return statement->getIdentifier() == index; });
 }
 
 template <class T>

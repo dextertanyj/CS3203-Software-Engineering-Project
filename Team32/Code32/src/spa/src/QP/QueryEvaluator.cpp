@@ -102,7 +102,7 @@ QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(DesignEntity design_enti
 	vector<string> result_string;
 	for (auto const& stmt : stmt_set) {
 		if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-			result_string.push_back(to_string(stmt->reference));
+			result_string.push_back(to_string(stmt->getIdentifier()));
 		}
 	}
 

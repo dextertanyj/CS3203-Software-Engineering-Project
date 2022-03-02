@@ -18,7 +18,7 @@ void PKB::TopologicalSort<TInfo>::sort(const TStore& truth_store,
                                        const PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>& transitive_store) {
 	order = vector<shared_ptr<TInfo>>();
 	unordered_map<shared_ptr<TInfo>, pair<unordered_set<shared_ptr<TInfo>>, unordered_set<shared_ptr<TInfo>>>> edges;
-	unordered_set<shared_ptr<TInfo>> all = truth_store.getAllInfo();
+	unordered_set<shared_ptr<TInfo>> all = truth_store.getAll();
 	for (const shared_ptr<TInfo>& info : all) {
 		TIdent ident = info->getIdentifier();
 		unordered_set<shared_ptr<TInfo>> incoming_edges = transitive_store.getForward(ident);

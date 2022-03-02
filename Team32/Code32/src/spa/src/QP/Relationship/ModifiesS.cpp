@@ -58,7 +58,7 @@ QP::QueryResult QP::Relationship::ModifiesS::executeTrivial(PKB::StorageAccessIn
 				continue;
 			}
 
-			VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
+			VarRefSet var_set = pkb.getModifiesByStmt(stmt->getIdentifier());
 			if (!var_set.empty()) {
 				return QueryResult(true);
 			}
@@ -73,7 +73,7 @@ QP::QueryResult QP::Relationship::ModifiesS::executeTrivial(PKB::StorageAccessIn
 				continue;
 			}
 
-			VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
+			VarRefSet var_set = pkb.getModifiesByStmt(stmt->getIdentifier());
 			if (!var_set.empty()) {
 				return QueryResult(true);
 			}
@@ -90,7 +90,7 @@ QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivial(PKB::StorageAcces
 		vector<string> column;
 		for (auto const& stmt : stmt_set) {
 			if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				column.push_back(to_string(stmt->reference));
+				column.push_back(to_string(stmt->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();
@@ -106,9 +106,9 @@ QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivial(PKB::StorageAcces
 				continue;
 			}
 
-			VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
+			VarRefSet var_set = pkb.getModifiesByStmt(stmt->getIdentifier());
 			if (!var_set.empty()) {
-				column.push_back(to_string(stmt->reference));
+				column.push_back(to_string(stmt->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();
@@ -125,9 +125,9 @@ QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivial(PKB::StorageAcces
 				continue;
 			}
 
-			VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
+			VarRefSet var_set = pkb.getModifiesByStmt(stmt->getIdentifier());
 			for (auto const& var : var_set) {
-				stmt_column.push_back(to_string(stmt->reference));
+				stmt_column.push_back(to_string(stmt->getIdentifier()));
 				var_column.push_back(var);
 			}
 		}

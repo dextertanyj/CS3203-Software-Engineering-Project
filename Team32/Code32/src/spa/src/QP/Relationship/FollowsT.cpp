@@ -5,7 +5,7 @@ QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::StorageAccessInt
 		StmtInfoPtrSet followers_set = pkb.getFollowerStar(stoul(getLeftStmt().stmt_ref));
 		StmtRef right_stmt_no = stoul(getRightStmt().stmt_ref);
 		for (auto const& follower : followers_set) {
-			if (follower->reference == right_stmt_no) {
+			if (follower->getIdentifier() == right_stmt_no) {
 				return QueryResult(true);
 			}
 		}
@@ -26,7 +26,7 @@ QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::StorageAccessInt
 	} else if (getLeftStmt().type == StmtRefType::Underscore && getRightStmt().type == StmtRefType::Underscore) {
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
 		for (auto const& stmt : stmt_set) {
-			StmtInfoPtrSet followers = pkb.getFollowerStar(stmt->reference);
+			StmtInfoPtrSet followers = pkb.getFollowerStar(stmt->getIdentifier());
 			if (!followers.empty()) {
 				return QueryResult(true);
 			}
@@ -39,7 +39,7 @@ QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::StorageAccessInt
 				continue;
 			}
 
-			StmtInfoPtrSet preceding_set = pkb.getPrecedingStar(stmt->reference);
+			StmtInfoPtrSet preceding_set = pkb.getPrecedingStar(stmt->getIdentifier());
 			if (!preceding_set.empty()) {
 				return QueryResult(true);
 			}
@@ -60,7 +60,7 @@ QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::StorageAccessInt
 				continue;
 			}
 
-			StmtInfoPtrSet followers = pkb.getFollowerStar(stmt->reference);
+			StmtInfoPtrSet followers = pkb.getFollowerStar(stmt->getIdentifier());
 			if (!followers.empty()) {
 				return QueryResult(true);
 			}
@@ -78,7 +78,7 @@ QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::StorageAccessInt
 				continue;
 			}
 
-			StmtInfoPtrSet follower_set = pkb.getFollowerStar(stmt->reference);
+			StmtInfoPtrSet follower_set = pkb.getFollowerStar(stmt->getIdentifier());
 			for (auto const& follower : follower_set) {
 				if (Utilities::checkStmtTypeMatch(follower, right_design_entity)) {
 					return QueryResult(true);
@@ -97,7 +97,7 @@ QP::QueryResult QP::Relationship::FollowsT::executeNonTrivial(PKB::StorageAccess
 		vector<string> column;
 		for (auto const& preceding : preceding_set) {
 			if (Utilities::checkStmtTypeMatch(preceding, design_entity)) {
-				column.push_back(to_string(preceding->reference));
+				column.push_back(to_string(preceding->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();
@@ -113,9 +113,9 @@ QP::QueryResult QP::Relationship::FollowsT::executeNonTrivial(PKB::StorageAccess
 				continue;
 			}
 
-			StmtInfoPtrSet follower_set = pkb.getFollowerStar(stmt->reference);
+			StmtInfoPtrSet follower_set = pkb.getFollowerStar(stmt->getIdentifier());
 			if (!follower_set.empty()) {
-				column.push_back(to_string(stmt->reference));
+				column.push_back(to_string(stmt->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();
@@ -137,11 +137,11 @@ QP::QueryResult QP::Relationship::FollowsT::executeNonTrivial(PKB::StorageAccess
 				continue;
 			}
 
-			StmtInfoPtrSet follower_set = pkb.getFollowerStar(stmt->reference);
+			StmtInfoPtrSet follower_set = pkb.getFollowerStar(stmt->getIdentifier());
 			for (auto const& follower : follower_set) {
 				if (Utilities::checkStmtTypeMatch(follower, right_design_entity)) {
-					left_column.push_back(to_string(stmt->reference));
-					right_column.push_back(to_string(follower->reference));
+					left_column.push_back(to_string(stmt->getIdentifier()));
+					right_column.push_back(to_string(follower->getIdentifier()));
 				}
 			}
 		}
@@ -159,9 +159,9 @@ QP::QueryResult QP::Relationship::FollowsT::executeNonTrivial(PKB::StorageAccess
 				continue;
 			}
 
-			StmtInfoPtrSet preceding_set = pkb.getPrecedingStar(stmt->reference);
+			StmtInfoPtrSet preceding_set = pkb.getPrecedingStar(stmt->getIdentifier());
 			if (!preceding_set.empty()) {
-				column.push_back(to_string(stmt->reference));
+				column.push_back(to_string(stmt->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();
@@ -175,7 +175,7 @@ QP::QueryResult QP::Relationship::FollowsT::executeNonTrivial(PKB::StorageAccess
 
 		for (auto const& stmt : stmt_set) {
 			if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				column.push_back(to_string(stmt->reference));
+				column.push_back(to_string(stmt->getIdentifier()));
 			}
 		}
 
