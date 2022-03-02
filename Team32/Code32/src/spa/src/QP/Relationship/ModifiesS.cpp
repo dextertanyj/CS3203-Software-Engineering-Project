@@ -35,41 +35,11 @@ QP::QueryResult QP::Relationship::ModifiesS::executeTrivial(PKB::StorageAccessIn
 		return QueryResult(!var_set.empty());
 	}
 	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
-		StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(ent.ent_ref);
-		DesignEntity design_entity = map[stmt.stmt_ref];
-		for (auto const& stmt : stmt_set) {
-			if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				return QueryResult(true);
-			}
-		}
+		return executeTrivialEntVarName(pkb, map);
 	} else if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::Underscore) {
-		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity design_entity = map[stmt.stmt_ref];
-		for (auto const& stmt : stmt_set) {
-			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				continue;
-			}
-
-			VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
-			if (!var_set.empty()) {
-				return QueryResult(true);
-			}
-		}
+		return executeTrivialEntUnknown(pkb, map);
 	} else if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::Synonym) {
-		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity design_entity = map[stmt.stmt_ref];
-		vector<string> stmt_column;
-		vector<string> var_column;
-		for (auto const& stmt : stmt_set) {
-			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				continue;
-			}
-
-			VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
-			if (!var_set.empty()) {
-				return QueryResult(true);
-			}
-		}
+		return executeTrivialEntUnknown(pkb, map);
 	}
 
 	return {};
@@ -77,69 +47,118 @@ QP::QueryResult QP::Relationship::ModifiesS::executeTrivial(PKB::StorageAccessIn
 
 QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
 	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
-		StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(ent.ent_ref);
-		DesignEntity design_entity = map[stmt.stmt_ref];
-		vector<string> column;
-		for (auto const& stmt : stmt_set) {
-			if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				column.push_back(to_string(stmt->reference));
-			}
-		}
-		QueryResult result = QueryResult();
-		result.addColumn(stmt.stmt_ref, column);
-		return result;
+		return executeNonTrivialEntVarName(pkb, map);
 	}
 	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::Underscore) {
-		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity design_entity = map[stmt.stmt_ref];
-		vector<string> column;
-		for (auto const& stmt : stmt_set) {
-			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				continue;
-			}
-
-			VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
-			if (!var_set.empty()) {
-				column.push_back(to_string(stmt->reference));
-			}
-		}
-		QueryResult result = QueryResult();
-		result.addColumn(stmt.stmt_ref, column);
-		return result;
+		return executeNonTrivialEntUnderscore(pkb, map);
 	}
 	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::Synonym) {
-		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity design_entity = map[stmt.stmt_ref];
-		vector<string> stmt_column;
-		vector<string> var_column;
-		for (auto const& stmt : stmt_set) {
-			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				continue;
-			}
-
-			VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
-			for (auto const& var : var_set) {
-				stmt_column.push_back(to_string(stmt->reference));
-				var_column.push_back(var);
-			}
-		}
-		QueryResult result = QueryResult();
-		result.addColumn(stmt.stmt_ref, stmt_column);
-		result.addColumn(ent.ent_ref, var_column);
-		return result;
+		return executeNonTrivialEntSynonym(pkb, map);
 	}
 	if (stmt.type == StmtRefType::StmtNumber && ent.type == EntRefType::Synonym) {
-		VarRefSet var_set = pkb.getModifiesByStmt(stoul(stmt.stmt_ref));
-		vector<string> column;
-
-		for (auto const& var : var_set) {
-			column.push_back(var);
-		}
-
-		QueryResult result = QueryResult();
-		result.addColumn(ent.ent_ref, column);
-		return result;
+		return executeNonTrivialStmtStmtNo(pkb, map);
 	}
 
 	return {};
+}
+
+QP::QueryResult QP::Relationship::ModifiesS::executeTrivialEntVarName(PKB::StorageAccessInterface& pkb,
+                                                                      unordered_map<string, DesignEntity>& map) {
+	StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(ent.ent_ref);
+	DesignEntity design_entity = map[stmt.stmt_ref];
+	for (auto const& stmt : stmt_set) {
+		if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
+			return QueryResult(true);
+		}
+	}
+	return {};
+}
+
+QP::QueryResult QP::Relationship::ModifiesS::executeTrivialEntUnknown(PKB::StorageAccessInterface& pkb,
+                                                                      unordered_map<string, DesignEntity>& map) {
+	StmtInfoPtrSet stmt_set = pkb.getStatements();
+	DesignEntity design_entity = map[stmt.stmt_ref];
+	for (auto const& stmt : stmt_set) {
+		if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
+			continue;
+		}
+
+		VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
+		if (!var_set.empty()) {
+			return QueryResult(true);
+		}
+	}
+	return {};
+}
+
+QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivialEntVarName(PKB::StorageAccessInterface& pkb,
+                                                                         unordered_map<string, DesignEntity>& map) {
+	StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(ent.ent_ref);
+	DesignEntity design_entity = map[stmt.stmt_ref];
+	vector<string> column;
+	for (auto const& stmt : stmt_set) {
+		if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
+			column.push_back(to_string(stmt->reference));
+		}
+	}
+	QueryResult result = QueryResult();
+	result.addColumn(stmt.stmt_ref, column);
+	return result;
+}
+
+QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivialEntUnderscore(PKB::StorageAccessInterface& pkb,
+                                                                            unordered_map<string, DesignEntity>& map) {
+	StmtInfoPtrSet stmt_set = pkb.getStatements();
+	DesignEntity design_entity = map[stmt.stmt_ref];
+	vector<string> column;
+	for (auto const& stmt : stmt_set) {
+		if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
+			continue;
+		}
+
+		VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
+		if (!var_set.empty()) {
+			column.push_back(to_string(stmt->reference));
+		}
+	}
+	QueryResult result = QueryResult();
+	result.addColumn(stmt.stmt_ref, column);
+	return result;
+}
+
+QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivialEntSynonym(PKB::StorageAccessInterface& pkb,
+                                                                         unordered_map<string, DesignEntity>& map) {
+	StmtInfoPtrSet stmt_set = pkb.getStatements();
+	DesignEntity design_entity = map[stmt.stmt_ref];
+	vector<string> stmt_column;
+	vector<string> var_column;
+	for (auto const& stmt : stmt_set) {
+		if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
+			continue;
+		}
+
+		VarRefSet var_set = pkb.getModifiesByStmt(stmt->reference);
+		for (auto const& var : var_set) {
+			stmt_column.push_back(to_string(stmt->reference));
+			var_column.push_back(var);
+		}
+	}
+	QueryResult result = QueryResult();
+	result.addColumn(stmt.stmt_ref, stmt_column);
+	result.addColumn(ent.ent_ref, var_column);
+	return result;
+}
+
+QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivialStmtStmtNo(PKB::StorageAccessInterface& pkb,
+                                                                         unordered_map<string, DesignEntity>& map) {
+	VarRefSet var_set = pkb.getModifiesByStmt(stoul(stmt.stmt_ref));
+	vector<string> column;
+
+	for (auto const& var : var_set) {
+		column.push_back(var);
+	}
+
+	QueryResult result = QueryResult();
+	result.addColumn(ent.ent_ref, column);
+	return result;
 }
