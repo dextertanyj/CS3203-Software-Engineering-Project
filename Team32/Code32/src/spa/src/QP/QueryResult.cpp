@@ -57,7 +57,7 @@ void QP::QueryResult::joinWithDifferentSynonym(QueryResult& query_result) {
 	}
 
 	size_t number_of_rows = table.begin()->second.size();
-	for (int i = 0; i < number_of_rows; i++) {
+	for (size_t i = 0; i < number_of_rows; i++) {
 		unordered_map<string, string> row;
 		for (string const& common_syn : common_synonyms) {
 			row.insert({common_syn, table[common_syn][i]});
@@ -111,8 +111,8 @@ void QP::QueryResult::joinWithSameSynonym(QueryResult& query_result) {
 
 	size_t number_of_rows = final_result.begin()->second.size();
 	unordered_map<string, vector<string>> temp = final_result;
-	int pos = 0;
-	for (int i = 0; i < number_of_rows; i++) {
+	size_t pos = 0;
+	for (size_t i = 0; i < number_of_rows; i++) {
 		unordered_map<string, string> row;
 		for (const string& synonym : synonyms) {
 			row.insert({synonym, temp.at(synonym)[i]});
@@ -134,7 +134,7 @@ void QP::QueryResult::joinWithSameSynonym(QueryResult& query_result) {
 
 bool QP::QueryResult::contains(unordered_map<string, vector<string>>& table, const unordered_map<string, string>& row) {
 	size_t number_of_rows = table.begin()->second.size();
-	for (int i = 0; i < number_of_rows; i++) {
+	for (size_t i = 0; i < number_of_rows; i++) {
 		if (isRowMatch(row, table, i)) {
 			return true;
 		}
@@ -143,7 +143,7 @@ bool QP::QueryResult::contains(unordered_map<string, vector<string>>& table, con
 	return false;
 }
 
-bool QP::QueryResult::isRowMatch(const unordered_map<string, string>& row, unordered_map<string, vector<string>>& table, int row_number) {
+bool QP::QueryResult::isRowMatch(const unordered_map<string, string>& row, unordered_map<string, vector<string>>& table, size_t row_number) {
 	bool has_match = true;
 	for (const auto& iterator : row) {
 		if (table.at(iterator.first)[row_number] != iterator.second) {
@@ -155,7 +155,7 @@ bool QP::QueryResult::isRowMatch(const unordered_map<string, string>& row, unord
 	return has_match;
 }
 
-void QP::QueryResult::removeRow(unordered_map<string, vector<string>>& table, int row_number) {
+void QP::QueryResult::removeRow(unordered_map<string, vector<string>>& table, size_t row_number) {
 	for (auto iterator = table.begin(); iterator != table.end(); ++iterator) {
 		vector<string> col = iterator->second;
 		col.erase(col.begin() + row_number);
@@ -171,8 +171,8 @@ unordered_map<string, vector<string>> QP::QueryResult::getSubTableWithRow(const 
 	unordered_map<string, vector<string>> sub_table = this->table;
 	size_t number_of_rows = table.begin()->second.size();
 
-	int pos = 0;
-	for (int i = 0; i < number_of_rows; i++) {
+	size_t pos = 0;
+	for (size_t i = 0; i < number_of_rows; i++) {
 		if (!isRowMatch(row, sub_table, pos)) {
 			removeRow(sub_table, pos);
 		} else {

@@ -30,7 +30,7 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 		{make_unique<QP::Relationship::ModifiesS>(a, v)},
 	};
 	QP::QueryProperties properties = QP::QueryProperties(declarations, select, clauses);
-	unordered_map<string, int> synonyms_in_group = {
+	unordered_map<string, size_t> synonyms_in_group = {
 		{"s1", 0}, {"s2", 0}, {"a", 1}, {"v", 1}, {"i", 1},
 	};
 

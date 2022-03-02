@@ -32,11 +32,11 @@ void QP::QueryGraph::addEdge(const pair<string, string>& symbols) {
 	}
 }
 
-unordered_map<string, int> QP::QueryGraph::getSynonymsInGroup(const string& selected_synonym) {
+unordered_map<string, size_t> QP::QueryGraph::getSynonymsInGroup(const string& selected_synonym) {
 	// Run BFS on the selected node
-	unordered_map<string, int> result;
+	unordered_map<string, size_t> result;
 	unordered_set<string> unvisited_nodes;
-	int group_number = 0;
+	size_t group_number = 0;
 
 	for (auto& node : nodes) {
 		unvisited_nodes.insert(node.first);

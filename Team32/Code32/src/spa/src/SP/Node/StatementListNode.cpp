@@ -35,7 +35,7 @@ bool SP::Node::StatementListNode::equals(const shared_ptr<StatementListNode>& ob
 	if (this->stmt_list.size() != object->stmt_list.size()) {
 		return false;
 	}
-	for (int i = 0; i < this->stmt_list.size(); i++) {
+	for (size_t i = 0; i < this->stmt_list.size(); i++) {
 		if (!this->stmt_list[i]->equals(object->stmt_list[i])) {
 			return false;
 		}

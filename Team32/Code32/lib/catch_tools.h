@@ -3,9 +3,9 @@
 
 #include "catch.hpp"
 
-template<typename T, typename R>
+template <typename T, typename R>
 void REQUIRE_EQUALS(T lhs, R rhs) {
-    REQUIRE(lhs == rhs);
+	REQUIRE(lhs == (T)rhs);
 };
 
-#endif //CATCH_TOOLS_H
+#endif  // CATCH_TOOLS_H

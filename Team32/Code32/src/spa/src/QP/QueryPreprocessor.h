@@ -38,28 +38,28 @@ private:
 	QueryProperties parseQuery();
 
 	// Parsing clauses/2nd level nodes
-	void parseDeclaration(int& token_index);
-	void parseSelect(int& token_index);
-	void parseSuchThat(int& token_index);
-	void parsePattern(int& token_index);
+	void parseDeclaration(size_t& token_index);
+	void parseSelect(size_t& token_index);
+	void parseSuchThat(size_t& token_index);
+	void parsePattern(size_t& token_index);
 
 	// Parsing Rules
-	DesignEntity parseDesignEntity(int& token_index);
-	unique_ptr<Relationship::Relation> parseRelation(int& token_index);
-	unique_ptr<Relationship::Follows> parseFollows(int& token_index);
-	unique_ptr<Relationship::Parent> parseParent(int& token_index);
-	unique_ptr<Relationship::UsesP> parseUsesP(int& token_index);
-	unique_ptr<Relationship::UsesS> parseUsesS(int& token_index);
-	unique_ptr<Relationship::ModifiesP> parseModifiesP(int& token_index);
-	unique_ptr<Relationship::ModifiesS> parseModifiesS(int& token_index);
-	unique_ptr<Relationship::Calls> parseCalls(int& token_index);
-	QueryEntRef parseQueryEntRef(int& token_index, const set<DesignEntity>& accepted_design_entities);
-	QueryStmtRef parseQueryStmtRef(int& token_index, const set<DesignEntity>& accepted_design_entities);
-	Common::ExpressionProcessor::Expression parseExpression(int& token_index);
+	DesignEntity parseDesignEntity(size_t& token_index);
+	unique_ptr<Relationship::Relation> parseRelation(size_t& token_index);
+	unique_ptr<Relationship::Follows> parseFollows(size_t& token_index);
+	unique_ptr<Relationship::Parent> parseParent(size_t& token_index);
+	unique_ptr<Relationship::UsesP> parseUsesP(size_t& token_index);
+	unique_ptr<Relationship::UsesS> parseUsesS(size_t& token_index);
+	unique_ptr<Relationship::ModifiesP> parseModifiesP(size_t& token_index);
+	unique_ptr<Relationship::ModifiesS> parseModifiesS(size_t& token_index);
+	unique_ptr<Relationship::Calls> parseCalls(size_t& token_index);
+	QueryEntRef parseQueryEntRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities);
+	QueryStmtRef parseQueryStmtRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities);
+	Common::ExpressionProcessor::Expression parseExpression(size_t& token_index);
 
 	// Helper methods
 	static bool isIdentOrName(const string& token);
-	void matchTokenOrThrow(const string& token, int& token_index);
+	void matchTokenOrThrow(const string& token, size_t& token_index);
 
 	vector<string> query_tokens;
 	DeclarationList declaration_list;

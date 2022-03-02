@@ -12,7 +12,7 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	createSymbolToTypeMap(query_properties.getDeclarationList());
 	QueryGraph graph = buildGraph(query_properties);
 	Declaration select = query_properties.getSelect();
-	unordered_map<string, int> synonyms_in_group = graph.getSynonymsInGroup(select.symbol);
+	unordered_map<string, size_t> synonyms_in_group = graph.getSynonymsInGroup(select.symbol);
 	vector<ClauseList> clauses_in_group = splitClauses(query_properties, synonyms_in_group);
 
 	QueryResult result;
@@ -162,7 +162,7 @@ QP::QueryResult QP::QueryEvaluator::evaluateClauses(ClauseList& clauses, bool is
 		result_list.push_back(result);
 	}
 
-	for (int i = 1; i < result_list.size(); i++) {
+	for (size_t i = 1; i < result_list.size(); i++) {
 		result_list[0].joinResult(result_list[i]);
 	}
 	return result_list[0];
@@ -170,8 +170,8 @@ QP::QueryResult QP::QueryEvaluator::evaluateClauses(ClauseList& clauses, bool is
 
 // First element contains clauses with the selected synonym.
 // Last element contains clauses without synonyms.
-vector<ClauseList> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties, unordered_map<string, int>& synonyms_in_group) {
-	int number_of_groups = 0;
+vector<ClauseList> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties, unordered_map<string, size_t>& synonyms_in_group) {
+	size_t number_of_groups = 0;
 	for (auto const& pair : synonyms_in_group) {
 		if (pair.second + 1 > number_of_groups) {
 			number_of_groups = pair.second + 1;
@@ -185,7 +185,7 @@ vector<ClauseList> QP::QueryEvaluator::splitClauses(QueryProperties& query_prope
 		if (declarations.empty()) {
 			result[number_of_groups].push_back(clause);
 		} else {
-			int group_number = synonyms_in_group[declarations[0]];
+			size_t group_number = synonyms_in_group[declarations[0]];
 			result[group_number].push_back(clause);
 		}
 	}

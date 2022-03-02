@@ -15,7 +15,7 @@ public:
 
 private:
 	vector<string> expression_tokens;
-	int idx;
+	size_t idx;
 };
 
 #endif  // SPA_SRC_QP_QUERYEXPRESSIONLEXER_H

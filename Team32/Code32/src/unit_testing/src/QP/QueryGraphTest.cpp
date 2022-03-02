@@ -48,7 +48,7 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 
 	QP::QueryGraph graph = QP::QueryGraph(list);
 	graph.setEdges(clause_list);
-	unordered_map<string, int> synonyms = graph.getSynonymsInGroup("a");
+	unordered_map<string, size_t> synonyms = graph.getSynonymsInGroup("a");
 
 	REQUIRE(synonyms["a"] == 0);
 	REQUIRE(synonyms["b"] == 0);
