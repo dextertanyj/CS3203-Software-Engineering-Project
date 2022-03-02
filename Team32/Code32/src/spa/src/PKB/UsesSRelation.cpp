@@ -43,8 +43,8 @@ bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const s
 	                [variable](const VarRef& existing_var) { return existing_var == variable; }));
 }
 
-void PKB::UsesSRelation::optimize(StatementRelationStore<ParentRelation>& parent_store, CallStatementStore call_store,
-                                  Types::ProcedureStore proc_store, TopologicalSort<ProcedureInfo> topo_order,
+void PKB::UsesSRelation::optimize(StatementRelationStore<ParentRelation>& parent_store, CallStatementStore& call_store,
+                                  Types::ProcedureStore& proc_store, TopologicalSort<ProcedureInfo>& topo_order,
                                   SVRelationStore<UsesSRelation>& store) {
 	// Start optimization from the lowest level in the DAG.
 	for (shared_ptr<ProcedureInfo> proc : topo_order.get()) {
@@ -60,8 +60,8 @@ void PKB::UsesSRelation::optimize(StatementRelationStore<ParentRelation>& parent
 	}
 }
 
-VarRefSet PKB::UsesSRelation::optimizeCall(shared_ptr<StmtInfo> statement, CallStatementStore call_store, Types::ProcedureStore proc_store,
-                                           SVRelationStore<UsesSRelation>& store) {
+VarRefSet PKB::UsesSRelation::optimizeCall(const shared_ptr<StmtInfo>& statement, CallStatementStore& call_store,
+                                           Types::ProcedureStore& proc_store, SVRelationStore<UsesSRelation>& store) {
 	// Need to access CallStatementStore to get the statements modified in the called procedure.
 	VarRefSet variables;
 	ProcRef called_proc = call_store.getProcedure(statement);
@@ -77,8 +77,9 @@ VarRefSet PKB::UsesSRelation::optimizeCall(shared_ptr<StmtInfo> statement, CallS
 	return variables;
 }
 
-VarRefSet PKB::UsesSRelation::optimizeConditional(shared_ptr<StmtInfo> statement, StatementRelationStore<ParentRelation>& parent_store,
-                                                  SVRelationStore<UsesSRelation>& store) {
+VarRefSet PKB::UsesSRelation::optimizeConditional(const shared_ptr<StmtInfo>& statement,
+                                                  StatementRelationStore<ParentRelation>& parent_store,
+                                                  SVRelationStore<UsesRelation>& store) {
 	// For conditional statements, need to look at the child* statements for modify statements.
 	VarRefSet variables;
 	auto children = parent_store.getReverseTransitive(statement->getIdentifier());
