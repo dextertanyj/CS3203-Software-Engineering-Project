@@ -353,8 +353,8 @@ TEST_CASE("PKB::Uses Methods Test") {
 	StmtRef s2 = 2;
 	StmtRef s3 = 3;
 	StmtRef s4 = 4;
-	StmtRef s5 = 5;
-	StmtRef s6 = 6;
+	//StmtRef s5 = 5;
+	//StmtRef s6 = 6;
 	StmtRef s_max = SIZE_MAX;
 	StmtRef s_zero = 0;
 	VarRef x = "x";
@@ -466,6 +466,7 @@ TEST_CASE("PKB::Uses Methods Test") {
 		CHECK_THROWS(pkb.getUsesByStmt(0));
 	}
 
+	/*
 	SECTION("PKB::getUsesByProc Test") {
 		pkb.setUses(s1, a);
 		pkb.setUses(s6, x);
@@ -519,6 +520,7 @@ TEST_CASE("PKB::Uses Methods Test") {
 
 		CHECK_FALSE(pkb.checkUses(proc_2, a));
 	}
+	 */
 }
 
 TEST_CASE("PKB::Modifies Methods Test") {
@@ -623,6 +625,7 @@ TEST_CASE("PKB::Modifies Methods Test") {
 		CHECK(pkb.getModifiesByStmt(s4).empty());
 	}
 
+	/*
 	SECTION("PKB::getModifiesByProc Test") {
 		pkb.setModifies(s2, x);
 		pkb.setModifies(s5, y);
@@ -675,5 +678,6 @@ TEST_CASE("PKB::Modifies Methods Test") {
 
 		CHECK_FALSE(pkb.checkModifies(proc_2, x));
 	}
+	 */
 }
 

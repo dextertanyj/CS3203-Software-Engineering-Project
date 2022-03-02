@@ -218,8 +218,8 @@ void PKB::Storage::populateComplexRelations() {
 	FollowsRelation::optimize(follows_store);
 	ModifiesSRelation::optimize(statement_store, parent_store, modifies_s_store);
 	UsesSRelation::optimize(statement_store, parent_store, uses_s_store);
-	UsesPRelation::optimize(call_store, uses_p_store, uses_s_store, call_graph);
-    ModifiesPRelation::optimize(call_store, modifies_p_store, modifies_s_store, call_graph);
+	UsesPRelation::optimize(procedure_store, uses_p_store, uses_s_store);
+    ModifiesPRelation::optimize(procedure_store, modifies_p_store, modifies_s_store);
 }
 
 void PKB::Storage::clear() {
