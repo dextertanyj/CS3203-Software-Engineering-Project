@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
+#include <algorithm>
 
 template <class TInfo>
 PKB::TopologicalSort<TInfo>::TopologicalSort() = default;
