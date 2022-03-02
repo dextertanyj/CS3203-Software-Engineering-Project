@@ -48,11 +48,11 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 
 	QP::QueryGraph graph = QP::QueryGraph(list);
 	graph.setEdges(such_that_list, {});
-	vector<unordered_set<string>> synonyms = graph.getSynonymsInGroup("a");
+	unordered_map<string, int> synonyms = graph.getSynonymsInGroup("a");
 
-	unordered_set<string> expected_first_group = {"a", "b", "c"};
-	unordered_set<string> expected_second_group = {"d", "e"};
-	REQUIRE(synonyms.size() == 2);
-	REQUIRE(synonyms[0] == expected_first_group);
-	REQUIRE(synonyms[1] == expected_second_group);
+	REQUIRE(synonyms["a"] == 0);
+	REQUIRE(synonyms["b"] == 0);
+	REQUIRE(synonyms["c"] == 0);
+	REQUIRE(synonyms["d"] == 1);
+	REQUIRE(synonyms["e"] == 1);
 }

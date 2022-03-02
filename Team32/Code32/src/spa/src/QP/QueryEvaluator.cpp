@@ -12,7 +12,7 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	createSymbolToTypeMap(query_properties.getDeclarationList());
 	QueryGraph graph = buildGraph(query_properties);
 	Declaration select = query_properties.getSelect();
-	vector<unordered_set<string>> synonyms_in_group = graph.getSynonymsInGroup(select.symbol);
+	unordered_map<string, int> synonyms_in_group = graph.getSynonymsInGroup(select.symbol);
 	vector<pair<SuchThatClauseList, PatternClauseList>> clauses_in_group = splitClauses(query_properties, synonyms_in_group);
 
 	QueryResult result;
@@ -173,35 +173,32 @@ QP::QueryResult QP::QueryEvaluator::evaluateClauses(SuchThatClauseList& such_tha
 // First element contains clauses with the selected synonym.
 // Last element contains clauses without synonyms.
 vector<pair<SuchThatClauseList, PatternClauseList>> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties,
-                                                                                     vector<unordered_set<string>>& synonyms_in_group) {
-	vector<pair<SuchThatClauseList, PatternClauseList>> result(synonyms_in_group.size() + 1);
+                                                                                     unordered_map<string, int>& synonyms_in_group) {
+	int number_of_groups = 0;
+	for (auto const& pair : synonyms_in_group) {
+		if (pair.second + 1 > number_of_groups) {
+			number_of_groups = pair.second + 1;
+		}
+	}
+
+	vector<pair<SuchThatClauseList, PatternClauseList>> result(number_of_groups + 1);
 
 	for (const SuchThatClause& such_that_clause : query_properties.getSuchThatClauseList()) {
-		for (int i = 0; i <= synonyms_in_group.size(); i++) {
-			vector<string> declarations = such_that_clause.relation->getDeclarationSymbols();
-			if (i == synonyms_in_group.size() || declarations.empty()) {
-				result[synonyms_in_group.size()].first.push_back(such_that_clause);
-				break;
-			}
-
-			if (synonyms_in_group[i].find(declarations[0]) != synonyms_in_group[i].end()) {
-				result[i].first.push_back(such_that_clause);
-				break;
-			}
+		vector<string> declarations = such_that_clause.relation->getDeclarationSymbols();
+		if (declarations.empty()) {
+			result[number_of_groups].first.push_back(such_that_clause);
+		} else {
+			int group_number = synonyms_in_group[declarations[0]];
+			result[group_number].first.push_back(such_that_clause);
 		}
 	}
 	for (const PatternClause& pattern_clause : query_properties.getPatternClauseList()) {
-		for (int i = 0; i <= synonyms_in_group.size(); i++) {
-			vector<string> declarations = pattern_clause.relation->getDeclarationSymbols();
-			if (i == synonyms_in_group.size()) {
-				result[synonyms_in_group.size()].second.push_back(pattern_clause);
-				break;
-			}
-
-			if (synonyms_in_group[i].find(declarations[0]) != synonyms_in_group[i].end()) {
-				result[i].second.push_back(pattern_clause);
-				break;
-			}
+		vector<string> declarations = pattern_clause.relation->getDeclarationSymbols();
+		if (declarations.empty()) {
+			result[number_of_groups].second.push_back(pattern_clause);
+		} else {
+			int group_number = synonyms_in_group[declarations[0]];
+			result[group_number].second.push_back(pattern_clause);
 		}
 	}
 

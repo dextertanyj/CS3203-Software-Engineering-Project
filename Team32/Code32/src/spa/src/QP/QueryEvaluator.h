@@ -3,7 +3,6 @@
 
 #include <string>
 #include <unordered_map>
-#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -20,7 +19,7 @@ public:
 	explicit QueryEvaluator(PKB::StorageAccessInterface& pkb);
 	QP::QueryResult executeQuery(QueryProperties& query_properties);
 	static vector<pair<SuchThatClauseList, PatternClauseList>> splitClauses(QueryProperties& query_properties,
-	                                                                        vector<unordered_set<string>>& synonyms_in_group);
+	                                                                        unordered_map<string, int>& synonyms_in_group);
 
 private:
 	PKB::StorageAccessInterface& pkb;

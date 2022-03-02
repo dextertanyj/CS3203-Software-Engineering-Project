@@ -29,9 +29,12 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 		{make_unique<QP::Relationship::ModifiesS>(a, v)},
 	};
 	QP::QueryProperties properties = QP::QueryProperties(declarations, select, such_that_clauses, {});
-	vector<unordered_set<string>> synonyms_in_group = {
-		{"s1", "s2"},
-		{"a", "v", "i"},
+	unordered_map<string, int> synonyms_in_group = {
+		{"s1", 0},
+		{"s2", 0},
+		{"a", 1},
+		{"v", 1},
+		{"i", 1},
 	};
 
 	PKB::Storage pkb = PKB::Storage();
