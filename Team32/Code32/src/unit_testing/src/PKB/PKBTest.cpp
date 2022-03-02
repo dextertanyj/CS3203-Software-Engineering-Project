@@ -469,6 +469,7 @@ TEST_CASE("PKB::Modifies Methods Test") {
 	StmtRef s2 = 2;
 	StmtRef s3 = 3;
 	StmtRef s4 = 4;
+	StmtRef s5 = 5;
 	StmtRef s_max = SIZE_MAX;
 	StmtRef s_zero = 0;
 	VarRef x = "x";
@@ -478,13 +479,16 @@ TEST_CASE("PKB::Modifies Methods Test") {
 	VarRefSet v1 = {x, y, z};
 	VarRefSet v2 = {"x"};
 	VarRefSet v3 = {x, ""};
+	ProcRef proc_1 = "procedure_one";
+	ProcRef proc_2 = "procedure_two";
+	ProcRef proc_3 = "procedure_three";
 	shared_ptr<StmtInfo> p1 = stmt_info_map.at(s1);
 	shared_ptr<StmtInfo> p2 = stmt_info_map.at(s2);
 	shared_ptr<StmtInfo> p3 = stmt_info_map.at(s3);
 
 	SECTION("PKB::setModifies by Var Test") {
 		// StmtRef does not exist in Statement Store
-		CHECK_THROWS(pkb.setModifies(s4, v1));
+		CHECK_THROWS(pkb.setModifies(s_max, v1));
 
 		// Throw error for invalid arguments
 		CHECK_THROWS(pkb.setModifies(s_zero, x));
@@ -505,7 +509,7 @@ TEST_CASE("PKB::Modifies Methods Test") {
 		REQUIRE_THROWS_AS(pkb.setModifies(s1, v3), invalid_argument);
 
 		// StmtRef does not exist in Statement Store
-		CHECK_THROWS(pkb.setModifies(s4, v1));
+		CHECK_THROWS(pkb.setModifies(s5, v1));
 
 		// More than one variable in varset
 		CHECK_THROWS(pkb.setModifies(s1, v1));
@@ -518,21 +522,21 @@ TEST_CASE("PKB::Modifies Methods Test") {
 		pkb.setModifies(s1, v2);
 		pkb.setModifies(s2, y);
 		pkb.setModifies(s3, z);
-		pkb.setModifies(s_max, x);
+		pkb.setModifies(s5, x);
 
 		CHECK(pkb.checkModifies(s1, x));
 		CHECK(pkb.checkModifies(s2, y));
 		CHECK(pkb.checkModifies(s3, z));
-		CHECK(pkb.checkModifies(s_max, x));
+		CHECK(pkb.checkModifies(s5, x));
 
 		// Negative Cases
-		CHECK_FALSE(pkb.checkModifies(s_max, z));
+		CHECK_FALSE(pkb.checkModifies(s5, z));
 		CHECK_FALSE(pkb.checkModifies(s2, x));
 		CHECK_FALSE(pkb.checkModifies(s3, y));
 
 		// Invalid arguments
 		CHECK_THROWS(pkb.checkModifies(s_zero, x));
-		CHECK_THROWS(pkb.checkModifies(s_max, ""));
+		CHECK_THROWS(pkb.checkModifies(s5, ""));
 	}
 
 	SECTION("PKB::getStmtModifiesByVar Test") {
@@ -558,5 +562,18 @@ TEST_CASE("PKB::Modifies Methods Test") {
 		CHECK(pkb.getModifiesByStmt(s3) == unordered_set<VarRef>{y});
 
 		CHECK(pkb.getModifiesByStmt(s4).empty());
+	}
+
+	SECTION("PKB::getModifiesByProc Test") {
+		pkb.setModifies(s2, x);
+		pkb.setModifies(s5, y);
+		pkb.setProc(proc_1, s1, s3);
+		pkb.setProc(proc_2, s4, s4);
+		pkb.setProc(proc_3, s5, s5);
+		pkb.setCall(3, proc_2);
+		pkb.setCall(4, proc_3);
+
+		pkb.populateComplexRelations();
+		CHECK(pkb.getModifiesByProc(proc_1) == unordered_set<VarRef>{x, y});
 	}
 }

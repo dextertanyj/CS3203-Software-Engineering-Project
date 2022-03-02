@@ -12,10 +12,10 @@ void PKB::UsesPRelation::optimize(const TransitiveRelationStore<ProcRef, Procedu
             variables.insert(variable_set.begin(), variable_set.end());
         }
         ProcRef proc = itr->get()->getIdentifier();
-        unordered_set<shared_ptr<ProcedureInfo>> proc_forward_transitive = call_store.getForwardTransitive(proc);
-        for (const auto& proc_info : proc_forward_transitive) {
+        unordered_set<shared_ptr<ProcedureInfo>> proc_reverse_transitive = call_store.getReverseTransitive(proc);
+        for (const auto& proc_info : proc_reverse_transitive) {
             ProcRef proc_ref = proc_info->getIdentifier();
-            VarRefSet variable_set = store.getByProc(proc);
+            VarRefSet variable_set = store.getByProc(proc_ref);
             variables.insert(variable_set.begin(), variable_set.end());
         }
         store.set(proc, variables);

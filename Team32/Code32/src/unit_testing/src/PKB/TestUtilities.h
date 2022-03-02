@@ -56,7 +56,8 @@ inline PKB::Storage generateModifyTestPKB() {
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::Call);
-	pkb.setStmtType(SIZE_MAX, StmtType::Assign);
+	pkb.setStmtType(4, StmtType::Call);
+	pkb.setStmtType(5, StmtType::Assign);
 	return pkb;
 };
 
