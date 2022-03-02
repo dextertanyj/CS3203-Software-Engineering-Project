@@ -28,9 +28,6 @@ QP::QueryResult QP::Relationship::UsesS::executeTrivial(PKB::StorageAccessInterf
 		VarRefSet var_set = pkb.getUsesByStmt(stoul(stmt.stmt_ref));
 		return QueryResult(!var_set.empty());
 	}
-	if (stmt.type == StmtRefType::Underscore) {
-		return QueryResult(false);
-	}
 	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
 		StmtInfoPtrSet stmt_set = pkb.getStmtUsesByVar(ent.ent_ref);
 		DesignEntity design_entity = map[stmt.stmt_ref];
@@ -135,10 +132,6 @@ QP::QueryResult QP::Relationship::UsesS::executeNonTrivial(PKB::StorageAccessInt
 
 		QueryResult result = QueryResult();
 		result.addColumn(ent.ent_ref, column);
-		return result;
-	}
-	if (stmt.type == StmtRefType::Underscore) {
-		QueryResult result = QueryResult();
 		return result;
 	}
 	return {};

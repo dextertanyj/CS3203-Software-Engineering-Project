@@ -29,9 +29,6 @@ QP::QueryResult QP::Relationship::ModifiesS::executeTrivial(PKB::StorageAccessIn
 		VarRefSet var_set = pkb.getModifiesByStmt(stoul(stmt.stmt_ref));
 		return QueryResult(!var_set.empty());
 	}
-	if (stmt.type == StmtRefType::Underscore) {
-		return QueryResult(false);
-	}
 	if (stmt.type == StmtRefType::Synonym && ent.type == EntRefType::VarName) {
 		StmtInfoPtrSet stmt_set = pkb.getStmtModifiesByVar(ent.ent_ref);
 		DesignEntity design_entity = map[stmt.stmt_ref];
@@ -136,10 +133,6 @@ QP::QueryResult QP::Relationship::ModifiesS::executeNonTrivial(PKB::StorageAcces
 
 		QueryResult result = QueryResult();
 		result.addColumn(ent.ent_ref, column);
-		return result;
-	}
-	if (stmt.type == StmtRefType::Underscore) {
-		QueryResult result = QueryResult();
 		return result;
 	}
 

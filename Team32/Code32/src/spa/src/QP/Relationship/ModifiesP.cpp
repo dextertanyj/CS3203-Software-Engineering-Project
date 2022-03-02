@@ -30,9 +30,6 @@ QP::QueryResult QP::Relationship::ModifiesP::executeTrivial(PKB::StorageAccessIn
 		VarRefSet var_set = pkb.getModifiesByProc(left_ent.ent_ref);
 		return QueryResult(!var_set.empty());
 	}
-	if (left_ent.type == EntRefType::Underscore) {
-		return QueryResult(false);
-	}
 	if (left_ent.type == EntRefType::Synonym && right_ent.type == EntRefType::VarName) {
 		ProcRefSet proc_set = pkb.getProcModifiesByVar(right_ent.ent_ref);
 		return QueryResult(!proc_set.empty());
@@ -99,10 +96,6 @@ QP::QueryResult QP::Relationship::ModifiesP::executeNonTrivial(PKB::StorageAcces
 		QueryResult result = QueryResult();
 		result.addColumn(left_ent.ent_ref, proc_column);
 		result.addColumn(right_ent.ent_ref, var_column);
-		return result;
-	}
-	if (left_ent.type == EntRefType::Underscore) {
-		QueryResult result = QueryResult();
 		return result;
 	}
 	return {};
