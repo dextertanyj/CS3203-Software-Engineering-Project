@@ -44,7 +44,7 @@ TEST_CASE("PKB::UsesRelation") {
 	}
 
 	SECTION("PKB::UsesRelation::optimize Test") {
-		PKB::StatementStore statement_store = TestUtilities::generateStatementStore();
+		PKB::Types::StatementStore statement_store = TestUtilities::generateStatementStore();
 		PKB::StatementRelationStore<PKB::ParentRelation> parent_store = PKB::StatementRelationStore<PKB::ParentRelation>();
 		unordered_set<VarRef> var_refs = unordered_set<VarRef>({"e", "f", "g"});
 
@@ -78,7 +78,7 @@ TEST_CASE("PKB::UsesRelation") {
 
 	// If statement (index 2) is nested within while statement (index 1)
 	SECTION("PKB::UsesRelation::optimize Nested Test") {
-		PKB::StatementStore statement_store = TestUtilities::generateStatementStore();
+		PKB::Types::StatementStore statement_store = TestUtilities::generateStatementStore();
 		PKB::StatementRelationStore<PKB::ParentRelation> parent_store = PKB::StatementRelationStore<PKB::ParentRelation>();
 		unordered_set<VarRef> var_refs = unordered_set<VarRef>({"e", "f", "g"});
 

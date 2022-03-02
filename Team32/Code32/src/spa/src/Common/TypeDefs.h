@@ -15,10 +15,14 @@ typedef string ProcRef;
 
 enum class StmtType { Assign, Print, Call, Read, WhileStmt, IfStmt };
 
-typedef struct StmtInfo {
-	StmtRef reference;
-	StmtType type;
-} StmtInfo;
+class StatementInfoInterface {
+public:
+	[[nodiscard]] virtual StmtRef getIdentifier() const = 0;
+	[[nodiscard]] virtual StmtType getType() const = 0;
+	virtual ~StatementInfoInterface() = default;
+};
+
+typedef StatementInfoInterface StmtInfo;
 
 typedef unordered_set<shared_ptr<StmtInfo>> StmtInfoPtrSet;
 typedef unordered_set<VarRef> VarRefSet;

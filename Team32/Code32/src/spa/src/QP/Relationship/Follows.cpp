@@ -41,7 +41,7 @@ QP::QueryResult QP::Relationship::Follows::executeTrivial(PKB::StorageAccessInte
 	} else if (left_stmt.type == StmtRefType::Underscore && right_stmt.type == StmtRefType::Underscore) {
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
 		for (auto const& stmt : stmt_set) {
-			shared_ptr<StmtInfo> follower = pkb.getFollower(stmt->reference);
+			shared_ptr<StmtInfo> follower = pkb.getFollower(stmt->getIdentifier());
 			if (follower != nullptr) {
 				return QueryResult(true);
 			}
@@ -54,7 +54,7 @@ QP::QueryResult QP::Relationship::Follows::executeTrivial(PKB::StorageAccessInte
 				continue;
 			}
 
-			shared_ptr<StmtInfo> preceding = pkb.getPreceding(stmt->reference);
+			shared_ptr<StmtInfo> preceding = pkb.getPreceding(stmt->getIdentifier());
 			if (preceding != nullptr) {
 				return QueryResult(true);
 			}
@@ -74,7 +74,7 @@ QP::QueryResult QP::Relationship::Follows::executeTrivial(PKB::StorageAccessInte
 				continue;
 			}
 
-			shared_ptr<StmtInfo> follower = pkb.getFollower(stmt->reference);
+			shared_ptr<StmtInfo> follower = pkb.getFollower(stmt->getIdentifier());
 			if (follower != nullptr) {
 				return QueryResult(true);
 			}
@@ -92,7 +92,7 @@ QP::QueryResult QP::Relationship::Follows::executeTrivial(PKB::StorageAccessInte
 				continue;
 			}
 
-			shared_ptr<StmtInfo> follower = pkb.getFollower(stmt->reference);
+			shared_ptr<StmtInfo> follower = pkb.getFollower(stmt->getIdentifier());
 			if (Utilities::checkStmtTypeMatch(follower, right_design_entity)) {
 				return QueryResult(true);
 			}
@@ -110,7 +110,7 @@ QP::QueryResult QP::Relationship::Follows::executeNonTrivial(PKB::StorageAccessI
 		if (!Utilities::checkStmtTypeMatch(preceding, design_entity)) {
 			return {};
 		}
-		column.push_back(to_string(preceding->reference));
+		column.push_back(to_string(preceding->getIdentifier()));
 		QueryResult result = QueryResult();
 		result.addColumn(left_stmt.stmt_ref, column);
 		return result;
@@ -124,9 +124,9 @@ QP::QueryResult QP::Relationship::Follows::executeNonTrivial(PKB::StorageAccessI
 				continue;
 			}
 
-			shared_ptr<StmtInfo> follower = pkb.getFollower(stmt->reference);
+			shared_ptr<StmtInfo> follower = pkb.getFollower(stmt->getIdentifier());
 			if (follower != nullptr) {
-				column.push_back(to_string(stmt->reference));
+				column.push_back(to_string(stmt->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();
@@ -148,10 +148,10 @@ QP::QueryResult QP::Relationship::Follows::executeNonTrivial(PKB::StorageAccessI
 				continue;
 			}
 
-			shared_ptr<StmtInfo> follower = pkb.getFollower(stmt->reference);
+			shared_ptr<StmtInfo> follower = pkb.getFollower(stmt->getIdentifier());
 			if (Utilities::checkStmtTypeMatch(follower, right_design_entity)) {
-				left_column.push_back(to_string(stmt->reference));
-				right_column.push_back(to_string(follower->reference));
+				left_column.push_back(to_string(stmt->getIdentifier()));
+				right_column.push_back(to_string(follower->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();
@@ -168,9 +168,9 @@ QP::QueryResult QP::Relationship::Follows::executeNonTrivial(PKB::StorageAccessI
 				continue;
 			}
 
-			shared_ptr<StmtInfo> preceding = pkb.getPreceding(stmt->reference);
+			shared_ptr<StmtInfo> preceding = pkb.getPreceding(stmt->getIdentifier());
 			if (preceding != nullptr) {
-				column.push_back(to_string(stmt->reference));
+				column.push_back(to_string(stmt->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();
@@ -183,7 +183,7 @@ QP::QueryResult QP::Relationship::Follows::executeNonTrivial(PKB::StorageAccessI
 		vector<string> column;
 
 		if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-			column.push_back(to_string(stmt->reference));
+			column.push_back(to_string(stmt->getIdentifier()));
 		}
 		QueryResult result = QueryResult();
 		result.addColumn(right_stmt.stmt_ref, column);

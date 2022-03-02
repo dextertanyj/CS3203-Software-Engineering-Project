@@ -17,7 +17,7 @@ class MockInfoStore {
 public:
 	MockInfoStore() = default;
 	void insert(shared_ptr<MockInfo> info) { infos.insert(info); };
-	unordered_set<shared_ptr<MockInfo>> getAllInfo() const { return infos; };
+	unordered_set<shared_ptr<MockInfo>> getAll() const { return infos; };
 	unordered_set<shared_ptr<MockInfo>> infos;
 };
 

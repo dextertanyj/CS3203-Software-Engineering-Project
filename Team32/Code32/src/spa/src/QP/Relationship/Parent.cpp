@@ -47,7 +47,7 @@ QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInter
 	} else if (parent_stmt.type == StmtRefType::Underscore && child_stmt.type == StmtRefType::Underscore) {
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
 		for (auto const& stmt : stmt_set) {
-			StmtInfoPtrSet children = pkb.getChildren(stmt->reference);
+			StmtInfoPtrSet children = pkb.getChildren(stmt->getIdentifier());
 			if (!children.empty()) {
 				return QueryResult(true);
 			}
@@ -60,7 +60,7 @@ QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInter
 				continue;
 			}
 
-			shared_ptr<StmtInfo> parent = pkb.getParent(stmt->reference);
+			shared_ptr<StmtInfo> parent = pkb.getParent(stmt->getIdentifier());
 			if (parent != nullptr) {
 				return QueryResult(true);
 			}
@@ -80,7 +80,7 @@ QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInter
 				continue;
 			}
 
-			StmtInfoPtrSet children = pkb.getChildren(stmt->reference);
+			StmtInfoPtrSet children = pkb.getChildren(stmt->getIdentifier());
 			if (!children.empty()) {
 				return QueryResult(true);
 			}
@@ -98,7 +98,7 @@ QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInter
 				continue;
 			}
 
-			StmtInfoPtrSet children = pkb.getChildren(stmt->reference);
+			StmtInfoPtrSet children = pkb.getChildren(stmt->getIdentifier());
 			for (auto const& child : children) {
 				if (Utilities::checkStmtTypeMatch(child, child_design_entity)) {
 					return QueryResult(true);
@@ -118,7 +118,7 @@ QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::StorageAccessIn
 		if (!Utilities::checkStmtTypeMatch(parent, design_entity)) {
 			return {};
 		}
-		column.push_back(to_string(parent->reference));
+		column.push_back(to_string(parent->getIdentifier()));
 		QueryResult result = QueryResult();
 		result.addColumn(parent_stmt.stmt_ref, column);
 		return result;
@@ -132,9 +132,9 @@ QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::StorageAccessIn
 				continue;
 			}
 
-			StmtInfoPtrSet children = pkb.getChildren(stmt->reference);
+			StmtInfoPtrSet children = pkb.getChildren(stmt->getIdentifier());
 			if (!children.empty()) {
-				column.push_back(to_string(stmt->reference));
+				column.push_back(to_string(stmt->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();
@@ -156,11 +156,11 @@ QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::StorageAccessIn
 				continue;
 			}
 
-			StmtInfoPtrSet children = pkb.getChildren(stmt->reference);
+			StmtInfoPtrSet children = pkb.getChildren(stmt->getIdentifier());
 			for (auto const& child : children) {
 				if (Utilities::checkStmtTypeMatch(child, child_design_entity)) {
-					parent_column.push_back(to_string(stmt->reference));
-					child_column.push_back(to_string(child->reference));
+					parent_column.push_back(to_string(stmt->getIdentifier()));
+					child_column.push_back(to_string(child->getIdentifier()));
 				}
 			}
 		}
@@ -178,9 +178,9 @@ QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::StorageAccessIn
 				continue;
 			}
 
-			shared_ptr<StmtInfo> parent = pkb.getParent(stmt->reference);
+			shared_ptr<StmtInfo> parent = pkb.getParent(stmt->getIdentifier());
 			if (parent != nullptr) {
-				column.push_back(to_string(stmt->reference));
+				column.push_back(to_string(stmt->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();
@@ -194,7 +194,7 @@ QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::StorageAccessIn
 
 		for (auto const& stmt : stmt_set) {
 			if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				column.push_back(to_string(stmt->reference));
+				column.push_back(to_string(stmt->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();

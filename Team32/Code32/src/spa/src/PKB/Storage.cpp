@@ -1,5 +1,6 @@
 #include "PKB/Storage.h"
 
+#include <algorithm>
 #include <iterator>
 
 using namespace std;
@@ -88,13 +89,19 @@ void PKB::Storage::setAssign(StmtRef index, VarRef variable, Common::ExpressionP
 	return assign_store.setAssign(statement, move(variable), move(expression));
 }
 
-StmtInfoPtrSet PKB::Storage::getStatements() { return statement_store.getAll(); }
+StmtInfoPtrSet PKB::Storage::getStatements() {
+	unordered_set<shared_ptr<StatementInfo>> set = statement_store.getAll();
+	return statementInfoPtrSetToInterfacePtrSet(set);
+}
 
 VarRefSet PKB::Storage::getVariables() { return variable_store.getAll(); }
 
 unordered_set<ConstVal> PKB::Storage::getConstants() { return constant_store.getAll(); }
 
-unordered_set<ProcRef> PKB::Storage::getProcedures() { return {}; }
+unordered_set<ProcRef> PKB::Storage::getProcedures() {
+	unordered_set<shared_ptr<ProcedureInfo>> procedures = procedure_store.getAll();
+	return procedureInfoToProcRef(procedures);
+}
 
 bool PKB::Storage::checkParents(StmtRef parent, StmtRef child) { return parent_store.isRelated(parent, child); }
 
@@ -199,7 +206,7 @@ vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::Storage::getStmtsWithPatternRHS(
 void PKB::Storage::populateComplexRelations() {
 	call_statement_store.populate(procedure_store, call_store);
 	call_store.optimize();
-	call_graph.sort<ProcedureStore, ProcRef, CallRelation>(procedure_store, call_store);
+	call_graph.sort(procedure_store, call_store);
 	ParentRelation::optimize(parent_store);
 	FollowsRelation::optimize(follows_store);
 	ModifiesRelation::optimize(statement_store, parent_store, modifies_store);
@@ -222,11 +229,18 @@ ProcRefSet PKB::Storage::procedureInfoToProcRef(const unordered_set<shared_ptr<P
 	return result;
 }
 
+StmtInfoPtrSet PKB::Storage::statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set) {
+	StmtInfoPtrSet result;
+	transform(set.begin(), set.end(), inserter(result, result.begin()),
+	          [](const shared_ptr<StatementInfo>& info) { return static_pointer_cast<StmtInfo>(info); });
+	return result;
+}
+
 unordered_map<StmtRef, shared_ptr<StmtInfo>> PKB::Storage::getStmtInfoMap() {
-	StmtInfoPtrSet set = statement_store.getAll();
+	unordered_set<shared_ptr<StatementInfo>> set = statement_store.getAll();
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> map;
 	for (const auto& item : set) {
-		map.insert({item->reference, item});
+		map.insert({item->getIdentifier(), item});
 	}
 	return map;
 }

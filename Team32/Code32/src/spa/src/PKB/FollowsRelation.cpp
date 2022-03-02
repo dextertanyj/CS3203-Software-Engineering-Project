@@ -7,7 +7,7 @@ using namespace std;
 PKB::FollowsRelation::FollowsRelation(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
 
 void PKB::FollowsRelation::insertForward(shared_ptr<StmtInfo> following_to_insert) {
-	if (self->reference <= following_to_insert->reference) {
+	if (self->getIdentifier() <= following_to_insert->getIdentifier()) {
 		throw invalid_argument("Statement out of order");
 	}
 	if (this->following != nullptr) {
@@ -17,7 +17,7 @@ void PKB::FollowsRelation::insertForward(shared_ptr<StmtInfo> following_to_inser
 }
 
 void PKB::FollowsRelation::insertReverse(shared_ptr<StmtInfo> follower_to_insert) {
-	if (self->reference >= follower_to_insert->reference) {
+	if (self->getIdentifier() >= follower_to_insert->getIdentifier()) {
 		throw invalid_argument("Statement out of order");
 	}
 	if (this->follower != nullptr) {
@@ -28,7 +28,7 @@ void PKB::FollowsRelation::insertReverse(shared_ptr<StmtInfo> follower_to_insert
 
 void PKB::FollowsRelation::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> followings) {
 	for (const auto& following_to_insert : followings) {
-		if (self->reference <= following_to_insert->reference) {
+		if (self->getIdentifier() <= following_to_insert->getIdentifier()) {
 			throw invalid_argument("Statement out of order");
 		}
 	}
@@ -37,7 +37,7 @@ void PKB::FollowsRelation::appendForwardTransitive(unordered_set<shared_ptr<Stmt
 
 void PKB::FollowsRelation::appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> followers) {
 	for (const auto& follower_to_insert : followers) {
-		if (self->reference >= follower_to_insert->reference) {
+		if (self->getIdentifier() >= follower_to_insert->getIdentifier()) {
 			throw invalid_argument("Statement out of order");
 		}
 	}
@@ -76,7 +76,7 @@ StmtInfoPtrSet PKB::FollowsRelation::populateTransitive(PKB::StatementRelationSt
 	previous.insert(current.self);
 	unordered_set<shared_ptr<StmtInfo>> result;
 	if (current.follower != nullptr) {
-		auto follower = store.map.find(current.follower->reference);
+		auto follower = store.map.find(current.follower->getIdentifier());
 		result = populateTransitive(store, follower->second, previous);
 	}
 	current.appendReverseTransitive(result);

@@ -6,7 +6,7 @@
 PKB::ParentRelation::ParentRelation(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
 
 void PKB::ParentRelation::insertForward(const shared_ptr<StmtInfo>& parent_to_insert) {
-	if (self->reference <= parent_to_insert->reference) {
+	if (self->getIdentifier() <= parent_to_insert->getIdentifier()) {
 		throw invalid_argument("Statement out of order");
 	}
 	if (this->parent != nullptr) {
@@ -16,7 +16,7 @@ void PKB::ParentRelation::insertForward(const shared_ptr<StmtInfo>& parent_to_in
 }
 
 void PKB::ParentRelation::insertReverse(const shared_ptr<StmtInfo>& child_to_insert) {
-	if (self->reference >= child_to_insert->reference) {
+	if (self->getIdentifier() >= child_to_insert->getIdentifier()) {
 		throw invalid_argument("Statement out of order");
 	}
 	this->children.insert(child_to_insert);
@@ -24,7 +24,7 @@ void PKB::ParentRelation::insertReverse(const shared_ptr<StmtInfo>& child_to_ins
 
 void PKB::ParentRelation::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> parents_to_insert) {
 	for (const auto& parent : parents_to_insert) {
-		if (self->reference <= parent->reference) {
+		if (self->getIdentifier() <= parent->getIdentifier()) {
 			throw invalid_argument("Statement out of order");
 		}
 	}
@@ -33,7 +33,7 @@ void PKB::ParentRelation::appendForwardTransitive(unordered_set<shared_ptr<StmtI
 
 void PKB::ParentRelation::appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> children_to_insert) {
 	for (const auto& child : children_to_insert) {
-		if (self->reference >= child->reference) {
+		if (self->getIdentifier() >= child->getIdentifier()) {
 			throw invalid_argument("Statement out of order");
 		}
 	}
@@ -68,7 +68,7 @@ unordered_set<shared_ptr<StmtInfo>> PKB::ParentRelation::populateTransitive(Stat
 	previous.insert(current.self);
 	unordered_set<shared_ptr<StmtInfo>> result;
 	for (const shared_ptr<StmtInfo>& child : current.children) {
-		auto relation = store.map.find(child->reference);
+		auto relation = store.map.find(child->getIdentifier());
 		unordered_set<shared_ptr<StmtInfo>> transitive_children = populateTransitive(store, relation->second, previous);
 		result.insert(transitive_children.begin(), transitive_children.end());
 	}

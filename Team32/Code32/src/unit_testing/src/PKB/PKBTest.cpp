@@ -69,8 +69,8 @@ TEST_CASE("PKB::PKB Follows Methods Test") {
 		pkb.setFollows(s_2, s_3);
 		pkb.setFollows(s_4, s_max);
 
-		CHECK(pkb.getFollower(s_1)->reference == s_4);
-		CHECK(pkb.getFollower(s_2)->reference == s_3);
+		CHECK(pkb.getFollower(s_1)->getIdentifier() == s_4);
+		CHECK(pkb.getFollower(s_2)->getIdentifier() == s_3);
 		CHECK(pkb.getFollower(s_3) == nullptr);
 		CHECK(pkb.getFollower(s_max) == nullptr);
 
@@ -88,9 +88,9 @@ TEST_CASE("PKB::PKB Follows Methods Test") {
 
 		CHECK(pkb.getPreceding(s_1) == nullptr);
 		CHECK(pkb.getPreceding(s_2) == nullptr);
-		CHECK(pkb.getPreceding(s_3)->reference == s_2);
-		CHECK(pkb.getPreceding(s_4)->reference == s_1);
-		CHECK(pkb.getPreceding(s_max)->reference == s_4);
+		CHECK(pkb.getPreceding(s_3)->getIdentifier() == s_2);
+		CHECK(pkb.getPreceding(s_4)->getIdentifier() == s_1);
+		CHECK(pkb.getPreceding(s_max)->getIdentifier() == s_4);
 
 		// Not stored in PKB.
 		CHECK(pkb.getPreceding(s_5) == nullptr);
@@ -210,9 +210,9 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 		CHECK(pkb.checkParents(s_1, s_2));
 		CHECK(pkb.checkParents(s_2, s_3));
 		CHECK(pkb.checkParents(s_2, s_4));
-		CHECK(pkb.getParent(s_2)->reference == s_1);
-		CHECK(pkb.getParent(s_3)->reference == s_2);
-		CHECK(pkb.getParent(s_4)->reference == s_2);
+		CHECK(pkb.getParent(s_2)->getIdentifier() == s_1);
+		CHECK(pkb.getParent(s_3)->getIdentifier() == s_2);
+		CHECK(pkb.getParent(s_4)->getIdentifier() == s_2);
 
 		shared_ptr<StmtInfo> expected_s_2_info = stmt_info_map.find(s_2)->second;
 		shared_ptr<StmtInfo> expected_s_3_info = stmt_info_map.find(s_3)->second;
@@ -242,8 +242,8 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 		pkb.setParent(s_2, s_4);
 
 		CHECK(pkb.getParent(s_1) == nullptr);  // Highest statement should have no parent.
-		CHECK(pkb.getParent(s_2)->reference == 1);
-		CHECK(pkb.getParent(s_3)->reference == 2);
+		CHECK(pkb.getParent(s_2)->getIdentifier() == 1);
+		CHECK(pkb.getParent(s_3)->getIdentifier() == 2);
 
 		// Statement which was not stored in PKB.
 		CHECK(pkb.getParent(s_5) == nullptr);

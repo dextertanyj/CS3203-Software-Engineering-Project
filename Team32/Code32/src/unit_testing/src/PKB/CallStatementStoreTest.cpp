@@ -50,8 +50,8 @@ TEST_CASE("PKB::CallStatementStore::get Test") {
 
 TEST_CASE("PKB::CallStatementStore::populate Test") {
 	PKB::CallStatementStore store;
-	PKB::StatementStore statements;
-	PKB::ProcedureStore procedures;
+	PKB::Types::StatementStore statements;
+	PKB::Types::ProcedureStore procedures;
 	PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation> call_store;
 
 	SECTION("Single Call") {

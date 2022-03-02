@@ -14,13 +14,13 @@
 #include "PKB/CallStatementStore.h"
 #include "PKB/ConstantStore.h"
 #include "PKB/FollowsRelation.h"
+#include "PKB/InfoStore.h"
 #include "PKB/ModifiesRelation.h"
 #include "PKB/PKB.h"
 #include "PKB/ParentRelation.h"
-#include "PKB/ProcedureStore.h"
 #include "PKB/SVRelationStore.tpp"
+#include "PKB/StatementInfo.h"
 #include "PKB/StatementRelationStore.tpp"
-#include "PKB/StatementStore.h"
 #include "PKB/StorageAccessInterface.h"
 #include "PKB/StorageUpdateInterface.h"
 #include "PKB/TopologicalSort.tpp"
@@ -108,8 +108,8 @@ public:
 private:
 	ConstantStore constant_store;
 	VariableStore variable_store;
-	StatementStore statement_store;
-	ProcedureStore procedure_store;
+	Types::StatementStore statement_store;
+	Types::ProcedureStore procedure_store;
 	CallStatementStore call_statement_store;
 	TopologicalSort<ProcedureInfo> call_graph;
 	TransitiveRelationStore<ProcRef, ProcedureInfo, CallRelation> call_store;
@@ -120,6 +120,7 @@ private:
 	AssignStore assign_store;
 
 	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
+	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set);
 };
 
 #endif
