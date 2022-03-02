@@ -1,11 +1,11 @@
-name: Compile and Test - Windows
+name: Build & Test - Windows
 on: [push, pull_request]
 
 env:
   BUILD_TYPE: Release
 
 jobs:
-  compile-windows:
+  test-windows:
     runs-on: windows-latest
     steps:
       - name: Checkout repository code
