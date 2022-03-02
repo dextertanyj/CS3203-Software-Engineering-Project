@@ -47,8 +47,10 @@ void PKB::UsesSRelation::optimize(StatementRelationStore<ParentRelation>& parent
                                   Types::ProcedureStore& proc_store, TopologicalSort<ProcedureInfo>& topo_order,
                                   SVRelationStore<UsesSRelation>& store) {
 	// Start optimization from the lowest level in the DAG.
-	for (shared_ptr<ProcedureInfo> proc : topo_order.get()) {
-		for (const auto& statement : proc->getStatements()) {
+	vector<shared_ptr<ProcedureInfo>> order = topo_order.get();
+	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {
+		vector<shared_ptr<StmtInfo>> stmts_in_proc = proc_iterator->get()->getStatements();
+		for (const auto& statement : stmts_in_proc) {
 			VarRefSet variables;
 			if (statement->getType() == StmtType::Call) {
 				variables = optimizeCall(statement, call_store, proc_store, store);
