@@ -3,6 +3,7 @@
 
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
+#include "PKB/Types.h"
 
 namespace TestUtilities {
 inline shared_ptr<StmtInfo> createStmtInfo(StmtRef stmt_no, StmtType type) {
@@ -47,7 +48,9 @@ inline PKB::Storage generateUsesTestPKB() {
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::IfStmt);
 	pkb.setStmtType(3, StmtType::Print);
-	pkb.setStmtType(SIZE_MAX, StmtType::WhileStmt);
+	pkb.setStmtType(4, StmtType::Call);
+	pkb.setStmtType(5, StmtType::Call);
+	pkb.setStmtType(6, StmtType::WhileStmt);
 	return pkb;
 };
 
@@ -56,7 +59,8 @@ inline PKB::Storage generateModifyTestPKB() {
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::Call);
-	pkb.setStmtType(SIZE_MAX, StmtType::Assign);
+	pkb.setStmtType(4, StmtType::Call);
+	pkb.setStmtType(5, StmtType::Assign);
 	return pkb;
 };
 

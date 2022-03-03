@@ -5,7 +5,7 @@
 #include "catch.hpp"
 
 TEST_CASE("PKB::SVRelationStore") {
-	PKB::SVRelationStore uses_store = PKB::SVRelationStore<PKB::UsesRelation>();
+	PKB::SVRelationStore uses_store = PKB::SVRelationStore<PKB::UsesSRelation>();
 	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(5, StmtType::Print);
 	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(6, StmtType::Assign);
 	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(7, StmtType::IfStmt);

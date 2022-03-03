@@ -1,20 +1,19 @@
-#include "PKB/ModifiesRelation.h"
+#include "PKB/UsesSRelation.h"
 
 #include <algorithm>
 
 #include "PKB/SVRelationStore.tpp"
 
-bool PKB::ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement,
-                                     const VarRef& variable) {
+bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
 	StmtRef idx = statement->getIdentifier();
-	if (statement->getType() == StmtType::Print) {
-		throw invalid_argument("Print statements cannot modify a variable");
+	if (statement->getType() == StmtType::Read) {
+		throw invalid_argument("Read statements cannot use a variable");
 	}
-	if (statement->getType() == StmtType::WhileStmt || statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::Call) {
+	if (statement->getType() == StmtType::WhileStmt || statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::Call ||
+	    statement->getType() == StmtType::Assign) {
 		return true;
 	}
 	auto statement_iter = store->statement_key_map.find(idx);
-	// If the statement reference is not found in the SVRelationStore, then setModifies is valid.
 	if (statement_iter == store->statement_key_map.end()) {
 		return true;
 	}
@@ -22,13 +21,14 @@ bool PKB::ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, c
 	                [variable](const VarRef& existing_var) { return existing_var != variable; }));
 }
 
-bool PKB::ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement,
-                                     const VarRefSet& variables) {
+bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const shared_ptr<StmtInfo>& statement,
+                                  const VarRefSet& variables) {
 	StmtRef idx = statement->getIdentifier();
-	if (statement->getType() == StmtType::Print) {
-		throw invalid_argument("Print statements cannot modify a variable");
+	if (statement->getType() == StmtType::Read) {
+		throw invalid_argument("Read statements cannot use a variable");
 	}
-	if (statement->getType() == StmtType::WhileStmt || statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::Call) {
+	if (statement->getType() == StmtType::WhileStmt || statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::Call ||
+	    statement->getType() == StmtType::Assign || variables.empty()) {
 		return true;
 	}
 	if (variables.size() > 1) {
@@ -43,8 +43,8 @@ bool PKB::ModifiesRelation::validate(SVRelationStore<ModifiesRelation>* store, c
 	                [variable](const VarRef& existing_var) { return existing_var == variable; }));
 }
 
-void PKB::ModifiesRelation::optimize(Types::StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
-                                     SVRelationStore<ModifiesRelation>& store) {
+void PKB::UsesSRelation::optimize(Types::StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
+                                  SVRelationStore<UsesSRelation>& store) {
 	for (const auto& statement : statement_store.getAll()) {
 		if (statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::WhileStmt) {
 			auto children = parent_store.getReverseTransitive(statement->getIdentifier());

@@ -6,12 +6,12 @@
 #include "PKB/StatementRelationStore.tpp"
 #include "PKB/Types.h"
 
-class PKB::ModifiesRelation {
+class PKB::ModifiesSRelation {
 public:
-	static bool validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable);
-	static bool validate(SVRelationStore<ModifiesRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables);
+	static bool validate(SVRelationStore<ModifiesSRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable);
+	static bool validate(SVRelationStore<ModifiesSRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables);
 	static void optimize(Types::StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
-	                     SVRelationStore<ModifiesRelation>& store);
+	                     SVRelationStore<ModifiesSRelation>& store);
 };
 
 #endif  // SPA_SRC_PKB_MODIFIESRELATION_H
