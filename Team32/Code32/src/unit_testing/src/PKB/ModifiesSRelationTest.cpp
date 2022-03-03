@@ -22,6 +22,7 @@ TEST_CASE("PKB::ModifiesSRelation Test") {
 	shared_ptr<StmtInfo> s4 = TestUtilities::createStmtInfo(4, StmtType::Call);
 	shared_ptr<StmtInfo> s5 = TestUtilities::createStmtInfo(5, StmtType::Read);
 	shared_ptr<StmtInfo> s6 = TestUtilities::createStmtInfo(6, StmtType::Read);
+	shared_ptr<StmtInfo> s7 = TestUtilities::createStmtInfo(6, StmtType::Print);
 
 	PKB::Types::ProcedureStore procedure_store = PKB::Types::ProcedureStore();
 	PKB::CallStatementStore call_statement_store = PKB::CallStatementStore();
@@ -41,8 +42,12 @@ TEST_CASE("PKB::ModifiesSRelation Test") {
 		REQUIRE(PKB::ModifiesSRelation::validate(&store, s2, "x"));
 		REQUIRE(PKB::ModifiesSRelation::validate(&store, s3, "x"));
 		REQUIRE(PKB::ModifiesSRelation::validate(&store, s4, "x"));
-		REQUIRE_THROWS_AS(PKB::ModifiesSRelation::validate(&store, s5, "x"), invalid_argument);
+		REQUIRE(PKB::ModifiesSRelation::validate(&store, s5, "x"));
 		REQUIRE(PKB::ModifiesSRelation::validate(&store, s6, "x"));
+
+		// Print statements cannot modify a variable.
+		REQUIRE_THROWS_AS(PKB::ModifiesSRelation::validate(&store, s7, "x"), invalid_argument);
+
 		store.set(s1, "x");
 		store.set(s2, "x");
 		store.set(s3, "x");
@@ -61,8 +66,9 @@ TEST_CASE("PKB::ModifiesSRelation Test") {
 		REQUIRE(PKB::ModifiesSRelation::validate(&store, s2, var_refs));
 		REQUIRE_FALSE(PKB::ModifiesSRelation::validate(&store, s3, var_refs));
 		REQUIRE(PKB::ModifiesSRelation::validate(&store, s4, var_refs));
-		REQUIRE_THROWS_AS(PKB::ModifiesSRelation::validate(&store, s5, var_refs), invalid_argument);
+		REQUIRE_FALSE(PKB::ModifiesSRelation::validate(&store, s5, var_refs));
 		REQUIRE_FALSE(PKB::ModifiesSRelation::validate(&store, s6, var_refs));
+		REQUIRE_THROWS_AS(PKB::ModifiesSRelation::validate(&store, s7, var_refs), invalid_argument);
 	}
 
 	// TODO: Rewrite optimize to include call stores.
