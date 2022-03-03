@@ -82,7 +82,7 @@ QP::QueryResult QP::Relationship::UsesS::executeTrivialEntUnknown(PKB::StorageAc
 			continue;
 		}
 
-		VarRefSet var_set = pkb.getUsesByStmt(stmt->reference);
+		VarRefSet var_set = pkb.getUsesByStmt(stmt->getIdentifier());
 		if (!var_set.empty()) {
 			return QueryResult(true);
 		}
@@ -97,7 +97,7 @@ QP::QueryResult QP::Relationship::UsesS::executeNonTrivialEntVarName(PKB::Storag
 	vector<string> column;
 	for (auto const& stmt : stmt_set) {
 		if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-			column.push_back(to_string(stmt->reference));
+			column.push_back(to_string(stmt->getIdentifier()));
 		}
 	}
 	QueryResult result = QueryResult();
@@ -115,9 +115,9 @@ QP::QueryResult QP::Relationship::UsesS::executeNonTrivialEntUnderscore(PKB::Sto
 			continue;
 		}
 
-		VarRefSet var_set = pkb.getUsesByStmt(stmt->reference);
+		VarRefSet var_set = pkb.getUsesByStmt(stmt->getIdentifier());
 		if (!var_set.empty()) {
-			column.push_back(to_string(stmt->reference));
+			column.push_back(to_string(stmt->getIdentifier()));
 		}
 	}
 	QueryResult result = QueryResult();
@@ -136,9 +136,9 @@ QP::QueryResult QP::Relationship::UsesS::executeNonTrivialEntSynonym(PKB::Storag
 			continue;
 		}
 
-		VarRefSet var_set = pkb.getUsesByStmt(stmt->reference);
+		VarRefSet var_set = pkb.getUsesByStmt(stmt->getIdentifier());
 		for (auto const& var : var_set) {
-			stmt_column.push_back(to_string(stmt->reference));
+			stmt_column.push_back(to_string(stmt->getIdentifier()));
 			var_column.push_back(var);
 		}
 	}
