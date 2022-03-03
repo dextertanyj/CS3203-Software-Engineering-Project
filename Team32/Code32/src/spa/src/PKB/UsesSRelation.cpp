@@ -21,7 +21,8 @@ bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const s
 	                [variable](const VarRef& existing_var) { return existing_var != variable; }));
 }
 
-bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables) {
+bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const shared_ptr<StmtInfo>& statement,
+                                  const VarRefSet& variables) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Read) {
 		throw invalid_argument("Read statements cannot use a variable");
@@ -43,7 +44,7 @@ bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const s
 }
 
 void PKB::UsesSRelation::optimize(Types::StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
-                                 SVRelationStore<UsesSRelation>& store) {
+                                  SVRelationStore<UsesSRelation>& store) {
 	for (const auto& statement : statement_store.getAll()) {
 		if (statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::WhileStmt) {
 			auto children = parent_store.getReverseTransitive(statement->getIdentifier());

@@ -5,7 +5,7 @@
 #include "PKB/SVRelationStore.tpp"
 
 bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store, const shared_ptr<StmtInfo>& statement,
-                                     const VarRef& variable) {
+                                      const VarRef& variable) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Print) {
 		throw invalid_argument("Print statements cannot modify a variable");
@@ -23,7 +23,7 @@ bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store,
 }
 
 bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store, const shared_ptr<StmtInfo>& statement,
-                                     const VarRefSet& variables) {
+                                      const VarRefSet& variables) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Print) {
 		throw invalid_argument("Print statements cannot modify a variable");
@@ -44,7 +44,7 @@ bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store,
 }
 
 void PKB::ModifiesSRelation::optimize(Types::StatementStore& statement_store, StatementRelationStore<ParentRelation>& parent_store,
-                                     SVRelationStore<ModifiesSRelation>& store) {
+                                      SVRelationStore<ModifiesSRelation>& store) {
 	for (const auto& statement : statement_store.getAll()) {
 		if (statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::WhileStmt) {
 			auto children = parent_store.getReverseTransitive(statement->getIdentifier());
