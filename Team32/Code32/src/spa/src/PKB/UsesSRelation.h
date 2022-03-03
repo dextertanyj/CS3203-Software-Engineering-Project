@@ -20,7 +20,7 @@ private:
 	                              Types::ProcedureStore& proc_store, SVRelationStore<UsesSRelation>& store);
 	static VarRefSet optimizeConditional(const shared_ptr<StmtInfo>& statement,
 	                                     StatementRelationStore<ParentRelation>& parent_store,
-	                                     SVRelationStore<UsesRelation>& store);
+	                                     SVRelationStore<UsesSRelation>& store);
 };
 
 #endif  // SPA_SRC_PKB_USESRELATION_H

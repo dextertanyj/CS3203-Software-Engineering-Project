@@ -59,7 +59,7 @@ void PKB::ModifiesSRelation::optimize(StatementRelationStore<ParentRelation>& pa
 				variables = optimizeConditional(statement, parent_store, store);
 			}
 			if (!variables.empty()) {
-				modifies_store.set(statement, variables);
+				store.set(statement, variables);
 			}
 		}
 	}
@@ -75,7 +75,7 @@ VarRefSet PKB::ModifiesSRelation::optimizeCall(const shared_ptr<StmtInfo>& state
 	for (const auto& stmt_in_called_proc : stmts_in_called_proc) {
 		auto iter = store.statement_key_map.find(stmt_in_called_proc->getIdentifier());
 		// If statement modifies a variable, then we must record it in the calling statement.
-		if (iter != modifies_store.statement_key_map.end()) {
+		if (iter != store.statement_key_map.end()) {
 			variables.insert(iter->second.begin(), iter->second.end());
 		}
 	}
@@ -91,7 +91,7 @@ VarRefSet PKB::ModifiesSRelation::optimizeConditional(const shared_ptr<StmtInfo>
 	for (const auto& child : children) {
 		auto iter = store.statement_key_map.find(child->getIdentifier());
 		// If child statement modifies a variable, then we must record it in the parent conditional statement.
-		if (iter != modifies_store.statement_key_map.end()) {
+		if (iter != store.statement_key_map.end()) {
 			variables.insert(iter->second.begin(), iter->second.end());
 		}
 	}

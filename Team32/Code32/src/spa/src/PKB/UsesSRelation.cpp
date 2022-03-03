@@ -83,7 +83,7 @@ VarRefSet PKB::UsesSRelation::optimizeCall(const shared_ptr<StmtInfo>& statement
 
 VarRefSet PKB::UsesSRelation::optimizeConditional(const shared_ptr<StmtInfo>& statement,
                                                   StatementRelationStore<ParentRelation>& parent_store,
-                                                  SVRelationStore<UsesRelation>& store) {
+                                                  SVRelationStore<UsesSRelation>& store) {
 	// For conditional statements, need to look at the child* statements for modify statements.
 	VarRefSet variables;
 	auto children = parent_store.getReverseTransitive(statement->getIdentifier());
