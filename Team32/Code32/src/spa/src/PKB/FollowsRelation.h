@@ -10,8 +10,8 @@
 class PKB::FollowsRelation {
 public:
 	explicit FollowsRelation(shared_ptr<StmtInfo> self);
-	void insertForward(shared_ptr<StmtInfo> following_to_insert);
-	void insertReverse(shared_ptr<StmtInfo> follower_to_insert);
+	void insertForward(const shared_ptr<StmtInfo>& following_to_insert);
+	void insertReverse(const shared_ptr<StmtInfo>& follower_to_insert);
 	void appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> followings);
 	void appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> followers);
 

@@ -21,7 +21,7 @@ inline bool checkStmtTypeMatch(const shared_ptr<StmtInfo>& stmt, DesignEntity de
 		return false;
 	}
 
-	return design_entity == DesignEntity::Stmt || stmt->type == design_ent_to_stmt_type[design_entity];
+	return design_entity == DesignEntity::Stmt || stmt->getType() == design_ent_to_stmt_type[design_entity];
 }
 };  // namespace QP::Utilities
 

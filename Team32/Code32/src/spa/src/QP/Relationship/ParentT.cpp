@@ -5,7 +5,7 @@ QP::QueryResult QP::Relationship::ParentT::executeTrivial(PKB::StorageAccessInte
 		StmtInfoPtrSet children_set = pkb.getChildStar(stoul(getParentStmt().stmt_ref));
 		StmtRef child_stmt_no = stoul(getChildStmt().stmt_ref);
 		for (auto const& child : children_set) {
-			if (child->reference == child_stmt_no) {
+			if (child->getIdentifier() == child_stmt_no) {
 				return QueryResult(true);
 			}
 		}
@@ -31,7 +31,7 @@ QP::QueryResult QP::Relationship::ParentT::executeTrivial(PKB::StorageAccessInte
 	} else if (getParentStmt().type == StmtRefType::Underscore && getChildStmt().type == StmtRefType::Underscore) {
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
 		for (auto const& stmt : stmt_set) {
-			StmtInfoPtrSet children = pkb.getChildStar(stmt->reference);
+			StmtInfoPtrSet children = pkb.getChildStar(stmt->getIdentifier());
 			if (!children.empty()) {
 				return QueryResult(true);
 			}
@@ -44,7 +44,7 @@ QP::QueryResult QP::Relationship::ParentT::executeTrivial(PKB::StorageAccessInte
 				continue;
 			}
 
-			StmtInfoPtrSet parent_set = pkb.getParentStar(stmt->reference);
+			StmtInfoPtrSet parent_set = pkb.getParentStar(stmt->getIdentifier());
 			if (!parent_set.empty()) {
 				return QueryResult(true);
 			}
@@ -65,7 +65,7 @@ QP::QueryResult QP::Relationship::ParentT::executeTrivial(PKB::StorageAccessInte
 				continue;
 			}
 
-			StmtInfoPtrSet children = pkb.getChildStar(stmt->reference);
+			StmtInfoPtrSet children = pkb.getChildStar(stmt->getIdentifier());
 			if (!children.empty()) {
 				return QueryResult(true);
 			}
@@ -83,7 +83,7 @@ QP::QueryResult QP::Relationship::ParentT::executeTrivial(PKB::StorageAccessInte
 				continue;
 			}
 
-			StmtInfoPtrSet children = pkb.getChildStar(stmt->reference);
+			StmtInfoPtrSet children = pkb.getChildStar(stmt->getIdentifier());
 			for (auto const& child : children) {
 				if (Utilities::checkStmtTypeMatch(child, child_design_entity)) {
 					return QueryResult(true);
@@ -102,7 +102,7 @@ QP::QueryResult QP::Relationship::ParentT::executeNonTrivial(PKB::StorageAccessI
 		vector<string> column;
 		for (auto const& parent : parent_set) {
 			if (Utilities::checkStmtTypeMatch(parent, design_entity)) {
-				column.push_back(to_string(parent->reference));
+				column.push_back(to_string(parent->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();
@@ -118,9 +118,9 @@ QP::QueryResult QP::Relationship::ParentT::executeNonTrivial(PKB::StorageAccessI
 				continue;
 			}
 
-			StmtInfoPtrSet children = pkb.getChildStar(stmt->reference);
+			StmtInfoPtrSet children = pkb.getChildStar(stmt->getIdentifier());
 			if (!children.empty()) {
-				column.push_back(to_string(stmt->reference));
+				column.push_back(to_string(stmt->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();
@@ -142,11 +142,11 @@ QP::QueryResult QP::Relationship::ParentT::executeNonTrivial(PKB::StorageAccessI
 				continue;
 			}
 
-			StmtInfoPtrSet children = pkb.getChildStar(stmt->reference);
+			StmtInfoPtrSet children = pkb.getChildStar(stmt->getIdentifier());
 			for (auto const& child : children) {
 				if (Utilities::checkStmtTypeMatch(child, child_design_entity)) {
-					parent_column.push_back(to_string(stmt->reference));
-					child_column.push_back(to_string(child->reference));
+					parent_column.push_back(to_string(stmt->getIdentifier()));
+					child_column.push_back(to_string(child->getIdentifier()));
 				}
 			}
 		}
@@ -164,9 +164,9 @@ QP::QueryResult QP::Relationship::ParentT::executeNonTrivial(PKB::StorageAccessI
 				continue;
 			}
 
-			StmtInfoPtrSet parent_set = pkb.getParentStar(stmt->reference);
+			StmtInfoPtrSet parent_set = pkb.getParentStar(stmt->getIdentifier());
 			if (!parent_set.empty()) {
-				column.push_back(to_string(stmt->reference));
+				column.push_back(to_string(stmt->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();
@@ -180,7 +180,7 @@ QP::QueryResult QP::Relationship::ParentT::executeNonTrivial(PKB::StorageAccessI
 
 		for (auto const& stmt : stmt_set) {
 			if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				column.push_back(to_string(stmt->reference));
+				column.push_back(to_string(stmt->getIdentifier()));
 			}
 		}
 		QueryResult result = QueryResult();

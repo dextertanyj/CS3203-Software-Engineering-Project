@@ -90,6 +90,9 @@ QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) 
 		case DesignEntity::Constant: {
 			return getConstants(select.symbol);
 		}
+		case DesignEntity::Procedure: {
+			return getProcedures(select.symbol);
+		}
 		default:
 			return {};
 	}
@@ -102,7 +105,7 @@ QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(DesignEntity design_enti
 	vector<string> result_string;
 	for (auto const& stmt : stmt_set) {
 		if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-			result_string.push_back(to_string(stmt->reference));
+			result_string.push_back(to_string(stmt->getIdentifier()));
 		}
 	}
 
@@ -131,6 +134,19 @@ QP::QueryResult QP::QueryEvaluator::getVariables(const string& symbol) {
 	vector<string> result_string;
 	for (auto const& var : var_set) {
 		result_string.push_back(var);
+	}
+
+	result.addColumn(symbol, result_string);
+	return result;
+}
+
+QP::QueryResult QP::QueryEvaluator::getProcedures(const string& symbol) {
+	ProcRefSet proc_set = pkb.getProcedures();
+	QueryResult result = QueryResult();
+
+	vector<string> result_string;
+	for (auto const& proc : proc_set) {
+		result_string.push_back(proc);
 	}
 
 	result.addColumn(symbol, result_string);

@@ -59,7 +59,7 @@ QP::QueryResult QP::Relationship::Pattern::executeNonTrivial(PKB::StorageAccessI
 			bool is_exact = this->expression_type != ExpressionType::ExpressionUnderscore;
 			auto stmt_pairs = pkb.getStmtsWithPatternRHS(getExpression(), is_exact);
 			for (auto const& pair : stmt_pairs) {
-				assign_result.push_back(to_string(pair.first->reference));
+				assign_result.push_back(to_string(pair.first->getIdentifier()));
 				var_result.push_back(pair.second);
 			}
 		} else {
@@ -67,7 +67,7 @@ QP::QueryResult QP::Relationship::Pattern::executeNonTrivial(PKB::StorageAccessI
 			for (auto const& var_ref : var_set) {
 				StmtInfoPtrSet stmt_set = pkb.getStmtsWithPatternLHS(var_ref);
 				for (auto const& stmt : stmt_set) {
-					assign_result.push_back(to_string(stmt->reference));
+					assign_result.push_back(to_string(stmt->getIdentifier()));
 					var_result.push_back(var_ref);
 				}
 			}
@@ -98,7 +98,7 @@ QP::QueryResult QP::Relationship::Pattern::executeNonTrivial(PKB::StorageAccessI
 	vector<string> assign_stmt_strings;
 	for (auto const& stmt : stmt_set) {
 		if (Utilities::checkStmtTypeMatch(stmt, DesignEntity::Assign)) {
-			assign_stmt_strings.push_back(to_string(stmt->reference));
+			assign_stmt_strings.push_back(to_string(stmt->getIdentifier()));
 		}
 	}
 	result.addColumn(this->syn_assign.symbol, assign_stmt_strings);

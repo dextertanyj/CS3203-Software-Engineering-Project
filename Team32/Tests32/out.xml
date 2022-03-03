@@ -1,0 +1,22 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>Tests32</name><parsing_time_taken>5.050000</parsing_time_taken>
+</info>
+<queries>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="Statement count test">1</id><querystr><![CDATA[stmt s; Select s]]></querystr>
+<stuans>8,4,2,1,6,7,5,3</stuans>
+<correct>1,2,3,4,5,6,7,8</correct>
+<time_taken>1.098000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="Comment">2</id><querystr><![CDATA[stmt s; Select s such that Parent(s, 4)]]></querystr>
+<stuans>3</stuans>
+<correct>3</correct>
+<time_taken>1.208000</time_taken>
+<passed/>
+</query>
+</queries>
+</test_results>

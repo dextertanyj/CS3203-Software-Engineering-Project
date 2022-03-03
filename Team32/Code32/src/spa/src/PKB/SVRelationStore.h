@@ -27,8 +27,8 @@ private:
 	unordered_map<StmtRef, unordered_set<VarRef>> statement_key_map;
 	unordered_map<VarRef, unordered_set<shared_ptr<StmtInfo>>> variable_key_map;
 
-	friend class UsesRelation;
-	friend class ModifiesRelation;
+	friend class UsesSRelation;
+	friend class ModifiesSRelation;
 };
 
 #endif  // SPA_SRC_PKB_SVRELATIONSTORE_H

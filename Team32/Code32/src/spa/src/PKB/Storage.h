@@ -4,22 +4,31 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
 #include "PKB/AssignStore.h"
-#include "PKB/ConstantStore.h"
+#include "PKB/CallRelation.h"
+#include "PKB/CallStatementStore.h"
 #include "PKB/FollowsRelation.h"
-#include "PKB/ModifiesRelation.h"
+#include "PKB/InfoStore.h"
+#include "PKB/ModifiesPRelation.h"
+#include "PKB/ModifiesSRelation.h"
 #include "PKB/PKB.h"
+#include "PKB/PVRelationStore.tpp"
 #include "PKB/ParentRelation.h"
 #include "PKB/SVRelationStore.tpp"
+#include "PKB/SetStore.tpp"
+#include "PKB/StatementInfo.h"
 #include "PKB/StatementRelationStore.tpp"
-#include "PKB/StatementStore.h"
 #include "PKB/StorageAccessInterface.h"
 #include "PKB/StorageUpdateInterface.h"
-#include "PKB/VariableStore.h"
+#include "PKB/TopologicalSort.tpp"
+#include "PKB/TransitiveRelationStore.tpp"
+#include "PKB/UsesPRelation.h"
+#include "PKB/UsesSRelation.h"
 
 using namespace std;
 
@@ -100,14 +109,23 @@ public:
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> getStmtInfoMap();
 
 private:
-	ConstantStore constant_store;
-	VariableStore variable_store;
-	StatementStore statement_store;
+	SetStore<ConstVal> constant_store;
+	SetStore<VarRef> variable_store;
+	Types::StatementStore statement_store;
+	Types::ProcedureStore procedure_store;
+	CallStatementStore call_statement_store;
+	TopologicalSort<ProcedureInfo> call_graph;
+	TransitiveRelationStore<ProcRef, ProcedureInfo, CallRelation> call_store;
 	StatementRelationStore<ParentRelation> parent_store;
 	StatementRelationStore<FollowsRelation> follows_store;
-	SVRelationStore<UsesRelation> uses_store;
-	SVRelationStore<ModifiesRelation> modifies_store;
+	SVRelationStore<UsesSRelation> uses_s_store;
+	SVRelationStore<ModifiesSRelation> modifies_s_store;
+	PVRelationStore<UsesPRelation> uses_p_store;
+	PVRelationStore<PKB::ModifiesPRelation> modifies_p_store;
 	AssignStore assign_store;
+
+	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
+	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set);
 };
 
 #endif

@@ -14,8 +14,8 @@ PKB::StatementRelationStore<T>::StatementRelationStore() = default;
 template <class T>
 void PKB::StatementRelationStore<T>::set(shared_ptr<StmtInfo> front,
                                          shared_ptr<StmtInfo> back) {  // NOLINT(bugprone-easily-swappable-parameters)
-	StmtRef front_idx = front->reference;
-	StmtRef back_idx = back->reference;
+	StmtRef front_idx = front->getIdentifier();
+	StmtRef back_idx = back->getIdentifier();
 
 	if (front_idx >= back_idx) {
 		throw invalid_argument("Second statement must come after the first statement");
@@ -62,7 +62,7 @@ bool PKB::StatementRelationStore<T>::isRelated(StmtRef front, StmtRef back) {
 	if (result.empty()) {
 		return false;
 	}
-	return (any_of(result.begin(), result.end(), [back](const shared_ptr<StmtInfo>& ptr) { return ptr->reference == back; }));
+	return (any_of(result.begin(), result.end(), [back](const shared_ptr<StmtInfo>& ptr) { return ptr->getIdentifier() == back; }));
 }
 
 template <class T>

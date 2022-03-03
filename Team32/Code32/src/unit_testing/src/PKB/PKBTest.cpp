@@ -1,12 +1,12 @@
 #include <climits>
 
-#include "MockUtilities.h"
 #include "PKB/FollowsRelation.h"
 #include "PKB/Storage.h"
+#include "TestUtilities.h"
 #include "catch.hpp"
 
 TEST_CASE("PKB::PKB Follows Methods Test") {
-	PKB::Storage pkb = MockUtilities::generateFollowsTestPKB();
+	PKB::Storage pkb = TestUtilities::generateFollowsTestPKB();
 	StmtRef s_1 = 1;
 	StmtRef s_2 = 2;
 	StmtRef s_3 = 3;
@@ -24,17 +24,17 @@ TEST_CASE("PKB::PKB Follows Methods Test") {
 		// Verify that normal setting works.
 		CHECK_NOTHROW(pkb.setFollows(s_1, s_2));
 		CHECK_NOTHROW(pkb.setFollows(s_2, s_3));
-		pkb = MockUtilities::generateFollowsTestPKB();
+		pkb = TestUtilities::generateFollowsTestPKB();
 
 		// If s_1 already has a follower, it should not be able to have a new direct follower.
 		CHECK_NOTHROW(pkb.setFollows(s_1, s_2));
 		CHECK_THROWS(pkb.setFollows(s_1, s_max));
-		pkb = MockUtilities::generateFollowsTestPKB();
+		pkb = TestUtilities::generateFollowsTestPKB();
 
 		// If s_3 already follows s_2, then it should not be allowed to follow s_1.
 		CHECK_NOTHROW(pkb.setFollows(s_2, s_3));
 		CHECK_THROWS(pkb.setFollows(s_1, s_3));
-		pkb = MockUtilities::generateFollowsTestPKB();
+		pkb = TestUtilities::generateFollowsTestPKB();
 
 		// Verify that improper arguments lead to an exception thrown.
 		CHECK_THROWS(pkb.setFollows(s_1, s_1));
@@ -69,8 +69,8 @@ TEST_CASE("PKB::PKB Follows Methods Test") {
 		pkb.setFollows(s_2, s_3);
 		pkb.setFollows(s_4, s_max);
 
-		CHECK(pkb.getFollower(s_1)->reference == s_4);
-		CHECK(pkb.getFollower(s_2)->reference == s_3);
+		CHECK(pkb.getFollower(s_1)->getIdentifier() == s_4);
+		CHECK(pkb.getFollower(s_2)->getIdentifier() == s_3);
 		CHECK(pkb.getFollower(s_3) == nullptr);
 		CHECK(pkb.getFollower(s_max) == nullptr);
 
@@ -88,9 +88,9 @@ TEST_CASE("PKB::PKB Follows Methods Test") {
 
 		CHECK(pkb.getPreceding(s_1) == nullptr);
 		CHECK(pkb.getPreceding(s_2) == nullptr);
-		CHECK(pkb.getPreceding(s_3)->reference == s_2);
-		CHECK(pkb.getPreceding(s_4)->reference == s_1);
-		CHECK(pkb.getPreceding(s_max)->reference == s_4);
+		CHECK(pkb.getPreceding(s_3)->getIdentifier() == s_2);
+		CHECK(pkb.getPreceding(s_4)->getIdentifier() == s_1);
+		CHECK(pkb.getPreceding(s_max)->getIdentifier() == s_4);
 
 		// Not stored in PKB.
 		CHECK(pkb.getPreceding(s_5) == nullptr);
@@ -171,7 +171,7 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 	StmtRef s_9 = 9;
 	StmtRef s_max = SIZE_MAX;
 	StmtRef s_zero = 0;
-	PKB::Storage pkb = MockUtilities::generateParentTestPKB();
+	PKB::Storage pkb = TestUtilities::generateParentTestPKB();
 
 	SECTION("PKB::PKB::setParent Test") {
 		pkb.setStmtType(SIZE_MAX, StmtType::Read);
@@ -190,7 +190,7 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 		// A child cannot have multiple parents.
 		CHECK_THROWS(pkb.setParent(s_2, s_max));
 		CHECK_THROWS(pkb.setParent(s_1, s_3));
-		pkb = MockUtilities::generateParentTestPKB();
+		pkb = TestUtilities::generateParentTestPKB();
 
 		// Verify that improper arguments lead to an exception thrown.
 		CHECK_THROWS(pkb.setParent(s_zero, s_1));
@@ -210,9 +210,9 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 		CHECK(pkb.checkParents(s_1, s_2));
 		CHECK(pkb.checkParents(s_2, s_3));
 		CHECK(pkb.checkParents(s_2, s_4));
-		CHECK(pkb.getParent(s_2)->reference == s_1);
-		CHECK(pkb.getParent(s_3)->reference == s_2);
-		CHECK(pkb.getParent(s_4)->reference == s_2);
+		CHECK(pkb.getParent(s_2)->getIdentifier() == s_1);
+		CHECK(pkb.getParent(s_3)->getIdentifier() == s_2);
+		CHECK(pkb.getParent(s_4)->getIdentifier() == s_2);
 
 		shared_ptr<StmtInfo> expected_s_2_info = stmt_info_map.find(s_2)->second;
 		shared_ptr<StmtInfo> expected_s_3_info = stmt_info_map.find(s_3)->second;
@@ -242,8 +242,8 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 		pkb.setParent(s_2, s_4);
 
 		CHECK(pkb.getParent(s_1) == nullptr);  // Highest statement should have no parent.
-		CHECK(pkb.getParent(s_2)->reference == 1);
-		CHECK(pkb.getParent(s_3)->reference == 2);
+		CHECK(pkb.getParent(s_2)->getIdentifier() == 1);
+		CHECK(pkb.getParent(s_3)->getIdentifier() == 2);
 
 		// Statement which was not stored in PKB.
 		CHECK(pkb.getParent(s_5) == nullptr);
@@ -347,12 +347,14 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 }
 
 TEST_CASE("PKB::Uses Methods Test") {
-	PKB::Storage pkb = MockUtilities::generateUsesTestPKB();
+	PKB::Storage pkb = TestUtilities::generateUsesTestPKB();
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
 	StmtRef s1 = 1;
 	StmtRef s2 = 2;
 	StmtRef s3 = 3;
 	StmtRef s4 = 4;
+	//StmtRef s5 = 5;
+	//StmtRef s6 = 6;
 	StmtRef s_max = SIZE_MAX;
 	StmtRef s_zero = 0;
 	VarRef x = "x";
@@ -363,6 +365,9 @@ TEST_CASE("PKB::Uses Methods Test") {
 	VarRefSet v1 = {x, y, z};
 	VarRefSet v2 = {"a"};
 	VarRefSet v3 = {x, ""};
+	ProcRef proc_1 = "procedure_one";
+	ProcRef proc_2 = "procedure_two";
+	ProcRef proc_3 = "procedure_three";
 	shared_ptr<StmtInfo> p1 = stmt_info_map.at(s1);
 	shared_ptr<StmtInfo> p2 = stmt_info_map.at(s2);
 	shared_ptr<StmtInfo> p3 = stmt_info_map.at(s3);
@@ -373,7 +378,7 @@ TEST_CASE("PKB::Uses Methods Test") {
 		REQUIRE_THROWS_AS(pkb.setUses(s1, ""), invalid_argument);
 
 		// StmtRef does not exist in Statement Store
-		CHECK_THROWS(pkb.setUses(s4, x));
+		CHECK_THROWS(pkb.setUses(s_max, x));
 
 		// 1 statement, multiple vars.
 		CHECK_NOTHROW(pkb.setUses(s1, x));
@@ -390,7 +395,7 @@ TEST_CASE("PKB::Uses Methods Test") {
 		REQUIRE_THROWS_AS(pkb.setUses(s1, v3), invalid_argument);
 
 		// StmtRef does not exist in Statement Store
-		CHECK_THROWS(pkb.setUses(s4, v1));
+		CHECK_THROWS(pkb.setUses(s_max, v1));
 
 		// 1 statement, multiple vars.
 		CHECK_NOTHROW(pkb.setUses(s1, v1));
@@ -413,13 +418,13 @@ TEST_CASE("PKB::Uses Methods Test") {
 		CHECK(pkb.checkUses(s3, x));
 
 		// Negative Cases
-		CHECK_FALSE(pkb.checkUses(s_max, x));
+		CHECK_FALSE(pkb.checkUses(s4, x));
 		CHECK_FALSE(pkb.checkUses(s2, y));
 		CHECK_FALSE(pkb.checkUses(s3, z));
 
 		// Invalid arguments
 		CHECK_THROWS(pkb.checkUses(s_zero, x));
-		CHECK_THROWS(pkb.checkUses(s_max, ""));
+		CHECK_THROWS(pkb.checkUses(s4, ""));
 	}
 
 	SECTION("PKB::getStmtUsesByVar Test") {
@@ -444,31 +449,88 @@ TEST_CASE("PKB::Uses Methods Test") {
 		pkb.setUses(s2, y);
 		pkb.setUses(s2, z);
 		pkb.setUses(s3, x);
-		pkb.setUses(s_max, xyz);
+		pkb.setUses(s4, xyz);
 
 		unordered_set<VarRef> used_by_s1 = {x, y, z};
 		unordered_set<VarRef> used_by_s2 = {y, z};
 		unordered_set<VarRef> used_by_s3 = {x};
-		unordered_set<VarRef> used_by_s_max = {xyz};
+		unordered_set<VarRef> used_by_s4 = {xyz};
 
 		CHECK(pkb.getUsesByStmt(s1) == used_by_s1);
 		CHECK(pkb.getUsesByStmt(s2) == used_by_s2);
 		CHECK(pkb.getUsesByStmt(s3) == used_by_s3);
-		CHECK(pkb.getUsesByStmt(s_max) == used_by_s_max);
+		CHECK(pkb.getUsesByStmt(s4) == used_by_s4);
 
 		// Invalid arguments
 		CHECK_THROWS(pkb.getUsesByStmt(s_zero));
 		CHECK_THROWS(pkb.getUsesByStmt(0));
 	}
+
+	/*
+	SECTION("PKB::getUsesByProc Test") {
+		pkb.setUses(s1, a);
+		pkb.setUses(s6, x);
+		pkb.setProc(proc_1, s1, s4);
+		pkb.setProc(proc_2, s5, s5);
+		pkb.setProc(proc_3, s6, s6);
+		pkb.setCall(4, proc_2);
+		pkb.setCall(5, proc_3);
+
+		pkb.populateComplexRelations();
+		CHECK(pkb.getUsesByProc(proc_1) == unordered_set<VarRef>{a, x});
+		CHECK(pkb.getUsesByProc(proc_2) == unordered_set<VarRef>{x});
+		CHECK(pkb.getUsesByProc(proc_3) == unordered_set<VarRef>{x});
+
+		// Invalid Proc
+		CHECK_THROWS(pkb.getUsesByProc(""));
+	}
+
+	SECTION("PKB::getProcUsesByVar Test") {
+		pkb.setUses(s1, a);
+		pkb.setUses(s6, x);
+		pkb.setProc(proc_1, s1, s4);
+		pkb.setProc(proc_2, s5, s5);
+		pkb.setProc(proc_3, s6, s6);
+		pkb.setCall(4, proc_2);
+		pkb.setCall(5, proc_3);
+
+		pkb.populateComplexRelations();
+		CHECK(pkb.getProcUsesByVar(a) == unordered_set<ProcRef>{proc_1});
+		CHECK(pkb.getProcUsesByVar(x) == unordered_set<ProcRef>{proc_1, proc_2, proc_3});
+
+		CHECK_THROWS(pkb.getProcUsesByVar(""));
+	}
+
+	SECTION("PKB::checkUses Proc Test") {
+		CHECK_THROWS(pkb.checkUses("", x));
+		CHECK_THROWS(pkb.checkUses(proc_1, ""));
+
+		pkb.setUses(s1, a);
+		pkb.setUses(s6, x);
+		pkb.setProc(proc_1, s1, s4);
+		pkb.setProc(proc_2, s5, s5);
+		pkb.setProc(proc_3, s6, s6);
+		pkb.setCall(4, proc_2);
+		pkb.setCall(5, proc_3);
+
+		pkb.populateComplexRelations();
+		CHECK(pkb.checkUses(proc_1, x));
+		CHECK(pkb.checkUses(proc_1, a));
+		CHECK(pkb.checkUses(proc_2, x));
+
+		CHECK_FALSE(pkb.checkUses(proc_2, a));
+	}
+	 */
 }
 
 TEST_CASE("PKB::Modifies Methods Test") {
-	PKB::Storage pkb = MockUtilities::generateModifyTestPKB();
+	PKB::Storage pkb = TestUtilities::generateModifyTestPKB();
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
 	StmtRef s1 = 1;
 	StmtRef s2 = 2;
 	StmtRef s3 = 3;
 	StmtRef s4 = 4;
+	StmtRef s5 = 5;
 	StmtRef s_max = SIZE_MAX;
 	StmtRef s_zero = 0;
 	VarRef x = "x";
@@ -478,13 +540,16 @@ TEST_CASE("PKB::Modifies Methods Test") {
 	VarRefSet v1 = {x, y, z};
 	VarRefSet v2 = {"x"};
 	VarRefSet v3 = {x, ""};
+	ProcRef proc_1 = "procedure_one";
+	ProcRef proc_2 = "procedure_two";
+	ProcRef proc_3 = "procedure_three";
 	shared_ptr<StmtInfo> p1 = stmt_info_map.at(s1);
 	shared_ptr<StmtInfo> p2 = stmt_info_map.at(s2);
 	shared_ptr<StmtInfo> p3 = stmt_info_map.at(s3);
 
 	SECTION("PKB::setModifies by Var Test") {
 		// StmtRef does not exist in Statement Store
-		CHECK_THROWS(pkb.setModifies(s4, v1));
+		CHECK_THROWS(pkb.setModifies(s_max, v1));
 
 		// Throw error for invalid arguments
 		CHECK_THROWS(pkb.setModifies(s_zero, x));
@@ -505,7 +570,7 @@ TEST_CASE("PKB::Modifies Methods Test") {
 		REQUIRE_THROWS_AS(pkb.setModifies(s1, v3), invalid_argument);
 
 		// StmtRef does not exist in Statement Store
-		CHECK_THROWS(pkb.setModifies(s4, v1));
+		CHECK_THROWS(pkb.setModifies(s5, v1));
 
 		// More than one variable in varset
 		CHECK_THROWS(pkb.setModifies(s1, v1));
@@ -518,21 +583,21 @@ TEST_CASE("PKB::Modifies Methods Test") {
 		pkb.setModifies(s1, v2);
 		pkb.setModifies(s2, y);
 		pkb.setModifies(s3, z);
-		pkb.setModifies(s_max, x);
+		pkb.setModifies(s5, x);
 
 		CHECK(pkb.checkModifies(s1, x));
 		CHECK(pkb.checkModifies(s2, y));
 		CHECK(pkb.checkModifies(s3, z));
-		CHECK(pkb.checkModifies(s_max, x));
+		CHECK(pkb.checkModifies(s5, x));
 
 		// Negative Cases
-		CHECK_FALSE(pkb.checkModifies(s_max, z));
+		CHECK_FALSE(pkb.checkModifies(s5, z));
 		CHECK_FALSE(pkb.checkModifies(s2, x));
 		CHECK_FALSE(pkb.checkModifies(s3, y));
 
 		// Invalid arguments
 		CHECK_THROWS(pkb.checkModifies(s_zero, x));
-		CHECK_THROWS(pkb.checkModifies(s_max, ""));
+		CHECK_THROWS(pkb.checkModifies(s5, ""));
 	}
 
 	SECTION("PKB::getStmtModifiesByVar Test") {
@@ -559,4 +624,60 @@ TEST_CASE("PKB::Modifies Methods Test") {
 
 		CHECK(pkb.getModifiesByStmt(s4).empty());
 	}
+
+	/*
+	SECTION("PKB::getModifiesByProc Test") {
+		pkb.setModifies(s2, x);
+		pkb.setModifies(s5, y);
+		pkb.setProc(proc_1, s1, s3);
+		pkb.setProc(proc_2, s4, s4);
+		pkb.setProc(proc_3, s5, s5);
+		pkb.setCall(3, proc_2);
+		pkb.setCall(4, proc_3);
+
+		pkb.populateComplexRelations();
+		CHECK(pkb.getModifiesByProc(proc_1) == unordered_set<VarRef>{x, y});
+		CHECK(pkb.getModifiesByProc(proc_2) == unordered_set<VarRef>{y});
+		CHECK(pkb.getModifiesByProc(proc_3) == unordered_set<VarRef>{y});
+
+		CHECK_THROWS(pkb.getModifiesByProc(""));
+	}
+
+	SECTION("PKB::getProcModifiesByVar Test") {
+		pkb.setModifies(s2, x);
+		pkb.setModifies(s5, y);
+		pkb.setProc(proc_1, s1, s3);
+		pkb.setProc(proc_2, s4, s4);
+		pkb.setProc(proc_3, s5, s5);
+		pkb.setCall(3, proc_2);
+		pkb.setCall(4, proc_3);
+
+		pkb.populateComplexRelations();
+		CHECK(pkb.getProcModifiesByVar(y) == unordered_set<VarRef>{proc_1, proc_2, proc_3});
+		CHECK(pkb.getProcModifiesByVar(x) == unordered_set<VarRef>{proc_1});
+
+		CHECK_THROWS(pkb.getProcModifiesByVar(""));
+	}
+
+	SECTION("PKB::checkModifies Proc Test") {
+		CHECK_THROWS(pkb.checkModifies("", x));
+		CHECK_THROWS(pkb.checkModifies(proc_1, ""));
+
+		pkb.setModifies(s2, x);
+		pkb.setModifies(s5, y);
+		pkb.setProc(proc_1, s1, s3);
+		pkb.setProc(proc_2, s4, s4);
+		pkb.setProc(proc_3, s5, s5);
+		pkb.setCall(3, proc_2);
+		pkb.setCall(4, proc_3);
+
+		pkb.populateComplexRelations();
+		CHECK(pkb.checkModifies(proc_1, x));
+		CHECK(pkb.checkModifies(proc_1, y));
+		CHECK(pkb.checkModifies(proc_2, y));
+
+		CHECK_FALSE(pkb.checkModifies(proc_2, x));
+	}
+	 */
 }
+

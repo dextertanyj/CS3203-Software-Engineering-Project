@@ -1,12 +1,24 @@
-#include "MockUtilities.h"
+#ifndef UNIT_TESTING_SRC_PKB_TESTUTILITIES_H
+#define UNIT_TESTING_SRC_PKB_TESTUTILITIES_H
 
-shared_ptr<StmtInfo> MockUtilities::createStmtInfo(StmtRef stmt_no, StmtType type) {
-	StmtInfo s = {stmt_no, type};
-	shared_ptr<StmtInfo> stmt_info = make_shared<StmtInfo>(s);
-	return stmt_info;
+#include "Common/TypeDefs.h"
+#include "PKB/Storage.h"
+#include "PKB/Types.h"
+
+namespace TestUtilities {
+inline shared_ptr<StmtInfo> createStmtInfo(StmtRef stmt_no, StmtType type) {
+	PKB::Types::StatementStore store;
+	store.insert(stmt_no, type);
+	return store.get(stmt_no);
 }
 
-PKB::Storage MockUtilities::generateFollowsTestPKB() {
+inline shared_ptr<PKB::ProcedureInfo> createProcedureInfo(ProcRef name) {
+	PKB::Types::ProcedureStore store;
+	store.insert(name, {});
+	return store.get(name);
+};
+
+inline PKB::Storage generateFollowsTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::IfStmt);
@@ -15,9 +27,9 @@ PKB::Storage MockUtilities::generateFollowsTestPKB() {
 	pkb.setStmtType(5, StmtType::Assign);
 	pkb.setStmtType(6, StmtType::Read);
 	return pkb;
-}
+};
 
-PKB::Storage MockUtilities::generateParentTestPKB() {
+inline PKB::Storage generateParentTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::WhileStmt);
 	pkb.setStmtType(2, StmtType::IfStmt);
@@ -29,28 +41,31 @@ PKB::Storage MockUtilities::generateParentTestPKB() {
 	pkb.setStmtType(8, StmtType::IfStmt);
 	pkb.setStmtType(9, StmtType::Read);
 	return pkb;
-}
+};
 
-PKB::Storage MockUtilities::generateUsesTestPKB() {
+inline PKB::Storage generateUsesTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::IfStmt);
 	pkb.setStmtType(3, StmtType::Print);
-	pkb.setStmtType(SIZE_MAX, StmtType::WhileStmt);
+	pkb.setStmtType(4, StmtType::Call);
+	pkb.setStmtType(5, StmtType::Call);
+	pkb.setStmtType(6, StmtType::WhileStmt);
 	return pkb;
-}
+};
 
-PKB::Storage MockUtilities::generateModifyTestPKB() {
+inline PKB::Storage generateModifyTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::Call);
-	pkb.setStmtType(SIZE_MAX, StmtType::Assign);
+	pkb.setStmtType(4, StmtType::Call);
+	pkb.setStmtType(5, StmtType::Assign);
 	return pkb;
-}
+};
 
-PKB::StatementStore MockUtilities::generateStatementStore() {
-	PKB::StatementStore statement_store = PKB::StatementStore();
+inline PKB::Types::StatementStore generateStatementStore() {
+	PKB::Types::StatementStore statement_store = PKB::Types::StatementStore();
 	statement_store.insert(1, StmtType::WhileStmt);
 	statement_store.insert(2, StmtType::IfStmt);
 	statement_store.insert(3, StmtType::Assign);
@@ -58,4 +73,7 @@ PKB::StatementStore MockUtilities::generateStatementStore() {
 	statement_store.insert(5, StmtType::Print);
 	statement_store.insert(6, StmtType::Read);
 	return statement_store;
-}
+};
+};  // namespace TestUtilities
+
+#endif  // UNIT_TESTING_SRC_PKB_TESTUTILITIES_H

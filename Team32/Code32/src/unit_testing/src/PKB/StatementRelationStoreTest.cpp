@@ -1,14 +1,14 @@
 #include "PKB/StatementRelationStore.h"
 
-#include "MockUtilities.h"
 #include "PKB/Storage.h"
+#include "TestUtilities.h"
 #include "catch.hpp"
 
 TEST_CASE("PKB::StatementRelationStore::set Test") {
-	shared_ptr<StmtInfo> s_1 = MockUtilities::createStmtInfo(1, StmtType::WhileStmt);
-	shared_ptr<StmtInfo> s_2 = MockUtilities::createStmtInfo(2, StmtType::Assign);
-	shared_ptr<StmtInfo> s_3 = MockUtilities::createStmtInfo(3, StmtType::IfStmt);
-	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Read);
+	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(1, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(2, StmtType::Assign);
+	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(3, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s_4 = TestUtilities::createStmtInfo(4, StmtType::Read);
 
 	SECTION("PKB::StatementRelationStore::set Follows Test") {
 		PKB::StatementRelationStore follows_store = PKB::StatementRelationStore<PKB::FollowsRelation>();
@@ -49,10 +49,10 @@ TEST_CASE("PKB::StatementRelationStore::set Test") {
 }
 
 TEST_CASE("PKB::StatementRelationStore::getForward Test") {
-	shared_ptr<StmtInfo> s_1 = MockUtilities::createStmtInfo(1, StmtType::WhileStmt);
-	shared_ptr<StmtInfo> s_2 = MockUtilities::createStmtInfo(2, StmtType::Assign);
-	shared_ptr<StmtInfo> s_3 = MockUtilities::createStmtInfo(3, StmtType::IfStmt);
-	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Read);
+	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(1, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(2, StmtType::Assign);
+	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(3, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s_4 = TestUtilities::createStmtInfo(4, StmtType::Read);
 
 	SECTION("PKB::StatementRelationStore::getForward Follows Test") {
 		PKB::StatementRelationStore follows_store = PKB::StatementRelationStore<PKB::FollowsRelation>();
@@ -97,10 +97,10 @@ TEST_CASE("PKB::StatementRelationStore::getForward Test") {
 }
 
 TEST_CASE("PKB::StatementRelationStore::getReverse Test") {
-	shared_ptr<StmtInfo> s_1 = MockUtilities::createStmtInfo(1, StmtType::WhileStmt);
-	shared_ptr<StmtInfo> s_2 = MockUtilities::createStmtInfo(2, StmtType::Assign);
-	shared_ptr<StmtInfo> s_3 = MockUtilities::createStmtInfo(3, StmtType::IfStmt);
-	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Read);
+	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(1, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(2, StmtType::Assign);
+	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(3, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s_4 = TestUtilities::createStmtInfo(4, StmtType::Read);
 
 	SECTION("PKB::StatementRelationStore::getReverse Follows Test") {
 		PKB::StatementRelationStore follows_store = PKB::StatementRelationStore<PKB::FollowsRelation>();
@@ -144,10 +144,10 @@ TEST_CASE("PKB::StatementRelationStore::getReverse Test") {
 	}
 }
 TEST_CASE("PKB::StatementRelationStore::getForwardTransitive Test") {
-	shared_ptr<StmtInfo> s_1 = MockUtilities::createStmtInfo(1, StmtType::WhileStmt);
-	shared_ptr<StmtInfo> s_2 = MockUtilities::createStmtInfo(2, StmtType::Assign);
-	shared_ptr<StmtInfo> s_3 = MockUtilities::createStmtInfo(3, StmtType::IfStmt);
-	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Read);
+	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(1, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(2, StmtType::Assign);
+	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(3, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s_4 = TestUtilities::createStmtInfo(4, StmtType::Read);
 
 	SECTION("PKB::StatementRelationStore::getForwardTransitive Follows Test") {
 		PKB::StatementRelationStore follows_store = PKB::StatementRelationStore<PKB::FollowsRelation>();
@@ -185,10 +185,10 @@ TEST_CASE("PKB::StatementRelationStore::getForwardTransitive Test") {
 }
 
 TEST_CASE("PKB::StatementRelationStore::getReverseTransitive Test") {
-	shared_ptr<StmtInfo> s_1 = MockUtilities::createStmtInfo(1, StmtType::WhileStmt);
-	shared_ptr<StmtInfo> s_2 = MockUtilities::createStmtInfo(2, StmtType::Assign);
-	shared_ptr<StmtInfo> s_3 = MockUtilities::createStmtInfo(3, StmtType::IfStmt);
-	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Read);
+	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(1, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(2, StmtType::Assign);
+	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(3, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s_4 = TestUtilities::createStmtInfo(4, StmtType::Read);
 
 	SECTION("PKB::StatementRelationStore::getReverseTransitive Follows Test") {
 		PKB::StatementRelationStore follows_store = PKB::StatementRelationStore<PKB::FollowsRelation>();
@@ -226,10 +226,10 @@ TEST_CASE("PKB::StatementRelationStore::getReverseTransitive Test") {
 }
 
 TEST_CASE("PKB::StatementRelationStore::isRelated Test") {
-	shared_ptr<StmtInfo> s_1 = MockUtilities::createStmtInfo(1, StmtType::WhileStmt);
-	shared_ptr<StmtInfo> s_2 = MockUtilities::createStmtInfo(2, StmtType::Assign);
-	shared_ptr<StmtInfo> s_3 = MockUtilities::createStmtInfo(3, StmtType::IfStmt);
-	shared_ptr<StmtInfo> s_4 = MockUtilities::createStmtInfo(4, StmtType::Read);
+	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(1, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(2, StmtType::Assign);
+	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(3, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s_4 = TestUtilities::createStmtInfo(4, StmtType::Read);
 
 	SECTION("PKB::StatementRelationStore::isRelated Follows Test") {
 		PKB::StatementRelationStore follows_store = PKB::StatementRelationStore<PKB::FollowsRelation>();

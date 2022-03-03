@@ -12,20 +12,39 @@ class StorageUpdateInterface;
 class StorageAccessInterface;
 class Storage;
 
-class AssignStore;
-class ConstantStore;
-class ProcedureStore;
-template <class T>
-class StatementRelationStore;
-class StatementStore;
+class StatementInfo;
+class ProcedureInfo;
+
+template <typename TIdent, typename TContent, class TInfo>
+class InfoStore;
+template <typename T>
+class SetStore;
+template <typename TIdent, class TInfo, class TRelation>
+class TransitiveRelationStore;
+class CallStatementStore;
 template <class T>
 class SVRelationStore;
+template <class T>
+class PVRelationStore;
 class VariableStore;
 
+template <class TInfo>
+class TopologicalSort;
+template <class T>
+class StatementRelationStore;
+template <class T>
+class SVRelationStore;
+
+class AssignStore;
+class CallStatementStore;
+
+class CallRelation;
 class FollowsRelation;
-class ModifiesRelation;
+class ModifiesSRelation;
+class ModifiesPRelation;
 class ParentRelation;
-class UsesRelation;
+class UsesSRelation;
+class UsesPRelation;
 
 typedef struct AssignRelation {
 	shared_ptr<StmtInfo> node;
@@ -33,10 +52,7 @@ typedef struct AssignRelation {
 	Common::ExpressionProcessor::Expression expression;
 } AssignRelation;
 
-typedef struct ProcRelation {
-	vector<shared_ptr<StmtInfo>> idx_list;
-	shared_ptr<StmtInfo> call_stmt;
-} ProcRelation;
+namespace Types {};
 }  // namespace PKB
 
 #endif  // SPA_SRC_PKB_PKB_H
