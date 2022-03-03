@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "PKB/SVRelationStore.tpp"
+#include "PKB/TopologicalSort.tpp"
 
 bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
 	StmtRef idx = statement->getIdentifier();

@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "PKB/SVRelationStore.tpp"
+#include "PKB/TopologicalSort.tpp"
 
 bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store, const shared_ptr<StmtInfo>& statement,
                                       const VarRef& variable) {
@@ -48,7 +49,6 @@ void PKB::ModifiesSRelation::optimize(StatementRelationStore<ParentRelation>& pa
                                       SVRelationStore<ModifiesSRelation>& store) {
 	// Start optimization from the lowest level in the DAG.
 	vector<shared_ptr<ProcedureInfo>> order = topo_order.get();
-	// Start optimization from the lowest level in the DAG.
 	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {
 		vector<shared_ptr<StmtInfo>> stmts_in_proc = proc_iterator->get()->getStatements();
 		for (const auto& statement : stmts_in_proc) {
