@@ -48,7 +48,8 @@ void PKB::ModifiesSRelation::optimize(StatementRelationStore<ParentRelation>& pa
                                       SVRelationStore<ModifiesSRelation>& store) {
 	// Start optimization from the lowest level in the DAG.
 	vector<shared_ptr<ProcedureInfo>> order = topo_order.get();
-	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {// <ProcedureInfo> proc : topo_order.get()) {
+	// Start optimization from the lowest level in the DAG.
+	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {
 		vector<shared_ptr<StmtInfo>> stmts_in_proc = proc_iterator->get()->getStatements();
 		for (const auto& statement : stmts_in_proc) {
 			VarRefSet variables;
@@ -57,7 +58,9 @@ void PKB::ModifiesSRelation::optimize(StatementRelationStore<ParentRelation>& pa
 			} else if (statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::WhileStmt) {
 				variables = optimizeConditional(statement, parent_store, store);
 			}
-			if (!variables.empty()) modifies_store.set(statement, variables);
+			if (!variables.empty()) {
+				modifies_store.set(statement, variables);
+			}
 		}
 	}
 }

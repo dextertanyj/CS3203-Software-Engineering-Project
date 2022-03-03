@@ -15,6 +15,7 @@ public:
 	static void optimize(StatementRelationStore<ParentRelation>& parent_store, CallStatementStore& call_store,
 	                     Types::ProcedureStore& proc_store, TopologicalSort<ProcedureInfo>& topo_order,
 	                     SVRelationStore<UsesSRelation>& store);
+private:
 	static VarRefSet optimizeCall(const shared_ptr<StmtInfo>& statement, CallStatementStore& call_store,
 	                              Types::ProcedureStore& proc_store, SVRelationStore<UsesSRelation>& store);
 	static VarRefSet optimizeConditional(const shared_ptr<StmtInfo>& statement,
