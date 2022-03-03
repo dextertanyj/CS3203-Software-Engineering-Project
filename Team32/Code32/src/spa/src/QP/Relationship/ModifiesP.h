@@ -19,6 +19,13 @@ private:
 
 	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
 	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
+
+	QueryResult executeTrivialBothUnknown(PKB::StorageAccessInterface& pkb);
+
+	QueryResult executeNonTrivialLeftEntVarName(PKB::StorageAccessInterface& pkb);
+	QueryResult executeNonTrivialRightEntVarName(PKB::StorageAccessInterface& pkb);
+	QueryResult executeNonTrivialRightEntUnderscore(PKB::StorageAccessInterface& pkb);
+	QueryResult executeNonTrivialRightEntSynonym(PKB::StorageAccessInterface& pkb);
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_MODIFIESP_H
