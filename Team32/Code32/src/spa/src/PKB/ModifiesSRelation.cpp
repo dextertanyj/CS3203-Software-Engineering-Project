@@ -51,11 +51,18 @@ void PKB::ModifiesSRelation::optimize(StatementRelationStore<ParentRelation>& pa
 	vector<shared_ptr<ProcedureInfo>> order = topo_order.get();
 	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {
 		vector<shared_ptr<StmtInfo>> stmts_in_proc = proc_iterator->get()->getStatements();
+		VarRefSet variables;
+		// For any procedure, we must process the call statements first before propagating the conditional statements.
 		for (const auto& statement : stmts_in_proc) {
-			VarRefSet variables;
 			if (statement->getType() == StmtType::Call) {
 				variables = optimizeCall(statement, call_store, proc_store, store);
-			} else if (statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::WhileStmt) {
+			}
+			if (!variables.empty()) {
+				store.set(statement, variables);
+			}
+		}
+		for (const auto& statement : stmts_in_proc) {
+			if (statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::WhileStmt) {
 				variables = optimizeConditional(statement, parent_store, store);
 			}
 			if (!variables.empty()) {
