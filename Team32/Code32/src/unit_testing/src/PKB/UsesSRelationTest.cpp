@@ -9,8 +9,8 @@ TEST_CASE("PKB::UsesSRelation") {
 	shared_ptr<StmtInfo> s2 = TestUtilities::createStmtInfo(2, StmtType::IfStmt);
 	shared_ptr<StmtInfo> s3 = TestUtilities::createStmtInfo(3, StmtType::Assign);
 	shared_ptr<StmtInfo> s4 = TestUtilities::createStmtInfo(4, StmtType::Call);
-	shared_ptr<StmtInfo> s5 = TestUtilities::createStmtInfo(5, StmtType::Read);
-	shared_ptr<StmtInfo> s6 = TestUtilities::createStmtInfo(6, StmtType::Read);
+	shared_ptr<StmtInfo> s5 = TestUtilities::createStmtInfo(5, StmtType::Print);
+	shared_ptr<StmtInfo> s6 = TestUtilities::createStmtInfo(6, StmtType::Print);
 	shared_ptr<StmtInfo> s7 = TestUtilities::createStmtInfo(7, StmtType::Call);
 	shared_ptr<StmtInfo> s8 = TestUtilities::createStmtInfo(8, StmtType::Assign);
 	shared_ptr<StmtInfo> s9 = TestUtilities::createStmtInfo(9, StmtType::Print);
