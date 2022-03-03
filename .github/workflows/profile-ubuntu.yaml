@@ -38,7 +38,7 @@ jobs:
 
       - name: Install valgrind
         shell: bash
-        run: sudo apt-get install valgrind
+        run: sudo apt-get update && sudo apt-get install valgrind
 
       - name: Run valgrind
         shell: bash
