@@ -16,8 +16,6 @@
 #include "PKB/InfoStore.h"
 #include "PKB/ModifiesPRelation.h"
 #include "PKB/ModifiesSRelation.h"
-#include "PKB/UsesPRelation.h"
-#include "PKB/UsesSRelation.h"
 #include "PKB/PKB.h"
 #include "PKB/PVRelationStore.tpp"
 #include "PKB/ParentRelation.h"
@@ -29,6 +27,8 @@
 #include "PKB/StorageUpdateInterface.h"
 #include "PKB/TopologicalSort.tpp"
 #include "PKB/TransitiveRelationStore.tpp"
+#include "PKB/UsesPRelation.h"
+#include "PKB/UsesSRelation.h"
 #include "PKB/VariableStore.h"
 
 using namespace std;

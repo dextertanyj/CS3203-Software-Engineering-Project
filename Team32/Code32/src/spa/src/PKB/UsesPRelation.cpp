@@ -1,7 +1,7 @@
 #include "PKB/UsesPRelation.h"
 
-void PKB::UsesPRelation::optimize(const Types::ProcedureStore& procStore,
-                                  PVRelationStore<UsesPRelation>& store, SVRelationStore<UsesSRelation>& uses_s_store) {
+void PKB::UsesPRelation::optimize(const Types::ProcedureStore& procStore, PVRelationStore<UsesPRelation>& store,
+                                  SVRelationStore<UsesSRelation>& uses_s_store) {
 	for (const auto& proc_info : procStore.getAll()) {
 		vector<shared_ptr<StmtInfo>> proc_stmt_list = proc_info->getStatements();
 		VarRefSet variables;
