@@ -14,11 +14,12 @@
 #include "PKB/CallStatementStore.h"
 #include "PKB/FollowsRelation.h"
 #include "PKB/InfoStore.h"
+#include "PKB/ModifiesPRelation.h"
 #include "PKB/ModifiesSRelation.h"
 #include "PKB/UsesPRelation.h"
 #include "PKB/UsesSRelation.h"
-#include "PKB/ModifiesPRelation.h"
 #include "PKB/PKB.h"
+#include "PKB/PVRelationStore.tpp"
 #include "PKB/ParentRelation.h"
 #include "PKB/SVRelationStore.tpp"
 #include "PKB/SetStore.tpp"
@@ -29,8 +30,6 @@
 #include "PKB/TopologicalSort.tpp"
 #include "PKB/TransitiveRelationStore.tpp"
 #include "PKB/VariableStore.h"
-#include "PKB/PVRelationStore.h"
-#include "PKB/PVRelationStore.tpp"
 
 using namespace std;
 
@@ -122,8 +121,8 @@ private:
 	StatementRelationStore<FollowsRelation> follows_store;
 	SVRelationStore<UsesSRelation> uses_s_store;
 	SVRelationStore<ModifiesSRelation> modifies_s_store;
-    PVRelationStore<UsesPRelation> uses_p_store;
-    PVRelationStore<PKB::ModifiesPRelation> modifies_p_store;
+	PVRelationStore<UsesPRelation> uses_p_store;
+	PVRelationStore<PKB::ModifiesPRelation> modifies_p_store;
 	AssignStore assign_store;
 
 	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
