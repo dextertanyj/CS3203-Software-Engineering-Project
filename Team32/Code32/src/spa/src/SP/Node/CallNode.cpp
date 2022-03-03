@@ -7,6 +7,7 @@ SP::Node::CallNode::CallNode(StmtRef stmt_no, ProcRef procedure) : StatementNode
 StmtRef SP::Node::CallNode::extract(PKB::StorageUpdateInterface& pkb) {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Call);
+	pkb.setCall(stmt_ref, procedure);
 	return stmt_ref;
 }
 
