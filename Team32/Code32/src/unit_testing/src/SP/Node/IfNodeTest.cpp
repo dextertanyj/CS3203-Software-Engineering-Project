@@ -1,5 +1,6 @@
 #include "SP/Node/IfNode.h"
 
+#include "../MockUtilities.h"
 #include "../TestUtilities.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "SP/Node/CallNode.h"
@@ -156,7 +157,7 @@ TEST_CASE("SP::Node::IfNode::parseIfStatement") {
 }
 
 TEST_CASE("SP::Node::IfNode::extract Test") {
-	PKB::Storage pkb;
+	MockStorageUpdate pkb;
 
 	SECTION("Single enclosed statement") {
 		StmtRef statement_number = 2;
@@ -171,14 +172,12 @@ TEST_CASE("SP::Node::IfNode::extract Test") {
 		IfNode node = IfNode(statement_number, std::move(condition), std::move(then_body), std::move(else_body));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
-
-		REQUIRE(pkb.checkParents(statement_number, then_statement));
-		REQUIRE(pkb.checkParents(statement_number, else_statement));
-		REQUIRE_FALSE(pkb.checkParents(then_statement, else_statement));
-
-		REQUIRE_FALSE(pkb.checkFollows(then_statement, then_statement));
-		REQUIRE_FALSE(pkb.checkFollows(statement_number, then_statement));
-		REQUIRE_FALSE(pkb.checkFollows(statement_number, else_statement));
+		REQUIRE_EQUALS(pkb.set_parent_call_count, 2);
+		REQUIRE_EQUALS(pkb.set_parent_arguments,
+		               vector<tuple<StmtRef, StmtRef>>{{statement_number, then_statement}, {statement_number, else_statement}});
+		REQUIRE_EQUALS(pkb.set_parent_arguments.size(), 2);
+		REQUIRE_EQUALS(pkb.set_follows_call_count, 0);
+		REQUIRE(pkb.set_follows_arguments.empty());
 	}
 
 	SECTION("Multiple enclosed statements") {
@@ -202,21 +201,19 @@ TEST_CASE("SP::Node::IfNode::extract Test") {
 		IfNode node = IfNode(statement_number, std::move(condition), std::move(then_body), std::move(else_body));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
-
-		REQUIRE(pkb.checkParents(statement_number, first_then_statement));
-		REQUIRE(pkb.checkParents(statement_number, second_then_statement));
-		REQUIRE(pkb.checkParents(statement_number, third_then_statement));
-		REQUIRE(pkb.checkParents(statement_number, first_else_statement));
-		REQUIRE(pkb.checkParents(statement_number, second_else_statement));
-		REQUIRE(pkb.checkParents(statement_number, third_else_statement));
-		REQUIRE_FALSE(pkb.checkParents(third_then_statement, first_else_statement));
-		REQUIRE_FALSE(pkb.checkParents(third_else_statement, first_then_statement));
-
-		REQUIRE(pkb.checkFollows(first_then_statement, second_then_statement));
-		REQUIRE(pkb.checkFollows(second_then_statement, third_then_statement));
-		REQUIRE(pkb.checkFollows(first_else_statement, second_else_statement));
-		REQUIRE(pkb.checkFollows(second_else_statement, third_else_statement));
-		REQUIRE_FALSE(pkb.checkFollows(third_then_statement, first_else_statement));
-		REQUIRE_FALSE(pkb.checkFollows(third_else_statement, first_then_statement));
+		REQUIRE_EQUALS(pkb.set_parent_call_count, 6);
+		REQUIRE_EQUALS(pkb.set_parent_arguments, vector<tuple<StmtRef, StmtRef>>{{statement_number, first_then_statement},
+		                                                                         {statement_number, second_then_statement},
+		                                                                         {statement_number, third_then_statement},
+		                                                                         {statement_number, first_else_statement},
+		                                                                         {statement_number, second_else_statement},
+		                                                                         {statement_number, third_else_statement}});
+		REQUIRE_EQUALS(pkb.set_parent_arguments.size(), 6);
+		REQUIRE_EQUALS(pkb.set_follows_call_count, 4);
+		REQUIRE_EQUALS(pkb.set_follows_arguments, vector<tuple<StmtRef, StmtRef>>{{first_then_statement, second_then_statement},
+		                                                                          {second_then_statement, third_then_statement},
+		                                                                          {first_else_statement, second_else_statement},
+		                                                                          {second_else_statement, third_else_statement}});
+		REQUIRE_EQUALS(pkb.set_follows_arguments.size(), 4);
 	}
 }

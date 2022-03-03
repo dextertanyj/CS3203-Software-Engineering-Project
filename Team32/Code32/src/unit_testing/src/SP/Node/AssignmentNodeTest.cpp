@@ -1,5 +1,6 @@
 #include "SP/Node/AssignmentNode.h"
 
+#include "../MockUtilities.h"
 #include "../TestUtilities.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
@@ -110,19 +111,29 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement") {
 
 TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 	SP::Lexer lex;
-	PKB::Storage pkb;
+	MockStorageUpdate pkb;
 
 	SECTION("Single constant assignment") {
 		lex.initialize("1;");
 		StmtRef statement_number = 1;
 		unique_ptr<ExpressionNode> expression =
 			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+		expression->extract();
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
-		REQUIRE_EQUALS(pkb.getConstants(), unordered_set<ConstVal>({1}));
-		REQUIRE(pkb.checkModifies(statement_number, "A"));
-		REQUIRE(pkb.patternExists("A", SP::TestUtilities::createArithmeticExpression(vector<string>({"1"})), true));
+		REQUIRE_EQUALS(pkb.set_constant_set_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_constant_set_arguments, vector<unordered_set<ConstVal>>({{1}}));
+		REQUIRE_EQUALS(pkb.set_modifies_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_modifies_arguments, vector<tuple<StmtRef, VarRef>>({{statement_number, "A"}}));
+		REQUIRE_EQUALS(pkb.set_uses_call_count, 0);
+		REQUIRE(pkb.set_uses_arguments.empty());
+		vector<tuple<StmtRef, VarRef, Common::ExpressionProcessor::Expression>> res_set = pkb.set_assign_arguments;
+		for (auto const& res : res_set) {
+			REQUIRE_EQUALS(std::get<0>(res), statement_number);
+			REQUIRE_EQUALS(std::get<1>(res), "A");
+			REQUIRE(SP::TestUtilities::createArithmeticExpression(vector<string>({"1"})).equals(std::get<2>(res)));
+		}
 	}
 
 	SECTION("Single variable assignment") {
@@ -130,13 +141,21 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		StmtRef statement_number = 2;
 		unique_ptr<ExpressionNode> expression =
 			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+		expression->extract();
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
-		REQUIRE(pkb.getConstants().empty());
-		REQUIRE(pkb.checkModifies(statement_number, "A"));
-		REQUIRE(pkb.checkUses(statement_number, "B"));
-		REQUIRE(pkb.patternExists("A", SP::TestUtilities::createArithmeticExpression(vector<string>({"B"})), true));
+		REQUIRE_EQUALS(pkb.set_modifies_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_modifies_arguments, vector<tuple<StmtRef, VarRef>>({{statement_number, "A"}}));
+		REQUIRE_EQUALS(pkb.set_uses_set_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_uses_set_arguments,
+		               vector<tuple<StmtRef, unordered_set<VarRef>>>({{statement_number, unordered_set<VarRef>{"B"}}}));
+		vector<tuple<StmtRef, VarRef, Common::ExpressionProcessor::Expression>> res_set = pkb.set_assign_arguments;
+		for (auto const& res : res_set) {
+			REQUIRE_EQUALS(std::get<0>(res), statement_number);
+			REQUIRE_EQUALS(std::get<1>(res), "A");
+			REQUIRE(SP::TestUtilities::createArithmeticExpression(vector<string>({"B"})).equals(std::get<2>(res)));
+		}
 	}
 
 	SECTION("Multiple terminal assignment") {
@@ -144,14 +163,23 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		StmtRef statement_number = 3;
 		unique_ptr<ExpressionNode> expression =
 			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+		expression->extract();
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
-		REQUIRE_EQUALS(pkb.getConstants(), unordered_set<ConstVal>({1, 2}));
-		REQUIRE(pkb.checkModifies(statement_number, "A"));
-		REQUIRE(pkb.checkUses(statement_number, "B"));
-		REQUIRE(pkb.checkUses(statement_number, "C"));
-		REQUIRE(pkb.patternExists("A", SP::TestUtilities::createArithmeticExpression(vector<string>({"1", "+", "B", "*", "2", "/", "C"})),
-		                          true));
+		REQUIRE_EQUALS(pkb.set_constant_set_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_constant_set_arguments, vector<unordered_set<ConstVal>>({{1, 2}}));
+		REQUIRE_EQUALS(pkb.set_modifies_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_modifies_arguments, vector<tuple<StmtRef, VarRef>>({{statement_number, "A"}}));
+		REQUIRE_EQUALS(pkb.set_uses_set_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_uses_set_arguments,
+		               vector<tuple<StmtRef, unordered_set<VarRef>>>({{statement_number, unordered_set<VarRef>{"B", "C"}}}));
+		vector<tuple<StmtRef, VarRef, Common::ExpressionProcessor::Expression>> res_set = pkb.set_assign_arguments;
+		for (auto const& res : res_set) {
+			REQUIRE_EQUALS(std::get<0>(res), statement_number);
+			REQUIRE_EQUALS(std::get<1>(res), "A");
+			REQUIRE(SP::TestUtilities::createArithmeticExpression(vector<string>({"1", "+", "B", "*", "2", "/", "C"}))
+			            .equals(std::get<2>(res)));
+		}
 	}
 }

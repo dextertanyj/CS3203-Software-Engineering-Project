@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "../TestUtilities.h"
+#include "../MockUtilities.h"
 #include "SP/Lexer.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/PrintNode.h"
@@ -147,7 +147,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList") {
 }
 
 TEST_CASE("SP::Node::StatementListNode::extract Test") {
-	PKB::Storage pkb;
+	MockStorageUpdate pkb;
 
 	SECTION("Single enclosed statement") {
 		StmtRef statement_number = 2;
@@ -156,7 +156,8 @@ TEST_CASE("SP::Node::StatementListNode::extract Test") {
 		vector<StmtRef> result = node.extract(pkb);
 		vector<StmtRef> expected = vector<StmtRef>({statement_number});
 		REQUIRE_EQUALS(expected, result);
-		REQUIRE(pkb.checkUses(statement_number, "A"));
+		REQUIRE_EQUALS(pkb.set_uses_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_uses_arguments, vector<tuple<StmtRef, VarRef>>({{statement_number, "A"}}));
 	}
 
 	SECTION("Multiple enclosed statements") {
@@ -170,7 +171,11 @@ TEST_CASE("SP::Node::StatementListNode::extract Test") {
 		vector<StmtRef> result = node.extract(pkb);
 		vector<StmtRef> expected = vector<StmtRef>({first_statement, second_statement, third_statement});
 		REQUIRE_EQUALS(expected, result);
-		REQUIRE(pkb.checkUses(first_statement, "A"));
-		REQUIRE(pkb.checkModifies(third_statement, "B"));
+		REQUIRE_EQUALS(pkb.set_uses_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_uses_arguments, vector<tuple<StmtRef, VarRef>>({{first_statement, "A"}}));
+		REQUIRE_EQUALS(pkb.set_uses_arguments.size(), 1);
+		REQUIRE_EQUALS(pkb.set_modifies_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_modifies_arguments, vector<tuple<StmtRef, VarRef>>({{third_statement, "B"}}));
+		REQUIRE_EQUALS(pkb.set_modifies_arguments.size(), 1);
 	}
 }

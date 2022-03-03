@@ -56,10 +56,9 @@ public:
 	};
 	void setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) {
 		set_assign_call_count++;
+		set_assign_arguments.push_back({index, variable, expression});
 	};
-	void populateComplexRelations() {
-		populate_complex_relations_call_count++;
-	};
+	void populateComplexRelations() { populate_complex_relations_call_count++; };
 
 	vector<tuple<ProcRef, StmtRef, StmtRef>> set_proc_arguments;
 	int set_proc_call_count = 0;

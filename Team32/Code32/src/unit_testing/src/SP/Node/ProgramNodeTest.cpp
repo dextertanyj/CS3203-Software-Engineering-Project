@@ -1,5 +1,6 @@
 #include "SP/Node/ProgramNode.h"
 
+#include "../MockUtilities.h"
 #include "../TestUtilities.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/ReadNode.h"
@@ -93,7 +94,7 @@ TEST_CASE("SP::Node::ProgramNode::parseProgram") {
 }
 
 TEST_CASE("SP::Node::ProgramNode::extract Test") {
-	PKB::Storage pkb;
+	MockStorageUpdate pkb;
 
 	SECTION("Single procedure") {
 		ProgramNode node = ProgramNode();
@@ -102,7 +103,8 @@ TEST_CASE("SP::Node::ProgramNode::extract Test") {
 		first_procedure->addStatementNode(make_unique<ReadNode>(statement_number, make_unique<VariableNode>("A")));
 		node.addProcedureNode(make_unique<ProcedureNode>("First", move(first_procedure), statement_number, statement_number));
 		node.extract(pkb);
-		REQUIRE(pkb.checkModifies(statement_number, "A"));
+		REQUIRE_EQUALS(pkb.set_modifies_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_modifies_arguments, vector<tuple<StmtRef, VarRef>>({{statement_number, "A"}}));
 	}
 
 	SECTION("Multiple procedures") {
@@ -117,7 +119,8 @@ TEST_CASE("SP::Node::ProgramNode::extract Test") {
 		node.addProcedureNode(
 			make_unique<ProcedureNode>("Second", move(second_procedure), second_statement_number, second_statement_number));
 		node.extract(pkb);
-		REQUIRE(pkb.checkModifies(first_statement_number, "A"));
-		REQUIRE(pkb.checkModifies(second_statement_number, "B"));
+		REQUIRE_EQUALS(pkb.set_modifies_call_count, 2);
+		REQUIRE_EQUALS(pkb.set_modifies_arguments,
+		               vector<tuple<StmtRef, VarRef>>({{first_statement_number, "A"}, {second_statement_number, "B"}}));
 	}
 }

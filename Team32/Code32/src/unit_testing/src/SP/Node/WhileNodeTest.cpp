@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "../MockUtilities.h"
 #include "../TestUtilities.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "SP/Node/CallNode.h"
@@ -121,7 +122,7 @@ TEST_CASE("SP::Node::WhileNode::parseWhileStatement") {
 }
 
 TEST_CASE("SP::Node::WhileNode::extract Test") {
-	PKB::Storage pkb;
+	MockStorageUpdate pkb;
 
 	SECTION("Single enclosed statement") {
 		StmtRef statement_number = 2;
@@ -133,9 +134,11 @@ TEST_CASE("SP::Node::WhileNode::extract Test") {
 		WhileNode node = WhileNode(statement_number, std::move(condition), std::move(body));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
-
-		REQUIRE(pkb.checkParents(statement_number, innner_statement));
-		REQUIRE_FALSE(pkb.checkFollows(statement_number, innner_statement));
+		REQUIRE_EQUALS(pkb.set_parent_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_parent_arguments, vector<tuple<StmtRef, StmtRef>>{{statement_number, innner_statement}});
+		REQUIRE_EQUALS(pkb.set_parent_arguments.size(), 1);
+		REQUIRE_EQUALS(pkb.set_follows_call_count, 0);
+		REQUIRE(pkb.set_follows_arguments.empty());
 	}
 
 	SECTION("Multiple enclosed statements") {
@@ -152,14 +155,14 @@ TEST_CASE("SP::Node::WhileNode::extract Test") {
 		WhileNode node = WhileNode(statement_number, std::move(condition), std::move(body));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
-
-		REQUIRE(pkb.checkParents(statement_number, first_innner_statement));
-		REQUIRE(pkb.checkParents(statement_number, second_innner_statement));
-		REQUIRE(pkb.checkParents(statement_number, third_innner_statement));
-		REQUIRE_FALSE(pkb.checkParents(first_innner_statement, second_innner_statement));
-
-		REQUIRE(pkb.checkFollows(first_innner_statement, second_innner_statement));
-		REQUIRE(pkb.checkFollows(second_innner_statement, third_innner_statement));
-		REQUIRE_FALSE(pkb.checkFollows(statement_number, first_innner_statement));
+		REQUIRE_EQUALS(pkb.set_parent_call_count, 3);
+		REQUIRE_EQUALS(pkb.set_parent_arguments, vector<tuple<StmtRef, StmtRef>>{{statement_number, first_innner_statement},
+		                                                                         {statement_number, second_innner_statement},
+		                                                                         {statement_number, third_innner_statement}});
+		REQUIRE_EQUALS(pkb.set_parent_arguments.size(), 3);
+		REQUIRE_EQUALS(pkb.set_follows_call_count, 2);
+		REQUIRE_EQUALS(pkb.set_follows_arguments, vector<tuple<StmtRef, StmtRef>>{{first_innner_statement, second_innner_statement},
+		                                                                          {second_innner_statement, third_innner_statement}});
+		REQUIRE_EQUALS(pkb.set_follows_arguments.size(), 2);
 	}
 }
