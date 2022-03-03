@@ -17,10 +17,10 @@ public:
 	                     SVRelationStore<UsesSRelation>& store);
 
 private:
-	static VarRefSet optimizeCall(const shared_ptr<StmtInfo>& statement, CallStatementStore& call_store, Types::ProcedureStore& proc_store,
-	                              SVRelationStore<UsesSRelation>& store);
-	static VarRefSet optimizeConditional(const shared_ptr<StmtInfo>& statement, StatementRelationStore<ParentRelation>& parent_store,
-	                                     SVRelationStore<UsesSRelation>& store);
+	static void optimizeCall(const shared_ptr<StmtInfo>& statement, CallStatementStore& call_store, Types::ProcedureStore& proc_store,
+	                         SVRelationStore<UsesSRelation>& store);
+	static void optimizeConditional(const shared_ptr<StmtInfo>& statement, StatementRelationStore<ParentRelation>& parent_store,
+	                                SVRelationStore<UsesSRelation>& store);
 };
 
 #endif  // SPA_SRC_PKB_USESRELATION_H
