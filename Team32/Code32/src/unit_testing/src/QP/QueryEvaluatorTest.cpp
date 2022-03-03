@@ -4,6 +4,7 @@
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "Common/TypeDefs.h"
 #include "QP/QueryExpressionLexer.h"
+#include "QP/Relationship/Follows.h"
 #include "QP/Relationship/ModifiesS.h"
 #include "QP/Relationship/Parent.h"
 #include "catch.hpp"
@@ -49,6 +50,8 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::Assign);
 	pkb.setStmtType(4, StmtType::IfStmt);
+	pkb.setFollows(1, 2);
+	pkb.setFollows(3, 4);
 	pkb.setModifies(1, "x");
 	pkb.setProc("proc1", 1, 2);
 	pkb.setProc("proc2", 3, 4);
@@ -70,6 +73,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	QueryEntRef var_underscore = {EntRefType::Underscore, "_"};
 	QueryStmtRef a = {StmtRefType::Synonym, "a"};
 	QueryStmtRef stmt_no1 = {StmtRefType::StmtNumber, "1"};
+	QueryStmtRef stmt_underscore = {StmtRefType::Underscore, "_"};
 
 	vector<string> assign_token = {"x", "+", "1"};
 	QP::QueryExpressionLexer lexer = QP::QueryExpressionLexer(assign_token);
@@ -173,6 +177,22 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 
 	SECTION("Non-trivial pattern clause and such that clause") {
 		SuchThatClauseList such_that_clauses = {{make_unique<QP::Relationship::ModifiesS>(stmt_no1, v)}};
+		PatternClauseList pattern_list = {
+			{make_unique<QP::Relationship::Pattern>(assign_synonym, v, ExpressionType::ExpressionUnderscore, query_expression)}};
+		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, such_that_clauses, pattern_list);
+
+		QP::QueryResult result = evaluator.executeQuery(properties);
+
+		vector<string> expected_result = {"x"};
+		vector<string> actual_result = result.getSynonymResult("v");
+		REQUIRE(actual_result == expected_result);
+	};
+
+	SECTION("Multiple clauses") {
+		SuchThatClauseList such_that_clauses = {
+			{make_unique<QP::Relationship::ModifiesS>(stmt_no1, v)},
+			{make_unique<QP::Relationship::Follows>(a, stmt_underscore)},
+		};
 		PatternClauseList pattern_list = {
 			{make_unique<QP::Relationship::Pattern>(assign_synonym, v, ExpressionType::ExpressionUnderscore, query_expression)}};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, such_that_clauses, pattern_list);
