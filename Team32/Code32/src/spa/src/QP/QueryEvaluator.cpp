@@ -40,7 +40,7 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(ClauseList& clauses) {
 	// These clauses should be evaluated independently since they are unrelated
 	for (const Clause& clause : clauses) {
-		ClauseList list = { clause };
+		ClauseList list = {clause};
 		if (!evaluateClauses(list, true).getResult()) {
 			return {};
 		}
