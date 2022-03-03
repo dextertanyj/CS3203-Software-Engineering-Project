@@ -12,6 +12,8 @@ class Pattern;
 class Relation;
 class UsesP;
 class UsesS;
+class Calls;
+class CallsT;
 }  // namespace QP::Relationship
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_RELATIONSHIP_H
