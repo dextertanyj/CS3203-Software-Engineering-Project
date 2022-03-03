@@ -35,8 +35,7 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 	};
 
 	PKB::Storage pkb = PKB::Storage();
-	vector<pair<SuchThatClauseList, PatternClauseList>> clauses_in_group =
-		QP::QueryEvaluator::splitClauses(properties, synonyms_in_group);
+	vector<pair<SuchThatClauseList, PatternClauseList>> clauses_in_group = QP::QueryEvaluator::splitClauses(properties, synonyms_in_group);
 
 	REQUIRE(clauses_in_group.size() == 3);
 	REQUIRE(clauses_in_group[0].first.size() == 1);
@@ -51,6 +50,8 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	pkb.setStmtType(3, StmtType::Assign);
 	pkb.setStmtType(4, StmtType::IfStmt);
 	pkb.setModifies(1, "x");
+	pkb.setProc("proc1", 1, 2);
+	pkb.setProc("proc2", 3, 4);
 
 	unordered_set<ConstVal> constants = {1};
 	pkb.setConstant(constants);
@@ -58,14 +59,13 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	QP::QueryEvaluator evaluator = QP::QueryEvaluator(pkb);
 
 	DeclarationList declarations = {
-		{DesignEntity::Stmt, "s1"},
-		{DesignEntity::Stmt, "s2"},
-		{DesignEntity::Variable, "v"},
-		{DesignEntity::Assign, "a"},
+		{DesignEntity::Stmt, "s1"},  {DesignEntity::Stmt, "s2"},     {DesignEntity::Variable, "v"},
+		{DesignEntity::Assign, "a"}, {DesignEntity::Procedure, "p"},
 	};
 	Declaration assign_synonym = {DesignEntity::Assign, "a"};
 	Declaration var_synonym = {DesignEntity::Variable, "v"};
 	Declaration stmt_synonym = {DesignEntity::Stmt, "s1"};
+	Declaration proc_synonym = {DesignEntity::Procedure, "p"};
 	QueryEntRef v = {EntRefType::Synonym, "v"};
 	QueryEntRef var_underscore = {EntRefType::Underscore, "_"};
 	QueryStmtRef a = {StmtRefType::Synonym, "a"};
@@ -97,6 +97,16 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 
 		vector<string> expected_result = {"x"};
 		vector<string> actual_result = result.getSynonymResult("v");
+		REQUIRE(actual_result == expected_result);
+	};
+
+	SECTION("No clause, select procedure") {
+		QP::QueryProperties properties = QP::QueryProperties(declarations, proc_synonym, {}, {});
+		QP::QueryResult result = evaluator.executeQuery(properties);
+
+		vector<string> expected_result = {"proc1", "proc2"};
+		vector<string> actual_result = result.getSynonymResult("p");
+		sort(actual_result.begin(), actual_result.end());
 		REQUIRE(actual_result == expected_result);
 	};
 
