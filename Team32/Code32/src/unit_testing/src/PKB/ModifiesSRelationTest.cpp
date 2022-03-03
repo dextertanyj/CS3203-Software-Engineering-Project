@@ -115,7 +115,7 @@ TEST_CASE("PKB::ModifiesSRelation Test") {
 		StmtInfoPtrSet expected_set_var_z = {s1, s2, s3};
 		StmtInfoPtrSet expected_set_var_a = {s1, s5};
 		StmtInfoPtrSet expected_set_var_b = {s1, s2, s4, s6};
-		StmtInfoPtrSet expected_set_var_c = {s1, s2, s4, s6};
+		StmtInfoPtrSet expected_set_var_c = {s1, s2, s4, s7, s8};
 
 		CHECK(store.getByStmt(1) == expected_set_s1);
 		CHECK(store.getByStmt(2) == expected_set_s2);
