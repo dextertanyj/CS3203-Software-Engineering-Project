@@ -3,6 +3,7 @@
 
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
+#include "PKB/Types.h"
 
 namespace TestUtilities {
 inline shared_ptr<StmtInfo> createStmtInfo(StmtRef stmt_no, StmtType type) {

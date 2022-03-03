@@ -76,7 +76,7 @@ StmtInfoPtrSet PKB::FollowsRelation::populateTransitive(PKB::StatementRelationSt
 	previous.insert(current.self);
 	unordered_set<shared_ptr<StmtInfo>> result;
 	if (current.follower != nullptr) {
-		auto follower = store.map.find(current.follower->reference);
+		auto follower = store.map.find(current.follower->getIdentifier());
 		result = populateTransitive(store, follower->second, previous);
 	}
 	current.appendReverseTransitive(result);

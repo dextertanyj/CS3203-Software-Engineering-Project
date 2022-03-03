@@ -1,18 +1,18 @@
 #include "PKB/UsesPRelation.h"
 
-#include "MockUtilities.h"
+#include "TestUtilities.h"
 #include "catch.hpp"
 
 TEST_CASE("PKB::UsesPRelation::optimize Test") {
-	PKB::ProcedureStore procedure_store = PKB::ProcedureStore();
+	PKB::Types::ProcedureStore procedure_store = PKB::Types::ProcedureStore();
 	PKB::PVRelationStore<PKB::UsesPRelation> store = PKB::PVRelationStore<PKB::UsesPRelation>();
 	PKB::SVRelationStore<PKB::UsesSRelation> uses_s_store = PKB::SVRelationStore<PKB::UsesSRelation>();
 
-	shared_ptr<StmtInfo> s1 = MockUtilities::createStmtInfo(1, StmtType::Assign);
-	shared_ptr<StmtInfo> s2 = MockUtilities::createStmtInfo(2, StmtType::Call);
-	shared_ptr<StmtInfo> s3 = MockUtilities::createStmtInfo(3, StmtType::Assign);
-	shared_ptr<StmtInfo> s4 = MockUtilities::createStmtInfo(4, StmtType::Call);
-	shared_ptr<StmtInfo> s5 = MockUtilities::createStmtInfo(5, StmtType::Print);
+	shared_ptr<StmtInfo> s1 = TestUtilities::createStmtInfo(1, StmtType::Assign);
+	shared_ptr<StmtInfo> s2 = TestUtilities::createStmtInfo(2, StmtType::Call);
+	shared_ptr<StmtInfo> s3 = TestUtilities::createStmtInfo(3, StmtType::Assign);
+	shared_ptr<StmtInfo> s4 = TestUtilities::createStmtInfo(4, StmtType::Call);
+	shared_ptr<StmtInfo> s5 = TestUtilities::createStmtInfo(5, StmtType::Print);
 	ProcRef p1 = "one";
 	ProcRef p2 = "two";
 	VarRef x = "x";
