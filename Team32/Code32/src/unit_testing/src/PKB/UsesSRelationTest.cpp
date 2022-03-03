@@ -10,10 +10,10 @@ TEST_CASE("PKB::UsesSRelation") {
 	shared_ptr<StmtInfo> s3 = TestUtilities::createStmtInfo(3, StmtType::Assign);
 	shared_ptr<StmtInfo> s4 = TestUtilities::createStmtInfo(4, StmtType::Call);
 	shared_ptr<StmtInfo> s5 = TestUtilities::createStmtInfo(5, StmtType::Print);
-	shared_ptr<StmtInfo> s6 = TestUtilities::createStmtInfo(6, StmtType::Print);
+	shared_ptr<StmtInfo> s6 = TestUtilities::createStmtInfo(6, StmtType::Assign);
 	shared_ptr<StmtInfo> s7 = TestUtilities::createStmtInfo(7, StmtType::Call);
 	shared_ptr<StmtInfo> s8 = TestUtilities::createStmtInfo(8, StmtType::Assign);
-	shared_ptr<StmtInfo> s9 = TestUtilities::createStmtInfo(9, StmtType::Print);
+	shared_ptr<StmtInfo> s9 = TestUtilities::createStmtInfo(9, StmtType::Read);
 
 	SECTION("PKB::UsesSRelation::validate One Var Test") {
 		REQUIRE(PKB::UsesSRelation::validate(&store, s1, "x"));
@@ -21,7 +21,7 @@ TEST_CASE("PKB::UsesSRelation") {
 		REQUIRE(PKB::UsesSRelation::validate(&store, s3, "x"));
 		REQUIRE(PKB::UsesSRelation::validate(&store, s4, "x"));
 		REQUIRE(PKB::UsesSRelation::validate(&store, s5, "x"));
-		REQUIRE_THROWS_AS(PKB::UsesSRelation::validate(&store, s6, "x"), invalid_argument);
+		REQUIRE_THROWS_AS(PKB::UsesSRelation::validate(&store, s9, "x"), invalid_argument);
 		store.set(s1, "x");
 		store.set(s2, "x");
 		store.set(s3, "x");
@@ -42,7 +42,7 @@ TEST_CASE("PKB::UsesSRelation") {
 		REQUIRE(PKB::UsesSRelation::validate(&store, s3, var_refs));
 		REQUIRE(PKB::UsesSRelation::validate(&store, s4, var_refs));
 		REQUIRE_FALSE(PKB::UsesSRelation::validate(&store, s5, var_refs));
-		REQUIRE_THROWS_AS(PKB::UsesSRelation::validate(&store, s6, var_refs), invalid_argument);
+		REQUIRE_THROWS_AS(PKB::UsesSRelation::validate(&store, s9, var_refs), invalid_argument);
 	}
 
 	SECTION("PKB::UsesSRelation::optimize Test") {
@@ -83,6 +83,8 @@ TEST_CASE("PKB::UsesSRelation") {
 		VarRefSet var_refs_cd = {"c", "d"};
 		VarRefSet var_refs_efg = {"e", "f", "g"};
 
+		store.set(s1, "y");
+		store.set(s2, "z");
 		store.set(s3, "a");
 		store.set(s5, "b");
 		store.set(s6, var_refs_cd);
@@ -100,9 +102,11 @@ TEST_CASE("PKB::UsesSRelation") {
 		 * 2) var 'b' from s5 propagates up to s1.
 		 * 2) var 'c' and 'd' from s6 in sub_proc_1 propagates to s4, s2 and s1.
 		 * 3) var 'e', 'f', 'g' from s8 in sub_proc_2 propagates up to s7, s4, s2 and s1.
+		 * 4) var 'y' is used by s1.
+		 * 5) var 'z' is used by s2 and propagates to s1.
 		 */
-		VarRefSet expected_set_s1 = {"a", "b", "c", "d", "e", "f", "g"};
-		VarRefSet expected_set_s2 = {"a", "c", "d", "e", "f", "g"};
+		VarRefSet expected_set_s1 = {"a", "b", "c", "d", "e", "f", "g", "y", "z"};
+		VarRefSet expected_set_s2 = {"a", "c", "d", "e", "f", "g", "z"};
 		VarRefSet expected_set_s3 = {"a"};
 		VarRefSet expected_set_s4 = {"c", "d", "e", "f", "g"};
 		VarRefSet expected_set_s5 = {"b"};
@@ -117,7 +121,8 @@ TEST_CASE("PKB::UsesSRelation") {
 		StmtInfoPtrSet expected_set_var_e = {s1, s2, s4, s7, s8};
 		StmtInfoPtrSet expected_set_var_f = {s1, s2, s4, s7, s8};
 		StmtInfoPtrSet expected_set_var_g = {s1, s2, s4, s7, s8};
-
+		StmtInfoPtrSet expected_set_var_y = {s1};
+		StmtInfoPtrSet expected_set_var_z = {s1, s2};
 		CHECK(store.getByStmt(1) == expected_set_s1);
 		CHECK(store.getByStmt(2) == expected_set_s2);
 		CHECK(store.getByStmt(3) == expected_set_s3);
