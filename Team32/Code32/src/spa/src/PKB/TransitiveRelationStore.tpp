@@ -99,14 +99,4 @@ unordered_set<shared_ptr<TInfo>> PKB::TransitiveRelationStore<TIdent, TInfo, TRe
 	throw logic_error("Unspecialized populateTransitive invoked.");
 }
 
-// Template specializations for Call relationship.
-
-template <>
-void PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation>::optimize();
-
-template <>
-unordered_set<shared_ptr<PKB::ProcedureInfo>>
-PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation>::populateTransitive(
-	CallRelation& current, unordered_set<shared_ptr<ProcedureInfo>> previous);
-
 #endif  // SPA_SRC_PKB_TRANSITIVERELATIONSTORE_TPP

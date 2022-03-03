@@ -2,8 +2,6 @@
 
 #include <stdexcept>
 
-#include "PKB/TransitiveRelationStore.h"
-
 PKB::CallRelation::CallRelation(shared_ptr<ProcedureInfo> self) : self(std::move(self)) {}
 
 void PKB::CallRelation::insertForward(const shared_ptr<ProcedureInfo>& caller) {
