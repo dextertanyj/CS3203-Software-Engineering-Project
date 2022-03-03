@@ -171,7 +171,7 @@ StmtInfoPtrSet PKB::Storage::getStmtModifiesByVar(const VarRef &name) { return m
 
 ProcRefSet PKB::Storage::getProcModifiesByVar(const VarRef &name) { return modifies_p_store.getByVar(name); }
 
-unordered_set<VarRef> PKB::Storage::getModifiesByStmt(StmtRef index) { return modifies_s_store.getByStmt(index); }
+VarRefSet PKB::Storage::getModifiesByStmt(StmtRef index) { return modifies_s_store.getByStmt(index); }
 
 VarRefSet PKB::Storage::getModifiesByProc(const ProcRef &name) { return modifies_p_store.getByProc(name); }
 
@@ -183,7 +183,7 @@ StmtInfoPtrSet PKB::Storage::getStmtUsesByVar(const VarRef &name) { return uses_
 
 ProcRefSet PKB::Storage::getProcUsesByVar(const VarRef &name) { return uses_p_store.getByVar(name); }
 
-unordered_set<VarRef> PKB::Storage::getUsesByStmt(StmtRef index) { return uses_s_store.getByStmt(index); }
+VarRefSet PKB::Storage::getUsesByStmt(StmtRef index) { return uses_s_store.getByStmt(index); }
 
 VarRefSet PKB::Storage::getUsesByProc(const ProcRef &name) { return uses_p_store.getByProc(name); }
 
@@ -209,10 +209,10 @@ void PKB::Storage::populateComplexRelations() {
 	call_graph.sort(procedure_store, call_store);
 	ParentRelation::optimize(parent_store);
 	FollowsRelation::optimize(follows_store);
-	ModifiesSRelation::optimize(statement_store, parent_store, modifies_s_store);
-	UsesSRelation::optimize(statement_store, parent_store, uses_s_store);
-	UsesPRelation::optimize(procedure_store, uses_p_store, uses_s_store);
+	ModifiesSRelation::optimize(parent_store, call_statement_store, procedure_store, call_graph, modifies_s_store);
+	UsesSRelation::optimize(parent_store, call_statement_store, procedure_store, call_graph, uses_s_store);
 	ModifiesPRelation::optimize(procedure_store, modifies_p_store, modifies_s_store);
+	UsesPRelation::optimize(procedure_store, uses_p_store, uses_s_store);
 }
 
 void PKB::Storage::clear() {
