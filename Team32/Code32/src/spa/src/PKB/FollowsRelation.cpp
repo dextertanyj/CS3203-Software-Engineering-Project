@@ -13,7 +13,7 @@ void PKB::FollowsRelation::insertForward(const shared_ptr<StmtInfo>& following_t
 	if (this->following != nullptr) {
 		throw invalid_argument("This statement is already following_to_insert a statement");
 	}
-	this->following = move(following_to_insert);
+	this->following = following_to_insert;
 }
 
 void PKB::FollowsRelation::insertReverse(const shared_ptr<StmtInfo>& follower_to_insert) {
@@ -23,7 +23,7 @@ void PKB::FollowsRelation::insertReverse(const shared_ptr<StmtInfo>& follower_to
 	if (this->follower != nullptr) {
 		throw invalid_argument("This statement already has a follower statement");
 	}
-	this->follower = move(follower_to_insert);
+	this->follower = follower_to_insert;
 }
 
 void PKB::FollowsRelation::appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> followings) {

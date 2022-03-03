@@ -165,7 +165,7 @@ ProcRefSet PKB::Storage::getCallerStar(const ProcRef &callee) {
 
 bool PKB::Storage::checkModifies(StmtRef index, const VarRef &name) { return modifies_s_store.check(index, name); }
 
-bool PKB::Storage::checkModifies(const ProcRef &proc, const VarRef &name) { return modifies_p_store.check(proc, name); }
+bool PKB::Storage::checkModifies(const ProcRef &procedure_name, const VarRef &name) { return modifies_p_store.check(procedure_name, name); }
 
 StmtInfoPtrSet PKB::Storage::getStmtModifiesByVar(const VarRef &name) { return modifies_s_store.getByVar(name); }
 
@@ -173,11 +173,11 @@ ProcRefSet PKB::Storage::getProcModifiesByVar(const VarRef &name) { return modif
 
 unordered_set<VarRef> PKB::Storage::getModifiesByStmt(StmtRef index) { return modifies_s_store.getByStmt(index); }
 
-VarRefSet PKB::Storage::getModifiesByProc(const ProcRef &proc) { return modifies_p_store.getByProc(proc); }
+VarRefSet PKB::Storage::getModifiesByProc(const ProcRef &name) { return modifies_p_store.getByProc(name); }
 
 bool PKB::Storage::checkUses(StmtRef index, const VarRef &name) { return uses_s_store.check(index, name); }
 
-bool PKB::Storage::checkUses(const ProcRef &proc, const VarRef &name) { return uses_p_store.check(proc, name); }
+bool PKB::Storage::checkUses(const ProcRef &procedure_name, const VarRef &name) { return uses_p_store.check(procedure_name, name); }
 
 StmtInfoPtrSet PKB::Storage::getStmtUsesByVar(const VarRef &name) { return uses_s_store.getByVar(name); }
 
@@ -185,7 +185,7 @@ ProcRefSet PKB::Storage::getProcUsesByVar(const VarRef &name) { return uses_p_st
 
 unordered_set<VarRef> PKB::Storage::getUsesByStmt(StmtRef index) { return uses_s_store.getByStmt(index); }
 
-VarRefSet PKB::Storage::getUsesByProc(const ProcRef &proc) { return uses_p_store.getByProc(proc); }
+VarRefSet PKB::Storage::getUsesByProc(const ProcRef &name) { return uses_p_store.getByProc(name); }
 
 bool PKB::Storage::patternExists(const VarRef &name, const Common::ExpressionProcessor::Expression &exp, bool is_exact_match) {
 	return assign_store.patternExists(name, exp, is_exact_match);
