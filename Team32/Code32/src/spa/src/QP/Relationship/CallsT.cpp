@@ -62,9 +62,9 @@ QP::QueryResult QP::Relationship::CallsT::executeNonTrivialCallerVarName(PKB::St
 		QueryResult result = QueryResult();
 		result.addColumn(callee_ent.ent_ref, column);
 		return result;
+	} else {
+		throw QueryException("Invalid non trivial case.");
 	}
-
-	return {};
 }
 
 QP::QueryResult QP::Relationship::CallsT::executeNonTrivialCallerUnderscore(PKB::StorageAccessInterface& pkb) {
@@ -81,9 +81,9 @@ QP::QueryResult QP::Relationship::CallsT::executeNonTrivialCallerUnderscore(PKB:
 		QueryResult result = QueryResult();
 		result.addColumn(callee_ent.ent_ref, column);
 		return result;
+	} else {
+		throw QueryException("Invalid non trivial case.");
 	}
-
-	return {};
 }
 
 QP::QueryResult QP::Relationship::CallsT::executeNonTrivialCallerSynonym(PKB::StorageAccessInterface& pkb) {
