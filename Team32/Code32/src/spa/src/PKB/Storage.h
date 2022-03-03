@@ -29,7 +29,6 @@
 #include "PKB/TransitiveRelationStore.tpp"
 #include "PKB/UsesPRelation.h"
 #include "PKB/UsesSRelation.h"
-#include "PKB/VariableStore.h"
 
 using namespace std;
 
