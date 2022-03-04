@@ -72,7 +72,7 @@ QP::QueryResult QP::Relationship::CallsT::executeNonTrivialCallerUnderscore(PKB:
 		vector<string> column;
 		ProcRefSet proc_set = pkb.getProcedures();
 		for (auto const& proc : proc_set) {
-			ProcRefSet caller_set = pkb.getCallerStar(callee_ent.ent_ref);
+			ProcRefSet caller_set = pkb.getCallerStar(proc);
 			if (!caller_set.empty()) {
 				column.push_back(proc);
 			}
@@ -98,8 +98,8 @@ QP::QueryResult QP::Relationship::CallsT::executeNonTrivialCallerSynonym(PKB::St
 	} else if (callee_ent.type == EntRefType::Underscore) {
 		ProcRefSet proc_set = pkb.getProcedures();
 		for (auto const& proc : proc_set) {
-			ProcRefSet caller_set = pkb.getCallerStar(proc);
-			if (!caller_set.empty()) {
+			ProcRefSet callee_set = pkb.getCalleeStar(proc);
+			if (!callee_set.empty()) {
 				caller_column.push_back(proc);
 			}
 		}
@@ -107,7 +107,7 @@ QP::QueryResult QP::Relationship::CallsT::executeNonTrivialCallerSynonym(PKB::St
 		vector<string> callee_column;
 		ProcRefSet proc_set = pkb.getProcedures();
 		for (auto const& proc : proc_set) {
-			ProcRefSet callee_set = pkb.getCalleeStar(caller_ent.ent_ref);
+			ProcRefSet callee_set = pkb.getCalleeStar(proc);
 			for (auto const& callee : callee_set) {
 				caller_column.push_back(proc);
 				callee_column.push_back(callee);

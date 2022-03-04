@@ -150,7 +150,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 	// Combinations of stmtRef : synonym | '_' | INTEGER for Follows
 	QP::QueryPreprocessor qpp1;
 	QP::QueryProperties qp1 = qpp1.parseQuery(UnivDeclarations + "Select s1 such that Follows(s1, s2)");
-	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp1.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp1.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getLeftStmt().stmt_ref == "s1");
 	REQUIRE((*clause).getRightStmt().type == StmtRefType::Synonym);
@@ -158,7 +158,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 
 	QP::QueryPreprocessor qpp2;
 	QP::QueryProperties qp2 = qpp2.parseQuery(UnivDeclarations + "Select i1 such that Follows(i1, _)");
-	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp2.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp2.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getLeftStmt().stmt_ref == "i1");
 	REQUIRE((*clause).getRightStmt().type == StmtRefType::Underscore);
@@ -166,7 +166,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 
 	QP::QueryPreprocessor qpp3;
 	QP::QueryProperties qp3 = qpp3.parseQuery(UnivDeclarations + "Select r1 such that Follows(r1, 20)");
-	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp3.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp3.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getLeftStmt().stmt_ref == "r1");
 	REQUIRE((*clause).getRightStmt().type == StmtRefType::StmtNumber);
@@ -174,7 +174,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 
 	QP::QueryPreprocessor qpp4;
 	QP::QueryProperties qp4 = qpp4.parseQuery(UnivDeclarations + "Select a1 such that Follows(01, a1)");
-	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp4.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp4.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getLeftStmt().type == StmtRefType::StmtNumber);
 	REQUIRE((*clause).getLeftStmt().stmt_ref == "01");
 	REQUIRE((*clause).getRightStmt().type == StmtRefType::Synonym);
@@ -182,7 +182,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 
 	QP::QueryPreprocessor qpp5;
 	QP::QueryProperties qp5 = qpp5.parseQuery(UnivDeclarations + "Select i1 such that Follows(32, 03)");
-	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp5.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp5.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getLeftStmt().type == StmtRefType::StmtNumber);
 	REQUIRE((*clause).getLeftStmt().stmt_ref == "32");
 	REQUIRE((*clause).getRightStmt().type == StmtRefType::StmtNumber);
@@ -190,7 +190,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 
 	QP::QueryPreprocessor qpp6;
 	QP::QueryProperties qp6 = qpp6.parseQuery(UnivDeclarations + "Select w2 such that Follows(1010, _)");
-	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp6.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp6.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getLeftStmt().type == StmtRefType::StmtNumber);
 	REQUIRE((*clause).getLeftStmt().stmt_ref == "1010");
 	REQUIRE((*clause).getRightStmt().type == StmtRefType::Underscore);
@@ -198,7 +198,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 
 	QP::QueryPreprocessor qpp7;
 	QP::QueryProperties qp7 = qpp7.parseQuery(UnivDeclarations + "Select s1 such that Follows(_, p2)");
-	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp7.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp7.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Underscore);
 	REQUIRE((*clause).getLeftStmt().stmt_ref == "_");
 	REQUIRE((*clause).getRightStmt().type == StmtRefType::Synonym);
@@ -206,7 +206,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 
 	QP::QueryPreprocessor qpp8;
 	QP::QueryProperties qp8 = qpp8.parseQuery(UnivDeclarations + "Select i1 such that Follows(_, 1)");
-	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp8.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp8.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Underscore);
 	REQUIRE((*clause).getLeftStmt().stmt_ref == "_");
 	REQUIRE((*clause).getRightStmt().type == StmtRefType::StmtNumber);
@@ -214,7 +214,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 
 	QP::QueryPreprocessor qpp9;
 	QP::QueryProperties qp9 = qpp9.parseQuery(UnivDeclarations + "Select w2 such that Follows(_, _)");
-	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp9.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp9.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Underscore);
 	REQUIRE((*clause).getLeftStmt().stmt_ref == "_");
 	REQUIRE((*clause).getRightStmt().type == StmtRefType::Underscore);
@@ -223,14 +223,14 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 	// Follows*
 	QP::QueryPreprocessor qpp10;
 	QP::QueryProperties qp10 = qpp10.parseQuery(UnivDeclarations + "Select c2 such that Follows*(w1, c2)");
-	clause_t = dynamic_pointer_cast<QP::Relationship::FollowsT>(qp10.getSuchThatClauseList()[0].relation).get();
+	clause_t = dynamic_pointer_cast<QP::Relationship::FollowsT>(qp10.getClauseList()[0].relation).get();
 	REQUIRE((*clause_t).getLeftStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause_t).getLeftStmt().stmt_ref == "w1");
 	REQUIRE((*clause_t).getRightStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause_t).getRightStmt().stmt_ref == "c2");
 	QP::QueryPreprocessor qpp11;
 	QP::QueryProperties qp11 = qpp11.parseQuery(UnivDeclarations + "Select c2 such that Follows*      (   w1  , c2  )");
-	clause_t = dynamic_pointer_cast<QP::Relationship::FollowsT>(qp11.getSuchThatClauseList()[0].relation).get();
+	clause_t = dynamic_pointer_cast<QP::Relationship::FollowsT>(qp11.getClauseList()[0].relation).get();
 	REQUIRE((*clause_t).getLeftStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause_t).getLeftStmt().stmt_ref == "w1");
 	REQUIRE((*clause_t).getRightStmt().type == StmtRefType::Synonym);
@@ -239,8 +239,8 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 	// Multiple Follows(*) clauses
 	QP::QueryPreprocessor qpp12;
 	QP::QueryProperties qp12 = qpp12.parseQuery(UnivDeclarations + "Select c2 such that Follows(i1, _) and Follows(w1, c2)");
-	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp12.getSuchThatClauseList()[0].relation).get();
-	clause1 = dynamic_pointer_cast<QP::Relationship::Follows>(qp12.getSuchThatClauseList()[1].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp12.getClauseList()[0].relation).get();
+	clause1 = dynamic_pointer_cast<QP::Relationship::Follows>(qp12.getClauseList()[1].relation).get();
 	REQUIRE((*clause).getLeftStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getLeftStmt().stmt_ref == "i1");
 	REQUIRE((*clause).getRightStmt().type == StmtRefType::Underscore);
@@ -251,8 +251,8 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Follows(*)") {
 	REQUIRE((*clause1).getRightStmt().stmt_ref == "c2");
 	QP::QueryPreprocessor qpp13;
 	QP::QueryProperties qp13 = qpp13.parseQuery(UnivDeclarations + "Select c2 such that Follows*(i1, _) and Follows(w1, c2)");
-	clause_t = dynamic_pointer_cast<QP::Relationship::FollowsT>(qp13.getSuchThatClauseList()[0].relation).get();
-	clause1 = dynamic_pointer_cast<QP::Relationship::Follows>(qp13.getSuchThatClauseList()[1].relation).get();
+	clause_t = dynamic_pointer_cast<QP::Relationship::FollowsT>(qp13.getClauseList()[0].relation).get();
+	clause1 = dynamic_pointer_cast<QP::Relationship::Follows>(qp13.getClauseList()[1].relation).get();
 	REQUIRE((*clause_t).getLeftStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause_t).getLeftStmt().stmt_ref == "i1");
 	REQUIRE((*clause_t).getRightStmt().type == StmtRefType::Underscore);
@@ -286,7 +286,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 	QP::Relationship::UsesS* clause;
 	QP::QueryPreprocessor qpp1;
 	QP::QueryProperties qp1 = qpp1.parseQuery(UnivDeclarations + "Select v1 such that Uses(s1, v1)");
-	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp1.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp1.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "s1");
 	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
@@ -294,7 +294,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 
 	QP::QueryPreprocessor qpp2;
 	QP::QueryProperties qp2 = qpp2.parseQuery(UnivDeclarations + "Select s1 such that Uses(s1, _)");
-	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp2.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp2.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "s1");
 	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
@@ -302,7 +302,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 
 	QP::QueryPreprocessor qpp3;
 	QP::QueryProperties qp3 = qpp3.parseQuery(UnivDeclarations + "Select s1 such that Uses(s1, \"x\")");
-	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp3.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp3.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "s1");
 	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
@@ -310,7 +310,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 
 	QP::QueryPreprocessor qpp4;
 	QP::QueryProperties qp4 = qpp4.parseQuery(UnivDeclarations + "Select v1 such that Uses(i1, v1)");
-	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp4.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp4.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "i1");
 	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
@@ -318,7 +318,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 
 	QP::QueryPreprocessor qpp5;
 	QP::QueryProperties qp5 = qpp5.parseQuery(UnivDeclarations + "Select p1 such that Uses(p1, _)");
-	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp5.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp5.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "p1");
 	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
@@ -326,7 +326,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 
 	QP::QueryPreprocessor qpp6;
 	QP::QueryProperties qp6 = qpp6.parseQuery(UnivDeclarations + "Select a1 such that Uses(a1, \"y\")");
-	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp6.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp6.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "a1");
 	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
@@ -334,7 +334,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 
 	QP::QueryPreprocessor qpp7;
 	QP::QueryProperties qp7 = qpp7.parseQuery(UnivDeclarations + "Select v1 such that Uses(w2, v1)");
-	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp7.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp7.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "w2");
 	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
@@ -342,7 +342,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 
 	QP::QueryPreprocessor qpp8;
 	QP::QueryProperties qp8 = qpp8.parseQuery(UnivDeclarations + "Select i1 such that Uses(i1, _)");
-	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp8.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp8.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "i1");
 	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
@@ -350,7 +350,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 
 	QP::QueryPreprocessor qpp9;
 	QP::QueryProperties qp9 = qpp9.parseQuery(UnivDeclarations + "Select w1 such that Uses(w1, \"z0\")");
-	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp9.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp9.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "w1");
 	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
@@ -358,7 +358,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 
 	QP::QueryPreprocessor qpp10;
 	QP::QueryProperties qp10 = qpp10.parseQuery(UnivDeclarations + "Select v1 such that Uses(1, v1)");
-	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp10.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp10.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::StmtNumber);
 	REQUIRE((*clause).getStmt().stmt_ref == "1");
 	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
@@ -366,7 +366,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 
 	QP::QueryPreprocessor qpp11;
 	QP::QueryProperties qp11 = qpp11.parseQuery(UnivDeclarations + "Select s1 such that Uses(w2, _)");
-	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp11.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp11.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "w2");
 	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
@@ -374,7 +374,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 
 	QP::QueryPreprocessor qpp12;
 	QP::QueryProperties qp12 = qpp12.parseQuery(UnivDeclarations + "Select s1 such that Uses(w2, \"var\")");
-	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp12.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::UsesS>(qp12.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "w2");
 	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
@@ -384,7 +384,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 	QP::Relationship::UsesP* clause2;
 	QP::QueryPreprocessor qpp13;
 	QP::QueryProperties qp13 = qpp13.parseQuery(UnivDeclarations + "Select v1 such that Uses(pc1, v1)");
-	clause2 = dynamic_pointer_cast<QP::Relationship::UsesP>(qp13.getSuchThatClauseList()[0].relation).get();
+	clause2 = dynamic_pointer_cast<QP::Relationship::UsesP>(qp13.getClauseList()[0].relation).get();
 	REQUIRE((*clause2).getLeftEnt().type == EntRefType::Synonym);
 	REQUIRE((*clause2).getLeftEnt().ent_ref == "pc1");
 	REQUIRE((*clause2).getRightEnt().type == EntRefType::Synonym);
@@ -392,7 +392,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 
 	QP::QueryPreprocessor qpp14;
 	QP::QueryProperties qp14 = qpp14.parseQuery(UnivDeclarations + "Select v1 such that Uses(c1, _)");
-	clause2 = dynamic_pointer_cast<QP::Relationship::UsesP>(qp14.getSuchThatClauseList()[0].relation).get();
+	clause2 = dynamic_pointer_cast<QP::Relationship::UsesP>(qp14.getClauseList()[0].relation).get();
 	REQUIRE((*clause2).getLeftEnt().type == EntRefType::Synonym);
 	REQUIRE((*clause2).getLeftEnt().ent_ref == "c1");
 	REQUIRE((*clause2).getRightEnt().type == EntRefType::Underscore);
@@ -400,7 +400,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 
 	QP::QueryPreprocessor qpp15;
 	QP::QueryProperties qp15 = qpp15.parseQuery(UnivDeclarations + R"(Select s2 such that Uses("procedureName", "varName"))");
-	clause2 = dynamic_pointer_cast<QP::Relationship::UsesP>(qp15.getSuchThatClauseList()[0].relation).get();
+	clause2 = dynamic_pointer_cast<QP::Relationship::UsesP>(qp15.getClauseList()[0].relation).get();
 	REQUIRE((*clause2).getLeftEnt().type == EntRefType::VarName);
 	REQUIRE((*clause2).getLeftEnt().ent_ref == "procedureName");
 	REQUIRE((*clause2).getRightEnt().type == EntRefType::VarName);
@@ -432,7 +432,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 	QP::Relationship::ModifiesS* clause;
 	QP::QueryPreprocessor qpp1;
 	QP::QueryProperties qp1 = qpp1.parseQuery(UnivDeclarations + "Select v1 such that Modifies(s1, v1)");
-	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp1.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp1.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "s1");
 	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
@@ -440,7 +440,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 
 	QP::QueryPreprocessor qpp2;
 	QP::QueryProperties qp2 = qpp2.parseQuery(UnivDeclarations + "Select s1 such that Modifies(s1, _)");
-	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp2.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp2.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "s1");
 	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
@@ -448,7 +448,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 
 	QP::QueryPreprocessor qpp3;
 	QP::QueryProperties qp3 = qpp3.parseQuery(UnivDeclarations + "Select s1 such that Modifies(s1, \"x\")");
-	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp3.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp3.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "s1");
 	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
@@ -456,7 +456,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 
 	QP::QueryPreprocessor qpp4;
 	QP::QueryProperties qp4 = qpp4.parseQuery(UnivDeclarations + "Select v1 such that Modifies(i1, v1)");
-	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp4.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp4.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "i1");
 	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
@@ -464,7 +464,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 
 	QP::QueryPreprocessor qpp5;
 	QP::QueryProperties qp5 = qpp5.parseQuery(UnivDeclarations + "Select p1 such that Modifies(r1, _)");
-	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp5.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp5.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "r1");
 	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
@@ -472,7 +472,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 
 	QP::QueryPreprocessor qpp6;
 	QP::QueryProperties qp6 = qpp6.parseQuery(UnivDeclarations + "Select a1 such that Modifies(a1, \"y\")");
-	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp6.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp6.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "a1");
 	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
@@ -480,7 +480,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 
 	QP::QueryPreprocessor qpp7;
 	QP::QueryProperties qp7 = qpp7.parseQuery(UnivDeclarations + "Select v1 such that Modifies(w2, v1)");
-	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp7.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp7.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "w2");
 	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
@@ -488,7 +488,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 
 	QP::QueryPreprocessor qpp8;
 	QP::QueryProperties qp8 = qpp8.parseQuery(UnivDeclarations + "Select i1 such that Modifies(i1, _)");
-	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp8.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp8.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "i1");
 	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
@@ -496,7 +496,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 
 	QP::QueryPreprocessor qpp9;
 	QP::QueryProperties qp9 = qpp9.parseQuery(UnivDeclarations + "Select w1 such that Modifies(w1, \"z0\")");
-	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp9.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp9.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "w1");
 	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
@@ -504,7 +504,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 
 	QP::QueryPreprocessor qpp10;
 	QP::QueryProperties qp10 = qpp10.parseQuery(UnivDeclarations + "Select v1 such that Modifies(1, v1)");
-	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp10.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp10.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::StmtNumber);
 	REQUIRE((*clause).getStmt().stmt_ref == "1");
 	REQUIRE((*clause).getEnt().type == EntRefType::Synonym);
@@ -512,7 +512,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 
 	QP::QueryPreprocessor qpp11;
 	QP::QueryProperties qp11 = qpp11.parseQuery(UnivDeclarations + "Select s1 such that Modifies(w2, _)");
-	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp11.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp11.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "w2");
 	REQUIRE((*clause).getEnt().type == EntRefType::Underscore);
@@ -520,7 +520,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 
 	QP::QueryPreprocessor qpp12;
 	QP::QueryProperties qp12 = qpp12.parseQuery(UnivDeclarations + "Select s1 such that Modifies(w2, \"var\")");
-	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp12.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::ModifiesS>(qp12.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getStmt().type == StmtRefType::Synonym);
 	REQUIRE((*clause).getStmt().stmt_ref == "w2");
 	REQUIRE((*clause).getEnt().type == EntRefType::VarName);
@@ -530,7 +530,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 	QP::Relationship::ModifiesP* clause2;
 	QP::QueryPreprocessor qpp13;
 	QP::QueryProperties qp13 = qpp13.parseQuery(UnivDeclarations + "Select v1 such that Modifies(pc1, v1)");
-	clause2 = dynamic_pointer_cast<QP::Relationship::ModifiesP>(qp13.getSuchThatClauseList()[0].relation).get();
+	clause2 = dynamic_pointer_cast<QP::Relationship::ModifiesP>(qp13.getClauseList()[0].relation).get();
 	REQUIRE((*clause2).getLeftEnt().type == EntRefType::Synonym);
 	REQUIRE((*clause2).getLeftEnt().ent_ref == "pc1");
 	REQUIRE((*clause2).getRightEnt().type == EntRefType::Synonym);
@@ -538,7 +538,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 
 	QP::QueryPreprocessor qpp14;
 	QP::QueryProperties qp14 = qpp14.parseQuery(UnivDeclarations + "Select v1 such that Modifies(c1, _)");
-	clause2 = dynamic_pointer_cast<QP::Relationship::ModifiesP>(qp14.getSuchThatClauseList()[0].relation).get();
+	clause2 = dynamic_pointer_cast<QP::Relationship::ModifiesP>(qp14.getClauseList()[0].relation).get();
 	REQUIRE((*clause2).getLeftEnt().type == EntRefType::Synonym);
 	REQUIRE((*clause2).getLeftEnt().ent_ref == "c1");
 	REQUIRE((*clause2).getRightEnt().type == EntRefType::Underscore);
@@ -546,7 +546,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 
 	QP::QueryPreprocessor qpp15;
 	QP::QueryProperties qp15 = qpp15.parseQuery(UnivDeclarations + R"(Select s2 such that Modifies("procedureName", "varName"))");
-	clause2 = dynamic_pointer_cast<QP::Relationship::ModifiesP>(qp15.getSuchThatClauseList()[0].relation).get();
+	clause2 = dynamic_pointer_cast<QP::Relationship::ModifiesP>(qp15.getClauseList()[0].relation).get();
 	REQUIRE((*clause2).getLeftEnt().type == EntRefType::VarName);
 	REQUIRE((*clause2).getLeftEnt().ent_ref == "procedureName");
 	REQUIRE((*clause2).getRightEnt().type == EntRefType::VarName);
@@ -663,8 +663,8 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Calls(*)") {
 TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that") {
 	QP::QueryPreprocessor qpp1;
 	QP::QueryProperties qp1 = qpp1.parseQuery(UnivDeclarations + "Select c2 such that Modifies(c2, _) and Follows(w1, c2)");
-	QP::Relationship::ModifiesP* clause = dynamic_pointer_cast<QP::Relationship::ModifiesP>(qp1.getSuchThatClauseList()[0].relation).get();
-	QP::Relationship::Follows* clause1 = dynamic_pointer_cast<QP::Relationship::Follows>(qp1.getSuchThatClauseList()[1].relation).get();
+	QP::Relationship::ModifiesP* clause = dynamic_pointer_cast<QP::Relationship::ModifiesP>(qp1.getClauseList()[0].relation).get();
+	QP::Relationship::Follows* clause1 = dynamic_pointer_cast<QP::Relationship::Follows>(qp1.getClauseList()[1].relation).get();
 	REQUIRE((*clause).getLeftEnt().type == EntRefType::Synonym);
 	REQUIRE((*clause).getLeftEnt().ent_ref == "c2");
 	REQUIRE((*clause).getRightEnt().type == EntRefType::Underscore);
@@ -676,8 +676,8 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that") {
 
 	QP::QueryPreprocessor qpp2;
 	QP::QueryProperties qp2 = qpp2.parseQuery(UnivDeclarations + "Select w2 such that Parent*(007, _) such that Uses(w2, v1)");
-	QP::Relationship::ParentT* clause2 = dynamic_pointer_cast<QP::Relationship::ParentT>(qp2.getSuchThatClauseList()[0].relation).get();
-	QP::Relationship::UsesS* clause3 = dynamic_pointer_cast<QP::Relationship::UsesS>(qp2.getSuchThatClauseList()[1].relation).get();
+	QP::Relationship::ParentT* clause2 = dynamic_pointer_cast<QP::Relationship::ParentT>(qp2.getClauseList()[0].relation).get();
+	QP::Relationship::UsesS* clause3 = dynamic_pointer_cast<QP::Relationship::UsesS>(qp2.getClauseList()[1].relation).get();
 	REQUIRE((*clause2).getParentStmt().type == StmtRefType::StmtNumber);
 	REQUIRE((*clause2).getParentStmt().stmt_ref == "007");
 	REQUIRE((*clause2).getChildStmt().type == StmtRefType::Underscore);
@@ -692,7 +692,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid pattern") {
 	QP::Relationship::Pattern* clause1;
 	QP::QueryPreprocessor qpp1;
 	QP::QueryProperties qp1 = qpp1.parseQuery(UnivDeclarations + "Select a1 pattern a1(v1, _)");
-	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp1.getPatternClauseList()[0].relation).get();
+	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp1.getClauseList()[0].relation).get();
 	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
 	REQUIRE((*clause1).getEntRef().type == EntRefType::Synonym);
@@ -700,7 +700,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid pattern") {
 	REQUIRE((*clause1).getExpressionType() == ExpressionType::Underscore);
 	QP::QueryPreprocessor qpp2;
 	QP::QueryProperties qp2 = qpp2.parseQuery(UnivDeclarations + "Select v1 pattern a1(v1, \"x\")");
-	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp2.getPatternClauseList()[0].relation).get();
+	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp2.getClauseList()[0].relation).get();
 	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
 	REQUIRE((*clause1).getEntRef().type == EntRefType::Synonym);
@@ -708,7 +708,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid pattern") {
 	REQUIRE((*clause1).getExpressionType() == ExpressionType::Expression);
 	QP::QueryPreprocessor qpp3;
 	QP::QueryProperties qp3 = qpp3.parseQuery(UnivDeclarations + "Select v1 pattern a2  (v1, _\"x\"_)");
-	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp3.getPatternClauseList()[0].relation).get();
+	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp3.getClauseList()[0].relation).get();
 	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a2");
 	REQUIRE((*clause1).getEntRef().type == EntRefType::Synonym);
@@ -716,7 +716,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid pattern") {
 	REQUIRE((*clause1).getExpressionType() == ExpressionType::ExpressionUnderscore);
 	QP::QueryPreprocessor qpp4;
 	QP::QueryProperties qp4 = qpp4.parseQuery(UnivDeclarations + "Select a1 pattern a1(_, _)");
-	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp4.getPatternClauseList()[0].relation).get();
+	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp4.getClauseList()[0].relation).get();
 	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
 	REQUIRE((*clause1).getEntRef().type == EntRefType::Underscore);
@@ -724,7 +724,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid pattern") {
 	REQUIRE((*clause1).getExpressionType() == ExpressionType::Underscore);
 	QP::QueryPreprocessor qpp5;
 	QP::QueryProperties qp5 = qpp5.parseQuery(UnivDeclarations + "Select a2 pattern a1(_, \"x\")");
-	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp5.getPatternClauseList()[0].relation).get();
+	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp5.getClauseList()[0].relation).get();
 	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
 	REQUIRE((*clause1).getEntRef().type == EntRefType::Underscore);
@@ -732,7 +732,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid pattern") {
 	REQUIRE((*clause1).getExpressionType() == ExpressionType::Expression);
 	QP::QueryPreprocessor qpp6;
 	QP::QueryProperties qp6 = qpp6.parseQuery(UnivDeclarations + "Select a1 pattern a1(_, _\"x + 2\"_)");
-	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp6.getPatternClauseList()[0].relation).get();
+	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp6.getClauseList()[0].relation).get();
 	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
 	REQUIRE((*clause1).getEntRef().type == EntRefType::Underscore);
@@ -740,7 +740,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid pattern") {
 	REQUIRE((*clause1).getExpressionType() == ExpressionType::ExpressionUnderscore);
 	QP::QueryPreprocessor qpp7;
 	QP::QueryProperties qp7 = qpp7.parseQuery(UnivDeclarations + R"(Select a1 pattern a1("foo", "(x+5)*3- y"))");
-	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp7.getPatternClauseList()[0].relation).get();
+	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp7.getClauseList()[0].relation).get();
 	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
 	REQUIRE((*clause1).getEntRef().type == EntRefType::VarName);
@@ -748,7 +748,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid pattern") {
 	REQUIRE((*clause1).getExpressionType() == ExpressionType::Expression);
 	QP::QueryPreprocessor qpp8;
 	QP::QueryProperties qp8 = qpp8.parseQuery(UnivDeclarations + "Select a1 pattern a1(\"foo\", _)");
-	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp8.getPatternClauseList()[0].relation).get();
+	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp8.getClauseList()[0].relation).get();
 	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
 	REQUIRE((*clause1).getEntRef().type == EntRefType::VarName);
@@ -756,7 +756,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid pattern") {
 	REQUIRE((*clause1).getExpressionType() == ExpressionType::Underscore);
 	QP::QueryPreprocessor qpp9;
 	QP::QueryProperties qp9 = qpp9.parseQuery(UnivDeclarations + R"(Select a2 pattern a1("foo", _"x-2"_))");
-	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp9.getPatternClauseList()[0].relation).get();
+	clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp9.getClauseList()[0].relation).get();
 	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
 	REQUIRE((*clause1).getEntRef().type == EntRefType::VarName);
@@ -794,8 +794,8 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid pattern") {
 TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that/pattern clauses") {
 	QP::QueryPreprocessor qpp12;
 	QP::QueryProperties qp12 = qpp12.parseQuery(UnivDeclarations + "Select a1 such that Follows(w1, a1) pattern a1(v1, _\"2-4\"_)");
-	QP::Relationship::Follows* clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp12.getSuchThatClauseList()[0].relation).get();
-	QP::Relationship::Pattern* clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp12.getPatternClauseList()[0].relation).get();
+	QP::Relationship::Follows* clause = dynamic_pointer_cast<QP::Relationship::Follows>(qp12.getClauseList()[0].relation).get();
+	QP::Relationship::Pattern* clause1 = dynamic_pointer_cast<QP::Relationship::Pattern>(qp12.getClauseList()[1].relation).get();
 	REQUIRE((*clause1).getSynAssign().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().symbol == "a1");
 	REQUIRE((*clause1).getEntRef().type == EntRefType::Synonym);

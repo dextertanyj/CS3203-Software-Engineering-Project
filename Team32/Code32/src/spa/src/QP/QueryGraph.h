@@ -3,7 +3,6 @@
 
 #include <string>
 #include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 #include "QP/QueryProperties.h"
@@ -13,13 +12,9 @@ using namespace std;
 class QP::QueryGraph {
 public:
 	explicit QueryGraph(const DeclarationList& declarations);
-	void setEdges(const SuchThatClauseList& such_that_clause_list, const PatternClauseList& pattern_clause_list);
+	void setEdges(const ClauseList& clause_list);
 	unordered_map<string, Node> getNodes();
-
-	/*
-	 * The first group will contain the selected synonym
-	 */
-	vector<unordered_set<string>> getSynonymsInGroup(const string& selected_synonym);
+	unordered_map<string, int> getSynonymsInGroup(const string& selected_synonym);
 
 private:
 	unordered_map<string, Node> nodes;

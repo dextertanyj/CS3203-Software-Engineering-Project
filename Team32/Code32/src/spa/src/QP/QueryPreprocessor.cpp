@@ -68,7 +68,7 @@ QP::QueryProperties QP::QueryPreprocessor::parseQuery() {
 	if (this->select.symbol.empty()) {
 		throw QueryException("Missing Select clause.");
 	}
-	return {this->declaration_list, this->select, this->such_that_clause_list, this->pattern_clause_list};
+	return {this->declaration_list, this->select, this->clause_list};
 }
 
 void QP::QueryPreprocessor::parseDeclaration(int& token_index) {
@@ -118,8 +118,8 @@ void QP::QueryPreprocessor::parseSelect(int& token_index) {
 }
 
 void QP::QueryPreprocessor::parseSuchThat(int& token_index) {
-	SuchThatClause such_that_clause = {parseRelation(token_index)};
-	this->such_that_clause_list.push_back(such_that_clause);
+	Clause clause = {parseRelation(token_index)};
+	this->clause_list.push_back(clause);
 	if (token_index < this->query_tokens.size() && this->query_tokens[token_index] == "and") {
 		parseSuchThat(++token_index);
 	}
@@ -173,8 +173,8 @@ void QP::QueryPreprocessor::parsePattern(int& token_index) {
 		parsePattern(++token_index);
 	}
 	unique_ptr<Relationship::Relation> relation = make_unique<Relationship::Pattern>(synonym, ent_ref, expression_type, query_expression);
-	PatternClause pattern_clause = {std::move(relation)};
-	this->pattern_clause_list.push_back(pattern_clause);
+	Clause clause = {std::move(relation)};
+	this->clause_list.push_back(clause);
 }
 
 DesignEntity QP::QueryPreprocessor::parseDesignEntity(int& token_index) {
