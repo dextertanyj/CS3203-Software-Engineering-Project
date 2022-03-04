@@ -89,6 +89,7 @@ void QP::QueryResult::joinWithDifferentSynonym(QueryResult& query_result) {
 	}
 
 	this->table = new_table;
+	this->synonyms_stored.insert(new_synonyms.begin(), new_synonyms.end());
 	if (new_table.begin()->second.empty()) {
 		this->result = false;
 	}
@@ -124,6 +125,7 @@ void QP::QueryResult::joinWithSameSynonym(QueryResult& query_result) {
 		}
 	}
 
+	this->synonyms_stored = synonyms;
 	this->table = final_result;
 	if (final_result.begin()->second.empty()) {
 		this->result = false;
