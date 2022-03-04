@@ -17,18 +17,18 @@ class PKB::SVRelationStore {
 public:
 	SVRelationStore();
 	void set(shared_ptr<StmtInfo> statement, VarRef variable);
-	void set(shared_ptr<StmtInfo> statement, unordered_set<VarRef> variables);
+	void set(shared_ptr<StmtInfo> statement, VarRefSet variables);
 	bool check(StmtRef index, const VarRef& variable);
-	unordered_set<VarRef> getByStmt(StmtRef index);
-	unordered_set<shared_ptr<StmtInfo>> getByVar(const VarRef& variable);
+	VarRefSet getByStmt(StmtRef index);
+	StmtInfoPtrSet getByVar(const VarRef& variable);
 	void clear();
 
 private:
-	unordered_map<StmtRef, unordered_set<VarRef>> statement_key_map;
-	unordered_map<VarRef, unordered_set<shared_ptr<StmtInfo>>> variable_key_map;
+	unordered_map<StmtRef, VarRefSet> statement_key_map;
+	unordered_map<VarRef, StmtInfoPtrSet> variable_key_map;
 
-	friend class UsesRelation;
-	friend class ModifiesRelation;
+	friend class UsesSRelation;
+	friend class ModifiesSRelation;
 };
 
 #endif  // SPA_SRC_PKB_SVRELATIONSTORE_H

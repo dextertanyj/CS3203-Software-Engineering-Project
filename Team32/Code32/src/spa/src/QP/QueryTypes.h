@@ -42,13 +42,9 @@ typedef struct Declaration {
 	string symbol;
 } Declaration;
 
-typedef struct PatternClause {
+typedef struct Clause {
 	shared_ptr<Relationship::Relation> relation;
-} PatternClause;
-
-typedef struct SuchThatClause {
-	shared_ptr<Relationship::Relation> relation;
-} SuchThatClause;
+} Clause;
 
 typedef struct Node {
 	string declaration_symbol;
@@ -56,8 +52,7 @@ typedef struct Node {
 } Node;
 
 typedef vector<Declaration> DeclarationList;
-typedef vector<SuchThatClause> SuchThatClauseList;
-typedef vector<PatternClause> PatternClauseList;
+typedef vector<Clause> ClauseList;
 }  // namespace QP::Types
 
 #endif  // SPA_SRC_QP_QUERYTYPES_H

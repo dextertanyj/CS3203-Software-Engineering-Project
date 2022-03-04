@@ -1,14 +1,12 @@
-#include "PKB/InfoStore.h"
-
 #include <algorithm>
 #include <stdexcept>
 
+#include "PKB/Types.h"
 #include "TestUtilities.h"
-#include "catch.hpp"
 #include "catch_tools.h"
 
-TEST_CASE("PKB::ProcedureStore Test") {
-	PKB::InfoStore<ProcRef, vector<shared_ptr<StmtInfo>>, PKB::ProcedureInfo> store;
+TEST_CASE("PKB::Types::ProcedureStore Test") {
+	PKB::Types::ProcedureStore store;
 	ProcRef name_1 = "procedure";
 	ProcRef name_2 = "main";
 	vector<shared_ptr<StmtInfo>> single_statement = {TestUtilities::createStmtInfo(1, StmtType::Read)};
@@ -40,7 +38,7 @@ TEST_CASE("PKB::ProcedureStore Test") {
 		unordered_set<shared_ptr<PKB::ProcedureInfo>> infos = store.getAll();
 
 		REQUIRE_EQUALS(infos.size(), 2);
-		for (auto info : infos) {
+		for (const auto& info : infos) {
 			REQUIRE(any_of(expected_names.begin(), expected_names.end(),
 			               [info](const ProcRef& name) { return info->getIdentifier() == name; }));
 			REQUIRE(any_of(expected_statements.begin(), expected_statements.end(),

@@ -6,8 +6,8 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "PKB/ModifiesRelation.h"
-#include "PKB/UsesRelation.h"
+#include "PKB/ModifiesSRelation.h"
+#include "PKB/UsesSRelation.h"
 
 template <class T>
 PKB::SVRelationStore<T>::SVRelationStore() = default;
@@ -88,7 +88,7 @@ bool PKB::SVRelationStore<T>::check(StmtRef index, const VarRef& variable) {
 }
 
 template <class T>
-unordered_set<VarRef> PKB::SVRelationStore<T>::getByStmt(StmtRef index) {
+VarRefSet PKB::SVRelationStore<T>::getByStmt(StmtRef index) {
 	if (index <= 0) {
 		throw invalid_argument("Statement number must be a positive integer.");
 	}
@@ -101,7 +101,7 @@ unordered_set<VarRef> PKB::SVRelationStore<T>::getByStmt(StmtRef index) {
 }
 
 template <class T>
-unordered_set<shared_ptr<StmtInfo>> PKB::SVRelationStore<T>::getByVar(const VarRef& variable) {
+StmtInfoPtrSet PKB::SVRelationStore<T>::getByVar(const VarRef& variable) {
 	if (variable.length() == 0) {
 		throw invalid_argument("Variable name must have length more than 0.");
 	}

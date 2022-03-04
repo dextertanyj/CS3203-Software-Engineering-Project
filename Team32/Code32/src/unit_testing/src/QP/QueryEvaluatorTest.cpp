@@ -23,25 +23,24 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 	QueryStmtRef stmt_no2 = {StmtRefType::StmtNumber, "2"};
 	QueryEntRef v = {EntRefType::Synonym, "v"};
 
-	SuchThatClauseList such_that_clauses = {
+	ClauseList clauses = {
 		{make_unique<QP::Relationship::Parent>(s1, s2)},
 		{make_unique<QP::Relationship::Parent>(a, i)},
 		{make_unique<QP::Relationship::Parent>(stmt_no1, stmt_no2)},
 		{make_unique<QP::Relationship::ModifiesS>(a, v)},
 	};
-	QP::QueryProperties properties = QP::QueryProperties(declarations, select, such_that_clauses, {});
-	vector<unordered_set<string>> synonyms_in_group = {
-		{"s1", "s2"},
-		{"a", "v", "i"},
+	QP::QueryProperties properties = QP::QueryProperties(declarations, select, clauses);
+	unordered_map<string, int> synonyms_in_group = {
+		{"s1", 0}, {"s2", 0}, {"a", 1}, {"v", 1}, {"i", 1},
 	};
 
 	PKB::Storage pkb = PKB::Storage();
-	vector<pair<SuchThatClauseList, PatternClauseList>> clauses_in_group = QP::QueryEvaluator::splitClauses(properties, synonyms_in_group);
+	vector<ClauseList> clauses_in_group = QP::QueryEvaluator::splitClauses(properties, synonyms_in_group);
 
 	REQUIRE(clauses_in_group.size() == 3);
-	REQUIRE(clauses_in_group[0].first.size() == 1);
-	REQUIRE(clauses_in_group[1].first.size() == 2);
-	REQUIRE(clauses_in_group[2].first.size() == 1);
+	REQUIRE(clauses_in_group[0].size() == 1);
+	REQUIRE(clauses_in_group[1].size() == 2);
+	REQUIRE(clauses_in_group[2].size() == 1);
 };
 
 TEST_CASE("QP::QueryEvaluator::execute") {
@@ -86,7 +85,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 		Common::ExpressionProcessor::Expression::parse(query_lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 
 	SECTION("No clause, select assign statement") {
-		QP::QueryProperties properties = QP::QueryProperties(declarations, assign_synonym, {}, {});
+		QP::QueryProperties properties = QP::QueryProperties(declarations, assign_synonym, {});
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
 		vector<string> expected_result = {"1", "3"};
@@ -96,7 +95,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("No clause, select variable") {
-		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, {}, {});
+		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, {});
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
 		vector<string> expected_result = {"x"};
@@ -105,7 +104,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("No clause, select procedure") {
-		QP::QueryProperties properties = QP::QueryProperties(declarations, proc_synonym, {}, {});
+		QP::QueryProperties properties = QP::QueryProperties(declarations, proc_synonym, {});
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
 		vector<string> expected_result = {"proc1", "proc2"};
@@ -115,8 +114,8 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("One non-trivial such that clause") {
-		SuchThatClauseList such_that_clauses = {{make_unique<QP::Relationship::ModifiesS>(a, v)}};
-		QP::QueryProperties properties = QP::QueryProperties(declarations, assign_synonym, such_that_clauses, {});
+		ClauseList clauses = {{make_unique<QP::Relationship::ModifiesS>(a, v)}};
+		QP::QueryProperties properties = QP::QueryProperties(declarations, assign_synonym, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
@@ -126,8 +125,8 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("One trivial such that clause") {
-		SuchThatClauseList such_that_clauses = {{make_unique<QP::Relationship::ModifiesS>(stmt_no1, v)}};
-		QP::QueryProperties properties = QP::QueryProperties(declarations, assign_synonym, such_that_clauses, {});
+		ClauseList clauses = {{make_unique<QP::Relationship::ModifiesS>(stmt_no1, v)}};
+		QP::QueryProperties properties = QP::QueryProperties(declarations, assign_synonym, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
@@ -138,9 +137,9 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("One trivial pattern clause") {
-		PatternClauseList pattern_list = {{make_unique<QP::Relationship::Pattern>(assign_synonym, var_underscore,
-		                                                                          ExpressionType::ExpressionUnderscore, query_expression)}};
-		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, {}, pattern_list);
+		ClauseList clauses = {{make_unique<QP::Relationship::Pattern>(assign_synonym, var_underscore, ExpressionType::ExpressionUnderscore,
+		                                                              query_expression)}};
+		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
@@ -150,9 +149,9 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("One non-trivial pattern clause") {
-		PatternClauseList pattern_list = {
+		ClauseList clauses = {
 			{make_unique<QP::Relationship::Pattern>(assign_synonym, v, ExpressionType::ExpressionUnderscore, query_expression)}};
-		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, {}, pattern_list);
+		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
@@ -162,10 +161,10 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("Trivial pattern clause and trival such that clause") {
-		SuchThatClauseList such_that_clauses = {{make_unique<QP::Relationship::ModifiesS>(stmt_no1, v)}};
-		PatternClauseList pattern_list = {
+		ClauseList clauses = {
+			{make_unique<QP::Relationship::ModifiesS>(stmt_no1, v)},
 			{make_unique<QP::Relationship::Pattern>(assign_synonym, v, ExpressionType::ExpressionUnderscore, query_expression)}};
-		QP::QueryProperties properties = QP::QueryProperties(declarations, stmt_synonym, such_that_clauses, pattern_list);
+		QP::QueryProperties properties = QP::QueryProperties(declarations, stmt_synonym, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
@@ -176,10 +175,11 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("Non-trivial pattern clause and such that clause") {
-		SuchThatClauseList such_that_clauses = {{make_unique<QP::Relationship::ModifiesS>(stmt_no1, v)}};
-		PatternClauseList pattern_list = {
-			{make_unique<QP::Relationship::Pattern>(assign_synonym, v, ExpressionType::ExpressionUnderscore, query_expression)}};
-		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, such_that_clauses, pattern_list);
+		ClauseList clauses = {
+			{make_unique<QP::Relationship::ModifiesS>(stmt_no1, v)},
+			{make_unique<QP::Relationship::Pattern>(assign_synonym, v, ExpressionType::ExpressionUnderscore, query_expression)},
+		};
+		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
@@ -189,13 +189,12 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("Multiple clauses") {
-		SuchThatClauseList such_that_clauses = {
+		ClauseList clauses = {
 			{make_unique<QP::Relationship::ModifiesS>(stmt_no1, v)},
 			{make_unique<QP::Relationship::Follows>(a, stmt_underscore)},
+			{make_unique<QP::Relationship::Pattern>(assign_synonym, v, ExpressionType::ExpressionUnderscore, query_expression)},
 		};
-		PatternClauseList pattern_list = {
-			{make_unique<QP::Relationship::Pattern>(assign_synonym, v, ExpressionType::ExpressionUnderscore, query_expression)}};
-		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, such_that_clauses, pattern_list);
+		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 

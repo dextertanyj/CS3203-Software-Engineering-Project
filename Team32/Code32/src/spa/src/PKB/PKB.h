@@ -17,26 +17,33 @@ class ProcedureInfo;
 
 template <typename TIdent, typename TContent, class TInfo>
 class InfoStore;
-
-class AssignStore;
-class ConstantStore;
-template <class T>
-class StatementRelationStore;
+template <typename T>
+class SetStore;
 template <typename TIdent, class TInfo, class TRelation>
 class TransitiveRelationStore;
 class CallStatementStore;
 template <class T>
 class SVRelationStore;
-class VariableStore;
+template <class T>
+class PVRelationStore;
 
 template <class TInfo>
 class TopologicalSort;
+template <class T>
+class StatementRelationStore;
+template <class T>
+class SVRelationStore;
+
+class AssignStore;
+class CallStatementStore;
 
 class CallRelation;
 class FollowsRelation;
-class ModifiesRelation;
+class ModifiesSRelation;
+class ModifiesPRelation;
 class ParentRelation;
-class UsesRelation;
+class UsesSRelation;
+class UsesPRelation;
 
 typedef struct AssignRelation {
 	shared_ptr<StmtInfo> node;
