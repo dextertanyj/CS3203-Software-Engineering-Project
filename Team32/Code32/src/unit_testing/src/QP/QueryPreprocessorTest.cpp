@@ -581,7 +581,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Calls(*)") {
 
 	QP::QueryPreprocessor qpp1;
 	QP::QueryProperties qp1 = qpp1.parseQuery(UnivDeclarations + "Select pc1 such that Calls(pc1, pc2)");
-	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp1.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp1.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getCallerEnt().type == EntRefType::Synonym);
 	REQUIRE((*clause).getCallerEnt().ent_ref == "pc1");
 	REQUIRE((*clause).getCalleeEnt().type == EntRefType::Synonym);
@@ -589,7 +589,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Calls(*)") {
 
 	QP::QueryPreprocessor qpp2;
 	QP::QueryProperties qp2 = qpp2.parseQuery(UnivDeclarations + "Select pc1 such that Calls(pc1, _)");
-	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp2.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp2.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getCallerEnt().type == EntRefType::Synonym);
 	REQUIRE((*clause).getCallerEnt().ent_ref == "pc1");
 	REQUIRE((*clause).getCalleeEnt().type == EntRefType::Underscore);
@@ -597,7 +597,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Calls(*)") {
 
 	QP::QueryPreprocessor qpp3;
 	QP::QueryProperties qp3 = qpp3.parseQuery(UnivDeclarations + "Select pc1 such that Calls(pc1, \"procedure1\")");
-	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp3.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp3.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getCallerEnt().type == EntRefType::Synonym);
 	REQUIRE((*clause).getCallerEnt().ent_ref == "pc1");
 	REQUIRE((*clause).getCalleeEnt().type == EntRefType::VarName);
@@ -605,7 +605,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Calls(*)") {
 
 	QP::QueryPreprocessor qpp4;
 	QP::QueryProperties qp4 = qpp4.parseQuery(UnivDeclarations + "Select pc1 such that Calls(\"procedure1\", pc1)");
-	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp4.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp4.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getCallerEnt().type == EntRefType::VarName);
 	REQUIRE((*clause).getCallerEnt().ent_ref == "procedure1");
 	REQUIRE((*clause).getCalleeEnt().type == EntRefType::Synonym);
@@ -613,7 +613,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Calls(*)") {
 
 	QP::QueryPreprocessor qpp5;
 	QP::QueryProperties qp5 = qpp5.parseQuery(UnivDeclarations + "Select i1 such that Calls(\"procedure1\", \"procedure2\")");
-	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp5.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp5.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getCallerEnt().type == EntRefType::VarName);
 	REQUIRE((*clause).getCallerEnt().ent_ref == "procedure1");
 	REQUIRE((*clause).getCalleeEnt().type == EntRefType::VarName);
@@ -621,7 +621,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Calls(*)") {
 
 	QP::QueryPreprocessor qpp6;
 	QP::QueryProperties qp6 = qpp6.parseQuery(UnivDeclarations + "Select w2 such that Calls(\"procedure1\", _)");
-	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp6.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp6.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getCallerEnt().type == EntRefType::VarName);
 	REQUIRE((*clause).getCallerEnt().ent_ref == "procedure1");
 	REQUIRE((*clause).getCalleeEnt().type == EntRefType::Underscore);
@@ -629,7 +629,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Calls(*)") {
 
 	QP::QueryPreprocessor qpp7;
 	QP::QueryProperties qp7 = qpp7.parseQuery(UnivDeclarations + "Select s1 such that Calls(_, pc2)");
-	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp7.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp7.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getCallerEnt().type == EntRefType::Underscore);
 	REQUIRE((*clause).getCallerEnt().ent_ref == "_");
 	REQUIRE((*clause).getCalleeEnt().type == EntRefType::Synonym);
@@ -637,7 +637,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Calls(*)") {
 
 	QP::QueryPreprocessor qpp8;
 	QP::QueryProperties qp8 = qpp8.parseQuery(UnivDeclarations + "Select i1 such that Calls*(_, \"procedure1\")");
-	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp8.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp8.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getCallerEnt().type == EntRefType::Underscore);
 	REQUIRE((*clause).getCallerEnt().ent_ref == "_");
 	REQUIRE((*clause).getCalleeEnt().type == EntRefType::VarName);
@@ -645,7 +645,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Calls(*)") {
 
 	QP::QueryPreprocessor qpp9;
 	QP::QueryProperties qp9 = qpp9.parseQuery(UnivDeclarations + "Select w2 such that Calls(_, _)");
-	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp9.getSuchThatClauseList()[0].relation).get();
+	clause = dynamic_pointer_cast<QP::Relationship::Calls>(qp9.getClauseList()[0].relation).get();
 	REQUIRE((*clause).getCallerEnt().type == EntRefType::Underscore);
 	REQUIRE((*clause).getCallerEnt().ent_ref == "_");
 	REQUIRE((*clause).getCalleeEnt().type == EntRefType::Underscore);
@@ -653,7 +653,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Calls(*)") {
 
 	QP::QueryPreprocessor qpp10;
 	QP::QueryProperties qp10 = qpp10.parseQuery(UnivDeclarations + "Select pc2 such that Calls*(pc1, pc2)");
-	clause_t = dynamic_pointer_cast<QP::Relationship::CallsT>(qp10.getSuchThatClauseList()[0].relation).get();
+	clause_t = dynamic_pointer_cast<QP::Relationship::CallsT>(qp10.getClauseList()[0].relation).get();
 	REQUIRE((*clause_t).getCallerEnt().type == EntRefType::Synonym);
 	REQUIRE((*clause_t).getCallerEnt().ent_ref == "pc1");
 	REQUIRE((*clause_t).getCalleeEnt().type == EntRefType::Synonym);
