@@ -1,0 +1,45 @@
+1 - Call trivial
+stmt s;
+Select s such that Calls(_, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9
+5000
+2 - Caller calls callee
+procedure p;
+Select p such that Calls(p, "callee")
+caller
+5000
+3 - Call self
+procedure p;
+Select p such that Calls(p, p)
+loop2
+5000
+4 - Call self transitive
+procedure p;
+Select p such that Calls*(p, p)
+loop1, loop2
+5000
+5 - Called by any
+procedure p, q;
+Select q such that Calls*(p, q)
+callee, loop1, loop2
+5000
+6 - UsesP procedure, varName
+procedure p;
+Select p such that Uses(p, "z")
+loop1, loop2
+5000
+7 - UsesP call, _
+call c;
+Select c such that Uses(c, _)
+1, 5, 8, 9
+5000
+8 - ModifiesP procedureName, variable
+variable v;
+Select v such that Modifies("loop1", v)
+y, z
+5000
+7 - ModifiesP ambiguous first ref
+call c;
+Select c such that Modifies(_, _)
+none
+5000
