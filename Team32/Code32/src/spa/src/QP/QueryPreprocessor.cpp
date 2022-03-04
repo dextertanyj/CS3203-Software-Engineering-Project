@@ -232,6 +232,8 @@ unique_ptr<QP::Relationship::Relation> QP::QueryPreprocessor::parseRelation(int&
 		} catch (const QueryException& e) {
 			return parseUsesP(token_index);
 		}
+	} else if (this->query_tokens[token_index] == "Calls" || this->query_tokens[token_index] == "Calls*") {
+		return parseCalls(token_index);
 	} else {
 		throw QueryException("Unexpected query token relation: " + this->query_tokens[token_index] + ".");
 	}
@@ -343,7 +345,7 @@ unique_ptr<QP::Relationship::ModifiesS> QP::QueryPreprocessor::parseModifiesS(in
 
 unique_ptr<QP::Relationship::Calls> QP::QueryPreprocessor::parseCalls(int& token_index) {
 	bool is_star = false;
-	if (this->query_tokens[token_index] == "Call*") {
+	if (this->query_tokens[token_index] == "Calls*") {
 		is_star = true;
 	}
 	token_index++;
