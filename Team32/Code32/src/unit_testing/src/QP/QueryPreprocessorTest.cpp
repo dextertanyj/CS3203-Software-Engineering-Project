@@ -658,7 +658,6 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Calls(*)") {
 	REQUIRE((*clause_t).getCallerEnt().ent_ref == "pc1");
 	REQUIRE((*clause_t).getCalleeEnt().type == EntRefType::Synonym);
 	REQUIRE((*clause_t).getCalleeEnt().ent_ref == "pc2");
-
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that") {
