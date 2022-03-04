@@ -3,7 +3,7 @@ procedure caller {
 }
 
 procedure callee {
-	x = 1;
+	x = x + 1;
 }
 
 procedure loop1 {
@@ -13,12 +13,15 @@ procedure loop1 {
 }
 
 procedure loop2 {
-	z = z + 1;
 	
-	if (z == 1) {
-		call loop1;
+	if (z == 1) then {
+		call loop3;
 	} else {
-		call loop2;
+		print z;
 	}
 
+}
+
+procedure loop3 {
+	z = 1;
 }
