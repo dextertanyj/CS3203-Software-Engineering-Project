@@ -61,8 +61,7 @@ private:
 	vector<string> query_tokens;
 	DeclarationList declaration_list;
 	Declaration select;
-	SuchThatClauseList such_that_clause_list;
-	PatternClauseList pattern_clause_list;
+	ClauseList clause_list;
 	QueryResult query_result;
 };
 

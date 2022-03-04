@@ -9,13 +9,9 @@ QP::QueryGraph::QueryGraph(const DeclarationList& declarations) {
 	}
 }
 
-void QP::QueryGraph::setEdges(const SuchThatClauseList& such_that_clause_list, const PatternClauseList& pattern_clause_list) {
-	for (const SuchThatClause& such_that_clause : such_that_clause_list) {
-		setEdge(such_that_clause.relation);
-	}
-
-	for (const PatternClause& pattern_clause : pattern_clause_list) {
-		setEdge(pattern_clause.relation);
+void QP::QueryGraph::setEdges(const ClauseList& clause_list) {
+	for (const Clause& clause : clause_list) {
+		setEdge(clause.relation);
 	}
 }
 
@@ -36,11 +32,11 @@ void QP::QueryGraph::addEdge(const pair<string, string>& symbols) {
 	}
 }
 
-vector<unordered_set<string>> QP::QueryGraph::getSynonymsInGroup(const string& selected_synonym) {
+unordered_map<string, int> QP::QueryGraph::getSynonymsInGroup(const string& selected_synonym) {
 	// Run BFS on the selected node
-	vector<unordered_set<string>> result;
-	unordered_set<string> group;
+	unordered_map<string, int> result;
 	unordered_set<string> unvisited_nodes;
+	int group_number = 0;
 
 	for (auto& node : nodes) {
 		unvisited_nodes.insert(node.first);
@@ -51,7 +47,7 @@ vector<unordered_set<string>> QP::QueryGraph::getSynonymsInGroup(const string& s
 
 	while (!queue.empty()) {
 		string symbol = queue.front();
-		group.insert(symbol);
+		result.insert({symbol, group_number});
 		unvisited_nodes.erase(symbol);
 		queue.pop();
 
@@ -66,11 +62,9 @@ vector<unordered_set<string>> QP::QueryGraph::getSynonymsInGroup(const string& s
 		// we add an unvisited node to queue
 		if (queue.empty() && !unvisited_nodes.empty()) {
 			queue.push(*unvisited_nodes.begin());
-			result.push_back(group);
-			group.clear();
+			group_number++;
 		}
 	}
 
-	result.push_back(group);
 	return result;
 }

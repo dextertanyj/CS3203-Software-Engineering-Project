@@ -14,19 +14,16 @@ using namespace std;
 
 class QP::QueryProperties {
 public:
-	QueryProperties(DeclarationList declaration_list, Declaration select, SuchThatClauseList such_that_clause_list,
-	                PatternClauseList pattern_clause_list);
+	QueryProperties(DeclarationList declaration_list, Declaration select, ClauseList clause_list);
 
 	DeclarationList getDeclarationList();
 	Declaration getSelect();
-	SuchThatClauseList getSuchThatClauseList();
-	PatternClauseList getPatternClauseList();
+	ClauseList getClauseList();
 
 private:
 	DeclarationList declaration_list;
 	Declaration select;
-	SuchThatClauseList such_that_clause_list;
-	PatternClauseList pattern_clause_list;
+	ClauseList clause_list;
 };
 
 #endif  // SPA_SRC_QP_QUERYPROPERTIES_H
