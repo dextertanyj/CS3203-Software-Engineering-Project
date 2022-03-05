@@ -143,7 +143,8 @@ bool QP::QueryResult::contains(unordered_map<string, vector<string>>& table, con
 	return false;
 }
 
-bool QP::QueryResult::isRowMatch(const unordered_map<string, string>& row, unordered_map<string, vector<string>>& table, size_t row_number) {
+bool QP::QueryResult::isRowMatch(const unordered_map<string, string>& row, unordered_map<string, vector<string>>& table,
+                                 size_t row_number) {
 	bool has_match = true;
 	for (const auto& iterator : row) {
 		if (table.at(iterator.first)[row_number] != iterator.second) {
@@ -158,7 +159,8 @@ bool QP::QueryResult::isRowMatch(const unordered_map<string, string>& row, unord
 void QP::QueryResult::removeRow(unordered_map<string, vector<string>>& table, size_t row_number) {
 	for (auto iterator = table.begin(); iterator != table.end(); ++iterator) {
 		vector<string> col = iterator->second;
-		col.erase(col.begin() + row_number);
+		// Narrowing conversion, implementation defined behaviour for values greater than long.
+		col.erase(col.begin() + static_cast<vector<string>::difference_type>(row_number));
 		table[iterator->first] = col;
 	}
 }

@@ -1,4 +1,4 @@
-name: Autotester - MacOS
+name: Autotester - macOS
 on: [push, pull_request]
 
 env:
