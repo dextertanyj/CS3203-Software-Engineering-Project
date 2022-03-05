@@ -1,4 +1,4 @@
-name: Compile and Test - Self Hosted
+name: Build & Test - Self Hosted
 on: [workflow_dispatch]
 
 env:

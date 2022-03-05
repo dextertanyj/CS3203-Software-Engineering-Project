@@ -16,7 +16,7 @@ public:
 
 private:
 	vector<string> tokens;
-	int index;
+	size_t index;
 };
 
 #endif  // SPA_MOCKLEXER_H

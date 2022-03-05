@@ -18,7 +18,7 @@ class QP::QueryEvaluator {
 public:
 	explicit QueryEvaluator(PKB::StorageAccessInterface& pkb);
 	QP::QueryResult executeQuery(QueryProperties& query_properties);
-	static vector<ClauseList> splitClauses(QueryProperties& query_properties, unordered_map<string, int>& synonyms_in_group);
+	static vector<ClauseList> splitClauses(QueryProperties& query_properties, unordered_map<string, size_t>& synonyms_in_group);
 
 private:
 	PKB::StorageAccessInterface& pkb;

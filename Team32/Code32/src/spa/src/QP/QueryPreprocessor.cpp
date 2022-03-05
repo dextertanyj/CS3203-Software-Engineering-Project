@@ -32,7 +32,7 @@ void QP::QueryPreprocessor::tokenizeQuery(string query) {
 		smatch match = *i;
 		if (match.str() == "*" && !this->query_tokens.empty() &&
 		    (this->query_tokens.back() == "Parent" || this->query_tokens.back() == "Follows" || this->query_tokens.back() == "Calls") &&
-		    prev_pos + this->query_tokens.back().length() == match.position()) {
+		    prev_pos + this->query_tokens.back().length() == static_cast<size_t>(match.position())) {
 			string combined_token = this->query_tokens.back() + "*";
 			this->query_tokens.pop_back();
 			this->query_tokens.push_back(combined_token);
@@ -44,7 +44,7 @@ void QP::QueryPreprocessor::tokenizeQuery(string query) {
 }
 
 QP::QueryProperties QP::QueryPreprocessor::parseQuery() {
-	int token_index = 0;
+	size_t token_index = 0;
 
 	// Used to check if synonyms for "Select" has been parsed
 	this->select.symbol = "";
@@ -71,7 +71,7 @@ QP::QueryProperties QP::QueryPreprocessor::parseQuery() {
 	return {this->declaration_list, this->select, this->clause_list};
 }
 
-void QP::QueryPreprocessor::parseDeclaration(int& token_index) {
+void QP::QueryPreprocessor::parseDeclaration(size_t& token_index) {
 	Declaration declaration;
 	declaration.symbol = "";
 
@@ -102,7 +102,7 @@ void QP::QueryPreprocessor::parseDeclaration(int& token_index) {
 	throw QueryException("Unexpected end of query.");
 }
 
-void QP::QueryPreprocessor::parseSelect(int& token_index) {
+void QP::QueryPreprocessor::parseSelect(size_t& token_index) {
 	if (token_index >= this->query_tokens.size()) {
 		throw QueryException("Unexpected end of query.");
 	}
@@ -117,7 +117,7 @@ void QP::QueryPreprocessor::parseSelect(int& token_index) {
 	throw QueryException("Undeclared query synonym.");
 }
 
-void QP::QueryPreprocessor::parseSuchThat(int& token_index) {
+void QP::QueryPreprocessor::parseSuchThat(size_t& token_index) {
 	Clause clause = {parseRelation(token_index)};
 	this->clause_list.push_back(clause);
 	if (token_index < this->query_tokens.size() && this->query_tokens[token_index] == "and") {
@@ -125,7 +125,7 @@ void QP::QueryPreprocessor::parseSuchThat(int& token_index) {
 	}
 }
 
-void QP::QueryPreprocessor::parsePattern(int& token_index) {
+void QP::QueryPreprocessor::parsePattern(size_t& token_index) {
 	Declaration synonym;
 	QueryEntRef ent_ref;
 	ExpressionType expression_type = ExpressionType::Underscore;
@@ -177,7 +177,7 @@ void QP::QueryPreprocessor::parsePattern(int& token_index) {
 	this->clause_list.push_back(clause);
 }
 
-DesignEntity QP::QueryPreprocessor::parseDesignEntity(int& token_index) {
+DesignEntity QP::QueryPreprocessor::parseDesignEntity(size_t& token_index) {
 	DesignEntity design_entity;
 	if (this->query_tokens[token_index] == "stmt") {
 		design_entity = DesignEntity::Stmt;
@@ -206,14 +206,14 @@ DesignEntity QP::QueryPreprocessor::parseDesignEntity(int& token_index) {
 	return design_entity;
 }
 
-unique_ptr<QP::Relationship::Relation> QP::QueryPreprocessor::parseRelation(int& token_index) {
+unique_ptr<QP::Relationship::Relation> QP::QueryPreprocessor::parseRelation(size_t& token_index) {
 	if (this->query_tokens[token_index] == "Follows" || this->query_tokens[token_index] == "Follows*") {
 		return parseFollows(token_index);
 	}
 	if (this->query_tokens[token_index] == "Modifies") {
 		token_index++;
 		try {
-			int temp_token_index = token_index;
+			size_t temp_token_index = token_index;
 			unique_ptr<Relationship::Relation> relation = parseModifiesS(temp_token_index);
 			token_index = temp_token_index;
 			return relation;
@@ -225,7 +225,7 @@ unique_ptr<QP::Relationship::Relation> QP::QueryPreprocessor::parseRelation(int&
 	} else if (this->query_tokens[token_index] == "Uses") {
 		token_index++;
 		try {
-			int temp_token_index = token_index;
+			size_t temp_token_index = token_index;
 			unique_ptr<Relationship::Relation> relation = parseUsesS(temp_token_index);
 			token_index = temp_token_index;
 			return relation;
@@ -239,7 +239,7 @@ unique_ptr<QP::Relationship::Relation> QP::QueryPreprocessor::parseRelation(int&
 	}
 }
 
-unique_ptr<QP::Relationship::Follows> QP::QueryPreprocessor::parseFollows(int& token_index) {
+unique_ptr<QP::Relationship::Follows> QP::QueryPreprocessor::parseFollows(size_t& token_index) {
 	bool is_star = false;
 	if (this->query_tokens[token_index] == "Follows*") {
 		is_star = true;
@@ -260,7 +260,7 @@ unique_ptr<QP::Relationship::Follows> QP::QueryPreprocessor::parseFollows(int& t
 	return make_unique<Relationship::Follows>(ref1, ref2);
 }
 
-unique_ptr<QP::Relationship::Parent> QP::QueryPreprocessor::parseParent(int& token_index) {
+unique_ptr<QP::Relationship::Parent> QP::QueryPreprocessor::parseParent(size_t& token_index) {
 	bool is_star = false;
 	if (this->query_tokens[token_index] == "Parent*") {
 		is_star = true;
@@ -281,7 +281,7 @@ unique_ptr<QP::Relationship::Parent> QP::QueryPreprocessor::parseParent(int& tok
 	return make_unique<Relationship::Parent>(ref1, ref2);
 }
 
-unique_ptr<QP::Relationship::UsesP> QP::QueryPreprocessor::parseUsesP(int& token_index) {
+unique_ptr<QP::Relationship::UsesP> QP::QueryPreprocessor::parseUsesP(size_t& token_index) {
 	matchTokenOrThrow("(", token_index);
 	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Procedure};
 	QueryEntRef ref1 = parseQueryEntRef(token_index, ref1_allowed_design_entities);
@@ -296,7 +296,7 @@ unique_ptr<QP::Relationship::UsesP> QP::QueryPreprocessor::parseUsesP(int& token
 	return make_unique<Relationship::UsesP>(ref1, ref2);
 }
 
-unique_ptr<QP::Relationship::UsesS> QP::QueryPreprocessor::parseUsesS(int& token_index) {
+unique_ptr<QP::Relationship::UsesS> QP::QueryPreprocessor::parseUsesS(size_t& token_index) {
 	matchTokenOrThrow("(", token_index);
 	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Assign, DesignEntity::Call,  DesignEntity::Print,
 	                                                  DesignEntity::If,     DesignEntity::While, DesignEntity::Stmt};
@@ -312,7 +312,7 @@ unique_ptr<QP::Relationship::UsesS> QP::QueryPreprocessor::parseUsesS(int& token
 	return make_unique<Relationship::UsesS>(ref1, ref2);
 }
 
-unique_ptr<QP::Relationship::ModifiesP> QP::QueryPreprocessor::parseModifiesP(int& token_index) {
+unique_ptr<QP::Relationship::ModifiesP> QP::QueryPreprocessor::parseModifiesP(size_t& token_index) {
 	matchTokenOrThrow("(", token_index);
 	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Procedure};
 	QueryEntRef ref1 = parseQueryEntRef(token_index, ref1_allowed_design_entities);
@@ -327,7 +327,7 @@ unique_ptr<QP::Relationship::ModifiesP> QP::QueryPreprocessor::parseModifiesP(in
 	return make_unique<Relationship::ModifiesP>(ref1, ref2);
 }
 
-unique_ptr<QP::Relationship::ModifiesS> QP::QueryPreprocessor::parseModifiesS(int& token_index) {
+unique_ptr<QP::Relationship::ModifiesS> QP::QueryPreprocessor::parseModifiesS(size_t& token_index) {
 	matchTokenOrThrow("(", token_index);
 	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Assign, DesignEntity::Call,  DesignEntity::Read,
 	                                                  DesignEntity::If,     DesignEntity::While, DesignEntity::Stmt};
@@ -343,7 +343,7 @@ unique_ptr<QP::Relationship::ModifiesS> QP::QueryPreprocessor::parseModifiesS(in
 	return make_unique<Relationship::ModifiesS>(ref1, ref2);
 }
 
-unique_ptr<QP::Relationship::Calls> QP::QueryPreprocessor::parseCalls(int& token_index) {
+unique_ptr<QP::Relationship::Calls> QP::QueryPreprocessor::parseCalls(size_t& token_index) {
 	bool is_star = false;
 	if (this->query_tokens[token_index] == "Calls*") {
 		is_star = true;
@@ -361,7 +361,7 @@ unique_ptr<QP::Relationship::Calls> QP::QueryPreprocessor::parseCalls(int& token
 	return make_unique<Relationship::Calls>(ref1, ref2);
 }
 
-QueryEntRef QP::QueryPreprocessor::parseQueryEntRef(int& token_index, const set<DesignEntity>& accepted_design_entities) {
+QueryEntRef QP::QueryPreprocessor::parseQueryEntRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities) {
 	QueryEntRef ent_ref;
 	if (this->query_tokens[token_index] == "_") {
 		ent_ref.type = EntRefType::Underscore;
@@ -390,7 +390,7 @@ QueryEntRef QP::QueryPreprocessor::parseQueryEntRef(int& token_index, const set<
 	return ent_ref;
 }
 
-QueryStmtRef QP::QueryPreprocessor::parseQueryStmtRef(int& token_index, const set<DesignEntity>& accepted_design_entities) {
+QueryStmtRef QP::QueryPreprocessor::parseQueryStmtRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities) {
 	QueryStmtRef stmt_ref;
 	if (this->query_tokens[token_index] == "_") {
 		stmt_ref.type = StmtRefType::Underscore;
@@ -416,7 +416,7 @@ QueryStmtRef QP::QueryPreprocessor::parseQueryStmtRef(int& token_index, const se
 	return stmt_ref;
 }
 
-Common::ExpressionProcessor::Expression QP::QueryPreprocessor::parseExpression(int& token_index) {
+Common::ExpressionProcessor::Expression QP::QueryPreprocessor::parseExpression(size_t& token_index) {
 	matchTokenOrThrow("\"", token_index);
 	vector<string> expression;
 	while (this->query_tokens[token_index] != "\"") {
@@ -436,7 +436,7 @@ Common::ExpressionProcessor::Expression QP::QueryPreprocessor::parseExpression(i
 
 bool QP::QueryPreprocessor::isIdentOrName(const string& token) { return regex_match(token, regex("^[a-zA-Z][a-zA-Z0-9]*$")); }
 
-void QP::QueryPreprocessor::matchTokenOrThrow(const string& token, int& token_index) {
+void QP::QueryPreprocessor::matchTokenOrThrow(const string& token, size_t& token_index) {
 	if (token_index < this->query_tokens.size() && this->query_tokens[token_index] == token) {
 		token_index++;  // Skip token
 	} else {

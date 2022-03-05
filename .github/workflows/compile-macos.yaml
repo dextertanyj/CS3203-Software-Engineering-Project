@@ -1,11 +1,11 @@
-name: Compile and Test - MacOS
+name: Build & Test - macOS
 on: [push, pull_request]
 
 env:
   BUILD_TYPE: Coverage
 
 jobs:
-  compile-macos:
+  test-macos:
     runs-on: macos-latest
     steps:
       - name: Checkout repository code
