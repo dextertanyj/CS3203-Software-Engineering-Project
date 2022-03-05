@@ -26,7 +26,7 @@ loop1, loop2
 6 - UsesP call, _
 call c;
 Select c such that Uses(c, _)
-1, 5, 7
+1, 5
 5000
 7 - ModifiesP procedureName, variable
 variable v;
