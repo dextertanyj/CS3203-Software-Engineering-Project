@@ -108,11 +108,14 @@ TEST_CASE("QP::Relationship::Calls::execute") {
 	}
 
 	SECTION("trivial: synonym & synonym") {
-		QP::Relationship::Calls calls = QP::Relationship::Calls(proc_synonym_1, proc_synonym_2);
+		QP::Relationship::Calls calls1 = QP::Relationship::Calls(proc_synonym_1, proc_synonym_2);
+		QP::Relationship::Calls calls2 = QP::Relationship::Calls(proc_synonym_1, proc_synonym_1);
 
-		QP::QueryResult result = calls.execute(pkb, true, map);
+		QP::QueryResult result1 = calls1.execute(pkb, true, map);
+		QP::QueryResult result2 = calls2.execute(pkb, true, map);
 
-		REQUIRE(result.getResult());
+		REQUIRE(result1.getResult());
+		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("non-trivial: varName & synonym") {
@@ -162,17 +165,20 @@ TEST_CASE("QP::Relationship::Calls::execute") {
 	}
 
 	SECTION("non-trivial: synonym & synonym") {
-		QP::Relationship::Calls calls = QP::Relationship::Calls(proc_synonym_1, proc_synonym_2);
+		QP::Relationship::Calls calls1 = QP::Relationship::Calls(proc_synonym_1, proc_synonym_2);
+		QP::Relationship::Calls calls2 = QP::Relationship::Calls(proc_synonym_1, proc_synonym_1);
 
-		QP::QueryResult result = calls.execute(pkb, false, map);
+		QP::QueryResult result1 = calls1.execute(pkb, false, map);
+		QP::QueryResult result2 = calls2.execute(pkb, false, map);
 
 		vector<string> expected_result_1 = {"proc1", "proc2"};
 		vector<string> expected_result_2 = {"proc2", "proc3"};
-		vector<string> actual_result_1 = result.getSynonymResult("p1");
-		vector<string> actual_result_2 = result.getSynonymResult("p2");
+		vector<string> actual_result_1 = result1.getSynonymResult("p1");
+		vector<string> actual_result_2 = result1.getSynonymResult("p2");
 		sort(actual_result_1.begin(), actual_result_1.end());
 		sort(actual_result_2.begin(), actual_result_2.end());
 		REQUIRE(actual_result_1 == expected_result_1);
 		REQUIRE(actual_result_2 == expected_result_2);
+		REQUIRE(!result2.getResult());
 	}
 }
