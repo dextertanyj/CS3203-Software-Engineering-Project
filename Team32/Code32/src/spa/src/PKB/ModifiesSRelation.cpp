@@ -51,22 +51,22 @@ void PKB::ModifiesSRelation::optimize(StatementRelationStore<ParentRelation>& pa
 	vector<shared_ptr<ProcedureInfo>> order = topo_order.get();
 	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {
 		vector<shared_ptr<StmtInfo>> stmts_in_proc = proc_iterator->get()->getStatements();
+		// For any procedure, we must process the call statements first before propagating the conditional statements.
 		for (const auto& statement : stmts_in_proc) {
-			VarRefSet variables;
 			if (statement->getType() == StmtType::Call) {
-				variables = optimizeCall(statement, call_store, proc_store, store);
-			} else if (statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::WhileStmt) {
-				variables = optimizeConditional(statement, parent_store, store);
+				optimizeCall(statement, call_store, proc_store, store);
 			}
-			if (!variables.empty()) {
-				store.set(statement, variables);
+		}
+		for (const auto& statement : stmts_in_proc) {
+			if (statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::WhileStmt) {
+				optimizeConditional(statement, parent_store, store);
 			}
 		}
 	}
 }
 
-VarRefSet PKB::ModifiesSRelation::optimizeCall(const shared_ptr<StmtInfo>& statement, CallStatementStore& call_store,
-                                               Types::ProcedureStore& proc_store, SVRelationStore<ModifiesSRelation>& store) {
+void PKB::ModifiesSRelation::optimizeCall(const shared_ptr<StmtInfo>& statement, CallStatementStore& call_store,
+                                          Types::ProcedureStore& proc_store, SVRelationStore<ModifiesSRelation>& store) {
 	// Need to access CallStatementStore to get the statements modified in the called procedure.
 	VarRefSet variables;
 	ProcRef called_proc = call_store.getProcedure(statement);
@@ -79,12 +79,14 @@ VarRefSet PKB::ModifiesSRelation::optimizeCall(const shared_ptr<StmtInfo>& state
 			variables.insert(iter->second.begin(), iter->second.end());
 		}
 	}
-	return variables;
+	if (!variables.empty()) {
+		store.set(statement, variables);
+	}
 }
 
-VarRefSet PKB::ModifiesSRelation::optimizeConditional(const shared_ptr<StmtInfo>& statement,
-                                                      StatementRelationStore<ParentRelation>& parent_store,
-                                                      SVRelationStore<ModifiesSRelation>& store) {
+void PKB::ModifiesSRelation::optimizeConditional(const shared_ptr<StmtInfo>& statement,
+                                                 StatementRelationStore<ParentRelation>& parent_store,
+                                                 SVRelationStore<ModifiesSRelation>& store) {
 	// For conditional statements, need to look at the child* statements for modify statements.
 	VarRefSet variables;
 	auto children = parent_store.getReverseTransitive(statement->getIdentifier());
@@ -95,5 +97,7 @@ VarRefSet PKB::ModifiesSRelation::optimizeConditional(const shared_ptr<StmtInfo>
 			variables.insert(iter->second.begin(), iter->second.end());
 		}
 	}
-	return variables;
+	if (!variables.empty()) {
+		store.set(statement, variables);
+	}
 }
