@@ -283,7 +283,7 @@ unique_ptr<QP::Relationship::Parent> QP::QueryPreprocessor::parseParent(int& tok
 
 unique_ptr<QP::Relationship::UsesP> QP::QueryPreprocessor::parseUsesP(int& token_index) {
 	matchTokenOrThrow("(", token_index);
-	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Call, DesignEntity::Procedure};
+	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Procedure};
 	QueryEntRef ref1 = parseQueryEntRef(token_index, ref1_allowed_design_entities);
 	// 1st entRef cannot be a wildcard
 	if (ref1.type == EntRefType::Underscore) {
@@ -298,7 +298,7 @@ unique_ptr<QP::Relationship::UsesP> QP::QueryPreprocessor::parseUsesP(int& token
 
 unique_ptr<QP::Relationship::UsesS> QP::QueryPreprocessor::parseUsesS(int& token_index) {
 	matchTokenOrThrow("(", token_index);
-	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Assign, DesignEntity::Print, DesignEntity::If, DesignEntity::While,
+	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Assign, DesignEntity::Call, DesignEntity::Print, DesignEntity::If, DesignEntity::While,
 	                                                  DesignEntity::Stmt};
 	QueryStmtRef ref1 = parseQueryStmtRef(token_index, ref1_allowed_design_entities);
 	// 1st stmeRef cannot be a wildcard
@@ -314,7 +314,7 @@ unique_ptr<QP::Relationship::UsesS> QP::QueryPreprocessor::parseUsesS(int& token
 
 unique_ptr<QP::Relationship::ModifiesP> QP::QueryPreprocessor::parseModifiesP(int& token_index) {
 	matchTokenOrThrow("(", token_index);
-	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Call, DesignEntity::Procedure};
+	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Procedure};
 	QueryEntRef ref1 = parseQueryEntRef(token_index, ref1_allowed_design_entities);
 	// 1st entRef cannot be a wildcard
 	if (ref1.type == EntRefType::Underscore) {
@@ -329,7 +329,7 @@ unique_ptr<QP::Relationship::ModifiesP> QP::QueryPreprocessor::parseModifiesP(in
 
 unique_ptr<QP::Relationship::ModifiesS> QP::QueryPreprocessor::parseModifiesS(int& token_index) {
 	matchTokenOrThrow("(", token_index);
-	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Assign, DesignEntity::Read, DesignEntity::If, DesignEntity::While,
+	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Assign, DesignEntity::Call, DesignEntity::Read, DesignEntity::If, DesignEntity::While,
 	                                                  DesignEntity::Stmt};
 	QueryStmtRef ref1 = parseQueryStmtRef(token_index, ref1_allowed_design_entities);
 	// 1st stmeRef cannot be a wildcard
