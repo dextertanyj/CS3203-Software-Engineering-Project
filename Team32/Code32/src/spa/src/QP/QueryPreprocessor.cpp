@@ -31,7 +31,7 @@ void QP::QueryPreprocessor::tokenizeQuery(string query) {
 	for (sregex_iterator i = words_begin; i != words_end; ++i) {
 		smatch match = *i;
 		if (match.str() == "*" && !this->query_tokens.empty() &&
-		    (this->query_tokens.back() == "Parent" || this->query_tokens.back() == "Follows") &&
+		    (this->query_tokens.back() == "Parent" || this->query_tokens.back() == "Follows" || this->query_tokens.back() == "Calls") &&
 		    prev_pos + this->query_tokens.back().length() == match.position()) {
 			string combined_token = this->query_tokens.back() + "*";
 			this->query_tokens.pop_back();
@@ -232,6 +232,8 @@ unique_ptr<QP::Relationship::Relation> QP::QueryPreprocessor::parseRelation(int&
 		} catch (const QueryException& e) {
 			return parseUsesP(token_index);
 		}
+	} else if (this->query_tokens[token_index] == "Calls" || this->query_tokens[token_index] == "Calls*") {
+		return parseCalls(token_index);
 	} else {
 		throw QueryException("Unexpected query token relation: " + this->query_tokens[token_index] + ".");
 	}
@@ -281,7 +283,7 @@ unique_ptr<QP::Relationship::Parent> QP::QueryPreprocessor::parseParent(int& tok
 
 unique_ptr<QP::Relationship::UsesP> QP::QueryPreprocessor::parseUsesP(int& token_index) {
 	matchTokenOrThrow("(", token_index);
-	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Call, DesignEntity::Procedure};
+	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Procedure};
 	QueryEntRef ref1 = parseQueryEntRef(token_index, ref1_allowed_design_entities);
 	// 1st entRef cannot be a wildcard
 	if (ref1.type == EntRefType::Underscore) {
@@ -296,8 +298,8 @@ unique_ptr<QP::Relationship::UsesP> QP::QueryPreprocessor::parseUsesP(int& token
 
 unique_ptr<QP::Relationship::UsesS> QP::QueryPreprocessor::parseUsesS(int& token_index) {
 	matchTokenOrThrow("(", token_index);
-	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Assign, DesignEntity::Print, DesignEntity::If, DesignEntity::While,
-	                                                  DesignEntity::Stmt};
+	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Assign, DesignEntity::Call,  DesignEntity::Print,
+	                                                  DesignEntity::If,     DesignEntity::While, DesignEntity::Stmt};
 	QueryStmtRef ref1 = parseQueryStmtRef(token_index, ref1_allowed_design_entities);
 	// 1st stmeRef cannot be a wildcard
 	if (ref1.type == StmtRefType::Underscore) {
@@ -312,7 +314,7 @@ unique_ptr<QP::Relationship::UsesS> QP::QueryPreprocessor::parseUsesS(int& token
 
 unique_ptr<QP::Relationship::ModifiesP> QP::QueryPreprocessor::parseModifiesP(int& token_index) {
 	matchTokenOrThrow("(", token_index);
-	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Call, DesignEntity::Procedure};
+	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Procedure};
 	QueryEntRef ref1 = parseQueryEntRef(token_index, ref1_allowed_design_entities);
 	// 1st entRef cannot be a wildcard
 	if (ref1.type == EntRefType::Underscore) {
@@ -327,8 +329,8 @@ unique_ptr<QP::Relationship::ModifiesP> QP::QueryPreprocessor::parseModifiesP(in
 
 unique_ptr<QP::Relationship::ModifiesS> QP::QueryPreprocessor::parseModifiesS(int& token_index) {
 	matchTokenOrThrow("(", token_index);
-	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Assign, DesignEntity::Read, DesignEntity::If, DesignEntity::While,
-	                                                  DesignEntity::Stmt};
+	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Assign, DesignEntity::Call,  DesignEntity::Read,
+	                                                  DesignEntity::If,     DesignEntity::While, DesignEntity::Stmt};
 	QueryStmtRef ref1 = parseQueryStmtRef(token_index, ref1_allowed_design_entities);
 	// 1st stmeRef cannot be a wildcard
 	if (ref1.type == StmtRefType::Underscore) {
@@ -339,6 +341,24 @@ unique_ptr<QP::Relationship::ModifiesS> QP::QueryPreprocessor::parseModifiesS(in
 	QueryEntRef ref2 = parseQueryEntRef(token_index, ref2_allowed_design_entities);
 	matchTokenOrThrow(")", token_index);
 	return make_unique<Relationship::ModifiesS>(ref1, ref2);
+}
+
+unique_ptr<QP::Relationship::Calls> QP::QueryPreprocessor::parseCalls(int& token_index) {
+	bool is_star = false;
+	if (this->query_tokens[token_index] == "Calls*") {
+		is_star = true;
+	}
+	token_index++;
+	set<DesignEntity> allowed_design_entities = {DesignEntity::Procedure};
+	matchTokenOrThrow("(", token_index);
+	QueryEntRef ref1 = parseQueryEntRef(token_index, allowed_design_entities);
+	matchTokenOrThrow(",", token_index);
+	QueryEntRef ref2 = parseQueryEntRef(token_index, allowed_design_entities);
+	matchTokenOrThrow(")", token_index);
+	if (is_star) {
+		return make_unique<Relationship::CallsT>(ref1, ref2);
+	}
+	return make_unique<Relationship::Calls>(ref1, ref2);
 }
 
 QueryEntRef QP::QueryPreprocessor::parseQueryEntRef(int& token_index, const set<DesignEntity>& accepted_design_entities) {
