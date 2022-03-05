@@ -135,6 +135,7 @@ TEST_CASE("QP::Relationship::ModifiesP::execute") {
 		sort(actual_proc_result1.begin(), actual_proc_result1.end());
 		vector<string> expected_var_result1 = {"x", "z"};
 		vector<string> actual_var_result1 = result1.getSynonymResult("var");
+		sort(actual_var_result1.begin(), actual_var_result1.end());
 		REQUIRE(actual_proc_result1 == expected_proc_result1);
 		REQUIRE(actual_var_result1 == expected_var_result1);
 	}
