@@ -17,6 +17,7 @@ procedure loop2 {
 	if (z == 1) then {
 		call loop3;
 	} else {
+		call loop4;
 		print z;
 	}
 
@@ -24,4 +25,8 @@ procedure loop2 {
 
 procedure loop3 {
 	z = 1;
+}
+
+procedure loop4 {
+	z = 2 * z;
 }
