@@ -76,7 +76,6 @@ TEST_CASE("PKB::PKB Follows Methods Test") {
 
 		// Not stored into PKB.
 		CHECK(pkb.getFollower(s_5) == nullptr);
-		CHECK_THROWS_AS(pkb.getFollower(s_zero), std::invalid_argument);
 	}
 
 	SECTION("PKB::PKB::getPreceding Test") {
@@ -94,7 +93,6 @@ TEST_CASE("PKB::PKB Follows Methods Test") {
 
 		// Not stored in PKB.
 		CHECK(pkb.getPreceding(s_5) == nullptr);
-		CHECK_THROWS_AS(pkb.getPreceding(s_zero), std::invalid_argument);
 	}
 
 	// Nesting levels as such:
@@ -247,8 +245,6 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 
 		// Statement which was not stored in PKB.
 		CHECK(pkb.getParent(s_5) == nullptr);
-		// StmtRef <= 0 not allowed for get methods.
-		CHECK_THROWS_AS(pkb.getParent(s_zero), std::invalid_argument);
 	}
 
 	// Nesting levels:

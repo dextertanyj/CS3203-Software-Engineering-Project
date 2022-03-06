@@ -44,42 +44,50 @@ void PKB::FollowsRelation::appendReverseTransitive(StmtInfoPtrSet followers) {
 	this->followers_transitive.insert(followers.begin(), followers.end());
 }
 
-StmtInfoPtrSet PKB::FollowsRelation::getForward() {
+shared_ptr<StmtInfo> PKB::FollowsRelation::getSelf() const {
+	return self;
+}
+
+StmtInfoPtrSet PKB::FollowsRelation::getForward() const {
 	if (following == nullptr) {
 		return {};
 	}
 	return {following};
 }
 
-StmtInfoPtrSet PKB::FollowsRelation::getReverse() {
+StmtInfoPtrSet PKB::FollowsRelation::getReverse() const {
 	if (follower == nullptr) {
 		return {};
 	}
 	return {follower};
 }
 
-StmtInfoPtrSet PKB::FollowsRelation::getForwardTransitive() { return following_transitive; }
+StmtInfoPtrSet PKB::FollowsRelation::getForwardTransitive() const { return following_transitive; }
 
-StmtInfoPtrSet PKB::FollowsRelation::getReverseTransitive() { return followers_transitive; }
+StmtInfoPtrSet PKB::FollowsRelation::getReverseTransitive() const { return followers_transitive; }
 
-void PKB::FollowsRelation::optimize(PKB::StatementRelationStore<PKB::FollowsRelation>& store) {
-	for (auto& item : store.map) {
+// Template specializations for Parent relationship.
+
+template <>
+void PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::FollowsRelation>::optimize() {
+	for (auto& item : map) {
 		if (item.second.getForward().empty()) {
-			PKB::FollowsRelation::populateTransitive(store, item.second, {});
+			populateTransitive(item.second, {});
 		}
 	}
 }
 
-StmtInfoPtrSet PKB::FollowsRelation::populateTransitive(PKB::StatementRelationStore<PKB::FollowsRelation>& store,
-                                                        PKB::FollowsRelation& current, StmtInfoPtrSet previous) {
+template <>
+StmtInfoPtrSet PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::FollowsRelation>::populateTransitive(FollowsRelation& current,
+                                                                                                        StmtInfoPtrSet previous) {
 	current.appendForwardTransitive(previous);
-	previous.insert(current.self);
+	previous.insert(current.getSelf());
 	StmtInfoPtrSet result;
-	if (current.follower != nullptr) {
-		auto follower = store.map.find(current.follower->getIdentifier());
-		result = populateTransitive(store, follower->second, previous);
+	if (!current.getReverse().empty()) {
+		auto follower = map.find((*current.getReverse().begin())->getIdentifier());
+		result = populateTransitive(follower->second, previous);
 	}
 	current.appendReverseTransitive(result);
-	result.insert(current.self);
+	result.insert(current.getSelf());
 	return result;
 }

@@ -45,6 +45,15 @@ unordered_set<shared_ptr<PKB::ProcedureInfo>> PKB::CallRelation::getReverseTrans
 // Template specializations for Call relationship.
 
 template <>
+void PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation>::optimize() {
+	for (auto& item : map) {
+		if (item.second.getForward().empty()) {
+			populateTransitive(item.second, {});
+		}
+	}
+}
+
+template <>
 unordered_set<shared_ptr<PKB::ProcedureInfo>>
 PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation>::populateTransitive(
 	CallRelation& current, unordered_set<shared_ptr<ProcedureInfo>> previous) {
@@ -69,13 +78,4 @@ PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation>::po
 	}
 	result.insert(current.getSelf());
 	return result;
-}
-
-template <>
-void PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation>::optimize() {
-	for (auto& item : map) {
-		if (item.second.getForward().empty()) {
-			populateTransitive(item.second, {});
-		}
-	}
 }

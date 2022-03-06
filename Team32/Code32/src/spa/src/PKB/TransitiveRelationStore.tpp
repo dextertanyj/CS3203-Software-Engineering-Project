@@ -88,15 +88,4 @@ void PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::clear() {
 	map.clear();
 }
 
-template <typename TIdent, typename TInfo, class TRelation>
-void PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::optimize() {
-	throw logic_error("Unspecialized optimize invoked.");
-}
-
-template <typename TIdent, typename TInfo, class TRelation>
-unordered_set<shared_ptr<TInfo>> PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::populateTransitive(
-	TRelation& /*current*/, unordered_set<shared_ptr<TInfo>> /*previous*/) {
-	throw logic_error("Unspecialized populateTransitive invoked.");
-}
-
 #endif  // SPA_SRC_PKB_TRANSITIVERELATIONSTORE_TPP

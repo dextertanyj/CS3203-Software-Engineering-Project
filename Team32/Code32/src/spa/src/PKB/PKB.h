@@ -2,7 +2,6 @@
 #define SPA_SRC_PKB_PKB_H
 
 #include <memory>
-#include <vector>
 
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
@@ -26,17 +25,11 @@ template <class T>
 class SVRelationStore;
 template <class T>
 class PVRelationStore;
-
 template <class TInfo>
 class TopologicalSort;
-template <class T>
-class StatementRelationStore;
-template <class T>
-class SVRelationStore;
 
 class AssignStore;
 class CallStatementStore;
-
 class CallRelation;
 class FollowsRelation;
 class ModifiesSRelation;

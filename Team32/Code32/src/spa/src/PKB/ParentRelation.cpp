@@ -40,38 +40,46 @@ void PKB::ParentRelation::appendReverseTransitive(StmtInfoPtrSet children_to_ins
 	this->children_transitive.insert(children_to_insert.begin(), children_to_insert.end());
 }
 
-StmtInfoPtrSet PKB::ParentRelation::getForward() {
+shared_ptr<StmtInfo> PKB::ParentRelation::getSelf() const {
+	return self;
+}
+
+StmtInfoPtrSet PKB::ParentRelation::getForward() const {
 	if (parent == nullptr) {
 		return {};
 	}
 	return {parent};
 }
 
-StmtInfoPtrSet PKB::ParentRelation::getReverse() { return children; }
+StmtInfoPtrSet PKB::ParentRelation::getReverse() const { return children; }
 
-StmtInfoPtrSet PKB::ParentRelation::getForwardTransitive() { return parent_transitive; }
+StmtInfoPtrSet PKB::ParentRelation::getForwardTransitive() const { return parent_transitive; }
 
-StmtInfoPtrSet PKB::ParentRelation::getReverseTransitive() { return children_transitive; }
+StmtInfoPtrSet PKB::ParentRelation::getReverseTransitive() const { return children_transitive; }
 
-void PKB::ParentRelation::optimize(StatementRelationStore<ParentRelation>& store) {
-	for (auto& item : store.map) {
-		if (item.second.parent == nullptr) {
-			ParentRelation::populateTransitive(store, item.second, {});
+// Template specializations for Parent relationship.
+
+template <>
+void PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::ParentRelation>::optimize() {
+	for (auto& item : map) {
+		if (item.second.getForward().empty()) {
+			populateTransitive(item.second, {});
 		}
 	}
 }
 
-StmtInfoPtrSet PKB::ParentRelation::populateTransitive(StatementRelationStore<ParentRelation>& store, ParentRelation& current,
+template <>
+StmtInfoPtrSet PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::ParentRelation>::populateTransitive(ParentRelation& current,
                                                        StmtInfoPtrSet previous) {
 	current.appendForwardTransitive(previous);
-	previous.insert(current.self);
+	previous.insert(current.getSelf());
 	StmtInfoPtrSet result;
-	for (const shared_ptr<StmtInfo>& child : current.children) {
-		auto relation = store.map.find(child->getIdentifier());
-		StmtInfoPtrSet transitive_children = populateTransitive(store, relation->second, previous);
+	for (const shared_ptr<StmtInfo>& child : current.getReverse()) {
+		auto relation = map.find(child->getIdentifier());
+		StmtInfoPtrSet transitive_children = populateTransitive(relation->second, previous);
 		result.insert(transitive_children.begin(), transitive_children.end());
 	}
 	current.appendReverseTransitive(result);
-	result.insert(current.self);
+	result.insert(current.getSelf());
 	return result;
 }

@@ -83,7 +83,7 @@ TEST_CASE("PKB::ModifiesSRelation Test") {
 		transitive_rel_store.set(procedure_store.get(sub_proc_1), procedure_store.get(sub_proc_2));
 		call_graph.sort(procedure_store, transitive_rel_store);
 
-		PKB::StatementRelationStore<PKB::ParentRelation> parent_store = PKB::StatementRelationStore<PKB::ParentRelation>();
+		PKB::Types::ParentStore parent_store = PKB::Types::ParentStore();
 
 		store.set(s3, "z");
 		store.set(s5, "a");
@@ -94,7 +94,7 @@ TEST_CASE("PKB::ModifiesSRelation Test") {
 		parent_store.set(s2, s4);
 		parent_store.set(s2, s3);
 
-		PKB::ParentRelation::optimize(parent_store);
+		parent_store.optimize();
 		PKB::ModifiesSRelation::optimize(parent_store, call_statement_store, procedure_store, call_graph, store);
 
 		/* If optimize works correctly:

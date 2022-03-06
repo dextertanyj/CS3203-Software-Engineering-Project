@@ -44,9 +44,8 @@ bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store,
 	                [variable](const VarRef& existing_var) { return existing_var == variable; }));
 }
 
-void PKB::ModifiesSRelation::optimize(StatementRelationStore<ParentRelation>& parent_store, CallStatementStore& call_store,
-                                      Types::ProcedureStore& proc_store, TopologicalSort<ProcedureInfo>& topo_order,
-                                      SVRelationStore<ModifiesSRelation>& store) {
+void PKB::ModifiesSRelation::optimize(Types::ParentStore& parent_store, CallStatementStore& call_store, Types::ProcedureStore& proc_store,
+                                      TopologicalSort<ProcedureInfo>& topo_order, SVRelationStore<ModifiesSRelation>& store) {
 	// Start optimization from the lowest level in the DAG.
 	vector<shared_ptr<ProcedureInfo>> order = topo_order.get();
 	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {
@@ -84,8 +83,7 @@ void PKB::ModifiesSRelation::optimizeCall(const shared_ptr<StmtInfo>& statement,
 	}
 }
 
-void PKB::ModifiesSRelation::optimizeConditional(const shared_ptr<StmtInfo>& statement,
-                                                 StatementRelationStore<ParentRelation>& parent_store,
+void PKB::ModifiesSRelation::optimizeConditional(const shared_ptr<StmtInfo>& statement, Types::ParentStore& parent_store,
                                                  SVRelationStore<ModifiesSRelation>& store) {
 	// For conditional statements, need to look at the child* statements for modify statements.
 	VarRefSet variables;

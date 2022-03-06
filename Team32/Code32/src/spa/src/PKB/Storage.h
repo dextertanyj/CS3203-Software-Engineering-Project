@@ -22,7 +22,6 @@
 #include "PKB/SVRelationStore.tpp"
 #include "PKB/SetStore.tpp"
 #include "PKB/StatementInfo.h"
-#include "PKB/StatementRelationStore.tpp"
 #include "PKB/StorageAccessInterface.h"
 #include "PKB/StorageUpdateInterface.h"
 #include "PKB/TopologicalSort.tpp"
@@ -115,9 +114,9 @@ private:
 	Types::ProcedureStore procedure_store;
 	CallStatementStore call_statement_store;
 	TopologicalSort<ProcedureInfo> call_graph;
-	TransitiveRelationStore<ProcRef, ProcedureInfo, CallRelation> call_store;
-	StatementRelationStore<ParentRelation> parent_store;
-	StatementRelationStore<FollowsRelation> follows_store;
+	Types::CallStore call_store;
+	Types::ParentStore parent_store;
+	Types::FollowsStore follows_store;
 	SVRelationStore<UsesSRelation> uses_s_store;
 	SVRelationStore<ModifiesSRelation> modifies_s_store;
 	PVRelationStore<UsesPRelation> uses_p_store;
