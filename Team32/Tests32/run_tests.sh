@@ -38,6 +38,8 @@ do
   TESTNAMES[${#TESTNAMES[@]}]="$TESTNAME";
 done
 
+rm -f "$TEMP_RESULT"
+
 SUCCESS=0;
 
 for IDX in "${!RESULT[@]}"
@@ -49,6 +51,7 @@ do
 done
 
 if [ $SUCCESS -eq 0 ] && ! grep -E "(Evaluating)" "$COMBINED_RESULT" &> /dev/null ; then
+  echo "Success";
   exit $SUCCESS;
 else
   cat "$COMBINED_RESULT";
