@@ -17,20 +17,21 @@ void PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::set(shared_ptr<TInf
 	auto front_iter = map.find(front_ident);
 	auto back_iter = map.find(back_ident);
 
-	if (front_iter == map.end()) {
-		TRelation relation = TRelation(front);
-		relation.insertReverse(back);
-		map.insert(make_pair(front_ident, relation));
-	} else {
-		front_iter->second.insertReverse(back);
-	}
-
+	// Attempt to insert forward facing relationship first since they tend to have more restrictions.
 	if (back_iter == map.end()) {
 		TRelation relation = TRelation(back);
 		relation.insertForward(front);
 		map.insert({back_ident, relation});
 	} else {
 		back_iter->second.insertForward(front);
+	}
+
+	if (front_iter == map.end()) {
+		TRelation relation = TRelation(front);
+		relation.insertReverse(back);
+		map.insert(make_pair(front_ident, relation));
+	} else {
+		front_iter->second.insertReverse(back);
 	}
 }
 
