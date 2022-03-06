@@ -35,6 +35,12 @@ QP::QueryResult QP::Relationship::CallsT::executeTrivialCallerVarName(PKB::Stora
 }
 
 QP::QueryResult QP::Relationship::CallsT::executeTrivialCallerUnderscoreSynonym(PKB::StorageAccessInterface& pkb) {
+	if (callee_ent.type == EntRefType::Synonym && caller_ent.type == EntRefType::Synonym) {
+		if (callee_ent.ent_ref == caller_ent.ent_ref) {
+			return {};
+		}
+	}
+
 	if (callee_ent.type == EntRefType::VarName) {
 		ProcRefSet proc_set = pkb.getCallerStar(callee_ent.ent_ref);
 		return QueryResult(!proc_set.empty());
@@ -104,6 +110,10 @@ QP::QueryResult QP::Relationship::CallsT::executeNonTrivialCallerSynonym(PKB::St
 			}
 		}
 	} else if (callee_ent.type == EntRefType::Synonym) {
+		if (callee_ent.ent_ref == caller_ent.ent_ref) {
+			return {};
+		}
+
 		vector<string> callee_column;
 		ProcRefSet proc_set = pkb.getProcedures();
 		for (auto const& proc : proc_set) {
