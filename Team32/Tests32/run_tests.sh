@@ -14,7 +14,7 @@ RESULT_PATH="$SCRIPT_PATH"/results;
 TEMP_RESULT="$RESULT_PATH"/temp.txt;
 COMBINED_RESULT="$RESULT_PATH"/combined.txt;
 mkdir -p "$RESULT_PATH";
-rm "$COMBINED_RESULT"
+rm -f "$COMBINED_RESULT"
 
 TESTNAMES=();
 RESULT=();
@@ -27,7 +27,7 @@ do
   TEST_QUERIES="$SCRIPT_PATH"/"$TESTNAME"_queries.txt;
   TEST_OUTPUT="$RESULT_PATH"/"$TESTNAME"_out.xml;
   echo "$TESTNAME Test" >> "$COMBINED_RESULT";
-  "$AUTOTESTER_PATH" "$TEST_SOURCE" "$TEST_QUERIES" "$TEST_OUTPUT" | tee "$TEMP_RESULT" \
+  "$AUTOTESTER_PATH" "$TEST_SOURCE" "$TEST_QUERIES" "$TEST_OUTPUT" | tee "$TEMP_RESULT" | \
     grep -E "(Evaluating query|answer|exception|Missing:|Additional:)" | \
     grep -B 4 -E "(Additional:)" >> "$COMBINED_RESULT";
   RESULT[${#RESULT[@]}]=${PIPESTATUS[0]};
@@ -37,6 +37,8 @@ do
   echo "" >> "$COMBINED_RESULT";
   TESTNAMES[${#TESTNAMES[@]}]="$TESTNAME";
 done
+
+rm -f "$TEMP_RESULT"
 
 SUCCESS=0;
 
@@ -49,6 +51,7 @@ do
 done
 
 if [ $SUCCESS -eq 0 ] && ! grep -E "(Evaluating)" "$COMBINED_RESULT" &> /dev/null ; then
+  echo "Success";
   exit $SUCCESS;
 else
   cat "$COMBINED_RESULT";
