@@ -22,6 +22,8 @@ class ArithmeticNode;
 class ConstantNode;
 class ParenthesesWrapper;
 class VariableNode;  // NOLINT(bugprone-forward-declaration-namespace)
+template <typename T>
+class TerminalNode;
 enum class ExpressionType { Arithmetic, Relational, Logical };
 }  // namespace Common::ExpressionProcessor
 

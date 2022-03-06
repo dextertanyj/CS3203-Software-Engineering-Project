@@ -9,11 +9,3 @@ Common::ExpressionProcessor::ParenthesesWrapper::ParenthesesWrapper(shared_ptr<E
 shared_ptr<Common::ExpressionProcessor::ExpressionNode> Common::ExpressionProcessor::ParenthesesWrapper::getExpression() {
 	return expression;
 }
-
-bool Common::ExpressionProcessor::ParenthesesWrapper::equals(shared_ptr<ExpressionNode> /*object*/) {
-	throw logic_error("Parentheses wrapper invoked.");
-}
-
-bool Common::ExpressionProcessor::ParenthesesWrapper::contains(shared_ptr<ExpressionNode> /*object*/) {
-	throw logic_error("Parentheses wrapper invoked.");
-}
