@@ -1,0 +1,32 @@
+procedure caller {
+	call callee;
+}
+
+procedure callee {
+	x = x + 1;
+}
+
+procedure loop1 {
+	print y;
+	read y;
+	call loop2;
+}
+
+procedure loop2 {
+	
+	if (z == 1) then {
+		call loop3;
+	} else {
+		call loop4;
+		print z;
+	}
+
+}
+
+procedure loop3 {
+	z = 1;
+}
+
+procedure loop4 {
+	z = 2 * z;
+}
