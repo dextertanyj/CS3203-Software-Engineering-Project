@@ -27,6 +27,10 @@ enum class StmtRefType { Synonym, Underscore, StmtNumber };
 enum class EntRefType { Synonym, Underscore, VarName };
 enum class ExpressionType { Expression, Underscore, ExpressionUnderscore };
 
+enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression };
+
+class ReferenceArgument;
+
 typedef struct QueryStmtRef {
 	StmtRefType type;
 	string stmt_ref;

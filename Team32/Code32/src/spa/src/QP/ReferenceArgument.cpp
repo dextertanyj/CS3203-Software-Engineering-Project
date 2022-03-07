@@ -1,0 +1,66 @@
+#include "ReferenceArgument.h"
+
+#include <utility>
+
+template <class... Ts>
+struct Visitor : Ts... {
+	using Ts::operator()...;
+};
+
+template <class... Ts>
+Visitor(Ts...) -> Visitor<Ts...>;
+
+QP::Types::ReferenceArgument::ReferenceArgument() = default;
+
+QP::Types::ReferenceArgument::ReferenceArgument(QP::Types::Declaration synonym) : value(synonym) {}
+
+QP::Types::ReferenceArgument::ReferenceArgument(string name) : value(name) {}
+
+QP::Types::ReferenceArgument::ReferenceArgument(StmtRef statement_index) : value(statement_index) {}
+
+QP::Types::ReferenceArgument::ReferenceArgument(Common::ExpressionProcessor::Expression expression, bool exact)
+	: value(pair<Common::ExpressionProcessor::Expression, bool>({move(expression), exact})) {}
+
+QP::Types::ReferenceType QP::Types::ReferenceArgument::getType() {
+	QP::Types::ReferenceType type = QP::Types::ReferenceType::Wildcard;
+	visit(Visitor{[&type](const StmtRef& /*unused*/) { type = QP::Types::ReferenceType::StatementIndex; },
+	              [&type](const QP::Types::Declaration& /*unused*/) { type = QP::Types::ReferenceType::Synonym; },
+	              [&type](const string& /*unused*/) { type = QP::Types::ReferenceType::Name; },
+	              [&type](const pair<Common::ExpressionProcessor::Expression, bool>& arg) {
+					  type = arg.second ? QP::Types::ReferenceType::ExactExpression : QP::Types::ReferenceType::SubExpression;
+				  },
+	              [&type](const monostate& /*unused*/) { type = QP::Types::ReferenceType::Wildcard; }},
+	      value);
+	return type;
+}
+
+QP::Types::Declaration QP::Types::ReferenceArgument::getSynonym() {
+	Declaration synonym;
+	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Synonym not stored."); },
+	              [&synonym](Declaration arg) { synonym = move(arg); }},
+	      value);
+	return synonym;
+}
+
+string QP::Types::ReferenceArgument::getName() {
+	string name;
+	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Name not stored."); }, [&name](string arg) { name = move(arg); }},
+	      value);
+	return name;
+}
+
+StmtRef QP::Types::ReferenceArgument::getStatementIndex() {
+	StmtRef index = 0;
+	visit(
+		Visitor{[](auto) { throw QP::ReferenceArgumentException("Statement index not stored."); }, [&index](StmtRef arg) { index = arg; }},
+		value);
+	return index;
+}
+
+Common::ExpressionProcessor::Expression QP::Types::ReferenceArgument::getExpression() {
+	Common::ExpressionProcessor::Expression expr = Common::ExpressionProcessor::Expression(nullptr, {}, {});
+	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Expression not stored."); },
+	              [&expr](Common::ExpressionProcessor::Expression arg) { expr = move(arg); }},
+	      value);
+	return expr;
+}
