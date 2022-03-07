@@ -44,9 +44,8 @@ bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const s
 	                [variable](const VarRef& existing_var) { return existing_var == variable; }));
 }
 
-void PKB::UsesSRelation::optimize(Types::ParentStore& parent_store, CallStatementStore& call_store,
-                                  Types::ProcedureStore& proc_store, TopologicalSort<ProcedureInfo>& topo_order,
-                                  SVRelationStore<UsesSRelation>& store) {
+void PKB::UsesSRelation::optimize(Types::ParentStore& parent_store, CallStatementStore& call_store, Types::ProcedureStore& proc_store,
+                                  TopologicalSort<ProcedureInfo>& topo_order, SVRelationStore<UsesSRelation>& store) {
 	// Start optimization from the lowest level in the DAG.
 	vector<shared_ptr<ProcedureInfo>> order = topo_order.get();
 	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {

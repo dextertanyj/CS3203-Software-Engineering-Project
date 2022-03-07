@@ -36,8 +36,7 @@ template <>
 void PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::ParentRelation>::optimize();
 
 template <>
-StmtInfoPtrSet
-PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::ParentRelation>::populateTransitive(
-	ParentRelation& current, StmtInfoPtrSet previous);
+StmtInfoPtrSet PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::ParentRelation>::populateTransitive(ParentRelation& current,
+                                                                                                        StmtInfoPtrSet previous);
 
 #endif  // SPA_SRC_PKB_PARENTRELATION_H

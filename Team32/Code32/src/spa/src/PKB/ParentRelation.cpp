@@ -40,9 +40,7 @@ void PKB::ParentRelation::appendReverseTransitive(StmtInfoPtrSet children_to_ins
 	this->children_transitive.insert(children_to_insert.begin(), children_to_insert.end());
 }
 
-shared_ptr<StmtInfo> PKB::ParentRelation::getSelf() const {
-	return self;
-}
+shared_ptr<StmtInfo> PKB::ParentRelation::getSelf() const { return self; }
 
 StmtInfoPtrSet PKB::ParentRelation::getForward() const {
 	if (parent == nullptr) {
@@ -70,7 +68,7 @@ void PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::ParentRelation>::optim
 
 template <>
 StmtInfoPtrSet PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::ParentRelation>::populateTransitive(ParentRelation& current,
-                                                       StmtInfoPtrSet previous) {
+                                                                                                        StmtInfoPtrSet previous) {
 	current.appendForwardTransitive(previous);
 	previous.insert(current.getSelf());
 	StmtInfoPtrSet result;

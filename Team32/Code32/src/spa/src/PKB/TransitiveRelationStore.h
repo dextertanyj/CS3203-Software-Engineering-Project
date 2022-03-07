@@ -25,7 +25,8 @@ public:
 
 private:
 	unordered_map<TIdent, TRelation> map;
-	unordered_set<shared_ptr<TInfo>> populateTransitive(TRelation& current, unordered_set<shared_ptr<TInfo>> previous) = delete;
+	unordered_set<shared_ptr<TInfo>> populateTransitive(TRelation& current, unordered_set<shared_ptr<TInfo>> previous) =
+		delete;  // NOLINT(modernize-use-equals-delete)
 };
 
 #endif  // SPA_SRC_PKB_TRANSITIVERELATIONSTORE_H

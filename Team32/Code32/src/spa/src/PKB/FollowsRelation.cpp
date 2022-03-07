@@ -44,9 +44,7 @@ void PKB::FollowsRelation::appendReverseTransitive(StmtInfoPtrSet followers) {
 	this->followers_transitive.insert(followers.begin(), followers.end());
 }
 
-shared_ptr<StmtInfo> PKB::FollowsRelation::getSelf() const {
-	return self;
-}
+shared_ptr<StmtInfo> PKB::FollowsRelation::getSelf() const { return self; }
 
 StmtInfoPtrSet PKB::FollowsRelation::getForward() const {
 	if (following == nullptr) {
@@ -79,7 +77,7 @@ void PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::FollowsRelation>::opti
 
 template <>
 StmtInfoPtrSet PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::FollowsRelation>::populateTransitive(FollowsRelation& current,
-                                                                                                        StmtInfoPtrSet previous) {
+                                                                                                         StmtInfoPtrSet previous) {
 	current.appendForwardTransitive(previous);
 	previous.insert(current.getSelf());
 	StmtInfoPtrSet result;
