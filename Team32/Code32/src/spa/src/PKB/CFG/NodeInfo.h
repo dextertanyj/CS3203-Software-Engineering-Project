@@ -6,6 +6,7 @@
 
 class PKB::NodeInfo {
 public:
+	NodeInfo() = default;
 	NodeInfo(shared_ptr<StmtInfo> info);
 	[[nodiscard]] StmtRef getIdentifier() const;
 	[[nodiscard]] StmtType getType() const;
