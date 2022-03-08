@@ -27,6 +27,10 @@ template <class T>
 class PVRelationStore;
 template <class TInfo>
 class TopologicalSort;
+template <typename T>
+class TransitiveRelation;
+
+class OrderedStatementTransitiveRelation;
 
 class AssignStore;
 class CallStatementStore;
