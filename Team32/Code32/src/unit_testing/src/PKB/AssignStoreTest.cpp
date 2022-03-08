@@ -1,7 +1,7 @@
 #include "PKB/AssignStore.h"
 
 #include "Common/ExpressionProcessor/ArithmeticNode.h"
-#include "Common/ExpressionProcessor/ConstantNode.h"
+#include "Common/ExpressionProcessor/TerminalNode.tpp"
 #include "Common/ExpressionProcessor/Expression.h"
 #include "TestUtilities.h"
 #include "catch.hpp"
@@ -12,7 +12,7 @@ using namespace Common::ExpressionProcessor;
 
 Expression getBasicOpTree() {
 	shared_ptr<ExpressionNode> root =
-		make_shared<ArithmeticNode>(MathematicalOperator::Plus, make_shared<ConstantNode>("1"), make_shared<ConstantNode>("2"));
+		make_shared<ArithmeticNode>(MathematicalOperator::Plus, make_shared<TerminalNode<ConstVal>>(1), make_shared<TerminalNode<ConstVal>>(2));
 	unordered_set<VarRef> variables = unordered_set<VarRef>();
 	unordered_set<ConstVal> constants = unordered_set<ConstVal>({1, 2});
 	Expression node = Expression(root, variables, constants);
@@ -20,7 +20,7 @@ Expression getBasicOpTree() {
 }
 
 Expression getPartialOpTree() {
-	shared_ptr<ExpressionNode> root = make_shared<ConstantNode>("2");
+	shared_ptr<ExpressionNode> root = make_shared<TerminalNode<ConstVal>>(2);
 	unordered_set<VarRef> variables = unordered_set<VarRef>();
 	unordered_set<ConstVal> constants = unordered_set<ConstVal>({2});
 	Expression node = Expression(root, variables, constants);
