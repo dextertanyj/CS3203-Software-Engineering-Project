@@ -17,8 +17,6 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 	pkb.setProc("B", 3, 4);
 	pkb.populateComplexRelations();
 
-	unordered_map<string, DesignEntity> map;
-
 	ReferenceArgument left_proc_no1 = ReferenceArgument("A");
 	ReferenceArgument left_proc_no2 = ReferenceArgument("B");
 	ReferenceArgument left_proc_no3 = ReferenceArgument({QP::Types::DesignEntity::Procedure, "procedure"});
@@ -31,8 +29,8 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, x);
 		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no1, y);
 
-		QP::QueryResult result1 = uses1.execute(pkb, true, map);
-		QP::QueryResult result2 = uses2.execute(pkb, true, map);
+		QP::QueryResult result1 = uses1.execute(pkb, true);
+		QP::QueryResult result2 = uses2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -42,8 +40,8 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, wildcard);
 		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no2, wildcard);
 
-		QP::QueryResult result1 = uses1.execute(pkb, true, map);
-		QP::QueryResult result2 = uses2.execute(pkb, true, map);
+		QP::QueryResult result1 = uses1.execute(pkb, true);
+		QP::QueryResult result2 = uses2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -53,8 +51,8 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, var);
 		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no2, var);
 
-		QP::QueryResult result1 = uses1.execute(pkb, true, map);
-		QP::QueryResult result2 = uses2.execute(pkb, true, map);
+		QP::QueryResult result1 = uses1.execute(pkb, true);
+		QP::QueryResult result2 = uses2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -64,8 +62,8 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, x);
 		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no3, y);
 
-		QP::QueryResult result1 = uses1.execute(pkb, true, map);
-		QP::QueryResult result2 = uses2.execute(pkb, true, map);
+		QP::QueryResult result1 = uses1.execute(pkb, true);
+		QP::QueryResult result2 = uses2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -74,7 +72,7 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 	SECTION("trivial: synonym & wildcard") {
 		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, wildcard);
 
-		QP::QueryResult result1 = uses1.execute(pkb, true, map);
+		QP::QueryResult result1 = uses1.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 	}
@@ -82,7 +80,7 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 	SECTION("trivial: synonym & synonym") {
 		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, var);
 
-		QP::QueryResult result1 = uses1.execute(pkb, true, map);
+		QP::QueryResult result1 = uses1.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 	}
@@ -91,8 +89,8 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, var);
 		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no2, var);
 
-		QP::QueryResult result1 = uses1.execute(pkb, false, map);
-		QP::QueryResult result2 = uses2.execute(pkb, false, map);
+		QP::QueryResult result1 = uses1.execute(pkb, false);
+		QP::QueryResult result2 = uses2.execute(pkb, false);
 
 		vector<string> expected_result1 = {"x", "z"};
 		vector<string> actual_result1 = result1.getSynonymResult("var");
@@ -105,8 +103,8 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, x);
 		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no3, y);
 
-		QP::QueryResult result1 = uses1.execute(pkb, false, map);
-		QP::QueryResult result2 = uses2.execute(pkb, false, map);
+		QP::QueryResult result1 = uses1.execute(pkb, false);
+		QP::QueryResult result2 = uses2.execute(pkb, false);
 
 		vector<string> expected_result1 = {"A"};
 		vector<string> actual_result1 = result1.getSynonymResult("procedure");
@@ -118,7 +116,7 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 	SECTION("non-trivial: synonym & wildcard") {
 		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, wildcard);
 
-		QP::QueryResult result1 = uses1.execute(pkb, false, map);
+		QP::QueryResult result1 = uses1.execute(pkb, false);
 
 		vector<string> expected_result1 = {"A"};
 		vector<string> actual_result1 = result1.getSynonymResult("procedure");
@@ -129,7 +127,7 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 	SECTION("non-trivial: synonym & synonym") {
 		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, var);
 
-		QP::QueryResult result1 = uses1.execute(pkb, false, map);
+		QP::QueryResult result1 = uses1.execute(pkb, false);
 
 		vector<string> expected_proc_result1 = {"A", "A"};
 		vector<string> actual_proc_result1 = result1.getSynonymResult("procedure");

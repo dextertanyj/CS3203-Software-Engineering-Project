@@ -13,15 +13,15 @@ public:
 	 * A trivial relation is one that does not contain synonym or contains
 	 * synonyms that only appear in one clause.
 	 */
-	inline QueryResult execute(PKB::StorageAccessInterface& pkb, bool is_trivial, unordered_map<string, DesignEntity>& map) {
-		return is_trivial ? executeTrivial(pkb, map) : executeNonTrivial(pkb, map);
+	inline QueryResult execute(PKB::StorageAccessInterface& pkb, bool is_trivial) {
+		return is_trivial ? executeTrivial(pkb) : executeNonTrivial(pkb);
 	};
 	virtual vector<string> getDeclarationSymbols() = 0;
 	virtual ~Relation() = default;
 
 private:
-	virtual QueryResult executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) = 0;
-	virtual QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) = 0;
+	virtual QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) = 0;
+	virtual QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) = 0;
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_RELATION_H

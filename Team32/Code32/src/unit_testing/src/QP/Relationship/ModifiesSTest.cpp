@@ -14,11 +14,6 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	pkb.setModifies(2, "x");
 	pkb.setModifies(3, "y");
 
-	unordered_map<string, DesignEntity> map;
-	map.insert({"s", DesignEntity::Stmt});
-	map.insert({"a", DesignEntity::Assign});
-	map.insert({"if", DesignEntity::If});
-
 	ReferenceArgument stmt_no1 = ReferenceArgument(1);
 	ReferenceArgument stmt_no2 = ReferenceArgument(2);
 	ReferenceArgument stmt_no3 = ReferenceArgument(3);
@@ -35,8 +30,8 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_no1, x);
 		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(stmt_no1, y);
 
-		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
-		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, true);
+		QP::QueryResult result2 = modifies2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -46,8 +41,8 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_no1, wildcard);
 		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(stmt_no4, wildcard);
 
-		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
-		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, true);
+		QP::QueryResult result2 = modifies2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -57,8 +52,8 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_no1, var);
 		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(stmt_no4, var);
 
-		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
-		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, true);
+		QP::QueryResult result2 = modifies2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -68,8 +63,8 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(assign_synonym, x);
 		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(assign_synonym, y);
 
-		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
-		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, true);
+		QP::QueryResult result2 = modifies2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -79,8 +74,8 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_synonym, wildcard);
 		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(if_synonym, wildcard);
 
-		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
-		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, true);
+		QP::QueryResult result2 = modifies2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -90,8 +85,8 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_synonym, var);
 		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(if_synonym, var);
 
-		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
-		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, true);
+		QP::QueryResult result2 = modifies2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -101,8 +96,8 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(assign_synonym, x);
 		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(if_synonym, y);
 
-		QP::QueryResult result1 = modifies1.execute(pkb, false, map);
-		QP::QueryResult result2 = modifies2.execute(pkb, false, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, false);
+		QP::QueryResult result2 = modifies2.execute(pkb, false);
 
 		vector<string> expected_result = {"1"};
 		REQUIRE(result1.getSynonymResult("a") == expected_result);
@@ -113,8 +108,8 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_synonym, wildcard);
 		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(if_synonym, wildcard);
 
-		QP::QueryResult result1 = modifies1.execute(pkb, false, map);
-		QP::QueryResult result2 = modifies2.execute(pkb, false, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, false);
+		QP::QueryResult result2 = modifies2.execute(pkb, false);
 
 		vector<string> expected_result = {"1", "2", "3"};
 		vector<string> actual_result = result1.getSynonymResult("s");
@@ -127,8 +122,8 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_synonym, var);
 		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(if_synonym, var);
 
-		QP::QueryResult result1 = modifies1.execute(pkb, false, map);
-		QP::QueryResult result2 = modifies2.execute(pkb, false, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, false);
+		QP::QueryResult result2 = modifies2.execute(pkb, false);
 
 		vector<string> expected_stmt_result = {"1", "2", "3"};
 		vector<string> expected_var_result = {"x", "x", "y"};
@@ -145,8 +140,8 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_no1, var);
 		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(stmt_no4, var);
 
-		QP::QueryResult result1 = modifies1.execute(pkb, false, map);
-		QP::QueryResult result2 = modifies2.execute(pkb, false, map);
+		QP::QueryResult result1 = modifies1.execute(pkb, false);
+		QP::QueryResult result2 = modifies2.execute(pkb, false);
 
 		vector<string> expected_result = {"x"};
 		vector<string> actual_result = result1.getSynonymResult("var");

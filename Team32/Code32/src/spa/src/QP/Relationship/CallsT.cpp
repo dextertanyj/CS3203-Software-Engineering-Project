@@ -1,6 +1,6 @@
 #include "CallsT.h"
 
-QP::QueryResult QP::Relationship::CallsT::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::CallsT::executeTrivial(PKB::StorageAccessInterface& pkb) {
 	if (caller_ent.getType() == ReferenceType::Name) {
 		return executeTrivialCallerVarName(pkb);
 	} else {
@@ -8,8 +8,7 @@ QP::QueryResult QP::Relationship::CallsT::executeTrivial(PKB::StorageAccessInter
 	}
 }
 
-QP::QueryResult QP::Relationship::CallsT::executeNonTrivial(PKB::StorageAccessInterface& pkb,
-                                                            unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::CallsT::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
 	if (caller_ent.getType() == ReferenceType::Name) {
 		return executeNonTrivialCallerVarName(pkb);
 	} else if (caller_ent.getType() == ReferenceType::Wildcard) {

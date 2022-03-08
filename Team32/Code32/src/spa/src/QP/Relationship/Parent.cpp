@@ -20,7 +20,7 @@ vector<string> QP::Relationship::Parent::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>&  /*map*/) {
+QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInterface& pkb) {
 	if (parent_stmt.getType() == ReferenceType::StatementIndex && child_stmt.getType() == ReferenceType::StatementIndex) {
 		return QueryResult(pkb.checkParents(parent_stmt.getStatementIndex(), child_stmt.getStatementIndex()));
 	}
@@ -110,7 +110,7 @@ QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInter
 	return {};
 }
 
-QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>&  /*map*/) {
+QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
 	if (parent_stmt.getType() == ReferenceType::Synonym && child_stmt.getType() == ReferenceType::StatementIndex) {
 		shared_ptr<StmtInfo> parent = pkb.getParent(child_stmt.getStatementIndex());
 		DesignEntity design_entity = parent_stmt.getSynonym().type;

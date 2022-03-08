@@ -1,6 +1,6 @@
 #include "FollowsT.h"
 
-QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::StorageAccessInterface& pkb) {
 	if (getLeftStmt().getType() == ReferenceType::StatementIndex && getRightStmt().getType() == ReferenceType::StatementIndex) {
 		StmtInfoPtrSet followers_set = pkb.getFollowerStar(getLeftStmt().getStatementIndex());
 		StmtRef right_stmt_no = getRightStmt().getStatementIndex();
@@ -90,7 +90,7 @@ QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::StorageAccessInt
 	return {};
 }
 
-QP::QueryResult QP::Relationship::FollowsT::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::FollowsT::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
 	if (getLeftStmt().getType() == ReferenceType::Synonym && getRightStmt().getType() == ReferenceType::StatementIndex) {
 		StmtInfoPtrSet preceding_set = pkb.getPrecedingStar(getRightStmt().getStatementIndex());
 		DesignEntity design_entity = getLeftStmt().getSynonym().type;

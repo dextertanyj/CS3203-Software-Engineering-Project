@@ -1,6 +1,6 @@
 #include "ParentT.h"
 
-QP::QueryResult QP::Relationship::ParentT::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::ParentT::executeTrivial(PKB::StorageAccessInterface& pkb) {
 	if (getParentStmt().getType() == ReferenceType::StatementIndex && getChildStmt().getType() == ReferenceType::StatementIndex) {
 		StmtInfoPtrSet children_set = pkb.getChildStar(getParentStmt().getStatementIndex());
 		StmtRef child_stmt_no = getChildStmt().getStatementIndex();
@@ -95,7 +95,7 @@ QP::QueryResult QP::Relationship::ParentT::executeTrivial(PKB::StorageAccessInte
 	return {};
 }
 
-QP::QueryResult QP::Relationship::ParentT::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
+QP::QueryResult QP::Relationship::ParentT::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
 	if (getParentStmt().getType() == ReferenceType::Synonym && getChildStmt().getType() == ReferenceType::StatementIndex) {
 		StmtInfoPtrSet parent_set = pkb.getParentStar(getChildStmt().getStatementIndex());
 		DesignEntity design_entity = getParentStmt().getSynonym().type;

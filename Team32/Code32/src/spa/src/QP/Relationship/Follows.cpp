@@ -20,7 +20,7 @@ vector<string> QP::Relationship::Follows::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QP::QueryResult QP::Relationship::Follows::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::Follows::executeTrivial(PKB::StorageAccessInterface& pkb) {
 	if (left_stmt.getType() == ReferenceType::StatementIndex && right_stmt.getType() == ReferenceType::StatementIndex) {
 		return QueryResult(pkb.checkFollows(left_stmt.getStatementIndex(), right_stmt.getStatementIndex()));
 	}
@@ -102,8 +102,7 @@ QP::QueryResult QP::Relationship::Follows::executeTrivial(PKB::StorageAccessInte
 	return {};
 }
 
-QP::QueryResult QP::Relationship::Follows::executeNonTrivial(PKB::StorageAccessInterface& pkb,
-                                                             unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::Follows::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
 	if (left_stmt.getType() == ReferenceType::Synonym && right_stmt.getType() == ReferenceType::StatementIndex) {
 		shared_ptr<StmtInfo> preceding = pkb.getPreceding(right_stmt.getStatementIndex());
 		DesignEntity design_entity = left_stmt.getSynonym().type;

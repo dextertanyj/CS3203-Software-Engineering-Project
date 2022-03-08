@@ -9,8 +9,8 @@ public:
 	using Calls::Calls;
 
 private:
-	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
-	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
+	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
 
 	QueryResult executeTrivialCallerVarName(PKB::StorageAccessInterface& pkb);
 	QueryResult executeTrivialCallerUnderscoreSynonym(PKB::StorageAccessInterface& pkb);

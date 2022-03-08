@@ -14,8 +14,6 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	pkb.setParent(2, 3);
 	pkb.setParent(3, 4);
 
-	unordered_map<string, DesignEntity> map;
-
 	ReferenceArgument stmt_no1 = ReferenceArgument(1);
 	ReferenceArgument stmt_no2 = ReferenceArgument(2);
 	ReferenceArgument stmt_no3 = ReferenceArgument(3);
@@ -29,8 +27,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		QP::Relationship::Parent parent1 = QP::Relationship::Parent(stmt_no1, stmt_no2);
 		QP::Relationship::Parent parent2 = QP::Relationship::Parent(stmt_no1, stmt_no3);
 
-		QP::QueryResult result1 = parent1.execute(pkb, true, map);
-		QP::QueryResult result2 = parent2.execute(pkb, true, map);
+		QP::QueryResult result1 = parent1.execute(pkb, true);
+		QP::QueryResult result2 = parent2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -40,8 +38,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		QP::Relationship::Parent parent1 = QP::Relationship::Parent(stmt_no1, wildcard);
 		QP::Relationship::Parent parent2 = QP::Relationship::Parent(stmt_no4, wildcard);
 
-		QP::QueryResult result1 = parent1.execute(pkb, true, map);
-		QP::QueryResult result2 = parent2.execute(pkb, true, map);
+		QP::QueryResult result1 = parent1.execute(pkb, true);
+		QP::QueryResult result2 = parent2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -51,8 +49,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		QP::Relationship::Parent parent1 = QP::Relationship::Parent(stmt_no1, stmt_synonym);
 		QP::Relationship::Parent parent2 = QP::Relationship::Parent(stmt_no1, assign_synonym);
 
-		QP::QueryResult result1 = parent1.execute(pkb, true, map);
-		QP::QueryResult result2 = parent2.execute(pkb, true, map);
+		QP::QueryResult result1 = parent1.execute(pkb, true);
+		QP::QueryResult result2 = parent2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -62,8 +60,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		QP::Relationship::Parent parent1 = QP::Relationship::Parent(wildcard, stmt_no2);
 		QP::Relationship::Parent parent2 = QP::Relationship::Parent(wildcard, stmt_no1);
 
-		QP::QueryResult result1 = parent1.execute(pkb, true, map);
-		QP::QueryResult result2 = parent2.execute(pkb, true, map);
+		QP::QueryResult result1 = parent1.execute(pkb, true);
+		QP::QueryResult result2 = parent2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -72,7 +70,7 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	SECTION("trivial: wildcard & wildcard") {
 		QP::Relationship::Parent parent = QP::Relationship::Parent(wildcard, wildcard);
 
-		QP::QueryResult result = parent.execute(pkb, true, map);
+		QP::QueryResult result = parent.execute(pkb, true);
 
 		REQUIRE(result.getResult());
 	}
@@ -81,8 +79,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		QP::Relationship::Parent parent1 = QP::Relationship::Parent(wildcard, stmt_synonym);
 		QP::Relationship::Parent parent2 = QP::Relationship::Parent(wildcard, assign_synonym);
 
-		QP::QueryResult result1 = parent1.execute(pkb, true, map);
-		QP::QueryResult result2 = parent2.execute(pkb, true, map);
+		QP::QueryResult result1 = parent1.execute(pkb, true);
+		QP::QueryResult result2 = parent2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -92,8 +90,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		QP::Relationship::Parent parent1 = QP::Relationship::Parent(assign_synonym, stmt_no2);
 		QP::Relationship::Parent parent2 = QP::Relationship::Parent(assign_synonym, stmt_no3);
 
-		QP::QueryResult result1 = parent1.execute(pkb, true, map);
-		QP::QueryResult result2 = parent2.execute(pkb, true, map);
+		QP::QueryResult result1 = parent1.execute(pkb, true);
+		QP::QueryResult result2 = parent2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -103,8 +101,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		QP::Relationship::Parent parent1 = QP::Relationship::Parent(assign_synonym, wildcard);
 		QP::Relationship::Parent parent2 = QP::Relationship::Parent(if_synonym, wildcard);
 
-		QP::QueryResult result1 = parent1.execute(pkb, true, map);
-		QP::QueryResult result2 = parent2.execute(pkb, true, map);
+		QP::QueryResult result1 = parent1.execute(pkb, true);
+		QP::QueryResult result2 = parent2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -114,8 +112,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		QP::Relationship::Parent parent1 = QP::Relationship::Parent(assign_synonym, stmt_synonym);
 		QP::Relationship::Parent parent2 = QP::Relationship::Parent(if_synonym, stmt_synonym);
 
-		QP::QueryResult result1 = parent1.execute(pkb, true, map);
-		QP::QueryResult result2 = parent2.execute(pkb, true, map);
+		QP::QueryResult result1 = parent1.execute(pkb, true);
+		QP::QueryResult result2 = parent2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -125,8 +123,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		QP::Relationship::Parent parent1 = QP::Relationship::Parent(assign_synonym, stmt_no2);
 		QP::Relationship::Parent parent2 = QP::Relationship::Parent(if_synonym, stmt_no2);
 
-		QP::QueryResult result1 = parent1.execute(pkb, false, map);
-		QP::QueryResult result2 = parent2.execute(pkb, false, map);
+		QP::QueryResult result1 = parent1.execute(pkb, false);
+		QP::QueryResult result2 = parent2.execute(pkb, false);
 
 		vector<string> expected_result = {"1"};
 		REQUIRE(result1.getSynonymResult("a") == expected_result);
@@ -137,8 +135,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		QP::Relationship::Parent parent1 = QP::Relationship::Parent(stmt_synonym, wildcard);
 		QP::Relationship::Parent parent2 = QP::Relationship::Parent(if_synonym, wildcard);
 
-		QP::QueryResult result1 = parent1.execute(pkb, false, map);
-		QP::QueryResult result2 = parent2.execute(pkb, false, map);
+		QP::QueryResult result1 = parent1.execute(pkb, false);
+		QP::QueryResult result2 = parent2.execute(pkb, false);
 
 		vector<string> expected_result = {"1", "2", "3"};
 		vector<string> actual_result = result1.getSynonymResult("s");
@@ -151,8 +149,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		QP::Relationship::Parent parent1 = QP::Relationship::Parent(stmt_synonym, if_synonym);
 		QP::Relationship::Parent parent2 = QP::Relationship::Parent(if_synonym, assign_synonym);
 
-		QP::QueryResult result1 = parent1.execute(pkb, false, map);
-		QP::QueryResult result2 = parent2.execute(pkb, false, map);
+		QP::QueryResult result1 = parent1.execute(pkb, false);
+		QP::QueryResult result2 = parent2.execute(pkb, false);
 
 		vector<string> expected_stmt_result = {"3"};
 		vector<string> expected_if_result = {"4"};
@@ -165,8 +163,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		QP::Relationship::Parent parent1 = QP::Relationship::Parent(wildcard, if_synonym);
 		QP::Relationship::Parent parent2 = QP::Relationship::Parent(wildcard, assign_synonym);
 
-		QP::QueryResult result1 = parent1.execute(pkb, false, map);
-		QP::QueryResult result2 = parent2.execute(pkb, false, map);
+		QP::QueryResult result1 = parent1.execute(pkb, false);
+		QP::QueryResult result2 = parent2.execute(pkb, false);
 
 		vector<string> expected_result = {"4"};
 		REQUIRE(result1.getSynonymResult("if") == expected_result);
@@ -177,8 +175,8 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		QP::Relationship::Parent parent1 = QP::Relationship::Parent(stmt_no1, stmt_synonym);
 		QP::Relationship::Parent parent2 = QP::Relationship::Parent(stmt_no1, if_synonym);
 
-		QP::QueryResult result1 = parent1.execute(pkb, false, map);
-		QP::QueryResult result2 = parent2.execute(pkb, false, map);
+		QP::QueryResult result1 = parent1.execute(pkb, false);
+		QP::QueryResult result2 = parent2.execute(pkb, false);
 
 		vector<string> expected_result = {"2"};
 		REQUIRE(result1.getSynonymResult("s") == expected_result);

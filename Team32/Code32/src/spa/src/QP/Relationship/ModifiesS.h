@@ -18,8 +18,8 @@ private:
 	ReferenceArgument stmt;
 	ReferenceArgument ent;
 
-	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
-	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
+	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
 
 	QueryResult executeTrivialEntVarName(PKB::StorageAccessInterface& pkb);
 	QueryResult executeTrivialEntUnknown(PKB::StorageAccessInterface& pkb);
