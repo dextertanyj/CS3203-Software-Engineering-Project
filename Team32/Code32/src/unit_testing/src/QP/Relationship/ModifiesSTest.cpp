@@ -26,11 +26,10 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	ReferenceArgument stmt_synonym = ReferenceArgument({QP::Types::DesignEntity::Stmt, "s"});
 	ReferenceArgument assign_synonym = ReferenceArgument({QP::Types::DesignEntity::Assign, "a"});
 	ReferenceArgument if_synonym = ReferenceArgument({QP::Types::DesignEntity::If, "if"});
-	ReferenceArgument stmt_underscore = ReferenceArgument();
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
 	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "if"});
-	ReferenceArgument var_underscore = ReferenceArgument();
+	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("trivial: stmtNumber & varName") {
 		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_no1, x);
@@ -43,9 +42,9 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: stmtNumber & underscore") {
-		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_no1, var_underscore);
-		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(stmt_no4, var_underscore);
+	SECTION("trivial: stmtNumber & wildcard") {
+		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_no1, wildcard);
+		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(stmt_no4, wildcard);
 
 		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
 		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
@@ -76,9 +75,9 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: synonym & underscore") {
-		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_synonym, var_underscore);
-		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(if_synonym, var_underscore);
+	SECTION("trivial: synonym & wildcard") {
+		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_synonym, wildcard);
+		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(if_synonym, wildcard);
 
 		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
 		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
@@ -110,9 +109,9 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: synonym & underscore") {
-		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_synonym, var_underscore);
-		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(if_synonym, var_underscore);
+	SECTION("non-trivial: synonym & wildcard") {
+		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_synonym, wildcard);
+		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(if_synonym, wildcard);
 
 		QP::QueryResult result1 = modifies1.execute(pkb, false, map);
 		QP::QueryResult result2 = modifies2.execute(pkb, false, map);

@@ -24,7 +24,7 @@ TEST_CASE("QP::Relationship::ModifiesP::execute") {
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
 	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
-	ReferenceArgument var_underscore = ReferenceArgument();
+	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("trivial: varName & varName") {
 		QP::Relationship::ModifiesP modifies1 = QP::Relationship::ModifiesP(left_proc_no1, x);
@@ -37,9 +37,9 @@ TEST_CASE("QP::Relationship::ModifiesP::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: varName & underscore") {
-		QP::Relationship::ModifiesP modifies1 = QP::Relationship::ModifiesP(left_proc_no1, var_underscore);
-		QP::Relationship::ModifiesP modifies2 = QP::Relationship::ModifiesP(left_proc_no2, var_underscore);
+	SECTION("trivial: varName & wildcard") {
+		QP::Relationship::ModifiesP modifies1 = QP::Relationship::ModifiesP(left_proc_no1, wildcard);
+		QP::Relationship::ModifiesP modifies2 = QP::Relationship::ModifiesP(left_proc_no2, wildcard);
 
 		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
 		QP::QueryResult result2 = modifies2.execute(pkb, true, map);
@@ -70,8 +70,8 @@ TEST_CASE("QP::Relationship::ModifiesP::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: synonym & underscore") {
-		QP::Relationship::ModifiesP modifies1 = QP::Relationship::ModifiesP(left_proc_no3, var_underscore);
+	SECTION("trivial: synonym & wildcard") {
+		QP::Relationship::ModifiesP modifies1 = QP::Relationship::ModifiesP(left_proc_no3, wildcard);
 
 		QP::QueryResult result1 = modifies1.execute(pkb, true, map);
 
@@ -114,8 +114,8 @@ TEST_CASE("QP::Relationship::ModifiesP::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: synonym & underscore") {
-		QP::Relationship::ModifiesP modifies1 = QP::Relationship::ModifiesP(left_proc_no3, var_underscore);
+	SECTION("non-trivial: synonym & wildcard") {
+		QP::Relationship::ModifiesP modifies1 = QP::Relationship::ModifiesP(left_proc_no3, wildcard);
 
 		QP::QueryResult result1 = modifies1.execute(pkb, false, map);
 
