@@ -21,12 +21,12 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 	map.insert({"p1", DesignEntity::Procedure});
 	map.insert({"p2", DesignEntity::Procedure});
 
-	QueryEntRef proc1 = {EntRefType::VarName, "proc1"};
-	QueryEntRef proc2 = {EntRefType::VarName, "proc2"};
-	QueryEntRef proc3 = {EntRefType::VarName, "proc3"};
-	QueryEntRef proc_synonym_1 = {EntRefType::Synonym, "p1"};
-	QueryEntRef proc_synonym_2 = {EntRefType::Synonym, "p2"};
-	QueryEntRef underscore = {EntRefType::Underscore, "_"};
+	ReferenceArgument proc1 = ReferenceArgument("proc1");
+	ReferenceArgument proc2 = ReferenceArgument("proc2");
+	ReferenceArgument proc3 = ReferenceArgument("proc3");
+	ReferenceArgument proc_synonym_1 = ReferenceArgument({DesignEntity::Procedure, "p1"});
+	ReferenceArgument proc_synonym_2 = ReferenceArgument({DesignEntity::Procedure, "p2"});
+	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("trivial: varName & varName") {
 		QP::Relationship::CallsT callsT1 = QP::Relationship::CallsT(proc1, proc3);
@@ -40,8 +40,8 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 	}
 
 	SECTION("trivial: varName & underscore") {
-		QP::Relationship::CallsT callsT1 = QP::Relationship::CallsT(proc1, underscore);
-		QP::Relationship::CallsT callsT2 = QP::Relationship::CallsT(proc3, underscore);
+		QP::Relationship::CallsT callsT1 = QP::Relationship::CallsT(proc1, wildcard);
+		QP::Relationship::CallsT callsT2 = QP::Relationship::CallsT(proc3, wildcard);
 
 		QP::QueryResult result1 = callsT1.execute(pkb, true, map);
 		QP::QueryResult result2 = callsT2.execute(pkb, true, map);
@@ -62,8 +62,8 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 	}
 
 	SECTION("trivial: underscore & varName") {
-		QP::Relationship::CallsT callsT1 = QP::Relationship::CallsT(underscore, proc2);
-		QP::Relationship::CallsT callsT2 = QP::Relationship::CallsT(underscore, proc1);
+		QP::Relationship::CallsT callsT1 = QP::Relationship::CallsT(wildcard, proc2);
+		QP::Relationship::CallsT callsT2 = QP::Relationship::CallsT(wildcard, proc1);
 
 		QP::QueryResult result1 = callsT1.execute(pkb, true, map);
 		QP::QueryResult result2 = callsT2.execute(pkb, true, map);
@@ -73,7 +73,7 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 	}
 
 	SECTION("trivial: underscore & underscore") {
-		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(underscore, underscore);
+		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(wildcard, wildcard);
 
 		QP::QueryResult result = callsT.execute(pkb, true, map);
 
@@ -81,7 +81,7 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 	}
 
 	SECTION("trivial: underscore & synonym") {
-		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(underscore, proc_synonym_1);
+		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(wildcard, proc_synonym_1);
 
 		QP::QueryResult result = callsT.execute(pkb, true, map);
 
@@ -100,7 +100,7 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 	}
 
 	SECTION("trivial: synonym & underscore") {
-		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(proc_synonym_1, underscore);
+		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(proc_synonym_1, wildcard);
 
 		QP::QueryResult result = callsT.execute(pkb, true, map);
 
@@ -132,7 +132,7 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 	}
 
 	SECTION("non-trivial: underscore & synonym") {
-		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(underscore, proc_synonym_1);
+		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(wildcard, proc_synonym_1);
 
 		QP::QueryResult result = callsT.execute(pkb, false, map);
 
@@ -156,7 +156,7 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 	}
 
 	SECTION("non-trivial: synonym & underscore") {
-		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(proc_synonym_1, underscore);
+		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(proc_synonym_1, wildcard);
 
 		QP::QueryResult result = callsT.execute(pkb, false, map);
 
