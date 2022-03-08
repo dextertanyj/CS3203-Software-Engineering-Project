@@ -20,18 +20,17 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 	map.insert({"a", DesignEntity::Assign});
 	map.insert({"if", DesignEntity::If});
 
-	QueryStmtRef stmt_no1 = {StmtRefType::StmtNumber, "1"};
-	QueryStmtRef stmt_no2 = {StmtRefType::StmtNumber, "2"};
-	QueryStmtRef stmt_no3 = {StmtRefType::StmtNumber, "3"};
-	QueryStmtRef stmt_no4 = {StmtRefType::StmtNumber, "4"};
-	QueryStmtRef stmt_synonym = {StmtRefType::Synonym, "s"};
-	QueryStmtRef assign_synonym = {StmtRefType::Synonym, "a"};
-	QueryStmtRef if_synonym = {StmtRefType::Synonym, "if"};
-	QueryStmtRef stmt_underscore = {StmtRefType::Underscore, "_"};
-	QueryEntRef x = {EntRefType::VarName, "x"};
-	QueryEntRef y = {EntRefType::VarName, "y"};
-	QueryEntRef var = {EntRefType::Synonym, "var"};
-	QueryEntRef var_underscore = {EntRefType::Underscore, "x"};
+	ReferenceArgument stmt_no1 = ReferenceArgument(1);
+	ReferenceArgument stmt_no2 = ReferenceArgument(2);
+	ReferenceArgument stmt_no3 = ReferenceArgument(3);
+	ReferenceArgument stmt_no4 = ReferenceArgument(4);
+	ReferenceArgument stmt_synonym = ReferenceArgument({QP::Types::DesignEntity::Stmt, "s"});
+	ReferenceArgument assign_synonym = ReferenceArgument({QP::Types::DesignEntity::Assign, "a"});
+	ReferenceArgument if_synonym = ReferenceArgument({QP::Types::DesignEntity::If, "if"});
+	ReferenceArgument x = ReferenceArgument("x");
+	ReferenceArgument y = ReferenceArgument("y");
+	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
+	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("trivial: stmtNumber & varName") {
 		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmt_no1, x);
@@ -44,9 +43,9 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: stmtNumber & underscore") {
-		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmt_no1, var_underscore);
-		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(stmt_no4, var_underscore);
+	SECTION("trivial: stmtNumber & wildcard") {
+		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmt_no1, wildcard);
+		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(stmt_no4, wildcard);
 
 		QP::QueryResult result1 = uses1.execute(pkb, true, map);
 		QP::QueryResult result2 = uses2.execute(pkb, true, map);
@@ -77,9 +76,9 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: synonym & underscore") {
-		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmt_synonym, var_underscore);
-		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(if_synonym, var_underscore);
+	SECTION("trivial: synonym & wildcard") {
+		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmt_synonym, wildcard);
+		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(if_synonym, wildcard);
 
 		QP::QueryResult result1 = uses1.execute(pkb, true, map);
 		QP::QueryResult result2 = uses2.execute(pkb, true, map);
@@ -111,9 +110,9 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: synonym & underscore") {
-		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmt_synonym, var_underscore);
-		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(if_synonym, var_underscore);
+	SECTION("non-trivial: synonym & wildcard") {
+		QP::Relationship::UsesS uses1 = QP::Relationship::UsesS(stmt_synonym, wildcard);
+		QP::Relationship::UsesS uses2 = QP::Relationship::UsesS(if_synonym, wildcard);
 
 		QP::QueryResult result1 = uses1.execute(pkb, false, map);
 		QP::QueryResult result2 = uses2.execute(pkb, false, map);

@@ -2,31 +2,32 @@
 #define SPA_SRC_QP_RELATIONSHIP_USESS_H
 
 #include "QP/QueryTypes.h"
+#include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Relation.h"
 
 class QP::Relationship::UsesS : public Relation {
 public:
-	UsesS(QueryStmtRef stmt, QueryEntRef ent);
+	UsesS(ReferenceArgument stmt, ReferenceArgument ent);
 
-	QueryStmtRef getStmt();
-	QueryEntRef getEnt();
+	ReferenceArgument getStmt();
+	ReferenceArgument getEnt();
 
 	vector<string> getDeclarationSymbols() override;
 
 private:
-	QueryStmtRef stmt;
-	QueryEntRef ent;
+	ReferenceArgument stmt;
+	ReferenceArgument ent;
 
 	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
 	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
 
-	QueryResult executeTrivialEntVarName(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map);
-	QueryResult executeTrivialEntUnknown(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map);
+	QueryResult executeTrivialEntVarName(PKB::StorageAccessInterface& pkb);
+	QueryResult executeTrivialEntUnknown(PKB::StorageAccessInterface& pkb);
 
-	QueryResult executeNonTrivialEntVarName(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map);
-	QueryResult executeNonTrivialEntUnderscore(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map);
-	QueryResult executeNonTrivialEntSynonym(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map);
-	QueryResult executeNonTrivialStmtStmtNo(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map);
+	QueryResult executeNonTrivialEntVarName(PKB::StorageAccessInterface& pkb);
+	QueryResult executeNonTrivialEntUnderscore(PKB::StorageAccessInterface& pkb);
+	QueryResult executeNonTrivialEntSynonym(PKB::StorageAccessInterface& pkb);
+	QueryResult executeNonTrivialStmtStmtNo(PKB::StorageAccessInterface& pkb);
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_USESS_H

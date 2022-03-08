@@ -19,13 +19,13 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 
 	unordered_map<string, DesignEntity> map;
 
-	QueryEntRef left_proc_no1 = {EntRefType::VarName, "A"};
-	QueryEntRef left_proc_no2 = {EntRefType::VarName, "B"};
-	QueryEntRef left_proc_no3 = {EntRefType::Synonym, "procedure"};
-	QueryEntRef x = {EntRefType::VarName, "x"};
-	QueryEntRef y = {EntRefType::VarName, "y"};
-	QueryEntRef var = {EntRefType::Synonym, "var"};
-	QueryEntRef var_underscore = {EntRefType::Underscore, "x"};
+	ReferenceArgument left_proc_no1 = ReferenceArgument("A");
+	ReferenceArgument left_proc_no2 = ReferenceArgument("B");
+	ReferenceArgument left_proc_no3 = ReferenceArgument({QP::Types::DesignEntity::Procedure, "procedure"});
+	ReferenceArgument x = ReferenceArgument("x");
+	ReferenceArgument y = ReferenceArgument("y");
+	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
+	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("trivial: varName & varName") {
 		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, x);
@@ -38,9 +38,9 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: varName & underscore") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, var_underscore);
-		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no2, var_underscore);
+	SECTION("trivial: varName & wildcard") {
+		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, wildcard);
+		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no2, wildcard);
 
 		QP::QueryResult result1 = uses1.execute(pkb, true, map);
 		QP::QueryResult result2 = uses2.execute(pkb, true, map);
@@ -71,8 +71,8 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: synonym & underscore") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, var_underscore);
+	SECTION("trivial: synonym & wildcard") {
+		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, wildcard);
 
 		QP::QueryResult result1 = uses1.execute(pkb, true, map);
 
@@ -101,7 +101,7 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: synonym & VarName") {
+	SECTION("non-trivial: synonym & varName") {
 		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, x);
 		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no3, y);
 
@@ -115,8 +115,8 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: synonym & underscore") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, var_underscore);
+	SECTION("non-trivial: synonym & wildcard") {
+		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, wildcard);
 
 		QP::QueryResult result1 = uses1.execute(pkb, false, map);
 
