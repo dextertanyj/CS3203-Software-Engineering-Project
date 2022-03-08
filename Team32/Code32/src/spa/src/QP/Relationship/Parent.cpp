@@ -54,7 +54,7 @@ QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInter
 		}
 	} else if (parent_stmt.getType() == ReferenceType::Wildcard && child_stmt.getType() == ReferenceType::Synonym) {
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity design_entity = parent_stmt.getSynonym().type;
+		DesignEntity design_entity = child_stmt.getSynonym().type;
 		for (auto const& stmt : stmt_set) {
 			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;

@@ -2,6 +2,7 @@
 
 #include "QP/Relationship/Parent.h"
 #include "QP/Relationship/UsesS.h"
+#include "QP/ReferenceArgument.h"
 #include "catch.hpp"
 
 TEST_CASE("QP::QueryGraph::QueryGraph Should initialize nodes") {
@@ -13,9 +14,9 @@ TEST_CASE("QP::QueryGraph::QueryGraph Should initialize nodes") {
 
 TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
 	DeclarationList list = {{DesignEntity::Stmt, "s"}, {DesignEntity::Variable, "v"}, {DesignEntity::Assign, "a"}};
-	QueryStmtRef s = {StmtRefType::Synonym, "s"};
-	QueryStmtRef a = {StmtRefType::Synonym, "a"};
-	QueryEntRef v = {EntRefType::Synonym, "v"};
+	ReferenceArgument s = ReferenceArgument({DesignEntity::Stmt, "s"});
+	ReferenceArgument a = ReferenceArgument({DesignEntity::Assign, "a"});
+	ReferenceArgument v = ReferenceArgument({DesignEntity::Variable, "v"});
 	ClauseList clause_list = {
 		{make_unique<QP::Relationship::Parent>(s, a)},
 		{make_unique<QP::Relationship::UsesS>(a, v)},
@@ -35,11 +36,11 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 		{DesignEntity::Stmt, "a"},   {DesignEntity::Assign, "b"},   {DesignEntity::If, "c"},
 		{DesignEntity::Assign, "d"}, {DesignEntity::Variable, "e"},
 	};
-	QueryStmtRef a = {StmtRefType::Synonym, "a"};
-	QueryStmtRef b = {StmtRefType::Synonym, "b"};
-	QueryStmtRef c = {StmtRefType::Synonym, "c"};
-	QueryStmtRef d = {StmtRefType::Synonym, "d"};
-	QueryEntRef e = {EntRefType::Synonym, "e"};
+	ReferenceArgument a = ReferenceArgument({DesignEntity::Stmt, "a"});
+	ReferenceArgument b = ReferenceArgument({DesignEntity::Assign, "b"});
+	ReferenceArgument c = ReferenceArgument({DesignEntity::If, "c"});
+	ReferenceArgument d = ReferenceArgument({DesignEntity::Assign, "d"});
+	ReferenceArgument e = ReferenceArgument({DesignEntity::Variable, "e"});
 	ClauseList clause_list = {
 		{make_unique<QP::Relationship::Parent>(a, b)},
 		{make_unique<QP::Relationship::Parent>(a, c)},

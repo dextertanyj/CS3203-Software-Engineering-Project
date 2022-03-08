@@ -23,7 +23,7 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	ReferenceArgument if_synonym = ReferenceArgument({QP::Types::DesignEntity::If, "if"});
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
-	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "if"});
+	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
 	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("trivial: stmtNumber & varName") {

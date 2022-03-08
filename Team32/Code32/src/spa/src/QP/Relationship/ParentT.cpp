@@ -71,7 +71,7 @@ QP::QueryResult QP::Relationship::ParentT::executeTrivial(PKB::StorageAccessInte
 			}
 		}
 	} else if (getParentStmt().getType() == ReferenceType::Synonym && getChildStmt().getType() == ReferenceType::Synonym) {
-		if (getParentStmt().getSynonym().symbol == getParentStmt().getSynonym().symbol) {
+		if (getParentStmt().getSynonym().symbol == getChildStmt().getSynonym().symbol) {
 			return {};
 		}
 

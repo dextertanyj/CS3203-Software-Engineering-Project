@@ -60,7 +60,7 @@ StmtRef QP::Types::ReferenceArgument::getStatementIndex() const {
 Common::ExpressionProcessor::Expression QP::Types::ReferenceArgument::getExpression() const {
 	Common::ExpressionProcessor::Expression expr = Common::ExpressionProcessor::Expression(nullptr, {}, {});
 	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Expression not stored."); },
-	              [&expr](Common::ExpressionProcessor::Expression arg) { expr = move(arg); }},
+	              [&expr](pair<Common::ExpressionProcessor::Expression, bool> arg) { expr = move(arg.first); }},
 	      value);
 	return expr;
 }

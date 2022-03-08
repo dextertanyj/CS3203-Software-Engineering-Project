@@ -4,7 +4,7 @@
 #include <regex>
 #include <utility>
 
-#include "Common/ExpressionProcessor/OperatorAcceptor.h"
+#include "Common/Converter.h"
 #include "QP/QueryExpressionLexer.h"
 #include "QP/QueryTypes.h"
 #include "QP/Relationship/Pattern.h"
@@ -126,14 +126,13 @@ void QP::QueryPreprocessor::parseSuchThat(size_t& token_index) {
 }
 
 void QP::QueryPreprocessor::parsePattern(size_t& token_index) {
-	Declaration synonym;
-	QueryEntRef ent_ref;
-	ExpressionType expression_type = ExpressionType::Underscore;
-	optional<Common::ExpressionProcessor::Expression> query_expression;
+	ReferenceArgument synonym;
+	ReferenceArgument ent_ref;
+	ReferenceArgument expr;
 	bool has_synonym = false;
 	for (const Declaration& declaration : this->declaration_list) {
 		if (declaration.type == DesignEntity::Assign && declaration.symbol == this->query_tokens[token_index]) {
-			synonym = declaration;
+			synonym = ReferenceArgument(declaration);
 			has_synonym = true;
 			break;
 		}
@@ -150,29 +149,23 @@ void QP::QueryPreprocessor::parsePattern(size_t& token_index) {
 	if (this->query_tokens[token_index] == "_") {
 		token_index++;
 		if (this->query_tokens[token_index] == "\"") {
-			expression_type = ExpressionType::ExpressionUnderscore;
 			Common::ExpressionProcessor::Expression expression = parseExpression(token_index);
-			query_expression = expression;
-		} else {
-			expression_type = ExpressionType::Underscore;
+			expr = ReferenceArgument(expression, false);
+			matchTokenOrThrow("_", token_index);
 		}
 	} else if (this->query_tokens[token_index] == "\"") {
-		expression_type = ExpressionType::Expression;
 		Common::ExpressionProcessor::Expression expression = parseExpression(token_index);
-		query_expression = expression;
+		expr = ReferenceArgument(expression, true);
 	} else {
 		throw QueryException("Unexpected query expression: " + this->query_tokens[token_index] + ".");
 	}
 
-	if (expression_type == ExpressionType::ExpressionUnderscore) {
-		matchTokenOrThrow("_", token_index);
-	}
 	matchTokenOrThrow(")", token_index);
 
 	if (token_index < this->query_tokens.size() && this->query_tokens[token_index] == "and") {
 		parsePattern(++token_index);
 	}
-	unique_ptr<Relationship::Relation> relation = make_unique<Relationship::Pattern>(synonym, ent_ref, expression_type, query_expression);
+	unique_ptr<Relationship::Relation> relation = make_unique<Relationship::Pattern>(synonym, ent_ref, expr);
 	Clause clause = {std::move(relation)};
 	this->clause_list.push_back(clause);
 }
@@ -250,9 +243,9 @@ unique_ptr<QP::Relationship::Follows> QP::QueryPreprocessor::parseFollows(size_t
 		DesignEntity::While, DesignEntity::If,   DesignEntity::Assign,
 	};
 	matchTokenOrThrow("(", token_index);
-	QueryStmtRef ref1 = parseQueryStmtRef(token_index, allowed_design_entities);
+	ReferenceArgument ref1 = parseQueryStmtRef(token_index, allowed_design_entities);
 	matchTokenOrThrow(",", token_index);
-	QueryStmtRef ref2 = parseQueryStmtRef(token_index, allowed_design_entities);
+	ReferenceArgument ref2 = parseQueryStmtRef(token_index, allowed_design_entities);
 	matchTokenOrThrow(")", token_index);
 	if (is_star) {
 		return make_unique<Relationship::FollowsT>(ref1, ref2);
@@ -271,9 +264,9 @@ unique_ptr<QP::Relationship::Parent> QP::QueryPreprocessor::parseParent(size_t& 
 		DesignEntity::While, DesignEntity::If,   DesignEntity::Assign,
 	};
 	matchTokenOrThrow("(", token_index);
-	QueryStmtRef ref1 = parseQueryStmtRef(token_index, allowed_design_entities);
+	ReferenceArgument ref1 = parseQueryStmtRef(token_index, allowed_design_entities);
 	matchTokenOrThrow(",", token_index);
-	QueryStmtRef ref2 = parseQueryStmtRef(token_index, allowed_design_entities);
+	ReferenceArgument ref2 = parseQueryStmtRef(token_index, allowed_design_entities);
 	matchTokenOrThrow(")", token_index);
 	if (is_star) {
 		return make_unique<Relationship::ParentT>(ref1, ref2);
@@ -284,14 +277,14 @@ unique_ptr<QP::Relationship::Parent> QP::QueryPreprocessor::parseParent(size_t& 
 unique_ptr<QP::Relationship::UsesP> QP::QueryPreprocessor::parseUsesP(size_t& token_index) {
 	matchTokenOrThrow("(", token_index);
 	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Procedure};
-	QueryEntRef ref1 = parseQueryEntRef(token_index, ref1_allowed_design_entities);
+	ReferenceArgument ref1 = parseQueryEntRef(token_index, ref1_allowed_design_entities);
 	// 1st entRef cannot be a wildcard
-	if (ref1.type == EntRefType::Underscore) {
+	if (ref1.getType() == ReferenceType::Wildcard) {
 		throw QueryException("Ambiguous wildcard _.");
 	}
 	matchTokenOrThrow(",", token_index);
 	set<DesignEntity> ref2_allowed_design_entities = {DesignEntity::Variable};
-	QueryEntRef ref2 = parseQueryEntRef(token_index, ref2_allowed_design_entities);
+	ReferenceArgument ref2 = parseQueryEntRef(token_index, ref2_allowed_design_entities);
 	matchTokenOrThrow(")", token_index);
 	return make_unique<Relationship::UsesP>(ref1, ref2);
 }
@@ -300,14 +293,14 @@ unique_ptr<QP::Relationship::UsesS> QP::QueryPreprocessor::parseUsesS(size_t& to
 	matchTokenOrThrow("(", token_index);
 	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Assign, DesignEntity::Call,  DesignEntity::Print,
 	                                                  DesignEntity::If,     DesignEntity::While, DesignEntity::Stmt};
-	QueryStmtRef ref1 = parseQueryStmtRef(token_index, ref1_allowed_design_entities);
+	ReferenceArgument ref1 = parseQueryStmtRef(token_index, ref1_allowed_design_entities);
 	// 1st stmeRef cannot be a wildcard
-	if (ref1.type == StmtRefType::Underscore) {
+	if (ref1.getType() == ReferenceType::Wildcard) {
 		throw QueryException("Ambiguous wildcard _.");
 	}
 	matchTokenOrThrow(",", token_index);
 	set<DesignEntity> ref2_allowed_design_entities = {DesignEntity::Variable};
-	QueryEntRef ref2 = parseQueryEntRef(token_index, ref2_allowed_design_entities);
+	ReferenceArgument ref2 = parseQueryEntRef(token_index, ref2_allowed_design_entities);
 	matchTokenOrThrow(")", token_index);
 	return make_unique<Relationship::UsesS>(ref1, ref2);
 }
@@ -315,14 +308,14 @@ unique_ptr<QP::Relationship::UsesS> QP::QueryPreprocessor::parseUsesS(size_t& to
 unique_ptr<QP::Relationship::ModifiesP> QP::QueryPreprocessor::parseModifiesP(size_t& token_index) {
 	matchTokenOrThrow("(", token_index);
 	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Procedure};
-	QueryEntRef ref1 = parseQueryEntRef(token_index, ref1_allowed_design_entities);
+	ReferenceArgument ref1 = parseQueryEntRef(token_index, ref1_allowed_design_entities);
 	// 1st entRef cannot be a wildcard
-	if (ref1.type == EntRefType::Underscore) {
+	if (ref1.getType() == ReferenceType::Wildcard) {
 		throw QueryException("Ambiguous wildcard _.");
 	}
 	matchTokenOrThrow(",", token_index);
 	set<DesignEntity> ref2_allowed_design_entities = {DesignEntity::Variable};
-	QueryEntRef ref2 = parseQueryEntRef(token_index, ref2_allowed_design_entities);
+	ReferenceArgument ref2 = parseQueryEntRef(token_index, ref2_allowed_design_entities);
 	matchTokenOrThrow(")", token_index);
 	return make_unique<Relationship::ModifiesP>(ref1, ref2);
 }
@@ -331,14 +324,14 @@ unique_ptr<QP::Relationship::ModifiesS> QP::QueryPreprocessor::parseModifiesS(si
 	matchTokenOrThrow("(", token_index);
 	set<DesignEntity> ref1_allowed_design_entities = {DesignEntity::Assign, DesignEntity::Call,  DesignEntity::Read,
 	                                                  DesignEntity::If,     DesignEntity::While, DesignEntity::Stmt};
-	QueryStmtRef ref1 = parseQueryStmtRef(token_index, ref1_allowed_design_entities);
+	ReferenceArgument ref1 = parseQueryStmtRef(token_index, ref1_allowed_design_entities);
 	// 1st stmeRef cannot be a wildcard
-	if (ref1.type == StmtRefType::Underscore) {
+	if (ref1.getType() == ReferenceType::Wildcard) {
 		throw QueryException("Ambiguous wildcard _.");
 	}
 	matchTokenOrThrow(",", token_index);
 	set<DesignEntity> ref2_allowed_design_entities = {DesignEntity::Variable};
-	QueryEntRef ref2 = parseQueryEntRef(token_index, ref2_allowed_design_entities);
+	ReferenceArgument ref2 = parseQueryEntRef(token_index, ref2_allowed_design_entities);
 	matchTokenOrThrow(")", token_index);
 	return make_unique<Relationship::ModifiesS>(ref1, ref2);
 }
@@ -351,9 +344,9 @@ unique_ptr<QP::Relationship::Calls> QP::QueryPreprocessor::parseCalls(size_t& to
 	token_index++;
 	set<DesignEntity> allowed_design_entities = {DesignEntity::Procedure};
 	matchTokenOrThrow("(", token_index);
-	QueryEntRef ref1 = parseQueryEntRef(token_index, allowed_design_entities);
+	ReferenceArgument ref1 = parseQueryEntRef(token_index, allowed_design_entities);
 	matchTokenOrThrow(",", token_index);
-	QueryEntRef ref2 = parseQueryEntRef(token_index, allowed_design_entities);
+	ReferenceArgument ref2 = parseQueryEntRef(token_index, allowed_design_entities);
 	matchTokenOrThrow(")", token_index);
 	if (is_star) {
 		return make_unique<Relationship::CallsT>(ref1, ref2);
@@ -361,59 +354,42 @@ unique_ptr<QP::Relationship::Calls> QP::QueryPreprocessor::parseCalls(size_t& to
 	return make_unique<Relationship::Calls>(ref1, ref2);
 }
 
-QueryEntRef QP::QueryPreprocessor::parseQueryEntRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities) {
-	QueryEntRef ent_ref;
+ReferenceArgument QP::QueryPreprocessor::parseQueryEntRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities) {
+	ReferenceArgument ent_ref;
 	if (this->query_tokens[token_index] == "_") {
-		ent_ref.type = EntRefType::Underscore;
-		ent_ref.ent_ref = "_";
+		++token_index;
+		return ReferenceArgument();
 	} else if (token_index + 2 < this->query_tokens.size() && this->query_tokens[token_index] == "\"" &&
 	           isIdentOrName(this->query_tokens[token_index + 1]) && this->query_tokens[token_index + 2] == "\"") {
-		ent_ref.type = EntRefType::VarName;
-		ent_ref.ent_ref = this->query_tokens[token_index + 1];
-		token_index += 2;
+		token_index += 3;
+		return ReferenceArgument(this->query_tokens[token_index - 2]);
 	} else {
-		bool has_synonym = false;
 		for (const Declaration& declaration : this->declaration_list) {
 			if (declaration.symbol == this->query_tokens[token_index] && accepted_design_entities.count(declaration.type) != 0) {
-				ent_ref.type = EntRefType::Synonym;
-				ent_ref.ent_ref = this->query_tokens[token_index];
-				has_synonym = true;
-				break;
+				++token_index;
+				return ReferenceArgument({declaration.type, this->query_tokens[token_index - 1]});
 			}
 		}
-		if (!has_synonym) {
-			throw QueryException("Unexpected query entity reference: " + this->query_tokens[token_index] + ".");
-		}
+		throw QueryException("Unexpected query entity reference: " + this->query_tokens[token_index] + ".");
 	}
-
-	token_index++;
-	return ent_ref;
 }
 
-QueryStmtRef QP::QueryPreprocessor::parseQueryStmtRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities) {
-	QueryStmtRef stmt_ref;
+ReferenceArgument QP::QueryPreprocessor::parseQueryStmtRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities) {
 	if (this->query_tokens[token_index] == "_") {
-		stmt_ref.type = StmtRefType::Underscore;
-		stmt_ref.stmt_ref = "_";
+		++token_index;
+		return ReferenceArgument();
 	} else if (regex_match(this->query_tokens[token_index], regex("^[0-9]+$"))) {
-		stmt_ref.type = StmtRefType::StmtNumber;
-		stmt_ref.stmt_ref = this->query_tokens[token_index];
+		++token_index;
+		return ReferenceArgument(Common::Converter::convertInteger(this->query_tokens[token_index - 1]));
 	} else {
-		bool has_synonym = false;
 		for (const Declaration& declaration : this->declaration_list) {
 			if (declaration.symbol == this->query_tokens[token_index] && accepted_design_entities.count(declaration.type) != 0) {
-				stmt_ref.type = StmtRefType::Synonym;
-				stmt_ref.stmt_ref = this->query_tokens[token_index];
-				has_synonym = true;
-				break;
+				++token_index;
+				return ReferenceArgument({declaration.type, this->query_tokens[token_index - 1]});
 			}
 		}
-		if (!has_synonym) {
-			throw QueryException("Unexpected query statement reference: " + this->query_tokens[token_index] + ".");
-		}
+		throw QueryException("Unexpected query statement reference: " + this->query_tokens[token_index] + ".");
 	}
-	token_index++;
-	return stmt_ref;
 }
 
 Common::ExpressionProcessor::Expression QP::QueryPreprocessor::parseExpression(size_t& token_index) {
