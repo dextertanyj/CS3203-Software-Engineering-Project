@@ -10,6 +10,7 @@
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
 #include "PKB/AssignStore.h"
+#include "PKB/CFG/NodeRelation.h"
 #include "PKB/CallRelation.h"
 #include "PKB/CallStatementStore.h"
 #include "PKB/FollowsRelation.h"
@@ -46,6 +47,7 @@ public:
 	void setUses(StmtRef index, VarRefSet names) override;
 	void setModifies(StmtRef index, VarRefSet names) override;
 	void setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) override;
+	void setNext(StmtRef previous, StmtRef next) override;
 
 	// Get methods called by PQL
 
@@ -100,6 +102,10 @@ public:
 	ProcRefSet getCaller(const ProcRef& callee) override;
 	ProcRefSet getCallerStar(const ProcRef& callee) override;
 
+	// CFG Node get methods
+	bool checkNext(StmtRef first, StmtRef second) override;
+	bool checkNextStar(StmtRef first, StmtRef second) override;
+
 	// Others
 	void populateComplexRelations() override;
 	void clear();
@@ -122,6 +128,7 @@ private:
 	PVRelationStore<UsesPRelation> uses_p_store;
 	PVRelationStore<PKB::ModifiesPRelation> modifies_p_store;
 	AssignStore assign_store;
+	TransitiveRelationStore<StmtRef, StmtInfo, PKB::NodeRelation> control_flow_graph;
 
 	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
 	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set);

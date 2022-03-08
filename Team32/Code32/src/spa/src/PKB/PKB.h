@@ -41,6 +41,7 @@ class ModifiesPRelation;
 class ParentRelation;
 class UsesSRelation;
 class UsesPRelation;
+class NodeRelation;
 
 typedef struct AssignRelation {
 	shared_ptr<StmtInfo> node;

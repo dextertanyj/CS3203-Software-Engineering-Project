@@ -89,6 +89,12 @@ void PKB::Storage::setAssign(StmtRef index, VarRef variable, Common::ExpressionP
 	return assign_store.setAssign(statement, move(variable), move(expression));
 }
 
+void PKB::Storage::setNext(StmtRef previous, StmtRef next) {
+	shared_ptr<StmtInfo> previous_stmt_info = statement_store.get(previous);
+	shared_ptr<StmtInfo> next_stmt_info = statement_store.get(next);
+	control_flow_graph.set(previous_stmt_info, next_stmt_info);
+}
+
 StmtInfoPtrSet PKB::Storage::getStatements() {
 	unordered_set<shared_ptr<StatementInfo>> set = statement_store.getAll();
 	return statementInfoPtrSetToInterfacePtrSet(set);
@@ -203,6 +209,11 @@ vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::Storage::getStmtsWithPatternRHS(
 	return assign_store.getStmtsWithPatternRHS(expression, is_exact_match);
 }
 
+bool PKB::Storage::checkNext(StmtRef first, StmtRef second) { return control_flow_graph.isRelated(first, second); }
+
+// TODO: Implement checkNextStar method.
+bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return false; }
+
 void PKB::Storage::populateComplexRelations() {
 	call_statement_store.populate(procedure_store, call_store);
 	call_store.optimize();
@@ -213,6 +224,7 @@ void PKB::Storage::populateComplexRelations() {
 	UsesSRelation::optimize(parent_store, call_statement_store, procedure_store, call_graph, uses_s_store);
 	ModifiesPRelation::optimize(procedure_store, modifies_p_store, modifies_s_store);
 	UsesPRelation::optimize(procedure_store, uses_p_store, uses_s_store);
+	control_flow_graph.optimize();
 }
 
 void PKB::Storage::clear() {
@@ -222,7 +234,9 @@ void PKB::Storage::clear() {
 	uses_s_store.clear();
 	uses_p_store.clear();
 	modifies_s_store.clear();
+	modifies_p_store.clear();
 	statement_store.clear();
+	control_flow_graph.clear();
 }
 
 ProcRefSet PKB::Storage::procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>> &set) {

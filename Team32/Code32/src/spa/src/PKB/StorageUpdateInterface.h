@@ -17,6 +17,8 @@ public:
 	virtual void setUses(StmtRef index, VarRefSet names) = 0;
 	virtual void setModifies(StmtRef index, VarRefSet names) = 0;
 	virtual void setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) = 0;
+	virtual void setNext(StmtRef previous, StmtRef next) = 0;
+	virtual void setLastNode(StmtRef last) = 0;
 	virtual void populateComplexRelations() = 0;
 
 	virtual ~StorageUpdateInterface() = default;

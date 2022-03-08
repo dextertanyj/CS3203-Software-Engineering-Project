@@ -17,7 +17,7 @@ private:
 	ProcRef name;
 	vector<shared_ptr<StmtInfo>> statements;
 
-	friend class PKB::InfoStore<ProcRef, vector<shared_ptr<StmtInfo>>, ProcedureInfo>;
+	friend class ProcedureStore;
 };
 
 #endif  // SPA_SRC_PKB_PROCEDUREINFO_H

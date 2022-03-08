@@ -56,6 +56,10 @@ public:
 	virtual ProcRefSet getCaller(const ProcRef& callee) = 0;
 	virtual ProcRefSet getCallerStar(const ProcRef& callee) = 0;
 
+	// CFG Next Methods
+	virtual bool checkNext(StmtRef first, StmtRef second) = 0;
+	virtual bool checkNextStar(StmtRef first, StmtRef second) = 0;
+
 	virtual ~StorageAccessInterface() = default;
 };
 
