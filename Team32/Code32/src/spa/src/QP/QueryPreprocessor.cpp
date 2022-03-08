@@ -359,37 +359,38 @@ ReferenceArgument QP::QueryPreprocessor::parseQueryEntRef(size_t& token_index, c
 	if (this->query_tokens[token_index] == "_") {
 		++token_index;
 		return ReferenceArgument();
-	} else if (token_index + 2 < this->query_tokens.size() && this->query_tokens[token_index] == "\"" &&
-	           isIdentOrName(this->query_tokens[token_index + 1]) && this->query_tokens[token_index + 2] == "\"") {
+	}
+	if (token_index + 2 < this->query_tokens.size() && this->query_tokens[token_index] == "\"" &&
+	    isIdentOrName(this->query_tokens[token_index + 1]) && this->query_tokens[token_index + 2] == "\"") {
 		token_index += 3;
 		return ReferenceArgument(this->query_tokens[token_index - 2]);
-	} else {
-		for (const Declaration& declaration : this->declaration_list) {
-			if (declaration.symbol == this->query_tokens[token_index] && accepted_design_entities.count(declaration.type) != 0) {
-				++token_index;
-				return ReferenceArgument({declaration.type, this->query_tokens[token_index - 1]});
-			}
-		}
-		throw QueryException("Unexpected query entity reference: " + this->query_tokens[token_index] + ".");
 	}
+
+	for (const Declaration& declaration : this->declaration_list) {
+		if (declaration.symbol == this->query_tokens[token_index] && accepted_design_entities.count(declaration.type) != 0) {
+			++token_index;
+			return ReferenceArgument({declaration.type, this->query_tokens[token_index - 1]});
+		}
+	}
+	throw QueryException("Unexpected query entity reference: " + this->query_tokens[token_index] + ".");
 }
 
 ReferenceArgument QP::QueryPreprocessor::parseQueryStmtRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities) {
 	if (this->query_tokens[token_index] == "_") {
 		++token_index;
 		return ReferenceArgument();
-	} else if (regex_match(this->query_tokens[token_index], regex("^[0-9]+$"))) {
+	}
+	if (regex_match(this->query_tokens[token_index], regex("^[0-9]+$"))) {
 		++token_index;
 		return ReferenceArgument(Common::Converter::convertInteger(this->query_tokens[token_index - 1]));
-	} else {
-		for (const Declaration& declaration : this->declaration_list) {
-			if (declaration.symbol == this->query_tokens[token_index] && accepted_design_entities.count(declaration.type) != 0) {
-				++token_index;
-				return ReferenceArgument({declaration.type, this->query_tokens[token_index - 1]});
-			}
-		}
-		throw QueryException("Unexpected query statement reference: " + this->query_tokens[token_index] + ".");
 	}
+	for (const Declaration& declaration : this->declaration_list) {
+		if (declaration.symbol == this->query_tokens[token_index] && accepted_design_entities.count(declaration.type) != 0) {
+			++token_index;
+			return ReferenceArgument({declaration.type, this->query_tokens[token_index - 1]});
+		}
+	}
+	throw QueryException("Unexpected query statement reference: " + this->query_tokens[token_index] + ".");
 }
 
 Common::ExpressionProcessor::Expression QP::QueryPreprocessor::parseExpression(size_t& token_index) {
