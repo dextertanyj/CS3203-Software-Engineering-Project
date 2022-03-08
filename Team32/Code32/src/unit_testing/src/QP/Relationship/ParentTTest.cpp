@@ -16,18 +16,15 @@ TEST_CASE("QP::Relationship::ParentT::execute") {
 	pkb.populateComplexRelations();
 
 	unordered_map<string, DesignEntity> map;
-	map.insert({"s", DesignEntity::Stmt});
-	map.insert({"a", DesignEntity::Assign});
-	map.insert({"if", DesignEntity::If});
-
-	QueryStmtRef stmt_no1 = {StmtRefType::StmtNumber, "1"};
-	QueryStmtRef stmt_no2 = {StmtRefType::StmtNumber, "2"};
-	QueryStmtRef stmt_no3 = {StmtRefType::StmtNumber, "3"};
-	QueryStmtRef stmt_no4 = {StmtRefType::StmtNumber, "4"};
-	QueryStmtRef stmt_synonym = {StmtRefType::Synonym, "s"};
-	QueryStmtRef assign_synonym = {StmtRefType::Synonym, "a"};
-	QueryStmtRef if_synonym = {StmtRefType::Synonym, "if"};
-	QueryStmtRef underscore = {StmtRefType::Underscore, "_"};
+	
+	ReferenceArgument stmt_no1 = ReferenceArgument(1);
+	ReferenceArgument stmt_no2 = ReferenceArgument(2);
+	ReferenceArgument stmt_no3 = ReferenceArgument(3);
+	ReferenceArgument stmt_no4 = ReferenceArgument(4);
+	ReferenceArgument stmt_synonym = ReferenceArgument({QP::Types::DesignEntity::Stmt, "s"});
+	ReferenceArgument assign_synonym = ReferenceArgument({QP::Types::DesignEntity::Assign, "a"});
+	ReferenceArgument if_synonym = ReferenceArgument({QP::Types::DesignEntity::If, "if"});
+	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("trivial: stmtNumber & stmtNumber") {
 		QP::Relationship::ParentT parent1 = QP::Relationship::ParentT(stmt_no1, stmt_no3);
@@ -40,9 +37,9 @@ TEST_CASE("QP::Relationship::ParentT::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: stmtNumber & underscore") {
-		QP::Relationship::ParentT parent1 = QP::Relationship::ParentT(stmt_no1, underscore);
-		QP::Relationship::ParentT parent2 = QP::Relationship::ParentT(stmt_no3, underscore);
+	SECTION("trivial: stmtNumber & wildcard") {
+		QP::Relationship::ParentT parent1 = QP::Relationship::ParentT(stmt_no1, wildcard);
+		QP::Relationship::ParentT parent2 = QP::Relationship::ParentT(stmt_no3, wildcard);
 
 		QP::QueryResult result1 = parent1.execute(pkb, true, map);
 		QP::QueryResult result2 = parent2.execute(pkb, true, map);
@@ -62,9 +59,9 @@ TEST_CASE("QP::Relationship::ParentT::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: underscore & stmtNumber") {
-		QP::Relationship::ParentT parent1 = QP::Relationship::ParentT(underscore, stmt_no3);
-		QP::Relationship::ParentT parent2 = QP::Relationship::ParentT(underscore, stmt_no1);
+	SECTION("trivial: wildcard & stmtNumber") {
+		QP::Relationship::ParentT parent1 = QP::Relationship::ParentT(wildcard, stmt_no3);
+		QP::Relationship::ParentT parent2 = QP::Relationship::ParentT(wildcard, stmt_no1);
 
 		QP::QueryResult result1 = parent1.execute(pkb, true, map);
 		QP::QueryResult result2 = parent2.execute(pkb, true, map);
@@ -73,17 +70,17 @@ TEST_CASE("QP::Relationship::ParentT::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: underscore & underscore") {
-		QP::Relationship::ParentT parent = QP::Relationship::ParentT(underscore, underscore);
+	SECTION("trivial: wildcard & wildcard") {
+		QP::Relationship::ParentT parent = QP::Relationship::ParentT(wildcard, wildcard);
 
 		QP::QueryResult result = parent.execute(pkb, true, map);
 
 		REQUIRE(result.getResult());
 	}
 
-	SECTION("trivial: underscore & synonym") {
-		QP::Relationship::ParentT parent1 = QP::Relationship::ParentT(underscore, stmt_synonym);
-		QP::Relationship::ParentT parent2 = QP::Relationship::ParentT(underscore, assign_synonym);
+	SECTION("trivial: wildcard & synonym") {
+		QP::Relationship::ParentT parent1 = QP::Relationship::ParentT(wildcard, stmt_synonym);
+		QP::Relationship::ParentT parent2 = QP::Relationship::ParentT(wildcard, assign_synonym);
 
 		QP::QueryResult result1 = parent1.execute(pkb, true, map);
 		QP::QueryResult result2 = parent2.execute(pkb, true, map);
@@ -103,9 +100,9 @@ TEST_CASE("QP::Relationship::ParentT::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: synonym & underscore") {
-		QP::Relationship::ParentT parent1 = QP::Relationship::ParentT(assign_synonym, underscore);
-		QP::Relationship::ParentT parent2 = QP::Relationship::ParentT(if_synonym, underscore);
+	SECTION("trivial: synonym & wildcard") {
+		QP::Relationship::ParentT parent1 = QP::Relationship::ParentT(assign_synonym, wildcard);
+		QP::Relationship::ParentT parent2 = QP::Relationship::ParentT(if_synonym, wildcard);
 
 		QP::QueryResult result1 = parent1.execute(pkb, true, map);
 		QP::QueryResult result2 = parent2.execute(pkb, true, map);
@@ -137,9 +134,9 @@ TEST_CASE("QP::Relationship::ParentT::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: synonym & underscore") {
-		QP::Relationship::ParentT parent1 = QP::Relationship::ParentT(stmt_synonym, underscore);
-		QP::Relationship::ParentT parent2 = QP::Relationship::ParentT(if_synonym, underscore);
+	SECTION("non-trivial: synonym & wildcard") {
+		QP::Relationship::ParentT parent1 = QP::Relationship::ParentT(stmt_synonym, wildcard);
+		QP::Relationship::ParentT parent2 = QP::Relationship::ParentT(if_synonym, wildcard);
 
 		QP::QueryResult result1 = parent1.execute(pkb, false, map);
 		QP::QueryResult result2 = parent2.execute(pkb, false, map);
@@ -167,9 +164,9 @@ TEST_CASE("QP::Relationship::ParentT::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: underscore & synonym") {
-		QP::Relationship::ParentT parent1 = QP::Relationship::ParentT(underscore, if_synonym);
-		QP::Relationship::ParentT parent2 = QP::Relationship::ParentT(underscore, assign_synonym);
+	SECTION("non-trivial: wildcard & synonym") {
+		QP::Relationship::ParentT parent1 = QP::Relationship::ParentT(wildcard, if_synonym);
+		QP::Relationship::ParentT parent2 = QP::Relationship::ParentT(wildcard, assign_synonym);
 
 		QP::QueryResult result1 = parent1.execute(pkb, false, map);
 		QP::QueryResult result2 = parent2.execute(pkb, false, map);

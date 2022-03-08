@@ -21,7 +21,7 @@ QP::Types::ReferenceArgument::ReferenceArgument(StmtRef statement_index) : value
 QP::Types::ReferenceArgument::ReferenceArgument(Common::ExpressionProcessor::Expression expression, bool exact)
 	: value(pair<Common::ExpressionProcessor::Expression, bool>({move(expression), exact})) {}
 
-QP::Types::ReferenceType QP::Types::ReferenceArgument::getType() {
+QP::Types::ReferenceType QP::Types::ReferenceArgument::getType() const {
 	QP::Types::ReferenceType type = QP::Types::ReferenceType::Wildcard;
 	visit(Visitor{[&type](const StmtRef& /*unused*/) { type = QP::Types::ReferenceType::StatementIndex; },
 	              [&type](const QP::Types::Declaration& /*unused*/) { type = QP::Types::ReferenceType::Synonym; },
@@ -34,7 +34,7 @@ QP::Types::ReferenceType QP::Types::ReferenceArgument::getType() {
 	return type;
 }
 
-QP::Types::Declaration QP::Types::ReferenceArgument::getSynonym() {
+QP::Types::Declaration QP::Types::ReferenceArgument::getSynonym() const {
 	Declaration synonym;
 	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Synonym not stored."); },
 	              [&synonym](Declaration arg) { synonym = move(arg); }},
@@ -42,14 +42,14 @@ QP::Types::Declaration QP::Types::ReferenceArgument::getSynonym() {
 	return synonym;
 }
 
-string QP::Types::ReferenceArgument::getName() {
+string QP::Types::ReferenceArgument::getName() const {
 	string name;
 	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Name not stored."); }, [&name](string arg) { name = move(arg); }},
 	      value);
 	return name;
 }
 
-StmtRef QP::Types::ReferenceArgument::getStatementIndex() {
+StmtRef QP::Types::ReferenceArgument::getStatementIndex() const {
 	StmtRef index = 0;
 	visit(
 		Visitor{[](auto) { throw QP::ReferenceArgumentException("Statement index not stored."); }, [&index](StmtRef arg) { index = arg; }},
@@ -57,7 +57,7 @@ StmtRef QP::Types::ReferenceArgument::getStatementIndex() {
 	return index;
 }
 
-Common::ExpressionProcessor::Expression QP::Types::ReferenceArgument::getExpression() {
+Common::ExpressionProcessor::Expression QP::Types::ReferenceArgument::getExpression() const {
 	Common::ExpressionProcessor::Expression expr = Common::ExpressionProcessor::Expression(nullptr, {}, {});
 	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Expression not stored."); },
 	              [&expr](Common::ExpressionProcessor::Expression arg) { expr = move(arg); }},
