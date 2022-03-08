@@ -1,10 +1,14 @@
 #include "NodeRelation.h"
 
+#include <queue>
 #include <stdexcept>
 
-PKB::NodeRelation::NodeRelation(shared_ptr<StmtInfo> self) : self(std::move(self)), is_last_node(false) {}
+#include "NodeInfo.h"
+#include "NodeComparator.h"
 
-void PKB::NodeRelation::insertForward(const shared_ptr<StmtInfo>& previous_node) {
+PKB::NodeRelation::NodeRelation(shared_ptr<PKB::NodeInfo> self) : self(std::move(self)) {}
+
+void PKB::NodeRelation::insertForward(const shared_ptr<PKB::NodeInfo>& previous_node) {
 	if (self == previous_node) {
 		throw invalid_argument("Recursive call detected.");
 	}
@@ -14,7 +18,7 @@ void PKB::NodeRelation::insertForward(const shared_ptr<StmtInfo>& previous_node)
 	this->previous_nodes.insert(previous_node);
 }
 
-void PKB::NodeRelation::insertReverse(const shared_ptr<StmtInfo>& next_node) {
+void PKB::NodeRelation::insertReverse(const shared_ptr<PKB::NodeInfo>& next_node) {
 	if (self == next_node) {
 		throw invalid_argument("Recursive call detected.");
 	}
@@ -28,72 +32,72 @@ void PKB::NodeRelation::insertReverse(const shared_ptr<StmtInfo>& next_node) {
 	this->next_nodes.insert(next_node);
 }
 
-void PKB::NodeRelation::appendForwardTransitive(StmtInfoPtrSet new_previous_nodes) {
+void PKB::NodeRelation::appendForwardTransitive(unordered_set<shared_ptr<NodeInfo>> new_previous_nodes) {
 	if (new_previous_nodes.find(self) != new_previous_nodes.end()) {
 		throw invalid_argument("Recursive call detected.");
 	}
 	this->previous_nodes_transitive.insert(new_previous_nodes.begin(), new_previous_nodes.end());
 }
 
-void PKB::NodeRelation::appendReverseTransitive(StmtInfoPtrSet new_callees) {
-	if (new_callees.find(self) != new_callees.end()) {
+void PKB::NodeRelation::appendReverseTransitive(unordered_set<shared_ptr<NodeInfo>> new_next_nodes) {
+	if (new_next_nodes.find(self) != new_next_nodes.end()) {
 		throw invalid_argument("Recursive call detected.");
 	}
-	this->next_nodes_transitive.insert(new_callees.begin(), new_callees.end());
+	this->next_nodes_transitive.insert(new_next_nodes.begin(), new_next_nodes.end());
 }
 
-shared_ptr<StmtInfo> PKB::NodeRelation::getSelf() const { return self; }
+shared_ptr<PKB::NodeInfo> PKB::NodeRelation::getSelf() const { return self; }
 
-StmtInfoPtrSet PKB::NodeRelation::getForward() const { return previous_nodes; }
+unordered_set<shared_ptr<PKB::NodeInfo>> PKB::NodeRelation::getForward() const { return previous_nodes; }
 
-StmtInfoPtrSet PKB::NodeRelation::getReverse() const { return next_nodes; }
+unordered_set<shared_ptr<PKB::NodeInfo>> PKB::NodeRelation::getReverse() const { return next_nodes; }
 
-StmtInfoPtrSet PKB::NodeRelation::getForwardTransitive() const { return previous_nodes_transitive; }
+unordered_set<shared_ptr<PKB::NodeInfo>> PKB::NodeRelation::getForwardTransitive() const { return previous_nodes_transitive; }
 
-StmtInfoPtrSet PKB::NodeRelation::getReverseTransitive() const { return next_nodes_transitive; }
+unordered_set<shared_ptr<PKB::NodeInfo>> PKB::NodeRelation::getReverseTransitive() const { return next_nodes_transitive; }
 
-void PKB::NodeRelation::setLastNode() { this->is_last_node = true; }
+void PKB::NodeRelation::setCFGIndex(StmtRef ref) { this->self->setUniqueIndex(ref); }
 
-void PKB::NodeRelation::setCFGIndex(StmtRef ref) { this->cfg_index = ref; }
-
-// Template specializations for Call relationship.
+// Template specializations for CFG Next relationship.
 
 template <>
-StmtInfoPtrSet PKB::TransitiveRelationStore<ProcRef, StmtInfo, PKB::NodeRelation>::populateTransitive(
-	NodeRelation& current, StmtInfoPtrSet previous) {
-	/* TODO: Implement Next* here
-	current.appendForwardTransitive(previous);
-	previous.insert(current.getSelf());
-	StmtInfoPtrSet result = current.getReverseTransitive();
-	bool unset = result.empty();
-	StmtInfoPtrSet callers = current.getForwardTransitive();
-	for (const shared_ptr<StmtInfo>& callee : current.getReverse()) {
-	    if (callers.find(callee) != callers.end()) {
-	        throw logic_error("Recursive call detected.");
-	    }
-	    auto relation = map.find(callee->getIdentifier());
-	    StmtInfoPtrSet transitive_callees = populateTransitive(relation->second, previous);
-	    // If the node has been visited before, we optimize by skipping the duplicate addition of children.
-	    if (unset) {
-	        result.insert(transitive_callees.begin(), transitive_callees.end());
-	    }
-	}
-	if (unset) {
-	    current.appendReverseTransitive(result);
-	}
-	result.insert(current.getSelf());
-	return result;
- */
-	return {};
+unordered_set<shared_ptr<PKB::NodeInfo>> PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>::populateTransitive(
+	NodeRelation& current, unordered_set<shared_ptr<PKB::NodeInfo>> next_nodes_transitive) {
+	current.appendReverseTransitive(next_nodes_transitive);
+	next_nodes_transitive.insert(current.getSelf());
+	return next_nodes_transitive;
 }
 
 template <>
-void PKB::TransitiveRelationStore<ProcRef, StmtInfo, PKB::NodeRelation>::optimize() {
-	/* TODO: Implement Next* here
+void PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>::optimize() {
+	NodeRelation last_node = NodeRelation(nullptr);
 	for (auto& item : map) {
-	    if (item.second.getForward().empty()) {
-	        populateTransitive(item.second, {});
-	    }
+		// Start optimization from the end of the CFG.
+		if (item.second.getReverse().empty()) {
+			last_node = item.second;
+			break;
+		}
 	}
-	*/
+	// Use last node's stmt ref as the unique index of a CFG.
+	StmtRef unique_index = last_node.getSelf()->getIdentifier();
+	unordered_set<shared_ptr<PKB::NodeInfo>> next_nodes_transitive = {};
+
+	// PQ stores a pair of stmt ref and the transitive next nodes to add to that ref's node.
+	// populateTransitive will then perform the insertion into the NodeRelation, while returning
+	// a new set of transitive next nodes to add to subsequent parent nodes.
+	std::priority_queue<pair<StmtRef, unordered_set<shared_ptr<PKB::NodeInfo>>>,
+	                    vector<pair<StmtRef, unordered_set<shared_ptr<PKB::NodeInfo>>>>, NodeComparator>
+		queue;
+	queue.push(make_pair(last_node.getSelf()->getIdentifier(), next_nodes_transitive));
+	while (!queue.empty()) {
+		StmtRef current_ref = queue.top().first;
+		NodeRelation current_node_relation = map.find(current_ref)->second;
+		unordered_set<shared_ptr<NodeInfo>> nodes_to_add = queue.top().second;
+		current_node_relation.setCFGIndex(unique_index);
+		nodes_to_add = populateTransitive(current_node_relation, nodes_to_add);
+		for (shared_ptr<PKB::NodeInfo> previous_node : current_node_relation.getForward()) {
+			queue.push(make_pair(previous_node->getIdentifier(), nodes_to_add));
+		}
+		queue.pop();
+	}
 }

@@ -13,6 +13,7 @@ class Storage;
 
 class StatementInfo;
 class ProcedureInfo;
+class NodeInfo;
 
 template <typename TIdent, typename TContent, class TInfo>
 class InfoStore;

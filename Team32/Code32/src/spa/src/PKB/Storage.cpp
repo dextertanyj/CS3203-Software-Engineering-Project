@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <iterator>
 
+#include "PKB/CFG/NodeInfo.h"
+
 using namespace std;
 
 // This method will store information about a statement into PKB's statement map.
@@ -88,11 +90,17 @@ void PKB::Storage::setAssign(StmtRef index, VarRef variable, Common::ExpressionP
 	shared_ptr<StmtInfo> statement = statement_store.get(index);
 	return assign_store.setAssign(statement, move(variable), move(expression));
 }
+void PKB::Storage::setNode(StmtRef index) {
+	shared_ptr<StmtInfo> info = statement_store.get(index);
+	node_store.insert(index, PKB::NodeInfo(info));
+}
 
 void PKB::Storage::setNext(StmtRef previous, StmtRef next) {
 	shared_ptr<StmtInfo> previous_stmt_info = statement_store.get(previous);
 	shared_ptr<StmtInfo> next_stmt_info = statement_store.get(next);
-	control_flow_graph.set(previous_stmt_info, next_stmt_info);
+	NodeInfo previous_node = NodeInfo(previous_stmt_info);
+	NodeInfo next_node = NodeInfo(next_stmt_info);
+	control_flow_graph.set(make_shared<NodeInfo>(previous_node), make_shared<NodeInfo>(next_node));
 }
 
 StmtInfoPtrSet PKB::Storage::getStatements() {
@@ -209,10 +217,11 @@ vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::Storage::getStmtsWithPatternRHS(
 	return assign_store.getStmtsWithPatternRHS(expression, is_exact_match);
 }
 
-bool PKB::Storage::checkNext(StmtRef first, StmtRef second) { return control_flow_graph.isRelated(first, second); }
-
-// TODO: Implement checkNextStar method.
-bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return false; }
+bool PKB::Storage::checkNext(StmtRef first, StmtRef second) {
+	shared_ptr<NodeInfo> first_node = node_store.get(first);
+	shared_ptr<NodeInfo> second_node = node_store.get(second);
+	return first_node->getUniqueIndex() == second_node->getUniqueIndex() && control_flow_graph.isRelated(first, second);
+}
 
 void PKB::Storage::populateComplexRelations() {
 	call_statement_store.populate(procedure_store, call_store);
@@ -236,6 +245,7 @@ void PKB::Storage::clear() {
 	modifies_s_store.clear();
 	modifies_p_store.clear();
 	statement_store.clear();
+	node_store.clear();
 	control_flow_graph.clear();
 }
 
@@ -261,3 +271,4 @@ unordered_map<StmtRef, shared_ptr<StmtInfo>> PKB::Storage::getStmtInfoMap() {
 	}
 	return map;
 }
+

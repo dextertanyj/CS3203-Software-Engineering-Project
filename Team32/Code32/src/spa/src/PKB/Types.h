@@ -15,6 +15,7 @@
 namespace PKB::Types {
 typedef InfoStore<ProcRef, vector<shared_ptr<StmtInfo>>, ProcedureInfo> ProcedureStore;
 typedef InfoStore<StmtRef, StmtType, StatementInfo> StatementStore;
+typedef InfoStore<StmtRef, NodeInfo, NodeInfo> NodeStore;
 typedef TransitiveRelationStore<ProcRef, ProcedureInfo, CallRelation> CallStore;
 typedef TransitiveRelationStore<StmtRef, StmtInfo, ParentRelation> ParentStore;
 typedef TransitiveRelationStore<StmtRef, StmtInfo, FollowsRelation> FollowsStore;

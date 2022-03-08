@@ -48,6 +48,7 @@ public:
 	void setModifies(StmtRef index, VarRefSet names) override;
 	void setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) override;
 	void setNext(StmtRef previous, StmtRef next) override;
+	void setNode(StmtRef index) override;
 
 	// Get methods called by PQL
 
@@ -104,7 +105,6 @@ public:
 
 	// CFG Node get methods
 	bool checkNext(StmtRef first, StmtRef second) override;
-	bool checkNextStar(StmtRef first, StmtRef second) override;
 
 	// Others
 	void populateComplexRelations() override;
@@ -118,6 +118,7 @@ private:
 	SetStore<VarRef> variable_store;
 	Types::StatementStore statement_store;
 	Types::ProcedureStore procedure_store;
+	Types::NodeStore node_store;
 	CallStatementStore call_statement_store;
 	TopologicalSort<ProcedureInfo> call_graph;
 	Types::CallStore call_store;
@@ -128,7 +129,7 @@ private:
 	PVRelationStore<UsesPRelation> uses_p_store;
 	PVRelationStore<PKB::ModifiesPRelation> modifies_p_store;
 	AssignStore assign_store;
-	TransitiveRelationStore<StmtRef, StmtInfo, PKB::NodeRelation> control_flow_graph;
+	TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation> control_flow_graph;
 
 	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
 	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set);

@@ -9,38 +9,35 @@
 
 class PKB::NodeRelation {
 public:
-	explicit NodeRelation(shared_ptr<StmtInfo> self);
-	void insertForward(const shared_ptr<StmtInfo>& previous_node);
-	void insertReverse(const shared_ptr<StmtInfo>& next_node);
-	void appendForwardTransitive(StmtInfoPtrSet new_previous_nodes);
-	void appendReverseTransitive(StmtInfoPtrSet new_child_nodes);
+	explicit NodeRelation(shared_ptr<NodeInfo> self);
+	void insertForward(const shared_ptr<NodeInfo>& previous_node);
+	void insertReverse(const shared_ptr<NodeInfo>& next_node);
+	void appendForwardTransitive(unordered_set<shared_ptr<NodeInfo>> new_previous_nodes);
+	void appendReverseTransitive(unordered_set<shared_ptr<NodeInfo>> new_next_nodes);
 
-	[[nodiscard]] shared_ptr<StmtInfo> getSelf() const;
-	[[nodiscard]] StmtInfoPtrSet getForward() const;
-	[[nodiscard]] StmtInfoPtrSet getReverse() const;
-	[[nodiscard]] StmtInfoPtrSet getForwardTransitive() const;
-	[[nodiscard]] StmtInfoPtrSet getReverseTransitive() const;
+	[[nodiscard]] shared_ptr<NodeInfo> getSelf() const;
+	[[nodiscard]] unordered_set<shared_ptr<NodeInfo>> getForward() const;
+	[[nodiscard]] unordered_set<shared_ptr<NodeInfo>> getReverse() const;
+	[[nodiscard]] unordered_set<shared_ptr<NodeInfo>> getForwardTransitive() const;
+	[[nodiscard]] unordered_set<shared_ptr<NodeInfo>> getReverseTransitive() const;
 
-	void setLastNode();
 	void setCFGIndex(StmtRef ref);
 
 private:
-	shared_ptr<StmtInfo> self;
-	StmtInfoPtrSet previous_nodes;
-	StmtInfoPtrSet next_nodes;
-	StmtInfoPtrSet previous_nodes_transitive;
-	StmtInfoPtrSet next_nodes_transitive;
-	bool is_last_node;
-	StmtRef cfg_index;
+	shared_ptr<NodeInfo> self;
+	unordered_set<shared_ptr<NodeInfo>> previous_nodes;
+	unordered_set<shared_ptr<NodeInfo>> next_nodes;
+	unordered_set<shared_ptr<NodeInfo>> previous_nodes_transitive;
+	unordered_set<shared_ptr<NodeInfo>> next_nodes_transitive;
 };
 
 // Template specializations for CFG Node relationship.
 
 template <>
-void PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::NodeRelation>::optimize();
+void PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>::optimize();
 
 template <>
-StmtInfoPtrSet PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::NodeRelation>::populateTransitive(
-	NodeRelation& current, StmtInfoPtrSet previous);
+unordered_set<shared_ptr<PKB::NodeInfo>> PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>::populateTransitive(
+	NodeRelation& current, unordered_set<shared_ptr<NodeInfo>> next_nodes_transitive);
 
 #endif  // SPA_NODERELATION_H
