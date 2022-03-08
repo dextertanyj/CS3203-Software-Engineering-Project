@@ -92,14 +92,14 @@ void PKB::Storage::setAssign(StmtRef index, VarRef variable, Common::ExpressionP
 }
 void PKB::Storage::setNode(StmtRef index) {
 	shared_ptr<StmtInfo> info = statement_store.get(index);
-	node_store.insert(index, PKB::NodeInfo(info));
+	node_store.insert(index, info->getType());
 }
 
 void PKB::Storage::setNext(StmtRef previous, StmtRef next) {
 	shared_ptr<StmtInfo> previous_stmt_info = statement_store.get(previous);
 	shared_ptr<StmtInfo> next_stmt_info = statement_store.get(next);
-	NodeInfo previous_node = NodeInfo(previous_stmt_info);
-	NodeInfo next_node = NodeInfo(next_stmt_info);
+	NodeInfo previous_node = NodeInfo(previous_stmt_info->getIdentifier(), previous_stmt_info->getType());
+	NodeInfo next_node = NodeInfo(next_stmt_info->getIdentifier(), next_stmt_info->getType());
 	control_flow_graph.set(make_shared<NodeInfo>(previous_node), make_shared<NodeInfo>(next_node));
 }
 

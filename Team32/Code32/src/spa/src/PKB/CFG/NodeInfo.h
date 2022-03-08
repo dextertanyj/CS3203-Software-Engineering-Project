@@ -7,7 +7,7 @@
 class PKB::NodeInfo {
 public:
 	NodeInfo() = default;
-	NodeInfo(shared_ptr<StmtInfo> info);
+	NodeInfo(StmtRef identifier, StmtType type);
 	[[nodiscard]] StmtRef getIdentifier() const;
 	[[nodiscard]] StmtType getType() const;
 	void setUniqueIndex(StmtRef unique_index);
