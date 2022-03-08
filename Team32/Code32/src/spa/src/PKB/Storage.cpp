@@ -223,6 +223,10 @@ bool PKB::Storage::checkNext(StmtRef first, StmtRef second) {
 	return first_node->getUniqueIndex() == second_node->getUniqueIndex() && control_flow_graph.isRelated(first, second);
 }
 
+unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getNextTransitive(StmtRef node_ref) {
+	return control_flow_graph.getReverseTransitive(node_ref);
+}
+
 void PKB::Storage::populateComplexRelations() {
 	call_statement_store.populate(procedure_store, call_store);
 	call_store.optimize();
@@ -233,7 +237,7 @@ void PKB::Storage::populateComplexRelations() {
 	UsesSRelation::optimize(parent_store, call_statement_store, procedure_store, call_graph, uses_s_store);
 	ModifiesPRelation::optimize(procedure_store, modifies_p_store, modifies_s_store);
 	UsesPRelation::optimize(procedure_store, uses_p_store, uses_s_store);
-//	control_flow_graph.optimize();
+	//	control_flow_graph.optimize();
 }
 
 void PKB::Storage::clear() {
