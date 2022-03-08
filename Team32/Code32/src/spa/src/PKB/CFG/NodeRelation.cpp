@@ -70,7 +70,7 @@ unordered_set<shared_ptr<PKB::NodeInfo>> PKB::TransitiveRelationStore<StmtRef, P
 
 template <>
 void PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>::optimize() {
-	NodeRelation last_node = NodeRelation(nullptr);
+	NodeRelation last_node;
 	for (auto& item : map) {
 		// Start optimization from the end of the CFG.
 		if (item.second.getReverse().empty()) {

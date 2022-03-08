@@ -9,6 +9,7 @@
 
 class PKB::NodeRelation {
 public:
+	NodeRelation() = default;
 	explicit NodeRelation(shared_ptr<NodeInfo> self);
 	void insertForward(const shared_ptr<NodeInfo>& previous_node);
 	void insertReverse(const shared_ptr<NodeInfo>& next_node);
