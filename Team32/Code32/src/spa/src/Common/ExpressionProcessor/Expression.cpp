@@ -10,7 +10,7 @@
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "Common/ExpressionProcessor/ParenthesesWrapper.h"
 #include "Common/ExpressionProcessor/RelationalNode.h"
-#include "Common/ExpressionProcessor/TerminalNode.h"
+#include "Common/ExpressionProcessor/TerminalNode.tpp"
 #include "Common/ExpressionProcessor/UnaryLogicalNode.h"
 #include "Common/TypeDefs.h"
 #include "Common/Validator.h"
