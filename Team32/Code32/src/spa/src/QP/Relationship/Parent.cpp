@@ -14,7 +14,7 @@ vector<string> QP::Relationship::Parent::getDeclarationSymbols() {
 	if (this->parent_stmt.getType() == ReferenceType::Synonym) {
 		declaration_symbols.push_back(this->parent_stmt.getSynonym().symbol);
 	}
-	if (this->parent_stmt.getType() == ReferenceType::Synonym) {
+	if (this->child_stmt.getType() == ReferenceType::Synonym) {
 		declaration_symbols.push_back(this->child_stmt.getSynonym().symbol);
 	}
 	return declaration_symbols;
