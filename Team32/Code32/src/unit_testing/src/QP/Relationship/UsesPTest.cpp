@@ -19,13 +19,13 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 
 	unordered_map<string, DesignEntity> map;
 
-	QueryEntRef left_proc_no1 = {EntRefType::VarName, "A"};
-	QueryEntRef left_proc_no2 = {EntRefType::VarName, "B"};
-	QueryEntRef left_proc_no3 = {EntRefType::Synonym, "procedure"};
-	QueryEntRef x = {EntRefType::VarName, "x"};
-	QueryEntRef y = {EntRefType::VarName, "y"};
-	QueryEntRef var = {EntRefType::Synonym, "var"};
-	QueryEntRef var_underscore = {EntRefType::Underscore, "x"};
+	ReferenceArgument left_proc_no1 = ReferenceArgument("A");
+	ReferenceArgument left_proc_no2 = ReferenceArgument("B");
+	ReferenceArgument left_proc_no3 = ReferenceArgument({QP::Types::DesignEntity::Procedure, "procedure"});
+	ReferenceArgument x = ReferenceArgument("x");
+	ReferenceArgument y = ReferenceArgument("y");
+	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
+	ReferenceArgument var_underscore = ReferenceArgument();
 
 	SECTION("trivial: varName & varName") {
 		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, x);

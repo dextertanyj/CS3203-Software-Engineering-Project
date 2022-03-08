@@ -19,18 +19,18 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	map.insert({"a", DesignEntity::Assign});
 	map.insert({"if", DesignEntity::If});
 
-	QueryStmtRef stmt_no1 = {StmtRefType::StmtNumber, "1"};
-	QueryStmtRef stmt_no2 = {StmtRefType::StmtNumber, "2"};
-	QueryStmtRef stmt_no3 = {StmtRefType::StmtNumber, "3"};
-	QueryStmtRef stmt_no4 = {StmtRefType::StmtNumber, "4"};
-	QueryStmtRef stmt_synonym = {StmtRefType::Synonym, "s"};
-	QueryStmtRef assign_synonym = {StmtRefType::Synonym, "a"};
-	QueryStmtRef if_synonym = {StmtRefType::Synonym, "if"};
-	QueryStmtRef stmt_underscore = {StmtRefType::Underscore, "_"};
-	QueryEntRef x = {EntRefType::VarName, "x"};
-	QueryEntRef y = {EntRefType::VarName, "y"};
-	QueryEntRef var = {EntRefType::Synonym, "var"};
-	QueryEntRef var_underscore = {EntRefType::Underscore, "x"};
+	ReferenceArgument stmt_no1 = ReferenceArgument(1);
+	ReferenceArgument stmt_no2 = ReferenceArgument(2);
+	ReferenceArgument stmt_no3 = ReferenceArgument(3);
+	ReferenceArgument stmt_no4 = ReferenceArgument(4);
+	ReferenceArgument stmt_synonym = ReferenceArgument({QP::Types::DesignEntity::Stmt, "s"});
+	ReferenceArgument assign_synonym = ReferenceArgument({QP::Types::DesignEntity::Assign, "a"});
+	ReferenceArgument if_synonym = ReferenceArgument({QP::Types::DesignEntity::If, "if"});
+	ReferenceArgument stmt_underscore = ReferenceArgument();
+	ReferenceArgument x = ReferenceArgument("x");
+	ReferenceArgument y = ReferenceArgument("y");
+	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "if"});
+	ReferenceArgument var_underscore = ReferenceArgument();
 
 	SECTION("trivial: stmtNumber & varName") {
 		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_no1, x);
