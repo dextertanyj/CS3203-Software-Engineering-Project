@@ -58,7 +58,6 @@ public:
 
 	// CFG Next Methods
 	virtual bool checkNext(StmtRef first, StmtRef second) = 0;
-	virtual bool checkNextStar(StmtRef first, StmtRef second) = 0;
 
 	virtual ~StorageAccessInterface() = default;
 };

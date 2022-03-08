@@ -271,4 +271,3 @@ unordered_map<StmtRef, shared_ptr<StmtInfo>> PKB::Storage::getStmtInfoMap() {
 	}
 	return map;
 }
-

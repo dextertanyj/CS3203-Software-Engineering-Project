@@ -4,7 +4,6 @@
 #include "Common/TypeDefs.h"
 #include "PKB/PKB.h"
 
-
 class PKB::StatementInfo : public StatementInfoInterface {
 public:
 	[[nodiscard]] StmtRef getIdentifier() const override;
@@ -14,7 +13,8 @@ private:
 	StmtRef index;
 	StmtType type;
 
-	friend class PKB::InfoStore<StmtRef, StmtType, StatementInfo>;;
+	friend class PKB::InfoStore<StmtRef, StmtType, StatementInfo>;
+	;
 
 protected:
 	StatementInfo(StmtRef index, StmtType type);

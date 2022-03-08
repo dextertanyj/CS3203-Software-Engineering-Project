@@ -3,8 +3,8 @@
 #include <queue>
 #include <stdexcept>
 
-#include "NodeInfo.h"
 #include "NodeComparator.h"
+#include "NodeInfo.h"
 
 PKB::NodeRelation::NodeRelation(shared_ptr<PKB::NodeInfo> self) : self(std::move(self)) {}
 
