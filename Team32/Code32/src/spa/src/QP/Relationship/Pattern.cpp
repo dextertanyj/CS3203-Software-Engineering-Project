@@ -197,5 +197,4 @@ QP::QueryResult QP::Relationship::Pattern::executeNonTrivial(PKB::StorageAccessI
 		default:
 			throw logic_error("Incorrect arguments received.");
 	}
-
 }

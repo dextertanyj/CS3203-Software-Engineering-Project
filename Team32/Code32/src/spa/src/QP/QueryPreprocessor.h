@@ -8,11 +8,11 @@
 #include <vector>
 
 #include "Common/ExpressionProcessor/Expression.h"
-#include "QP/ReferenceArgument.h"
 #include "QP/QueryEvaluator.h"
 #include "QP/QueryExpressionLexer.h"
 #include "QP/QueryProperties.h"
 #include "QP/QueryResult.h"
+#include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Calls.h"
 #include "QP/Relationship/CallsT.h"
 #include "QP/Relationship/Follows.h"

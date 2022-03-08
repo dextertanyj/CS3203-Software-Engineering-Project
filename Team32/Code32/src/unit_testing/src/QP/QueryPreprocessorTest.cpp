@@ -705,7 +705,8 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid pattern") {
 	REQUIRE((*clause1).getSynAssign().getType() == ReferenceType::Synonym);
 	REQUIRE((*clause1).getSynAssign().getSynonym().type == DesignEntity::Assign);
 	REQUIRE((*clause1).getSynAssign().getSynonym().symbol == "a1");
-	REQUIRE((*clause1).getEntRef().getType() == ReferenceType::Wildcard);;
+	REQUIRE((*clause1).getEntRef().getType() == ReferenceType::Wildcard);
+	;
 	REQUIRE((*clause1).getExpressionType() == ReferenceType::ExactExpression);
 	QP::QueryPreprocessor qpp6;
 	QP::QueryProperties qp6 = qpp6.parseQuery(UnivDeclarations + "Select a1 pattern a1(_, _\"x + 2\"_)");
