@@ -3,19 +3,20 @@
 
 #include "QP/QueryTypes.h"
 #include "QP/Relationship/Relation.h"
+#include "QP/ReferenceArgument.h"
 
 class QP::Relationship::Parent : public Relation {
 public:
-	Parent(QueryStmtRef parent_stmt, QueryStmtRef child_stmt);
+	Parent(ReferenceArgument parent_stmt, ReferenceArgument child_stmt);
 
-	QueryStmtRef getParentStmt();
-	QueryStmtRef getChildStmt();
+	ReferenceArgument getParentStmt();
+	ReferenceArgument getChildStmt();
 
 	vector<string> getDeclarationSymbols() override;
 
 private:
-	QueryStmtRef parent_stmt;
-	QueryStmtRef child_stmt;
+	ReferenceArgument parent_stmt;
+	ReferenceArgument child_stmt;
 	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
 	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
 };

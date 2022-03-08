@@ -2,35 +2,35 @@
 
 #include <utility>
 
-QP::Relationship::Parent::Parent(QueryStmtRef parent_stmt, QueryStmtRef child_stmt)
+QP::Relationship::Parent::Parent(ReferenceArgument parent_stmt, ReferenceArgument child_stmt)
 	: parent_stmt(std::move(std::move(parent_stmt))), child_stmt(std::move(std::move(child_stmt))) {}
 
-QueryStmtRef QP::Relationship::Parent::getParentStmt() { return parent_stmt; }
+ReferenceArgument QP::Relationship::Parent::getParentStmt() { return parent_stmt; }
 
-QueryStmtRef QP::Relationship::Parent::getChildStmt() { return child_stmt; }
+ReferenceArgument QP::Relationship::Parent::getChildStmt() { return child_stmt; }
 
 vector<string> QP::Relationship::Parent::getDeclarationSymbols() {
 	vector<string> declaration_symbols;
-	if (this->parent_stmt.type == StmtRefType::Synonym) {
-		declaration_symbols.push_back(this->parent_stmt.stmt_ref);
+	if (this->parent_stmt.getType() == ReferenceType::Synonym) {
+		declaration_symbols.push_back(this->parent_stmt.getSynonym().symbol);
 	}
-	if (this->child_stmt.type == StmtRefType::Synonym) {
-		declaration_symbols.push_back(this->child_stmt.stmt_ref);
+	if (this->parent_stmt.getType() == ReferenceType::Synonym) {
+		declaration_symbols.push_back(this->child_stmt.getSynonym().symbol);
 	}
 	return declaration_symbols;
 }
 
-QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
-	if (parent_stmt.type == StmtRefType::StmtNumber && child_stmt.type == StmtRefType::StmtNumber) {
-		return QueryResult(pkb.checkParents(stoul(parent_stmt.stmt_ref), stoul(child_stmt.stmt_ref)));
+QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>&  /*map*/) {
+	if (parent_stmt.getType() == ReferenceType::StatementIndex && child_stmt.getType() == ReferenceType::StatementIndex) {
+		return QueryResult(pkb.checkParents(parent_stmt.getStatementIndex(), child_stmt.getStatementIndex()));
 	}
-	if (parent_stmt.type == StmtRefType::StmtNumber && child_stmt.type == StmtRefType::Underscore) {
-		StmtInfoPtrSet stmt_set = pkb.getChildren(stoul(parent_stmt.stmt_ref));
+	if (parent_stmt.getType() == ReferenceType::StatementIndex && child_stmt.getType() == ReferenceType::Wildcard) {
+		StmtInfoPtrSet stmt_set = pkb.getChildren(parent_stmt.getStatementIndex());
 		return QueryResult(!stmt_set.empty());
 	}
-	if (parent_stmt.type == StmtRefType::StmtNumber && child_stmt.type == StmtRefType::Synonym) {
-		StmtInfoPtrSet stmt_set = pkb.getChildren(stoul(parent_stmt.stmt_ref));
-		DesignEntity design_entity = map[child_stmt.stmt_ref];
+	if (parent_stmt.getType() == ReferenceType::StatementIndex && child_stmt.getType() == ReferenceType::Synonym) {
+		StmtInfoPtrSet stmt_set = pkb.getChildren(parent_stmt.getStatementIndex());
+		DesignEntity design_entity = child_stmt.getSynonym().type;
 
 		if (design_entity == DesignEntity::Stmt) {
 			return QueryResult(!stmt_set.empty());
@@ -41,10 +41,10 @@ QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInter
 				return QueryResult(true);
 			}
 		}
-	} else if (parent_stmt.type == StmtRefType::Underscore && child_stmt.type == StmtRefType::StmtNumber) {
-		shared_ptr<StmtInfo> parent = pkb.getParent(stoul(child_stmt.stmt_ref));
+	} else if (parent_stmt.getType() == ReferenceType::Wildcard && child_stmt.getType() == ReferenceType::StatementIndex) {
+		shared_ptr<StmtInfo> parent = pkb.getParent(child_stmt.getStatementIndex());
 		return QueryResult(parent != nullptr);
-	} else if (parent_stmt.type == StmtRefType::Underscore && child_stmt.type == StmtRefType::Underscore) {
+	} else if (parent_stmt.getType() == ReferenceType::Wildcard && child_stmt.getType() == ReferenceType::Wildcard) {
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
 		for (auto const& stmt : stmt_set) {
 			StmtInfoPtrSet children = pkb.getChildren(stmt->getIdentifier());
@@ -52,9 +52,9 @@ QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInter
 				return QueryResult(true);
 			}
 		}
-	} else if (parent_stmt.type == StmtRefType::Underscore && child_stmt.type == StmtRefType::Synonym) {
+	} else if (parent_stmt.getType() == ReferenceType::Wildcard && child_stmt.getType() == ReferenceType::Synonym) {
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity design_entity = map[child_stmt.stmt_ref];
+		DesignEntity design_entity = parent_stmt.getSynonym().type;
 		for (auto const& stmt : stmt_set) {
 			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;
@@ -65,16 +65,16 @@ QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInter
 				return QueryResult(true);
 			}
 		}
-	} else if (parent_stmt.type == StmtRefType::Synonym && child_stmt.type == StmtRefType::StmtNumber) {
-		shared_ptr<StmtInfo> parent = pkb.getParent(stoul(child_stmt.stmt_ref));
-		DesignEntity design_entity = map[parent_stmt.stmt_ref];
+	} else if (parent_stmt.getType() == ReferenceType::Synonym && child_stmt.getType() == ReferenceType::StatementIndex) {
+		shared_ptr<StmtInfo> parent = pkb.getParent(child_stmt.getStatementIndex());
+		DesignEntity design_entity = parent_stmt.getSynonym().type;
 		if (!Utilities::checkStmtTypeMatch(parent, design_entity)) {
 			return {};
 		}
 		return QueryResult(true);
-	} else if (parent_stmt.type == StmtRefType::Synonym && child_stmt.type == StmtRefType::Underscore) {
+	} else if (parent_stmt.getType() == ReferenceType::Synonym && child_stmt.getType() == ReferenceType::Wildcard) {
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity design_entity = map[parent_stmt.stmt_ref];
+		DesignEntity design_entity = parent_stmt.getSynonym().type;
 		for (auto const& stmt : stmt_set) {
 			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
 				continue;
@@ -85,14 +85,14 @@ QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInter
 				return QueryResult(true);
 			}
 		}
-	} else if (parent_stmt.type == StmtRefType::Synonym && child_stmt.type == StmtRefType::Synonym) {
-		if (parent_stmt.stmt_ref == child_stmt.stmt_ref) {
+	} else if (parent_stmt.getType() == ReferenceType::Synonym && child_stmt.getType() == ReferenceType::Synonym) {
+		if (parent_stmt.getSynonym().symbol == child_stmt.getSynonym().symbol) {
 			return {};
 		}
 
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity parent_design_entity = map[parent_stmt.stmt_ref];
-		DesignEntity child_design_entity = map[child_stmt.stmt_ref];
+		DesignEntity parent_design_entity = parent_stmt.getSynonym().type;
+		DesignEntity child_design_entity = child_stmt.getSynonym().type;
 		for (auto const& stmt : stmt_set) {
 			if (!Utilities::checkStmtTypeMatch(stmt, parent_design_entity)) {
 				continue;
@@ -110,22 +110,22 @@ QP::QueryResult QP::Relationship::Parent::executeTrivial(PKB::StorageAccessInter
 	return {};
 }
 
-QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) {
-	if (parent_stmt.type == StmtRefType::Synonym && child_stmt.type == StmtRefType::StmtNumber) {
-		shared_ptr<StmtInfo> parent = pkb.getParent(stoul(child_stmt.stmt_ref));
-		DesignEntity design_entity = map[parent_stmt.stmt_ref];
+QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>&  /*map*/) {
+	if (parent_stmt.getType() == ReferenceType::Synonym && child_stmt.getType() == ReferenceType::StatementIndex) {
+		shared_ptr<StmtInfo> parent = pkb.getParent(child_stmt.getStatementIndex());
+		DesignEntity design_entity = parent_stmt.getSynonym().type;
 		vector<string> column;
 		if (!Utilities::checkStmtTypeMatch(parent, design_entity)) {
 			return {};
 		}
 		column.push_back(to_string(parent->getIdentifier()));
 		QueryResult result = QueryResult();
-		result.addColumn(parent_stmt.stmt_ref, column);
+		result.addColumn(parent_stmt.getSynonym().symbol, column);
 		return result;
 	}
-	if (parent_stmt.type == StmtRefType::Synonym && child_stmt.type == StmtRefType::Underscore) {
+	if (parent_stmt.getType() == ReferenceType::Synonym && child_stmt.getType() == ReferenceType::Wildcard) {
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity design_entity = map[parent_stmt.stmt_ref];
+		DesignEntity design_entity = parent_stmt.getSynonym().type;
 		vector<string> column;
 		for (auto const& stmt : stmt_set) {
 			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
@@ -138,17 +138,17 @@ QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::StorageAccessIn
 			}
 		}
 		QueryResult result = QueryResult();
-		result.addColumn(parent_stmt.stmt_ref, column);
+		result.addColumn(parent_stmt.getSynonym().symbol, column);
 		return result;
 	}
-	if (parent_stmt.type == StmtRefType::Synonym && child_stmt.type == StmtRefType::Synonym) {
-		if (parent_stmt.stmt_ref == child_stmt.stmt_ref) {
+	if (parent_stmt.getType() == ReferenceType::Synonym && child_stmt.getType() == ReferenceType::Synonym) {
+		if (parent_stmt.getSynonym().symbol == child_stmt.getSynonym().symbol) {
 			return {};
 		}
 
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity parent_design_entity = map[parent_stmt.stmt_ref];
-		DesignEntity child_design_entity = map[child_stmt.stmt_ref];
+		DesignEntity parent_design_entity = parent_stmt.getSynonym().type;
+		DesignEntity child_design_entity = child_stmt.getSynonym().type;
 		vector<string> parent_column;
 		vector<string> child_column;
 		for (auto const& stmt : stmt_set) {
@@ -165,13 +165,13 @@ QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::StorageAccessIn
 			}
 		}
 		QueryResult result = QueryResult();
-		result.addColumn(parent_stmt.stmt_ref, parent_column);
-		result.addColumn(child_stmt.stmt_ref, child_column);
+		result.addColumn(parent_stmt.getSynonym().symbol, parent_column);
+		result.addColumn(child_stmt.getSynonym().symbol, child_column);
 		return result;
 	}
-	if (parent_stmt.type == StmtRefType::Underscore && child_stmt.type == StmtRefType::Synonym) {
+	if (parent_stmt.getType() == ReferenceType::Wildcard && child_stmt.getType() == ReferenceType::Synonym) {
 		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity design_entity = map[child_stmt.stmt_ref];
+		DesignEntity design_entity = child_stmt.getSynonym().type;
 		vector<string> column;
 		for (auto const& stmt : stmt_set) {
 			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
@@ -184,12 +184,12 @@ QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::StorageAccessIn
 			}
 		}
 		QueryResult result = QueryResult();
-		result.addColumn(child_stmt.stmt_ref, column);
+		result.addColumn(child_stmt.getSynonym().symbol, column);
 		return result;
 	}
-	if (parent_stmt.type == StmtRefType::StmtNumber && child_stmt.type == StmtRefType::Synonym) {
-		StmtInfoPtrSet stmt_set = pkb.getChildren(stoul(parent_stmt.stmt_ref));
-		DesignEntity design_entity = map[child_stmt.stmt_ref];
+	if (parent_stmt.getType() == ReferenceType::StatementIndex && child_stmt.getType() == ReferenceType::Synonym) {
+		StmtInfoPtrSet stmt_set = pkb.getChildren(parent_stmt.getStatementIndex());
+		DesignEntity design_entity = child_stmt.getSynonym().type;
 		vector<string> column;
 
 		for (auto const& stmt : stmt_set) {
@@ -198,7 +198,7 @@ QP::QueryResult QP::Relationship::Parent::executeNonTrivial(PKB::StorageAccessIn
 			}
 		}
 		QueryResult result = QueryResult();
-		result.addColumn(child_stmt.stmt_ref, column);
+		result.addColumn(child_stmt.getSynonym().symbol, column);
 		return result;
 	}
 

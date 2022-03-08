@@ -42,35 +42,35 @@ public:
 	 * Returns the type of reference stored.
 	 * @return the type of reference stored.
 	 */
-	ReferenceType getType();
+	[[nodiscard]] ReferenceType getType() const;
 
 	/**
 	 * Returns the synonym stored.
 	 * @throws ReferenceArgumentException if a synonym is not stored.
 	 * @return the synonym stored.
 	 */
-	Declaration getSynonym();
+	[[nodiscard]] Declaration getSynonym() const;
 
 	/**
 	 * Returns the name stored.
 	 * @throws ReferenceArgumentException if a name is not stored.
 	 * @return the name stored.
 	 */
-	string getName();
+	[[nodiscard]] string getName() const;
 
 	/**
 	 * Returns the statement index stored.
 	 * @throws ReferenceArgumentException if a statement index is not stored.
 	 * @return the statement index stored.
 	 */
-	StmtRef getStatementIndex();
+	[[nodiscard]] StmtRef getStatementIndex() const;
 
 	/**
 	 * Returns the expression stored.
 	 * @throws ReferenceArgumentException if an expression is not stored.
 	 * @return the expression stored.
 	 */
-	Common::ExpressionProcessor::Expression getExpression();
+	[[nodiscard]] Common::ExpressionProcessor::Expression getExpression() const;
 
 private:
 	variant<monostate, Declaration, string, StmtRef, pair<Common::ExpressionProcessor::Expression, bool>> value;
