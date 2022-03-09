@@ -1,22 +1,37 @@
 #include "Common/ExpressionProcessor/Expression.h"
 
 #include <cassert>
+#include <utility>
 
 #include "Common/Converter.h"
 #include "Common/ExpressionProcessor/ArithmeticNode.h"
 #include "Common/ExpressionProcessor/BinaryLogicalNode.h"
-#include "Common/ExpressionProcessor/ConstantNode.h"
 #include "Common/ExpressionProcessor/LogicalNode.h"
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "Common/ExpressionProcessor/ParenthesesWrapper.h"
 #include "Common/ExpressionProcessor/RelationalNode.h"
+#include "Common/ExpressionProcessor/TerminalNode.tpp"
 #include "Common/ExpressionProcessor/UnaryLogicalNode.h"
-#include "Common/ExpressionProcessor/VariableNode.h"
 #include "Common/TypeDefs.h"
 #include "Common/Validator.h"
 
-using namespace std;
+#define LOGICAL_PRECEDENCE (-1)
+#define RELATIONAL_PRECEDENCE 1
+#define ADD_SUBTRACT_PRECEDENCE 2
+#define MULTIPLY_DIVIDE_MODULUS_PRECEDENCE 3
+
 using namespace Common::ExpressionProcessor;
+
+struct ExtractVisitor {
+	shared_ptr<ExpressionNode> expression;  // NOLINT(misc-non-private-member-variables-in-classes)
+	bool wrapped = false;                   // NOLINT(misc-non-private-member-variables-in-classes)
+	void operator()(ParenthesesWrapper parentheses) {
+		shared_ptr<ExpressionNode> expr = parentheses.getExpression();
+		wrapped = true;
+		expression = move(expr);
+	}
+	void operator()(shared_ptr<ExpressionNode> expr) { expression = move(expr); }
+};
 
 Expression::Expression(shared_ptr<ExpressionNode> root, unordered_set<VarRef> variables, unordered_set<ConstVal> constants)
 	: root(move(root)), variables(move(variables)), constants(move(constants)) {}
@@ -25,10 +40,11 @@ Expression Expression::parse(LexerInterface& lex, ExpressionType type) {
 	Acceptor acceptor = OperatorAcceptor::getAcceptor(type);
 	unordered_set<VarRef> variables;
 	unordered_set<ConstVal> constants;
-	shared_ptr<ExpressionNode> lhs = parseTerminal(lex, acceptor, variables, constants);
-	shared_ptr<ExpressionNode> expression = Expression::construct(lex, acceptor, variables, constants, lhs, 0);
-	if (dynamic_pointer_cast<ParenthesesWrapper>(expression) != nullptr) {
-		expression = dynamic_pointer_cast<ParenthesesWrapper>(expression)->getExpression();
+	variant<ParenthesesWrapper, shared_ptr<ExpressionNode>> lhs = parseTerminal(lex, acceptor, variables, constants);
+	ExtractVisitor extract_visitor;
+	visit(extract_visitor, lhs);
+	shared_ptr<ExpressionNode> expression = Expression::construct(lex, acceptor, variables, constants, extract_visitor.expression, 0);
+	if (extract_visitor.wrapped && expression == extract_visitor.expression) {
 		if (dynamic_pointer_cast<RelationalNode>(expression) != nullptr || dynamic_pointer_cast<LogicalNode>(expression) != nullptr) {
 			throw ExpressionProcessorException("Unsupported nested parentheses in expression.");
 		}
@@ -44,11 +60,6 @@ shared_ptr<ExpressionNode> Expression::construct(LexerInterface& lex, Acceptor a
 	string lookahead = lex.peekToken();
 	if (!acceptor(lookahead)) {
 		return lhs;
-	}
-
-	// Safe to unwrap parentheses wrapper since closing parentheses are not accepted by any acceptor.
-	if (dynamic_pointer_cast<ParenthesesWrapper>(lhs) != nullptr) {
-		lhs = dynamic_pointer_cast<ParenthesesWrapper>(lhs)->getExpression();
 	}
 
 	// Binary logical operators are a special case since they must be fully parenthesized
@@ -92,15 +103,15 @@ shared_ptr<ExpressionNode> Expression::construct(LexerInterface& lex, Acceptor a
 
 shared_ptr<ExpressionNode> Expression::parseTerminalSafe(LexerInterface& lex, Acceptor acceptor, unordered_set<VarRef>& variables,
                                                          unordered_set<ConstVal>& constants) {
-	shared_ptr<ExpressionNode> expression = parseTerminal(lex, acceptor, variables, constants);
-	if (dynamic_pointer_cast<ParenthesesWrapper>(expression) != nullptr) {
-		expression = dynamic_pointer_cast<ParenthesesWrapper>(expression)->getExpression();
-	}
-	return expression;
+	variant<ParenthesesWrapper, shared_ptr<ExpressionNode>> expression = parseTerminal(lex, acceptor, variables, constants);
+	ExtractVisitor extract_visitor;
+	visit(extract_visitor, expression);
+	return extract_visitor.expression;
 }
 
-shared_ptr<ExpressionNode> Expression::parseTerminal(LexerInterface& lex, Acceptor acceptor, unordered_set<VarRef>& variables,
-                                                     unordered_set<ConstVal>& constants) {
+variant<ParenthesesWrapper, shared_ptr<ExpressionNode>> Expression::parseTerminal(LexerInterface& lex, Acceptor acceptor,
+                                                                                  unordered_set<VarRef>& variables,
+                                                                                  unordered_set<ConstVal>& constants) {
 	string token = lex.readToken();
 	if (OperatorAcceptor::acceptUnaryLogical(token)) {
 		if (!acceptor(token)) {
@@ -122,10 +133,11 @@ shared_ptr<ExpressionNode> Expression::parseTerminal(LexerInterface& lex, Accept
 	if (token == "(") {
 		// We only have to check for disallowed nested parentheses when parseTerminal is called sequentially without any actual
 		// construction.
-		shared_ptr<ExpressionNode> lhs = parseTerminal(lex, acceptor, variables, constants);
-		shared_ptr<ExpressionNode> expression = construct(lex, acceptor, variables, constants, lhs, 0);
-		if (dynamic_pointer_cast<ParenthesesWrapper>(expression) != nullptr) {
-			expression = dynamic_pointer_cast<ParenthesesWrapper>(expression)->getExpression();
+		variant<ParenthesesWrapper, shared_ptr<ExpressionNode>> lhs = parseTerminal(lex, acceptor, variables, constants);
+		ExtractVisitor extract_visitor;
+		visit(extract_visitor, lhs);
+		shared_ptr<ExpressionNode> expression = construct(lex, acceptor, variables, constants, extract_visitor.expression, 0);
+		if (extract_visitor.wrapped && expression == extract_visitor.expression) {
 			if (dynamic_pointer_cast<RelationalNode>(expression) != nullptr || dynamic_pointer_cast<LogicalNode>(expression) != nullptr) {
 				throw ExpressionProcessorException("Unsupported nested parentheses in expression.");
 			}
@@ -134,15 +146,16 @@ shared_ptr<ExpressionNode> Expression::parseTerminal(LexerInterface& lex, Accept
 		if (token != ")") {
 			throw ExpressionProcessorException("Unexpected token received: " + token + ".");
 		}
-		return make_shared<ParenthesesWrapper>(expression);
+		return ParenthesesWrapper(expression);
 	}
 	if (Validator::validateName(token)) {
 		variables.insert(token);
-		return make_shared<VariableNode>(token);
+		return make_shared<TerminalNode<string>>(token);
 	}
 	if (Validator::validateInteger(token)) {
-		constants.insert(Converter::convertInteger(token));
-		return make_shared<ConstantNode>(token);
+		ConstVal value = Converter::convertInteger(token);
+		constants.insert(value);
+		return make_shared<TerminalNode<ConstVal>>(value);
 	}
 	throw ExpressionProcessorException("Unexpected token received: " + token + ".");
 }
@@ -150,16 +163,16 @@ shared_ptr<ExpressionNode> Expression::parseTerminal(LexerInterface& lex, Accept
 int Expression::getPrecedence(MathematicalOperator op) {
 	// Logical operators are expected to be fully parenthesized and so should never be chained.
 	if (op == MathematicalOperator::And || op == MathematicalOperator::Or) {
-		return -1;
+		return LOGICAL_PRECEDENCE;
 	}
 	if (op == MathematicalOperator::LTE || op == MathematicalOperator::GTE || op == MathematicalOperator::LT ||
 	    op == MathematicalOperator::GT || op == MathematicalOperator::EQ || op == MathematicalOperator::NEQ) {
-		return 1;
+		return RELATIONAL_PRECEDENCE;
 	}
 	if (op == MathematicalOperator::Plus || op == MathematicalOperator::Minus) {
-		return 2;
+		return ADD_SUBTRACT_PRECEDENCE;
 	}
-	return 3;
+	return MULTIPLY_DIVIDE_MODULUS_PRECEDENCE;
 }
 
 bool Expression::checkExpressionType(const shared_ptr<ExpressionNode>& expression, ExpressionType type) {

@@ -7,11 +7,9 @@
 
 using namespace std;
 
-class Common::ExpressionProcessor::ParenthesesWrapper : public ExpressionNode {
+class Common::ExpressionProcessor::ParenthesesWrapper {
 public:
 	explicit ParenthesesWrapper(shared_ptr<ExpressionNode> expression);
-	bool equals(shared_ptr<ExpressionNode> object) override;
-	bool contains(shared_ptr<ExpressionNode> object) override;
 	shared_ptr<ExpressionNode> getExpression();
 
 private:
