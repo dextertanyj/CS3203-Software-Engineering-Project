@@ -10,13 +10,13 @@ public:
 	NodeInfo(StmtRef identifier, StmtType type);
 	[[nodiscard]] StmtRef getIdentifier() const;
 	[[nodiscard]] StmtType getType() const;
-	void setUniqueIndex(StmtRef unique_index);
+	void setUniqueIndex(size_t unique_index);
 	StmtRef getUniqueIndex() const;
 
 private:
 	StmtRef index;
 	StmtType type;
-	StmtRef uniqueIndex;
+	size_t uniqueIndex;
 };
 
 #endif  // SPA_NODEINFO_H

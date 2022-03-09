@@ -9,6 +9,6 @@ StmtRef PKB::NodeInfo::getIdentifier() const { return this->index; }
 
 StmtType PKB::NodeInfo::getType() const { return this->type; }
 
-StmtRef PKB::NodeInfo::getUniqueIndex() const { return this->uniqueIndex; }
+size_t PKB::NodeInfo::getUniqueIndex() const { return this->uniqueIndex; }
 
-void PKB::NodeInfo::setUniqueIndex(StmtRef unique_index) { this->uniqueIndex = unique_index; }
+void PKB::NodeInfo::setUniqueIndex(size_t unique_index) { this->uniqueIndex = unique_index; }
