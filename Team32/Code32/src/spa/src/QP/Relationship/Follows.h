@@ -33,11 +33,9 @@ public:
 
 	// Executors
 
-	static QueryResult executeIndexSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
-	                                       const ReferenceArgument& rear);
+	static QueryResult executeIndexSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front, const ReferenceArgument& rear);
 	static QueryResult executeWildcardSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& rear);
-	static QueryResult executeSynonymIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
-	                                       const ReferenceArgument& rear);
+	static QueryResult executeSynonymIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front, const ReferenceArgument& rear);
 	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front);
 	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
 	                                         const ReferenceArgument& rear);

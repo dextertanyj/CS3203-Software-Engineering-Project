@@ -82,7 +82,6 @@ QP::QueryResult QP::Relationship::Follows::executeNonTrivial(PKB::StorageAccessI
 	if (left_stmt.getType() == ReferenceType::StatementIndex && right_stmt.getType() == ReferenceType::Synonym) {
 		return executeIndexSynonym(pkb, left_stmt, right_stmt);
 	}
-	
 
 	return {};
 }

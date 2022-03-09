@@ -35,11 +35,10 @@ QP::QueryResult QP::Relationship::CallsT::executeNonTrivial(PKB::StorageAccessIn
 	return {};
 }
 
-
 // Trivial Executors
 
 QP::QueryResult QP::Relationship::CallsT::executeTrivialNameName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
-                                                                const ReferenceArgument& callee) {
+                                                                 const ReferenceArgument& callee) {
 	ProcRefSet callee_set = pkb.getCalleeStar(caller.getName());
 	for (auto const& callee_reference : callee_set) {
 		if (callee_reference == callee.getName()) {
@@ -50,12 +49,12 @@ QP::QueryResult QP::Relationship::CallsT::executeTrivialNameName(PKB::StorageAcc
 }
 
 QP::QueryResult QP::Relationship::CallsT::executeTrivialNameWildcardOrSynonym(PKB::StorageAccessInterface& pkb,
-                                                                             const ReferenceArgument& caller) {
+                                                                              const ReferenceArgument& caller) {
 	return QueryResult(!pkb.getCalleeStar(caller.getName()).empty());
 }
 
 QP::QueryResult QP::Relationship::CallsT::executeTrivialWildcardOrSynonymName(PKB::StorageAccessInterface& pkb,
-                                                                             const ReferenceArgument& callee) {
+                                                                              const ReferenceArgument& callee) {
 	return QueryResult(!pkb.getCallerStar(callee.getName()).empty());
 }
 
@@ -72,7 +71,7 @@ QP::QueryResult QP::Relationship::CallsT::executeTrivialWildcardOrSynonymWildcar
 }
 
 QP::QueryResult QP::Relationship::CallsT::executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
-                                                                      const ReferenceArgument& callee) {
+                                                                       const ReferenceArgument& callee) {
 	if (caller.getSynonym().symbol == callee.getSynonym().symbol) {
 		return {};
 	}
@@ -82,7 +81,7 @@ QP::QueryResult QP::Relationship::CallsT::executeTrivialSynonymSynonym(PKB::Stor
 // Executors
 
 QP::QueryResult QP::Relationship::CallsT::executeNameSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
-                                                            const ReferenceArgument& callee) {
+                                                             const ReferenceArgument& callee) {
 	QueryResult result = QueryResult();
 	vector<string> column;
 	ProcRefSet callees = pkb.getCalleeStar(caller.getName());
@@ -110,7 +109,7 @@ QP::QueryResult QP::Relationship::CallsT::executeWildcardSynonym(PKB::StorageAcc
 }
 
 QP::QueryResult QP::Relationship::CallsT::executeSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
-                                                            const ReferenceArgument& callee) {
+                                                             const ReferenceArgument& callee) {
 	QueryResult result = QueryResult();
 	vector<string> caller_column;
 	ProcRefSet callers = pkb.getCallerStar(callee.getName());
@@ -135,7 +134,7 @@ QP::QueryResult QP::Relationship::CallsT::executeSynonymWildcard(PKB::StorageAcc
 }
 
 QP::QueryResult QP::Relationship::CallsT::executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
-                                                               const ReferenceArgument& callee) {
+                                                                const ReferenceArgument& callee) {
 	if (caller.getSynonym().symbol == callee.getSynonym().symbol) {
 		return {};
 	}
