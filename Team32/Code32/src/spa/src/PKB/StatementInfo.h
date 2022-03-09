@@ -10,14 +10,10 @@ public:
 	[[nodiscard]] StmtType getType() const override;
 
 private:
+	StatementInfo(StmtRef index, StmtType type);
 	StmtRef index;
 	StmtType type;
-
 	friend class PKB::InfoStore<StmtRef, StmtType, StatementInfo>;
-	;
-
-protected:
-	StatementInfo(StmtRef index, StmtType type);
 };
 
 #endif  // SPA_SRC_PKB_STATEMENTINFO_H
