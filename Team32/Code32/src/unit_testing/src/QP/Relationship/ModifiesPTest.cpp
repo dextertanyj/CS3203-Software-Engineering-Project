@@ -22,7 +22,6 @@ TEST_CASE("QP::Relationship::ModifiesP::execute") {
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
 	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
-	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("Trivial: Name & Name") {
 		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialNameName(pkb, left_proc_no1, x);

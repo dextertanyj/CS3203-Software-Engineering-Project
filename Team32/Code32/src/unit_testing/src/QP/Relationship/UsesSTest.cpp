@@ -25,7 +25,6 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
 	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
-	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("Trivial: Index & Name") {
 		QP::QueryResult result1 = QP::Relationship::UsesS::executeTrivialIndexName(pkb, stmt_no1, x);

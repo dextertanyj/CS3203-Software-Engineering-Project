@@ -35,7 +35,6 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Assign);
 	pkb.setStmtType(3, StmtType::Assign);
-	pkb.setStmtType(4, StmtType::Print);
 
 	vector<string> assign_token1 = {"1"};
 	QP::QueryExpressionLexer lexer1 = QP::QueryExpressionLexer(assign_token1);
@@ -63,7 +62,6 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	ReferenceArgument y = ReferenceArgument("y");
 	ReferenceArgument z = ReferenceArgument("z");
 	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
-	ReferenceArgument wildcard = ReferenceArgument();
 
 	vector<string> query_token1 = {"1"};
 	QP::QueryExpressionLexer lexer4 = QP::QueryExpressionLexer(query_token1);
@@ -131,7 +129,7 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 		REQUIRE(!result9.getResult());
 	}
 
-	SECTION("Trivial: Name, Sub-Expression") {
+	SECTION("Trivial: Name & Sub-Expression") {
 		QP::QueryResult result1 = QP::Relationship::Pattern::executeTrivialNameExpression(pkb, x, ReferenceArgument(query_expression1, false));
 		QP::QueryResult result2 = QP::Relationship::Pattern::executeTrivialNameExpression(pkb, x, ReferenceArgument(query_expression2, false));
 		QP::QueryResult result3 = QP::Relationship::Pattern::executeTrivialNameExpression(pkb, x, ReferenceArgument(query_expression3, false));

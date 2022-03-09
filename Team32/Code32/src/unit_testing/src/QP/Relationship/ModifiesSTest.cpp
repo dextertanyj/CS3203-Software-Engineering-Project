@@ -24,7 +24,6 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
 	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
-	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("Trivial: Index & Name") {
 		QP::QueryResult result1 = QP::Relationship::ModifiesS::executeTrivialIndexName(pkb,stmt_no1, x);
@@ -110,9 +109,6 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	}
 
 	SECTION("Index & Synonym") {
-		QP::Relationship::ModifiesS modifies1 = QP::Relationship::ModifiesS(stmt_no1, var);
-		QP::Relationship::ModifiesS modifies2 = QP::Relationship::ModifiesS(stmt_no4, var);
-
 		QP::QueryResult result1 = QP::Relationship::ModifiesS::executeIndexSynonym(pkb, stmt_no1, var);
 		QP::QueryResult result2 = QP::Relationship::ModifiesS::executeIndexSynonym(pkb, stmt_no4, var);
 

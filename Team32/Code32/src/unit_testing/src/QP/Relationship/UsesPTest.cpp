@@ -23,12 +23,8 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
 	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
-	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("Trivial: Name & Name") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, x);
-		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no1, y);
-
 		QP::QueryResult result1 = QP::Relationship::UsesP::executeTrivialNameName(pkb, left_proc_no1, x);
 		QP::QueryResult result2 = QP::Relationship::UsesP::executeTrivialNameName(pkb, left_proc_no1, y);
 
@@ -37,9 +33,6 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 	}
 
 	SECTION("Trivial: Name & Wildcard") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, wildcard);
-		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no2, wildcard);
-
 		QP::QueryResult result1 = QP::Relationship::UsesP::executeTrivialName(pkb, left_proc_no1);
 		QP::QueryResult result2 = QP::Relationship::UsesP::executeTrivialName(pkb, left_proc_no2);
 
@@ -48,9 +41,6 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 	}
 
 	SECTION("Trivial: Name & Synonym") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, var);
-		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no2, var);
-
 		QP::QueryResult result1 = QP::Relationship::UsesP::executeTrivialName(pkb, left_proc_no1);
 		QP::QueryResult result2 = QP::Relationship::UsesP::executeTrivialName(pkb, left_proc_no2);
 
