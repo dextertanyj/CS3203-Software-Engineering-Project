@@ -27,21 +27,18 @@ vector<string> QP::Relationship::UsesS::getDeclarationSymbols() {
 
 QP::QueryResult QP::Relationship::UsesS::executeTrivial(PKB::StorageAccessInterface& pkb) {
 	if (stmt.getType() == ReferenceType::StatementIndex && ent.getType() == ReferenceType::Name) {
-		return QueryResult(pkb.checkUses(stmt.getStatementIndex(), ent.getName()));
+		return executeTrivialIndexVarName(pkb, stmt, ent);
 	}
 	if ((stmt.getType() == ReferenceType::StatementIndex && ent.getType() == ReferenceType::Wildcard) ||
 	    (stmt.getType() == ReferenceType::StatementIndex && ent.getType() == ReferenceType::Synonym)) {
-		VarRefSet var_set = pkb.getUsesByStmt(stmt.getStatementIndex());
-		return QueryResult(!var_set.empty());
+		return executeTrivialIndex(pkb, stmt);
 	}
 	if (stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Name) {
-		return executeTrivialEntVarName(pkb);
+		return executeTrivialSynonym(pkb, stmt, ent);
 	}
-	if (stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Wildcard) {
-		return executeTrivialEntUnknown(pkb);
-	}
-	if (stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Synonym) {
-		return executeTrivialEntUnknown(pkb);
+	if ((stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Wildcard) ||
+	    (stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Synonym)) {
+		return executeTrivialSynonymSynonym(pkb, stmt);
 	}
 
 	return {};
@@ -49,40 +46,51 @@ QP::QueryResult QP::Relationship::UsesS::executeTrivial(PKB::StorageAccessInterf
 
 QP::QueryResult QP::Relationship::UsesS::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
 	if (stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Name) {
-		return executeNonTrivialEntVarName(pkb);
+		return executeSynonymVarName(pkb, stmt, ent);
 	}
 	if (stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Wildcard) {
-		return executeNonTrivialEntUnderscore(pkb);
+		return executeSynonymWildcard(pkb, stmt);
 	}
 	if (stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Synonym) {
-		return executeNonTrivialEntSynonym(pkb);
+		return executeSynonymSynonym(pkb, stmt, ent);
 	}
 	if (stmt.getType() == ReferenceType::StatementIndex && ent.getType() == ReferenceType::Synonym) {
-		return executeNonTrivialStmtStmtNo(pkb);
+		return executeIndexSynonym(pkb, stmt, ent);
 	}
 	return {};
 }
 
-QP::QueryResult QP::Relationship::UsesS::executeTrivialEntVarName(PKB::StorageAccessInterface& pkb) {
+QP::QueryResult QP::Relationship::UsesS::executeTrivialIndexVarName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
+                                                                    const ReferenceArgument& ent) {
+	return QueryResult(pkb.checkUses(stmt.getStatementIndex(), ent.getName()));
+}
+
+QP::QueryResult QP::Relationship::UsesS::executeTrivialIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt) {
+	VarRefSet var_set = pkb.getUsesByStmt(stmt.getStatementIndex());
+	return QueryResult(!var_set.empty());
+}
+
+QP::QueryResult QP::Relationship::UsesS::executeTrivialSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
+                                                               const ReferenceArgument& ent) {
 	StmtInfoPtrSet stmt_set = pkb.getStmtUsesByVar(ent.getName());
 	DesignEntity design_entity = stmt.getSynonym().type;
-	for (auto const& stmt : stmt_set) {
-		if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
+	for (auto const& res_stmt : stmt_set) {
+		if (Utilities::checkStmtTypeMatch(res_stmt, design_entity)) {
 			return QueryResult(true);
 		}
 	}
 	return {};
 }
 
-QP::QueryResult QP::Relationship::UsesS::executeTrivialEntUnknown(PKB::StorageAccessInterface& pkb) {
+QP::QueryResult QP::Relationship::UsesS::executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt) {
 	StmtInfoPtrSet stmt_set = pkb.getStatements();
 	DesignEntity design_entity = stmt.getSynonym().type;
-	for (auto const& stmt : stmt_set) {
-		if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
+	for (auto const& res_stmt : stmt_set) {
+		if (!Utilities::checkStmtTypeMatch(res_stmt, design_entity)) {
 			continue;
 		}
 
-		VarRefSet var_set = pkb.getUsesByStmt(stmt->getIdentifier());
+		VarRefSet var_set = pkb.getUsesByStmt(res_stmt->getIdentifier());
 		if (!var_set.empty()) {
 			return QueryResult(true);
 		}
@@ -90,13 +98,14 @@ QP::QueryResult QP::Relationship::UsesS::executeTrivialEntUnknown(PKB::StorageAc
 	return {};
 }
 
-QP::QueryResult QP::Relationship::UsesS::executeNonTrivialEntVarName(PKB::StorageAccessInterface& pkb) {
+QP::QueryResult QP::Relationship::UsesS::executeSynonymVarName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
+                                                               const ReferenceArgument& ent) {
 	StmtInfoPtrSet stmt_set = pkb.getStmtUsesByVar(ent.getName());
 	DesignEntity design_entity = stmt.getSynonym().type;
 	vector<string> column;
-	for (auto const& stmt : stmt_set) {
-		if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-			column.push_back(to_string(stmt->getIdentifier()));
+	for (auto const& res_stmt : stmt_set) {
+		if (Utilities::checkStmtTypeMatch(res_stmt, design_entity)) {
+			column.push_back(to_string(res_stmt->getIdentifier()));
 		}
 	}
 	QueryResult result = QueryResult();
@@ -104,18 +113,18 @@ QP::QueryResult QP::Relationship::UsesS::executeNonTrivialEntVarName(PKB::Storag
 	return result;
 }
 
-QP::QueryResult QP::Relationship::UsesS::executeNonTrivialEntUnderscore(PKB::StorageAccessInterface& pkb) {
+QP::QueryResult QP::Relationship::UsesS::executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt) {
 	StmtInfoPtrSet stmt_set = pkb.getStatements();
 	DesignEntity design_entity = stmt.getSynonym().type;
 	vector<string> column;
-	for (auto const& stmt : stmt_set) {
-		if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
+	for (auto const& res_stmt : stmt_set) {
+		if (!Utilities::checkStmtTypeMatch(res_stmt, design_entity)) {
 			continue;
 		}
 
-		VarRefSet var_set = pkb.getUsesByStmt(stmt->getIdentifier());
+		VarRefSet var_set = pkb.getUsesByStmt(res_stmt->getIdentifier());
 		if (!var_set.empty()) {
-			column.push_back(to_string(stmt->getIdentifier()));
+			column.push_back(to_string(res_stmt->getIdentifier()));
 		}
 	}
 	QueryResult result = QueryResult();
@@ -123,19 +132,20 @@ QP::QueryResult QP::Relationship::UsesS::executeNonTrivialEntUnderscore(PKB::Sto
 	return result;
 }
 
-QP::QueryResult QP::Relationship::UsesS::executeNonTrivialEntSynonym(PKB::StorageAccessInterface& pkb) {
+QP::QueryResult QP::Relationship::UsesS::executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
+                                                               const ReferenceArgument& ent) {
 	StmtInfoPtrSet stmt_set = pkb.getStatements();
 	DesignEntity design_entity = stmt.getSynonym().type;
 	vector<string> stmt_column;
 	vector<string> var_column;
-	for (auto const& stmt : stmt_set) {
-		if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
+	for (auto const& res_stmt : stmt_set) {
+		if (!Utilities::checkStmtTypeMatch(res_stmt, design_entity)) {
 			continue;
 		}
 
-		VarRefSet var_set = pkb.getUsesByStmt(stmt->getIdentifier());
+		VarRefSet var_set = pkb.getUsesByStmt(res_stmt->getIdentifier());
 		for (auto const& var : var_set) {
-			stmt_column.push_back(to_string(stmt->getIdentifier()));
+			stmt_column.push_back(to_string(res_stmt->getIdentifier()));
 			var_column.push_back(var);
 		}
 	}
@@ -145,7 +155,8 @@ QP::QueryResult QP::Relationship::UsesS::executeNonTrivialEntSynonym(PKB::Storag
 	return result;
 }
 
-QP::QueryResult QP::Relationship::UsesS::executeNonTrivialStmtStmtNo(PKB::StorageAccessInterface& pkb) {
+QP::QueryResult QP::Relationship::UsesS::executeIndexSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
+                                                             const ReferenceArgument& ent) {
 	VarRefSet var_set = pkb.getUsesByStmt(stmt.getStatementIndex());
 	vector<string> column;
 
