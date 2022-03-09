@@ -31,16 +31,6 @@ enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpress
 
 class ReferenceArgument;
 
-typedef struct QueryStmtRef {
-	StmtRefType type;
-	string stmt_ref;
-} QueryStmtRef;
-
-typedef struct QueryEntRef {
-	EntRefType type;
-	string ent_ref;
-} QueryEntRef;
-
 typedef struct Declaration {
 	DesignEntity type;
 	string symbol;

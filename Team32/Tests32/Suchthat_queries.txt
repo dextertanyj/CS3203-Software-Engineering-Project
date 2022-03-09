@@ -50,7 +50,7 @@ Select s such that Parent(9, s)
 5000
 11 - Parent(stmtNo, stmtNo) positive
 stmt ss;
-Select ss such that Parent(4, 05)
+Select ss such that Parent(4, 5)
 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
 5000
 12 - Parent(stmtNo, stmtNo) negative
@@ -170,7 +170,7 @@ Select s such that Parent*(9, s)
 5000
 35 - ParentT(stmtNo, stmtNo) positive
 stmt ss;
-Select ss such that Parent*(4, 05)
+Select ss such that Parent*(4, 5)
 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
 5000
 36 - ParentT(stmtNo, stmtNo) negative

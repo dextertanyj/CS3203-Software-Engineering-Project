@@ -2,8 +2,8 @@
 #define SPA_SRC_QP_RELATIONSHIP_PARENT_H
 
 #include "QP/QueryTypes.h"
-#include "QP/Relationship/Relation.h"
 #include "QP/ReferenceArgument.h"
+#include "QP/Relationship/Relation.h"
 
 class QP::Relationship::Parent : public Relation {
 public:

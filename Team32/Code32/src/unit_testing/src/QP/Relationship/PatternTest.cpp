@@ -12,7 +12,7 @@ TEST_CASE("QP::Relationship::Pattern::getDeclarationSymbols") {
 
 	PKB::Storage pkb = PKB::Storage();
 	ReferenceArgument x = ReferenceArgument("x");
-	ReferenceArgument var = ReferenceArgument("var");
+	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
 	ReferenceArgument wildcard = ReferenceArgument();
 	vector<string> query_token = {"0"};
 	QP::QueryExpressionLexer lexer = QP::QueryExpressionLexer(query_token);
@@ -63,7 +63,7 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
 	ReferenceArgument z = ReferenceArgument("z");
-	ReferenceArgument var = ReferenceArgument("var");
+	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
 	ReferenceArgument wildcard = ReferenceArgument();
 
 	vector<string> query_token1 = {"1"};
