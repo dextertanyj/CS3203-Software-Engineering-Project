@@ -36,6 +36,8 @@ public:
 	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
 	                                         const ReferenceArgument& callee);
 
+	static ArgumentDispatcher dispatcher;
+
 private:
 	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
 	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
