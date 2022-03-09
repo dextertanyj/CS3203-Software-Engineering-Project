@@ -49,6 +49,10 @@ public:
 	void setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) override;
 	void setNext(StmtRef previous, StmtRef next) override;
 	void setNode(StmtRef index) override;
+	void setIfControl(StmtRef index, VarRefSet names) override;
+	void setIfControl(StmtRef index, VarRef name) override;
+	void setWhileControl(StmtRef index, VarRefSet names) override;
+	void setWhileControl(StmtRef index, VarRef name) override;
 
 	// Get methods called by PQL
 
@@ -107,6 +111,12 @@ public:
 	bool checkNext(StmtRef first, StmtRef second) override;
 	unordered_set<shared_ptr<PKB::NodeInfo>> getNextTransitive(StmtRef node_ref) override;
 
+	// Control Variable get methods
+	VarRefSet getIfControlVar(StmtRef index) override;
+	VarRefSet getWhileControlVar(StmtRef index) override;
+	StmtInfoPtrSet getIfControlStmt(VarRef name) override;
+	StmtInfoPtrSet getWhileControlStmt(VarRef name) override;
+
 	// Others
 	void populateComplexRelations() override;
 	void clear();
@@ -131,6 +141,8 @@ private:
 	PVRelationStore<PKB::ModifiesPRelation> modifies_p_store;
 	AssignStore assign_store;
 	TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation> control_flow_graph;
+	SVRelationStore<PKB::IfControlRelation> if_control_store;
+	PKB::SVRelationStore<PKB::WhileControlRelation> while_control_store;
 
 	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
 	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set);

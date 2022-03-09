@@ -95,6 +95,26 @@ void PKB::Storage::setNode(StmtRef index) {
 	node_store.insert(index, info->getType());
 }
 
+void PKB::Storage::setIfControl(StmtRef index, VarRefSet names) {
+	shared_ptr<StmtInfo> info = statement_store.get(index);
+	if_control_store.set(info, names);
+}
+
+void PKB::Storage::setIfControl(StmtRef index, VarRef name) {
+	shared_ptr<StmtInfo> info = statement_store.get(index);
+	if_control_store.set(info, name);
+}
+
+void PKB::Storage::setWhileControl(StmtRef index, VarRefSet names) {
+	shared_ptr<StmtInfo> info = statement_store.get(index);
+	while_control_store.set(info, names);
+}
+
+void PKB::Storage::setWhileControl(StmtRef index, VarRef name) {
+	shared_ptr<StmtInfo> info = statement_store.get(index);
+	while_control_store.set(info, name);
+}
+
 void PKB::Storage::setNext(StmtRef previous, StmtRef next) {
 	shared_ptr<StmtInfo> previous_stmt_info = statement_store.get(previous);
 	shared_ptr<StmtInfo> next_stmt_info = statement_store.get(next);
@@ -225,6 +245,22 @@ bool PKB::Storage::checkNext(StmtRef first, StmtRef second) {
 
 unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getNextTransitive(StmtRef node_ref) {
 	return control_flow_graph.getReverseTransitive(node_ref);
+}
+
+StmtInfoPtrSet PKB::Storage::getIfControlStmt(VarRef name) {
+	return if_control_store.getByVar(name);
+}
+
+StmtInfoPtrSet PKB::Storage::getWhileControlStmt(VarRef name) {
+	return while_control_store.getByVar(name);
+}
+
+VarRefSet PKB::Storage::getIfControlVar(StmtRef index) {
+	return if_control_store.getByStmt(index);
+}
+
+VarRefSet PKB::Storage::getWhileControlVar(StmtRef index) {
+	return while_control_store.getByStmt(index);
 }
 
 void PKB::Storage::populateComplexRelations() {

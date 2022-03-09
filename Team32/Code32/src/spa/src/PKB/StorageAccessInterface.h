@@ -60,6 +60,12 @@ public:
 	virtual bool checkNext(StmtRef first, StmtRef second) = 0;
 	virtual unordered_set<shared_ptr<PKB::NodeInfo>> getNextTransitive(StmtRef node_ref) = 0;
 
+	// Control Variable get methods
+	virtual VarRefSet getIfControlVar(StmtRef index) = 0;
+	virtual VarRefSet getWhileControlVar(StmtRef index) = 0;
+	virtual StmtInfoPtrSet getIfControlStmt(VarRef name) = 0;
+	virtual StmtInfoPtrSet getWhileControlStmt(VarRef name) = 0;
+
 	virtual ~StorageAccessInterface() = default;
 };
 
