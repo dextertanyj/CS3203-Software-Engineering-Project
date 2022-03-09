@@ -73,7 +73,7 @@ void PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>::op
 		}
 	}
 	// Use last node's stmt ref as the unique index of a CFG.
-	StmtRef unique_index = last_node.getSelf()->getIdentifier();
+	size_t unique_index = last_node.getSelf()->getIdentifier();
 	unordered_set<shared_ptr<PKB::NodeInfo>> next_nodes_transitive = {};
 
 	// PQ stores a pair of stmt ref and the transitive next nodes to add to that ref's node.

@@ -1,8 +1,13 @@
 #include "NextStarQueryCache.h"
 
+#include <queue>
+
+#include "NodeComparator.h"
 #include "PKB/TransitiveRelationStore.tpp"
 
-void PKB::NextStarQueryCache::initialize(PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>& cfg) {
+void PKB::NextStarQueryCache::initialize(PKB::Types::NodeStore& node_info_store,
+                                         PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>& cfg) {
+	this->node_store = node_info_store;
 	this->cfg_store = cfg;
 }
 
@@ -42,6 +47,29 @@ void PKB::NextStarQueryCache::cacheNextStarSet(StmtRef ref, unordered_set<shared
 	this->next_star_set_cache.insert({ref, next_star_set});
 }
 unordered_set<shared_ptr<PKB::NodeInfo>> PKB::NextStarQueryCache::searchNextStar(StmtRef ref) {
-	// TODO: Search algorithm populates next* starting from ending node in the procedure.
-	return {};
+	shared_ptr<NodeInfo> node = this->node_store.get(ref);
+	size_t last_node_ref = node->getUniqueIndex();
+	unordered_set<shared_ptr<PKB::NodeInfo>> next_nodes_transitive = {};
+	std::priority_queue<pair<StmtRef, unordered_set<shared_ptr<PKB::NodeInfo>>>,
+	                    vector<pair<StmtRef, unordered_set<shared_ptr<PKB::NodeInfo>>>>, NodeComparator>
+		queue;
+	queue.push(make_pair(last_node_ref, next_nodes_transitive));
+	while (!queue.empty()) {
+		StmtRef current_ref = queue.top().first;
+		// TODO: Try not to make map public by using friend class in the future.
+		NodeRelation current_node_relation = cfg_store.map.find(current_ref)->second;
+		unordered_set<shared_ptr<NodeInfo>> nodes_to_add = queue.top().second;
+		nodes_to_add = populateTransitive(current_node_relation, nodes_to_add);
+		for (shared_ptr<PKB::NodeInfo> previous_node : current_node_relation.getForward()) {
+			queue.push(make_pair(previous_node->getIdentifier(), nodes_to_add));
+		}
+		queue.pop();
+	}
+	return cfg_store.getReverseTransitive(ref);
+}
+unordered_set<shared_ptr<PKB::NodeInfo>> PKB::NextStarQueryCache::populateTransitive(
+	NodeRelation& current, unordered_set<shared_ptr<PKB::NodeInfo>> next_nodes_transitive) {
+	current.appendReverseTransitive(next_nodes_transitive);
+	next_nodes_transitive.insert(current.getSelf());
+	return next_nodes_transitive;
 }
