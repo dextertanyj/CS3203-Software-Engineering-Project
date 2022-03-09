@@ -3,8 +3,8 @@
 
 #include <memory>
 
-#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/ExpressionProcessor/AtomicNode.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 
 using std::shared_ptr;
 

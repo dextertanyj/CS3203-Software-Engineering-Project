@@ -15,7 +15,7 @@
 #include "Common/TypeDefs.h"
 #include "Common/Validator.h"
 
-#define LOGICAL_PRECEDENCE -1
+#define LOGICAL_PRECEDENCE (-1)
 #define RELATIONAL_PRECEDENCE 1
 #define ADD_SUBTRACT_PRECEDENCE 2
 #define MULTIPLY_DIVIDE_MODULUS_PRECEDENCE 3
@@ -23,8 +23,8 @@
 using namespace Common::ExpressionProcessor;
 
 struct ExtractVisitor {
-	shared_ptr<ExpressionNode> expression;
-	bool wrapped = false;
+	shared_ptr<ExpressionNode> expression;  // NOLINT(misc-non-private-member-variables-in-classes)
+	bool wrapped = false;                   // NOLINT(misc-non-private-member-variables-in-classes)
 	void operator()(ParenthesesWrapper parentheses) {
 		shared_ptr<ExpressionNode> expr = parentheses.getExpression();
 		wrapped = true;
