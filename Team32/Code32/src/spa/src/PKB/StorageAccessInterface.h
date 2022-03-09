@@ -58,6 +58,8 @@ public:
 
 	// CFG Next Methods
 	virtual bool checkNext(StmtRef first, StmtRef second) = 0;
+	virtual unordered_set<shared_ptr<PKB::NodeInfo>> getNext(StmtRef first) = 0;
+	virtual unordered_set<shared_ptr<PKB::NodeInfo>> getPrevious(StmtRef second) = 0;
 	virtual unordered_set<shared_ptr<PKB::NodeInfo>> getNextTransitive(StmtRef node_ref) = 0;
 
 	// Control Variable get methods

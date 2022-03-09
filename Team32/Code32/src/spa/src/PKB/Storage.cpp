@@ -247,21 +247,21 @@ unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getNextTransitive(StmtRef
 	return control_flow_graph.getReverseTransitive(node_ref);
 }
 
-StmtInfoPtrSet PKB::Storage::getIfControlStmt(VarRef name) {
-	return if_control_store.getByVar(name);
+unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getNext(StmtRef first) {
+	return control_flow_graph.getReverse(first);
 }
 
-StmtInfoPtrSet PKB::Storage::getWhileControlStmt(VarRef name) {
-	return while_control_store.getByVar(name);
+unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getPrevious(StmtRef second) {
+	return control_flow_graph.getForward(second);
 }
 
-VarRefSet PKB::Storage::getIfControlVar(StmtRef index) {
-	return if_control_store.getByStmt(index);
-}
+StmtInfoPtrSet PKB::Storage::getIfControlStmt(VarRef name) { return if_control_store.getByVar(name); }
 
-VarRefSet PKB::Storage::getWhileControlVar(StmtRef index) {
-	return while_control_store.getByStmt(index);
-}
+StmtInfoPtrSet PKB::Storage::getWhileControlStmt(VarRef name) { return while_control_store.getByVar(name); }
+
+VarRefSet PKB::Storage::getIfControlVar(StmtRef index) { return if_control_store.getByStmt(index); }
+
+VarRefSet PKB::Storage::getWhileControlVar(StmtRef index) { return while_control_store.getByStmt(index); }
 
 void PKB::Storage::populateComplexRelations() {
 	call_statement_store.populate(procedure_store, call_store);
