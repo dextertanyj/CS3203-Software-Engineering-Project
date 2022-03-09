@@ -1,5 +1,7 @@
 #include "NodeRelation.h"
 
+#include "PKB/TransitiveRelationStore.tpp"
+
 PKB::NodeRelation::NodeRelation(shared_ptr<PKB::NodeInfo> self) : self(std::move(self)) {}
 
 void PKB::NodeRelation::insertForward(const shared_ptr<PKB::NodeInfo>& previous_node) {
