@@ -9,7 +9,11 @@ using namespace std;
 
 // This method will store information about a statement into PKB's statement map.
 // Source Processor is guaranteed to call this method before storing relationships and variables.
-void PKB::Storage::setStmtType(StmtRef index, StmtType type) { statement_store.insert(index, type); }
+void PKB::Storage::setStmtType(StmtRef index, StmtType type) {
+	statement_store.insert(index, type);
+	shared_ptr<StmtInfo> info = statement_store.get(index);
+	node_store.insert(index, info->getType());
+}
 
 void PKB::Storage::setConstant(ConstVal value) { constant_store.insert(value); }
 
@@ -89,10 +93,6 @@ void PKB::Storage::setUses(StmtRef index, VarRefSet names) {
 void PKB::Storage::setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) {
 	shared_ptr<StmtInfo> statement = statement_store.get(index);
 	return assign_store.setAssign(statement, move(variable), move(expression));
-}
-void PKB::Storage::setNode(StmtRef index) {
-	shared_ptr<StmtInfo> info = statement_store.get(index);
-	node_store.insert(index, info->getType());
 }
 
 void PKB::Storage::setIfControl(StmtRef index, VarRefSet names) {

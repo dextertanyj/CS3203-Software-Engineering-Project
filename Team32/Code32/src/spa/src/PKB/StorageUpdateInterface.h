@@ -18,7 +18,6 @@ public:
 	virtual void setModifies(StmtRef index, VarRefSet names) = 0;
 	virtual void setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) = 0;
 	virtual void setNext(StmtRef previous, StmtRef next) = 0;
-	virtual void setNode(StmtRef previous) = 0;
 	virtual void setIfControl(StmtRef index, VarRefSet names) = 0;
 	virtual void setWhileControl(StmtRef index, VarRefSet names) = 0;
 	virtual void setIfControl(StmtRef index, VarRef name) = 0;

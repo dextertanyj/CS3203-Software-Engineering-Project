@@ -48,7 +48,6 @@ public:
 	void setModifies(StmtRef index, VarRefSet names) override;
 	void setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) override;
 	void setNext(StmtRef previous, StmtRef next) override;
-	void setNode(StmtRef index) override;
 	void setIfControl(StmtRef index, VarRefSet names) override;
 	void setIfControl(StmtRef index, VarRef name) override;
 	void setWhileControl(StmtRef index, VarRefSet names) override;
