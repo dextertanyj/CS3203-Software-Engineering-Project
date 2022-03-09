@@ -4,12 +4,11 @@
 #include <set>
 #include <unordered_map>
 
-#include "Common/TypeDefs.h"
 #include "NodeInfo.h"
 #include "NodeRelation.h"
 #include "PKB/PKB.h"
 
-class NextStarQueryCache {
+class PKB::NextStarQueryCache {
 public:
 	void initialize(PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>& cfg_store);
 	bool checkNextStar(StmtRef first, StmtRef second);
