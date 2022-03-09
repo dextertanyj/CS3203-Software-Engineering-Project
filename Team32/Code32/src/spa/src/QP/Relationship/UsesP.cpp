@@ -86,7 +86,7 @@ QP::QueryResult QP::Relationship::UsesP::executeTrivialSynonym(PKB::StorageAcces
 }
 
 QP::QueryResult QP::Relationship::UsesP::executeNameSynonym(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent,
-                                                               const ReferenceArgument &right_ent) {
+                                                            const ReferenceArgument &right_ent) {
 	VarRefSet var_set = pkb.getUsesByProc(left_ent.getName());
 	vector<string> column;
 
