@@ -8,16 +8,30 @@ class QP::Relationship::CallsT : public Calls {
 public:
 	using Calls::Calls;
 
+	// Trivial Executors
+
+	static QueryResult executeTrivialNameName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
+	                                          const ReferenceArgument& callee);
+	static QueryResult executeTrivialNameWildcardOrSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller);
+	static QueryResult executeTrivialWildcardOrSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& callee);
+	static QueryResult executeTrivialWildcardOrSynonymWildcardOrSynonym(PKB::StorageAccessInterface& pkb);
+	static QueryResult executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
+	                                                const ReferenceArgument& callee);
+
+	// Executors
+
+	static QueryResult executeNameSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
+	                                      const ReferenceArgument& callee);
+	static QueryResult executeWildcardSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& callee);
+	static QueryResult executeSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
+	                                      const ReferenceArgument& callee);
+	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller);
+	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
+	                                         const ReferenceArgument& callee);
+
 private:
 	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
 	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
-
-	QueryResult executeTrivialCallerVarName(PKB::StorageAccessInterface& pkb);
-	QueryResult executeTrivialCallerUnderscoreSynonym(PKB::StorageAccessInterface& pkb);
-
-	QueryResult executeNonTrivialCallerVarName(PKB::StorageAccessInterface& pkb);
-	QueryResult executeNonTrivialCallerUnderscore(PKB::StorageAccessInterface& pkb);
-	QueryResult executeNonTrivialCallerSynonym(PKB::StorageAccessInterface& pkb);
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_CALLT_H
