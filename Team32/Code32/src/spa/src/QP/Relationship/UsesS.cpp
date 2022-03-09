@@ -27,18 +27,18 @@ vector<string> QP::Relationship::UsesS::getDeclarationSymbols() {
 
 QP::QueryResult QP::Relationship::UsesS::executeTrivial(PKB::StorageAccessInterface& pkb) {
 	if (stmt.getType() == ReferenceType::StatementIndex && ent.getType() == ReferenceType::Name) {
-		return executeTrivialIndexVarName(pkb, stmt, ent);
+		return executeTrivialIndexName(pkb, stmt, ent);
 	}
 	if ((stmt.getType() == ReferenceType::StatementIndex && ent.getType() == ReferenceType::Wildcard) ||
 	    (stmt.getType() == ReferenceType::StatementIndex && ent.getType() == ReferenceType::Synonym)) {
 		return executeTrivialIndex(pkb, stmt);
 	}
 	if (stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Name) {
-		return executeTrivialSynonym(pkb, stmt, ent);
+		return executeTrivialSynonymName(pkb, stmt, ent);
 	}
 	if ((stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Wildcard) ||
 	    (stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Synonym)) {
-		return executeTrivialSynonymSynonym(pkb, stmt);
+		return executeTrivialSynonym(pkb, stmt);
 	}
 
 	return {};
@@ -46,7 +46,7 @@ QP::QueryResult QP::Relationship::UsesS::executeTrivial(PKB::StorageAccessInterf
 
 QP::QueryResult QP::Relationship::UsesS::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
 	if (stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Name) {
-		return executeSynonymVarName(pkb, stmt, ent);
+		return executeSynonymName(pkb, stmt, ent);
 	}
 	if (stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Wildcard) {
 		return executeSynonymWildcard(pkb, stmt);
@@ -60,7 +60,7 @@ QP::QueryResult QP::Relationship::UsesS::executeNonTrivial(PKB::StorageAccessInt
 	return {};
 }
 
-QP::QueryResult QP::Relationship::UsesS::executeTrivialIndexVarName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
+QP::QueryResult QP::Relationship::UsesS::executeTrivialIndexName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
                                                                     const ReferenceArgument& ent) {
 	return QueryResult(pkb.checkUses(stmt.getStatementIndex(), ent.getName()));
 }
@@ -70,7 +70,7 @@ QP::QueryResult QP::Relationship::UsesS::executeTrivialIndex(PKB::StorageAccessI
 	return QueryResult(!var_set.empty());
 }
 
-QP::QueryResult QP::Relationship::UsesS::executeTrivialSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
+QP::QueryResult QP::Relationship::UsesS::executeTrivialSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
                                                                const ReferenceArgument& ent) {
 	StmtInfoPtrSet stmt_set = pkb.getStmtUsesByVar(ent.getName());
 	DesignEntity design_entity = stmt.getSynonym().type;
@@ -82,7 +82,7 @@ QP::QueryResult QP::Relationship::UsesS::executeTrivialSynonym(PKB::StorageAcces
 	return {};
 }
 
-QP::QueryResult QP::Relationship::UsesS::executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt) {
+QP::QueryResult QP::Relationship::UsesS::executeTrivialSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt) {
 	StmtInfoPtrSet stmt_set = pkb.getStatements();
 	DesignEntity design_entity = stmt.getSynonym().type;
 	for (auto const& res_stmt : stmt_set) {
@@ -98,7 +98,7 @@ QP::QueryResult QP::Relationship::UsesS::executeTrivialSynonymSynonym(PKB::Stora
 	return {};
 }
 
-QP::QueryResult QP::Relationship::UsesS::executeSynonymVarName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
+QP::QueryResult QP::Relationship::UsesS::executeSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
                                                                const ReferenceArgument& ent) {
 	StmtInfoPtrSet stmt_set = pkb.getStmtUsesByVar(ent.getName());
 	DesignEntity design_entity = stmt.getSynonym().type;

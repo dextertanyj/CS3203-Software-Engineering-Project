@@ -16,15 +16,15 @@ public:
 
 	// Trivial Executors
 
-	static QueryResult executeTrivialIndexVarName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
+	static QueryResult executeTrivialIndexName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
 	                                              const ReferenceArgument& ent);
 	static QueryResult executeTrivialIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt);
-	static QueryResult executeTrivialSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt, const ReferenceArgument& ent);
-	static QueryResult executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt);
+	static QueryResult executeTrivialSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt, const ReferenceArgument& ent);
+	static QueryResult executeTrivialSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt);
 
 	// Executors
 
-	static QueryResult executeSynonymVarName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt, const ReferenceArgument& ent);
+	static QueryResult executeSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt, const ReferenceArgument& ent);
 	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt);
 	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt, const ReferenceArgument& ent);
 	static QueryResult executeIndexSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt, const ReferenceArgument& ent);

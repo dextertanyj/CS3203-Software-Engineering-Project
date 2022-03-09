@@ -48,7 +48,7 @@ QP::QueryResult QP::Relationship::UsesP::executeNonTrivial(PKB::StorageAccessInt
 		return executeVarNameSynonym(pkb, left_ent, right_ent);
 	}
 	if (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Name) {
-		return executeSynonymVarName(pkb, left_ent, right_ent);
+		return executeSynonymName(pkb, left_ent, right_ent);
 	}
 	if (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Wildcard) {
 		return executeSynonymWildcard(pkb, left_ent);
@@ -99,7 +99,7 @@ QP::QueryResult QP::Relationship::UsesP::executeVarNameSynonym(PKB::StorageAcces
 	return result;
 }
 
-QP::QueryResult QP::Relationship::UsesP::executeSynonymVarName(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent,
+QP::QueryResult QP::Relationship::UsesP::executeSynonymName(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent,
                                                                const ReferenceArgument &right_ent) {
 	ProcRefSet proc_set = pkb.getProcUsesByVar(right_ent.getName());
 	vector<string> column;

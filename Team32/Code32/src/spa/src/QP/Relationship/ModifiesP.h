@@ -14,19 +14,30 @@ public:
 
 	vector<string> getDeclarationSymbols() override;
 
+	// Trivial Executors
+
+	static QueryResult executeTrivialNameName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& left_ent,
+	                                          const ReferenceArgument& right_ent);
+	static QueryResult executeTrivialName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& left_ent);
+	static QueryResult executeTrivialSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& right_ent);
+	static QueryResult executeTrivialSynonym(PKB::StorageAccessInterface& pkb);
+
+	// Executors
+
+	static QueryResult executeNameSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& left_ent,
+	                                      const ReferenceArgument& right_ent);
+	static QueryResult executeSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& left_ent,
+	                                      const ReferenceArgument& right_ent);
+	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& left_ent);
+	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& left_ent,
+	                                         const ReferenceArgument& right_ent);
+
 private:
 	ReferenceArgument left_ent;
 	ReferenceArgument right_ent;
 
 	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
 	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
-
-	QueryResult executeTrivialBothUnknown(PKB::StorageAccessInterface& pkb);
-
-	QueryResult executeNonTrivialLeftEntVarName(PKB::StorageAccessInterface& pkb);
-	QueryResult executeNonTrivialRightEntVarName(PKB::StorageAccessInterface& pkb);
-	QueryResult executeNonTrivialRightEntUnderscore(PKB::StorageAccessInterface& pkb);
-	QueryResult executeNonTrivialRightEntSynonym(PKB::StorageAccessInterface& pkb);
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_MODIFIESP_H
