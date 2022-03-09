@@ -1,5 +1,5 @@
-#ifndef SPA_CALLDISPATCHER_H
-#define SPA_CALLDISPATCHER_H
+#ifndef SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_H
+#define SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_H
 
 #include "QP/QP.h"
 #include "QP/QueryTypes.h"
@@ -8,7 +8,8 @@
 template <class T>
 class QP::CallDispatcherTemplate {
 public:
-	static Types::ExecutorSetBundle argumentDispatcher(vector<Types::ReferenceArgument> arguments);
+	static Types::ExecutorSetBundle argumentDispatcher(ClauseType type, vector<Types::ReferenceArgument> arguments);
+
 private:
 	static const unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>>
 		argument_dispatch_map;
@@ -17,4 +18,4 @@ private:
 	static const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> synonym_map;
 };
 
-#endif  // SPA_CALLDISPATCHER_H
+#endif  // SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_H

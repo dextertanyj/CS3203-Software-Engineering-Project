@@ -17,9 +17,11 @@ class QueryProperties;
 class QueryResult;
 template <class T>
 class CallDispatcherTemplate;
-namespace Dispatcher {};
+struct Dispatcher;
 namespace Utilities {};
 namespace Types {};
+
+namespace DispatchProcessors {};
 
 struct QueryException : public runtime_error {
 	using runtime_error::runtime_error;

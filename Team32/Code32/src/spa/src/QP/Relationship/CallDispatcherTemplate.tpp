@@ -1,28 +1,15 @@
-#include "CallDispatcherTemplate.h"
+#ifndef SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_TPP
+#define SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_TPP
+
+#include "QP/Relationship/CallDispatcherTemplate.h"
+
+#include <utility>
+
+#include "QP/DispatchProcessors.h"
 
 template <class T>
-QP::Types::ExecutorSetBundle QP::CallDispatcherTemplate<T>::argumentDispatcher(vector<Types::ReferenceArgument> args) {
-	if (args.size() != 2) {
-		throw QP::QueryException("Incorrect number of arguments.");
-	}
-	Types::ArgumentDispatchKey outer_key = args.at(0).getType();
-	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
-		outer_key = args.at(0).getSynonym().type;
-	}
-	Types::ArgumentDispatchKey inner_key = args.at(0).getType();
-	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
-		inner_key = args.at(0).getSynonym().type;
-	}
-	auto outer_map_iter = argument_dispatch_map.find(outer_key);
-	if (outer_map_iter == argument_dispatch_map.end()) {
-		throw "Incorrect first argument.";
-	}
-	auto inner_map = outer_map_iter->second;
-	auto inner_map_iter = inner_map.find(inner_key);
-	if (inner_map_iter == inner_map.end()) {
-		throw "Incorrect second argument.";
-	}
-	return {Types::ClauseType::Call, inner_map_iter->second(args)};
+QP::Types::ExecutorSetBundle QP::CallDispatcherTemplate<T>::argumentDispatcher(ClauseType type, vector<Types::ReferenceArgument> args) {
+	return DispatchProcessors::processDoubleArgument(type, QP::CallDispatcherTemplate<T>::argument_dispatch_map, std::move(args));
 };
 
 template <class T>
@@ -95,3 +82,5 @@ const unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::Arg
 	QP::CallDispatcherTemplate<T>::argument_dispatch_map = {{Types::ReferenceType::Name, name_map},
                                                             {Types::ReferenceType::Wildcard, wildcard_map},
                                                             {Types::DesignEntity::Procedure, synonym_map}};
+
+#endif
