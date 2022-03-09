@@ -9,16 +9,16 @@ void PKB::NextStarQueryCache::initialize(PKB::TransitiveRelationStore<StmtRef, P
 bool PKB::NextStarQueryCache::checkNextStar(StmtRef first, StmtRef second) {
 	const bool is_in_cache = check_next_star_cache.find(make_pair(first, second)) != check_next_star_cache.end();
 	if (!is_in_cache) {
-		bool is_in_cfg = false;
-		unordered_set<shared_ptr<PKB::NodeInfo>> next_star_set = {};
-
 		// Need to search CFG for the relationship.
-		// TODO: Search logic
-
+		bool is_in_cfg = false;
+		unordered_set<shared_ptr<PKB::NodeInfo>> next_star_set = searchNextStar(first);
+		for (shared_ptr<PKB::NodeInfo> node_info : next_star_set) {
+			if (node_info->getIdentifier() == second) is_in_cfg = true;
+		}
 		if (is_in_cfg) {
-			cacheCheckNextStar(first, second);
 			cacheNextStarSet(first, next_star_set);
 		}
+		cacheCheckNextStar(first, second);
 		return is_in_cfg;
 	}
 	return false;
@@ -27,15 +27,8 @@ bool PKB::NextStarQueryCache::checkNextStar(StmtRef first, StmtRef second) {
 unordered_set<shared_ptr<PKB::NodeInfo>> PKB::NextStarQueryCache::getNextStar(StmtRef ref) {
 	const bool is_in_cache = next_star_set_cache.find(ref) != next_star_set_cache.end();
 	if (!is_in_cache) {
-		bool is_in_cfg = false;
-		unordered_set<shared_ptr<PKB::NodeInfo>> next_star_set = {};
-
-		// Need to search CFG for the relationship.
-		// TODO: Search logic
-
-		if (is_in_cfg) {
-			cacheNextStarSet(ref, next_star_set);
-		}
+		unordered_set<shared_ptr<PKB::NodeInfo>> next_star_set = searchNextStar(ref);
+		cacheNextStarSet(ref, next_star_set);
 		return next_star_set;
 	}
 	return next_star_set_cache.find(ref)->second;
@@ -47,4 +40,8 @@ void PKB::NextStarQueryCache::cacheCheckNextStar(StmtRef first, StmtRef second) 
 
 void PKB::NextStarQueryCache::cacheNextStarSet(StmtRef ref, unordered_set<shared_ptr<PKB::NodeInfo>> next_star_set) {
 	this->next_star_set_cache.insert({ref, next_star_set});
+}
+unordered_set<shared_ptr<PKB::NodeInfo>> PKB::NextStarQueryCache::searchNextStar(StmtRef ref) {
+	// TODO: Search algorithm populates next* starting from ending node in the procedure.
+	return {};
 }
