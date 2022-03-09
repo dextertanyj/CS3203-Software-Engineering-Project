@@ -13,6 +13,7 @@ public:
 	void setUniqueIndex(size_t unique_index);
 	StmtRef getUniqueIndex() const;
 	virtual bool isDummy() const;
+	virtual ~NodeInfo() = 0;
 
 private:
 	StmtRef index;
