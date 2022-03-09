@@ -45,19 +45,19 @@ class UsesPRelation;
 class NodeRelation;
 
 typedef struct IfControlRelation {
-	static bool validate(SVRelationStore<IfControlRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
+	static bool validate(SVRelationStore<IfControlRelation>*, const shared_ptr<StmtInfo>& statement, const VarRef&) {
 		return statement->getType() == StmtType::IfStmt;
 	}
-	static bool validate(SVRelationStore<IfControlRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variable) {
+	static bool validate(SVRelationStore<IfControlRelation>*, const shared_ptr<StmtInfo>& statement, const VarRefSet&) {
 		return statement->getType() == StmtType::IfStmt;
 	}
 } IfControlRelation;
 
 typedef struct WhileControlRelation {
-	static bool validate(SVRelationStore<WhileControlRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
+	static bool validate(SVRelationStore<WhileControlRelation>*, const shared_ptr<StmtInfo>& statement, const VarRef&) {
 		return statement->getType() == StmtType::WhileStmt;
 	}
-	static bool validate(SVRelationStore<WhileControlRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variable) {
+	static bool validate(SVRelationStore<WhileControlRelation>*, const shared_ptr<StmtInfo>& statement, const VarRefSet&) {
 		return statement->getType() == StmtType::WhileStmt;
 	}
 } WhileControlRelation;

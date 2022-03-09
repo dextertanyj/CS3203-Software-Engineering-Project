@@ -110,8 +110,8 @@ public:
 	bool checkNext(StmtRef first, StmtRef second) override;
 	StmtInfoPtrSet getNextTransitive(StmtRef node_ref) override;
 	StmtInfoPtrSet getPreviousTransitive(StmtRef node_ref) override;
-	virtual StmtInfoPtrSet getNext(StmtRef first) override;
-	virtual StmtInfoPtrSet getPrevious(StmtRef second) override;
+	StmtInfoPtrSet getNext(StmtRef first) override;
+	StmtInfoPtrSet getPrevious(StmtRef second) override;
 
 	// Control Variable get methods
 	bool checkIfControl(StmtRef index, VarRef name) override;
