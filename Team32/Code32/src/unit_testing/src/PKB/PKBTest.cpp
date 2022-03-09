@@ -673,7 +673,8 @@ TEST_CASE("PKB::Modifies Methods Test") {
 	}
 }
 
-/*
+
+/* Comment out when optimize has been implemented
 TEST_CASE("PKB::Next Methods Test") {
 	PKB::Storage pkb = TestUtilities::generateNextTestPKB();
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
@@ -713,16 +714,25 @@ TEST_CASE("PKB::Next Methods Test") {
 	}
 
 	SECTION("PKB::getPrevious Test") {
-		CHECK(pkb.getNext(2) == StmtInfoPtrSet{ s_1 });
-		CHECK(pkb.getNext(4) == StmtInfoPtrSet{ s_2 });
-		CHECK(pkb.getNext(8) == StmtInfoPtrSet{ s_6, s_7 });
+		CHECK(pkb.getPrevious(2) == StmtInfoPtrSet{ s_1 });
+		CHECK(pkb.getPrevious(4) == StmtInfoPtrSet{ s_2 });
+		CHECK(pkb.getPrevious(8) == StmtInfoPtrSet{ s_6, s_7 });
 	}
 
 	SECTION("PKB::getNextTransitive Test") {
-		CHECK(pkb.getNext(1) == StmtInfoPtrSet{ s_2, s_3, s_4, s_5, s_6, s_7, s_8 });
-		CHECK(pkb.getNext(3) == StmtInfoPtrSet{ s_2, s_3, s_4, s_5, s_6, s_7, s_8 });
-		CHECK(pkb.getNext(5) == StmtInfoPtrSet{ s_6, s_7, s_8 });
-		CHECK(pkb.getNext(6) == StmtInfoPtrSet{ s_8 });
+		CHECK(pkb.getNextTransitive(1) == StmtInfoPtrSet{ s_2, s_3, s_4, s_5, s_6, s_7, s_8 });
+		CHECK(pkb.getNextTransitive(3) == StmtInfoPtrSet{ s_2, s_3, s_4, s_5, s_6, s_7, s_8 });
+		CHECK(pkb.getNextTransitive(5) == StmtInfoPtrSet{ s_6, s_7, s_8 });
+		CHECK(pkb.getNextTransitive(6) == StmtInfoPtrSet{ s_8 });
+	}
+
+	SECTION("PKB::getPreviousTransitive Test") {
+		CHECK(pkb.getPreviousTransitive(1) == StmtInfoPtrSet{});
+		CHECK(pkb.getPreviousTransitive(3) == StmtInfoPtrSet{ s_1, s_2 });
+		CHECK(pkb.getPreviousTransitive(5) == StmtInfoPtrSet{ s_1, s_2, s_3, s_4 });
+		CHECK(pkb.getPreviousTransitive(7) == StmtInfoPtrSet{ s_1, s_2, s_3, s_4, s_5 });
 	}
 }
-*/
+ */
+
+

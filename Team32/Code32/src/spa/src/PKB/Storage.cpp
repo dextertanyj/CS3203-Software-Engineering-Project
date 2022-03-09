@@ -12,7 +12,7 @@ using namespace std;
 void PKB::Storage::setStmtType(StmtRef index, StmtType type) {
 	statement_store.insert(index, type);
 	shared_ptr<StmtInfo> info = statement_store.get(index);
-	node_store.insert(index, info->getType());
+	node_store.insert(index, type);
 }
 
 void PKB::Storage::setConstant(ConstVal value) { constant_store.insert(value); }

@@ -12,8 +12,8 @@ void PKB::NodeRelation::insertForward(const shared_ptr<PKB::NodeInfo>& previous_
 	if (self == previous_node) {
 		throw invalid_argument("Recursive call detected.");
 	}
-	if (previous_nodes.size() == 2) {
-		throw logic_error("A node cannot have more than 2 previous nodes.");
+	if (previous_nodes.size() == 3) {
+		throw logic_error("A node cannot have more than 3 previous nodes.");
 	}
 	this->previous_nodes.insert(previous_node);
 }
@@ -22,8 +22,8 @@ void PKB::NodeRelation::insertReverse(const shared_ptr<PKB::NodeInfo>& next_node
 	if (self == next_node) {
 		throw invalid_argument("Recursive call detected.");
 	}
-	if (next_nodes.size() == 2) {
-		throw logic_error("A node cannot have more than 2 next nodes.");
+	if (next_nodes.size() == 3) {
+		throw logic_error("A node cannot have more than 3 next nodes.");
 	}
 	StmtType current_type = self->getType();
 	if (current_type != StmtType::IfStmt && current_type != StmtType::WhileStmt && next_nodes.size() == 1) {
@@ -33,16 +33,10 @@ void PKB::NodeRelation::insertReverse(const shared_ptr<PKB::NodeInfo>& next_node
 }
 
 void PKB::NodeRelation::appendForwardTransitive(unordered_set<shared_ptr<NodeInfo>> new_previous_nodes) {
-	if (new_previous_nodes.find(self) != new_previous_nodes.end()) {
-		throw invalid_argument("Recursive call detected.");
-	}
 	this->previous_nodes_transitive.insert(new_previous_nodes.begin(), new_previous_nodes.end());
 }
 
 void PKB::NodeRelation::appendReverseTransitive(unordered_set<shared_ptr<NodeInfo>> new_next_nodes) {
-	if (new_next_nodes.find(self) != new_next_nodes.end()) {
-		throw invalid_argument("Recursive call detected.");
-	}
 	this->next_nodes_transitive.insert(new_next_nodes.begin(), new_next_nodes.end());
 }
 
