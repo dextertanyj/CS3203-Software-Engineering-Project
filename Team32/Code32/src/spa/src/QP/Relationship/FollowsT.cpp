@@ -2,89 +2,31 @@
 
 QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::StorageAccessInterface& pkb) {
 	if (getLeftStmt().getType() == ReferenceType::StatementIndex && getRightStmt().getType() == ReferenceType::StatementIndex) {
-		StmtInfoPtrSet followers_set = pkb.getFollowerStar(getLeftStmt().getStatementIndex());
-		StmtRef right_stmt_no = getRightStmt().getStatementIndex();
-		for (auto const& follower : followers_set) {
-			if (follower->getIdentifier() == right_stmt_no) {
-				return QueryResult(true);
-			}
-		}
-	} else if (getLeftStmt().getType() == ReferenceType::StatementIndex && getRightStmt().getType() == ReferenceType::Wildcard) {
-		StmtInfoPtrSet stmt_set = pkb.getFollowerStar(getLeftStmt().getStatementIndex());
-		return QueryResult(!stmt_set.empty());
-	} else if (getLeftStmt().getType() == ReferenceType::StatementIndex && getRightStmt().getType() == ReferenceType::Synonym) {
-		StmtInfoPtrSet stmt_set = pkb.getFollowerStar(getLeftStmt().getStatementIndex());
-		DesignEntity design_entity = getRightStmt().getSynonym().type;
-		for (auto const& stmt : stmt_set) {
-			if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				return QueryResult(true);
-			}
-		}
-	} else if (getLeftStmt().getType() == ReferenceType::Wildcard && getRightStmt().getType() == ReferenceType::StatementIndex) {
-		StmtInfoPtrSet stmt_set = pkb.getPrecedingStar(getRightStmt().getStatementIndex());
-		return QueryResult(!stmt_set.empty());
-	} else if (getLeftStmt().getType() == ReferenceType::Wildcard && getRightStmt().getType() == ReferenceType::Wildcard) {
-		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		for (auto const& stmt : stmt_set) {
-			StmtInfoPtrSet followers = pkb.getFollowerStar(stmt->getIdentifier());
-			if (!followers.empty()) {
-				return QueryResult(true);
-			}
-		}
-	} else if (getLeftStmt().getType() == ReferenceType::Wildcard && getRightStmt().getType() == ReferenceType::Synonym) {
-		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity design_entity = getRightStmt().getSynonym().type;
-		for (auto const& stmt : stmt_set) {
-			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				continue;
-			}
-
-			StmtInfoPtrSet preceding_set = pkb.getPrecedingStar(stmt->getIdentifier());
-			if (!preceding_set.empty()) {
-				return QueryResult(true);
-			}
-		}
-	} else if (getLeftStmt().getType() == ReferenceType::Synonym && getRightStmt().getType() == ReferenceType::StatementIndex) {
-		StmtInfoPtrSet preceding_set = pkb.getPrecedingStar(getRightStmt().getStatementIndex());
-		DesignEntity design_entity = getLeftStmt().getSynonym().type;
-		for (auto const& preceding : preceding_set) {
-			if (Utilities::checkStmtTypeMatch(preceding, design_entity)) {
-				return QueryResult(true);
-			}
-		}
-	} else if (getLeftStmt().getType() == ReferenceType::Synonym && getRightStmt().getType() == ReferenceType::Wildcard) {
-		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity design_entity = getLeftStmt().getSynonym().type;
-		for (auto const& stmt : stmt_set) {
-			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				continue;
-			}
-
-			StmtInfoPtrSet followers = pkb.getFollowerStar(stmt->getIdentifier());
-			if (!followers.empty()) {
-				return QueryResult(true);
-			}
-		}
-	} else if (getLeftStmt().getType() == ReferenceType::Synonym && getRightStmt().getType() == ReferenceType::Synonym) {
-		if (getLeftStmt().getSynonym().symbol == getRightStmt().getSynonym().symbol) {
-			return {};
-		}
-
-		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity left_design_entity = getLeftStmt().getSynonym().type;
-		DesignEntity right_design_entity = getRightStmt().getSynonym().type;
-		for (auto const& stmt : stmt_set) {
-			if (!Utilities::checkStmtTypeMatch(stmt, left_design_entity)) {
-				continue;
-			}
-
-			StmtInfoPtrSet follower_set = pkb.getFollowerStar(stmt->getIdentifier());
-			for (auto const& follower : follower_set) {
-				if (Utilities::checkStmtTypeMatch(follower, right_design_entity)) {
-					return QueryResult(true);
-				}
-			}
-		}
+		return executeTrivialIndexIndex(pkb, getLeftStmt(), getRightStmt());
+	}
+	if (getLeftStmt().getType() == ReferenceType::StatementIndex && getRightStmt().getType() == ReferenceType::Wildcard) {
+		return executeTrivialIndexWildcard(pkb, getLeftStmt());
+	}
+	if (getLeftStmt().getType() == ReferenceType::StatementIndex && getRightStmt().getType() == ReferenceType::Synonym) {
+		return executeTrivialIndexSynonym(pkb, getLeftStmt(), getRightStmt());
+	}
+	if (getLeftStmt().getType() == ReferenceType::Wildcard && getRightStmt().getType() == ReferenceType::StatementIndex) {
+		return executeTrivialWildcardIndex(pkb, getRightStmt());
+	}
+	if (getLeftStmt().getType() == ReferenceType::Wildcard && getRightStmt().getType() == ReferenceType::Wildcard) {
+		return executeTrivialWildcardWildcard(pkb);
+	}
+	if (getLeftStmt().getType() == ReferenceType::Wildcard && getRightStmt().getType() == ReferenceType::Synonym) {
+		return executeTrivialWildcardSynonym(pkb, getRightStmt());
+	}
+	if (getLeftStmt().getType() == ReferenceType::Synonym && getRightStmt().getType() == ReferenceType::StatementIndex) {
+		return executeTrivialSynonymIndex(pkb, getLeftStmt(), getRightStmt());
+	}
+	if (getLeftStmt().getType() == ReferenceType::Synonym && getRightStmt().getType() == ReferenceType::Wildcard) {
+		return executeTrivialSynonymWildcard(pkb, getLeftStmt());
+	}
+	if (getLeftStmt().getType() == ReferenceType::Synonym && getRightStmt().getType() == ReferenceType::Synonym) {
+		return executeTrivialSynonymSynonym(pkb, getLeftStmt(), getRightStmt());
 	}
 
 	return {};
@@ -92,97 +34,227 @@ QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::StorageAccessInt
 
 QP::QueryResult QP::Relationship::FollowsT::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
 	if (getLeftStmt().getType() == ReferenceType::Synonym && getRightStmt().getType() == ReferenceType::StatementIndex) {
-		StmtInfoPtrSet preceding_set = pkb.getPrecedingStar(getRightStmt().getStatementIndex());
-		DesignEntity design_entity = getLeftStmt().getSynonym().type;
-		vector<string> column;
-		for (auto const& preceding : preceding_set) {
-			if (Utilities::checkStmtTypeMatch(preceding, design_entity)) {
-				column.push_back(to_string(preceding->getIdentifier()));
-			}
-		}
-		QueryResult result = QueryResult();
-		result.addColumn(getLeftStmt().getSynonym().symbol, column);
-		return result;
+		return executeSynonymIndex(pkb, getLeftStmt(), getRightStmt());
 	}
 	if (getLeftStmt().getType() == ReferenceType::Synonym && getRightStmt().getType() == ReferenceType::Wildcard) {
-		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity design_entity = getLeftStmt().getSynonym().type;
-		vector<string> column;
-		for (auto const& stmt : stmt_set) {
-			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				continue;
-			}
-
-			StmtInfoPtrSet follower_set = pkb.getFollowerStar(stmt->getIdentifier());
-			if (!follower_set.empty()) {
-				column.push_back(to_string(stmt->getIdentifier()));
-			}
-		}
-		QueryResult result = QueryResult();
-		result.addColumn(getLeftStmt().getSynonym().symbol, column);
-		return result;
+		return executeSynonymWildcard(pkb, getLeftStmt());
 	}
 	if (getLeftStmt().getType() == ReferenceType::Synonym && getRightStmt().getType() == ReferenceType::Synonym) {
-		if (getLeftStmt().getSynonym().symbol == getRightStmt().getSynonym().symbol) {
-			return {};
-		}
-
-		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity left_design_entity = getLeftStmt().getSynonym().type;
-		DesignEntity right_design_entity = getRightStmt().getSynonym().type;
-		vector<string> left_column;
-		vector<string> right_column;
-		for (auto const& stmt : stmt_set) {
-			if (!Utilities::checkStmtTypeMatch(stmt, left_design_entity)) {
-				continue;
-			}
-
-			StmtInfoPtrSet follower_set = pkb.getFollowerStar(stmt->getIdentifier());
-			for (auto const& follower : follower_set) {
-				if (Utilities::checkStmtTypeMatch(follower, right_design_entity)) {
-					left_column.push_back(to_string(stmt->getIdentifier()));
-					right_column.push_back(to_string(follower->getIdentifier()));
-				}
-			}
-		}
-		QueryResult result = QueryResult();
-		result.addColumn(getLeftStmt().getSynonym().symbol, left_column);
-		result.addColumn(getRightStmt().getSynonym().symbol, right_column);
-		return result;
+		return executeSynonymSynonym(pkb, getLeftStmt(), getRightStmt());
 	}
 	if (getLeftStmt().getType() == ReferenceType::Wildcard && getRightStmt().getType() == ReferenceType::Synonym) {
-		StmtInfoPtrSet stmt_set = pkb.getStatements();
-		DesignEntity design_entity = getRightStmt().getSynonym().type;
-		vector<string> column;
-		for (auto const& stmt : stmt_set) {
-			if (!Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				continue;
-			}
-
-			StmtInfoPtrSet preceding_set = pkb.getPrecedingStar(stmt->getIdentifier());
-			if (!preceding_set.empty()) {
-				column.push_back(to_string(stmt->getIdentifier()));
-			}
-		}
-		QueryResult result = QueryResult();
-		result.addColumn(getRightStmt().getSynonym().symbol, column);
-		return result;
+		return executeWildcardSynonym(pkb, getRightStmt());
 	}
 	if (getLeftStmt().getType() == ReferenceType::StatementIndex && getRightStmt().getType() == ReferenceType::Synonym) {
-		StmtInfoPtrSet stmt_set = pkb.getFollowerStar(getLeftStmt().getStatementIndex());
-		DesignEntity design_entity = getRightStmt().getSynonym().type;
-		vector<string> column;
-
-		for (auto const& stmt : stmt_set) {
-			if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
-				column.push_back(to_string(stmt->getIdentifier()));
-			}
-		}
-
-		QueryResult result = QueryResult();
-		result.addColumn(getRightStmt().getSynonym().symbol, column);
-		return result;
+		return executeIndexSynonym(pkb, getLeftStmt(), getRightStmt());
 	}
 
 	return {};
+}
+
+// Trivial Executors
+
+QP::QueryResult QP::Relationship::FollowsT::executeTrivialIndexIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
+                                                                    const ReferenceArgument& rear) {
+	StmtInfoPtrSet rears = pkb.getFollowerStar(front.getStatementIndex());
+	StmtRef rear_index = rear.getStatementIndex();
+	for (auto const& rear_statement : rears) {
+		if (rear_statement->getIdentifier() == rear_index) {
+			return QueryResult(true);
+		}
+	}
+	return {};
+}
+
+QP::QueryResult QP::Relationship::FollowsT::executeTrivialIndexWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front) {
+	return QueryResult(!pkb.getFollowerStar(front.getStatementIndex()).empty());
+}
+
+QP::QueryResult QP::Relationship::FollowsT::executeTrivialIndexSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
+                                                                      const ReferenceArgument& rear) {
+	StmtInfoPtrSet rears = pkb.getFollowerStar(front.getStatementIndex());
+	if (rear.getSynonym().type == DesignEntity::Stmt) {
+		return QueryResult(!rears.empty());
+	}
+
+	for (auto const& rear_statement : rears) {
+		if (Utilities::checkStmtTypeMatch(rear_statement, rear.getSynonym().type)) {
+			return QueryResult(true);
+		}
+	}
+	return {};
+}
+
+QP::QueryResult QP::Relationship::FollowsT::executeTrivialWildcardIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& rear) {
+	return QueryResult(!pkb.getPrecedingStar(rear.getStatementIndex()).empty());
+}
+
+QP::QueryResult QP::Relationship::FollowsT::executeTrivialWildcardWildcard(PKB::StorageAccessInterface& pkb) {
+	StmtInfoPtrSet statements = pkb.getStatements();
+	for (auto const& statement : statements) {
+		StmtInfoPtrSet rears = pkb.getFollowerStar(statement->getIdentifier());
+		if (!rears.empty()) {
+			return QueryResult(true);
+		}
+	}
+	return {};
+}
+
+QP::QueryResult QP::Relationship::FollowsT::executeTrivialWildcardSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& rear) {
+	StmtInfoPtrSet statements = pkb.getStatements();
+	for (auto const& statement : statements) {
+		if (!Utilities::checkStmtTypeMatch(statement, rear.getSynonym().type)) {
+			continue;
+		}
+		StmtInfoPtrSet fronts = pkb.getPrecedingStar(statement->getIdentifier());
+		if (!fronts.empty()) {
+			return QueryResult(true);
+		}
+	}
+	return {};
+}
+
+QP::QueryResult QP::Relationship::FollowsT::executeTrivialSynonymIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
+                                                                      const ReferenceArgument& rear) {
+	StmtInfoPtrSet fronts = pkb.getPrecedingStar(rear.getStatementIndex());
+	for (auto const& front_statement : fronts) {
+		if (Utilities::checkStmtTypeMatch(front_statement, front.getSynonym().type)) {
+			return QueryResult(true);
+		}
+	}
+	return {};
+}
+
+QP::QueryResult QP::Relationship::FollowsT::executeTrivialSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front) {
+	StmtInfoPtrSet statements = pkb.getStatements();
+	for (auto const& statement : statements) {
+		if (!Utilities::checkStmtTypeMatch(statement, front.getSynonym().type)) {
+			continue;
+		}
+
+		StmtInfoPtrSet rears = pkb.getFollowerStar(statement->getIdentifier());
+		if (!rears.empty()) {
+			return QueryResult(true);
+		}
+	}
+	return {};
+}
+
+QP::QueryResult QP::Relationship::FollowsT::executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
+                                                                        const ReferenceArgument& rear) {
+	if (front.getSynonym().symbol == rear.getSynonym().symbol) {
+		return {};
+	}
+
+	StmtInfoPtrSet statements = pkb.getStatements();
+	for (auto const& statement : statements) {
+		if (!Utilities::checkStmtTypeMatch(statement, front.getSynonym().type)) {
+			continue;
+		}
+
+		StmtInfoPtrSet rears = pkb.getFollowerStar(statement->getIdentifier());
+		for (auto const& rear_statement : rears) {
+			if (Utilities::checkStmtTypeMatch(rear_statement, rear.getSynonym().type)) {
+				return QueryResult(true);
+			}
+		}
+	}
+
+	return {};
+}
+
+// Executors
+
+QP::QueryResult QP::Relationship::FollowsT::executeIndexSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
+                                                               const ReferenceArgument& rear) {
+	StmtInfoPtrSet statements = pkb.getFollowerStar(front.getStatementIndex());
+	vector<string> column;
+
+	for (auto const& statement : statements) {
+		if (Utilities::checkStmtTypeMatch(statement, rear.getSynonym().type)) {
+			column.push_back(to_string(statement->getIdentifier()));
+		}
+	}
+	QueryResult result = QueryResult();
+	result.addColumn(rear.getSynonym().symbol, column);
+	return result;
+}
+
+QP::QueryResult QP::Relationship::FollowsT::executeWildcardSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& rear) {
+	StmtInfoPtrSet statements = pkb.getStatements();
+	vector<string> column;
+	for (auto const& statement : statements) {
+		if (!Utilities::checkStmtTypeMatch(statement, rear.getSynonym().type)) {
+			continue;
+		}
+
+		StmtInfoPtrSet fronts = pkb.getPrecedingStar(statement->getIdentifier());
+		if (!fronts.empty()) {
+			column.push_back(to_string(statement->getIdentifier()));
+		}
+	}
+	QueryResult result = QueryResult();
+	result.addColumn(rear.getSynonym().symbol, column);
+	return result;
+}
+
+QP::QueryResult QP::Relationship::FollowsT::executeSynonymIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
+                                                               const ReferenceArgument& rear) {
+	StmtInfoPtrSet fronts = pkb.getPrecedingStar(rear.getStatementIndex());
+	vector<string> column;
+	for (auto const& front_statement : fronts) {
+		if (Utilities::checkStmtTypeMatch(front_statement, front.getSynonym().type)) {
+			column.push_back(to_string(front_statement->getIdentifier()));
+		}
+	}
+
+	QueryResult result = QueryResult();
+	result.addColumn(front.getSynonym().symbol, column);
+	return result;
+}
+
+QP::QueryResult QP::Relationship::FollowsT::executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front) {
+	StmtInfoPtrSet statements = pkb.getStatements();
+	vector<string> column;
+	for (auto const& statement : statements) {
+		if (!Utilities::checkStmtTypeMatch(statement, front.getSynonym().type)) {
+			continue;
+		}
+
+		StmtInfoPtrSet rearren = pkb.getFollowerStar(statement->getIdentifier());
+		if (!rearren.empty()) {
+			column.push_back(to_string(statement->getIdentifier()));
+		}
+	}
+	QueryResult result = QueryResult();
+	result.addColumn(front.getSynonym().symbol, column);
+	return result;
+}
+
+QP::QueryResult QP::Relationship::FollowsT::executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
+                                                                 const ReferenceArgument& rear) {
+	if (front.getSynonym().symbol == rear.getSynonym().symbol) {
+		return {};
+	}
+
+	StmtInfoPtrSet statements = pkb.getStatements();
+	vector<string> front_column;
+	vector<string> rear_column;
+	for (auto const& statement : statements) {
+		if (!Utilities::checkStmtTypeMatch(statement, front.getSynonym().type)) {
+			continue;
+		}
+
+		StmtInfoPtrSet rear_statements = pkb.getFollowerStar(statement->getIdentifier());
+		for (auto const& rear_statement : rear_statements) {
+			if (Utilities::checkStmtTypeMatch(rear_statement, rear.getSynonym().type)) {
+				front_column.push_back(to_string(statement->getIdentifier()));
+				rear_column.push_back(to_string(rear_statement->getIdentifier()));
+			}
+		}
+	}
+	QueryResult result = QueryResult();
+	result.addColumn(front.getSynonym().symbol, front_column);
+	result.addColumn(rear.getSynonym().symbol, rear_column);
+	return result;
 }
