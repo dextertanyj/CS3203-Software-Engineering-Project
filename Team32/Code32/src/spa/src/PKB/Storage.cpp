@@ -243,13 +243,41 @@ bool PKB::Storage::checkNext(StmtRef first, StmtRef second) {
 	return first_node->getUniqueIndex() == second_node->getUniqueIndex() && control_flow_graph.isRelated(first, second);
 }
 
-unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getNextTransitive(StmtRef node_ref) {
-	return control_flow_graph.getReverseTransitive(node_ref);
+StmtInfoPtrSet PKB::Storage::getNextTransitive(StmtRef node_ref) {
+	StmtInfoPtrSet stmt_info_set;
+	unordered_set<shared_ptr<PKB::NodeInfo>> node_infos = control_flow_graph.getReverseTransitive(node_ref);
+	for (const auto &node_info : node_infos) {
+		stmt_info_set.insert(statement_store.get(node_info->getIdentifier()));
+	}
+	return stmt_info_set;
 }
 
-unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getNext(StmtRef first) { return control_flow_graph.getReverse(first); }
+StmtInfoPtrSet PKB::Storage::getPreviousTransitive(StmtRef node_ref) {
+	StmtInfoPtrSet stmt_info_set;
+	unordered_set<shared_ptr<PKB::NodeInfo>> node_infos = control_flow_graph.getForwardTransitive(node_ref);
+	for (const auto &node_info : node_infos) {
+		stmt_info_set.insert(statement_store.get(node_info->getIdentifier()));
+	}
+	return stmt_info_set;
+}
 
-unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getPrevious(StmtRef second) { return control_flow_graph.getForward(second); }
+StmtInfoPtrSet PKB::Storage::getNext(StmtRef first) {
+	StmtInfoPtrSet stmt_info_set;
+	unordered_set<shared_ptr<PKB::NodeInfo>> node_infos = control_flow_graph.getReverse(first);
+	for (const auto &node_info : node_infos) {
+		stmt_info_set.insert(statement_store.get(node_info->getIdentifier()));
+	}
+	return stmt_info_set;
+}
+
+StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) {
+	StmtInfoPtrSet stmt_info_set;
+	unordered_set<shared_ptr<PKB::NodeInfo>> node_infos = control_flow_graph.getForward(second);
+	for (const auto &node_info : node_infos) {
+		stmt_info_set.insert(statement_store.get(node_info->getIdentifier()));
+	}
+	return stmt_info_set;
+}
 
 bool PKB::Storage::checkWhileControl(StmtRef index, VarRef name) { return while_control_store.check(index, name); }
 

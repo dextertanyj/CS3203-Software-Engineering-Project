@@ -108,9 +108,10 @@ public:
 
 	// CFG Node get methods
 	bool checkNext(StmtRef first, StmtRef second) override;
-	unordered_set<shared_ptr<PKB::NodeInfo>> getNextTransitive(StmtRef node_ref) override;
-	virtual unordered_set<shared_ptr<PKB::NodeInfo>> getNext(StmtRef first) override;
-	virtual unordered_set<shared_ptr<PKB::NodeInfo>> getPrevious(StmtRef second) override;
+	StmtInfoPtrSet getNextTransitive(StmtRef node_ref) override;
+	StmtInfoPtrSet getPreviousTransitive(StmtRef node_ref) override;
+	virtual StmtInfoPtrSet getNext(StmtRef first) override;
+	virtual StmtInfoPtrSet getPrevious(StmtRef second) override;
 
 	// Control Variable get methods
 	bool checkIfControl(StmtRef index, VarRef name) override;

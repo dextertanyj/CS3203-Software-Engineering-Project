@@ -64,6 +64,19 @@ inline PKB::Storage generateModifyTestPKB() {
 	return pkb;
 };
 
+inline PKB::Storage generateNextTestPKB() {
+	PKB::Storage pkb = PKB::Storage();
+	pkb.setStmtType(1, StmtType::Assign);
+	pkb.setStmtType(2, StmtType::WhileStmt);
+	pkb.setStmtType(3, StmtType::Assign);
+	pkb.setStmtType(4, StmtType::Read);
+	pkb.setStmtType(5, StmtType::IfStmt);
+	pkb.setStmtType(6, StmtType::Assign);
+	pkb.setStmtType(7, StmtType::Assign);
+	pkb.setStmtType(8, StmtType::Call);
+	return pkb;
+}
+
 inline PKB::Types::StatementStore generateStatementStore() {
 	PKB::Types::StatementStore statement_store = PKB::Types::StatementStore();
 	statement_store.insert(1, StmtType::WhileStmt);
