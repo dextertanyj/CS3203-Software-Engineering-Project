@@ -22,6 +22,28 @@ public:
 
 	vector<string> getDeclarationSymbols() override;
 
+	// Trivial Executors
+
+	static QueryResult executeTrivialNameWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& name);
+	static QueryResult executeTrivialSynonymOrWildcardWildcard(PKB::StorageAccessInterface& pkb);
+	static QueryResult executeTrivialNameExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& name,
+	                                                const ReferenceArgument& expression);
+	static QueryResult executeTrivialSynonymOrWildcardExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& expression);
+
+	// Executors
+
+	static QueryResult executeNameWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
+	                                       const ReferenceArgument& name);
+	static QueryResult executeWildcardWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign);
+	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
+	                                          const ReferenceArgument& synonym);
+	static QueryResult executeNameExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
+	                                         const ReferenceArgument& name, const ReferenceArgument& expression);
+	static QueryResult executeWildcardExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
+	                                             const ReferenceArgument& wildcard, const ReferenceArgument& expression);
+	static QueryResult executeSynonymExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
+	                                            const ReferenceArgument& synonym, const ReferenceArgument& expression);
+
 private:
 	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
 	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
