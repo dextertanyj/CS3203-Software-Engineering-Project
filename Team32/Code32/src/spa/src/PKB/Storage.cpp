@@ -247,13 +247,13 @@ unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getNextTransitive(StmtRef
 	return control_flow_graph.getReverseTransitive(node_ref);
 }
 
-unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getNext(StmtRef first) {
-	return control_flow_graph.getReverse(first);
-}
+unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getNext(StmtRef first) { return control_flow_graph.getReverse(first); }
 
-unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getPrevious(StmtRef second) {
-	return control_flow_graph.getForward(second);
-}
+unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getPrevious(StmtRef second) { return control_flow_graph.getForward(second); }
+
+bool PKB::Storage::checkWhileControl(StmtRef index, VarRef name) { return while_control_store.check(index, name); }
+
+bool PKB::Storage::checkIfControl(StmtRef index, VarRef name) { return if_control_store.check(index, name); }
 
 StmtInfoPtrSet PKB::Storage::getIfControlStmt(VarRef name) { return if_control_store.getByVar(name); }
 

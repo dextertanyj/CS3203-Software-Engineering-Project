@@ -113,6 +113,8 @@ public:
 	virtual unordered_set<shared_ptr<PKB::NodeInfo>> getPrevious(StmtRef second) override;
 
 	// Control Variable get methods
+	bool checkIfControl(StmtRef index, VarRef name) override;
+	bool checkWhileControl(StmtRef index, VarRef name) override;
 	VarRefSet getIfControlVar(StmtRef index) override;
 	VarRefSet getWhileControlVar(StmtRef index) override;
 	StmtInfoPtrSet getIfControlStmt(VarRef name) override;

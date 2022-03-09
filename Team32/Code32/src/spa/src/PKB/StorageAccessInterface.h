@@ -63,6 +63,8 @@ public:
 	virtual unordered_set<shared_ptr<PKB::NodeInfo>> getNextTransitive(StmtRef node_ref) = 0;
 
 	// Control Variable get methods
+	virtual bool checkIfControl(StmtRef index, VarRef name) = 0;
+	virtual bool checkWhileControl(StmtRef index, VarRef name) = 0;
 	virtual VarRefSet getIfControlVar(StmtRef index) = 0;
 	virtual VarRefSet getWhileControlVar(StmtRef index) = 0;
 	virtual StmtInfoPtrSet getIfControlStmt(VarRef name) = 0;
