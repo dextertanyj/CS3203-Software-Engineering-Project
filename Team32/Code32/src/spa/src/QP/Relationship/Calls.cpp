@@ -18,7 +18,7 @@ vector<string> QP::Relationship::Calls::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QP::QueryResult QP::Relationship::Calls::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::Calls::executeTrivial(PKB::StorageAccessInterface& pkb) {
 	if (caller_ent.getType() == ReferenceType::Name) {
 		return executeTrivialCallerVarName(pkb);
 	} else {
@@ -26,7 +26,7 @@ QP::QueryResult QP::Relationship::Calls::executeTrivial(PKB::StorageAccessInterf
 	}
 }
 
-QP::QueryResult QP::Relationship::Calls::executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::Calls::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
 	if (caller_ent.getType() == ReferenceType::Name) {
 		return executeNonTrivialCallerVarName(pkb);
 	} else if (caller_ent.getType() == ReferenceType::Wildcard) {

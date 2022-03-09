@@ -49,7 +49,7 @@ static QP::QueryResult executeTrivialSynonymOrWildcardExpression(PKB::StorageAcc
 		!pkb.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == QP::Types::ReferenceType::ExactExpression).empty());
 }
 
-QP::QueryResult QP::Relationship::Pattern::executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::Pattern::executeTrivial(PKB::StorageAccessInterface& pkb) {
 	if (ent_ref.getType() == Types::ReferenceType::Name) {
 		switch (expression.getType()) {
 			case Types::ReferenceType::Wildcard:
@@ -162,8 +162,7 @@ static QP::QueryResult executeSynonymExpression(PKB::StorageAccessInterface& pkb
 	return result;
 }
 
-QP::QueryResult QP::Relationship::Pattern::executeNonTrivial(PKB::StorageAccessInterface& pkb,
-                                                             unordered_map<string, DesignEntity>& /*map*/) {
+QP::QueryResult QP::Relationship::Pattern::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
 	switch (ent_ref.getType()) {
 		case Types::ReferenceType::Name:
 			switch (expression.getType()) {

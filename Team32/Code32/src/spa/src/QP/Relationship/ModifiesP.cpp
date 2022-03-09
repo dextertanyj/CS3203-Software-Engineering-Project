@@ -25,8 +25,7 @@ vector<string> QP::Relationship::ModifiesP::getDeclarationSymbols() {
 	return declaration_symbols;
 }
 
-QP::QueryResult QP::Relationship::ModifiesP::executeTrivial(PKB::StorageAccessInterface &pkb,
-                                                            unordered_map<string, DesignEntity> & /*map*/) {
+QP::QueryResult QP::Relationship::ModifiesP::executeTrivial(PKB::StorageAccessInterface &pkb) {
 	if (left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Name) {
 		return QueryResult(pkb.checkModifies(left_ent.getName(), right_ent.getName()));
 	}
@@ -46,8 +45,7 @@ QP::QueryResult QP::Relationship::ModifiesP::executeTrivial(PKB::StorageAccessIn
 	return {};
 }
 
-QP::QueryResult QP::Relationship::ModifiesP::executeNonTrivial(PKB::StorageAccessInterface &pkb,
-                                                               unordered_map<string, DesignEntity> & /*map*/) {
+QP::QueryResult QP::Relationship::ModifiesP::executeNonTrivial(PKB::StorageAccessInterface &pkb) {
 	if (left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Synonym) {
 		return executeNonTrivialLeftEntVarName(pkb);
 	}

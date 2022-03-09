@@ -17,8 +17,8 @@ public:
 private:
 	ReferenceArgument parent_stmt;
 	ReferenceArgument child_stmt;
-	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
-	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
+	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_PARENT_H

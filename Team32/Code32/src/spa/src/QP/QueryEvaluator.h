@@ -22,7 +22,6 @@ public:
 
 private:
 	PKB::StorageAccessInterface& pkb;
-	unordered_map<string, DesignEntity> symbol_to_type_map;
 	QueryResult executeNoClauses(const Declaration& select);
 	QueryResult getSpecificStmtType(DesignEntity design_entity, const string& symbol);
 	QueryResult getConstants(const string& symbol);
@@ -32,7 +31,6 @@ private:
 	QueryResult evaluateClauses(ClauseList& clauses, bool is_trivial);
 	QueryResult executeClausesWithoutSynonym(ClauseList& clauses);
 	bool executeGroup(ClauseList& clauses);
-	void createSymbolToTypeMap(const DeclarationList& declarations);
 };
 
 #endif  // SPA_SRC_QP_QUERYEVALUATOR_H

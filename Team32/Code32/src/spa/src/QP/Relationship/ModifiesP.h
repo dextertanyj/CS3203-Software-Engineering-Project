@@ -18,8 +18,8 @@ private:
 	ReferenceArgument left_ent;
 	ReferenceArgument right_ent;
 
-	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
-	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
+	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
 
 	QueryResult executeTrivialBothUnknown(PKB::StorageAccessInterface& pkb);
 

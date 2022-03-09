@@ -17,10 +17,6 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 	pkb.setCall(3, "proc3");
 	pkb.populateComplexRelations();
 
-	unordered_map<string, DesignEntity> map;
-	map.insert({"p1", DesignEntity::Procedure});
-	map.insert({"p2", DesignEntity::Procedure});
-
 	ReferenceArgument proc1 = ReferenceArgument("proc1");
 	ReferenceArgument proc2 = ReferenceArgument("proc2");
 	ReferenceArgument proc3 = ReferenceArgument("proc3");
@@ -32,19 +28,19 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 		QP::Relationship::CallsT callsT1 = QP::Relationship::CallsT(proc1, proc3);
 		QP::Relationship::CallsT callsT2 = QP::Relationship::CallsT(proc2, proc1);
 
-		QP::QueryResult result1 = callsT1.execute(pkb, true, map);
-		QP::QueryResult result2 = callsT2.execute(pkb, true, map);
+		QP::QueryResult result1 = callsT1.execute(pkb, true);
+		QP::QueryResult result2 = callsT2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: varName & underscore") {
+	SECTION("trivial: varName & wildcard") {
 		QP::Relationship::CallsT callsT1 = QP::Relationship::CallsT(proc1, wildcard);
 		QP::Relationship::CallsT callsT2 = QP::Relationship::CallsT(proc3, wildcard);
 
-		QP::QueryResult result1 = callsT1.execute(pkb, true, map);
-		QP::QueryResult result2 = callsT2.execute(pkb, true, map);
+		QP::QueryResult result1 = callsT1.execute(pkb, true);
+		QP::QueryResult result2 = callsT2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -54,36 +50,36 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 		QP::Relationship::CallsT callsT1 = QP::Relationship::CallsT(proc1, proc_synonym_1);
 		QP::Relationship::CallsT callsT2 = QP::Relationship::CallsT(proc3, proc_synonym_1);
 
-		QP::QueryResult result1 = callsT1.execute(pkb, true, map);
-		QP::QueryResult result2 = callsT2.execute(pkb, true, map);
+		QP::QueryResult result1 = callsT1.execute(pkb, true);
+		QP::QueryResult result2 = callsT2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: underscore & varName") {
+	SECTION("trivial: wildcard & varName") {
 		QP::Relationship::CallsT callsT1 = QP::Relationship::CallsT(wildcard, proc2);
 		QP::Relationship::CallsT callsT2 = QP::Relationship::CallsT(wildcard, proc1);
 
-		QP::QueryResult result1 = callsT1.execute(pkb, true, map);
-		QP::QueryResult result2 = callsT2.execute(pkb, true, map);
+		QP::QueryResult result1 = callsT1.execute(pkb, true);
+		QP::QueryResult result2 = callsT2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: underscore & underscore") {
+	SECTION("trivial: wildcard & wildcard") {
 		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(wildcard, wildcard);
 
-		QP::QueryResult result = callsT.execute(pkb, true, map);
+		QP::QueryResult result = callsT.execute(pkb, true);
 
 		REQUIRE(result.getResult());
 	}
 
-	SECTION("trivial: underscore & synonym") {
+	SECTION("trivial: wildcard & synonym") {
 		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(wildcard, proc_synonym_1);
 
-		QP::QueryResult result = callsT.execute(pkb, true, map);
+		QP::QueryResult result = callsT.execute(pkb, true);
 
 		REQUIRE(result.getResult());
 	}
@@ -92,17 +88,17 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 		QP::Relationship::CallsT callsT1 = QP::Relationship::CallsT(proc_synonym_1, proc2);
 		QP::Relationship::CallsT callsT2 = QP::Relationship::CallsT(proc_synonym_1, proc1);
 
-		QP::QueryResult result1 = callsT1.execute(pkb, true, map);
-		QP::QueryResult result2 = callsT2.execute(pkb, true, map);
+		QP::QueryResult result1 = callsT1.execute(pkb, true);
+		QP::QueryResult result2 = callsT2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: synonym & underscore") {
+	SECTION("trivial: synonym & wildcard") {
 		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(proc_synonym_1, wildcard);
 
-		QP::QueryResult result = callsT.execute(pkb, true, map);
+		QP::QueryResult result = callsT.execute(pkb, true);
 
 		REQUIRE(result.getResult());
 	}
@@ -111,8 +107,8 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 		QP::Relationship::CallsT callsT1 = QP::Relationship::CallsT(proc_synonym_1, proc_synonym_2);
 		QP::Relationship::CallsT callsT2 = QP::Relationship::CallsT(proc_synonym_1, proc_synonym_1);
 
-		QP::QueryResult result1 = callsT1.execute(pkb, true, map);
-		QP::QueryResult result2 = callsT2.execute(pkb, true, map);
+		QP::QueryResult result1 = callsT1.execute(pkb, true);
+		QP::QueryResult result2 = callsT2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -122,8 +118,8 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 		QP::Relationship::CallsT callsT1 = QP::Relationship::CallsT(proc1, proc_synonym_1);
 		QP::Relationship::CallsT callsT2 = QP::Relationship::CallsT(proc3, proc_synonym_1);
 
-		QP::QueryResult result1 = callsT1.execute(pkb, false, map);
-		QP::QueryResult result2 = callsT2.execute(pkb, false, map);
+		QP::QueryResult result1 = callsT1.execute(pkb, false);
+		QP::QueryResult result2 = callsT2.execute(pkb, false);
 
 		vector<string> expected_result = {"proc2", "proc3"};
 		vector<string> actual_result = result1.getSynonymResult("p1");
@@ -131,10 +127,10 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: underscore & synonym") {
+	SECTION("non-trivial: wildcard & synonym") {
 		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(wildcard, proc_synonym_1);
 
-		QP::QueryResult result = callsT.execute(pkb, false, map);
+		QP::QueryResult result = callsT.execute(pkb, false);
 
 		vector<string> expected_result = {"proc2", "proc3"};
 		vector<string> actual_result = result.getSynonymResult("p1");
@@ -146,8 +142,8 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 		QP::Relationship::CallsT callsT1 = QP::Relationship::CallsT(proc_synonym_1, proc3);
 		QP::Relationship::CallsT callsT2 = QP::Relationship::CallsT(proc_synonym_1, proc1);
 
-		QP::QueryResult result1 = callsT1.execute(pkb, false, map);
-		QP::QueryResult result2 = callsT2.execute(pkb, false, map);
+		QP::QueryResult result1 = callsT1.execute(pkb, false);
+		QP::QueryResult result2 = callsT2.execute(pkb, false);
 
 		vector<string> expected_result = {"proc1", "proc2"};
 		vector<string> actual_result = result1.getSynonymResult("p1");
@@ -155,10 +151,10 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: synonym & underscore") {
+	SECTION("non-trivial: synonym & wildcard") {
 		QP::Relationship::CallsT callsT = QP::Relationship::CallsT(proc_synonym_1, wildcard);
 
-		QP::QueryResult result = callsT.execute(pkb, false, map);
+		QP::QueryResult result = callsT.execute(pkb, false);
 
 		vector<string> expected_result = {"proc1", "proc2"};
 		vector<string> actual_result = result.getSynonymResult("p1");
@@ -170,8 +166,8 @@ TEST_CASE("QP::Relationship::CallsT::execute") {
 		QP::Relationship::CallsT callsT1 = QP::Relationship::CallsT(proc_synonym_1, proc_synonym_2);
 		QP::Relationship::CallsT callsT2 = QP::Relationship::CallsT(proc_synonym_1, proc_synonym_1);
 
-		QP::QueryResult result1 = callsT1.execute(pkb, false, map);
-		QP::QueryResult result2 = callsT2.execute(pkb, false, map);
+		QP::QueryResult result1 = callsT1.execute(pkb, false);
+		QP::QueryResult result2 = callsT2.execute(pkb, false);
 
 		vector<string> expected_result_1 = {"proc1", "proc1", "proc2"};
 		vector<string> expected_result_2 = {"proc2", "proc3", "proc3"};
