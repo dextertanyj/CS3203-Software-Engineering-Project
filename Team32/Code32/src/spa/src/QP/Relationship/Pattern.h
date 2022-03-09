@@ -8,28 +8,27 @@
 #include "Common/ExpressionProcessor/Expression.h"
 #include "QP/QueryExpressionLexer.h"
 #include "QP/QueryTypes.h"
+#include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Relation.h"
 
 class QP::Relationship::Pattern : public Relation {
 public:
-	Pattern(Declaration syn_assign, QueryEntRef ent_ref, ExpressionType expression_type,
-	        optional<Common::ExpressionProcessor::Expression> expression);
+	Pattern(ReferenceArgument syn_assign, ReferenceArgument ent_ref, ReferenceArgument expression);
 
-	Declaration getSynAssign();
-	QueryEntRef getEntRef();
-	ExpressionType getExpressionType();
+	ReferenceArgument getSynAssign();
+	ReferenceArgument getEntRef();
+	ReferenceType getExpressionType();
 	Common::ExpressionProcessor::Expression getExpression();
 
 	vector<string> getDeclarationSymbols() override;
 
 private:
-	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
-	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
+	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
 
-	Declaration syn_assign;
-	QueryEntRef ent_ref;
-	ExpressionType expression_type;
-	optional<Common::ExpressionProcessor::Expression> expression;
+	ReferenceArgument syn_assign;
+	ReferenceArgument ent_ref;
+	ReferenceArgument expression;
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_PATTERN_H

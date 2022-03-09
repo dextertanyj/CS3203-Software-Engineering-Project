@@ -1,7 +1,7 @@
 #include "QP/QueryEvaluator.h"
 
 #include "Common/ExpressionProcessor/Expression.h"
-#include "Common/ExpressionProcessor/OperatorAcceptor.h"
+#include "QP/ReferenceArgument.h"
 #include "Common/TypeDefs.h"
 #include "QP/QueryExpressionLexer.h"
 #include "QP/Relationship/Follows.h"
@@ -15,13 +15,13 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 		{DesignEntity::Assign, "a"}, {DesignEntity::If, "i"},
 	};
 	Declaration select = {DesignEntity::Stmt, "s1"};
-	QueryStmtRef s1 = {StmtRefType::Synonym, "s1"};
-	QueryStmtRef s2 = {StmtRefType::Synonym, "s2"};
-	QueryStmtRef a = {StmtRefType::Synonym, "a"};
-	QueryStmtRef i = {StmtRefType::Synonym, "i"};
-	QueryStmtRef stmt_no1 = {StmtRefType::StmtNumber, "1"};
-	QueryStmtRef stmt_no2 = {StmtRefType::StmtNumber, "2"};
-	QueryEntRef v = {EntRefType::Synonym, "v"};
+	ReferenceArgument s1 = ReferenceArgument({QP::Types::DesignEntity::Stmt, "s1"});
+	ReferenceArgument s2 = ReferenceArgument({QP::Types::DesignEntity::Stmt, "s2"});
+	ReferenceArgument a = ReferenceArgument({QP::Types::DesignEntity::Assign, "a"});
+	ReferenceArgument i = ReferenceArgument({QP::Types::DesignEntity::If, "i"});
+	ReferenceArgument stmt_no1 = ReferenceArgument(1);
+	ReferenceArgument stmt_no2 = ReferenceArgument(2);
+	ReferenceArgument v = ReferenceArgument({QP::Types::DesignEntity::Variable, "v"});
 
 	ClauseList clauses = {
 		{make_unique<QP::Relationship::Parent>(s1, s2)},
@@ -68,11 +68,11 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	Declaration var_synonym = {DesignEntity::Variable, "v"};
 	Declaration stmt_synonym = {DesignEntity::Stmt, "s1"};
 	Declaration proc_synonym = {DesignEntity::Procedure, "p"};
-	QueryEntRef v = {EntRefType::Synonym, "v"};
-	QueryEntRef var_underscore = {EntRefType::Underscore, "_"};
-	QueryStmtRef a = {StmtRefType::Synonym, "a"};
-	QueryStmtRef stmt_no1 = {StmtRefType::StmtNumber, "1"};
-	QueryStmtRef stmt_underscore = {StmtRefType::Underscore, "_"};
+	ReferenceArgument v = ReferenceArgument({QP::Types::DesignEntity::Variable, "v"});
+	ReferenceArgument var_underscore = ReferenceArgument();
+	ReferenceArgument a = ReferenceArgument({QP::Types::DesignEntity::Assign, "a"});
+	ReferenceArgument stmt_no1 = ReferenceArgument(1);
+	ReferenceArgument stmt_underscore = ReferenceArgument();
 
 	vector<string> assign_token = {"x", "+", "1"};
 	QP::QueryExpressionLexer lexer = QP::QueryExpressionLexer(assign_token);
@@ -137,8 +137,8 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("One trivial pattern clause") {
-		ClauseList clauses = {{make_unique<QP::Relationship::Pattern>(assign_synonym, var_underscore, ExpressionType::ExpressionUnderscore,
-		                                                              query_expression)}};
+		ClauseList clauses = {{make_unique<QP::Relationship::Pattern>(ReferenceArgument(assign_synonym), var_underscore,
+		                                                              ReferenceArgument(query_expression, false))}};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
@@ -150,7 +150,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 
 	SECTION("One non-trivial pattern clause") {
 		ClauseList clauses = {
-			{make_unique<QP::Relationship::Pattern>(assign_synonym, v, ExpressionType::ExpressionUnderscore, query_expression)}};
+			{make_unique<QP::Relationship::Pattern>(ReferenceArgument(assign_synonym), v, ReferenceArgument(query_expression, false))}};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
@@ -163,7 +163,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	SECTION("Trivial pattern clause and trival such that clause") {
 		ClauseList clauses = {
 			{make_unique<QP::Relationship::ModifiesS>(stmt_no1, v)},
-			{make_unique<QP::Relationship::Pattern>(assign_synonym, v, ExpressionType::ExpressionUnderscore, query_expression)}};
+			{make_unique<QP::Relationship::Pattern>(ReferenceArgument(assign_synonym), v, ReferenceArgument(query_expression, false))}};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, stmt_synonym, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
@@ -177,7 +177,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	SECTION("Non-trivial pattern clause and such that clause") {
 		ClauseList clauses = {
 			{make_unique<QP::Relationship::ModifiesS>(stmt_no1, v)},
-			{make_unique<QP::Relationship::Pattern>(assign_synonym, v, ExpressionType::ExpressionUnderscore, query_expression)},
+			{make_unique<QP::Relationship::Pattern>(ReferenceArgument(assign_synonym), v, ReferenceArgument(query_expression, false))},
 		};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, clauses);
 
@@ -192,7 +192,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 		ClauseList clauses = {
 			{make_unique<QP::Relationship::ModifiesS>(stmt_no1, v)},
 			{make_unique<QP::Relationship::Follows>(a, stmt_underscore)},
-			{make_unique<QP::Relationship::Pattern>(assign_synonym, v, ExpressionType::ExpressionUnderscore, query_expression)},
+			{make_unique<QP::Relationship::Pattern>(ReferenceArgument(assign_synonym), v, ReferenceArgument(query_expression, false))},
 		};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, var_synonym, clauses);
 

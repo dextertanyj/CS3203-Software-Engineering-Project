@@ -9,7 +9,6 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 		return executeNoClauses(query_properties.getSelect());
 	}
 
-	createSymbolToTypeMap(query_properties.getDeclarationList());
 	QueryGraph graph = buildGraph(query_properties);
 	Declaration select = query_properties.getSelect();
 	unordered_map<string, size_t> synonyms_in_group = graph.getSynonymsInGroup(select.symbol);
@@ -155,7 +154,7 @@ QP::QueryResult QP::QueryEvaluator::evaluateClauses(ClauseList& clauses, bool is
 	vector<QueryResult> result_list;
 
 	for (const Clause& clause : clauses) {
-		QueryResult result = clause.relation->execute(pkb, is_trivial, symbol_to_type_map);
+		QueryResult result = clause.relation->execute(pkb, is_trivial);
 		if (!result.getResult()) {
 			return {};
 		}
@@ -191,12 +190,4 @@ vector<ClauseList> QP::QueryEvaluator::splitClauses(QueryProperties& query_prope
 	}
 
 	return result;
-}
-
-void QP::QueryEvaluator::createSymbolToTypeMap(const DeclarationList& declarations) {
-	unordered_map<string, DesignEntity> map;
-	for (Declaration const& declaration : declarations) {
-		map.insert({declaration.symbol, declaration.type});
-	}
-	this->symbol_to_type_map = map;
 }

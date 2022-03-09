@@ -26,6 +26,10 @@ struct QueryTokenizationException : public runtime_error {
 	using runtime_error::runtime_error;
 };
 
+struct ReferenceArgumentException : public logic_error {
+	using logic_error::logic_error;
+};
+
 // struct QuerySyntaxException : public runtime_error {
 //     using runtime_error::runtime_error;
 // };

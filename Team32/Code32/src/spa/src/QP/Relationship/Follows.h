@@ -2,23 +2,24 @@
 #define SPA_SRC_QP_RELATIONSHIP_FOLLOWS_H
 
 #include "QP/QueryTypes.h"
+#include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Relation.h"
 #include "QP/Relationship/Relationship.h"
 
 class QP::Relationship::Follows : public Relation {
 public:
-	Follows(QueryStmtRef left_stmt, QueryStmtRef right_stmt);
+	Follows(ReferenceArgument left_stmt, ReferenceArgument right_stmt);
 
-	QueryStmtRef getLeftStmt();
-	QueryStmtRef getRightStmt();
+	ReferenceArgument getLeftStmt();
+	ReferenceArgument getRightStmt();
 
 	vector<string> getDeclarationSymbols() override;
 
 private:
-	QueryStmtRef left_stmt;
-	QueryStmtRef right_stmt;
-	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
-	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
+	ReferenceArgument left_stmt;
+	ReferenceArgument right_stmt;
+	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
+	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_FOLLOWS_H

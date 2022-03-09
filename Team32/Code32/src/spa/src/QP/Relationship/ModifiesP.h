@@ -2,23 +2,24 @@
 #define SPA_SRC_QP_RELATIONSHIP_MODIFIESP_H
 
 #include "QP/QueryTypes.h"
+#include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Relation.h"
 
 class QP::Relationship::ModifiesP : public Relation {
 public:
-	ModifiesP(QueryEntRef left_ent, QueryEntRef right_ent);
+	ModifiesP(ReferenceArgument left_ent, ReferenceArgument right_ent);
 
-	QueryEntRef getLeftEnt();
-	QueryEntRef getRightEnt();
+	ReferenceArgument getLeftEnt();
+	ReferenceArgument getRightEnt();
 
 	vector<string> getDeclarationSymbols() override;
 
 private:
-	QueryEntRef left_ent;
-	QueryEntRef right_ent;
+	ReferenceArgument left_ent;
+	ReferenceArgument right_ent;
 
-	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
-	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb, unordered_map<string, DesignEntity>& map) override;
+	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
+	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
 
 	QueryResult executeTrivialBothUnknown(PKB::StorageAccessInterface& pkb);
 

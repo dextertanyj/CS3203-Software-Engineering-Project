@@ -12,6 +12,7 @@
 #include "QP/QueryExpressionLexer.h"
 #include "QP/QueryProperties.h"
 #include "QP/QueryResult.h"
+#include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Calls.h"
 #include "QP/Relationship/CallsT.h"
 #include "QP/Relationship/Follows.h"
@@ -53,8 +54,8 @@ private:
 	unique_ptr<Relationship::ModifiesP> parseModifiesP(size_t& token_index);
 	unique_ptr<Relationship::ModifiesS> parseModifiesS(size_t& token_index);
 	unique_ptr<Relationship::Calls> parseCalls(size_t& token_index);
-	QueryEntRef parseQueryEntRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities);
-	QueryStmtRef parseQueryStmtRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities);
+	ReferenceArgument parseQueryEntRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities);
+	ReferenceArgument parseQueryStmtRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities);
 	Common::ExpressionProcessor::Expression parseExpression(size_t& token_index);
 
 	// Helper methods

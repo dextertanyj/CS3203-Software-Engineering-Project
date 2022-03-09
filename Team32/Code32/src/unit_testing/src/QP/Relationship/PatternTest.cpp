@@ -8,20 +8,20 @@
 #include "catch.hpp"
 
 TEST_CASE("QP::Relationship::Pattern::getDeclarationSymbols") {
-	Declaration syn_assign = {DesignEntity::Assign, "a"};
+	ReferenceArgument assign = ReferenceArgument({DesignEntity::Assign, "a"});
 
 	PKB::Storage pkb = PKB::Storage();
-	QueryEntRef x = {EntRefType::VarName, "x"};
-	QueryEntRef var = {EntRefType::Synonym, "var"};
-	QueryEntRef var_underscore = {EntRefType::Underscore, "_"};
+	ReferenceArgument x = ReferenceArgument("x");
+	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
+	ReferenceArgument wildcard = ReferenceArgument();
 	vector<string> query_token = {"0"};
 	QP::QueryExpressionLexer lexer = QP::QueryExpressionLexer(query_token);
 	auto query_expression = Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+	ReferenceArgument expression = ReferenceArgument(query_expression, true);
 
-	QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, x, ExpressionType::Underscore, query_expression);
-	QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, var, ExpressionType::Underscore, query_expression);
-	QP::Relationship::Pattern pattern3 =
-		QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::Underscore, query_expression);
+	QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(assign, x, expression);
+	QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(assign, var, expression);
+	QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(assign, wildcard, expression);
 
 	vector<string> symbols1 = {"a"};
 	vector<string> symbols2 = {"a", "var"};
@@ -58,18 +58,13 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	unordered_set<ConstVal> constants = {0, 1};
 	pkb.setConstant(constants);
 
-	unordered_map<string, DesignEntity> map;
-	map.insert({"s", DesignEntity::Stmt});
-	map.insert({"a", DesignEntity::Assign});
-	map.insert({"var", DesignEntity::Variable});
+	ReferenceArgument syn_assign = ReferenceArgument({QP::Types::DesignEntity::Assign, "a"});
 
-	Declaration syn_assign = {DesignEntity::Assign, "a"};
-
-	QueryEntRef x = {EntRefType::VarName, "x"};
-	QueryEntRef y = {EntRefType::VarName, "y"};
-	QueryEntRef z = {EntRefType::VarName, "z"};
-	QueryEntRef var = {EntRefType::Synonym, "var"};
-	QueryEntRef var_underscore = {EntRefType::Underscore, "x"};
+	ReferenceArgument x = ReferenceArgument("x");
+	ReferenceArgument y = ReferenceArgument("y");
+	ReferenceArgument z = ReferenceArgument("z");
+	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
+	ReferenceArgument wildcard = ReferenceArgument();
 
 	vector<string> query_token1 = {"1"};
 	QP::QueryExpressionLexer lexer4 = QP::QueryExpressionLexer(query_token1);
@@ -85,73 +80,66 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 		Common::ExpressionProcessor::Expression::parse(lexer6, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 
 	SECTION("trivial: _, _") {
-		QP::Relationship::Pattern pattern1 =
-			QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::Underscore, query_expression1);
-		QP::QueryResult result1 = pattern1.execute(pkb, true, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, wildcard, ReferenceArgument());
+		QP::QueryResult result1 = pattern1.execute(pkb, true);
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("trivial: _, expr") {
-		QP::Relationship::Pattern pattern1 =
-			QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::Expression, query_expression1);
-		QP::Relationship::Pattern pattern2 =
-			QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::Expression, query_expression2);
-		QP::Relationship::Pattern pattern3 =
-			QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::Expression, query_expression3);
-		QP::QueryResult result1 = pattern1.execute(pkb, true, map);
-		QP::QueryResult result2 = pattern2.execute(pkb, true, map);
-		QP::QueryResult result3 = pattern3.execute(pkb, true, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, wildcard, ReferenceArgument(query_expression1, true));
+		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, wildcard, ReferenceArgument(query_expression2, true));
+		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, wildcard, ReferenceArgument(query_expression3, true));
+		QP::QueryResult result1 = pattern1.execute(pkb, true);
+		QP::QueryResult result2 = pattern2.execute(pkb, true);
+		QP::QueryResult result3 = pattern3.execute(pkb, true);
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 		REQUIRE(!result3.getResult());
 	}
 
 	SECTION("trivial: _, _expr_") {
-		QP::Relationship::Pattern pattern1 =
-			QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::ExpressionUnderscore, query_expression1);
-		QP::Relationship::Pattern pattern2 =
-			QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::ExpressionUnderscore, query_expression2);
-		QP::Relationship::Pattern pattern3 =
-			QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::ExpressionUnderscore, query_expression3);
-		QP::QueryResult result1 = pattern1.execute(pkb, true, map);
-		QP::QueryResult result2 = pattern2.execute(pkb, true, map);
-		QP::QueryResult result3 = pattern3.execute(pkb, true, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, wildcard, ReferenceArgument(query_expression1, false));
+		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, wildcard, ReferenceArgument(query_expression2, false));
+		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, wildcard, ReferenceArgument(query_expression3, false));
+		QP::QueryResult result1 = pattern1.execute(pkb, true);
+		QP::QueryResult result2 = pattern2.execute(pkb, true);
+		QP::QueryResult result3 = pattern3.execute(pkb, true);
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 		REQUIRE(result3.getResult());
 	}
 
 	SECTION("trivial: varName, _") {
-		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, x, ExpressionType::Underscore, query_expression1);
-		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, y, ExpressionType::Underscore, query_expression1);
-		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, z, ExpressionType::Underscore, query_expression1);
-		QP::QueryResult result1 = pattern1.execute(pkb, true, map);
-		QP::QueryResult result2 = pattern2.execute(pkb, true, map);
-		QP::QueryResult result3 = pattern3.execute(pkb, true, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, x, ReferenceArgument());
+		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, y, ReferenceArgument());
+		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, z, ReferenceArgument());
+		QP::QueryResult result1 = pattern1.execute(pkb, true);
+		QP::QueryResult result2 = pattern2.execute(pkb, true);
+		QP::QueryResult result3 = pattern3.execute(pkb, true);
 		REQUIRE(result1.getResult());
 		REQUIRE(result2.getResult());
 		REQUIRE(!result3.getResult());
 	}
 
 	SECTION("trivial: varName, expr") {
-		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, x, ExpressionType::Expression, query_expression1);
-		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, x, ExpressionType::Expression, query_expression2);
-		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, x, ExpressionType::Expression, query_expression3);
-		QP::Relationship::Pattern pattern4 = QP::Relationship::Pattern(syn_assign, y, ExpressionType::Expression, query_expression1);
-		QP::Relationship::Pattern pattern5 = QP::Relationship::Pattern(syn_assign, y, ExpressionType::Expression, query_expression2);
-		QP::Relationship::Pattern pattern6 = QP::Relationship::Pattern(syn_assign, y, ExpressionType::Expression, query_expression3);
-		QP::Relationship::Pattern pattern7 = QP::Relationship::Pattern(syn_assign, z, ExpressionType::Expression, query_expression1);
-		QP::Relationship::Pattern pattern8 = QP::Relationship::Pattern(syn_assign, z, ExpressionType::Expression, query_expression2);
-		QP::Relationship::Pattern pattern9 = QP::Relationship::Pattern(syn_assign, z, ExpressionType::Expression, query_expression3);
-		QP::QueryResult result1 = pattern1.execute(pkb, true, map);
-		QP::QueryResult result2 = pattern2.execute(pkb, true, map);
-		QP::QueryResult result3 = pattern3.execute(pkb, true, map);
-		QP::QueryResult result4 = pattern4.execute(pkb, true, map);
-		QP::QueryResult result5 = pattern5.execute(pkb, true, map);
-		QP::QueryResult result6 = pattern6.execute(pkb, true, map);
-		QP::QueryResult result7 = pattern7.execute(pkb, true, map);
-		QP::QueryResult result8 = pattern8.execute(pkb, true, map);
-		QP::QueryResult result9 = pattern9.execute(pkb, true, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, x, ReferenceArgument(query_expression1, true));
+		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, x, ReferenceArgument(query_expression2, true));
+		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, x, ReferenceArgument(query_expression3, true));
+		QP::Relationship::Pattern pattern4 = QP::Relationship::Pattern(syn_assign, y, ReferenceArgument(query_expression1, true));
+		QP::Relationship::Pattern pattern5 = QP::Relationship::Pattern(syn_assign, y, ReferenceArgument(query_expression2, true));
+		QP::Relationship::Pattern pattern6 = QP::Relationship::Pattern(syn_assign, y, ReferenceArgument(query_expression3, true));
+		QP::Relationship::Pattern pattern7 = QP::Relationship::Pattern(syn_assign, z, ReferenceArgument(query_expression1, true));
+		QP::Relationship::Pattern pattern8 = QP::Relationship::Pattern(syn_assign, z, ReferenceArgument(query_expression2, true));
+		QP::Relationship::Pattern pattern9 = QP::Relationship::Pattern(syn_assign, z, ReferenceArgument(query_expression3, true));
+		QP::QueryResult result1 = pattern1.execute(pkb, true);
+		QP::QueryResult result2 = pattern2.execute(pkb, true);
+		QP::QueryResult result3 = pattern3.execute(pkb, true);
+		QP::QueryResult result4 = pattern4.execute(pkb, true);
+		QP::QueryResult result5 = pattern5.execute(pkb, true);
+		QP::QueryResult result6 = pattern6.execute(pkb, true);
+		QP::QueryResult result7 = pattern7.execute(pkb, true);
+		QP::QueryResult result8 = pattern8.execute(pkb, true);
+		QP::QueryResult result9 = pattern9.execute(pkb, true);
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 		REQUIRE(!result3.getResult());
@@ -164,33 +152,24 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("trivial: varName, _expr_") {
-		QP::Relationship::Pattern pattern1 =
-			QP::Relationship::Pattern(syn_assign, x, ExpressionType::ExpressionUnderscore, query_expression1);
-		QP::Relationship::Pattern pattern2 =
-			QP::Relationship::Pattern(syn_assign, x, ExpressionType::ExpressionUnderscore, query_expression2);
-		QP::Relationship::Pattern pattern3 =
-			QP::Relationship::Pattern(syn_assign, x, ExpressionType::ExpressionUnderscore, query_expression3);
-		QP::Relationship::Pattern pattern4 =
-			QP::Relationship::Pattern(syn_assign, y, ExpressionType::ExpressionUnderscore, query_expression1);
-		QP::Relationship::Pattern pattern5 =
-			QP::Relationship::Pattern(syn_assign, y, ExpressionType::ExpressionUnderscore, query_expression2);
-		QP::Relationship::Pattern pattern6 =
-			QP::Relationship::Pattern(syn_assign, y, ExpressionType::ExpressionUnderscore, query_expression3);
-		QP::Relationship::Pattern pattern7 =
-			QP::Relationship::Pattern(syn_assign, z, ExpressionType::ExpressionUnderscore, query_expression1);
-		QP::Relationship::Pattern pattern8 =
-			QP::Relationship::Pattern(syn_assign, z, ExpressionType::ExpressionUnderscore, query_expression2);
-		QP::Relationship::Pattern pattern9 =
-			QP::Relationship::Pattern(syn_assign, z, ExpressionType::ExpressionUnderscore, query_expression3);
-		QP::QueryResult result1 = pattern1.execute(pkb, true, map);
-		QP::QueryResult result2 = pattern2.execute(pkb, true, map);
-		QP::QueryResult result3 = pattern3.execute(pkb, true, map);
-		QP::QueryResult result4 = pattern4.execute(pkb, true, map);
-		QP::QueryResult result5 = pattern5.execute(pkb, true, map);
-		QP::QueryResult result6 = pattern6.execute(pkb, true, map);
-		QP::QueryResult result7 = pattern7.execute(pkb, true, map);
-		QP::QueryResult result8 = pattern8.execute(pkb, true, map);
-		QP::QueryResult result9 = pattern9.execute(pkb, true, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, x, ReferenceArgument(query_expression1, false));
+		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, x, ReferenceArgument(query_expression2, false));
+		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, x, ReferenceArgument(query_expression3, false));
+		QP::Relationship::Pattern pattern4 = QP::Relationship::Pattern(syn_assign, y, ReferenceArgument(query_expression1, false));
+		QP::Relationship::Pattern pattern5 = QP::Relationship::Pattern(syn_assign, y, ReferenceArgument(query_expression2, false));
+		QP::Relationship::Pattern pattern6 = QP::Relationship::Pattern(syn_assign, y, ReferenceArgument(query_expression3, false));
+		QP::Relationship::Pattern pattern7 = QP::Relationship::Pattern(syn_assign, z, ReferenceArgument(query_expression1, false));
+		QP::Relationship::Pattern pattern8 = QP::Relationship::Pattern(syn_assign, z, ReferenceArgument(query_expression2, false));
+		QP::Relationship::Pattern pattern9 = QP::Relationship::Pattern(syn_assign, z, ReferenceArgument(query_expression3, false));
+		QP::QueryResult result1 = pattern1.execute(pkb, true);
+		QP::QueryResult result2 = pattern2.execute(pkb, true);
+		QP::QueryResult result3 = pattern3.execute(pkb, true);
+		QP::QueryResult result4 = pattern4.execute(pkb, true);
+		QP::QueryResult result5 = pattern5.execute(pkb, true);
+		QP::QueryResult result6 = pattern6.execute(pkb, true);
+		QP::QueryResult result7 = pattern7.execute(pkb, true);
+		QP::QueryResult result8 = pattern8.execute(pkb, true);
+		QP::QueryResult result9 = pattern9.execute(pkb, true);
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 		REQUIRE(!result3.getResult());
@@ -203,42 +182,38 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("trivial: synonym, _") {
-		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, var, ExpressionType::Underscore, query_expression1);
-		QP::QueryResult result1 = pattern1.execute(pkb, true, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, var, ReferenceArgument());
+		QP::QueryResult result1 = pattern1.execute(pkb, true);
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("trivial: synonym, expr") {
-		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, var, ExpressionType::Expression, query_expression1);
-		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, var, ExpressionType::Expression, query_expression2);
-		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, var, ExpressionType::Expression, query_expression3);
-		QP::QueryResult result1 = pattern1.execute(pkb, true, map);
-		QP::QueryResult result2 = pattern2.execute(pkb, true, map);
-		QP::QueryResult result3 = pattern3.execute(pkb, true, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, var, ReferenceArgument(query_expression1, true));
+		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, var, ReferenceArgument(query_expression2, true));
+		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, var, ReferenceArgument(query_expression3, true));
+		QP::QueryResult result1 = pattern1.execute(pkb, true);
+		QP::QueryResult result2 = pattern2.execute(pkb, true);
+		QP::QueryResult result3 = pattern3.execute(pkb, true);
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 		REQUIRE(!result3.getResult());
 	}
 
 	SECTION("trivial: synonym, _expr_") {
-		QP::Relationship::Pattern pattern1 =
-			QP::Relationship::Pattern(syn_assign, var, ExpressionType::ExpressionUnderscore, query_expression1);
-		QP::Relationship::Pattern pattern2 =
-			QP::Relationship::Pattern(syn_assign, var, ExpressionType::ExpressionUnderscore, query_expression2);
-		QP::Relationship::Pattern pattern3 =
-			QP::Relationship::Pattern(syn_assign, var, ExpressionType::ExpressionUnderscore, query_expression3);
-		QP::QueryResult result1 = pattern1.execute(pkb, true, map);
-		QP::QueryResult result2 = pattern2.execute(pkb, true, map);
-		QP::QueryResult result3 = pattern3.execute(pkb, true, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, var, ReferenceArgument(query_expression1, false));
+		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, var, ReferenceArgument(query_expression2, false));
+		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, var, ReferenceArgument(query_expression3, false));
+		QP::QueryResult result1 = pattern1.execute(pkb, true);
+		QP::QueryResult result2 = pattern2.execute(pkb, true);
+		QP::QueryResult result3 = pattern3.execute(pkb, true);
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 		REQUIRE(result3.getResult());
 	}
 
 	SECTION("non-trivial: _, _") {
-		QP::Relationship::Pattern pattern1 =
-			QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::Underscore, query_expression1);
-		QP::QueryResult result1 = pattern1.execute(pkb, false, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, wildcard, ReferenceArgument());
+		QP::QueryResult result1 = pattern1.execute(pkb, false);
 		vector<string> expected_result = {"1", "2", "3"};
 		REQUIRE(result1.getResult());
 		auto result1vec = result1.getSynonymResult("a");
@@ -247,15 +222,12 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: _, expr") {
-		QP::Relationship::Pattern pattern1 =
-			QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::Expression, query_expression1);
-		QP::Relationship::Pattern pattern2 =
-			QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::Expression, query_expression2);
-		QP::Relationship::Pattern pattern3 =
-			QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::Expression, query_expression3);
-		QP::QueryResult result1 = pattern1.execute(pkb, false, map);
-		QP::QueryResult result2 = pattern2.execute(pkb, false, map);
-		QP::QueryResult result3 = pattern3.execute(pkb, false, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, wildcard, ReferenceArgument(query_expression1, true));
+		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, wildcard, ReferenceArgument(query_expression2, true));
+		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, wildcard, ReferenceArgument(query_expression3, true));
+		QP::QueryResult result1 = pattern1.execute(pkb, false);
+		QP::QueryResult result2 = pattern2.execute(pkb, false);
+		QP::QueryResult result3 = pattern3.execute(pkb, false);
 		vector<string> expected_result1 = {"1"};
 		REQUIRE(result1.getResult());
 		REQUIRE(result1.getSynonymResult("a") == expected_result1);
@@ -264,15 +236,12 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: _, _expr_") {
-		QP::Relationship::Pattern pattern1 =
-			QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::ExpressionUnderscore, query_expression1);
-		QP::Relationship::Pattern pattern2 =
-			QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::ExpressionUnderscore, query_expression2);
-		QP::Relationship::Pattern pattern3 =
-			QP::Relationship::Pattern(syn_assign, var_underscore, ExpressionType::ExpressionUnderscore, query_expression3);
-		QP::QueryResult result1 = pattern1.execute(pkb, false, map);
-		QP::QueryResult result2 = pattern2.execute(pkb, false, map);
-		QP::QueryResult result3 = pattern3.execute(pkb, false, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, wildcard, ReferenceArgument(query_expression1, false));
+		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, wildcard, ReferenceArgument(query_expression2, false));
+		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, wildcard, ReferenceArgument(query_expression3, false));
+		QP::QueryResult result1 = pattern1.execute(pkb, false);
+		QP::QueryResult result2 = pattern2.execute(pkb, false);
+		QP::QueryResult result3 = pattern3.execute(pkb, false);
 		vector<string> expected_result1 = {"1", "2"};
 		vector<string> expected_result3 = {"2", "3"};
 		REQUIRE(result1.getResult());
@@ -287,13 +256,13 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: varName, _") {
-		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, x, ExpressionType::Underscore, query_expression1);
-		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, y, ExpressionType::Underscore, query_expression1);
-		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, z, ExpressionType::Underscore, query_expression1);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, x, ReferenceArgument());
+		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, y, ReferenceArgument());
+		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, z, ReferenceArgument());
 
-		QP::QueryResult result1 = pattern1.execute(pkb, false, map);
-		QP::QueryResult result2 = pattern2.execute(pkb, false, map);
-		QP::QueryResult result3 = pattern3.execute(pkb, false, map);
+		QP::QueryResult result1 = pattern1.execute(pkb, false);
+		QP::QueryResult result2 = pattern2.execute(pkb, false);
+		QP::QueryResult result3 = pattern3.execute(pkb, false);
 
 		vector<string> expected_result1 = {"1"};
 		vector<string> expected_result2 = {"2", "3"};
@@ -307,24 +276,24 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: varName, expr") {
-		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, x, ExpressionType::Expression, query_expression1);
-		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, x, ExpressionType::Expression, query_expression2);
-		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, x, ExpressionType::Expression, query_expression3);
-		QP::Relationship::Pattern pattern4 = QP::Relationship::Pattern(syn_assign, y, ExpressionType::Expression, query_expression1);
-		QP::Relationship::Pattern pattern5 = QP::Relationship::Pattern(syn_assign, y, ExpressionType::Expression, query_expression2);
-		QP::Relationship::Pattern pattern6 = QP::Relationship::Pattern(syn_assign, y, ExpressionType::Expression, query_expression3);
-		QP::Relationship::Pattern pattern7 = QP::Relationship::Pattern(syn_assign, z, ExpressionType::Expression, query_expression1);
-		QP::Relationship::Pattern pattern8 = QP::Relationship::Pattern(syn_assign, z, ExpressionType::Expression, query_expression2);
-		QP::Relationship::Pattern pattern9 = QP::Relationship::Pattern(syn_assign, z, ExpressionType::Expression, query_expression3);
-		QP::QueryResult result1 = pattern1.execute(pkb, false, map);
-		QP::QueryResult result2 = pattern2.execute(pkb, false, map);
-		QP::QueryResult result3 = pattern3.execute(pkb, false, map);
-		QP::QueryResult result4 = pattern4.execute(pkb, false, map);
-		QP::QueryResult result5 = pattern5.execute(pkb, false, map);
-		QP::QueryResult result6 = pattern6.execute(pkb, false, map);
-		QP::QueryResult result7 = pattern7.execute(pkb, false, map);
-		QP::QueryResult result8 = pattern8.execute(pkb, false, map);
-		QP::QueryResult result9 = pattern9.execute(pkb, false, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, x, ReferenceArgument(query_expression1, true));
+		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, x, ReferenceArgument(query_expression2, true));
+		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, x, ReferenceArgument(query_expression3, true));
+		QP::Relationship::Pattern pattern4 = QP::Relationship::Pattern(syn_assign, y, ReferenceArgument(query_expression1, true));
+		QP::Relationship::Pattern pattern5 = QP::Relationship::Pattern(syn_assign, y, ReferenceArgument(query_expression2, true));
+		QP::Relationship::Pattern pattern6 = QP::Relationship::Pattern(syn_assign, y, ReferenceArgument(query_expression3, true));
+		QP::Relationship::Pattern pattern7 = QP::Relationship::Pattern(syn_assign, z, ReferenceArgument(query_expression1, true));
+		QP::Relationship::Pattern pattern8 = QP::Relationship::Pattern(syn_assign, z, ReferenceArgument(query_expression2, true));
+		QP::Relationship::Pattern pattern9 = QP::Relationship::Pattern(syn_assign, z, ReferenceArgument(query_expression3, true));
+		QP::QueryResult result1 = pattern1.execute(pkb, false);
+		QP::QueryResult result2 = pattern2.execute(pkb, false);
+		QP::QueryResult result3 = pattern3.execute(pkb, false);
+		QP::QueryResult result4 = pattern4.execute(pkb, false);
+		QP::QueryResult result5 = pattern5.execute(pkb, false);
+		QP::QueryResult result6 = pattern6.execute(pkb, false);
+		QP::QueryResult result7 = pattern7.execute(pkb, false);
+		QP::QueryResult result8 = pattern8.execute(pkb, false);
+		QP::QueryResult result9 = pattern9.execute(pkb, false);
 		vector<string> expected_result1 = {"1"};
 		REQUIRE(result1.getResult());
 		REQUIRE(result1.getSynonymResult("a") == expected_result1);
@@ -339,33 +308,24 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: varName, _expr_") {
-		QP::Relationship::Pattern pattern1 =
-			QP::Relationship::Pattern(syn_assign, x, ExpressionType::ExpressionUnderscore, query_expression1);
-		QP::Relationship::Pattern pattern2 =
-			QP::Relationship::Pattern(syn_assign, x, ExpressionType::ExpressionUnderscore, query_expression2);
-		QP::Relationship::Pattern pattern3 =
-			QP::Relationship::Pattern(syn_assign, x, ExpressionType::ExpressionUnderscore, query_expression3);
-		QP::Relationship::Pattern pattern4 =
-			QP::Relationship::Pattern(syn_assign, y, ExpressionType::ExpressionUnderscore, query_expression1);
-		QP::Relationship::Pattern pattern5 =
-			QP::Relationship::Pattern(syn_assign, y, ExpressionType::ExpressionUnderscore, query_expression2);
-		QP::Relationship::Pattern pattern6 =
-			QP::Relationship::Pattern(syn_assign, y, ExpressionType::ExpressionUnderscore, query_expression3);
-		QP::Relationship::Pattern pattern7 =
-			QP::Relationship::Pattern(syn_assign, z, ExpressionType::ExpressionUnderscore, query_expression1);
-		QP::Relationship::Pattern pattern8 =
-			QP::Relationship::Pattern(syn_assign, z, ExpressionType::ExpressionUnderscore, query_expression2);
-		QP::Relationship::Pattern pattern9 =
-			QP::Relationship::Pattern(syn_assign, z, ExpressionType::ExpressionUnderscore, query_expression3);
-		QP::QueryResult result1 = pattern1.execute(pkb, false, map);
-		QP::QueryResult result2 = pattern2.execute(pkb, false, map);
-		QP::QueryResult result3 = pattern3.execute(pkb, false, map);
-		QP::QueryResult result4 = pattern4.execute(pkb, false, map);
-		QP::QueryResult result5 = pattern5.execute(pkb, false, map);
-		QP::QueryResult result6 = pattern6.execute(pkb, false, map);
-		QP::QueryResult result7 = pattern7.execute(pkb, false, map);
-		QP::QueryResult result8 = pattern8.execute(pkb, false, map);
-		QP::QueryResult result9 = pattern9.execute(pkb, false, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, x, ReferenceArgument(query_expression1, false));
+		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, x, ReferenceArgument(query_expression2, false));
+		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, x, ReferenceArgument(query_expression3, false));
+		QP::Relationship::Pattern pattern4 = QP::Relationship::Pattern(syn_assign, y, ReferenceArgument(query_expression1, false));
+		QP::Relationship::Pattern pattern5 = QP::Relationship::Pattern(syn_assign, y, ReferenceArgument(query_expression2, false));
+		QP::Relationship::Pattern pattern6 = QP::Relationship::Pattern(syn_assign, y, ReferenceArgument(query_expression3, false));
+		QP::Relationship::Pattern pattern7 = QP::Relationship::Pattern(syn_assign, z, ReferenceArgument(query_expression1, false));
+		QP::Relationship::Pattern pattern8 = QP::Relationship::Pattern(syn_assign, z, ReferenceArgument(query_expression2, false));
+		QP::Relationship::Pattern pattern9 = QP::Relationship::Pattern(syn_assign, z, ReferenceArgument(query_expression3, false));
+		QP::QueryResult result1 = pattern1.execute(pkb, false);
+		QP::QueryResult result2 = pattern2.execute(pkb, false);
+		QP::QueryResult result3 = pattern3.execute(pkb, false);
+		QP::QueryResult result4 = pattern4.execute(pkb, false);
+		QP::QueryResult result5 = pattern5.execute(pkb, false);
+		QP::QueryResult result6 = pattern6.execute(pkb, false);
+		QP::QueryResult result7 = pattern7.execute(pkb, false);
+		QP::QueryResult result8 = pattern8.execute(pkb, false);
+		QP::QueryResult result9 = pattern9.execute(pkb, false);
 		vector<string> expected_result1 = {"1"};
 		vector<string> expected_result4 = {"2"};
 		vector<string> expected_result6 = {"2", "3"};
@@ -386,8 +346,8 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: synonym, _") {
-		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, var, ExpressionType::Underscore, query_expression1);
-		QP::QueryResult result1 = pattern1.execute(pkb, false, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, var, ReferenceArgument());
+		QP::QueryResult result1 = pattern1.execute(pkb, false);
 		vector<string> expected_result1 = {"1", "2", "3"};
 		vector<string> expected_result_var1 = {"x", "y", "y"};
 		REQUIRE(result1.getResult());
@@ -400,12 +360,12 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: synonym, expr") {
-		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, var, ExpressionType::Expression, query_expression1);
-		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, var, ExpressionType::Expression, query_expression2);
-		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, var, ExpressionType::Expression, query_expression3);
-		QP::QueryResult result1 = pattern1.execute(pkb, false, map);
-		QP::QueryResult result2 = pattern2.execute(pkb, false, map);
-		QP::QueryResult result3 = pattern3.execute(pkb, false, map);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, var, ReferenceArgument(query_expression1, true));
+		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, var, ReferenceArgument(query_expression2, true));
+		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, var, ReferenceArgument(query_expression3, true));
+		QP::QueryResult result1 = pattern1.execute(pkb, false);
+		QP::QueryResult result2 = pattern2.execute(pkb, false);
+		QP::QueryResult result3 = pattern3.execute(pkb, false);
 		vector<string> expected_result1 = {"1"};
 		vector<string> expected_result_var1 = {"x"};
 		REQUIRE(result1.getResult());
@@ -418,16 +378,13 @@ TEST_CASE("QP::Relationship::Pattern::execute") {
 	}
 
 	SECTION("non-trivial: synonym, _expr_") {
-		QP::Relationship::Pattern pattern1 =
-			QP::Relationship::Pattern(syn_assign, var, ExpressionType::ExpressionUnderscore, query_expression1);
-		QP::Relationship::Pattern pattern2 =
-			QP::Relationship::Pattern(syn_assign, var, ExpressionType::ExpressionUnderscore, query_expression2);
-		QP::Relationship::Pattern pattern3 =
-			QP::Relationship::Pattern(syn_assign, var, ExpressionType::ExpressionUnderscore, query_expression3);
+		QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(syn_assign, var, ReferenceArgument(query_expression1, false));
+		QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(syn_assign, var, ReferenceArgument(query_expression2, false));
+		QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(syn_assign, var, ReferenceArgument(query_expression3, false));
 
-		QP::QueryResult result1 = pattern1.execute(pkb, false, map);
-		QP::QueryResult result2 = pattern2.execute(pkb, false, map);
-		QP::QueryResult result3 = pattern3.execute(pkb, false, map);
+		QP::QueryResult result1 = pattern1.execute(pkb, false);
+		QP::QueryResult result2 = pattern2.execute(pkb, false);
+		QP::QueryResult result3 = pattern3.execute(pkb, false);
 
 		vector<string> expected_result1 = {"1", "2"};
 		vector<string> expected_result_var1 = {"x", "y"};

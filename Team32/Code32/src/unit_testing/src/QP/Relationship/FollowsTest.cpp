@@ -14,37 +14,32 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 	pkb.setFollows(2, 3);
 	pkb.setFollows(3, 4);
 
-	unordered_map<string, DesignEntity> map;
-	map.insert({"s", DesignEntity::Stmt});
-	map.insert({"a", DesignEntity::Assign});
-	map.insert({"if", DesignEntity::If});
-
-	QueryStmtRef stmt_no1 = {StmtRefType::StmtNumber, "1"};
-	QueryStmtRef stmt_no2 = {StmtRefType::StmtNumber, "2"};
-	QueryStmtRef stmt_no3 = {StmtRefType::StmtNumber, "3"};
-	QueryStmtRef stmt_no4 = {StmtRefType::StmtNumber, "4"};
-	QueryStmtRef stmt_synonym = {StmtRefType::Synonym, "s"};
-	QueryStmtRef assign_synonym = {StmtRefType::Synonym, "a"};
-	QueryStmtRef if_synonym = {StmtRefType::Synonym, "if"};
-	QueryStmtRef underscore = {StmtRefType::Underscore, "_"};
+	ReferenceArgument stmt_no1 = ReferenceArgument(1);
+	ReferenceArgument stmt_no2 = ReferenceArgument(2);
+	ReferenceArgument stmt_no3 = ReferenceArgument(3);
+	ReferenceArgument stmt_no4 = ReferenceArgument(4);
+	ReferenceArgument stmt_synonym = ReferenceArgument({DesignEntity::Stmt, "s"});
+	ReferenceArgument assign_synonym = ReferenceArgument({DesignEntity::Assign, "a"});
+	ReferenceArgument if_synonym = ReferenceArgument({DesignEntity::If, "if"});
+	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("trivial: stmtNumber & stmtNumber") {
 		QP::Relationship::Follows follows1 = QP::Relationship::Follows(stmt_no1, stmt_no2);
 		QP::Relationship::Follows follows2 = QP::Relationship::Follows(stmt_no1, stmt_no3);
 
-		QP::QueryResult result1 = follows1.execute(pkb, true, map);
-		QP::QueryResult result2 = follows2.execute(pkb, true, map);
+		QP::QueryResult result1 = follows1.execute(pkb, true);
+		QP::QueryResult result2 = follows2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: stmtNumber & underscore") {
-		QP::Relationship::Follows follows1 = QP::Relationship::Follows(stmt_no1, underscore);
-		QP::Relationship::Follows follows2 = QP::Relationship::Follows(stmt_no4, underscore);
+	SECTION("trivial: stmtNumber & wildcard") {
+		QP::Relationship::Follows follows1 = QP::Relationship::Follows(stmt_no1, wildcard);
+		QP::Relationship::Follows follows2 = QP::Relationship::Follows(stmt_no4, wildcard);
 
-		QP::QueryResult result1 = follows1.execute(pkb, true, map);
-		QP::QueryResult result2 = follows2.execute(pkb, true, map);
+		QP::QueryResult result1 = follows1.execute(pkb, true);
+		QP::QueryResult result2 = follows2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -54,38 +49,38 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 		QP::Relationship::Follows follows1 = QP::Relationship::Follows(stmt_no1, stmt_synonym);
 		QP::Relationship::Follows follows2 = QP::Relationship::Follows(stmt_no1, assign_synonym);
 
-		QP::QueryResult result1 = follows1.execute(pkb, true, map);
-		QP::QueryResult result2 = follows2.execute(pkb, true, map);
+		QP::QueryResult result1 = follows1.execute(pkb, true);
+		QP::QueryResult result2 = follows2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: underscore & stmtNumber") {
-		QP::Relationship::Follows follows1 = QP::Relationship::Follows(underscore, stmt_no2);
-		QP::Relationship::Follows follows2 = QP::Relationship::Follows(underscore, stmt_no1);
+	SECTION("trivial: wildcard & stmtNumber") {
+		QP::Relationship::Follows follows1 = QP::Relationship::Follows(wildcard, stmt_no2);
+		QP::Relationship::Follows follows2 = QP::Relationship::Follows(wildcard, stmt_no1);
 
-		QP::QueryResult result1 = follows1.execute(pkb, true, map);
-		QP::QueryResult result2 = follows2.execute(pkb, true, map);
+		QP::QueryResult result1 = follows1.execute(pkb, true);
+		QP::QueryResult result2 = follows2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: underscore & underscore") {
-		QP::Relationship::Follows follows = QP::Relationship::Follows(underscore, underscore);
+	SECTION("trivial: wildcard & wildcard") {
+		QP::Relationship::Follows follows = QP::Relationship::Follows(wildcard, wildcard);
 
-		QP::QueryResult result = follows.execute(pkb, true, map);
+		QP::QueryResult result = follows.execute(pkb, true);
 
 		REQUIRE(result.getResult());
 	}
 
-	SECTION("trivial: underscore & synonym") {
-		QP::Relationship::Follows follows1 = QP::Relationship::Follows(underscore, stmt_synonym);
-		QP::Relationship::Follows follows2 = QP::Relationship::Follows(underscore, assign_synonym);
+	SECTION("trivial: wildcard & synonym") {
+		QP::Relationship::Follows follows1 = QP::Relationship::Follows(wildcard, stmt_synonym);
+		QP::Relationship::Follows follows2 = QP::Relationship::Follows(wildcard, assign_synonym);
 
-		QP::QueryResult result1 = follows1.execute(pkb, true, map);
-		QP::QueryResult result2 = follows2.execute(pkb, true, map);
+		QP::QueryResult result1 = follows1.execute(pkb, true);
+		QP::QueryResult result2 = follows2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -95,19 +90,19 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 		QP::Relationship::Follows follows1 = QP::Relationship::Follows(assign_synonym, stmt_no2);
 		QP::Relationship::Follows follows2 = QP::Relationship::Follows(assign_synonym, stmt_no3);
 
-		QP::QueryResult result1 = follows1.execute(pkb, true, map);
-		QP::QueryResult result2 = follows2.execute(pkb, true, map);
+		QP::QueryResult result1 = follows1.execute(pkb, true);
+		QP::QueryResult result2 = follows2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: synonym & underscore") {
-		QP::Relationship::Follows follows1 = QP::Relationship::Follows(assign_synonym, underscore);
-		QP::Relationship::Follows follows2 = QP::Relationship::Follows(if_synonym, underscore);
+	SECTION("trivial: synonym & wildcard") {
+		QP::Relationship::Follows follows1 = QP::Relationship::Follows(assign_synonym, wildcard);
+		QP::Relationship::Follows follows2 = QP::Relationship::Follows(if_synonym, wildcard);
 
-		QP::QueryResult result1 = follows1.execute(pkb, true, map);
-		QP::QueryResult result2 = follows2.execute(pkb, true, map);
+		QP::QueryResult result1 = follows1.execute(pkb, true);
+		QP::QueryResult result2 = follows2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -117,8 +112,8 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 		QP::Relationship::Follows follows1 = QP::Relationship::Follows(assign_synonym, stmt_synonym);
 		QP::Relationship::Follows follows2 = QP::Relationship::Follows(assign_synonym, if_synonym);
 
-		QP::QueryResult result1 = follows1.execute(pkb, true, map);
-		QP::QueryResult result2 = follows2.execute(pkb, true, map);
+		QP::QueryResult result1 = follows1.execute(pkb, true);
+		QP::QueryResult result2 = follows2.execute(pkb, true);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -128,20 +123,20 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 		QP::Relationship::Follows follows1 = QP::Relationship::Follows(assign_synonym, stmt_no2);
 		QP::Relationship::Follows follows2 = QP::Relationship::Follows(if_synonym, stmt_no2);
 
-		QP::QueryResult result1 = follows1.execute(pkb, false, map);
-		QP::QueryResult result2 = follows2.execute(pkb, false, map);
+		QP::QueryResult result1 = follows1.execute(pkb, false);
+		QP::QueryResult result2 = follows2.execute(pkb, false);
 
 		vector<string> expected_result = {"1"};
 		REQUIRE(result1.getSynonymResult("a") == expected_result);
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: synonym & underscore") {
-		QP::Relationship::Follows follows1 = QP::Relationship::Follows(stmt_synonym, underscore);
-		QP::Relationship::Follows follows2 = QP::Relationship::Follows(if_synonym, underscore);
+	SECTION("non-trivial: synonym & wildcard") {
+		QP::Relationship::Follows follows1 = QP::Relationship::Follows(stmt_synonym, wildcard);
+		QP::Relationship::Follows follows2 = QP::Relationship::Follows(if_synonym, wildcard);
 
-		QP::QueryResult result1 = follows1.execute(pkb, false, map);
-		QP::QueryResult result2 = follows2.execute(pkb, false, map);
+		QP::QueryResult result1 = follows1.execute(pkb, false);
+		QP::QueryResult result2 = follows2.execute(pkb, false);
 
 		vector<string> expected_result = {"1", "2", "3"};
 		vector<string> actual_result = result1.getSynonymResult("s");
@@ -154,8 +149,8 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 		QP::Relationship::Follows follows1 = QP::Relationship::Follows(stmt_synonym, if_synonym);
 		QP::Relationship::Follows follows2 = QP::Relationship::Follows(if_synonym, assign_synonym);
 
-		QP::QueryResult result1 = follows1.execute(pkb, false, map);
-		QP::QueryResult result2 = follows2.execute(pkb, false, map);
+		QP::QueryResult result1 = follows1.execute(pkb, false);
+		QP::QueryResult result2 = follows2.execute(pkb, false);
 
 		vector<string> expected_stmt_result = {"3"};
 		vector<string> expected_if_result = {"4"};
@@ -164,12 +159,12 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: underscore & synonym") {
-		QP::Relationship::Follows follows1 = QP::Relationship::Follows(underscore, if_synonym);
-		QP::Relationship::Follows follows2 = QP::Relationship::Follows(underscore, assign_synonym);
+	SECTION("non-trivial: wildcard & synonym") {
+		QP::Relationship::Follows follows1 = QP::Relationship::Follows(wildcard, if_synonym);
+		QP::Relationship::Follows follows2 = QP::Relationship::Follows(wildcard, assign_synonym);
 
-		QP::QueryResult result1 = follows1.execute(pkb, false, map);
-		QP::QueryResult result2 = follows2.execute(pkb, false, map);
+		QP::QueryResult result1 = follows1.execute(pkb, false);
+		QP::QueryResult result2 = follows2.execute(pkb, false);
 
 		vector<string> expected_result = {"4"};
 		REQUIRE(result1.getSynonymResult("if") == expected_result);
@@ -180,8 +175,8 @@ TEST_CASE("QP::Relationship::Follows::execute") {
 		QP::Relationship::Follows follows1 = QP::Relationship::Follows(stmt_no1, stmt_synonym);
 		QP::Relationship::Follows follows2 = QP::Relationship::Follows(stmt_no1, if_synonym);
 
-		QP::QueryResult result1 = follows1.execute(pkb, false, map);
-		QP::QueryResult result2 = follows2.execute(pkb, false, map);
+		QP::QueryResult result1 = follows1.execute(pkb, false);
+		QP::QueryResult result2 = follows2.execute(pkb, false);
 
 		vector<string> expected_result = {"2"};
 		REQUIRE(result1.getSynonymResult("s") == expected_result);
