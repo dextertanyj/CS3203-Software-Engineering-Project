@@ -58,7 +58,9 @@ public:
 
 	// CFG Next Methods
 	virtual bool checkNext(StmtRef first, StmtRef second) = 0;
+	virtual bool checkNextStar(StmtRef first, StmtRef second) = 0;
 	virtual StmtInfoPtrSet getNext(StmtRef first) = 0;
+	virtual unordered_set<shared_ptr<PKB::NodeInfo>> getNextStar(StmtRef node_ref) = 0;
 	virtual StmtInfoPtrSet getPrevious(StmtRef second) = 0;
 	virtual StmtInfoPtrSet getNextTransitive(StmtRef node_ref) = 0;
 	virtual StmtInfoPtrSet getPreviousTransitive(StmtRef node_ref) = 0;

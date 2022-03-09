@@ -108,6 +108,8 @@ public:
 
 	// CFG Node get methods
 	bool checkNext(StmtRef first, StmtRef second) override;
+	bool checkNextStar(StmtRef first, StmtRef second) override;
+	unordered_set<shared_ptr<PKB::NodeInfo>> getNextStar(StmtRef node_ref) override;
 	StmtInfoPtrSet getNextTransitive(StmtRef node_ref) override;
 	StmtInfoPtrSet getPreviousTransitive(StmtRef node_ref) override;
 	StmtInfoPtrSet getNext(StmtRef first) override;

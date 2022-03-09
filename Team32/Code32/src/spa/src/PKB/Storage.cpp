@@ -243,6 +243,8 @@ bool PKB::Storage::checkNext(StmtRef first, StmtRef second) {
 	return first_node->getUniqueIndex() == second_node->getUniqueIndex() && control_flow_graph.isRelated(first, second);
 }
 
+bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return false; }
+
 StmtInfoPtrSet PKB::Storage::getNextTransitive(StmtRef node_ref) {
 	StmtInfoPtrSet stmt_info_set;
 	unordered_set<shared_ptr<PKB::NodeInfo>> node_infos = control_flow_graph.getReverseTransitive(node_ref);
@@ -251,6 +253,8 @@ StmtInfoPtrSet PKB::Storage::getNextTransitive(StmtRef node_ref) {
 	}
 	return stmt_info_set;
 }
+
+unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getNextStar(StmtRef node_ref) { return {}; }
 
 StmtInfoPtrSet PKB::Storage::getPreviousTransitive(StmtRef node_ref) {
 	StmtInfoPtrSet stmt_info_set;
