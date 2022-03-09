@@ -43,6 +43,7 @@ class ParentRelation;
 class UsesSRelation;
 class UsesPRelation;
 class NodeRelation;
+class NextStarQueryCache;
 
 typedef struct IfControlRelation {
 	static bool validate(SVRelationStore<IfControlRelation>*, const shared_ptr<StmtInfo>& statement, const VarRef&) {
