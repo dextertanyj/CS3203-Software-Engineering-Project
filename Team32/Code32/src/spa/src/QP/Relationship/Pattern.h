@@ -40,7 +40,7 @@ public:
 	static QueryResult executeNameExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
 	                                         const ReferenceArgument& name, const ReferenceArgument& expression);
 	static QueryResult executeWildcardExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
-	                                             const ReferenceArgument& wildcard, const ReferenceArgument& expression);
+	                                             const ReferenceArgument& expression);
 	static QueryResult executeSynonymExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
 	                                            const ReferenceArgument& synonym, const ReferenceArgument& expression);
 

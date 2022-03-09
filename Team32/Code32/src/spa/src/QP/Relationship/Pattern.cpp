@@ -60,7 +60,7 @@ QP::QueryResult QP::Relationship::Pattern::executeNonTrivial(PKB::StorageAccessI
 					return executeWildcardWildcard(pkb, syn_assign);
 				case Types::ReferenceType::SubExpression:
 				case Types::ReferenceType::ExactExpression:
-					return executeWildcardExpression(pkb, syn_assign, ent_ref, expression);
+					return executeWildcardExpression(pkb, syn_assign, expression);
 				default:
 					throw logic_error("Incorrect arguments received.");
 			}
@@ -168,7 +168,6 @@ QP::QueryResult QP::Relationship::Pattern::executeNameExpression(PKB::StorageAcc
 }
 
 QP::QueryResult QP::Relationship::Pattern::executeWildcardExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
-                                                                     const ReferenceArgument& wildcard,
                                                                      const ReferenceArgument& expression) {
 	QP::QueryResult result = QP::QueryResult();
 	vector<string> statement_result;
