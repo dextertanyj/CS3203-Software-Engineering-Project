@@ -14,6 +14,7 @@ class Storage;
 class StatementInfo;
 class ProcedureInfo;
 class NodeInfo;
+class DummyNodeInfo;
 
 template <typename TIdent, typename TContent, class TInfo>
 class InfoStore;

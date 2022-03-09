@@ -12,6 +12,7 @@ public:
 	[[nodiscard]] StmtType getType() const;
 	void setUniqueIndex(size_t unique_index);
 	StmtRef getUniqueIndex() const;
+	virtual bool isDummy() const;
 
 private:
 	StmtRef index;

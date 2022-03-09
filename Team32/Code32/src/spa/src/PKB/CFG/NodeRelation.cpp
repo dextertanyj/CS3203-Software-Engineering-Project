@@ -1,11 +1,5 @@
 #include "NodeRelation.h"
 
-#include <queue>
-#include <stdexcept>
-
-#include "NodeComparator.h"
-#include "NodeInfo.h"
-
 PKB::NodeRelation::NodeRelation(shared_ptr<PKB::NodeInfo> self) : self(std::move(self)) {}
 
 void PKB::NodeRelation::insertForward(const shared_ptr<PKB::NodeInfo>& previous_node) {
@@ -52,46 +46,53 @@ unordered_set<shared_ptr<PKB::NodeInfo>> PKB::NodeRelation::getReverseTransitive
 
 void PKB::NodeRelation::setCFGIndex(StmtRef ref) { this->self->setUniqueIndex(ref); }
 
-// Template specializations for CFG Next relationship.
-
-template <>
-unordered_set<shared_ptr<PKB::NodeInfo>> PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>::populateTransitive(
-	NodeRelation& current, unordered_set<shared_ptr<PKB::NodeInfo>> next_nodes_transitive) {
-	current.appendReverseTransitive(next_nodes_transitive);
-	next_nodes_transitive.insert(current.getSelf());
-	return next_nodes_transitive;
+shared_ptr<PKB::NodeInfo> PKB::NodeRelation::findLastNode(shared_ptr<NodeInfo> node_ref,
+                                                          TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>& store) {
+	shared_ptr<NodeInfo> current = node_ref;
+	unordered_set<shared_ptr<NodeInfo>> next_nodes = store.getReverse(current->getIdentifier());
+	while (!next_nodes.empty()) {
+		// Chosen branch should not matter.
+		current = shared_ptr<NodeInfo>(store.getReverse(current->getIdentifier()).begin()->get());
+		next_nodes = store.getReverse(current->getIdentifier());
+	}
+	return current;
 }
 
+/* Template specializations for CFG Next relationship.
+ populateTransitive method is not required, as this population will be done
+ per query and cannot be pre-computed.
+ */
 template <>
 void PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>::optimize() {
-	NodeRelation last_node;
+	// Edge case: If statement is final statement in the procedure. if and else blocks have no ending node.
+	std::set<int> edge_case_if_stmts;
 	for (auto& item : map) {
-		// Start optimization from the end of the CFG.
-		if (item.second.getReverse().empty()) {
-			last_node = item.second;
-			break;
+		NodeRelation relation = item.second;
+		// Edge case detected when if control statement only has 2 direct next statements.
+		// Gather these nodes in a set and add dummy nodes starting from the highest StmtRef.
+		if (relation.getSelf()->getType() == StmtType::IfStmt && relation.getReverse().size() == 2) {
+			edge_case_if_stmts.insert(relation.getSelf()->getIdentifier());
 		}
 	}
-	// Use last node's stmt ref as the unique index of a CFG.
-	size_t unique_index = last_node.getSelf()->getIdentifier();
-	unordered_set<shared_ptr<PKB::NodeInfo>> next_nodes_transitive = {};
+	// Start from the highest StmtRef if statement.
+	for (auto iter = edge_case_if_stmts.rbegin(); iter != edge_case_if_stmts.rend(); ++iter) {
+		unordered_set<shared_ptr<NodeInfo>> child_nodes = this->getReverse(*iter);
+		vector<shared_ptr<NodeInfo>> child_nodes_list(child_nodes.size());
+		std::copy(child_nodes.begin(), child_nodes.end(), child_nodes_list.begin());
+		// Need to use vector to differentiate first and second child node. There should be 2 child nodes.
+		shared_ptr<NodeInfo> child_node_1 = *(child_nodes_list.begin());
+		shared_ptr<NodeInfo> child_node_2 = *(child_nodes_list.rbegin());
+		// Find the last node within the block.
+		shared_ptr<PKB::NodeInfo> child_node_1_end_node = PKB::NodeRelation::findLastNode(child_node_1, *this);
+		shared_ptr<PKB::NodeInfo> child_node_2_end_node = PKB::NodeRelation::findLastNode(child_node_2, *this);
+		// Create dummy node and set these 2 ending nodes to the dummy node.
+		PKB::NodeInfo dummy_node = PKB::DummyNodeInfo();
+		shared_ptr<PKB::NodeInfo> dummy_node_ptr = make_shared<PKB::NodeInfo>(dummy_node);
+		this->set(child_node_1_end_node, dummy_node_ptr);
+		this->set(child_node_2_end_node, dummy_node_ptr);
+	}
 
-	// PQ stores a pair of stmt ref and the transitive next nodes to add to that ref's node.
-	// populateTransitive will then perform the insertion into the NodeRelation, while returning
-	// a new set of transitive next nodes to add to subsequent parent nodes.
-	std::priority_queue<pair<StmtRef, unordered_set<shared_ptr<PKB::NodeInfo>>>,
-	                    vector<pair<StmtRef, unordered_set<shared_ptr<PKB::NodeInfo>>>>, NodeComparator>
-		queue;
-	queue.push(make_pair(last_node.getSelf()->getIdentifier(), next_nodes_transitive));
-	while (!queue.empty()) {
-		StmtRef current_ref = queue.top().first;
-		NodeRelation current_node_relation = map.find(current_ref)->second;
-		unordered_set<shared_ptr<NodeInfo>> nodes_to_add = queue.top().second;
-		current_node_relation.setCFGIndex(unique_index);
-		nodes_to_add = populateTransitive(current_node_relation, nodes_to_add);
-		for (shared_ptr<PKB::NodeInfo> previous_node : current_node_relation.getForward()) {
-			queue.push(make_pair(previous_node->getIdentifier(), nodes_to_add));
-		}
-		queue.pop();
-	}
+	// Pre-processing: Connect ending statements within if/else blocks to the following statement of the if control statement.
+
+	// Populate unique index after pre-processing is done.
 }

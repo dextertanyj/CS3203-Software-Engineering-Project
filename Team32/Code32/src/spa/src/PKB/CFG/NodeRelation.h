@@ -1,11 +1,18 @@
 #ifndef SPA_NODERELATION_H
 #define SPA_NODERELATION_H
 #include <memory>
+#include <queue>
+#include <set>
+#include <stdexcept>
 #include <unordered_set>
 
 #include "Common/TypeDefs.h"
+#include "DummyNodeInfo.h"
+#include "NodeComparator.h"
+#include "NodeInfo.h"
 #include "PKB/PKB.h"
 #include "PKB/TransitiveRelationStore.h"
+#include "PKB/Types.h"
 
 class PKB::NodeRelation {
 public:
@@ -21,7 +28,8 @@ public:
 	[[nodiscard]] unordered_set<shared_ptr<NodeInfo>> getReverse() const;
 	[[nodiscard]] unordered_set<shared_ptr<NodeInfo>> getForwardTransitive() const;
 	[[nodiscard]] unordered_set<shared_ptr<NodeInfo>> getReverseTransitive() const;
-
+	[[nodiscard]] static shared_ptr<PKB::NodeInfo> findLastNode(
+		shared_ptr<NodeInfo> node_ref, PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>& store);
 	void setCFGIndex(StmtRef ref);
 
 private:
@@ -36,9 +44,5 @@ private:
 
 template <>
 void PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>::optimize();
-
-template <>
-unordered_set<shared_ptr<PKB::NodeInfo>> PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>::populateTransitive(
-	NodeRelation& current, unordered_set<shared_ptr<NodeInfo>> next_nodes_transitive);
 
 #endif  // SPA_NODERELATION_H
