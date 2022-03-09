@@ -8,7 +8,6 @@
 class PKB::DummyNodeInfo : public PKB::NodeInfo {
 public:
 	DummyNodeInfo();
-	bool isDummy() const override;
 };
 
 #endif  // SPA_DUMMYNODEINFO_H
