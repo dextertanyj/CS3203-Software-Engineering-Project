@@ -61,7 +61,7 @@ QP::QueryResult QP::Relationship::UsesS::executeNonTrivial(PKB::StorageAccessInt
 }
 
 QP::QueryResult QP::Relationship::UsesS::executeTrivialIndexName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
-                                                                    const ReferenceArgument& ent) {
+                                                                 const ReferenceArgument& ent) {
 	return QueryResult(pkb.checkUses(stmt.getStatementIndex(), ent.getName()));
 }
 
@@ -71,7 +71,7 @@ QP::QueryResult QP::Relationship::UsesS::executeTrivialIndex(PKB::StorageAccessI
 }
 
 QP::QueryResult QP::Relationship::UsesS::executeTrivialSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
-                                                               const ReferenceArgument& ent) {
+                                                                   const ReferenceArgument& ent) {
 	StmtInfoPtrSet stmt_set = pkb.getStmtUsesByVar(ent.getName());
 	DesignEntity design_entity = stmt.getSynonym().type;
 	for (auto const& res_stmt : stmt_set) {
@@ -99,7 +99,7 @@ QP::QueryResult QP::Relationship::UsesS::executeTrivialSynonym(PKB::StorageAcces
 }
 
 QP::QueryResult QP::Relationship::UsesS::executeSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
-                                                               const ReferenceArgument& ent) {
+                                                            const ReferenceArgument& ent) {
 	StmtInfoPtrSet stmt_set = pkb.getStmtUsesByVar(ent.getName());
 	DesignEntity design_entity = stmt.getSynonym().type;
 	vector<string> column;

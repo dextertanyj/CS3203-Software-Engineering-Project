@@ -45,7 +45,7 @@ QP::QueryResult QP::Relationship::UsesP::executeTrivial(PKB::StorageAccessInterf
 
 QP::QueryResult QP::Relationship::UsesP::executeNonTrivial(PKB::StorageAccessInterface &pkb) {
 	if (left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Synonym) {
-		return executeVarNameSynonym(pkb, left_ent, right_ent);
+		return executeNameSynonym(pkb, left_ent, right_ent);
 	}
 	if (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Name) {
 		return executeSynonymName(pkb, left_ent, right_ent);
@@ -85,7 +85,7 @@ QP::QueryResult QP::Relationship::UsesP::executeTrivialSynonym(PKB::StorageAcces
 	return {};
 }
 
-QP::QueryResult QP::Relationship::UsesP::executeVarNameSynonym(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent,
+QP::QueryResult QP::Relationship::UsesP::executeNameSynonym(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent,
                                                                const ReferenceArgument &right_ent) {
 	VarRefSet var_set = pkb.getUsesByProc(left_ent.getName());
 	vector<string> column;
@@ -100,7 +100,7 @@ QP::QueryResult QP::Relationship::UsesP::executeVarNameSynonym(PKB::StorageAcces
 }
 
 QP::QueryResult QP::Relationship::UsesP::executeSynonymName(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent,
-                                                               const ReferenceArgument &right_ent) {
+                                                            const ReferenceArgument &right_ent) {
 	ProcRefSet proc_set = pkb.getProcUsesByVar(right_ent.getName());
 	vector<string> column;
 	for (auto const &proc : proc_set) {

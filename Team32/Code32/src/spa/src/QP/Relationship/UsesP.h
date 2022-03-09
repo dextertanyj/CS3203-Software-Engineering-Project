@@ -24,8 +24,8 @@ public:
 
 	// Executors
 
-	static QueryResult executeVarNameSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& left_ent,
-	                                         const ReferenceArgument& right_ent);
+	static QueryResult executeNameSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& left_ent,
+	                                      const ReferenceArgument& right_ent);
 	static QueryResult executeSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& left_ent,
 	                                      const ReferenceArgument& right_ent);
 	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& left_ent);
