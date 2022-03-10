@@ -174,5 +174,5 @@ QP::QueryResult QP::Relationship::Calls::executeSynonymSynonym(PKB::StorageAcces
 }
 
 QP::Types::ArgumentDispatcher QP::Relationship::Calls::dispatcher = [](vector<ReferenceArgument> args) {
-	return CallDispatcherTemplate<QP::Relationship::Calls>::argumentDispatcher(Types::ClauseType::Call, std::move(args));
+	return CallDispatcherTemplate<Calls>::argumentDispatcher(Types::ClauseType::Call, std::move(args));
 };

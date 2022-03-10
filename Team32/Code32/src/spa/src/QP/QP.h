@@ -15,8 +15,6 @@ class QueryPreprocessor;
 class QueryProcessor;
 class QueryProperties;
 class QueryResult;
-template <class T>
-class CallDispatcherTemplate;
 struct Dispatcher;
 namespace Utilities {};
 namespace Types {};

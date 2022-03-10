@@ -1,12 +1,12 @@
 #ifndef SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_H
 #define SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_H
 
-#include "QP/QP.h"
+#include "QP/Relationship/Relationship.h"
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
 
 template <class T>
-class QP::CallDispatcherTemplate {
+class QP::Relationship::CallDispatcherTemplate {
 public:
 	static Types::ExecutorSetBundle argumentDispatcher(ClauseType type, vector<Types::ReferenceArgument> arguments);
 
