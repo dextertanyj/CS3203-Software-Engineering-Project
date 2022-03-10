@@ -82,7 +82,7 @@ QP::Relationship::FollowsDispatcherTemplate<T>::getWildcardMap() {
 			 return [rear = args.at(1)](PKB::StorageAccessInterface& pkb) { return T::executeTrivialWildcardIndex(pkb, rear); };
 		 }},
 		{Types::ReferenceType::Wildcard,
-	     [](vector<Types::ReferenceArgument>& /*args*/) {
+	     [](vector<Types::ReferenceArgument> /*args*/) {
 			 return [](PKB::StorageAccessInterface& pkb) { return T::executeTrivialWildcardWildcard(pkb); };
 		 }},
 		{Types::DesignEntity::Stmt, lambda_wildcard_synonym<T>},
