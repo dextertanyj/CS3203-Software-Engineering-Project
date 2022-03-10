@@ -1,5 +1,7 @@
 #include "ParentT.h"
 
+#include "QP/Relationship/ParentDispatcherTemplate.tpp"
+
 QP::QueryResult QP::Relationship::ParentT::executeTrivial(PKB::StorageAccessInterface& pkb) {
 	if (getParentStmt().getType() == ReferenceType::StatementIndex && getChildStmt().getType() == ReferenceType::StatementIndex) {
 		return executeTrivialIndexIndex(pkb, getParentStmt(), getChildStmt());
@@ -263,3 +265,7 @@ QP::QueryResult QP::Relationship::ParentT::executeSynonymSynonym(PKB::StorageAcc
 	result.addColumn(child.getSynonym().symbol, child_column);
 	return result;
 }
+
+QP::Types::ArgumentDispatcher QP::Relationship::ParentT::dispatcher = [](vector<ReferenceArgument> args) {
+	return ParentDispatcherTemplate<ParentT>::argumentDispatcher(Types::ClauseType::Call, std::move(args));
+};

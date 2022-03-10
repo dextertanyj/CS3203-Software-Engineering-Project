@@ -16,6 +16,8 @@ class Calls;
 class CallsT;
 template <class T>
 class CallDispatcherTemplate;
+template <class T>
+class ParentDispatcherTemplate;
 namespace Modifies {};
 }  // namespace QP::Relationship
 
