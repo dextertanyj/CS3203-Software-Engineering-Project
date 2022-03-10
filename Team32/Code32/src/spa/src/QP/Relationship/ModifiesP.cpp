@@ -63,7 +63,8 @@ QP::QueryResult QP::Relationship::ModifiesP::executeTrivialNameName(PKB::Storage
                                                                     const ReferenceArgument &right_ent) {
 	return QueryResult(pkb.checkModifies(left_ent.getName(), right_ent.getName()));
 }
-QP::QueryResult QP::Relationship::ModifiesP::executeTrivialNameWildcardOrSynonym(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent) {
+QP::QueryResult QP::Relationship::ModifiesP::executeTrivialNameWildcardOrSynonym(PKB::StorageAccessInterface &pkb,
+                                                                                 const ReferenceArgument &left_ent) {
 	VarRefSet var_set = pkb.getModifiesByProc(left_ent.getName());
 	return QueryResult(!var_set.empty());
 }

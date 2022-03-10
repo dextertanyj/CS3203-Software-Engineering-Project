@@ -64,7 +64,8 @@ QP::QueryResult QP::Relationship::UsesP::executeTrivialNameName(PKB::StorageAcce
 	return QueryResult(pkb.checkUses(left_ent.getName(), right_ent.getName()));
 }
 
-QP::QueryResult QP::Relationship::UsesP::executeTrivialNameWildcardOrSynonym(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent) {
+QP::QueryResult QP::Relationship::UsesP::executeTrivialNameWildcardOrSynonym(PKB::StorageAccessInterface &pkb,
+                                                                             const ReferenceArgument &left_ent) {
 	VarRefSet var_set = pkb.getUsesByProc(left_ent.getName());
 	return QueryResult(!var_set.empty());
 }

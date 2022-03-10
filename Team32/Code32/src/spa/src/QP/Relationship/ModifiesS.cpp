@@ -65,7 +65,8 @@ QP::QueryResult QP::Relationship::ModifiesS::executeTrivialIndexName(PKB::Storag
 	return QueryResult(pkb.checkModifies(stmt.getStatementIndex(), ent.getName()));
 }
 
-QP::QueryResult QP::Relationship::ModifiesS::executeTrivialIndexWildcardOrSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt) {
+QP::QueryResult QP::Relationship::ModifiesS::executeTrivialIndexWildcardOrSynonym(PKB::StorageAccessInterface& pkb,
+                                                                                  const ReferenceArgument& stmt) {
 	VarRefSet var_set = pkb.getModifiesByStmt(stmt.getStatementIndex());
 	return QueryResult(!var_set.empty());
 }
@@ -82,7 +83,8 @@ QP::QueryResult QP::Relationship::ModifiesS::executeTrivialSynonymName(PKB::Stor
 	return {};
 }
 
-QP::QueryResult QP::Relationship::ModifiesS::executeTrivialSynonymWildcardOrSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt) {
+QP::QueryResult QP::Relationship::ModifiesS::executeTrivialSynonymWildcardOrSynonym(PKB::StorageAccessInterface& pkb,
+                                                                                    const ReferenceArgument& stmt) {
 	StmtInfoPtrSet stmt_set = pkb.getStatements();
 	DesignEntity design_entity = stmt.getSynonym().type;
 	for (auto const& res_stmt : stmt_set) {
