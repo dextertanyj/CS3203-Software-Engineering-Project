@@ -29,8 +29,8 @@ QP::Types::ExecutorSetBundle QP::DispatchProcessors::processDoubleArgument(
 		outer_key = args.at(0).getSynonym().type;
 	}
 	Types::ArgumentDispatchKey inner_key = args.at(1).getType();
-	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
-		inner_key = args.at(0).getSynonym().type;
+	if (args.at(1).getType() == Types::ReferenceType::Synonym) {
+		inner_key = args.at(1).getSynonym().type;
 	}
 	auto outer_map_iter = map.find(outer_key);
 	if (outer_map_iter == map.end()) {
@@ -54,7 +54,7 @@ QP::Types::ExecutorSetBundle QP::DispatchProcessors::processDoubleArgument(
 	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
 		outer_key = args.at(0).getSynonym().type;
 	}
-	Types::ArgumentDispatchKey inner_key = args.at(0).getType();
+	Types::ArgumentDispatchKey inner_key = args.at(1).getType();
 	if (args.at(1).getType() == Types::ReferenceType::Synonym) {
 		inner_key = args.at(1).getSynonym().type;
 	}

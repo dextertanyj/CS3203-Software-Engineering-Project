@@ -14,6 +14,12 @@ QP::Types::ExecutorSetBundle QP::Relationship::CallDispatcherTemplate<T>::argume
 };
 
 template <class T>
+const unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>
+	QP::Relationship::CallDispatcherTemplate<T>::argument_dispatch_map = {{Types::ReferenceType::Name, name_map},
+                                                                          {Types::ReferenceType::Wildcard, wildcard_map},
+                                                                          {Types::DesignEntity::Procedure, synonym_map}};
+
+template <class T>
 const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Relationship::CallDispatcherTemplate<T>::name_map = {
 	{Types::ReferenceType::Name,
      [](vector<Types::ReferenceArgument> args) {
@@ -79,11 +85,5 @@ const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactor
 						 }};
 		 }},
 };
-
-template <class T>
-const unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>
-	QP::Relationship::CallDispatcherTemplate<T>::argument_dispatch_map = {{Types::ReferenceType::Name, name_map},
-                                                                          {Types::ReferenceType::Wildcard, wildcard_map},
-                                                                          {Types::DesignEntity::Procedure, synonym_map}};
 
 #endif

@@ -2,7 +2,16 @@
 
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
+#include "QP/Relationship/Modifies.h"
 #include "catch.hpp"
+
+template <class... Ts>
+struct Visitor : Ts... {
+	using Ts::operator()...;
+};
+
+template <class... Ts>
+Visitor(Ts...) -> Visitor<Ts...>;
 
 TEST_CASE("QP::Relationship::ModifiesP::execute") {
 	PKB::Storage pkb = PKB::Storage();
@@ -110,4 +119,32 @@ TEST_CASE("QP::Relationship::ModifiesP::execute") {
 		REQUIRE(actual_proc_result1 == expected_proc_result1);
 		REQUIRE(actual_var_result1 == expected_var_result1);
 	}
+}
+
+TEST_CASE("Modifies Dispatch Test") {
+	// TODO: Temporary test
+	PKB::Storage pkb = PKB::Storage();
+	pkb.setStmtType(1, StmtType::Assign);
+	pkb.setStmtType(2, StmtType::Read);
+	pkb.setStmtType(3, StmtType::Print);
+	pkb.setStmtType(4, StmtType::Print);
+	pkb.setModifies(1, "x");
+	pkb.setModifies(2, "z");
+	pkb.setProc("A", 1, 2);
+	pkb.setProc("B", 3, 4);
+	pkb.populateComplexRelations();
+
+	ReferenceArgument left_proc_no1 = ReferenceArgument("A");
+	ReferenceArgument left_proc_no2 = ReferenceArgument("B");
+	ReferenceArgument left_proc_no3 = ReferenceArgument({QP::Types::DesignEntity::Procedure, "procedure"});
+	ReferenceArgument x = ReferenceArgument("x");
+	ReferenceArgument y = ReferenceArgument("y");
+	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
+
+	auto fun = QP::Relationship::Modifies::dispatcher({left_proc_no3, x});
+	REQUIRE(fun.first == QP::Types::ClauseType::ModifiesP);
+	QP::QueryResult res;
+	visit(Visitor{[&](QP::Types::Executor exe) { res = exe(pkb); },
+	              [&](pair<QP::Types::Executor, QP::Types::Executor> exes) { res = exes.second(pkb); }},
+	      fun.second);
 }
