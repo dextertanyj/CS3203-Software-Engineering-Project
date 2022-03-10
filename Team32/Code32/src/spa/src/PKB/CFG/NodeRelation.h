@@ -33,6 +33,8 @@ public:
 	void setCFGIndex(StmtRef ref);
 	void removeForward(shared_ptr<NodeInfo> node_info);
 	void removeReverse(shared_ptr<NodeInfo> node_info);
+	static void populateUniqueIndex(const NodeRelation& node_relation, StmtRef stmt_no,
+	                                PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>& store);
 
 private:
 	shared_ptr<NodeInfo> self;

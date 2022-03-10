@@ -64,6 +64,15 @@ shared_ptr<PKB::NodeInfo> PKB::NodeRelation::findLastNode(shared_ptr<NodeInfo> n
 	return current;
 }
 
+void PKB::NodeRelation::populateUniqueIndex(const NodeRelation& node_relation, StmtRef stmt_no,
+                                            PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>& store) {
+	unordered_set<shared_ptr<NodeInfo>> forward_node_infos = node_relation.getForward();
+	for (auto node : forward_node_infos) {
+		node->setUniqueIndex(stmt_no);
+		populateUniqueIndex(store.map.at(node->getIdentifier()), stmt_no, store);
+	}
+}
+
 /* Template specializations for CFG Next relationship.
  populateTransitive method is not required, as this population will be done
  per query and cannot be pre-computed.
@@ -141,4 +150,9 @@ void PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>::op
 	 */
 
 	// Populate unique index after pre-processing is done.
+	for (auto& item : map) {
+		if (item.second.getReverse().empty()) {
+			PKB::NodeRelation::populateUniqueIndex(item.second, item.second.getSelf()->getIdentifier(), *this);
+		}
+	}
 }
