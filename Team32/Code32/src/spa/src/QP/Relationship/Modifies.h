@@ -122,10 +122,10 @@ const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>
 
 const unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>>
 	argument_dispatch_map = {{Types::ReferenceType::Name, name_map},          {Types::ReferenceType::StatementIndex, index_map},
-                              {Types::DesignEntity::Procedure, procedure_map}, {Types::DesignEntity::Stmt, statement_map},
-                              {Types::DesignEntity::Call, statement_map},      {Types::DesignEntity::Assign, statement_map},
-                              {Types::DesignEntity::Read, statement_map},      {Types::DesignEntity::While, statement_map},
-                              {Types::DesignEntity::If, statement_map}};
+                             {Types::DesignEntity::Procedure, procedure_map}, {Types::DesignEntity::Stmt, statement_map},
+                             {Types::DesignEntity::Call, statement_map},      {Types::DesignEntity::Assign, statement_map},
+                             {Types::DesignEntity::Read, statement_map},      {Types::DesignEntity::While, statement_map},
+                             {Types::DesignEntity::If, statement_map}};
 }  // namespace
 };  // namespace QP::Relationship::Modifies
 

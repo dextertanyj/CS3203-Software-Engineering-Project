@@ -1,9 +1,9 @@
 #ifndef SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_H
 #define SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_H
 
-#include "QP/Relationship/Relationship.h"
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
+#include "QP/Relationship/Relationship.h"
 
 template <class T>
 class QP::Relationship::CallDispatcherTemplate {
