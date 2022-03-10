@@ -21,13 +21,14 @@ const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>
 	{Types::ReferenceType::Wildcard, pair{Types::ClauseType::ModifiesP,
                                           [](vector<Types::ReferenceArgument> args) {
 											  return [procedure = args.at(0)](PKB::StorageAccessInterface& pkb) {
-												  return Relationship::ModifiesP::executeTrivialName(pkb, procedure);
+												  return Relationship::ModifiesP::executeTrivialNameWildcardOrSynonym(pkb, procedure);
 											  };
 										  }}},
 	{Types::DesignEntity::Variable, pair{Types::ClauseType::ModifiesP,
                                          [](vector<Types::ReferenceArgument> args) {
 											 return pair{[procedure = args.at(0)](PKB::StorageAccessInterface& pkb) {
-															 return Relationship::ModifiesP::executeTrivialName(pkb, procedure);
+															 return Relationship::ModifiesP::executeTrivialNameWildcardOrSynonym(pkb,
+		                                                                                                                         procedure);
 														 },
 	                                                     [procedure = args.at(0), variable = args.at(1)](PKB::StorageAccessInterface& pkb) {
 															 return Relationship::ModifiesP::executeNameSynonym(pkb, procedure, variable);
@@ -45,13 +46,14 @@ const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>
 	{Types::ReferenceType::Wildcard, pair{Types::ClauseType::ModifiesS,
                                           [](vector<Types::ReferenceArgument> args) {
 											  return [procedure = args.at(0)](PKB::StorageAccessInterface& pkb) {
-												  return Relationship::ModifiesS::executeTrivialIndex(pkb, procedure);
+												  return Relationship::ModifiesS::executeTrivialIndexWildcardOrSynonym(pkb, procedure);
 											  };
 										  }}},
 	{Types::DesignEntity::Variable, pair{Types::ClauseType::ModifiesS,
                                          [](vector<Types::ReferenceArgument> args) {
 											 return pair{[procedure = args.at(0)](PKB::StorageAccessInterface& pkb) {
-															 return Relationship::ModifiesS::executeTrivialIndex(pkb, procedure);
+															 return Relationship::ModifiesS::executeTrivialIndexWildcardOrSynonym(
+																 pkb, procedure);
 														 },
 	                                                     [procedure = args.at(0), variable = args.at(1)](PKB::StorageAccessInterface& pkb) {
 															 return Relationship::ModifiesS::executeIndexSynonym(pkb, procedure, variable);
@@ -72,20 +74,22 @@ const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>
 	{Types::ReferenceType::Wildcard, pair{Types::ClauseType::ModifiesP,
                                           [](vector<Types::ReferenceArgument> args) {
 											  return pair{[](PKB::StorageAccessInterface& pkb) {
-															  return Relationship::ModifiesP::executeTrivialSynonym(pkb);
+															  return Relationship::ModifiesP::executeTrivialSynonymWildcardOrSynonym(pkb);
 														  },
 	                                                      [procedure = args.at(0)](PKB::StorageAccessInterface& pkb) {
 															  return Relationship::ModifiesP::executeSynonymWildcard(pkb, procedure);
 														  }};
 										  }}},
-	{Types::DesignEntity::Variable,
-     pair{Types::ClauseType::ModifiesP,
-          [](vector<Types::ReferenceArgument> args) {
-			  return pair{[](PKB::StorageAccessInterface& pkb) { return Relationship::ModifiesP::executeTrivialSynonym(pkb); },
-	                      [procedure = args.at(0), variable = args.at(1)](PKB::StorageAccessInterface& pkb) {
-							  return Relationship::ModifiesP::executeSynonymSynonym(pkb, procedure, variable);
-						  }};
-		  }}},
+	{Types::DesignEntity::Variable, pair{Types::ClauseType::ModifiesP,
+                                         [](vector<Types::ReferenceArgument> args) {
+											 return pair{[](PKB::StorageAccessInterface& pkb) {
+															 return Relationship::ModifiesP::executeTrivialSynonymWildcardOrSynonym(pkb);
+														 },
+	                                                     [procedure = args.at(0), variable = args.at(1)](PKB::StorageAccessInterface& pkb) {
+															 return Relationship::ModifiesP::executeSynonymSynonym(pkb, procedure,
+		                                                                                                           variable);
+														 }};
+										 }}},
 };
 
 const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle> statement_map = {
@@ -102,7 +106,8 @@ const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>
 	{Types::ReferenceType::Wildcard, pair{Types::ClauseType::ModifiesS,
                                           [](vector<Types::ReferenceArgument> args) {
 											  return pair{[statement = args.at(0)](PKB::StorageAccessInterface& pkb) {
-															  return Relationship::ModifiesS::executeTrivialSynonym(pkb, statement);
+															  return Relationship::ModifiesS::executeTrivialSynonymWildcardOrSynonym(
+																  pkb, statement);
 														  },
 	                                                      [statement = args.at(0)](PKB::StorageAccessInterface& pkb) {
 															  return Relationship::ModifiesS::executeSynonymWildcard(pkb, statement);
@@ -110,13 +115,13 @@ const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>
 										  }}},
 	{Types::DesignEntity::Variable, pair{Types::ClauseType::ModifiesS,
                                          [](vector<Types::ReferenceArgument> args) {
-											 return pair{[statement = args.at(0)](PKB::StorageAccessInterface& pkb) {
-															 return Relationship::ModifiesS::executeTrivialSynonym(pkb, statement);
-														 },
-	                                                     [statement = args.at(0), variable = args.at(1)](PKB::StorageAccessInterface& pkb) {
-															 return Relationship::ModifiesS::executeSynonymSynonym(pkb, statement,
-		                                                                                                           variable);
-														 }};
+											 return pair{
+												 [statement = args.at(0)](PKB::StorageAccessInterface& pkb) {
+													 return Relationship::ModifiesS::executeTrivialSynonymWildcardOrSynonym(pkb, statement);
+												 },
+												 [statement = args.at(0), variable = args.at(1)](PKB::StorageAccessInterface& pkb) {
+													 return Relationship::ModifiesS::executeSynonymSynonym(pkb, statement, variable);
+												 }};
 										 }}},
 };
 

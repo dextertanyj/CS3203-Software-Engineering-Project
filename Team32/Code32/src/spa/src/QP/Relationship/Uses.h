@@ -21,13 +21,14 @@ const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>
 	{Types::ReferenceType::Wildcard, pair{Types::ClauseType::UsesP,
                                           [](vector<Types::ReferenceArgument> args) {
 											  return [procedure = args.at(0)](PKB::StorageAccessInterface& pkb) {
-												  return Relationship::UsesP::executeTrivialName(pkb, procedure);
+												  return Relationship::UsesP::executeTrivialNameWildcardOrSynonym(pkb, procedure);
 											  };
 										  }}},
 	{Types::DesignEntity::Variable, pair{Types::ClauseType::UsesP,
                                          [](vector<Types::ReferenceArgument> args) {
 											 return pair{[procedure = args.at(0)](PKB::StorageAccessInterface& pkb) {
-															 return Relationship::UsesP::executeTrivialName(pkb, procedure);
+															 return Relationship::UsesP::executeTrivialNameWildcardOrSynonym(pkb,
+		                                                                                                                     procedure);
 														 },
 	                                                     [procedure = args.at(0), variable = args.at(1)](PKB::StorageAccessInterface& pkb) {
 															 return Relationship::UsesP::executeNameSynonym(pkb, procedure, variable);
@@ -45,13 +46,14 @@ const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>
 	{Types::ReferenceType::Wildcard, pair{Types::ClauseType::UsesS,
                                           [](vector<Types::ReferenceArgument> args) {
 											  return [procedure = args.at(0)](PKB::StorageAccessInterface& pkb) {
-												  return Relationship::UsesS::executeTrivialIndex(pkb, procedure);
+												  return Relationship::UsesS::executeTrivialIndexWildcardOrSynonym(pkb, procedure);
 											  };
 										  }}},
 	{Types::DesignEntity::Variable, pair{Types::ClauseType::UsesS,
                                          [](vector<Types::ReferenceArgument> args) {
 											 return pair{[procedure = args.at(0)](PKB::StorageAccessInterface& pkb) {
-															 return Relationship::UsesS::executeTrivialIndex(pkb, procedure);
+															 return Relationship::UsesS::executeTrivialIndexWildcardOrSynonym(pkb,
+		                                                                                                                      procedure);
 														 },
 	                                                     [procedure = args.at(0), variable = args.at(1)](PKB::StorageAccessInterface& pkb) {
 															 return Relationship::UsesS::executeIndexSynonym(pkb, procedure, variable);
@@ -72,7 +74,7 @@ const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>
 	{Types::ReferenceType::Wildcard, pair{Types::ClauseType::UsesP,
                                           [](vector<Types::ReferenceArgument> args) {
 											  return pair{[](PKB::StorageAccessInterface& pkb) {
-															  return Relationship::UsesP::executeTrivialSynonym(pkb);
+															  return Relationship::UsesP::executeTrivialSynonymWildcardOrSynonym(pkb);
 														  },
 	                                                      [procedure = args.at(0)](PKB::StorageAccessInterface& pkb) {
 															  return Relationship::UsesP::executeSynonymWildcard(pkb, procedure);
@@ -81,7 +83,7 @@ const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>
 	{Types::DesignEntity::Variable, pair{Types::ClauseType::UsesP,
                                          [](vector<Types::ReferenceArgument> args) {
 											 return pair{[](PKB::StorageAccessInterface& pkb) {
-															 return Relationship::UsesP::executeTrivialSynonym(pkb);
+															 return Relationship::UsesP::executeTrivialSynonymWildcardOrSynonym(pkb);
 														 },
 	                                                     [procedure = args.at(0), variable = args.at(1)](PKB::StorageAccessInterface& pkb) {
 															 return Relationship::UsesP::executeSynonymSynonym(pkb, procedure, variable);
@@ -102,7 +104,8 @@ const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>
 	{Types::ReferenceType::Wildcard, pair{Types::ClauseType::UsesS,
                                           [](vector<Types::ReferenceArgument> args) {
 											  return pair{[statement = args.at(0)](PKB::StorageAccessInterface& pkb) {
-															  return Relationship::UsesS::executeTrivialSynonym(pkb, statement);
+															  return Relationship::UsesS::executeTrivialSynonymWildcardOrSynonym(pkb,
+		                                                                                                                         statement);
 														  },
 	                                                      [statement = args.at(0)](PKB::StorageAccessInterface& pkb) {
 															  return Relationship::UsesS::executeSynonymWildcard(pkb, statement);
@@ -111,7 +114,8 @@ const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>
 	{Types::DesignEntity::Variable, pair{Types::ClauseType::UsesS,
                                          [](vector<Types::ReferenceArgument> args) {
 											 return pair{[statement = args.at(0)](PKB::StorageAccessInterface& pkb) {
-															 return Relationship::UsesS::executeTrivialSynonym(pkb, statement);
+															 return Relationship::UsesS::executeTrivialSynonymWildcardOrSynonym(pkb,
+		                                                                                                                        statement);
 														 },
 	                                                     [statement = args.at(0), variable = args.at(1)](PKB::StorageAccessInterface& pkb) {
 															 return Relationship::UsesS::executeSynonymSynonym(pkb, statement, variable);
