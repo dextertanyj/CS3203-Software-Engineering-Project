@@ -44,6 +44,10 @@ public:
 	static QueryResult executeSynonymExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
 	                                            const ReferenceArgument& synonym, const ReferenceArgument& expression);
 
+	// Dispatcher
+
+	static Types::ArgumentDispatcher dispatcher;
+
 private:
 	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
 	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
@@ -51,6 +55,16 @@ private:
 	ReferenceArgument syn_assign;
 	ReferenceArgument ent_ref;
 	ReferenceArgument expression;
+
+	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getNameMap();
+	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getWildcardMap();
+	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getVariableSynonymMap();
+
+	static unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>> getSynonymMap();
+
+	static unordered_map<Types::ArgumentDispatchKey,
+	                     unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>>>
+		argument_dispatch_map;
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_PATTERN_H

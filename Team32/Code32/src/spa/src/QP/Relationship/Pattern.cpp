@@ -1,5 +1,9 @@
 #include "QP/Relationship/Pattern.h"
 
+#include <utility>
+
+#include "QP/DispatchProcessors.h"
+
 QP::Relationship::Pattern::Pattern(ReferenceArgument syn_assign, ReferenceArgument ent_ref, ReferenceArgument expression)
 	: syn_assign(std::move(syn_assign)), ent_ref(std::move(ent_ref)), expression(std::move(expression)) {}
 
@@ -196,4 +200,112 @@ QP::QueryResult QP::Relationship::Pattern::executeSynonymExpression(PKB::Storage
 	result.addColumn(synonym.getSynonym().symbol, variable_result);
 
 	return result;
+}
+
+QP::Types::ArgumentDispatcher QP::Relationship::Pattern::dispatcher = [](vector<ReferenceArgument> args) {
+	return DispatchProcessors::processTripleArgument(Types::ClauseType::PatternAssign, argument_dispatch_map, std::move(args));
+};
+
+unordered_map<QP::Types::ArgumentDispatchKey,
+              unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>>
+	QP::Relationship::Pattern::argument_dispatch_map = {{DesignEntity::Assign, getSynonymMap()}};
+
+unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>
+QP::Relationship::Pattern::getSynonymMap() {
+	static unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>> map =
+		{{ReferenceType::Name, getNameMap()},
+	     {ReferenceType::Wildcard, getWildcardMap()},
+	     {DesignEntity::Variable, getVariableSynonymMap()}};
+	return map;
+}
+
+unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Relationship::Pattern::getNameMap() {
+	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
+		{Types::ReferenceType::Wildcard,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[variable = args.at(1)](PKB::StorageAccessInterface& pkb) { return executeTrivialNameWildcard(pkb, variable); },
+		                 [assign = args.at(0), variable = args.at(1)](PKB::StorageAccessInterface& pkb) {
+							 return executeNameWildcard(pkb, assign, variable);
+						 }};
+		 }},
+		{Types::ReferenceType::ExactExpression,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[variable = args.at(1), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeTrivialNameExpression(pkb, variable, expression);
+						 },
+		                 [assign = args.at(0), variable = args.at(1), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeNameExpression(pkb, assign, variable, expression);
+						 }};
+		 }},
+		{Types::ReferenceType::SubExpression,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[variable = args.at(1), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeTrivialNameExpression(pkb, variable, expression);
+						 },
+		                 [assign = args.at(0), variable = args.at(1), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeNameExpression(pkb, assign, variable, expression);
+						 }};
+		 }},
+	};
+	return map;
+}
+
+unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Relationship::Pattern::getWildcardMap() {
+	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
+		{Types::ReferenceType::Wildcard,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[](PKB::StorageAccessInterface& pkb) { return executeTrivialSynonymOrWildcardWildcard(pkb); },
+		                 [assign = args.at(0)](PKB::StorageAccessInterface& pkb) { return executeWildcardWildcard(pkb, assign); }};
+		 }},
+		{Types::ReferenceType::ExactExpression,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeTrivialSynonymOrWildcardExpression(pkb, expression);
+						 },
+		                 [assign = args.at(0), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeWildcardExpression(pkb, assign, expression);
+						 }};
+		 }},
+		{Types::ReferenceType::SubExpression,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeTrivialSynonymOrWildcardExpression(pkb, expression);
+						 },
+		                 [assign = args.at(0), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeWildcardExpression(pkb, assign, expression);
+						 }};
+		 }},
+	};
+	return map;
+}
+
+unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Relationship::Pattern::getVariableSynonymMap() {
+	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
+		{Types::ReferenceType::Wildcard,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[](PKB::StorageAccessInterface& pkb) { return executeTrivialSynonymOrWildcardWildcard(pkb); },
+		                 [assign = args.at(0), variable = args.at(1)](PKB::StorageAccessInterface& pkb) {
+							 return executeSynonymWildcard(pkb, assign, variable);
+						 }};
+		 }},
+		{Types::ReferenceType::ExactExpression,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeTrivialSynonymOrWildcardExpression(pkb, expression);
+						 },
+		                 [assign = args.at(0), variable = args.at(1), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeSynonymExpression(pkb, assign, variable, expression);
+						 }};
+		 }},
+		{Types::ReferenceType::SubExpression,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeTrivialSynonymOrWildcardExpression(pkb, expression);
+						 },
+		                 [assign = args.at(0), variable = args.at(1), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeSynonymExpression(pkb, assign, variable, expression);
+						 }};
+		 }},
+	};
+	return map;
 }
