@@ -48,6 +48,10 @@ unordered_set<shared_ptr<PKB::NodeInfo>> PKB::NodeRelation::getReverseTransitive
 
 void PKB::NodeRelation::setCFGIndex(StmtRef ref) { this->self->setUniqueIndex(ref); }
 
+void PKB::NodeRelation::removeForward(shared_ptr<NodeInfo> node_info) { previous_nodes.erase(node_info); }
+
+void PKB::NodeRelation::removeReverse(shared_ptr<NodeInfo> node_info) { next_nodes.erase(node_info); }
+
 shared_ptr<PKB::NodeInfo> PKB::NodeRelation::findLastNode(shared_ptr<NodeInfo> node_ref,
                                                           TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>& store) {
 	shared_ptr<NodeInfo> current = node_ref;
@@ -66,35 +70,75 @@ shared_ptr<PKB::NodeInfo> PKB::NodeRelation::findLastNode(shared_ptr<NodeInfo> n
  */
 template <>
 void PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>::optimize() {
+	std::set<int> if_stmts;
+	// Find all If nodes and add them into an ordered set
+	for (auto& item : map) {
+		NodeRelation relation = item.second;
+		if (relation.getSelf()->getType() == StmtType::IfStmt) {
+			if_stmts.insert(relation.getSelf()->getIdentifier());
+		}
+	}
+
+	for (auto iter = if_stmts.rbegin(); iter != if_stmts.rend(); ++iter) {
+		unordered_set<shared_ptr<NodeInfo>> direct_nodes = this->getReverse(*iter);
+		vector<shared_ptr<NodeInfo>> sorted_direct_nodes;
+		// Sort direct_next_nodes
+		std::copy(direct_nodes.begin(), direct_nodes.end(), sorted_direct_nodes.begin());
+		sort(sorted_direct_nodes.begin(), sorted_direct_nodes.end());
+		shared_ptr<NodeInfo> larger_direct_node = sorted_direct_nodes[1];
+		shared_ptr<PKB::NodeInfo> larger_direct_node_end = PKB::NodeRelation::findLastNode(larger_direct_node, *this);
+		shared_ptr<PKB::NodeInfo> smaller_direct_node_end = map.at(larger_direct_node.get()->getIdentifier() - 1).getSelf();
+
+		// If node only has two direct next nodes, add dummy node before exiting if block
+		if (direct_nodes.size() == 2) {
+			// Create dummy node and set these 2 ending nodes to the dummy node.
+			PKB::NodeInfo dummy_node = PKB::DummyNodeInfo();
+			shared_ptr<PKB::NodeInfo> dummy_node_ptr = make_shared<PKB::NodeInfo>(dummy_node);
+			this->set(larger_direct_node_end, dummy_node_ptr);
+			this->set(smaller_direct_node_end, dummy_node_ptr);
+		}
+
+		// Pre-processing: Connect ending statements within if/else blocks to the following statement of the if control statement.
+		if (direct_nodes.size() == 3) {
+			shared_ptr<NodeInfo> following_node = sorted_direct_nodes[2];
+			this->set(larger_direct_node_end, following_node);
+			this->set(smaller_direct_node_end, following_node);
+			// Remove link between if control node and following node
+			NodeRelation current_if_node = map.at(*iter);
+			current_if_node.removeReverse(following_node);
+			map.at(following_node->getIdentifier()).removeForward(current_if_node.getSelf());
+		}
+	}
+	/*
 	// Edge case: If statement is final statement in the procedure. if and else blocks have no ending node.
 	std::set<int> edge_case_if_stmts;
 	for (auto& item : map) {
-		NodeRelation relation = item.second;
-		// Edge case detected when if control statement only has 2 direct next statements.
-		// Gather these nodes in a set and add dummy nodes starting from the highest StmtRef.
-		if (relation.getSelf()->getType() == StmtType::IfStmt && relation.getReverse().size() == 2) {
-			edge_case_if_stmts.insert(relation.getSelf()->getIdentifier());
-		}
-	}
-	// Start from the highest StmtRef if statement.
-	for (auto iter = edge_case_if_stmts.rbegin(); iter != edge_case_if_stmts.rend(); ++iter) {
-		unordered_set<shared_ptr<NodeInfo>> child_nodes = this->getReverse(*iter);
-		vector<shared_ptr<NodeInfo>> child_nodes_list(child_nodes.size());
-		std::copy(child_nodes.begin(), child_nodes.end(), child_nodes_list.begin());
-		// Need to use vector to differentiate first and second child node. There should be 2 child nodes.
-		shared_ptr<NodeInfo> child_node_1 = *(child_nodes_list.begin());
-		shared_ptr<NodeInfo> child_node_2 = *(child_nodes_list.rbegin());
-		// Find the last node within the block.
-		shared_ptr<PKB::NodeInfo> child_node_1_end_node = PKB::NodeRelation::findLastNode(child_node_1, *this);
-		shared_ptr<PKB::NodeInfo> child_node_2_end_node = PKB::NodeRelation::findLastNode(child_node_2, *this);
-		// Create dummy node and set these 2 ending nodes to the dummy node.
-		PKB::NodeInfo dummy_node = PKB::DummyNodeInfo();
-		shared_ptr<PKB::NodeInfo> dummy_node_ptr = make_shared<PKB::NodeInfo>(dummy_node);
-		this->set(child_node_1_end_node, dummy_node_ptr);
-		this->set(child_node_2_end_node, dummy_node_ptr);
+	    NodeRelation relation = item.second;
+	    // Edge case detected when if control statement only has 2 direct next statements.
+	    // Gather these nodes in a set and add dummy nodes starting from the highest StmtRef.
+	    if (relation.getSelf()->getType() == StmtType::IfStmt && relation.getReverse().size() == 2) {
+	        edge_case_if_stmts.insert(relation.getSelf()->getIdentifier());
+	    }
 	}
 
-	// Pre-processing: Connect ending statements within if/else blocks to the following statement of the if control statement.
+	// Start from the highest StmtRef if statement.
+	for (auto iter = edge_case_if_stmts.rbegin(); iter != edge_case_if_stmts.rend(); ++iter) {
+	    unordered_set<shared_ptr<NodeInfo>> child_nodes = this->getReverse(*iter);
+	    vector<shared_ptr<NodeInfo>> child_nodes_list(child_nodes.size());
+	    std::copy(child_nodes.begin(), child_nodes.end(), child_nodes_list.begin());
+	    // Need to use vector to differentiate first and second child node. There should be 2 child nodes.
+	    shared_ptr<NodeInfo> child_node_1 = *(child_nodes_list.begin());
+	    shared_ptr<NodeInfo> child_node_2 = *(child_nodes_list.rbegin());
+	    // Find the last node within the block.
+	    shared_ptr<PKB::NodeInfo> child_node_1_end_node = PKB::NodeRelation::findLastNode(child_node_1, *this);
+	    shared_ptr<PKB::NodeInfo> child_node_2_end_node = PKB::NodeRelation::findLastNode(child_node_2, *this);
+	    // Create dummy node and set these 2 ending nodes to the dummy node.
+	    PKB::NodeInfo dummy_node = PKB::DummyNodeInfo();
+	    shared_ptr<PKB::NodeInfo> dummy_node_ptr = make_shared<PKB::NodeInfo>(dummy_node);
+	    this->set(child_node_1_end_node, dummy_node_ptr);
+	    this->set(child_node_2_end_node, dummy_node_ptr);
+	}
+	 */
 
 	// Populate unique index after pre-processing is done.
 }

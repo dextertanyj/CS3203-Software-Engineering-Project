@@ -31,6 +31,8 @@ public:
 	[[nodiscard]] static shared_ptr<PKB::NodeInfo> findLastNode(
 		shared_ptr<NodeInfo> node_ref, PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>& store);
 	void setCFGIndex(StmtRef ref);
+	void removeForward(shared_ptr<NodeInfo> node_info);
+	void removeReverse(shared_ptr<NodeInfo> node_info);
 
 private:
 	shared_ptr<NodeInfo> self;

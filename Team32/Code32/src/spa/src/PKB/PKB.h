@@ -47,20 +47,19 @@ class NodeRelation;
 class NextStarQueryCache;
 
 typedef struct IfControlRelation {
-	static bool validate(SVRelationStore<IfControlRelation>* if_store, const shared_ptr<StmtInfo>& statement, const VarRef& var) {
+	static bool validate(SVRelationStore<IfControlRelation>*, const shared_ptr<StmtInfo>& statement, const VarRef&) {
 		return statement->getType() == StmtType::IfStmt;
 	}
-	static bool validate(SVRelationStore<IfControlRelation>* if_store, const shared_ptr<StmtInfo>& statement, const VarRefSet& var_set) {
+	static bool validate(SVRelationStore<IfControlRelation>*, const shared_ptr<StmtInfo>& statement, const VarRefSet&) {
 		return statement->getType() == StmtType::IfStmt;
 	}
 } IfControlRelation;
 
 typedef struct WhileControlRelation {
-	static bool validate(SVRelationStore<WhileControlRelation>* while_store, const shared_ptr<StmtInfo>& statement, const VarRef& var) {
+	static bool validate(SVRelationStore<WhileControlRelation>*, const shared_ptr<StmtInfo>& statement, const VarRef&) {
 		return statement->getType() == StmtType::WhileStmt;
 	}
-	static bool validate(SVRelationStore<WhileControlRelation>* while_store, const shared_ptr<StmtInfo>& statement,
-	                     const VarRefSet& var_set) {
+	static bool validate(SVRelationStore<WhileControlRelation>*, const shared_ptr<StmtInfo>& statement, const VarRefSet&) {
 		return statement->getType() == StmtType::WhileStmt;
 	}
 } WhileControlRelation;

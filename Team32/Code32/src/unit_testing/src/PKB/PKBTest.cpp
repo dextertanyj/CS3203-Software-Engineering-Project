@@ -673,66 +673,69 @@ TEST_CASE("PKB::Modifies Methods Test") {
 	}
 }
 
-
 /* Comment out when optimize has been implemented
 TEST_CASE("PKB::Next Methods Test") {
-	PKB::Storage pkb = TestUtilities::generateNextTestPKB();
-	unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
-	pkb.setNext(1, 2);
-	pkb.setNext(2, 3);
-	pkb.setNext(3, 2);
-	pkb.setNext(2, 4);
-	pkb.setNext(4, 5);
-	pkb.setNext(5, 6);
-	pkb.setNext(5, 7);
-	pkb.setNext(5, 8);
-	shared_ptr<StmtInfo> s_1 = stmt_info_map.at(1);
-	shared_ptr<StmtInfo> s_2 = stmt_info_map.at(2);
-	shared_ptr<StmtInfo> s_3 = stmt_info_map.at(3);
-	shared_ptr<StmtInfo> s_4 = stmt_info_map.at(4);
-	shared_ptr<StmtInfo> s_5 = stmt_info_map.at(5);
-	shared_ptr<StmtInfo> s_6 = stmt_info_map.at(6);
-	shared_ptr<StmtInfo> s_7 = stmt_info_map.at(7);
-	shared_ptr<StmtInfo> s_8 = stmt_info_map.at(8);
-	pkb.populateComplexRelations();
+    PKB::Storage pkb = TestUtilities::generateNextTestPKB();
+    unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
+    pkb.setNext(1, 2);
+    pkb.setNext(2, 3);
+    pkb.setNext(3, 2);
+    pkb.setNext(2, 4);
+    pkb.setNext(4, 5);
+    pkb.setNext(5, 6);
+    pkb.setNext(5, 9);
+    pkb.setNext(5, 10);
+    pkb.setNext(6, 7);
+    pkb.setNext(6, 8);
+    shared_ptr<StmtInfo> s_1 = stmt_info_map.at(1);
+    shared_ptr<StmtInfo> s_2 = stmt_info_map.at(2);
+    shared_ptr<StmtInfo> s_3 = stmt_info_map.at(3);
+    shared_ptr<StmtInfo> s_4 = stmt_info_map.at(4);
+    shared_ptr<StmtInfo> s_5 = stmt_info_map.at(5);
+    shared_ptr<StmtInfo> s_6 = stmt_info_map.at(6);
+    shared_ptr<StmtInfo> s_7 = stmt_info_map.at(7);
+    shared_ptr<StmtInfo> s_8 = stmt_info_map.at(8);
+    shared_ptr<StmtInfo> s_9 = stmt_info_map.at(9);
+    shared_ptr<StmtInfo> s_10 = stmt_info_map.at(10);
+    shared_ptr<StmtInfo> s_11 = stmt_info_map.at(11);
+    pkb.populateComplexRelations();
 
-	SECTION("PKB::checkNext Test") {
-		CHECK(pkb.checkNext(1, 2));
-		CHECK(pkb.checkNext(2, 3));
-		CHECK(pkb.checkNext(3, 2));
-		CHECK(pkb.checkNext(5, 7));
+    SECTION("PKB::checkNext Test") {
+        CHECK(pkb.checkNext(1, 2));
+        CHECK(pkb.checkNext(2, 3));
+        CHECK(pkb.checkNext(3, 2));
+        CHECK(pkb.checkNext(5, 9));
 
-		CHECK_FALSE(pkb.checkNext(2, 5));
-		CHECK_FALSE(pkb.checkNext(3, 4));
-	}
+        CHECK_FALSE(pkb.checkNext(2, 5));
+        CHECK_FALSE(pkb.checkNext(3, 4));
+    }
 
-	SECTION("PKB::getNext Test") {
-		CHECK(pkb.getNext(2) == StmtInfoPtrSet{ s_3, s_4 });
-		CHECK(pkb.getNext(4) == StmtInfoPtrSet{ s_4 });
-		CHECK(pkb.getNext(5) == StmtInfoPtrSet{ s_6, s_7 });
-		CHECK(pkb.getNext(6) == StmtInfoPtrSet{ s_8 });
-	}
+    SECTION("PKB::getNext Test") {
+        CHECK(pkb.getNext(2) == StmtInfoPtrSet{ s_3, s_4 });
+        CHECK(pkb.getNext(3) == StmtInfoPtrSet{ s_2 });
+        CHECK(pkb.getNext(5) == StmtInfoPtrSet{ s_6, s_9 });
+        CHECK(pkb.getNext(6) == StmtInfoPtrSet{ s_7, s_8 });
+    }
 
-	SECTION("PKB::getPrevious Test") {
-		CHECK(pkb.getPrevious(2) == StmtInfoPtrSet{ s_1 });
-		CHECK(pkb.getPrevious(4) == StmtInfoPtrSet{ s_2 });
-		CHECK(pkb.getPrevious(8) == StmtInfoPtrSet{ s_6, s_7 });
-	}
+    SECTION("PKB::getPrevious Test") {
+        CHECK(pkb.getPrevious(2) == StmtInfoPtrSet{ s_1 });
+        CHECK(pkb.getPrevious(4) == StmtInfoPtrSet{ s_2 });
+        CHECK(pkb.getPrevious(3) == StmtInfoPtrSet{ s_2 });
+        CHECK(pkb.getPrevious(6) == StmtInfoPtrSet{ s_5 });
+    }
 
-	SECTION("PKB::getNextTransitive Test") {
-		CHECK(pkb.getNextTransitive(1) == StmtInfoPtrSet{ s_2, s_3, s_4, s_5, s_6, s_7, s_8 });
-		CHECK(pkb.getNextTransitive(3) == StmtInfoPtrSet{ s_2, s_3, s_4, s_5, s_6, s_7, s_8 });
-		CHECK(pkb.getNextTransitive(5) == StmtInfoPtrSet{ s_6, s_7, s_8 });
-		CHECK(pkb.getNextTransitive(6) == StmtInfoPtrSet{ s_8 });
-	}
+    SECTION("PKB::getNextTransitive Test") {
+        CHECK(pkb.getNextTransitive(1) == StmtInfoPtrSet{ s_2, s_3, s_4, s_5, s_6, s_7, s_8, s_9, s_10 });
+        CHECK(pkb.getNextTransitive(3) == StmtInfoPtrSet{ s_2, s_3, s_4, s_5, s_6, s_7, s_8, s_9, s_10 });
+        CHECK(pkb.getNextTransitive(5) == StmtInfoPtrSet{ s_6, s_7, s_8, s_9, s_10 });
+        CHECK(pkb.getNextTransitive(6) == StmtInfoPtrSet{ s_7, s_8, s_10 });
+    }
 
-	SECTION("PKB::getPreviousTransitive Test") {
-		CHECK(pkb.getPreviousTransitive(1) == StmtInfoPtrSet{});
-		CHECK(pkb.getPreviousTransitive(3) == StmtInfoPtrSet{ s_1, s_2 });
-		CHECK(pkb.getPreviousTransitive(5) == StmtInfoPtrSet{ s_1, s_2, s_3, s_4 });
-		CHECK(pkb.getPreviousTransitive(7) == StmtInfoPtrSet{ s_1, s_2, s_3, s_4, s_5 });
-	}
+    SECTION("PKB::getPreviousTransitive Test") {
+        CHECK(pkb.getPreviousTransitive(1) == StmtInfoPtrSet{});
+        CHECK(pkb.getPreviousTransitive(3) == StmtInfoPtrSet{ s_1, s_2, s_3 });
+        CHECK(pkb.getPreviousTransitive(5) == StmtInfoPtrSet{ s_1, s_2, s_3, s_4 });
+        CHECK(pkb.getPreviousTransitive(8) == StmtInfoPtrSet{ s_1, s_2, s_3, s_4, s_5, s_6 });
+    }
 }
  */
-
-
