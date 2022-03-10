@@ -31,14 +31,14 @@ QP::QueryResult QP::Relationship::ModifiesS::executeTrivial(PKB::StorageAccessIn
 	}
 	if ((stmt.getType() == ReferenceType::StatementIndex && ent.getType() == ReferenceType::Wildcard) ||
 	    (stmt.getType() == ReferenceType::StatementIndex && ent.getType() == ReferenceType::Synonym)) {
-		return executeTrivialIndex(pkb, stmt);
+		return executeTrivialIndexWildcardOrSynonym(pkb, stmt);
 	}
 	if (stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Name) {
 		return executeTrivialSynonymName(pkb, stmt, ent);
 	}
 	if ((stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Wildcard) ||
 	    (stmt.getType() == ReferenceType::Synonym && ent.getType() == ReferenceType::Synonym)) {
-		return executeTrivialSynonym(pkb, stmt);
+		return executeTrivialSynonymWildcardOrSynonym(pkb, stmt);
 	}
 	return {};
 }
@@ -65,7 +65,7 @@ QP::QueryResult QP::Relationship::ModifiesS::executeTrivialIndexName(PKB::Storag
 	return QueryResult(pkb.checkModifies(stmt.getStatementIndex(), ent.getName()));
 }
 
-QP::QueryResult QP::Relationship::ModifiesS::executeTrivialIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt) {
+QP::QueryResult QP::Relationship::ModifiesS::executeTrivialIndexWildcardOrSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt) {
 	VarRefSet var_set = pkb.getModifiesByStmt(stmt.getStatementIndex());
 	return QueryResult(!var_set.empty());
 }
@@ -82,7 +82,7 @@ QP::QueryResult QP::Relationship::ModifiesS::executeTrivialSynonymName(PKB::Stor
 	return {};
 }
 
-QP::QueryResult QP::Relationship::ModifiesS::executeTrivialSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt) {
+QP::QueryResult QP::Relationship::ModifiesS::executeTrivialSynonymWildcardOrSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt) {
 	StmtInfoPtrSet stmt_set = pkb.getStatements();
 	DesignEntity design_entity = stmt.getSynonym().type;
 	for (auto const& res_stmt : stmt_set) {

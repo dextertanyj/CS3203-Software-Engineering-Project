@@ -35,16 +35,16 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 	}
 
 	SECTION("Trivial: Index & Wildcard") {
-		QP::QueryResult result1 = QP::Relationship::UsesS::executeTrivialIndex(pkb, stmt_no1);
-		QP::QueryResult result2 = QP::Relationship::UsesS::executeTrivialIndex(pkb, stmt_no4);
+		QP::QueryResult result1 = QP::Relationship::UsesS::executeTrivialIndexWildcardOrSynonym(pkb, stmt_no1);
+		QP::QueryResult result2 = QP::Relationship::UsesS::executeTrivialIndexWildcardOrSynonym(pkb, stmt_no4);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Index & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::UsesS::executeTrivialIndex(pkb, stmt_no1);
-		QP::QueryResult result2 = QP::Relationship::UsesS::executeTrivialIndex(pkb, stmt_no4);
+		QP::QueryResult result1 = QP::Relationship::UsesS::executeTrivialIndexWildcardOrSynonym(pkb, stmt_no1);
+		QP::QueryResult result2 = QP::Relationship::UsesS::executeTrivialIndexWildcardOrSynonym(pkb, stmt_no4);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -59,16 +59,16 @@ TEST_CASE("QP::Relationship::UsesS::execute") {
 	}
 
 	SECTION("Trivial: Synonym & Wildcard") {
-		QP::QueryResult result1 = QP::Relationship::UsesS::executeTrivialSynonym(pkb, stmt_synonym);
-		QP::QueryResult result2 = QP::Relationship::UsesS::executeTrivialSynonym(pkb, if_synonym);
+		QP::QueryResult result1 = QP::Relationship::UsesS::executeTrivialSynonymWildcardOrSynonym(pkb, stmt_synonym);
+		QP::QueryResult result2 = QP::Relationship::UsesS::executeTrivialSynonymWildcardOrSynonym(pkb, if_synonym);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Synonym & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::UsesS::executeTrivialSynonym(pkb, stmt_synonym);
-		QP::QueryResult result2 = QP::Relationship::UsesS::executeTrivialSynonym(pkb, if_synonym);
+		QP::QueryResult result1 = QP::Relationship::UsesS::executeTrivialSynonymWildcardOrSynonym(pkb, stmt_synonym);
+		QP::QueryResult result2 = QP::Relationship::UsesS::executeTrivialSynonymWildcardOrSynonym(pkb, if_synonym);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());

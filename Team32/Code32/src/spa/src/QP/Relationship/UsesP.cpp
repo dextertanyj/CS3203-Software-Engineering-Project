@@ -31,14 +31,14 @@ QP::QueryResult QP::Relationship::UsesP::executeTrivial(PKB::StorageAccessInterf
 	}
 	if ((left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Wildcard) ||
 	    (left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Synonym)) {
-		return executeTrivialName(pkb, left_ent);
+		return executeTrivialNameWildcardOrSynonym(pkb, left_ent);
 	}
 	if (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Name) {
 		return executeTrivialSynonymName(pkb, right_ent);
 	}
 	if ((left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Wildcard) ||
 	    (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Synonym)) {
-		return executeTrivialSynonym(pkb);
+		return executeTrivialSynonymWildcardOrSynonym(pkb);
 	}
 	return {};
 }
@@ -64,7 +64,7 @@ QP::QueryResult QP::Relationship::UsesP::executeTrivialNameName(PKB::StorageAcce
 	return QueryResult(pkb.checkUses(left_ent.getName(), right_ent.getName()));
 }
 
-QP::QueryResult QP::Relationship::UsesP::executeTrivialName(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent) {
+QP::QueryResult QP::Relationship::UsesP::executeTrivialNameWildcardOrSynonym(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent) {
 	VarRefSet var_set = pkb.getUsesByProc(left_ent.getName());
 	return QueryResult(!var_set.empty());
 }
@@ -74,7 +74,7 @@ QP::QueryResult QP::Relationship::UsesP::executeTrivialSynonymName(PKB::StorageA
 	return QueryResult(!proc_set.empty());
 }
 
-QP::QueryResult QP::Relationship::UsesP::executeTrivialSynonym(PKB::StorageAccessInterface &pkb) {
+QP::QueryResult QP::Relationship::UsesP::executeTrivialSynonymWildcardOrSynonym(PKB::StorageAccessInterface &pkb) {
 	unordered_set<ProcRef> proc_set = pkb.getProcedures();
 	for (auto const &proc : proc_set) {
 		VarRefSet var_set = pkb.getUsesByProc(proc);

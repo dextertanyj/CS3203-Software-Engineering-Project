@@ -31,14 +31,14 @@ QP::QueryResult QP::Relationship::ModifiesP::executeTrivial(PKB::StorageAccessIn
 	}
 	if ((left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Wildcard) ||
 	    (left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Synonym)) {
-		return executeTrivialName(pkb, left_ent);
+		return executeTrivialNameWildcardOrSynonym(pkb, left_ent);
 	}
 	if (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Name) {
 		return executeTrivialSynonymName(pkb, right_ent);
 	}
 	if ((left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Wildcard) ||
 	    (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Synonym)) {
-		return executeTrivialSynonym(pkb);
+		return executeTrivialSynonymWildcardOrSynonym(pkb);
 	}
 	return {};
 }
@@ -63,7 +63,7 @@ QP::QueryResult QP::Relationship::ModifiesP::executeTrivialNameName(PKB::Storage
                                                                     const ReferenceArgument &right_ent) {
 	return QueryResult(pkb.checkModifies(left_ent.getName(), right_ent.getName()));
 }
-QP::QueryResult QP::Relationship::ModifiesP::executeTrivialName(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent) {
+QP::QueryResult QP::Relationship::ModifiesP::executeTrivialNameWildcardOrSynonym(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent) {
 	VarRefSet var_set = pkb.getModifiesByProc(left_ent.getName());
 	return QueryResult(!var_set.empty());
 }
@@ -73,7 +73,7 @@ QP::QueryResult QP::Relationship::ModifiesP::executeTrivialSynonymName(PKB::Stor
 	return QueryResult(!proc_set.empty());
 }
 
-QP::QueryResult QP::Relationship::ModifiesP::executeTrivialSynonym(PKB::StorageAccessInterface &pkb) {
+QP::QueryResult QP::Relationship::ModifiesP::executeTrivialSynonymWildcardOrSynonym(PKB::StorageAccessInterface &pkb) {
 	unordered_set<ProcRef> proc_set = pkb.getProcedures();
 	for (auto const &proc : proc_set) {
 		VarRefSet var_set = pkb.getModifiesByProc(proc);

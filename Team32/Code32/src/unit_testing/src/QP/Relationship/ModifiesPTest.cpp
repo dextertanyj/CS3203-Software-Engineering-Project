@@ -32,16 +32,16 @@ TEST_CASE("QP::Relationship::ModifiesP::execute") {
 	}
 
 	SECTION("Trivial: Name & Wildcard") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialName(pkb, left_proc_no1);
-		QP::QueryResult result2 = QP::Relationship::ModifiesP::executeTrivialName(pkb, left_proc_no2);
+		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialNameWildcardOrSynonym(pkb, left_proc_no1);
+		QP::QueryResult result2 = QP::Relationship::ModifiesP::executeTrivialNameWildcardOrSynonym(pkb, left_proc_no2);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Name & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialName(pkb, left_proc_no1);
-		QP::QueryResult result2 = QP::Relationship::ModifiesP::executeTrivialName(pkb, left_proc_no2);
+		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialNameWildcardOrSynonym(pkb, left_proc_no1);
+		QP::QueryResult result2 = QP::Relationship::ModifiesP::executeTrivialNameWildcardOrSynonym(pkb, left_proc_no2);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -56,13 +56,13 @@ TEST_CASE("QP::Relationship::ModifiesP::execute") {
 	}
 
 	SECTION("Trivial: Synonym & Wildcard") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialSynonym(pkb);
+		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialSynonymWildcardOrSynonym(pkb);
 
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("Trivial: Synonym & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialSynonym(pkb);
+		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialSynonymWildcardOrSynonym(pkb);
 
 		REQUIRE(result1.getResult());
 	}

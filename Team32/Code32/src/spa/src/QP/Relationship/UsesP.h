@@ -18,9 +18,9 @@ public:
 
 	static QueryResult executeTrivialNameName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& left_ent,
 	                                          const ReferenceArgument& right_ent);
-	static QueryResult executeTrivialName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& left_ent);
+	static QueryResult executeTrivialNameWildcardOrSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& left_ent);
 	static QueryResult executeTrivialSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& right_ent);
-	static QueryResult executeTrivialSynonym(PKB::StorageAccessInterface& pkb);
+	static QueryResult executeTrivialSynonymWildcardOrSynonym(PKB::StorageAccessInterface& pkb);
 
 	// Executors
 

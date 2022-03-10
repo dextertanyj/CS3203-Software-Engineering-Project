@@ -18,10 +18,10 @@ public:
 
 	static QueryResult executeTrivialIndexName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
 	                                           const ReferenceArgument& ent);
-	static QueryResult executeTrivialIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt);
+	static QueryResult executeTrivialIndexWildcardOrSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt);
 	static QueryResult executeTrivialSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt,
 	                                             const ReferenceArgument& ent);
-	static QueryResult executeTrivialSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt);
+	static QueryResult executeTrivialSynonymWildcardOrSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& stmt);
 
 	// Executors
 
