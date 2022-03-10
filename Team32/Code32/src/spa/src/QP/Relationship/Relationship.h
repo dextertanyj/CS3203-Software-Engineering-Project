@@ -17,8 +17,11 @@ class CallsT;
 template <class T>
 class CallDispatcherTemplate;
 template <class T>
+class FollowsDispatcherTemplate;
+template <class T>
 class ParentDispatcherTemplate;
 namespace Modifies {};
+namespace Uses {};
 }  // namespace QP::Relationship
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_RELATIONSHIP_H

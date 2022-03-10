@@ -40,22 +40,24 @@ QP::Types::ExecutorSetBundle QP::Relationship::ParentDispatcherTemplate<T>::argu
 
 template <class T>
 const unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>
-	QP::Relationship::ParentDispatcherTemplate<T>::argument_dispatch_map = {{Types::ReferenceType::Name, getIndexMap()},
+	QP::Relationship::ParentDispatcherTemplate<T>::argument_dispatch_map = {{Types::ReferenceType::StatementIndex, getIndexMap()},
                                                                             {Types::ReferenceType::Wildcard, getWildcardMap()},
-                                                                            {Types::DesignEntity::Procedure, getSynonymMap()}};
+                                                                            {Types::DesignEntity::Stmt, getSynonymMap()},
+                                                                            {Types::DesignEntity::While, getSynonymMap()},
+                                                                            {Types::DesignEntity::If, getSynonymMap()}};
 
 template <class T>
 unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Relationship::ParentDispatcherTemplate<T>::getIndexMap() {
 	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
 		{Types::ReferenceType::StatementIndex,
 	     [](vector<Types::ReferenceArgument> args) {
-			 return [caller = args.at(0), callee = args.at(1)](PKB::StorageAccessInterface& pkb) {
-				 return T::executeTrivialIndexIndex(pkb, caller, callee);
+			 return [parent = args.at(0), child = args.at(1)](PKB::StorageAccessInterface& pkb) {
+				 return T::executeTrivialIndexIndex(pkb, parent, child);
 			 };
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](vector<Types::ReferenceArgument> args) {
-			 return [caller = args.at(0)](PKB::StorageAccessInterface& pkb) { return T::executeTrivialIndexWildcard(pkb, caller); };
+			 return [parent = args.at(0)](PKB::StorageAccessInterface& pkb) { return T::executeTrivialIndexWildcard(pkb, parent); };
 		 }},
 		{Types::DesignEntity::Stmt, lambda_index_synonym<T>},
 		{Types::DesignEntity::Call, lambda_index_synonym<T>},
