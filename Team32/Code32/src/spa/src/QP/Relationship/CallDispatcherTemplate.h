@@ -13,9 +13,9 @@ public:
 private:
 	static const unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>>
 		argument_dispatch_map;
-	static const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> name_map;
-	static const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> wildcard_map;
-	static const unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> synonym_map;
+	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getNameMap();
+	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getWildcardMap();
+	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getSynonymMap();
 };
 
 #endif  // SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_H
