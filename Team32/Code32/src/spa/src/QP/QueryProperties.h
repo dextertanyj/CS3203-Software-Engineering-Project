@@ -14,15 +14,15 @@ using namespace std;
 
 class QP::QueryProperties {
 public:
-	QueryProperties(DeclarationList declaration_list, Declaration select, ClauseList clause_list);
+	QueryProperties(DeclarationList declaration_list, DeclarationList select_list, ClauseList clause_list);
 
 	DeclarationList getDeclarationList();
-	Declaration getSelect();
+	DeclarationList getSelectList();
 	ClauseList getClauseList();
 
 private:
 	DeclarationList declaration_list;
-	Declaration select;
+	DeclarationList select_list;
 	ClauseList clause_list;
 };
 

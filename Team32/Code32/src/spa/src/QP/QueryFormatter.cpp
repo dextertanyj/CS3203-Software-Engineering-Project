@@ -7,13 +7,13 @@
 using namespace std;
 
 vector<string> QP::QueryFormatter::formatResult(QueryProperties& query_properties, QueryResult& query_result) {
-	Declaration select = query_properties.getSelect();
+	DeclarationList select_list = query_properties.getSelectList();
 
 	if (!query_result.getResult()) {
 		return {};
 	}
 
-	vector<string> result = query_result.getSynonymResult(select.symbol);
+	vector<string> result = query_result.getSynonymResult(select_list[0].symbol);
 	// Remove duplicates from result
 	unordered_set<string> set;
 	for (const string& value : result) {

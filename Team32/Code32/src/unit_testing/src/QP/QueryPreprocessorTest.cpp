@@ -107,13 +107,13 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid declarations") {
 TEST_CASE("QP::QueryPreprocessor::parseQuery Select") {
 	QP::QueryPreprocessor qpp1;
 	QP::QueryProperties qp1 = qpp1.parseQuery("print a; if b; Select a");
-	REQUIRE(qp1.getSelect().type == DesignEntity::Print);
-	REQUIRE(qp1.getSelect().symbol == "a");
+	REQUIRE(qp1.getSelectList()[0].type == DesignEntity::Print);
+	REQUIRE(qp1.getSelectList()[0].symbol == "a");
 
 	QP::QueryPreprocessor qpp2;
 	QP::QueryProperties qp2 = qpp2.parseQuery("print a; if b; Select b");
-	REQUIRE(qp2.getSelect().type == DesignEntity::If);
-	REQUIRE(qp2.getSelect().symbol == "b");
+	REQUIRE(qp2.getSelectList()[0].type == DesignEntity::If);
+	REQUIRE(qp2.getSelectList()[0].symbol == "b");
 
 	// undeclared synonym
 	QP::QueryPreprocessor qpp3;

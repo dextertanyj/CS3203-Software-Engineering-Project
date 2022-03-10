@@ -6,11 +6,11 @@ QP::QueryEvaluator::QueryEvaluator(PKB::StorageAccessInterface& pkb) : pkb(pkb) 
 
 QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 	if (query_properties.getClauseList().empty()) {
-		return executeNoClauses(query_properties.getSelect());
+		return executeNoClauses(query_properties.getSelectList()[0]);
 	}
 
 	QueryGraph graph = buildGraph(query_properties);
-	Declaration select = query_properties.getSelect();
+	Declaration select = query_properties.getSelectList()[0];
 	unordered_map<string, size_t> synonyms_in_group = graph.getSynonymsInGroup(select.symbol);
 	vector<ClauseList> clauses_in_group = splitClauses(query_properties, synonyms_in_group);
 

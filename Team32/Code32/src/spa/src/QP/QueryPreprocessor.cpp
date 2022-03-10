@@ -47,9 +47,8 @@ QP::QueryProperties QP::QueryPreprocessor::parseQuery() {
 	size_t token_index = 0;
 
 	// Used to check if synonyms for "Select" has been parsed
-	this->select.symbol = "";
 	while (token_index < this->query_tokens.size()) {
-		if (this->select.symbol.empty()) {
+		if (this->select_list.empty()) {
 			if (this->query_tokens[token_index] == "Select") {
 				parseSelect(++token_index);
 			} else {
@@ -65,10 +64,10 @@ QP::QueryProperties QP::QueryPreprocessor::parseQuery() {
 		}
 	}
 
-	if (this->select.symbol.empty()) {
+	if (this->select_list[0].symbol.empty()) {
 		throw QueryException("Missing Select clause.");
 	}
-	return {this->declaration_list, this->select, this->clause_list};
+	return {this->declaration_list, this->select_list, this->clause_list};
 }
 
 void QP::QueryPreprocessor::parseDeclaration(size_t& token_index) {
@@ -108,8 +107,7 @@ void QP::QueryPreprocessor::parseSelect(size_t& token_index) {
 	}
 	for (const Declaration& declaration : this->declaration_list) {
 		if (declaration.symbol == this->query_tokens[token_index]) {
-			this->select.type = declaration.type;
-			this->select.symbol = this->query_tokens[token_index];
+			this->select_list.push_back({declaration.type, this->query_tokens[token_index]});
 			token_index++;
 			return;
 		}

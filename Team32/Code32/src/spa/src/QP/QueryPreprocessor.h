@@ -64,7 +64,7 @@ private:
 
 	vector<string> query_tokens;
 	DeclarationList declaration_list;
-	Declaration select;
+	DeclarationList select_list;
 	ClauseList clause_list;
 	QueryResult query_result;
 };
