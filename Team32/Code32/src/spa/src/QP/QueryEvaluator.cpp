@@ -6,30 +6,33 @@ QP::QueryEvaluator::QueryEvaluator(PKB::StorageAccessInterface& pkb) : pkb(pkb) 
 
 QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 	if (query_properties.getClauseList().empty()) {
-		return executeNoClauses(query_properties.getSelectList()[0]);
+		return executeNoClauses(query_properties.getSelectList());
 	}
 
 	QueryGraph graph = buildGraph(query_properties);
-	Declaration select = query_properties.getSelectList()[0];
-	unordered_map<string, size_t> synonyms_in_group = graph.getSynonymsInGroup(select.symbol);
-	vector<ClauseList> clauses_in_group = splitClauses(query_properties, synonyms_in_group);
+	DeclarationList select_list = query_properties.getSelectList();
+	ConnectedSynonyms connected_synonyms = graph.getConnectedSynonyms(select_list);
+	vector<pair<ClauseList, bool>> clauses_in_group = splitClauses(query_properties, connected_synonyms);
 
-	QueryResult result;
-	if (clauses_in_group[0].empty()) {
-		result = executeNoClauses(select);
-	} else {
-		result = evaluateClauses(clauses_in_group[0], false);
-	}
+	QueryResult result = QueryResult(true);
 
 	// Execute clauses without synonyms first
 	size_t last_group = clauses_in_group.size() - 1;
-	if (!executeClausesWithoutSynonym(clauses_in_group[last_group]).getResult()) {
+	if (!executeClausesWithoutSynonym(clauses_in_group[last_group].first).getResult()) {
 		return {};
 	}
 
-	for (size_t i = 1; i < last_group; i++) {
-		if (!executeGroup(clauses_in_group[i])) {
-			return {};
+	for (size_t i = 0; i < last_group; i++) {
+		if (clauses_in_group[i].second) {
+			if (clauses_in_group[i].first.empty()) {
+				result = executeNoClauses(select_list);
+			} else {
+				result = evaluateClauses(clauses_in_group[i].first, false);
+			}
+		} else {
+			if (!executeGroup(clauses_in_group[i].first)) {
+				return {};
+			}
 		}
 	}
 
@@ -63,8 +66,12 @@ bool QP::QueryEvaluator::executeGroup(ClauseList& clauses) {
 	return query_result.getResult();
 }
 
-QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) {
-	switch (select.type) {
+QP::QueryResult QP::QueryEvaluator::executeNoClauses(const DeclarationList& select_list) {
+	if (select_list.empty()) {
+		return QueryResult(true);
+	}
+
+	switch (select_list[0].type) {
 		case DesignEntity::Stmt:
 		case DesignEntity::Read:
 		case DesignEntity::Print:
@@ -72,34 +79,34 @@ QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) 
 		case DesignEntity::While:
 		case DesignEntity::If:
 		case DesignEntity::Assign: {
-			return getSpecificStmtType(select.type, select.symbol);
+			return getSpecificStmtType(select_list[0]);
 		}
 		case DesignEntity::Variable: {
-			return getVariables(select.symbol);
+			return getVariables(select_list[0].symbol);
 		}
 		case DesignEntity::Constant: {
-			return getConstants(select.symbol);
+			return getConstants(select_list[0].symbol);
 		}
 		case DesignEntity::Procedure: {
-			return getProcedures(select.symbol);
+			return getProcedures(select_list[0].symbol);
 		}
 		default:
 			return {};
 	}
 }
 
-QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(DesignEntity design_entity, const string& symbol) {
+QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(const Declaration& declaration) {
 	StmtInfoPtrSet stmt_set = pkb.getStatements();
 	QueryResult result = QueryResult();
 
 	vector<string> result_string;
 	for (auto const& stmt : stmt_set) {
-		if (Utilities::checkStmtTypeMatch(stmt, design_entity)) {
+		if (Utilities::checkStmtTypeMatch(stmt, declaration.type)) {
 			result_string.push_back(to_string(stmt->getIdentifier()));
 		}
 	}
 
-	result.addColumn(symbol, result_string);
+	result.addColumn(declaration.symbol, result_string);
 	return result;
 }
 
@@ -167,26 +174,22 @@ QP::QueryResult QP::QueryEvaluator::evaluateClauses(ClauseList& clauses, bool is
 	return result_list[0];
 }
 
-// First element contains clauses with the selected synonym.
-// Last element contains clauses without synonyms.
-vector<ClauseList> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties, unordered_map<string, size_t>& synonyms_in_group) {
-	size_t number_of_groups = 0;
-	for (auto const& pair : synonyms_in_group) {
-		if (pair.second + 1 > number_of_groups) {
-			number_of_groups = pair.second + 1;
-		}
-	}
-
-	vector<ClauseList> result(number_of_groups + 1);
+vector<pair<ClauseList, bool>> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties, ConnectedSynonyms& connected_synonyms) {
+	vector<pair<ClauseList, bool>> result(connected_synonyms.number_of_groups + 1);
 
 	for (const Clause& clause : query_properties.getClauseList()) {
 		vector<string> declarations = clause.relation->getDeclarationSymbols();
 		if (declarations.empty()) {
-			result[number_of_groups].push_back(clause);
+			result[connected_synonyms.number_of_groups].first.push_back(clause);
 		} else {
-			size_t group_number = synonyms_in_group[declarations[0]];
-			result[group_number].push_back(clause);
+			size_t group_number = connected_synonyms.synonyms_in_group[declarations[0]];
+			result[group_number].first.push_back(clause);
 		}
+	}
+
+	result[connected_synonyms.number_of_groups].second = false;
+	for (size_t i = 0; i < connected_synonyms.number_of_groups; i++) {
+		result[i].second = connected_synonyms.is_group_selected[i];
 	}
 
 	return result;

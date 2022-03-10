@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "QP/Relationship/Relationship.h"
@@ -44,6 +45,12 @@ typedef struct Node {
 	string declaration_symbol;
 	vector<string> adjacent_symbols;
 } Node;
+
+typedef struct ConnectedSynonyms {
+	size_t number_of_groups;
+	unordered_map<string, size_t> synonyms_in_group;
+	unordered_map<size_t, bool> is_group_selected;
+} ConnectedSynonyms;
 
 typedef vector<Declaration> DeclarationList;
 typedef vector<Clause> ClauseList;

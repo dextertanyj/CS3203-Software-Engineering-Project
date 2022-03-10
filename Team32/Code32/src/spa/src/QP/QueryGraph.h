@@ -14,7 +14,7 @@ public:
 	explicit QueryGraph(const DeclarationList& declarations);
 	void setEdges(const ClauseList& clause_list);
 	unordered_map<string, Node> getNodes();
-	unordered_map<string, size_t> getSynonymsInGroup(const string& selected_synonym);
+	ConnectedSynonyms getConnectedSynonyms(const DeclarationList& select_list);
 
 private:
 	unordered_map<string, Node> nodes;

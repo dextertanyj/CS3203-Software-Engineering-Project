@@ -8,7 +8,7 @@ TEST_CASE("QP::QueryFormatter::formatResult No results") {
 	REQUIRE(QP::QueryFormatter::formatResult(properties, result).empty());
 }
 
-TEST_CASE("QP::QueryFormatter::formatQuery List of statement number") {
+TEST_CASE("QP::QueryFormatter::formatResult List of statement number") {
 	QP::QueryProperties properties = QP::QueryProperties({}, {{DesignEntity::Stmt, "s"}}, {});
 	QP::QueryResult result = QP::QueryResult();
 	result.addColumn("s", {"1", "2", "3", "3"});
@@ -18,4 +18,14 @@ TEST_CASE("QP::QueryFormatter::formatQuery List of statement number") {
 
 	sort(result_string.begin(), result_string.end());
 	REQUIRE(result_string == vector<string>({"1", "2", "3"}));
+}
+
+TEST_CASE("QP::QueryFormatter::formatResult Boolean") {
+	QP::QueryProperties properties = QP::QueryProperties({}, {}, {});
+	QP::QueryResult result = QP::QueryResult(true);
+
+	vector<string> result_string = QP::QueryFormatter::formatResult(properties, result);
+
+	sort(result_string.begin(), result_string.end());
+	REQUIRE(result_string == vector<string>({"TRUE"}));
 }

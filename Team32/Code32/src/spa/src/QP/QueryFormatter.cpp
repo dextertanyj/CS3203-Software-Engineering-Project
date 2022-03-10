@@ -8,6 +8,9 @@ using namespace std;
 
 vector<string> QP::QueryFormatter::formatResult(QueryProperties& query_properties, QueryResult& query_result) {
 	DeclarationList select_list = query_properties.getSelectList();
+	if (select_list.empty()) {
+		return formatBooleanResult(query_result);
+	}
 
 	if (!query_result.getResult()) {
 		return {};
@@ -23,4 +26,9 @@ vector<string> QP::QueryFormatter::formatResult(QueryProperties& query_propertie
 	result.assign(set.begin(), set.end());
 
 	return result;
+}
+
+vector<string> QP::QueryFormatter::formatBooleanResult(QueryResult& query_result) {
+	string result = query_result.getResult() ? "TRUE" : "FALSE";
+	return {result};
 }

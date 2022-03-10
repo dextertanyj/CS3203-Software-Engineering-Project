@@ -32,23 +32,35 @@ void QP::QueryGraph::addEdge(const pair<string, string>& symbols) {
 	}
 }
 
-unordered_map<string, size_t> QP::QueryGraph::getSynonymsInGroup(const string& selected_synonym) {
-	// Run BFS on the selected node
+ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& select_list) {
 	unordered_map<string, size_t> result;
+	unordered_map<size_t, bool> is_group_selected_map;
 	unordered_set<string> unvisited_nodes;
+	unordered_set<string> selected_nodes;
 	size_t group_number = 0;
+	bool is_selected = false;
 
 	for (auto& node : nodes) {
 		unvisited_nodes.insert(node.first);
 	}
 
+	for (auto& select : select_list) {
+		selected_nodes.insert(select.symbol);
+	}
+
 	queue<string> queue;
-	queue.push(selected_synonym);
+	if (!selected_nodes.empty()) {
+		queue.push(*selected_nodes.begin());
+		is_selected = true;
+	} else {
+		queue.push(*unvisited_nodes.begin());
+	}
 
 	while (!queue.empty()) {
 		string symbol = queue.front();
 		result.insert({symbol, group_number});
 		unvisited_nodes.erase(symbol);
+		selected_nodes.erase(symbol);
 		queue.pop();
 
 		Node node = this->nodes.at(symbol);
@@ -57,14 +69,22 @@ unordered_map<string, size_t> QP::QueryGraph::getSynonymsInGroup(const string& s
 				queue.push(adjacent_symbol);
 			}
 		}
-
-		// If queue is empty but there are still unvisited nodes,
-		// we add an unvisited node to queue
+		
 		if (queue.empty() && !unvisited_nodes.empty()) {
-			queue.push(*unvisited_nodes.begin());
+			is_group_selected_map.insert({group_number, is_selected});
+			if (!selected_nodes.empty()) {
+				queue.push(*selected_nodes.begin());
+			} else {
+				queue.push(*unvisited_nodes.begin());
+				is_selected = false;
+			}
 			group_number++;
 		}
 	}
 
-	return result;
+	return {
+		group_number + 1,
+		result,
+		is_group_selected_map,
+	};
 }

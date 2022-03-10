@@ -49,11 +49,16 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 
 	QP::QueryGraph graph = QP::QueryGraph(list);
 	graph.setEdges(clause_list);
-	unordered_map<string, size_t> synonyms = graph.getSynonymsInGroup("a");
+	ConnectedSynonyms synonyms = graph.getConnectedSynonyms({{DesignEntity::Stmt, "a"}});
 
-	REQUIRE(synonyms["a"] == 0);
-	REQUIRE(synonyms["b"] == 0);
-	REQUIRE(synonyms["c"] == 0);
-	REQUIRE(synonyms["d"] == 1);
-	REQUIRE(synonyms["e"] == 1);
+	size_t groupWithA = synonyms.synonyms_in_group["a"];
+	size_t groupWithD = synonyms.synonyms_in_group["d"];
+	REQUIRE(synonyms.number_of_groups == 2);
+	REQUIRE(synonyms.synonyms_in_group["a"] == groupWithA);
+	REQUIRE(synonyms.synonyms_in_group["b"] == groupWithA);
+	REQUIRE(synonyms.synonyms_in_group["c"] == groupWithA);
+	REQUIRE(synonyms.synonyms_in_group["d"] == groupWithD);
+	REQUIRE(synonyms.synonyms_in_group["e"] == groupWithD);
+	REQUIRE(synonyms.is_group_selected[groupWithA]);
+	REQUIRE(!synonyms.is_group_selected[groupWithD]);
 }

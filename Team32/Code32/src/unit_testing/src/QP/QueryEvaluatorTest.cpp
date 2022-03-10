@@ -30,17 +30,22 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 		{make_unique<QP::Relationship::ModifiesS>(a, v)},
 	};
 	QP::QueryProperties properties = QP::QueryProperties(declarations, {select}, clauses);
-	unordered_map<string, size_t> synonyms_in_group = {
-		{"s1", 0}, {"s2", 0}, {"a", 1}, {"v", 1}, {"i", 1},
+	ConnectedSynonyms connected_synonyms = {
+		2,
+		{{"s1", 0}, {"s2", 0}, {"a", 1}, {"v", 1}, {"i", 1}},
+		{{0, true}, {1, false}},
 	};
 
 	PKB::Storage pkb = PKB::Storage();
-	vector<ClauseList> clauses_in_group = QP::QueryEvaluator::splitClauses(properties, synonyms_in_group);
+	vector<pair<ClauseList, bool>> clauses_in_group = QP::QueryEvaluator::splitClauses(properties, connected_synonyms);
 
 	REQUIRE(clauses_in_group.size() == 3);
-	REQUIRE(clauses_in_group[0].size() == 1);
-	REQUIRE(clauses_in_group[1].size() == 2);
-	REQUIRE(clauses_in_group[2].size() == 1);
+	REQUIRE(clauses_in_group[0].first.size() == 1);
+	REQUIRE(clauses_in_group[1].first.size() == 2);
+	REQUIRE(clauses_in_group[2].first.size() == 1);
+	REQUIRE(clauses_in_group[0].second);
+	REQUIRE(!clauses_in_group[1].second);
+	REQUIRE(!clauses_in_group[2].second);
 };
 
 TEST_CASE("QP::QueryEvaluator::execute") {
@@ -201,5 +206,28 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 		vector<string> expected_result = {"x"};
 		vector<string> actual_result = result.getSynonymResult("v");
 		REQUIRE(actual_result == expected_result);
+	};
+
+	SECTION("Select boolean positive test") {
+		ClauseList clauses = {
+			{make_unique<QP::Relationship::ModifiesS>(stmt_no1, v)},
+			{make_unique<QP::Relationship::Follows>(a, stmt_underscore)},
+		};
+		QP::QueryProperties properties = QP::QueryProperties(declarations, {}, clauses);
+
+		QP::QueryResult result = evaluator.executeQuery(properties);
+
+		REQUIRE(result.getResult());
+	};
+
+	SECTION("Select boolean negative test") {
+		ClauseList clauses = {
+			{make_unique<QP::Relationship::Follows>(stmt_underscore, stmt_no1)},
+		};
+		QP::QueryProperties properties = QP::QueryProperties(declarations, {}, clauses);
+
+		QP::QueryResult result = evaluator.executeQuery(properties);
+
+		REQUIRE(!result.getResult());
 	};
 };

@@ -18,12 +18,12 @@ class QP::QueryEvaluator {
 public:
 	explicit QueryEvaluator(PKB::StorageAccessInterface& pkb);
 	QP::QueryResult executeQuery(QueryProperties& query_properties);
-	static vector<ClauseList> splitClauses(QueryProperties& query_properties, unordered_map<string, size_t>& synonyms_in_group);
+	static vector<pair<ClauseList, bool>> splitClauses(QueryProperties& query_properties, ConnectedSynonyms& connected_synonyms);
 
 private:
 	PKB::StorageAccessInterface& pkb;
-	QueryResult executeNoClauses(const Declaration& select);
-	QueryResult getSpecificStmtType(DesignEntity design_entity, const string& symbol);
+	QueryResult executeNoClauses(const DeclarationList& select_list);
+	QueryResult getSpecificStmtType(const Declaration& declaration);
 	QueryResult getConstants(const string& symbol);
 	QueryResult getVariables(const string& symbol);
 	QueryResult getProcedures(const string& symbol);
