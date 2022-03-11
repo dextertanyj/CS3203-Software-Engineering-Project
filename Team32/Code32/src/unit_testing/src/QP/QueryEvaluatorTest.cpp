@@ -305,7 +305,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 		vector<string> actual_result_s1 = result.getSynonymResult("s1");
 		vector<string> actual_result_a = result.getSynonymResult("a");
 		sort(actual_result_s1.begin(), actual_result_s1.end());
-		REQUIRE(result.getSynonymResult("s1") == expected_result_s1);
-		REQUIRE(result.getSynonymResult("a") == expected_result_a);
+		REQUIRE(actual_result_s1 == expected_result_s1);
+		REQUIRE(actual_result_a == expected_result_a);
 	};
 };

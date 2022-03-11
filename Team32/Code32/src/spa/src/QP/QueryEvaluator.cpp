@@ -90,7 +90,10 @@ QP::QueryResult QP::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, 
 		result_list[0].joinResult(result_list[i]);
 	}
 
-	result_list[0].filterByDeclarations(select_list);
+	if (!select_list.empty()) {
+		result_list[0].filterByDeclarations(select_list);
+	}
+	
 	return result_list[0];
 }
 
