@@ -5,45 +5,69 @@
 QP::QueryEvaluator::QueryEvaluator(PKB::StorageAccessInterface& pkb) : pkb(pkb) {}
 
 QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properties) {
-	if (query_properties.getClauseList().empty()) {
-		return executeNoClauses(query_properties.getSelectList());
-	}
-
 	QueryGraph graph = buildGraph(query_properties);
 	DeclarationList select_list = query_properties.getSelectList();
 	ConnectedSynonyms connected_synonyms = graph.getConnectedSynonyms(select_list);
-	vector<pair<ClauseList, bool>> clauses_in_group = splitClauses(query_properties, connected_synonyms);
+	vector<pair<ClauseList, DeclarationList>> clauses_in_group = splitClauses(query_properties, connected_synonyms);
 
-	QueryResult result = QueryResult(true);
+	QueryResult result = QueryResult();
 
 	// Execute clauses without synonyms first
 	size_t last_group = clauses_in_group.size() - 1;
-	if (!executeClausesWithoutSynonym(clauses_in_group[last_group].first).getResult()) {
+	if (!executeTrivialGroup(clauses_in_group[last_group].first).getResult()) {
 		return {};
 	}
 
 	for (size_t i = 0; i < last_group; i++) {
-		if (clauses_in_group[i].second) {
-			if (clauses_in_group[i].first.empty()) {
-				result = executeNoClauses(select_list);
-			} else {
-				result = evaluateClauses(clauses_in_group[i].first, false);
-			}
-		} else {
-			if (!executeGroup(clauses_in_group[i].first)) {
+		ClauseList clauses = clauses_in_group[i].first;
+		DeclarationList select_list = clauses_in_group[i].second;
+		if (select_list.empty()) {
+			if (!executeGroupWithoutSelected(clauses).getResult()) {
 				return {};
 			}
+		} else {
+			QueryResult group_result = executeGroupWithSelected(clauses, select_list);
+			if (!group_result.getResult()) {
+				return {};
+			} else if (result.getResult()) {
+				result.joinResult(group_result);
+			} else {
+				result = group_result;
+			}
 		}
+	}
+
+	if (select_list.empty()) {
+		return QueryResult(true);
 	}
 
 	return result;
 }
 
-QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(ClauseList& clauses) {
-	// These clauses should be evaluated independently since they are unrelated
+QP::QueryResult QP::QueryEvaluator::executeGroupWithSelected(ClauseList& clauses, DeclarationList& select_list) {
+	if (clauses.empty()) {
+		return executeNoClauses(select_list[0]);
+	}
+
+	return executeNonTrivialGroup(clauses, select_list);
+}
+
+QP::QueryResult QP::QueryEvaluator::executeGroupWithoutSelected(ClauseList& clauses) {
+	if (clauses.empty()) {
+		return QueryResult(true);
+	}
+
+	if (clauses.size() == 1) {
+		return executeTrivialGroup(clauses);
+	}
+
+	return executeNonTrivialGroup(clauses, vector<Declaration>({}));
+}
+
+QP::QueryResult QP::QueryEvaluator::executeTrivialGroup(ClauseList& clauses) {
 	for (const Clause& clause : clauses) {
-		ClauseList list = {clause};
-		if (!evaluateClauses(list, true).getResult()) {
+		QueryResult result = clause.relation->execute(pkb, true);
+		if (!result.getResult()) {
 			return {};
 		}
 	}
@@ -51,27 +75,27 @@ QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(ClauseList& cla
 	return QueryResult(true);
 }
 
-bool QP::QueryEvaluator::executeGroup(ClauseList& clauses) {
-	if (clauses.empty()) {
-		return true;
+QP::QueryResult QP::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, DeclarationList& select_list) {
+	vector<QueryResult> result_list;
+
+	for (const Clause& clause : clauses) {
+		QueryResult result = clause.relation->execute(pkb, false);
+		if (!result.getResult()) {
+			return {};
+		}
+		result_list.push_back(result);
 	}
 
-	QueryResult query_result;
-	if (clauses.size() == 1) {
-		query_result = evaluateClauses(clauses, true);
-	} else {
-		query_result = evaluateClauses(clauses, false);
+	for (size_t i = 1; i < result_list.size(); i++) {
+		result_list[0].joinResult(result_list[i]);
 	}
 
-	return query_result.getResult();
+	result_list[0].filterByDeclarations(select_list);
+	return result_list[0];
 }
 
-QP::QueryResult QP::QueryEvaluator::executeNoClauses(const DeclarationList& select_list) {
-	if (select_list.empty()) {
-		return QueryResult(true);
-	}
-
-	switch (select_list[0].type) {
+QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) {
+	switch (select.type) {
 		case DesignEntity::Stmt:
 		case DesignEntity::Read:
 		case DesignEntity::Print:
@@ -79,16 +103,16 @@ QP::QueryResult QP::QueryEvaluator::executeNoClauses(const DeclarationList& sele
 		case DesignEntity::While:
 		case DesignEntity::If:
 		case DesignEntity::Assign: {
-			return getSpecificStmtType(select_list[0]);
+			return getSpecificStmtType(select);
 		}
 		case DesignEntity::Variable: {
-			return getVariables(select_list[0].symbol);
+			return getVariables(select.symbol);
 		}
 		case DesignEntity::Constant: {
-			return getConstants(select_list[0].symbol);
+			return getConstants(select.symbol);
 		}
 		case DesignEntity::Procedure: {
-			return getProcedures(select_list[0].symbol);
+			return getProcedures(select.symbol);
 		}
 		default:
 			return {};
@@ -157,25 +181,9 @@ QP::QueryGraph QP::QueryEvaluator::buildGraph(QueryProperties& query_properties)
 	return graph;
 }
 
-QP::QueryResult QP::QueryEvaluator::evaluateClauses(ClauseList& clauses, bool is_trivial) {
-	vector<QueryResult> result_list;
-
-	for (const Clause& clause : clauses) {
-		QueryResult result = clause.relation->execute(pkb, is_trivial);
-		if (!result.getResult()) {
-			return {};
-		}
-		result_list.push_back(result);
-	}
-
-	for (size_t i = 1; i < result_list.size(); i++) {
-		result_list[0].joinResult(result_list[i]);
-	}
-	return result_list[0];
-}
-
-vector<pair<ClauseList, bool>> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties, ConnectedSynonyms& connected_synonyms) {
-	vector<pair<ClauseList, bool>> result(connected_synonyms.number_of_groups + 1);
+vector<pair<ClauseList, DeclarationList>> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties,
+                                                                           ConnectedSynonyms& connected_synonyms) {
+	vector<pair<ClauseList, DeclarationList>> result(connected_synonyms.number_of_groups + 1);
 
 	for (const Clause& clause : query_properties.getClauseList()) {
 		vector<string> declarations = clause.relation->getDeclarationSymbols();
@@ -187,9 +195,9 @@ vector<pair<ClauseList, bool>> QP::QueryEvaluator::splitClauses(QueryProperties&
 		}
 	}
 
-	result[connected_synonyms.number_of_groups].second = false;
+	result[connected_synonyms.number_of_groups].second = {};
 	for (size_t i = 0; i < connected_synonyms.number_of_groups; i++) {
-		result[i].second = connected_synonyms.is_group_selected[i];
+		result[i].second = connected_synonyms.group_to_selected_declarations[i];
 	}
 
 	return result;

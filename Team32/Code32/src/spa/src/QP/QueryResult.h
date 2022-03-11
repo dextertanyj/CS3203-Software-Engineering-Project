@@ -18,8 +18,10 @@ public:
 	unordered_map<string, vector<string>> getTable();
 	unordered_set<string> getSynonymsStored();
 	vector<string> getSynonymResult(const string& synonym);
+	size_t getTableSize();
 	void addColumn(const string& synonym, const vector<string>& column);
 	void joinResult(QueryResult& query_result);
+	void filterByDeclarations(const QP::Types::DeclarationList& select_list);
 
 private:
 	bool result;
@@ -30,6 +32,7 @@ private:
 	static bool contains(unordered_map<string, vector<string>>& table, const unordered_map<string, string>& row);
 	static bool isRowMatch(const unordered_map<string, string>& row, unordered_map<string, vector<string>>& table, size_t row_number);
 	static void removeRow(unordered_map<string, vector<string>>& table, size_t row_number);
+	static void removeDuplicateRows(unordered_map<string, vector<string>>& table);
 	unordered_map<string, vector<string>> getSubTableWithRow(const unordered_map<string, string>& row);
 };
 

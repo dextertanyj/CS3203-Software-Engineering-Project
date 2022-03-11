@@ -15,6 +15,7 @@ public:
 
 private:
 	static vector<string> formatBooleanResult(QueryResult& query_result);
+	static vector<string> formatNonBooleanResult(QueryProperties& query_properties, QueryResult& query_result);
 };
 
 #endif  // SPA_SRC_QP_QUERYFORMATTER_H

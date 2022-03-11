@@ -59,6 +59,6 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 	REQUIRE(synonyms.synonyms_in_group["c"] == groupWithA);
 	REQUIRE(synonyms.synonyms_in_group["d"] == groupWithD);
 	REQUIRE(synonyms.synonyms_in_group["e"] == groupWithD);
-	REQUIRE(synonyms.is_group_selected[groupWithA]);
-	REQUIRE(!synonyms.is_group_selected[groupWithD]);
+	REQUIRE(synonyms.group_to_selected_declarations[0].size() == 1);
+	REQUIRE(synonyms.group_to_selected_declarations[1].empty());
 }
