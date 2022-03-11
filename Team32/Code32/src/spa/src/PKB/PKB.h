@@ -45,6 +45,12 @@ class UsesSRelation;
 class UsesPRelation;
 class NodeRelation;
 class NextStarQueryCache;
+class NodeInterface;
+class IfNode;
+class WhileNode;
+class DummyNode;
+class NonConditionalNode;
+class ControlFlowGraph;
 
 typedef struct IfControlRelation {
 	static bool validate(SVRelationStore<IfControlRelation>*, const shared_ptr<StmtInfo>& statement, const VarRef&) {

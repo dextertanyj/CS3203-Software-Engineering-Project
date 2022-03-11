@@ -69,6 +69,7 @@ unordered_set<shared_ptr<PKB::NodeInfo>> PKB::NextStarQueryCache::searchNextStar
 }
 unordered_set<shared_ptr<PKB::NodeInfo>> PKB::NextStarQueryCache::populateTransitive(
 	NodeRelation& current, unordered_set<shared_ptr<PKB::NodeInfo>> next_nodes_transitive) {
+	// TODO: This will irreversibly add the next* set to the node. Which should not be done.
 	current.appendReverseTransitive(next_nodes_transitive);
 	next_nodes_transitive.insert(current.getSelf());
 	return next_nodes_transitive;
