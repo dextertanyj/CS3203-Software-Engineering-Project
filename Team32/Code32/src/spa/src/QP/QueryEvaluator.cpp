@@ -7,7 +7,7 @@
 using QP::Types::Clause;
 using QP::Types::DesignEntity;
 
-QP::QueryEvaluator::QueryEvaluator(PKB::StorageAccessInterface& pkb) : pkb(pkb) {}
+QP::QueryEvaluator::QueryEvaluator(PKB::StorageAccessInterface& pkb) : pkb(QP::StorageAdapter(pkb)) {}
 
 QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 	QueryGraph graph = buildGraph(query_properties);

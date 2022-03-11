@@ -16,15 +16,6 @@
 #include "QP/QueryExpressionLexer.h"
 #include "QP/QueryProperties.h"
 #include "QP/QueryResult.h"
-#include "QP/Relationship/Follows.h"
-#include "QP/Relationship/FollowsT.h"
-#include "QP/Relationship/Modifies.h"
-#include "QP/Relationship/ModifiesP.h"
-#include "QP/Relationship/ModifiesS.h"
-#include "QP/Relationship/Parent.h"
-#include "QP/Relationship/ParentT.h"
-#include "QP/Relationship/UsesP.h"
-#include "QP/Relationship/UsesS.h"
 
 class QP::QueryPreprocessor {
 public:

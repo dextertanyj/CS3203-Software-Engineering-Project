@@ -8,12 +8,18 @@
 #include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Relationship.h"
 
-template <class T>
-class QP::Relationship::ParentDispatcherTemplate {
+namespace QP::Relationship {
+template <QP::Types::ClauseType T>
+class ParentDispatcher;
+}
+
+template <QP::Types::ClauseType T>
+class QP::Relationship::ParentDispatcher {
 public:
-	static Types::ExecutorSetBundle argumentDispatcher(Types::ClauseType type, vector<Types::ReferenceArgument> arguments);
+	static Types::ArgumentDispatcher dispatcher;
 
 private:
+	static Types::ExecutorSetBundle argumentDispatcher(Types::ClauseType type, vector<Types::ReferenceArgument> arguments);
 	static const unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>>
 		argument_dispatch_map;
 	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getIndexMap();

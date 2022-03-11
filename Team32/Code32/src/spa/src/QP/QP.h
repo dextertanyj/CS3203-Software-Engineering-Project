@@ -16,6 +16,7 @@ class QueryProcessor;
 class QueryProperties;
 class QueryResult;
 struct Dispatcher;
+class StorageAdapter;
 namespace Utilities {};
 namespace Types {};
 

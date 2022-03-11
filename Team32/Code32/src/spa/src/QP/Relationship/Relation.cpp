@@ -15,11 +15,11 @@ vector<string> QP::Relationship::Relation::getDeclarationSymbols() const {
 
 QP::Types::ClauseType QP::Relationship::Relation::getType() const { return type; }
 
-QP::QueryResult QP::Relationship::Relation::execute(PKB::StorageAccessInterface& pkb, bool is_trivial) const {
+QP::QueryResult QP::Relationship::Relation::execute(QP::StorageAdapter& pkb, bool is_trivial) const {
 	return is_trivial ? executeTrivial(pkb) : execute(pkb);
 }
 
-QP::QueryResult QP::Relationship::Relation::executeTrivial(PKB::StorageAccessInterface& pkb) const {
+QP::QueryResult QP::Relationship::Relation::executeTrivial(QP::StorageAdapter& pkb) const {
 	QueryResult result;
 	visit(Visitor{[&](const Types::Executor& exec) { result = exec(pkb); },
 	              [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.first(pkb); }},
@@ -27,7 +27,7 @@ QP::QueryResult QP::Relationship::Relation::executeTrivial(PKB::StorageAccessInt
 	return result;
 }
 
-QP::QueryResult QP::Relationship::Relation::execute(PKB::StorageAccessInterface& pkb) const {
+QP::QueryResult QP::Relationship::Relation::execute(QP::StorageAdapter& pkb) const {
 	QueryResult result;
 	visit(Visitor{[&](const Types::Executor&) { throw QP::QueryException("Invalid executor."); },
 	              [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.second(pkb); }},

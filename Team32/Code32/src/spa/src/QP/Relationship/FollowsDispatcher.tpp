@@ -1,56 +1,66 @@
 #ifndef SPA_SRC_RELATIONSHIP_FOLLOWSDISPATCHERTEMPLATE_TPP
 #define SPA_SRC_RELATIONSHIP_FOLLOWSDISPATCHERTEMPLATE_TPP
 
-#include "QP/Relationship/FollowsDispatcherTemplate.h"
+#include "QP/Relationship/FollowsDispatcher.h"
 
 #include <unordered_map>
 #include <utility>
 
 #include "QP/DispatchProcessors.h"
+#include "QP/Relationship/StatementRelationExecutor.tpp"
 
-template <class T>
+template <QP::Types::ClauseType T>
 static QP::Types::ExecutorSetFactory lambda_index_synonym() {
 	static const QP::Types::ExecutorSetFactory lambda = [](vector<QP::Types::ReferenceArgument> args) {
-		return pair{
-			[front = args.at(0), rear = args.at(1)](PKB::StorageAccessInterface& pkb) {
-				return T::executeTrivialIndexSynonym(pkb, front, rear);
-			},
-			[front = args.at(0), rear = args.at(1)](PKB::StorageAccessInterface& pkb) { return T::executeIndexSynonym(pkb, front, rear); }};
-	};
-	return lambda;
-}
-
-template <class T>
-static QP::Types::ExecutorSetFactory lambda_wildcard_synonym() {
-	static const QP::Types::ExecutorSetFactory lambda = [](vector<QP::Types::ReferenceArgument> args) {
-		return pair{[rear = args.at(1)](PKB::StorageAccessInterface& pkb) { return T::executeTrivialWildcardSynonym(pkb, rear); },
-		            [rear = args.at(1)](PKB::StorageAccessInterface& pkb) { return T::executeWildcardSynonym(pkb, rear); }};
-	};
-	return lambda;
-}
-
-template <class T>
-static QP::Types::ExecutorSetFactory lambda_synonym_synonym() {
-	static const QP::Types::ExecutorSetFactory lambda = [](vector<QP::Types::ReferenceArgument> args) {
-		return pair{[front = args.at(0), rear = args.at(1)](PKB::StorageAccessInterface& pkb) {
-						return T::executeTrivialSynonymSynonym(pkb, front, rear);
+		return pair{[front = args.at(0), rear = args.at(1)](QP::StorageAdapter& pkb) {
+						return QP::Relationship::StatementRelationExecutor<T>::executeTrivialIndexSynonym(pkb, front, rear);
 					},
-		            [front = args.at(0), rear = args.at(1)](PKB::StorageAccessInterface& pkb) {
-						return T::executeSynonymSynonym(pkb, front, rear);
+		            [front = args.at(0), rear = args.at(1)](QP::StorageAdapter& pkb) {
+						return QP::Relationship::StatementRelationExecutor<T>::executeIndexSynonym(pkb, front, rear);
 					}};
 	};
 	return lambda;
 }
 
-template <class T>
-QP::Types::ExecutorSetBundle QP::Relationship::FollowsDispatcherTemplate<T>::argumentDispatcher(Types::ClauseType type,
+template <QP::Types::ClauseType T>
+static QP::Types::ExecutorSetFactory lambda_wildcard_synonym() {
+	static const QP::Types::ExecutorSetFactory lambda = [](vector<QP::Types::ReferenceArgument> args) {
+		return pair{[rear = args.at(1)](QP::StorageAdapter& pkb) {
+						return QP::Relationship::StatementRelationExecutor<T>::executeTrivialWildcardSynonym(pkb, rear);
+					},
+		            [rear = args.at(1)](QP::StorageAdapter& pkb) {
+						return QP::Relationship::StatementRelationExecutor<T>::executeWildcardSynonym(pkb, rear);
+					}};
+	};
+	return lambda;
+}
+
+template <QP::Types::ClauseType T>
+static QP::Types::ExecutorSetFactory lambda_synonym_synonym() {
+	static const QP::Types::ExecutorSetFactory lambda = [](vector<QP::Types::ReferenceArgument> args) {
+		return pair{[front = args.at(0), rear = args.at(1)](QP::StorageAdapter& pkb) {
+						return QP::Relationship::StatementRelationExecutor<T>::executeTrivialSynonymSynonym(pkb, front, rear);
+					},
+		            [front = args.at(0), rear = args.at(1)](QP::StorageAdapter& pkb) {
+						return QP::Relationship::StatementRelationExecutor<T>::executeSynonymSynonym(pkb, front, rear);
+					}};
+	};
+	return lambda;
+}
+
+template <QP::Types::ClauseType T>
+QP::Types::ArgumentDispatcher QP::Relationship::FollowsDispatcher<T>::dispatcher =
+	[](vector<Types::ReferenceArgument> args) { return argumentDispatcher(T, move(args)); };
+
+template <QP::Types::ClauseType T>
+QP::Types::ExecutorSetBundle QP::Relationship::FollowsDispatcher<T>::argumentDispatcher(Types::ClauseType type,
                                                                                                 vector<Types::ReferenceArgument> args) {
-	return DispatchProcessors::processDoubleArgument(type, FollowsDispatcherTemplate<T>::argument_dispatch_map, std::move(args));
+	return DispatchProcessors::processDoubleArgument(type, FollowsDispatcher<T>::argument_dispatch_map, std::move(args));
 };
 
-template <class T>
+template <QP::Types::ClauseType T>
 const unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>
-	QP::Relationship::FollowsDispatcherTemplate<T>::argument_dispatch_map = {{Types::ReferenceType::StatementIndex, getIndexMap()},
+	QP::Relationship::FollowsDispatcher<T>::argument_dispatch_map = {{Types::ReferenceType::StatementIndex, getIndexMap()},
                                                                              {Types::ReferenceType::Wildcard, getWildcardMap()},
                                                                              {Types::DesignEntity::Stmt, getSynonymMap()},
                                                                              {Types::DesignEntity::Call, getSynonymMap()},
@@ -60,18 +70,20 @@ const unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::Arg
                                                                              {Types::DesignEntity::While, getSynonymMap()},
                                                                              {Types::DesignEntity::If, getSynonymMap()}};
 
-template <class T>
-unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Relationship::FollowsDispatcherTemplate<T>::getIndexMap() {
+template <QP::Types::ClauseType T>
+unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Relationship::FollowsDispatcher<T>::getIndexMap() {
 	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
 		{Types::ReferenceType::StatementIndex,
 	     [](vector<Types::ReferenceArgument> args) {
-			 return [front = args.at(0), rear = args.at(1)](PKB::StorageAccessInterface& pkb) {
-				 return T::executeTrivialIndexIndex(pkb, front, rear);
+			 return [front = args.at(0), rear = args.at(1)](QP::StorageAdapter& pkb) {
+				 return StatementRelationExecutor<T>::executeTrivialIndexIndex(pkb, front, rear);
 			 };
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](vector<Types::ReferenceArgument> args) {
-			 return [front = args.at(0)](PKB::StorageAccessInterface& pkb) { return T::executeTrivialIndexWildcard(pkb, front); };
+			 return [front = args.at(0)](QP::StorageAdapter& pkb) {
+				 return StatementRelationExecutor<T>::executeTrivialIndexWildcard(pkb, front);
+			 };
 		 }},
 		{Types::DesignEntity::Stmt, lambda_index_synonym<T>()},
 		{Types::DesignEntity::Call, lambda_index_synonym<T>()},
@@ -84,17 +96,19 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 	return map;
 }
 
-template <class T>
+template <QP::Types::ClauseType T>
 unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>
-QP::Relationship::FollowsDispatcherTemplate<T>::getWildcardMap() {
+QP::Relationship::FollowsDispatcher<T>::getWildcardMap() {
 	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
 		{Types::ReferenceType::StatementIndex,
 	     [](vector<Types::ReferenceArgument> args) {
-			 return [rear = args.at(1)](PKB::StorageAccessInterface& pkb) { return T::executeTrivialWildcardIndex(pkb, rear); };
+			 return [rear = args.at(1)](QP::StorageAdapter& pkb) {
+				 return StatementRelationExecutor<T>::executeTrivialWildcardIndex(pkb, rear);
+			 };
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](vector<Types::ReferenceArgument> /*args*/) {
-			 return [](PKB::StorageAccessInterface& pkb) { return T::executeTrivialWildcardWildcard(pkb); };
+			 return [](QP::StorageAdapter& pkb) { return StatementRelationExecutor<T>::executeTrivialWildcardWildcard(pkb); };
 		 }},
 		{Types::DesignEntity::Stmt, lambda_wildcard_synonym<T>()},
 		{Types::DesignEntity::Call, lambda_wildcard_synonym<T>()},
@@ -107,23 +121,26 @@ QP::Relationship::FollowsDispatcherTemplate<T>::getWildcardMap() {
 	return map;
 }
 
-template <class T>
+template <QP::Types::ClauseType T>
 unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>
-QP::Relationship::FollowsDispatcherTemplate<T>::getSynonymMap() {
+QP::Relationship::FollowsDispatcher<T>::getSynonymMap() {
 	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
 		{Types::ReferenceType::StatementIndex,
 	     [](vector<QP::Types::ReferenceArgument> args) {
-			 return pair{[front = args.at(0), rear = args.at(1)](PKB::StorageAccessInterface& pkb) {
-							 return T::executeTrivialSynonymIndex(pkb, front, rear);
+			 return pair{[front = args.at(0), rear = args.at(1)](QP::StorageAdapter& pkb) {
+							 return StatementRelationExecutor<T>::executeTrivialSynonymIndex(pkb, front, rear);
 						 },
-		                 [front = args.at(0), rear = args.at(1)](PKB::StorageAccessInterface& pkb) {
-							 return T::executeSynonymIndex(pkb, front, rear);
+		                 [front = args.at(0), rear = args.at(1)](QP::StorageAdapter& pkb) {
+							 return StatementRelationExecutor<T>::executeSynonymIndex(pkb, front, rear);
 						 }};
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](vector<QP::Types::ReferenceArgument> args) {
-			 return pair{[front = args.at(0)](PKB::StorageAccessInterface& pkb) { return T::executeTrivialSynonymWildcard(pkb, front); },
-		                 [front = args.at(0)](PKB::StorageAccessInterface& pkb) { return T::executeSynonymWildcard(pkb, front); }};
+			 return pair{
+				 [front = args.at(0)](QP::StorageAdapter& pkb) {
+					 return StatementRelationExecutor<T>::executeTrivialSynonymWildcard(pkb, front);
+				 },
+				 [front = args.at(0)](QP::StorageAdapter& pkb) { return StatementRelationExecutor<T>::executeSynonymWildcard(pkb, front); }};
 		 }},
 		{Types::DesignEntity::Stmt, lambda_synonym_synonym<T>()},
 		{Types::DesignEntity::Call, lambda_synonym_synonym<T>()},

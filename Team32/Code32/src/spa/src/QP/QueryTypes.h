@@ -66,7 +66,7 @@ typedef struct Node {
 	vector<string> adjacent_symbols;
 } Node;
 
-typedef function<QP::QueryResult(PKB::StorageAccessInterface&)> Executor;
+typedef function<QP::QueryResult(QP::StorageAdapter&)> Executor;
 typedef variant<Executor, pair<Executor, Executor>> ExecutorSet;
 typedef function<ExecutorSet(vector<ReferenceArgument>)> ExecutorSetFactory;
 typedef pair<ClauseType, ExecutorSetFactory> ExecutorSetFactoryBundle;

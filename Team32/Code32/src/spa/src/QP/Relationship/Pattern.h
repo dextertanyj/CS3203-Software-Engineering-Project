@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 #include "Common/ExpressionProcessor/Expression.h"
-#include "PKB/StorageAccessInterface.h"
+#include "QP/StorageAdapter.h"
 #include "QP/QueryResult.h"
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
@@ -14,24 +14,24 @@
 class QP::Relationship::Pattern {
 public:
 	// Trivial Executors
-	static QueryResult executeTrivialNameWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& name);
-	static QueryResult executeTrivialSynonymOrWildcardWildcard(PKB::StorageAccessInterface& pkb);
-	static QueryResult executeTrivialNameExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& name,
+	static QueryResult executeTrivialNameWildcard(QP::StorageAdapter& pkb, const Types::ReferenceArgument& name);
+	static QueryResult executeTrivialSynonymOrWildcardWildcard(QP::StorageAdapter& pkb);
+	static QueryResult executeTrivialNameExpression(QP::StorageAdapter& pkb, const Types::ReferenceArgument& name,
 	                                                const Types::ReferenceArgument& expression);
-	static QueryResult executeTrivialSynonymOrWildcardExpression(PKB::StorageAccessInterface& pkb,
+	static QueryResult executeTrivialSynonymOrWildcardExpression(QP::StorageAdapter& pkb,
 	                                                             const Types::ReferenceArgument& expression);
 
 	// Executors
-	static QueryResult executeNameWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
+	static QueryResult executeNameWildcard(QP::StorageAdapter& pkb, const Types::ReferenceArgument& assign,
 	                                       const Types::ReferenceArgument& name);
-	static QueryResult executeWildcardWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign);
-	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
+	static QueryResult executeWildcardWildcard(QP::StorageAdapter& pkb, const Types::ReferenceArgument& assign);
+	static QueryResult executeSynonymWildcard(QP::StorageAdapter& pkb, const Types::ReferenceArgument& assign,
 	                                          const Types::ReferenceArgument& synonym);
-	static QueryResult executeNameExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
+	static QueryResult executeNameExpression(QP::StorageAdapter& pkb, const Types::ReferenceArgument& assign,
 	                                         const Types::ReferenceArgument& name, const Types::ReferenceArgument& expression);
-	static QueryResult executeWildcardExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
+	static QueryResult executeWildcardExpression(QP::StorageAdapter& pkb, const Types::ReferenceArgument& assign,
 	                                             const Types::ReferenceArgument& expression);
-	static QueryResult executeSynonymExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
+	static QueryResult executeSynonymExpression(QP::StorageAdapter& pkb, const Types::ReferenceArgument& assign,
 	                                            const Types::ReferenceArgument& synonym, const Types::ReferenceArgument& expression);
 
 	static Types::ArgumentDispatcher dispatcher;
