@@ -46,7 +46,8 @@ private:
 
 	// Parsing Rules
 	optional<Types::DesignEntity> parseDesignEntity();
-	unique_ptr<Relationship::Relation> parseRelation();
+	unique_ptr<Relationship::Relation> parseClause();
+	unique_ptr<Relationship::Relation> parseClause(Types::ClauseType type);
 	unique_ptr<Relationship::Relation> parseAssignPattern(Types::Declaration synonym);
 	Types::ReferenceArgument parseReferenceArgument();
 	Common::ExpressionProcessor::Expression parseExpression();

@@ -80,7 +80,7 @@ void QP::QueryPreprocessor::parseDeclaration(const Types::DesignEntity& type) {
 
 void QP::QueryPreprocessor::parseSelect() {
 	matchTokenOrThrow("Select");
-	auto synonym_search_result = existing_declarations.find(query_tokens[token_index]);
+	auto synonym_search_result = existing_declarations.find(query_tokens.at(token_index));
 	if (synonym_search_result != existing_declarations.end()) {
 		select_list.push_back({synonym_search_result->second.type, synonym_search_result->second.symbol});
 		token_index++;
@@ -109,20 +109,24 @@ void QP::QueryPreprocessor::parseClauses() {
 }
 
 void QP::QueryPreprocessor::parseSuchThat() {
-	this->clause_list.push_back({parseRelation()});
+	this->clause_list.push_back({parseClause()});
 	while (token_index < this->query_tokens.size() && this->query_tokens.at(token_index) == "and") {
 		token_index++;
-		this->clause_list.push_back({parseRelation()});
+		this->clause_list.push_back({parseClause()});
 	}
 }
 
-unique_ptr<QP::Relationship::Relation> QP::QueryPreprocessor::parseRelation() {
+unique_ptr<QP::Relationship::Relation> QP::QueryPreprocessor::parseClause() {
 	auto clause_type_iter = dispatcher.clause_map.find(this->query_tokens.at(token_index));
 	if (clause_type_iter == dispatcher.clause_map.end()) {
 		throw QueryException("Unexpected relation type.");
 	}
 	token_index++;
 	auto type = clause_type_iter->second;
+	return parseClause(type);
+}
+
+unique_ptr<QP::Relationship::Relation> QP::QueryPreprocessor::parseClause(QP::Types::ClauseType type) {
 	QP::Types::ArgumentDispatcher argument_dispatcher = dispatcher.dispatch_map.at(type);
 	vector<Types::ReferenceArgument> arguments;
 	matchTokenOrThrow("(");
@@ -137,7 +141,7 @@ unique_ptr<QP::Relationship::Relation> QP::QueryPreprocessor::parseRelation() {
 }
 
 void QP::QueryPreprocessor::parsePattern() {
-	auto synonym_search_result = existing_declarations.find(query_tokens[token_index]);
+	auto synonym_search_result = existing_declarations.find(query_tokens.at(token_index));
 	token_index++;
 	if (synonym_search_result == existing_declarations.end()) {
 		throw QP::QueryException("Undeclared synonym.");
@@ -149,7 +153,7 @@ void QP::QueryPreprocessor::parsePattern() {
 	}
 	while (token_index < this->query_tokens.size() && this->query_tokens.at(token_index) == "and") {
 		token_index++;
-		synonym_search_result = existing_declarations.find(query_tokens[token_index]);
+		synonym_search_result = existing_declarations.find(query_tokens.at(token_index));
 		if (synonym_search_result == existing_declarations.end()) {
 			throw QP::QueryException("Undeclared synonym.");
 		}
@@ -232,7 +236,7 @@ QP::Types::ReferenceArgument QP::QueryPreprocessor::parseReferenceArgument() {
 		return Types::ReferenceArgument(stoul(this->query_tokens.at(token_index - 1)));
 	}
 	if (Common::Validator::validateName(this->query_tokens.at(token_index))) {
-		auto synonym_search_result = existing_declarations.find(query_tokens[token_index]);
+		auto synonym_search_result = existing_declarations.find(query_tokens.at(token_index));
 		if (synonym_search_result == existing_declarations.end()) {
 			throw QP::QueryException("Undeclared synonym detected.");
 		}
