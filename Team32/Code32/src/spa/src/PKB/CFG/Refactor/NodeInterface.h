@@ -49,6 +49,8 @@ public:
 		throw logic_error("setDummyNode should not be called in base class");
 	};
 
+	virtual ~NodeInterface(){};
+
 	// Comparator for priority queue
 	friend bool operator<(PKB::NodeInterface lhs, PKB::NodeInterface rhs) { return lhs.getNodeRef() < rhs.getNodeRef(); };
 	friend bool operator>(PKB::NodeInterface lhs, PKB::NodeInterface rhs) { return lhs.getNodeRef() > rhs.getNodeRef(); };

@@ -10,6 +10,7 @@ public:
 	shared_ptr<PKB::NodeInterface> getDummyNode() override;
 	void setDummyNode(shared_ptr<PKB::NodeInterface> to_insert) override;
 	size_t getNodeRef() override;
+	~WhileNode(){};
 
 private:
 	shared_ptr<StmtInfo> statement_info;
