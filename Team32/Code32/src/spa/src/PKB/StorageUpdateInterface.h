@@ -17,11 +17,13 @@ public:
 	virtual void setUses(StmtRef index, VarRefSet names) = 0;
 	virtual void setModifies(StmtRef index, VarRefSet names) = 0;
 	virtual void setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) = 0;
-	virtual void setNext(StmtRef previous, StmtRef next) = 0;
 	virtual void setIfControl(StmtRef index, VarRefSet names) = 0;
 	virtual void setWhileControl(StmtRef index, VarRefSet names) = 0;
 	virtual void setIfControl(StmtRef index, VarRef name) = 0;
 	virtual void setWhileControl(StmtRef index, VarRef name) = 0;
+	virtual void setNext(StmtRef previous, StmtRef next) = 0;
+	virtual void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) = 0;
+	virtual void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) = 0;
 	virtual void populateComplexRelations() = 0;
 
 	virtual ~StorageUpdateInterface() = default;

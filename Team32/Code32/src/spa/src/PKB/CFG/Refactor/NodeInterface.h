@@ -51,9 +51,13 @@ public:
 
 	set<shared_ptr<PKB::NodeInterface>> getNextNodes() { return this->next_nodes; };
 
-	virtual size_t getNodeRef() = 0;
-	virtual shared_ptr<PKB::NodeInterface> getDummyNode() = 0;
-	virtual void setDummyNode(shared_ptr<PKB::NodeInterface> to_insert) = 0;
+	virtual size_t getNodeRef() { throw logic_error("getNodeRef should not be called in base class"); }
+
+	virtual shared_ptr<PKB::NodeInterface> getDummyNode() { throw logic_error("getDummyNode should not be called in base class"); };
+
+	virtual void setDummyNode(shared_ptr<PKB::NodeInterface> to_insert) {
+		throw logic_error("setDummyNode should not be called in base class");
+	};
 
 	// Comparator for priority queue
 	friend bool operator<(PKB::NodeInterface lhs, PKB::NodeInterface rhs) { return lhs.getNodeRef() < rhs.getNodeRef(); };

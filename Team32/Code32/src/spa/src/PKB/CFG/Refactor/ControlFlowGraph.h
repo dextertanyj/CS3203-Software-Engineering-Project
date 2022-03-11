@@ -19,9 +19,8 @@ public:
 	void setNext(StmtRef prev, StmtRef next);
 	void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next);
 	void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref);
-
 	void removeNextConnection(StmtRef first, StmtRef second);
-
+	void clear();
 	void optimize();
 	void populateUniqueIndex();
 

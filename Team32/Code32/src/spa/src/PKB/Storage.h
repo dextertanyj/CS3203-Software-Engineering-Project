@@ -12,6 +12,7 @@
 #include "PKB/AssignStore.h"
 #include "PKB/CFG/NextStarQueryCache.h"
 #include "PKB/CFG/NodeRelation.h"
+#include "PKB/CFG/Refactor/ControlFlowGraph.h"
 #include "PKB/CallRelation.h"
 #include "PKB/CallStatementStore.h"
 #include "PKB/FollowsRelation.h"
@@ -48,11 +49,14 @@ public:
 	void setUses(StmtRef index, VarRefSet names) override;
 	void setModifies(StmtRef index, VarRefSet names) override;
 	void setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) override;
-	void setNext(StmtRef previous, StmtRef next) override;
 	void setIfControl(StmtRef index, VarRefSet names) override;
 	void setIfControl(StmtRef index, VarRef name) override;
 	void setWhileControl(StmtRef index, VarRefSet names) override;
 	void setWhileControl(StmtRef index, VarRef name) override;
+	void setNext(StmtRef previous, StmtRef next) override;
+	void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) override;
+	void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) override;
+
 
 	// Get methods called by PQL
 
@@ -110,11 +114,10 @@ public:
 	// CFG Node get methods
 	bool checkNext(StmtRef first, StmtRef second) override;
 	bool checkNextStar(StmtRef first, StmtRef second) override;
-	unordered_set<shared_ptr<PKB::NodeInfo>> getNextStar(StmtRef node_ref) override;
-	StmtInfoPtrSet getNextTransitive(StmtRef node_ref) override;
-	StmtInfoPtrSet getPreviousTransitive(StmtRef node_ref) override;
 	StmtInfoPtrSet getNext(StmtRef first) override;
+	StmtInfoPtrSet getNextStar(StmtRef node_ref) override;
 	StmtInfoPtrSet getPrevious(StmtRef second) override;
+	StmtInfoPtrSet getPreviousStar(StmtRef second) override;
 
 	// Control Variable get methods
 	bool checkIfControl(StmtRef index, VarRef name) override;
@@ -147,13 +150,14 @@ private:
 	PVRelationStore<UsesPRelation> uses_p_store;
 	PVRelationStore<PKB::ModifiesPRelation> modifies_p_store;
 	AssignStore assign_store;
-	TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation> control_flow_graph;
+	ControlFlowGraph control_flow_graph;
 	SVRelationStore<PKB::IfControlRelation> if_control_store;
 	PKB::SVRelationStore<PKB::WhileControlRelation> while_control_store;
 	NextStarQueryCache next_cache;
 
 	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
 	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set);
+	void setNode(shared_ptr<StmtInfo> info);
 };
 
 #endif

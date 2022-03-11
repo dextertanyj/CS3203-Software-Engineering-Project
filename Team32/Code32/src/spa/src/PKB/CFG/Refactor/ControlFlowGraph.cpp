@@ -139,6 +139,11 @@ void PKB::ControlFlowGraph::set(shared_ptr<PKB::NodeInterface> prev, shared_ptr<
 	next->insertPrevious(prev);
 }
 
+void PKB::ControlFlowGraph::clear() {
+	this->stmt_to_normal_node_store.clear();
+	this->stmt_to_dummy_node_store.clear();
+}
+
 void PKB::ControlFlowGraph::removeNextConnection(StmtRef first, StmtRef second) {}
 
 void PKB::ControlFlowGraph::optimize() {}

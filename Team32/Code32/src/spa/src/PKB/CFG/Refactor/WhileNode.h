@@ -11,7 +11,6 @@ public:
 	void setDummyNode(shared_ptr<PKB::NodeInterface> to_insert) override;
 	size_t getNodeRef() override;
 
-
 private:
 	shared_ptr<StmtInfo> statement_info;
 };

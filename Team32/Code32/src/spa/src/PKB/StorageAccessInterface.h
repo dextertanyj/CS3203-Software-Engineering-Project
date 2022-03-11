@@ -60,10 +60,9 @@ public:
 	virtual bool checkNext(StmtRef first, StmtRef second) = 0;
 	virtual bool checkNextStar(StmtRef first, StmtRef second) = 0;
 	virtual StmtInfoPtrSet getNext(StmtRef first) = 0;
-	virtual unordered_set<shared_ptr<PKB::NodeInfo>> getNextStar(StmtRef node_ref) = 0;
+	virtual StmtInfoPtrSet getNextStar(StmtRef node_ref) = 0;
 	virtual StmtInfoPtrSet getPrevious(StmtRef second) = 0;
-	virtual StmtInfoPtrSet getNextTransitive(StmtRef node_ref) = 0;
-	virtual StmtInfoPtrSet getPreviousTransitive(StmtRef node_ref) = 0;
+	virtual StmtInfoPtrSet getPreviousStar(StmtRef second) = 0;
 
 	// Control Variable get methods
 	virtual bool checkIfControl(StmtRef index, VarRef name) = 0;

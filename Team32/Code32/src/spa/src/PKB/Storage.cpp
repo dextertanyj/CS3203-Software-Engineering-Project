@@ -3,8 +3,6 @@
 #include <algorithm>
 #include <iterator>
 
-#include "PKB/CFG/NodeInfo.h"
-
 using namespace std;
 
 // This method will store information about a statement into PKB's statement map.
@@ -12,7 +10,7 @@ using namespace std;
 void PKB::Storage::setStmtType(StmtRef index, StmtType type) {
 	statement_store.insert(index, type);
 	shared_ptr<StmtInfo> info = statement_store.get(index);
-	node_store.insert(index, type);
+	setNode(info);
 }
 
 void PKB::Storage::setConstant(ConstVal value) { constant_store.insert(value); }
@@ -115,13 +113,13 @@ void PKB::Storage::setWhileControl(StmtRef index, VarRef name) {
 	while_control_store.set(info, name);
 }
 
-void PKB::Storage::setNext(StmtRef previous, StmtRef next) {
-	shared_ptr<StmtInfo> previous_stmt_info = statement_store.get(previous);
-	shared_ptr<StmtInfo> next_stmt_info = statement_store.get(next);
-	NodeInfo previous_node = NodeInfo(previous_stmt_info->getIdentifier(), previous_stmt_info->getType());
-	NodeInfo next_node = NodeInfo(next_stmt_info->getIdentifier(), next_stmt_info->getType());
-	control_flow_graph.set(make_shared<NodeInfo>(previous_node), make_shared<NodeInfo>(next_node));
-}
+void PKB::Storage::setNext(StmtRef previous, StmtRef next) {}
+
+void PKB::Storage::setNode(shared_ptr<StmtInfo> info) {}
+	
+void PKB::Storage::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) {}
+
+void PKB::Storage::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) {}
 
 StmtInfoPtrSet PKB::Storage::getStatements() {
 	unordered_set<shared_ptr<StatementInfo>> set = statement_store.getAll();
@@ -237,51 +235,17 @@ vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::Storage::getStmtsWithPatternRHS(
 	return assign_store.getStmtsWithPatternRHS(expression, is_exact_match);
 }
 
-bool PKB::Storage::checkNext(StmtRef first, StmtRef second) {
-	shared_ptr<NodeInfo> first_node = node_store.get(first);
-	shared_ptr<NodeInfo> second_node = node_store.get(second);
-	return first_node->getUniqueIndex() == second_node->getUniqueIndex() && control_flow_graph.isRelated(first, second);
-}
+bool PKB::Storage::checkNext(StmtRef first, StmtRef second) { return false; }
 
 bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return false; }
 
-StmtInfoPtrSet PKB::Storage::getNextTransitive(StmtRef node_ref) {
-	StmtInfoPtrSet stmt_info_set;
-	unordered_set<shared_ptr<PKB::NodeInfo>> node_infos = control_flow_graph.getReverseTransitive(node_ref);
-	for (const auto &node_info : node_infos) {
-		stmt_info_set.insert(statement_store.get(node_info->getIdentifier()));
-	}
-	return stmt_info_set;
-}
+StmtInfoPtrSet PKB::Storage::getNext(StmtRef first) { return {}; }
 
-unordered_set<shared_ptr<PKB::NodeInfo>> PKB::Storage::getNextStar(StmtRef node_ref) { return {}; }
+StmtInfoPtrSet PKB::Storage::getNextStar(StmtRef node_ref) { return {}; }
 
-StmtInfoPtrSet PKB::Storage::getPreviousTransitive(StmtRef node_ref) {
-	StmtInfoPtrSet stmt_info_set;
-	unordered_set<shared_ptr<PKB::NodeInfo>> node_infos = control_flow_graph.getForwardTransitive(node_ref);
-	for (const auto &node_info : node_infos) {
-		stmt_info_set.insert(statement_store.get(node_info->getIdentifier()));
-	}
-	return stmt_info_set;
-}
+StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) { return {}; }
 
-StmtInfoPtrSet PKB::Storage::getNext(StmtRef first) {
-	StmtInfoPtrSet stmt_info_set;
-	unordered_set<shared_ptr<PKB::NodeInfo>> node_infos = control_flow_graph.getReverse(first);
-	for (const auto &node_info : node_infos) {
-		stmt_info_set.insert(statement_store.get(node_info->getIdentifier()));
-	}
-	return stmt_info_set;
-}
-
-StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) {
-	StmtInfoPtrSet stmt_info_set;
-	unordered_set<shared_ptr<PKB::NodeInfo>> node_infos = control_flow_graph.getForward(second);
-	for (const auto &node_info : node_infos) {
-		stmt_info_set.insert(statement_store.get(node_info->getIdentifier()));
-	}
-	return stmt_info_set;
-}
+StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef node_ref) { return {}; }
 
 bool PKB::Storage::checkWhileControl(StmtRef index, VarRef name) { return while_control_store.check(index, name); }
 
