@@ -13,3 +13,6 @@ shared_ptr<PKB::NodeInterface> PKB::WhileNode::getDummyNode() { throw logic_erro
 void PKB::WhileNode::setDummyNode(shared_ptr<PKB::NodeInterface> to_insert) {
 	throw logic_error("While node should not call setDummyNode.");
 }
+size_t PKB::WhileNode::getNodeRef() {
+	return this->statement_info->getIdentifier();
+}

@@ -10,3 +10,5 @@ PKB::IfNode::IfNode(shared_ptr<StmtInfo> info) {
 shared_ptr<PKB::NodeInterface> PKB::IfNode::getDummyNode() { return this->dummy_node; }
 
 void PKB::IfNode::setDummyNode(shared_ptr<PKB::NodeInterface> to_insert) { this->dummy_node = to_insert; }
+
+size_t PKB::IfNode::getNodeRef() { return this->statement_info->getIdentifier(); }

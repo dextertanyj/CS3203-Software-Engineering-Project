@@ -2,7 +2,7 @@
 #define SPA_NODEINTERFACE_H
 
 #include <algorithm>
-#include <vector>
+#include <set>
 
 #include "PKB/PKB.h"
 
@@ -21,14 +21,14 @@ public:
 		if (any_of(next_nodes.begin(), next_nodes.end(), next)) {
 			throw invalid_argument("Node to be inserted is already present.");
 		}
-		this->next_nodes.push_back(next);
+		this->next_nodes.insert(next);
 	}
 
 	void insertPrevious(shared_ptr<PKB::NodeInterface> prev) {
 		if (any_of(previous_nodes.begin(), previous_nodes.end(), prev)) {
 			throw invalid_argument("Node to be inserted is already present.");
 		}
-		this->previous_nodes.push_back(prev);
+		this->previous_nodes.insert(prev);
 	}
 
 	void removeNext(shared_ptr<PKB::NodeInterface> to_remove) {
@@ -47,12 +47,11 @@ public:
 		this->previous_nodes.erase(iter);
 	};
 
-	vector<shared_ptr<PKB::NodeInterface>> getPreviousNodes() { return this->previous_nodes; };
+	set<shared_ptr<PKB::NodeInterface>> getPreviousNodes() { return this->previous_nodes; };
 
-	vector<shared_ptr<PKB::NodeInterface>> getNextNodes() { return this->next_nodes; };
+	set<shared_ptr<PKB::NodeInterface>> getNextNodes() { return this->next_nodes; };
 
-	size_t getNodeRef() const { return this->node_ref; };
-
+	virtual size_t getNodeRef() = 0;
 	virtual shared_ptr<PKB::NodeInterface> getDummyNode() = 0;
 	virtual void setDummyNode(shared_ptr<PKB::NodeInterface> to_insert) = 0;
 
@@ -61,12 +60,10 @@ public:
 	friend bool operator>(PKB::NodeInterface lhs, PKB::NodeInterface rhs) { return lhs.getNodeRef() > rhs.getNodeRef(); };
 
 protected:
-	bool is_last_node;
 	size_t unique_index = 0;  // Default to 0 for convenience when populating unique index later.
-	size_t node_ref;
 	string node_type;
-	vector<shared_ptr<PKB::NodeInterface>> previous_nodes;
-	vector<shared_ptr<PKB::NodeInterface>> next_nodes;
+	set<shared_ptr<PKB::NodeInterface>> previous_nodes;
+	set<shared_ptr<PKB::NodeInterface>> next_nodes;
 	// Transitive store not required as we are not allowed to precompute.
 };
 

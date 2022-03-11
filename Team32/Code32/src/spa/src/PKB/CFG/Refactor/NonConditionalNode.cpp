@@ -15,3 +15,4 @@ void PKB::NonConditionalNode::setDummyNode(shared_ptr<PKB::NodeInterface> to_ins
 shared_ptr<PKB::NodeInterface> PKB::NonConditionalNode::getDummyNode() {
 	throw logic_error("Non conditional node should not call getDummyNode.");
 }
+size_t PKB::NonConditionalNode::getNodeRef() { return this->statement_info->getIdentifier(); }

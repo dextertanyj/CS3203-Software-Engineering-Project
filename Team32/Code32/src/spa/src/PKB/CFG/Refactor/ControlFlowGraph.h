@@ -1,6 +1,7 @@
 #ifndef SPA_CONTROLFLOWGRAPH_H
 #define SPA_CONTROLFLOWGRAPH_H
 
+#include <set>
 #include <unordered_map>
 
 #include "NodeInterface.h"
@@ -10,9 +11,10 @@ class PKB::ControlFlowGraph {
 public:
 	void createNode(shared_ptr<StmtInfo> stmt_info);
 
+	bool checkNext(StmtRef prev, StmtRef next);
 	shared_ptr<PKB::NodeInterface> getNode(StmtRef ref);
-	vector<shared_ptr<PKB::NodeInterface>> getPreviousNodes(StmtRef ref);
-	vector<shared_ptr<PKB::NodeInterface>> getNextNodes(StmtRef ref);
+	set<shared_ptr<PKB::NodeInterface>> getPreviousNodes(StmtRef ref);
+	set<shared_ptr<PKB::NodeInterface>> getNextNodes(StmtRef ref);
 
 	void setNext(StmtRef prev, StmtRef next);
 	void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next);
