@@ -1,5 +1,7 @@
-#ifndef SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_H
-#define SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_H
+#ifndef SPA_SRC_QP_RELATIONSHIP_CALLDISPATCHERTEMPLATE_H
+#define SPA_SRC_QP_RELATIONSHIP_CALLDISPATCHERTEMPLATE_H
+
+#include <unordered_map>
 
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
@@ -18,4 +20,4 @@ private:
 	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getSynonymMap();
 };
 
-#endif  // SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_H
+#endif  // SPA_SRC_QP_RELATIONSHIP_CALLDISPATCHERTEMPLATE_H

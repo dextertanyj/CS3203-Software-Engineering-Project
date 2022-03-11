@@ -1,4 +1,6 @@
-#include "ParentT.h"
+#include "QP/Relationship/ParentT.h"
+
+#include <utility>
 
 #include "QP/Relationship/ParentDispatcherTemplate.tpp"
 
@@ -267,5 +269,5 @@ QP::QueryResult QP::Relationship::ParentT::executeSynonymSynonym(PKB::StorageAcc
 }
 
 QP::Types::ArgumentDispatcher QP::Relationship::ParentT::dispatcher = [](vector<ReferenceArgument> args) {
-	return ParentDispatcherTemplate<ParentT>::argumentDispatcher(Types::ClauseType::Call, std::move(args));
+	return ParentDispatcherTemplate<ParentT>::argumentDispatcher(Types::ClauseType::ParentT, move(args));
 };

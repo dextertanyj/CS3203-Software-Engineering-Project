@@ -40,6 +40,8 @@ public:
 	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
 	                                         const ReferenceArgument& rear);
 
+	static ArgumentDispatcher dispatcher;
+
 private:
 	ReferenceArgument left_stmt;
 	ReferenceArgument right_stmt;

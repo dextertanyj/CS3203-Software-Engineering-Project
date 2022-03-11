@@ -1,8 +1,9 @@
-#ifndef SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_TPP
-#define SPA_SRC_RELATIONSHIP_CALLDISPATCHERTEMPLATE_TPP
+#ifndef SPA_SRC_QP_RELATIONSHIP_CALLDISPATCHERTEMPLATE_TPP
+#define SPA_SRC_QP_RELATIONSHIP_CALLDISPATCHERTEMPLATE_TPP
 
 #include "QP/Relationship/CallDispatcherTemplate.h"
 
+#include <unordered_map>
 #include <utility>
 
 #include "QP/DispatchProcessors.h"
@@ -10,7 +11,7 @@
 template <class T>
 QP::Types::ExecutorSetBundle QP::Relationship::CallDispatcherTemplate<T>::argumentDispatcher(ClauseType type,
                                                                                              vector<Types::ReferenceArgument> args) {
-	return DispatchProcessors::processDoubleArgument(type, CallDispatcherTemplate<T>::argument_dispatch_map, std::move(args));
+	return DispatchProcessors::processDoubleArgument(type, CallDispatcherTemplate<T>::argument_dispatch_map, move(args));
 };
 
 template <class T>
@@ -93,4 +94,4 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 	return map;
 }
 
-#endif
+#endif  // SPA_SRC_QP_RELATIONSHIP_CALLDISPATCHERTEMPLATE_TPP

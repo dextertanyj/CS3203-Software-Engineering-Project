@@ -1,5 +1,5 @@
-#ifndef SPA_MODIFIES_H
-#define SPA_MODIFIES_H
+#ifndef SPA_SRC_QP_RELATIONSHIP_MODIFIES_H
+#define SPA_SRC_QP_RELATIONSHIP_MODIFIES_H
 
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
@@ -134,4 +134,4 @@ const unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDis
 }  // namespace
 };  // namespace QP::Relationship::Modifies
 
-#endif  // SPA_MODIFIES_H
+#endif  // SPA_SRC_QP_RELATIONSHIP_MODIFIES_H

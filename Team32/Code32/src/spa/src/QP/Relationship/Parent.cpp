@@ -285,5 +285,5 @@ QP::QueryResult QP::Relationship::Parent::executeSynonymSynonym(PKB::StorageAcce
 }
 
 QP::Types::ArgumentDispatcher QP::Relationship::Parent::dispatcher = [](vector<ReferenceArgument> args) {
-	return ParentDispatcherTemplate<Parent>::argumentDispatcher(Types::ClauseType::Call, std::move(args));
+	return ParentDispatcherTemplate<Parent>::argumentDispatcher(Types::ClauseType::Parent, move(args));
 };

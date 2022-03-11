@@ -1,7 +1,10 @@
-#ifndef SPA_FOLLOWSDISPATCHERTEMPLATE_H
-#define SPA_FOLLOWSDISPATCHERTEMPLATE_H
+#ifndef SPA_SRC_QP_RELATIONSHIP_FOLLOWSDISPATCHERTEMPLATE_H
+#define SPA_SRC_QP_RELATIONSHIP_FOLLOWSDISPATCHERTEMPLATE_H
+
+#include <unordered_map>
 
 #include "QP/QueryTypes.h"
+#include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Relationship.h"
 
 template <class T>
@@ -17,4 +20,4 @@ private:
 	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getSynonymMap();
 };
 
-#endif  // SPA_FOLLOWSDISPATCHERTEMPLATE_H
+#endif  // SPA_SRC_QP_RELATIONSHIP_FOLLOWSDISPATCHERTEMPLATE_H

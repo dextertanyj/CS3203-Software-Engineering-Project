@@ -2,6 +2,7 @@
 #define SPA_SRC_QP_RELATIONSHIP_PARENTT_H
 
 #include "QP/QueryTypes.h"
+#include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Parent.h"
 
 class QP::Relationship::ParentT : public Parent {
