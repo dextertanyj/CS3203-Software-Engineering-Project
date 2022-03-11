@@ -54,6 +54,9 @@ class ReferenceArgument;
 typedef struct Declaration {
 	DesignEntity type;
 	string symbol;
+	bool operator== (const QP::Types::Declaration& other) const {
+		return type == other.type && symbol == other.symbol;
+	}
 } Declaration;
 
 typedef struct Clause {
