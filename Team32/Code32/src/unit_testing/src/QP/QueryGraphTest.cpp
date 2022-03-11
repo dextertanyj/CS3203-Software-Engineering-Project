@@ -66,14 +66,17 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 	graph.setEdges(clause_list);
 	ConnectedSynonyms synonyms = graph.getConnectedSynonyms(select_list);
 
+	size_t group_with_a = synonyms.synonyms_in_group["a"];
+	size_t group_with_d = synonyms.synonyms_in_group["d"];
+	size_t group_with_f = synonyms.synonyms_in_group["f"];
 	REQUIRE(synonyms.number_of_groups == 3);
-	REQUIRE(synonyms.synonyms_in_group["a"] == 0);
-	REQUIRE(synonyms.synonyms_in_group["b"] == 0);
-	REQUIRE(synonyms.synonyms_in_group["c"] == 0);
-	REQUIRE(synonyms.synonyms_in_group["d"] == 1);
-	REQUIRE(synonyms.synonyms_in_group["e"] == 1);
-	REQUIRE(synonyms.synonyms_in_group["f"] == 2);
-	REQUIRE(synonyms.group_to_selected_declarations[0].size() == 2);
-	REQUIRE(synonyms.group_to_selected_declarations[1].size() == 1);
-	REQUIRE(synonyms.group_to_selected_declarations[2].empty());
+	REQUIRE(synonyms.synonyms_in_group["b"] == group_with_a);
+	REQUIRE(synonyms.synonyms_in_group["c"] == group_with_a);
+	REQUIRE(synonyms.synonyms_in_group["e"] == group_with_d);
+	REQUIRE(group_with_d != group_with_a);
+	REQUIRE(group_with_f != group_with_a);
+	REQUIRE(group_with_f != group_with_d);
+	REQUIRE(synonyms.group_to_selected_declarations[group_with_a].size() == 2);
+	REQUIRE(synonyms.group_to_selected_declarations[group_with_d].size() == 1);
+	REQUIRE(synonyms.group_to_selected_declarations[group_with_f].empty());
 }
