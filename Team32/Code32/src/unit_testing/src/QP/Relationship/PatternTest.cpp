@@ -6,29 +6,7 @@
 #include "QP/QueryExpressionLexer.h"
 #include "catch.hpp"
 
-TEST_CASE("QP::Relationship::Pattern::getDeclarationSymbols") {
-	ReferenceArgument assign = ReferenceArgument({DesignEntity::Assign, "a"});
-
-	PKB::Storage pkb = PKB::Storage();
-	ReferenceArgument x = ReferenceArgument("x");
-	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
-	ReferenceArgument wildcard = ReferenceArgument();
-	vector<string> query_token = {"0"};
-	QP::QueryExpressionLexer lexer = QP::QueryExpressionLexer(query_token);
-	auto query_expression = Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic);
-	ReferenceArgument expression = ReferenceArgument(query_expression, true);
-
-	QP::Relationship::Pattern pattern1 = QP::Relationship::Pattern(assign, x, expression);
-	QP::Relationship::Pattern pattern2 = QP::Relationship::Pattern(assign, var, expression);
-	QP::Relationship::Pattern pattern3 = QP::Relationship::Pattern(assign, wildcard, expression);
-
-	vector<string> symbols1 = {"a"};
-	vector<string> symbols2 = {"a", "var"};
-
-	REQUIRE(pattern1.getDeclarationSymbols() == symbols1);
-	REQUIRE(pattern2.getDeclarationSymbols() == symbols2);
-	REQUIRE(pattern3.getDeclarationSymbols() == symbols1);
-}
+using namespace QP::Types;
 
 TEST_CASE("QP::Relationship::Pattern::execute") {
 	PKB::Storage pkb = PKB::Storage();

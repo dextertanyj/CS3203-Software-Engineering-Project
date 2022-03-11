@@ -4,6 +4,8 @@
 #include "PKB/Storage.h"
 #include "catch.hpp"
 
+using namespace QP::Types;
+
 TEST_CASE("QP::Relationship::FollowsT::execute") {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
@@ -57,8 +59,6 @@ TEST_CASE("QP::Relationship::FollowsT::execute") {
 	}
 
 	SECTION("Trivial: Wildcard & Wildcard") {
-		QP::Relationship::FollowsT parent = QP::Relationship::FollowsT(wildcard, wildcard);
-
 		QP::QueryResult result = QP::Relationship::FollowsT::executeTrivialWildcardWildcard(pkb);
 
 		REQUIRE(result.getResult());

@@ -53,15 +53,15 @@ private:
 	// Helper methods
 	void matchTokenOrThrow(const string& token);
 
-	int token_index;
+	size_t token_index;
 	vector<string> query_tokens;
 	unordered_map<string, Types::Declaration> existing_declarations;
 	Types::DeclarationList select_list;
 	Types::ClauseList clause_list;
-	QP::Dispatcher dispatcher;
 
 	static regex invalid_chars_regex;
 	static regex query_token_regex;
+	QP::Dispatcher dispatcher;
 };
 
 #endif  // SPA_SRC_QP_QUERYPREPROCESSOR_H

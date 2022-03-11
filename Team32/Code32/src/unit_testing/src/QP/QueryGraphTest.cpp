@@ -1,9 +1,10 @@
 #include "QP/QueryGraph.h"
 
-#include "QP/Relationship/Parent.h"
-#include "QP/Relationship/UsesS.h"
 #include "QP/ReferenceArgument.h"
+#include "QP/Relationship/Relation.h"
 #include "catch.hpp"
+
+using namespace QP::Types;
 
 TEST_CASE("QP::QueryGraph::QueryGraph Should initialize nodes") {
 	DeclarationList list = {{DesignEntity::Stmt, "s"}, {DesignEntity::Variable, "v"}};
@@ -18,8 +19,10 @@ TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
 	ReferenceArgument a = ReferenceArgument({DesignEntity::Assign, "a"});
 	ReferenceArgument v = ReferenceArgument({DesignEntity::Variable, "v"});
 	ClauseList clause_list = {
-		{make_unique<QP::Relationship::Parent>(s, a)},
-		{make_unique<QP::Relationship::UsesS>(a, v)},
+		{make_unique<QP::Relationship::Relation>(ClauseType::Parent, vector<ReferenceArgument>({s, a}),
+	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
+		{make_unique<QP::Relationship::Relation>(ClauseType::UsesS, vector<ReferenceArgument>({a, v}),
+	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
 	};
 
 	QP::QueryGraph graph = QP::QueryGraph(list);
@@ -42,9 +45,12 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 	ReferenceArgument d = ReferenceArgument({DesignEntity::Assign, "d"});
 	ReferenceArgument e = ReferenceArgument({DesignEntity::Variable, "e"});
 	ClauseList clause_list = {
-		{make_unique<QP::Relationship::Parent>(a, b)},
-		{make_unique<QP::Relationship::Parent>(a, c)},
-		{make_unique<QP::Relationship::UsesS>(d, e)},
+		{make_unique<QP::Relationship::Relation>(ClauseType::Parent, vector<ReferenceArgument>({a, b}),
+	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
+		{make_unique<QP::Relationship::Relation>(ClauseType::Parent, vector<ReferenceArgument>({a, c}),
+	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
+		{make_unique<QP::Relationship::Relation>(ClauseType::UsesS, vector<ReferenceArgument>({d, e}),
+	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
 	};
 
 	QP::QueryGraph graph = QP::QueryGraph(list);

@@ -4,6 +4,8 @@
 #include "PKB/Storage.h"
 #include "catch.hpp"
 
+using namespace QP::Types;
+
 TEST_CASE("QP::Relationship::Calls::execute") {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
@@ -49,8 +51,6 @@ TEST_CASE("QP::Relationship::Calls::execute") {
 	}
 
 	SECTION("Trivial: Wildcard Or Synonym & Wildcard Or Synonym But Not Both Synonym") {
-		QP::Relationship::Calls calls = QP::Relationship::Calls(wildcard, wildcard);
-
 		QP::QueryResult result = QP::Relationship::Calls::executeTrivialWildcardOrSynonymWildcardOrSynonym(pkb);
 
 		REQUIRE(result.getResult());
