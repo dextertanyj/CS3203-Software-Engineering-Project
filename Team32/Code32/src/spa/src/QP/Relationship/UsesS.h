@@ -20,11 +20,13 @@ public:
 
 	// Executors
 
-	static QueryResult executeSynonymName(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt, const Types::ReferenceArgument& ent);
+	static QueryResult executeSynonymName(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt,
+	                                      const Types::ReferenceArgument& ent);
 	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt);
-	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt, const Types::ReferenceArgument& ent);
-	static QueryResult executeIndexSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt, const Types::ReferenceArgument& ent);
-
+	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt,
+	                                         const Types::ReferenceArgument& ent);
+	static QueryResult executeIndexSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt,
+	                                       const Types::ReferenceArgument& ent);
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_USESS_H

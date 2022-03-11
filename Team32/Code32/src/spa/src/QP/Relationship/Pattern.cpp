@@ -6,7 +6,8 @@
 #include "QP/QueryUtils.h"
 
 // Trivial Executors
-QP::QueryResult QP::Relationship::Pattern::executeTrivialNameWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& name) {
+QP::QueryResult QP::Relationship::Pattern::executeTrivialNameWildcard(PKB::StorageAccessInterface& pkb,
+                                                                      const Types::ReferenceArgument& name) {
 	return QP::QueryResult(!pkb.getStmtsWithPatternLHS(name.getName()).empty());
 }
 
@@ -20,7 +21,8 @@ QP::QueryResult QP::Relationship::Pattern::executeTrivialSynonymOrWildcardWildca
 	return {};
 }
 
-QP::QueryResult QP::Relationship::Pattern::executeTrivialNameExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& name,
+QP::QueryResult QP::Relationship::Pattern::executeTrivialNameExpression(PKB::StorageAccessInterface& pkb,
+                                                                        const Types::ReferenceArgument& name,
                                                                         const Types::ReferenceArgument& expression) {
 	return QP::QueryResult(
 		pkb.patternExists(name.getName(), expression.getExpression(), expression.getType() == QP::Types::ReferenceType::ExactExpression));
@@ -46,7 +48,8 @@ QP::QueryResult QP::Relationship::Pattern::executeNameWildcard(PKB::StorageAcces
 	return result;
 }
 
-QP::QueryResult QP::Relationship::Pattern::executeWildcardWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign) {
+QP::QueryResult QP::Relationship::Pattern::executeWildcardWildcard(PKB::StorageAccessInterface& pkb,
+                                                                   const Types::ReferenceArgument& assign) {
 	QP::QueryResult result = QP::QueryResult();
 	vector<string> statement_result;
 	auto results = pkb.getStatements();
@@ -79,7 +82,8 @@ QP::QueryResult QP::Relationship::Pattern::executeSynonymWildcard(PKB::StorageAc
 }
 
 QP::QueryResult QP::Relationship::Pattern::executeNameExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
-                                                                 const Types::ReferenceArgument& name, const Types::ReferenceArgument& expression) {
+                                                                 const Types::ReferenceArgument& name,
+                                                                 const Types::ReferenceArgument& expression) {
 	QP::QueryResult result = QP::QueryResult();
 	vector<string> statement_result;
 	auto results = pkb.getStmtsWithPattern(name.getName(), expression.getExpression(),
@@ -91,7 +95,8 @@ QP::QueryResult QP::Relationship::Pattern::executeNameExpression(PKB::StorageAcc
 	return result;
 }
 
-QP::QueryResult QP::Relationship::Pattern::executeWildcardExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
+QP::QueryResult QP::Relationship::Pattern::executeWildcardExpression(PKB::StorageAccessInterface& pkb,
+                                                                     const Types::ReferenceArgument& assign,
                                                                      const Types::ReferenceArgument& expression) {
 	QP::QueryResult result = QP::QueryResult();
 	vector<string> statement_result;
@@ -105,8 +110,10 @@ QP::QueryResult QP::Relationship::Pattern::executeWildcardExpression(PKB::Storag
 	return result;
 }
 
-QP::QueryResult QP::Relationship::Pattern::executeSynonymExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
-                                                                    const Types::ReferenceArgument& synonym, const Types::ReferenceArgument& expression) {
+QP::QueryResult QP::Relationship::Pattern::executeSynonymExpression(PKB::StorageAccessInterface& pkb,
+                                                                    const Types::ReferenceArgument& assign,
+                                                                    const Types::ReferenceArgument& synonym,
+                                                                    const Types::ReferenceArgument& expression) {
 	QP::QueryResult result = QP::QueryResult();
 	vector<string> statement_result;
 	vector<string> variable_result;

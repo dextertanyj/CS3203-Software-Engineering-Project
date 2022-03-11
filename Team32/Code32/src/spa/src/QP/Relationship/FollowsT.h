@@ -1,10 +1,10 @@
 #ifndef SPA_SRC_QP_RELATIONSHIP_FOLLOWST_H
 #define SPA_SRC_QP_RELATIONSHIP_FOLLOWST_H
 
+#include "PKB/StorageAccessInterface.h"
 #include "QP/QueryResult.h"
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
-#include "PKB/StorageAccessInterface.h"
 #include "QP/Relationship/Relationship.h"
 
 class QP::Relationship::FollowsT {
@@ -27,9 +27,11 @@ public:
 
 	// Executors
 
-	static QueryResult executeIndexSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& front, const Types::ReferenceArgument& rear);
+	static QueryResult executeIndexSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& front,
+	                                       const Types::ReferenceArgument& rear);
 	static QueryResult executeWildcardSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& rear);
-	static QueryResult executeSynonymIndex(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& front, const Types::ReferenceArgument& rear);
+	static QueryResult executeSynonymIndex(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& front,
+	                                       const Types::ReferenceArgument& rear);
 	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& front);
 	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& front,
 	                                         const Types::ReferenceArgument& rear);

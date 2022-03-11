@@ -26,7 +26,6 @@ public:
 	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& left_ent);
 	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& left_ent,
 	                                         const Types::ReferenceArgument& right_ent);
-
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_USESP_H

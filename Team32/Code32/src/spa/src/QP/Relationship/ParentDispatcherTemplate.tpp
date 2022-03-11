@@ -11,11 +11,12 @@
 template <class T>
 static QP::Types::ExecutorSetFactory lambda_index_synonym() {
 	static const QP::Types::ExecutorSetFactory lambda = [](vector<QP::Types::ReferenceArgument> args) {
-		return pair{
-			[parent = args.at(0), child = args.at(1)](PKB::StorageAccessInterface& pkb) {
-				return T::executeTrivialIndexSynonym(pkb, parent, child);
-			},
-			[parent = args.at(0), child = args.at(1)](PKB::StorageAccessInterface& pkb) { return T::executeIndexSynonym(pkb, parent, child); }};
+		return pair{[parent = args.at(0), child = args.at(1)](PKB::StorageAccessInterface& pkb) {
+						return T::executeTrivialIndexSynonym(pkb, parent, child);
+					},
+		            [parent = args.at(0), child = args.at(1)](PKB::StorageAccessInterface& pkb) {
+						return T::executeIndexSynonym(pkb, parent, child);
+					}};
 	};
 	return lambda;
 }

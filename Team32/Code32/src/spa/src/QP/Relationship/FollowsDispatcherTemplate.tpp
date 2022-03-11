@@ -32,11 +32,12 @@ static QP::Types::ExecutorSetFactory lambda_wildcard_synonym() {
 template <class T>
 static QP::Types::ExecutorSetFactory lambda_synonym_synonym() {
 	static const QP::Types::ExecutorSetFactory lambda = [](vector<QP::Types::ReferenceArgument> args) {
-		return pair{
-			[front = args.at(0), rear = args.at(1)](PKB::StorageAccessInterface& pkb) {
-				return T::executeTrivialSynonymSynonym(pkb, front, rear);
-			},
-			[front = args.at(0), rear = args.at(1)](PKB::StorageAccessInterface& pkb) { return T::executeSynonymSynonym(pkb, front, rear); }};
+		return pair{[front = args.at(0), rear = args.at(1)](PKB::StorageAccessInterface& pkb) {
+						return T::executeTrivialSynonymSynonym(pkb, front, rear);
+					},
+		            [front = args.at(0), rear = args.at(1)](PKB::StorageAccessInterface& pkb) {
+						return T::executeSynonymSynonym(pkb, front, rear);
+					}};
 	};
 	return lambda;
 }

@@ -18,7 +18,8 @@ public:
 	static QueryResult executeTrivialSynonymOrWildcardWildcard(PKB::StorageAccessInterface& pkb);
 	static QueryResult executeTrivialNameExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& name,
 	                                                const Types::ReferenceArgument& expression);
-	static QueryResult executeTrivialSynonymOrWildcardExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& expression);
+	static QueryResult executeTrivialSynonymOrWildcardExpression(PKB::StorageAccessInterface& pkb,
+	                                                             const Types::ReferenceArgument& expression);
 
 	// Executors
 	static QueryResult executeNameWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
