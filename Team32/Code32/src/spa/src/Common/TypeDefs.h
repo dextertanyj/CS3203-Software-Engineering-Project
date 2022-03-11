@@ -8,6 +8,14 @@
 
 using namespace std;
 
+template <class... Ts>
+struct Visitor : Ts... {
+	using Ts::operator()...;
+};
+
+template <class... Ts>
+Visitor(Ts...) -> Visitor<Ts...>;
+
 typedef size_t StmtRef;
 typedef unsigned long long int ConstVal;
 typedef string VarRef;

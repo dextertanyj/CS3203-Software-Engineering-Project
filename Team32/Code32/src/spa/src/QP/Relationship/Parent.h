@@ -1,53 +1,40 @@
 #ifndef SPA_SRC_QP_RELATIONSHIP_PARENT_H
 #define SPA_SRC_QP_RELATIONSHIP_PARENT_H
 
+#include "PKB/StorageAccessInterface.h"
+#include "QP/QueryResult.h"
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
-#include "QP/Relationship/Relation.h"
+#include "QP/Relationship/Relationship.h"
 
-class QP::Relationship::Parent : public Relation {
+class QP::Relationship::Parent {
 public:
-	Parent(ReferenceArgument parent_stmt, ReferenceArgument child_stmt);
-
-	ReferenceArgument getParentStmt();
-	ReferenceArgument getChildStmt();
-
-	vector<string> getDeclarationSymbols() override;
-
 	// Trivial Executors
-
-	static QueryResult executeTrivialIndexIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
-	                                            const ReferenceArgument& child);
-	static QueryResult executeTrivialIndexWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent);
-	static QueryResult executeTrivialIndexSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
-	                                              const ReferenceArgument& child);
-	static QueryResult executeTrivialWildcardIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& child);
+	static QueryResult executeTrivialIndexIndex(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& parent,
+	                                            const Types::ReferenceArgument& child);
+	static QueryResult executeTrivialIndexWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& parent);
+	static QueryResult executeTrivialIndexSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& parent,
+	                                              const Types::ReferenceArgument& child);
+	static QueryResult executeTrivialWildcardIndex(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& child);
 	static QueryResult executeTrivialWildcardWildcard(PKB::StorageAccessInterface& pkb);
-	static QueryResult executeTrivialWildcardSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& child);
-	static QueryResult executeTrivialSynonymIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
-	                                              const ReferenceArgument& child);
-	static QueryResult executeTrivialSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent);
-	static QueryResult executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
-	                                                const ReferenceArgument& child);
+	static QueryResult executeTrivialWildcardSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& child);
+	static QueryResult executeTrivialSynonymIndex(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& parent,
+	                                              const Types::ReferenceArgument& child);
+	static QueryResult executeTrivialSynonymWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& parent);
+	static QueryResult executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& parent,
+	                                                const Types::ReferenceArgument& child);
 
 	// Executors
+	static QueryResult executeIndexSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& parent,
+	                                       const Types::ReferenceArgument& child);
+	static QueryResult executeWildcardSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& child);
+	static QueryResult executeSynonymIndex(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& parent,
+	                                       const Types::ReferenceArgument& child);
+	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& parent);
+	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& parent,
+	                                         const Types::ReferenceArgument& child);
 
-	static QueryResult executeIndexSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
-	                                       const ReferenceArgument& child);
-	static QueryResult executeWildcardSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& child);
-	static QueryResult executeSynonymIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
-	                                       const ReferenceArgument& child);
-	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent);
-	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
-	                                         const ReferenceArgument& child);
-
-	static ArgumentDispatcher dispatcher;
-
-private:
-	ReferenceArgument parent_stmt;
-	ReferenceArgument child_stmt;
-	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
-	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
+	static Types::ArgumentDispatcher dispatcher;
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_PARENT_H

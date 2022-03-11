@@ -2,14 +2,6 @@
 
 #include <utility>
 
-template <class... Ts>
-struct Visitor : Ts... {
-	using Ts::operator()...;
-};
-
-template <class... Ts>
-Visitor(Ts...) -> Visitor<Ts...>;
-
 QP::Types::ReferenceArgument::ReferenceArgument() = default;
 
 QP::Types::ReferenceArgument::ReferenceArgument(QP::Types::Declaration synonym) : value(synonym) {}

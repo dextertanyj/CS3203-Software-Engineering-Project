@@ -1,6 +1,9 @@
 #ifndef SPA_SRC_QP_RELATIONSHIP_MODIFIES_H
 #define SPA_SRC_QP_RELATIONSHIP_MODIFIES_H
 
+#include <unordered_map>
+#include <utility>
+
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
 #include "QP/Relationship/ModifiesP.h"

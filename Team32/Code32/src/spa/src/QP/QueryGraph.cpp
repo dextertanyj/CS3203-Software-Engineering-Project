@@ -1,21 +1,22 @@
 #include "QueryGraph.h"
 
 #include <queue>
+#include <vector>
 
-QP::QueryGraph::QueryGraph(const DeclarationList& declarations) {
-	for (const Declaration& declaration : declarations) {
-		Node node = {declaration.symbol, {}};
+QP::QueryGraph::QueryGraph(const Types::DeclarationList& declarations) {
+	for (const Types::Declaration& declaration : declarations) {
+		Types::Node node = {declaration.symbol, {}};
 		nodes.insert({declaration.symbol, node});
 	}
 }
 
-void QP::QueryGraph::setEdges(const ClauseList& clause_list) {
-	for (const Clause& clause : clause_list) {
+void QP::QueryGraph::setEdges(const Types::ClauseList& clause_list) {
+	for (const Types::Clause& clause : clause_list) {
 		setEdge(clause.relation);
 	}
 }
 
-unordered_map<string, Node> QP::QueryGraph::getNodes() { return nodes; }
+unordered_map<string, QP::Types::Node> QP::QueryGraph::getNodes() { return nodes; }
 
 void QP::QueryGraph::setEdge(const shared_ptr<Relationship::Relation>& relation) {
 	vector<string> declarations = relation->getDeclarationSymbols();
@@ -26,7 +27,7 @@ void QP::QueryGraph::setEdge(const shared_ptr<Relationship::Relation>& relation)
 }
 
 void QP::QueryGraph::addEdge(const pair<string, string>& symbols) {
-	Node& node = this->nodes.at(symbols.first);
+	Types::Node& node = this->nodes.at(symbols.first);
 	if (find(node.adjacent_symbols.begin(), node.adjacent_symbols.end(), symbols.second) == node.adjacent_symbols.end()) {
 		node.adjacent_symbols.push_back(symbols.second);
 	}
@@ -51,7 +52,7 @@ unordered_map<string, size_t> QP::QueryGraph::getSynonymsInGroup(const string& s
 		unvisited_nodes.erase(symbol);
 		queue.pop();
 
-		Node node = this->nodes.at(symbol);
+		Types::Node node = this->nodes.at(symbol);
 		for (const string& adjacent_symbol : node.adjacent_symbols) {
 			if (unvisited_nodes.find(adjacent_symbol) != unvisited_nodes.end()) {
 				queue.push(adjacent_symbol);

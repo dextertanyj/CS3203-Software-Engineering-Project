@@ -3,6 +3,7 @@
 
 #include "QP/Relationship/ParentDispatcherTemplate.h"
 
+#include <unordered_map>
 #include <utility>
 
 #include "QP/DispatchProcessors.h"

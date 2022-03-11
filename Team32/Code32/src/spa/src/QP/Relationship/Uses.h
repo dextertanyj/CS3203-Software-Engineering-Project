@@ -2,6 +2,7 @@
 #define SPA_SRC_QP_RELATIONSHIP_USES_H
 
 #include <unordered_map>
+#include <utility>
 
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"

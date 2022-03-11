@@ -9,7 +9,7 @@
 #include "QP/DispatchProcessors.h"
 
 template <class T>
-QP::Types::ExecutorSetBundle QP::Relationship::CallDispatcherTemplate<T>::argumentDispatcher(ClauseType type,
+QP::Types::ExecutorSetBundle QP::Relationship::CallDispatcherTemplate<T>::argumentDispatcher(Types::ClauseType type,
                                                                                              vector<Types::ReferenceArgument> args) {
 	return DispatchProcessors::processDoubleArgument(type, CallDispatcherTemplate<T>::argument_dispatch_map, move(args));
 };

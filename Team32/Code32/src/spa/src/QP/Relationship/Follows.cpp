@@ -1,109 +1,31 @@
 #include "QP/Relationship/Follows.h"
 
+#include <memory>
 #include <utility>
+#include <vector>
 
+#include "QP/QueryUtils.h"
 #include "QP/Relationship/FollowsDispatcherTemplate.tpp"
 
-QP::Relationship::Follows::Follows(ReferenceArgument left_stmt, ReferenceArgument right_stmt)
-	: left_stmt(std::move(std::move(left_stmt))), right_stmt(std::move(std::move(right_stmt))) {}
-
-ReferenceArgument QP::Relationship::Follows::getLeftStmt() { return left_stmt; }
-
-ReferenceArgument QP::Relationship::Follows::getRightStmt() { return right_stmt; }
-
-vector<string> QP::Relationship::Follows::getDeclarationSymbols() {
-	vector<string> declaration_symbols;
-	if (this->left_stmt.getType() == ReferenceType::Synonym) {
-		declaration_symbols.push_back(this->left_stmt.getSynonym().symbol);
-	}
-	if (this->right_stmt.getType() == ReferenceType::Synonym) {
-		declaration_symbols.push_back(this->right_stmt.getSynonym().symbol);
-	}
-	return declaration_symbols;
-}
-
-QP::QueryResult QP::Relationship::Follows::executeTrivial(PKB::StorageAccessInterface& pkb) {
-	if (left_stmt.getType() == ReferenceType::StatementIndex && right_stmt.getType() == ReferenceType::StatementIndex) {
-		return executeTrivialIndexIndex(pkb, left_stmt, right_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::StatementIndex && right_stmt.getType() == ReferenceType::Wildcard) {
-		return executeTrivialIndexWildcard(pkb, left_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::StatementIndex && right_stmt.getType() == ReferenceType::Synonym) {
-		return executeTrivialIndexSynonym(pkb, left_stmt, right_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::Wildcard && right_stmt.getType() == ReferenceType::StatementIndex) {
-		return executeTrivialWildcardIndex(pkb, right_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::Wildcard && right_stmt.getType() == ReferenceType::Wildcard) {
-		return executeTrivialWildcardWildcard(pkb);
-	}
-	if (left_stmt.getType() == ReferenceType::Wildcard && right_stmt.getType() == ReferenceType::Synonym) {
-		return executeTrivialWildcardSynonym(pkb, right_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::Synonym && right_stmt.getType() == ReferenceType::StatementIndex) {
-		return executeTrivialSynonymIndex(pkb, left_stmt, right_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::Synonym && right_stmt.getType() == ReferenceType::Wildcard) {
-		return executeTrivialSynonymWildcard(pkb, left_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::Synonym && right_stmt.getType() == ReferenceType::Synonym) {
-		return executeTrivialSynonymSynonym(pkb, left_stmt, right_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::Synonym && right_stmt.getType() == ReferenceType::StatementIndex) {
-		return executeSynonymIndex(pkb, left_stmt, right_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::Synonym && right_stmt.getType() == ReferenceType::Wildcard) {
-		return executeSynonymWildcard(pkb, left_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::Synonym && right_stmt.getType() == ReferenceType::Synonym) {
-		return executeSynonymSynonym(pkb, left_stmt, right_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::Wildcard && right_stmt.getType() == ReferenceType::Synonym) {
-		return executeWildcardSynonym(pkb, right_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::StatementIndex && right_stmt.getType() == ReferenceType::Synonym) {
-		return executeIndexSynonym(pkb, left_stmt, right_stmt);
-	}
-	return {};
-}
-
-QP::QueryResult QP::Relationship::Follows::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
-	if (left_stmt.getType() == ReferenceType::Synonym && right_stmt.getType() == ReferenceType::StatementIndex) {
-		return executeSynonymIndex(pkb, left_stmt, right_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::Synonym && right_stmt.getType() == ReferenceType::Wildcard) {
-		return executeSynonymWildcard(pkb, left_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::Synonym && right_stmt.getType() == ReferenceType::Synonym) {
-		return executeSynonymSynonym(pkb, left_stmt, right_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::Wildcard && right_stmt.getType() == ReferenceType::Synonym) {
-		return executeWildcardSynonym(pkb, right_stmt);
-	}
-	if (left_stmt.getType() == ReferenceType::StatementIndex && right_stmt.getType() == ReferenceType::Synonym) {
-		return executeIndexSynonym(pkb, left_stmt, right_stmt);
-	}
-
-	return {};
-}
-
-QP::QueryResult QP::Relationship::Follows::executeTrivialIndexIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
-                                                                    const ReferenceArgument& rear) {
+QP::QueryResult QP::Relationship::Follows::executeTrivialIndexIndex(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& front,
+                                                                    const Types::ReferenceArgument& rear) {
 	return QueryResult(pkb.checkFollows(front.getStatementIndex(), rear.getStatementIndex()));
 }
 
-QP::QueryResult QP::Relationship::Follows::executeTrivialIndexWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front) {
+QP::QueryResult QP::Relationship::Follows::executeTrivialIndexWildcard(PKB::StorageAccessInterface& pkb,
+                                                                       const Types::ReferenceArgument& front) {
 	return QueryResult(pkb.getFollower(front.getStatementIndex()) != nullptr);
 }
 
-QP::QueryResult QP::Relationship::Follows::executeTrivialIndexSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
-                                                                      const ReferenceArgument& rear) {
+QP::QueryResult QP::Relationship::Follows::executeTrivialIndexSynonym(PKB::StorageAccessInterface& pkb,
+                                                                      const Types::ReferenceArgument& front,
+                                                                      const Types::ReferenceArgument& rear) {
 	shared_ptr<StmtInfo> statement = pkb.getFollower(front.getStatementIndex());
 	return QueryResult(statement != nullptr && Utilities::checkStmtTypeMatch(statement, rear.getSynonym().type));
 }
 
-QP::QueryResult QP::Relationship::Follows::executeTrivialWildcardIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& rear) {
+QP::QueryResult QP::Relationship::Follows::executeTrivialWildcardIndex(PKB::StorageAccessInterface& pkb,
+                                                                       const Types::ReferenceArgument& rear) {
 	return QueryResult(pkb.getPreceding(rear.getStatementIndex()) != nullptr);
 }
 
@@ -118,7 +40,8 @@ QP::QueryResult QP::Relationship::Follows::executeTrivialWildcardWildcard(PKB::S
 	return {};
 }
 
-QP::QueryResult QP::Relationship::Follows::executeTrivialWildcardSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& rear) {
+QP::QueryResult QP::Relationship::Follows::executeTrivialWildcardSynonym(PKB::StorageAccessInterface& pkb,
+                                                                         const Types::ReferenceArgument& rear) {
 	StmtInfoPtrSet statements = pkb.getStatements();
 	for (auto const& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, rear.getSynonym().type)) {
@@ -132,13 +55,15 @@ QP::QueryResult QP::Relationship::Follows::executeTrivialWildcardSynonym(PKB::St
 	return {};
 }
 
-QP::QueryResult QP::Relationship::Follows::executeTrivialSynonymIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
-                                                                      const ReferenceArgument& rear) {
+QP::QueryResult QP::Relationship::Follows::executeTrivialSynonymIndex(PKB::StorageAccessInterface& pkb,
+                                                                      const Types::ReferenceArgument& front,
+                                                                      const Types::ReferenceArgument& rear) {
 	shared_ptr<StmtInfo> front_statement = pkb.getPreceding(rear.getStatementIndex());
 	return QueryResult(Utilities::checkStmtTypeMatch(front_statement, front.getSynonym().type));
 }
 
-QP::QueryResult QP::Relationship::Follows::executeTrivialSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front) {
+QP::QueryResult QP::Relationship::Follows::executeTrivialSynonymWildcard(PKB::StorageAccessInterface& pkb,
+                                                                         const Types::ReferenceArgument& front) {
 	StmtInfoPtrSet statements = pkb.getStatements();
 	for (auto const& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, front.getSynonym().type)) {
@@ -153,8 +78,9 @@ QP::QueryResult QP::Relationship::Follows::executeTrivialSynonymWildcard(PKB::St
 	return {};
 }
 
-QP::QueryResult QP::Relationship::Follows::executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
-                                                                        const ReferenceArgument& rear) {
+QP::QueryResult QP::Relationship::Follows::executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb,
+                                                                        const Types::ReferenceArgument& front,
+                                                                        const Types::ReferenceArgument& rear) {
 	if (front.getSynonym().symbol == rear.getSynonym().symbol) {
 		return {};
 	}
@@ -175,8 +101,8 @@ QP::QueryResult QP::Relationship::Follows::executeTrivialSynonymSynonym(PKB::Sto
 
 // Executors
 
-QP::QueryResult QP::Relationship::Follows::executeIndexSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
-                                                               const ReferenceArgument& rear) {
+QP::QueryResult QP::Relationship::Follows::executeIndexSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& front,
+                                                               const Types::ReferenceArgument& rear) {
 	shared_ptr<StmtInfo> statement = pkb.getFollower(front.getStatementIndex());
 	vector<string> column;
 
@@ -189,7 +115,7 @@ QP::QueryResult QP::Relationship::Follows::executeIndexSynonym(PKB::StorageAcces
 	return result;
 }
 
-QP::QueryResult QP::Relationship::Follows::executeWildcardSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& rear) {
+QP::QueryResult QP::Relationship::Follows::executeWildcardSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& rear) {
 	StmtInfoPtrSet statements = pkb.getStatements();
 	vector<string> column;
 	for (auto const& statement : statements) {
@@ -207,8 +133,8 @@ QP::QueryResult QP::Relationship::Follows::executeWildcardSynonym(PKB::StorageAc
 	return result;
 }
 
-QP::QueryResult QP::Relationship::Follows::executeSynonymIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
-                                                               const ReferenceArgument& rear) {
+QP::QueryResult QP::Relationship::Follows::executeSynonymIndex(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& front,
+                                                               const Types::ReferenceArgument& rear) {
 	shared_ptr<StmtInfo> front_statement = pkb.getPreceding(rear.getStatementIndex());
 	vector<string> column;
 	if (!Utilities::checkStmtTypeMatch(front_statement, front.getSynonym().type)) {
@@ -220,7 +146,7 @@ QP::QueryResult QP::Relationship::Follows::executeSynonymIndex(PKB::StorageAcces
 	return result;
 }
 
-QP::QueryResult QP::Relationship::Follows::executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front) {
+QP::QueryResult QP::Relationship::Follows::executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& front) {
 	StmtInfoPtrSet statements = pkb.getStatements();
 	vector<string> column;
 	for (auto const& statement : statements) {
@@ -238,8 +164,8 @@ QP::QueryResult QP::Relationship::Follows::executeSynonymWildcard(PKB::StorageAc
 	return result;
 }
 
-QP::QueryResult QP::Relationship::Follows::executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& front,
-                                                                 const ReferenceArgument& rear) {
+QP::QueryResult QP::Relationship::Follows::executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& front,
+                                                                 const Types::ReferenceArgument& rear) {
 	if (front.getSynonym().symbol == rear.getSynonym().symbol) {
 		return {};
 	}
@@ -265,6 +191,6 @@ QP::QueryResult QP::Relationship::Follows::executeSynonymSynonym(PKB::StorageAcc
 	return result;
 }
 
-QP::Types::ArgumentDispatcher QP::Relationship::Follows::dispatcher = [](vector<ReferenceArgument> args) {
-	return FollowsDispatcherTemplate<Follows>::argumentDispatcher(Types::ClauseType::Follows, std::move(args));
+QP::Types::ArgumentDispatcher QP::Relationship::Follows::dispatcher = [](vector<Types::ReferenceArgument> args) {
+	return FollowsDispatcherTemplate<Follows>::argumentDispatcher(Types::ClauseType::Follows, move(args));
 };

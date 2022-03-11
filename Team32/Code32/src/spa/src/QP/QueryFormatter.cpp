@@ -7,7 +7,7 @@
 using namespace std;
 
 vector<string> QP::QueryFormatter::formatResult(QueryProperties& query_properties, QueryResult& query_result) {
-	DeclarationList select_list = query_properties.getSelectList();
+	Types::DeclarationList select_list = query_properties.getSelectList();
 
 	if (!query_result.getResult()) {
 		return {};

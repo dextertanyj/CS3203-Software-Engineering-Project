@@ -3,6 +3,7 @@
 
 #include "QP/Relationship/FollowsDispatcherTemplate.h"
 
+#include <unordered_map>
 #include <utility>
 
 #include "QP/DispatchProcessors.h"

@@ -2,6 +2,8 @@
 
 #include <utility>
 
+#include "QP/QueryUtils.h"
+
 QP::QueryEvaluator::QueryEvaluator(PKB::StorageAccessInterface& pkb) : pkb(pkb) {}
 
 QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properties) {
@@ -10,9 +12,9 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	}
 
 	QueryGraph graph = buildGraph(query_properties);
-	Declaration select = query_properties.getSelectList()[0];
+	Types::Declaration select = query_properties.getSelectList()[0];
 	unordered_map<string, size_t> synonyms_in_group = graph.getSynonymsInGroup(select.symbol);
-	vector<ClauseList> clauses_in_group = splitClauses(query_properties, synonyms_in_group);
+	vector<Types::ClauseList> clauses_in_group = splitClauses(query_properties, synonyms_in_group);
 
 	QueryResult result;
 	if (clauses_in_group[0].empty()) {
@@ -36,10 +38,10 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	return result;
 }
 
-QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(ClauseList& clauses) {
+QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(Types::ClauseList& clauses) {
 	// These clauses should be evaluated independently since they are unrelated
-	for (const Clause& clause : clauses) {
-		ClauseList list = {clause};
+	for (const Types::Clause& clause : clauses) {
+		Types::ClauseList list = {clause};
 		if (!evaluateClauses(list, true).getResult()) {
 			return {};
 		}
@@ -48,7 +50,7 @@ QP::QueryResult QP::QueryEvaluator::executeClausesWithoutSynonym(ClauseList& cla
 	return QueryResult(true);
 }
 
-bool QP::QueryEvaluator::executeGroup(ClauseList& clauses) {
+bool QP::QueryEvaluator::executeGroup(Types::ClauseList& clauses) {
 	if (clauses.empty()) {
 		return true;
 	}
@@ -63,24 +65,24 @@ bool QP::QueryEvaluator::executeGroup(ClauseList& clauses) {
 	return query_result.getResult();
 }
 
-QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) {
+QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Types::Declaration& select) {
 	switch (select.type) {
-		case DesignEntity::Stmt:
-		case DesignEntity::Read:
-		case DesignEntity::Print:
-		case DesignEntity::Call:
-		case DesignEntity::While:
-		case DesignEntity::If:
-		case DesignEntity::Assign: {
+		case Types::DesignEntity::Stmt:
+		case Types::DesignEntity::Read:
+		case Types::DesignEntity::Print:
+		case Types::DesignEntity::Call:
+		case Types::DesignEntity::While:
+		case Types::DesignEntity::If:
+		case Types::DesignEntity::Assign: {
 			return getSpecificStmtType(select.type, select.symbol);
 		}
-		case DesignEntity::Variable: {
+		case Types::DesignEntity::Variable: {
 			return getVariables(select.symbol);
 		}
-		case DesignEntity::Constant: {
+		case Types::DesignEntity::Constant: {
 			return getConstants(select.symbol);
 		}
-		case DesignEntity::Procedure: {
+		case Types::DesignEntity::Procedure: {
 			return getProcedures(select.symbol);
 		}
 		default:
@@ -88,7 +90,7 @@ QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) 
 	}
 }
 
-QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(DesignEntity design_entity, const string& symbol) {
+QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(Types::DesignEntity design_entity, const string& symbol) {
 	StmtInfoPtrSet stmt_set = pkb.getStatements();
 	QueryResult result = QueryResult();
 
@@ -150,10 +152,10 @@ QP::QueryGraph QP::QueryEvaluator::buildGraph(QueryProperties& query_properties)
 	return graph;
 }
 
-QP::QueryResult QP::QueryEvaluator::evaluateClauses(ClauseList& clauses, bool is_trivial) {
+QP::QueryResult QP::QueryEvaluator::evaluateClauses(Types::ClauseList& clauses, bool is_trivial) {
 	vector<QueryResult> result_list;
 
-	for (const Clause& clause : clauses) {
+	for (const Types::Clause& clause : clauses) {
 		QueryResult result = clause.relation->execute(pkb, is_trivial);
 		if (!result.getResult()) {
 			return {};
@@ -169,7 +171,8 @@ QP::QueryResult QP::QueryEvaluator::evaluateClauses(ClauseList& clauses, bool is
 
 // First element contains clauses with the selected synonym.
 // Last element contains clauses without synonyms.
-vector<ClauseList> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties, unordered_map<string, size_t>& synonyms_in_group) {
+vector<QP::Types::ClauseList> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties,
+                                                               unordered_map<string, size_t>& synonyms_in_group) {
 	size_t number_of_groups = 0;
 	for (auto const& pair : synonyms_in_group) {
 		if (pair.second + 1 > number_of_groups) {
@@ -177,9 +180,9 @@ vector<ClauseList> QP::QueryEvaluator::splitClauses(QueryProperties& query_prope
 		}
 	}
 
-	vector<ClauseList> result(number_of_groups + 1);
+	vector<Types::ClauseList> result(number_of_groups + 1);
 
-	for (const Clause& clause : query_properties.getClauseList()) {
+	for (const Types::Clause& clause : query_properties.getClauseList()) {
 		vector<string> declarations = clause.relation->getDeclarationSymbols();
 		if (declarations.empty()) {
 			result[number_of_groups].push_back(clause);

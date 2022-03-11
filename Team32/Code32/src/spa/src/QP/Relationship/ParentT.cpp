@@ -2,64 +2,13 @@
 
 #include <utility>
 
+#include "QP/QueryUtils.h"
 #include "QP/Relationship/ParentDispatcherTemplate.tpp"
 
-QP::QueryResult QP::Relationship::ParentT::executeTrivial(PKB::StorageAccessInterface& pkb) {
-	if (getParentStmt().getType() == ReferenceType::StatementIndex && getChildStmt().getType() == ReferenceType::StatementIndex) {
-		return executeTrivialIndexIndex(pkb, getParentStmt(), getChildStmt());
-	}
-	if (getParentStmt().getType() == ReferenceType::StatementIndex && getChildStmt().getType() == ReferenceType::Wildcard) {
-		return executeTrivialIndexWildcard(pkb, getParentStmt());
-	}
-	if (getParentStmt().getType() == ReferenceType::StatementIndex && getChildStmt().getType() == ReferenceType::Synonym) {
-		return executeTrivialIndexSynonym(pkb, getParentStmt(), getChildStmt());
-	}
-	if (getParentStmt().getType() == ReferenceType::Wildcard && getChildStmt().getType() == ReferenceType::StatementIndex) {
-		return executeTrivialWildcardIndex(pkb, getChildStmt());
-	}
-	if (getParentStmt().getType() == ReferenceType::Wildcard && getChildStmt().getType() == ReferenceType::Wildcard) {
-		return executeTrivialWildcardWildcard(pkb);
-	}
-	if (getParentStmt().getType() == ReferenceType::Wildcard && getChildStmt().getType() == ReferenceType::Synonym) {
-		return executeTrivialWildcardSynonym(pkb, getChildStmt());
-	}
-	if (getParentStmt().getType() == ReferenceType::Synonym && getChildStmt().getType() == ReferenceType::StatementIndex) {
-		return executeTrivialSynonymIndex(pkb, getParentStmt(), getChildStmt());
-	}
-	if (getParentStmt().getType() == ReferenceType::Synonym && getChildStmt().getType() == ReferenceType::Wildcard) {
-		return executeTrivialSynonymWildcard(pkb, getParentStmt());
-	}
-	if (getParentStmt().getType() == ReferenceType::Synonym && getChildStmt().getType() == ReferenceType::Synonym) {
-		return executeTrivialSynonymSynonym(pkb, getParentStmt(), getChildStmt());
-	}
-
-	return {};
-}
-
-QP::QueryResult QP::Relationship::ParentT::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
-	if (getParentStmt().getType() == ReferenceType::Synonym && getChildStmt().getType() == ReferenceType::StatementIndex) {
-		return executeSynonymIndex(pkb, getParentStmt(), getChildStmt());
-	}
-	if (getParentStmt().getType() == ReferenceType::Synonym && getChildStmt().getType() == ReferenceType::Wildcard) {
-		return executeSynonymWildcard(pkb, getParentStmt());
-	}
-	if (getParentStmt().getType() == ReferenceType::Synonym && getChildStmt().getType() == ReferenceType::Synonym) {
-		return executeSynonymSynonym(pkb, getParentStmt(), getChildStmt());
-	}
-	if (getParentStmt().getType() == ReferenceType::Wildcard && getChildStmt().getType() == ReferenceType::Synonym) {
-		return executeWildcardSynonym(pkb, getChildStmt());
-	}
-	if (getParentStmt().getType() == ReferenceType::StatementIndex && getChildStmt().getType() == ReferenceType::Synonym) {
-		return executeIndexSynonym(pkb, getParentStmt(), getChildStmt());
-	}
-
-	return {};
-}
-
 // Trivial Executors
-
-QP::QueryResult QP::Relationship::ParentT::executeTrivialIndexIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
-                                                                    const ReferenceArgument& child) {
+QP::QueryResult QP::Relationship::ParentT::executeTrivialIndexIndex(PKB::StorageAccessInterface& pkb,
+                                                                    const Types::ReferenceArgument& parent,
+                                                                    const Types::ReferenceArgument& child) {
 	StmtInfoPtrSet children = pkb.getChildStar(parent.getStatementIndex());
 	StmtRef child_index = child.getStatementIndex();
 	for (auto const& child_statement : children) {
@@ -70,14 +19,16 @@ QP::QueryResult QP::Relationship::ParentT::executeTrivialIndexIndex(PKB::Storage
 	return {};
 }
 
-QP::QueryResult QP::Relationship::ParentT::executeTrivialIndexWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent) {
+QP::QueryResult QP::Relationship::ParentT::executeTrivialIndexWildcard(PKB::StorageAccessInterface& pkb,
+                                                                       const Types::ReferenceArgument& parent) {
 	return QueryResult(!pkb.getChildStar(parent.getStatementIndex()).empty());
 }
 
-QP::QueryResult QP::Relationship::ParentT::executeTrivialIndexSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
-                                                                      const ReferenceArgument& child) {
+QP::QueryResult QP::Relationship::ParentT::executeTrivialIndexSynonym(PKB::StorageAccessInterface& pkb,
+                                                                      const Types::ReferenceArgument& parent,
+                                                                      const Types::ReferenceArgument& child) {
 	StmtInfoPtrSet children = pkb.getChildStar(parent.getStatementIndex());
-	if (child.getSynonym().type == DesignEntity::Stmt) {
+	if (child.getSynonym().type == Types::DesignEntity::Stmt) {
 		return QueryResult(!children.empty());
 	}
 
@@ -89,7 +40,8 @@ QP::QueryResult QP::Relationship::ParentT::executeTrivialIndexSynonym(PKB::Stora
 	return {};
 }
 
-QP::QueryResult QP::Relationship::ParentT::executeTrivialWildcardIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& child) {
+QP::QueryResult QP::Relationship::ParentT::executeTrivialWildcardIndex(PKB::StorageAccessInterface& pkb,
+                                                                       const Types::ReferenceArgument& child) {
 	return QueryResult(!pkb.getParentStar(child.getStatementIndex()).empty());
 }
 
@@ -108,7 +60,8 @@ QP::QueryResult QP::Relationship::ParentT::executeTrivialWildcardWildcard(PKB::S
 	return {};
 }
 
-QP::QueryResult QP::Relationship::ParentT::executeTrivialWildcardSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& child) {
+QP::QueryResult QP::Relationship::ParentT::executeTrivialWildcardSynonym(PKB::StorageAccessInterface& pkb,
+                                                                         const Types::ReferenceArgument& child) {
 	StmtInfoPtrSet statements = pkb.getStatements();
 	for (auto const& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, child.getSynonym().type)) {
@@ -122,8 +75,9 @@ QP::QueryResult QP::Relationship::ParentT::executeTrivialWildcardSynonym(PKB::St
 	return {};
 }
 
-QP::QueryResult QP::Relationship::ParentT::executeTrivialSynonymIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
-                                                                      const ReferenceArgument& child) {
+QP::QueryResult QP::Relationship::ParentT::executeTrivialSynonymIndex(PKB::StorageAccessInterface& pkb,
+                                                                      const Types::ReferenceArgument& parent,
+                                                                      const Types::ReferenceArgument& child) {
 	StmtInfoPtrSet parents = pkb.getParentStar(child.getStatementIndex());
 	for (auto const& parent_statement : parents) {
 		if (Utilities::checkStmtTypeMatch(parent_statement, parent.getSynonym().type)) {
@@ -134,7 +88,7 @@ QP::QueryResult QP::Relationship::ParentT::executeTrivialSynonymIndex(PKB::Stora
 }
 
 QP::QueryResult QP::Relationship::ParentT::executeTrivialSynonymWildcard(PKB::StorageAccessInterface& pkb,
-                                                                         const ReferenceArgument& parent) {
+                                                                         const Types::ReferenceArgument& parent) {
 	StmtInfoPtrSet statements = pkb.getStatements();
 	for (auto const& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, parent.getSynonym().type)) {
@@ -149,8 +103,9 @@ QP::QueryResult QP::Relationship::ParentT::executeTrivialSynonymWildcard(PKB::St
 	return {};
 }
 
-QP::QueryResult QP::Relationship::ParentT::executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
-                                                                        const ReferenceArgument& child) {
+QP::QueryResult QP::Relationship::ParentT::executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb,
+                                                                        const Types::ReferenceArgument& parent,
+                                                                        const Types::ReferenceArgument& child) {
 	if (parent.getSynonym().symbol == child.getSynonym().symbol) {
 		return {};
 	}
@@ -173,9 +128,8 @@ QP::QueryResult QP::Relationship::ParentT::executeTrivialSynonymSynonym(PKB::Sto
 }
 
 // Executors
-
-QP::QueryResult QP::Relationship::ParentT::executeIndexSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
-                                                               const ReferenceArgument& child) {
+QP::QueryResult QP::Relationship::ParentT::executeIndexSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& parent,
+                                                               const Types::ReferenceArgument& child) {
 	StmtInfoPtrSet statements = pkb.getChildStar(parent.getStatementIndex());
 	vector<string> column;
 
@@ -189,7 +143,7 @@ QP::QueryResult QP::Relationship::ParentT::executeIndexSynonym(PKB::StorageAcces
 	return result;
 }
 
-QP::QueryResult QP::Relationship::ParentT::executeWildcardSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& child) {
+QP::QueryResult QP::Relationship::ParentT::executeWildcardSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& child) {
 	StmtInfoPtrSet statements = pkb.getStatements();
 	vector<string> column;
 	for (auto const& statement : statements) {
@@ -207,8 +161,8 @@ QP::QueryResult QP::Relationship::ParentT::executeWildcardSynonym(PKB::StorageAc
 	return result;
 }
 
-QP::QueryResult QP::Relationship::ParentT::executeSynonymIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
-                                                               const ReferenceArgument& child) {
+QP::QueryResult QP::Relationship::ParentT::executeSynonymIndex(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& parent,
+                                                               const Types::ReferenceArgument& child) {
 	StmtInfoPtrSet parents = pkb.getParentStar(child.getStatementIndex());
 	vector<string> column;
 	for (auto const& parent_statement : parents) {
@@ -222,7 +176,8 @@ QP::QueryResult QP::Relationship::ParentT::executeSynonymIndex(PKB::StorageAcces
 	return result;
 }
 
-QP::QueryResult QP::Relationship::ParentT::executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent) {
+QP::QueryResult QP::Relationship::ParentT::executeSynonymWildcard(PKB::StorageAccessInterface& pkb,
+                                                                  const Types::ReferenceArgument& parent) {
 	StmtInfoPtrSet statements = pkb.getStatements();
 	vector<string> column;
 	for (auto const& statement : statements) {
@@ -240,8 +195,8 @@ QP::QueryResult QP::Relationship::ParentT::executeSynonymWildcard(PKB::StorageAc
 	return result;
 }
 
-QP::QueryResult QP::Relationship::ParentT::executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
-                                                                 const ReferenceArgument& child) {
+QP::QueryResult QP::Relationship::ParentT::executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& parent,
+                                                                 const Types::ReferenceArgument& child) {
 	if (parent.getSynonym().symbol == child.getSynonym().symbol) {
 		return {};
 	}
@@ -268,6 +223,6 @@ QP::QueryResult QP::Relationship::ParentT::executeSynonymSynonym(PKB::StorageAcc
 	return result;
 }
 
-QP::Types::ArgumentDispatcher QP::Relationship::ParentT::dispatcher = [](vector<ReferenceArgument> args) {
+QP::Types::ArgumentDispatcher QP::Relationship::ParentT::dispatcher = [](vector<Types::ReferenceArgument> args) {
 	return ParentDispatcherTemplate<ParentT>::argumentDispatcher(Types::ClauseType::ParentT, move(args));
 };
