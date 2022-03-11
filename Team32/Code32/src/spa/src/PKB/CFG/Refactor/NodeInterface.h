@@ -17,19 +17,9 @@ public:
 	size_t getUniqueIndex() { return this->unique_index; }
 	string getNodeType() { return this->node_type; }
 
-	void insertNext(shared_ptr<PKB::NodeInterface> next) {
-		if (any_of(next_nodes.begin(), next_nodes.end(), next)) {
-			throw invalid_argument("Node to be inserted is already present.");
-		}
-		this->next_nodes.insert(next);
-	}
+	void insertNext(shared_ptr<PKB::NodeInterface> next) { this->next_nodes.insert(next); }
 
-	void insertPrevious(shared_ptr<PKB::NodeInterface> prev) {
-		if (any_of(previous_nodes.begin(), previous_nodes.end(), prev)) {
-			throw invalid_argument("Node to be inserted is already present.");
-		}
-		this->previous_nodes.insert(prev);
-	}
+	void insertPrevious(shared_ptr<PKB::NodeInterface> prev) { this->previous_nodes.insert(prev); }
 
 	void removeNext(shared_ptr<PKB::NodeInterface> to_remove) {
 		auto iter = std::find(next_nodes.begin(), next_nodes.end(), to_remove);
