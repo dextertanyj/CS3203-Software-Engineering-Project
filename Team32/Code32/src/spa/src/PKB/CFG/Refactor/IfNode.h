@@ -7,8 +7,8 @@
 class PKB::IfNode : public PKB::NodeInterface {
 public:
 	IfNode(shared_ptr<StmtInfo> info);
-	shared_ptr<PKB::NodeInterface> getDummyNode();
-	void setDummyNode(shared_ptr<PKB::NodeInterface> to_insert);
+	shared_ptr<PKB::NodeInterface> getDummyNode() override;
+	void setDummyNode(shared_ptr<PKB::NodeInterface> to_insert) override;
 
 private:
 	shared_ptr<StmtInfo> statement_info;
