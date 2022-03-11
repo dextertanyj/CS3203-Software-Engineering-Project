@@ -10,7 +10,7 @@ void PKB::CallStatementStore::set(const shared_ptr<StmtInfo>& statement, ProcRef
 	}
 	StmtRef index = statement->getIdentifier();
 	if (map.find(index) != map.end()) {
-		throw logic_error("Call statement already set.");
+		throw logic_error("Call statement already setConnection.");
 	}
 	map.insert({index, std::move(procedure)});
 }
@@ -22,7 +22,7 @@ ProcRef PKB::CallStatementStore::getProcedure(const shared_ptr<StmtInfo>& statem
 	StmtRef index = statement->getIdentifier();
 	auto iter = map.find(index);
 	if (iter == map.end()) {
-		throw logic_error("Call statement not set.");
+		throw logic_error("Call statement not setConnection.");
 	}
 	return iter->second;
 }

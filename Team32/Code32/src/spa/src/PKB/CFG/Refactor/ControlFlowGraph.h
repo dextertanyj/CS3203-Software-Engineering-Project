@@ -25,7 +25,7 @@ public:
 	void populateUniqueIndex();
 
 private:
-	void set(shared_ptr<PKB::NodeInterface> prev, shared_ptr<PKB::NodeInterface> next);
+	void setConnection(shared_ptr<PKB::NodeInterface> prev, shared_ptr<PKB::NodeInterface> next);
 	void createDummyNode(shared_ptr<PKB::IfNode> if_node);
 	unordered_map<StmtRef, shared_ptr<PKB::NodeInterface>> stmt_to_normal_node_store;
 	unordered_map<StmtRef, shared_ptr<PKB::NodeInterface>> stmt_to_dummy_node_store;

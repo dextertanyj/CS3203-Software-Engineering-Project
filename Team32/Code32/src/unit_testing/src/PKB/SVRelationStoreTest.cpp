@@ -20,7 +20,7 @@ TEST_CASE("PKB::SVRelationStore") {
 	VarRefSet v_4 = {};
 	VarRefSet v_5 = {"a"};
 
-	SECTION("PKB::SVRelationStore::set by VarRef Test") {
+	SECTION("PKB::SVRelationStore::setConnection by VarRef Test") {
 		// Variable length less than 1
 		REQUIRE_THROWS_AS(uses_store.set(s_1, ""), invalid_argument);
 		// Read statement does not use a variable
@@ -48,7 +48,7 @@ TEST_CASE("PKB::SVRelationStore") {
 		CHECK_NOTHROW(while_control_store.set(s_5, "x"));
 	}
 
-	SECTION("PKB::SVRelationStore::set by VarRefSet Test") {
+	SECTION("PKB::SVRelationStore::setConnection by VarRefSet Test") {
 		// Variable set contains empty string
 		REQUIRE_THROWS_AS(uses_store.set(s_2, v_3), invalid_argument);
 		// Read statement does not use variables
