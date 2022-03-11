@@ -57,7 +57,6 @@ public:
 	void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) override;
 	void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) override;
 
-
 	// Get methods called by PQL
 
 	// General get methods

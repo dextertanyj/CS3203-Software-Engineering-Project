@@ -8,7 +8,7 @@
 
 typedef unordered_set<shared_ptr<PKB::ProcedureInfo>> ProcedureInfoPtrSet;
 
-TEST_CASE("PKB::CallStatementStore::setConnection Test") {
+TEST_CASE("PKB::CallStatementStore::set Test") {
 	PKB::CallStatementStore store;
 	ProcRef p_1 = "main";
 	ProcRef p_2 = "method";

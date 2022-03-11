@@ -66,7 +66,7 @@ TEST_CASE("QP::QueryResult::joinResult Should join tables without any common syn
 	REQUIRE(table.at("e") == vector<string>({"9", "8", "7", "9", "8", "7"}));
 }
 
-TEST_CASE("QP::QueryResult::joinResult Should setConnection result to false when all rows are removed") {
+TEST_CASE("QP::QueryResult::joinResult Should set result to false when all rows are removed") {
 	QP::QueryResult result_one = QP::QueryResult();
 	QP::QueryResult result_two = QP::QueryResult();
 	result_one.addColumn("a", {"3", "1"});
