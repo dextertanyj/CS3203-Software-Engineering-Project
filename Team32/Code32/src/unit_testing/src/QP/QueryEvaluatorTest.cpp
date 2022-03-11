@@ -4,48 +4,61 @@
 #include "Common/TypeDefs.h"
 #include "QP/QueryExpressionLexer.h"
 #include "QP/ReferenceArgument.h"
+#include "QP/Relationship/Calls.h"
 #include "QP/Relationship/Follows.h"
 #include "QP/Relationship/ModifiesS.h"
 #include "QP/Relationship/Parent.h"
 #include "catch.hpp"
 
 TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
+	Declaration assign_declaration = {DesignEntity::Assign, "a"};
+	Declaration var_declaration = {DesignEntity::Variable, "v"};
+	Declaration stmt1_declaration = {DesignEntity::Stmt, "s1"};
+	Declaration stmt2_declaration = {DesignEntity::Stmt, "s2"};
+	Declaration if_declaration = {DesignEntity::If, "i"};
+	Declaration proc_declaration = {DesignEntity::Procedure, "p"};
 	DeclarationList declarations = {
-		{DesignEntity::Stmt, "s1"},  {DesignEntity::Stmt, "s2"}, {DesignEntity::Variable, "v"},
-		{DesignEntity::Assign, "a"}, {DesignEntity::If, "i"},
+		assign_declaration, var_declaration, stmt1_declaration, stmt2_declaration, if_declaration, proc_declaration,
 	};
-	Declaration select = {DesignEntity::Stmt, "s1"};
-	ReferenceArgument s1 = ReferenceArgument({QP::Types::DesignEntity::Stmt, "s1"});
-	ReferenceArgument s2 = ReferenceArgument({QP::Types::DesignEntity::Stmt, "s2"});
-	ReferenceArgument a = ReferenceArgument({QP::Types::DesignEntity::Assign, "a"});
-	ReferenceArgument i = ReferenceArgument({QP::Types::DesignEntity::If, "i"});
+	DeclarationList select_list = {stmt1_declaration, proc_declaration};
+	DeclarationList select_a = {assign_declaration};
+	DeclarationList select_p = {proc_declaration};
+	ReferenceArgument s1 = ReferenceArgument(stmt1_declaration);
+	ReferenceArgument s2 = ReferenceArgument(stmt2_declaration);
+	ReferenceArgument a = ReferenceArgument(assign_declaration);
+	ReferenceArgument i = ReferenceArgument(if_declaration);
+	ReferenceArgument v = ReferenceArgument(var_declaration);
+	ReferenceArgument p = ReferenceArgument(proc_declaration);
 	ReferenceArgument stmt_no1 = ReferenceArgument(1);
 	ReferenceArgument stmt_no2 = ReferenceArgument(2);
-	ReferenceArgument v = ReferenceArgument({QP::Types::DesignEntity::Variable, "v"});
+	ReferenceArgument wildcard = ReferenceArgument();
 
 	ClauseList clauses = {
 		{make_unique<QP::Relationship::Parent>(s1, s2)},
 		{make_unique<QP::Relationship::Parent>(a, i)},
 		{make_unique<QP::Relationship::Parent>(stmt_no1, stmt_no2)},
 		{make_unique<QP::Relationship::ModifiesS>(a, v)},
+		{make_unique<QP::Relationship::Calls>(p, wildcard)},
 	};
-	QP::QueryProperties properties = QP::QueryProperties(declarations, {select}, clauses);
+	QP::QueryProperties properties = QP::QueryProperties(declarations, select_list, clauses);
 	ConnectedSynonyms connected_synonyms = {
-		2,
-		{{"s1", 0}, {"s2", 0}, {"a", 1}, {"v", 1}, {"i", 1}},
-		{{0, {select}}, {1, {}}},
+		3,
+		{{"s1", 0}, {"s2", 0}, {"a", 1}, {"v", 1}, {"i", 1}, {"p", 2}},
+		{{0, select_a}, {1, {}}, {2, select_p}},
 	};
 
 	PKB::Storage pkb = PKB::Storage();
 	vector<pair<ClauseList, DeclarationList>> clauses_in_group = QP::QueryEvaluator::splitClauses(properties, connected_synonyms);
 
-	REQUIRE(clauses_in_group.size() == 3);
+	REQUIRE(clauses_in_group.size() == 4);
 	REQUIRE(clauses_in_group[0].first.size() == 1);
 	REQUIRE(clauses_in_group[1].first.size() == 2);
 	REQUIRE(clauses_in_group[2].first.size() == 1);
+	REQUIRE(clauses_in_group[3].first.size() == 1);
 	REQUIRE(clauses_in_group[0].second.size() == 1);
 	REQUIRE(clauses_in_group[1].second.empty());
-	REQUIRE(clauses_in_group[2].second.empty());
+	REQUIRE(clauses_in_group[2].second.size() == 1);
+	REQUIRE(clauses_in_group[3].second.empty());
 };
 
 TEST_CASE("QP::QueryEvaluator::execute") {
@@ -206,6 +219,14 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 		REQUIRE(actual_result == expected_result);
 	};
 
+	SECTION("Select boolean no clause") {
+		QP::QueryProperties properties = QP::QueryProperties(declarations, {}, {});
+
+		QP::QueryResult result = evaluator.executeQuery(properties);
+
+		REQUIRE(result.getResult());
+	};
+
 	SECTION("Select boolean positive test") {
 		ClauseList clauses = {
 			{make_unique<QP::Relationship::ModifiesS>(stmt_no1, var_syn)},
@@ -221,6 +242,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	SECTION("Select boolean negative test") {
 		ClauseList clauses = {
 			{make_unique<QP::Relationship::Follows>(wildcard, stmt_no1)},
+			{make_unique<QP::Relationship::Follows>(wildcard, stmt1_syn)},
 		};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, {}, clauses);
 
@@ -272,6 +294,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 		ClauseList clauses = {
 			{make_unique<QP::Relationship::ModifiesS>(assign_syn, var_syn)},
 			{make_unique<QP::Relationship::Follows>(wildcard, stmt1_syn)},
+			{make_unique<QP::Relationship::Follows>(wildcard, wildcard)},
 		};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, select_list, clauses);
 

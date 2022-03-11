@@ -28,7 +28,7 @@ vector<string> QP::QueryFormatter::formatNonBooleanResult(QueryProperties& query
 	vector<string> result;
 	DeclarationList select_list = query_properties.getSelectList();
 	size_t table_size = query_result.getTableSize();
-	
+
 	for (size_t i = 0; i < table_size; i++) {
 		string row = "";
 		for (Declaration const& declaration : select_list) {

@@ -22,7 +22,7 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 		ClauseList clauses = clauses_in_group[i].first;
 		DeclarationList select_list = clauses_in_group[i].second;
 		if (select_list.empty()) {
-			if (!executeGroupWithoutSelected(clauses).getResult()) {
+			if (!executeGroupWithoutSelected(clauses, select_list).getResult()) {
 				return {};
 			}
 		} else {
@@ -52,7 +52,7 @@ QP::QueryResult QP::QueryEvaluator::executeGroupWithSelected(ClauseList& clauses
 	return executeNonTrivialGroup(clauses, select_list);
 }
 
-QP::QueryResult QP::QueryEvaluator::executeGroupWithoutSelected(ClauseList& clauses) {
+QP::QueryResult QP::QueryEvaluator::executeGroupWithoutSelected(ClauseList& clauses, DeclarationList& select_list) {
 	if (clauses.empty()) {
 		return QueryResult(true);
 	}
@@ -61,7 +61,7 @@ QP::QueryResult QP::QueryEvaluator::executeGroupWithoutSelected(ClauseList& clau
 		return executeTrivialGroup(clauses);
 	}
 
-	return executeNonTrivialGroup(clauses, vector<Declaration>({}));
+	return executeNonTrivialGroup(clauses, select_list);
 }
 
 QP::QueryResult QP::QueryEvaluator::executeTrivialGroup(ClauseList& clauses) {

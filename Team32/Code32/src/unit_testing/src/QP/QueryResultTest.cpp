@@ -88,7 +88,7 @@ TEST_CASE("QP::QueryResult::filterByDeclarations Should filter result") {
 	result.addColumn("a", {"1", "3", "5", "1", "7"});
 	result.addColumn("b", {"a", "b", "c", "d", "e"});
 	result.addColumn("c", {"2", "4", "6", "2", "8"});
-	
+
 	result.filterByDeclarations(select_list);
 
 	unordered_map<string, vector<string>> table = result.getTable();

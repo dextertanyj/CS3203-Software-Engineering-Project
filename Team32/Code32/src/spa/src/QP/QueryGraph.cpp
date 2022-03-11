@@ -39,7 +39,6 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 	unordered_set<string> unvisited_nodes;
 	unordered_map<string, Declaration> selected_nodes;
 	size_t group_number = 0;
-	bool is_selected = false;
 
 	for (auto& node : nodes) {
 		unvisited_nodes.insert(node.first);
@@ -52,7 +51,6 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 	queue<string> queue;
 	if (!selected_nodes.empty()) {
 		queue.push(selected_nodes.begin()->first);
-		is_selected = true;
 	} else {
 		queue.push(*unvisited_nodes.begin());
 	}
@@ -73,23 +71,24 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 				queue.push(adjacent_symbol);
 			}
 		}
-		
-		if (queue.empty() && !unvisited_nodes.empty()) {
+
+		if (queue.empty()) {
 			group_to_selected_declarations.insert({group_number, selected_declarations});
 			selected_declarations.clear();
+			group_number++;
+		}
+
+		if (queue.empty() && !unvisited_nodes.empty()) {
 			if (!selected_nodes.empty()) {
 				queue.push(selected_nodes.begin()->first);
 			} else {
 				queue.push(*unvisited_nodes.begin());
-				is_selected = false;
 			}
-			group_number++;
 		}
 	}
 
-	group_to_selected_declarations.insert({group_number, selected_declarations});
 	return {
-		group_number + 1,
+		group_number,
 		result,
 		group_to_selected_declarations,
 	};

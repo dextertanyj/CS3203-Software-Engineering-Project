@@ -29,11 +29,11 @@ private:
 	unordered_map<string, vector<string>> table;
 	void joinWithDifferentSynonym(QueryResult& query_result);
 	void joinWithSameSynonym(QueryResult& query_result);
+	unordered_map<string, vector<string>> getSubTableWithRow(const unordered_map<string, string>& row);
 	static bool contains(unordered_map<string, vector<string>>& table, const unordered_map<string, string>& row);
 	static bool isRowMatch(const unordered_map<string, string>& row, unordered_map<string, vector<string>>& table, size_t row_number);
 	static void removeRow(unordered_map<string, vector<string>>& table, size_t row_number);
 	static void removeDuplicateRows(unordered_map<string, vector<string>>& table);
-	unordered_map<string, vector<string>> getSubTableWithRow(const unordered_map<string, string>& row);
 };
 
 #endif  // SPA_SRC_QP_QUERYRESULT_H

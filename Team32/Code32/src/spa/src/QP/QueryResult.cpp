@@ -12,9 +12,7 @@ unordered_set<string> QP::QueryResult::getSynonymsStored() { return synonyms_sto
 
 vector<string> QP::QueryResult::getSynonymResult(const string& synonym) { return table.at(synonym); }
 
-size_t QP::QueryResult::getTableSize() {
-	return table.begin()->second.size();
-}
+size_t QP::QueryResult::getTableSize() { return table.begin()->second.size(); }
 
 void QP::QueryResult::addColumn(const string& synonym, const vector<string>& column) {
 	if (column.empty()) {
@@ -190,7 +188,7 @@ unordered_map<string, vector<string>> QP::QueryResult::getSubTableWithRow(const 
 	}
 
 	unordered_map<string, vector<string>> sub_table = this->table;
-	size_t number_of_rows = table.begin()->second.size();
+	size_t number_of_rows = getTableSize();
 
 	size_t pos = 0;
 	for (size_t i = 0; i < number_of_rows; i++) {
@@ -217,8 +215,7 @@ void QP::QueryResult::removeDuplicateRows(unordered_map<string, vector<string>>&
 
 		if (rows.find(row) != rows.end()) {
 			removeRow(table, pos);
-		}
-		else {
+		} else {
 			pos++;
 			rows.insert(row);
 		}

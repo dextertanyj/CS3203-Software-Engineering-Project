@@ -23,7 +23,7 @@ public:
 private:
 	PKB::StorageAccessInterface& pkb;
 	QueryResult executeGroupWithSelected(ClauseList& clauses, DeclarationList& select_list);
-	QueryResult executeGroupWithoutSelected(ClauseList& clauses);
+	QueryResult executeGroupWithoutSelected(ClauseList& clauses, DeclarationList& select_list);
 	QueryResult executeTrivialGroup(ClauseList& clauses);
 	QueryResult executeNonTrivialGroup(ClauseList& clauses, DeclarationList& select_list);
 	QueryResult executeNoClauses(const Declaration& select);
