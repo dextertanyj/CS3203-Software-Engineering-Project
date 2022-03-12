@@ -10,7 +10,6 @@
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
 #include "PKB/AssignStore.h"
-#include "PKB/CFG/NextStarQueryCache.h"
 #include "PKB/CFG/NodeRelation.h"
 #include "PKB/CFG/Refactor/ControlFlowGraph.h"
 #include "PKB/CallRelation.h"
@@ -138,7 +137,6 @@ private:
 	SetStore<VarRef> variable_store;
 	Types::StatementStore statement_store;
 	Types::ProcedureStore procedure_store;
-	Types::NodeStore node_store;
 	CallStatementStore call_statement_store;
 	TopologicalSort<ProcedureInfo> call_graph;
 	Types::CallStore call_store;
@@ -152,7 +150,6 @@ private:
 	SVRelationStore<PKB::IfControlRelation> if_control_store;
 	PKB::SVRelationStore<PKB::WhileControlRelation> while_control_store;
 	PKB::ControlFlowGraph control_flow_graph;
-	NextStarQueryCache next_cache;
 
 	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
 	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set);

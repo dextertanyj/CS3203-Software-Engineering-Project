@@ -44,7 +44,6 @@ class ParentRelation;
 class UsesSRelation;
 class UsesPRelation;
 class NodeRelation;
-class NextStarQueryCache;
 class NodeInterface;
 class IfNode;
 class WhileNode;

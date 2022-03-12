@@ -299,7 +299,6 @@ void PKB::Storage::clear() {
 	modifies_s_store.clear();
 	modifies_p_store.clear();
 	statement_store.clear();
-	node_store.clear();
 	control_flow_graph.clear();
 }
 

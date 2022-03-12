@@ -66,7 +66,6 @@ StmtRefSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef ref) {
 }
 
 StmtRefSet PKB::ControlFlowGraph::getNextNodes(StmtRef ref) {
-
 	shared_ptr<PKB::NodeInterface> curr_node = this->getNode(ref);
 	StmtRefSet next_nodes;
 	// Edge case where this reference is an ifNode. Need to return the child nodes of the dummy, if there are any.
