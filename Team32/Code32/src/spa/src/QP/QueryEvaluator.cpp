@@ -29,7 +29,9 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 			QueryResult group_result = executeGroupWithSelected(clauses, select_list);
 			if (!group_result.getResult()) {
 				return {};
-			} else if (result.getResult()) {
+			}
+
+			if (result.getResult()) {
 				result.joinResult(group_result);
 			} else {
 				result = group_result;
@@ -93,7 +95,7 @@ QP::QueryResult QP::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, 
 	if (!select_list.empty()) {
 		result_list[0].filterByDeclarations(select_list);
 	}
-	
+
 	return result_list[0];
 }
 

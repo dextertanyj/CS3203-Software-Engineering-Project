@@ -208,9 +208,10 @@ void QP::QueryResult::removeDuplicateRows(unordered_map<string, vector<string>>&
 
 	size_t pos = 0;
 	for (size_t i = 0; i < number_of_rows; i++) {
-		string row = "";
+		string row;
 		for (auto const& pair : table) {
-			row = row + pair.second[pos] + " ";
+			row.append(pair.second[pos]);
+			row.append(" ");
 		}
 
 		if (rows.find(row) != rows.end()) {

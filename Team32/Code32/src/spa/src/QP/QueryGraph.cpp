@@ -44,8 +44,8 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 		unvisited_nodes.insert(node.first);
 	}
 
-	for (auto& select : select_list) {
-		selected_nodes.insert({select.symbol, select});
+	for (const Declaration& declaration : select_list) {
+		selected_nodes.insert({declaration.symbol, declaration});
 	}
 
 	queue<string> queue;
