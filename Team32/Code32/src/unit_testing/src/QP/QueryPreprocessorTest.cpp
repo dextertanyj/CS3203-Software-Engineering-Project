@@ -31,8 +31,6 @@ TEST_CASE("QP::QueryPreprocessor::tokenizeQuery Invalid tokenizer input") {
 	REQUIRE_THROWS_AS(qpp1.parseQuery("'"), QP::QueryTokenizationException);
 	REQUIRE_THROWS_AS(qpp1.parseQuery(":"), QP::QueryTokenizationException);
 	REQUIRE_THROWS_AS(qpp1.parseQuery("\\"), QP::QueryTokenizationException);
-	REQUIRE_THROWS_AS(qpp1.parseQuery(">"), QP::QueryTokenizationException);
-	REQUIRE_THROWS_AS(qpp1.parseQuery("<"), QP::QueryTokenizationException);
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid declarations") {

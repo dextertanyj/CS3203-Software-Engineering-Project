@@ -64,7 +64,7 @@ void QP::QueryPreprocessor::parseDeclaration(const Types::DesignEntity& type) {
 	if (existing_declarations.find(current_token) != existing_declarations.end()) {
 		throw QueryException("Duplicate synonym.");
 	}
-	this->existing_declarations.insert({current_token, {type, current_token}});
+	this->existing_declarations.insert({ current_token, {type, current_token} });
 	current_token = this->query_tokens.at(++token_index);
 	while (current_token != ";") {
 		matchTokenOrThrow(",");
@@ -72,10 +72,11 @@ void QP::QueryPreprocessor::parseDeclaration(const Types::DesignEntity& type) {
 		if (existing_declarations.find(current_token) != existing_declarations.end()) {
 			throw QueryException("Duplicate synonym.");
 		}
+		this->existing_declarations.insert({ current_token, {type, current_token} });
+		current_token = this->query_tokens.at(++token_index);
 	}
 	token_index++;
 }
-
 void QP::QueryPreprocessor::parseSelect() {
 	matchTokenOrThrow("Select");
 	// for the special case where BOOLEAN is a declared synonym
