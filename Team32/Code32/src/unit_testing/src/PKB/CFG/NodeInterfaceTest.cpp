@@ -161,3 +161,37 @@ TEST_CASE("PKB::NodeInterface::getDummyNode Test") {
 	CHECK_NOTHROW(if_node->setDummyNode(dummy_node));
 	REQUIRE(if_node->getDummyNode() == dummy_node);
 }
+
+TEST_CASE("PKB::NodeInterface::getNodeRef Test") {
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
+	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
+
+	shared_ptr<PKB::NodeInterface> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
+	shared_ptr<PKB::NodeInterface> while_node = make_shared<PKB::WhileNode>(PKB::WhileNode(while_stmt));
+	shared_ptr<PKB::NodeInterface> print_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(print_stmt));
+	shared_ptr<PKB::NodeInterface> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
+
+	REQUIRE(if_node->getNodeRef() == if_stmt->getIdentifier());
+	REQUIRE(while_node->getNodeRef() == while_stmt->getIdentifier());
+	REQUIRE(print_node->getNodeRef() == print_stmt->getIdentifier());
+	REQUIRE(read_node->getNodeRef() == read_stmt->getIdentifier());
+}
+
+TEST_CASE("PKB::NodeInterface::getNodeType Test") {
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
+	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
+
+	shared_ptr<PKB::NodeInterface> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
+	shared_ptr<PKB::NodeInterface> while_node = make_shared<PKB::WhileNode>(PKB::WhileNode(while_stmt));
+	shared_ptr<PKB::NodeInterface> print_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(print_stmt));
+	shared_ptr<PKB::NodeInterface> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
+
+	REQUIRE(if_node->getNodeType() == "if");
+	REQUIRE(while_node->getNodeType() == "while");
+	REQUIRE(print_node->getNodeType() == "non_conditional");
+	REQUIRE(read_node->getNodeType() == "non_conditional");
+}
