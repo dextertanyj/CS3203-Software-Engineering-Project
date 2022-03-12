@@ -6,6 +6,7 @@
 #include "PKB/CFG/Refactor/NonConditionalNode.h"
 #include "PKB/CFG/Refactor/WhileNode.h"
 #include "catch.hpp"
+#include "climits"
 
 TEST_CASE("PKB::NodeInterface Constructor Test") {
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
