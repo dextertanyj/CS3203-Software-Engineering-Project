@@ -28,10 +28,6 @@ public:
 	};
 	virtual ~NodeInterface(){};
 
-	// Comparator for priority queue
-	friend bool operator<(PKB::NodeInterface lhs, PKB::NodeInterface rhs) { return lhs.getNodeRef() < rhs.getNodeRef(); };
-	friend bool operator>(PKB::NodeInterface lhs, PKB::NodeInterface rhs) { return lhs.getNodeRef() > rhs.getNodeRef(); };
-
 protected:
 	size_t unique_index = 0;  // Default to 0 for convenience when populating unique index later.
 	string node_type;
