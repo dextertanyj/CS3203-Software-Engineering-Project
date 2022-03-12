@@ -1,5 +1,6 @@
 #ifndef SPA_NODERELATION_H
 #define SPA_NODERELATION_H
+#include <algorithm>
 #include <memory>
 #include <queue>
 #include <set>

@@ -93,7 +93,7 @@ void PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>::op
 		vector<shared_ptr<NodeInfo>> sorted_direct_nodes;
 		// Sort direct_next_nodes
 		std::copy(direct_nodes.begin(), direct_nodes.end(), sorted_direct_nodes.begin());
-		sort(sorted_direct_nodes.begin(), sorted_direct_nodes.end());
+		std::sort(sorted_direct_nodes.begin(), sorted_direct_nodes.end());
 		shared_ptr<NodeInfo> larger_direct_node = sorted_direct_nodes[1];
 		shared_ptr<PKB::NodeInfo> larger_direct_node_end = PKB::NodeRelation::findLastNode(larger_direct_node, *this);
 		shared_ptr<PKB::NodeInfo> smaller_direct_node_end = map.at(larger_direct_node.get()->getIdentifier() - 1).getSelf();

@@ -21,6 +21,7 @@ public:
 
 	void insertPrevious(shared_ptr<PKB::NodeInterface> prev) { this->previous_nodes.insert(prev); }
 
+	// TODO: Remove methods might be redundant.
 	void removeNext(shared_ptr<PKB::NodeInterface> to_remove) {
 		auto iter = std::find(next_nodes.begin(), next_nodes.end(), to_remove);
 		if (iter == next_nodes.end()) {
@@ -29,6 +30,7 @@ public:
 		this->next_nodes.erase(iter);
 	};
 
+	// TODO: Remove methods might be redundant.
 	void removePrevious(shared_ptr<NodeInterface> to_remove) {
 		auto iter = std::find(previous_nodes.begin(), previous_nodes.end(), to_remove);
 		if (iter == previous_nodes.end()) {
@@ -40,6 +42,11 @@ public:
 	set<shared_ptr<PKB::NodeInterface>> getPreviousNodes() { return this->previous_nodes; };
 
 	set<shared_ptr<PKB::NodeInterface>> getNextNodes() { return this->next_nodes; };
+
+	void clearRelations() {
+		this->previous_nodes.clear();
+		this->next_nodes.clear();
+	}
 
 	virtual size_t getNodeRef() { throw logic_error("getNodeRef should not be called in base class"); }
 
