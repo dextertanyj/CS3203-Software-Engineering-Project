@@ -14,6 +14,33 @@ public:
 
 	vector<string> getDeclarationSymbols() override;
 
+	// Trivial Executors
+
+	static QueryResult executeTrivialIndexIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
+	                                            const ReferenceArgument& child);
+	static QueryResult executeTrivialIndexWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent);
+	static QueryResult executeTrivialIndexSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
+	                                              const ReferenceArgument& child);
+	static QueryResult executeTrivialWildcardIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& child);
+	static QueryResult executeTrivialWildcardWildcard(PKB::StorageAccessInterface& pkb);
+	static QueryResult executeTrivialWildcardSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& child);
+	static QueryResult executeTrivialSynonymIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
+	                                              const ReferenceArgument& child);
+	static QueryResult executeTrivialSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent);
+	static QueryResult executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
+	                                                const ReferenceArgument& child);
+
+	// Executors
+
+	static QueryResult executeIndexSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
+	                                       const ReferenceArgument& child);
+	static QueryResult executeWildcardSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& child);
+	static QueryResult executeSynonymIndex(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
+	                                       const ReferenceArgument& child);
+	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent);
+	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
+	                                         const ReferenceArgument& child);
+
 private:
 	ReferenceArgument parent_stmt;
 	ReferenceArgument child_stmt;

@@ -27,41 +27,54 @@ vector<string> QP::Relationship::ModifiesP::getDeclarationSymbols() {
 
 QP::QueryResult QP::Relationship::ModifiesP::executeTrivial(PKB::StorageAccessInterface &pkb) {
 	if (left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Name) {
-		return QueryResult(pkb.checkModifies(left_ent.getName(), right_ent.getName()));
+		return executeTrivialNameName(pkb, left_ent, right_ent);
 	}
 	if ((left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Wildcard) ||
 	    (left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Synonym)) {
-		VarRefSet var_set = pkb.getModifiesByProc(left_ent.getName());
-		return QueryResult(!var_set.empty());
+		return executeTrivialNameWildcardOrSynonym(pkb, left_ent);
 	}
 	if (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Name) {
-		ProcRefSet proc_set = pkb.getProcModifiesByVar(right_ent.getName());
-		return QueryResult(!proc_set.empty());
+		return executeTrivialSynonymName(pkb, right_ent);
 	}
 	if ((left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Wildcard) ||
 	    (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Synonym)) {
-		return executeTrivialBothUnknown(pkb);
+		return executeTrivialSynonymWildcardOrSynonym(pkb);
 	}
 	return {};
 }
 
 QP::QueryResult QP::Relationship::ModifiesP::executeNonTrivial(PKB::StorageAccessInterface &pkb) {
 	if (left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Synonym) {
-		return executeNonTrivialLeftEntVarName(pkb);
+		return executeNameSynonym(pkb, left_ent, right_ent);
 	}
 	if (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Name) {
-		return executeNonTrivialRightEntVarName(pkb);
+		return executeSynonymName(pkb, left_ent, right_ent);
 	}
 	if (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Wildcard) {
-		return executeNonTrivialRightEntUnderscore(pkb);
+		return executeSynonymWildcard(pkb, left_ent);
 	}
 	if (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Synonym) {
-		return executeNonTrivialRightEntSynonym(pkb);
+		return executeSynonymSynonym(pkb, left_ent, right_ent);
 	}
 	return {};
 }
 
-QP::QueryResult QP::Relationship::ModifiesP::executeTrivialBothUnknown(PKB::StorageAccessInterface &pkb) {
+QP::QueryResult QP::Relationship::ModifiesP::executeTrivialNameName(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent,
+                                                                    const ReferenceArgument &right_ent) {
+	return QueryResult(pkb.checkModifies(left_ent.getName(), right_ent.getName()));
+}
+QP::QueryResult QP::Relationship::ModifiesP::executeTrivialNameWildcardOrSynonym(PKB::StorageAccessInterface &pkb,
+                                                                                 const ReferenceArgument &left_ent) {
+	VarRefSet var_set = pkb.getModifiesByProc(left_ent.getName());
+	return QueryResult(!var_set.empty());
+}
+QP::QueryResult QP::Relationship::ModifiesP::executeTrivialSynonymName(PKB::StorageAccessInterface &pkb,
+                                                                       const ReferenceArgument &right_ent) {
+	ProcRefSet proc_set = pkb.getProcModifiesByVar(right_ent.getName());
+	return QueryResult(!proc_set.empty());
+}
+
+QP::QueryResult QP::Relationship::ModifiesP::executeTrivialSynonymWildcardOrSynonym(PKB::StorageAccessInterface &pkb) {
 	unordered_set<ProcRef> proc_set = pkb.getProcedures();
 	for (auto const &proc : proc_set) {
 		VarRefSet var_set = pkb.getModifiesByProc(proc);
@@ -72,7 +85,8 @@ QP::QueryResult QP::Relationship::ModifiesP::executeTrivialBothUnknown(PKB::Stor
 	return {};
 }
 
-QP::QueryResult QP::Relationship::ModifiesP::executeNonTrivialLeftEntVarName(PKB::StorageAccessInterface &pkb) {
+QP::QueryResult QP::Relationship::ModifiesP::executeNameSynonym(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent,
+                                                                const ReferenceArgument &right_ent) {
 	VarRefSet var_set = pkb.getModifiesByProc(left_ent.getName());
 	vector<string> column;
 	for (auto const &var : var_set) {
@@ -83,7 +97,8 @@ QP::QueryResult QP::Relationship::ModifiesP::executeNonTrivialLeftEntVarName(PKB
 	return result;
 }
 
-QP::QueryResult QP::Relationship::ModifiesP::executeNonTrivialRightEntVarName(PKB::StorageAccessInterface &pkb) {
+QP::QueryResult QP::Relationship::ModifiesP::executeSynonymName(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent,
+                                                                const ReferenceArgument &right_ent) {
 	ProcRefSet proc_set = pkb.getProcModifiesByVar(right_ent.getName());
 	vector<string> column;
 	for (auto const &proc : proc_set) {
@@ -94,7 +109,7 @@ QP::QueryResult QP::Relationship::ModifiesP::executeNonTrivialRightEntVarName(PK
 	return result;
 }
 
-QP::QueryResult QP::Relationship::ModifiesP::executeNonTrivialRightEntUnderscore(PKB::StorageAccessInterface &pkb) {
+QP::QueryResult QP::Relationship::ModifiesP::executeSynonymWildcard(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent) {
 	unordered_set<ProcRef> proc_set = pkb.getProcedures();
 	vector<string> column;
 	for (auto const &proc : proc_set) {
@@ -108,7 +123,8 @@ QP::QueryResult QP::Relationship::ModifiesP::executeNonTrivialRightEntUnderscore
 	return result;
 }
 
-QP::QueryResult QP::Relationship::ModifiesP::executeNonTrivialRightEntSynonym(PKB::StorageAccessInterface &pkb) {
+QP::QueryResult QP::Relationship::ModifiesP::executeSynonymSynonym(PKB::StorageAccessInterface &pkb, const ReferenceArgument &left_ent,
+                                                                   const ReferenceArgument &right_ent) {
 	unordered_set<ProcRef> proc_set = pkb.getProcedures();
 	vector<string> proc_column;
 	vector<string> var_column;
