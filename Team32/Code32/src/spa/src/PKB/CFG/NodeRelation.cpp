@@ -65,13 +65,7 @@ shared_ptr<PKB::NodeInfo> PKB::NodeRelation::findLastNode(shared_ptr<NodeInfo> n
 }
 
 void PKB::NodeRelation::populateUniqueIndex(const NodeRelation& node_relation, StmtRef stmt_no,
-                                            PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>& store) {
-	unordered_set<shared_ptr<NodeInfo>> forward_node_infos = node_relation.getForward();
-	for (auto node : forward_node_infos) {
-		node->setUniqueIndex(stmt_no);
-		populateUniqueIndex(store.map.at(node->getIdentifier()), stmt_no, store);
-	}
-}
+                                            PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>& store) {}
 
 /* Template specializations for CFG Next relationship.
  populateTransitive method is not required, as this population will be done
@@ -118,37 +112,6 @@ void PKB::TransitiveRelationStore<StmtRef, PKB::NodeInfo, PKB::NodeRelation>::op
 			map.at(following_node->getIdentifier()).removeForward(current_if_node.getSelf());
 		}
 	}
-	/*
-	// Edge case: If statement is final statement in the procedure. if and else blocks have no ending node.
-	std::set<int> edge_case_if_stmts;
-	for (auto& item : map) {
-	    NodeRelation relation = item.second;
-	    // Edge case detected when if control statement only has 2 direct next statements.
-	    // Gather these nodes in a set and add dummy nodes starting from the highest StmtRef.
-	    if (relation.getSelf()->getType() == StmtType::IfStmt && relation.getReverse().size() == 2) {
-	        edge_case_if_stmts.insert(relation.getSelf()->getIdentifier());
-	    }
-	}
-
-	// Start from the highest StmtRef if statement.
-	for (auto iter = edge_case_if_stmts.rbegin(); iter != edge_case_if_stmts.rend(); ++iter) {
-	    unordered_set<shared_ptr<NodeInfo>> child_nodes = this->getReverse(*iter);
-	    vector<shared_ptr<NodeInfo>> child_nodes_list(child_nodes.size());
-	    std::copy(child_nodes.begin(), child_nodes.end(), child_nodes_list.begin());
-	    // Need to use vector to differentiate first and second child node. There should be 2 child nodes.
-	    shared_ptr<NodeInfo> child_node_1 = *(child_nodes_list.begin());
-	    shared_ptr<NodeInfo> child_node_2 = *(child_nodes_list.rbegin());
-	    // Find the last node within the block.
-	    shared_ptr<PKB::NodeInfo> child_node_1_end_node = PKB::NodeRelation::findLastNode(child_node_1, *this);
-	    shared_ptr<PKB::NodeInfo> child_node_2_end_node = PKB::NodeRelation::findLastNode(child_node_2, *this);
-	    // Create dummy node and set these 2 ending nodes to the dummy node.
-	    PKB::NodeInfo dummy_node = PKB::DummyNodeInfo();
-	    shared_ptr<PKB::NodeInfo> dummy_node_ptr = make_shared<PKB::NodeInfo>(dummy_node);
-	    this->set(child_node_1_end_node, dummy_node_ptr);
-	    this->set(child_node_2_end_node, dummy_node_ptr);
-	}
-	 */
-
 	// Populate unique index after pre-processing is done.
 	for (auto& item : map) {
 		if (item.second.getReverse().empty()) {
