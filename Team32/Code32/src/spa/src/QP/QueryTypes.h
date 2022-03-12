@@ -52,8 +52,9 @@ enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpress
 class ReferenceArgument;
 
 typedef struct Declaration {
-	DesignEntity type;
-	string symbol;
+	DesignEntity type;  // NOLINT(misc-non-private-member-variables-in-classes)
+	string symbol;      // NOLINT(misc-non-private-member-variables-in-classes)
+	bool operator==(const Declaration& other) const { return type == other.type && symbol == other.symbol; }
 } Declaration;
 
 typedef struct Clause {

@@ -24,10 +24,14 @@ struct QP::Dispatcher {
 	                                           {Types::ClauseType::PatternAssign, QP::Relationship::Pattern::dispatcher},
 	                                           {Types::ClauseType::UnknownUses, QP::Relationship::Uses::dispatcher}};
 	unordered_map<string, Types::ClauseType> clause_map = {
-		{"Calls", Types::ClauseType::Call},        {"Calls*", ClauseType::CallT},
-		{"Follows", ClauseType::Follows},          {"Follows*", ClauseType::FollowsT},
-		{"Modifies", ClauseType::UnknownModifies}, {"Parent", ClauseType::Parent},
-		{"Parent*", ClauseType::ParentT},          {"Uses", ClauseType::UnknownUses},
+		{"Calls", Types::ClauseType::Call},
+		{"Calls*", Types::ClauseType::CallT},
+		{"Follows", Types::ClauseType::Follows},
+		{"Follows*", Types::ClauseType::FollowsT},
+		{"Modifies", Types::ClauseType::UnknownModifies},
+		{"Parent", Types::ClauseType::Parent},
+		{"Parent*", Types::ClauseType::ParentT},
+		{"Uses", Types::ClauseType::UnknownUses},
 	};
 };
 

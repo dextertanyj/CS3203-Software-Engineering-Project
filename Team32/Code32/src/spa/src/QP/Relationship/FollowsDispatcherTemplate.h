@@ -2,6 +2,7 @@
 #define SPA_SRC_QP_RELATIONSHIP_FOLLOWSDISPATCHERTEMPLATE_H
 
 #include <unordered_map>
+#include <vector>
 
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"

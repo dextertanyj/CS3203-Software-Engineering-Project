@@ -1,48 +1,13 @@
 #include "CallsT.h"
 
 #include <utility>
+#include <vector>
 
 #include "QP/Relationship/CallDispatcherTemplate.tpp"
 
-QP::QueryResult QP::Relationship::CallsT::executeTrivial(PKB::StorageAccessInterface& pkb) {
-	if (getCallerEnt().getType() == ReferenceType::Name && getCalleeEnt().getType() == ReferenceType::Name) {
-		return executeTrivialNameName(pkb, getCallerEnt(), getCalleeEnt());
-	}
-	if (getCallerEnt().getType() == ReferenceType::Name) {
-		return executeTrivialNameWildcardOrSynonym(pkb, getCallerEnt());
-	}
-	if (getCalleeEnt().getType() == ReferenceType::Name) {
-		return executeTrivialWildcardOrSynonymName(pkb, getCalleeEnt());
-	}
-	if (getCallerEnt().getType() == ReferenceType::Synonym && getCalleeEnt().getType() == ReferenceType::Synonym) {
-		return executeTrivialSynonymSynonym(pkb, getCallerEnt(), getCalleeEnt());
-	}
-	return executeTrivialWildcardOrSynonymWildcardOrSynonym(pkb);
-}
-
-QP::QueryResult QP::Relationship::CallsT::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
-	if (getCallerEnt().getType() == ReferenceType::Name && getCalleeEnt().getType() == ReferenceType::Synonym) {
-		return executeNameSynonym(pkb, getCallerEnt(), getCalleeEnt());
-	}
-	if (getCallerEnt().getType() == ReferenceType::Wildcard && getCalleeEnt().getType() == ReferenceType::Synonym) {
-		return executeWildcardSynonym(pkb, getCalleeEnt());
-	}
-	if (getCallerEnt().getType() == ReferenceType::Synonym && getCalleeEnt().getType() == ReferenceType::Name) {
-		return executeSynonymName(pkb, getCallerEnt(), getCalleeEnt());
-	}
-	if (getCallerEnt().getType() == ReferenceType::Synonym && getCalleeEnt().getType() == ReferenceType::Wildcard) {
-		return executeSynonymWildcard(pkb, getCallerEnt());
-	}
-	if (getCallerEnt().getType() == ReferenceType::Synonym && getCalleeEnt().getType() == ReferenceType::Synonym) {
-		return executeSynonymSynonym(pkb, getCallerEnt(), getCalleeEnt());
-	}
-	return {};
-}
-
 // Trivial Executors
-
-QP::QueryResult QP::Relationship::CallsT::executeTrivialNameName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
-                                                                 const ReferenceArgument& callee) {
+QP::QueryResult QP::Relationship::CallsT::executeTrivialNameName(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& caller,
+                                                                 const Types::ReferenceArgument& callee) {
 	ProcRefSet callee_set = pkb.getCalleeStar(caller.getName());
 	for (auto const& callee_reference : callee_set) {
 		if (callee_reference == callee.getName()) {
@@ -53,12 +18,12 @@ QP::QueryResult QP::Relationship::CallsT::executeTrivialNameName(PKB::StorageAcc
 }
 
 QP::QueryResult QP::Relationship::CallsT::executeTrivialNameWildcardOrSynonym(PKB::StorageAccessInterface& pkb,
-                                                                              const ReferenceArgument& caller) {
+                                                                              const Types::ReferenceArgument& caller) {
 	return QueryResult(!pkb.getCalleeStar(caller.getName()).empty());
 }
 
 QP::QueryResult QP::Relationship::CallsT::executeTrivialWildcardOrSynonymName(PKB::StorageAccessInterface& pkb,
-                                                                              const ReferenceArgument& callee) {
+                                                                              const Types::ReferenceArgument& callee) {
 	return QueryResult(!pkb.getCallerStar(callee.getName()).empty());
 }
 
@@ -74,8 +39,9 @@ QP::QueryResult QP::Relationship::CallsT::executeTrivialWildcardOrSynonymWildcar
 	return {};
 }
 
-QP::QueryResult QP::Relationship::CallsT::executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
-                                                                       const ReferenceArgument& callee) {
+QP::QueryResult QP::Relationship::CallsT::executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb,
+                                                                       const Types::ReferenceArgument& caller,
+                                                                       const Types::ReferenceArgument& callee) {
 	if (caller.getSynonym().symbol == callee.getSynonym().symbol) {
 		return {};
 	}
@@ -83,9 +49,8 @@ QP::QueryResult QP::Relationship::CallsT::executeTrivialSynonymSynonym(PKB::Stor
 }
 
 // Executors
-
-QP::QueryResult QP::Relationship::CallsT::executeNameSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
-                                                             const ReferenceArgument& callee) {
+QP::QueryResult QP::Relationship::CallsT::executeNameSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& caller,
+                                                             const Types::ReferenceArgument& callee) {
 	QueryResult result = QueryResult();
 	vector<string> column;
 	ProcRefSet callees = pkb.getCalleeStar(caller.getName());
@@ -97,7 +62,7 @@ QP::QueryResult QP::Relationship::CallsT::executeNameSynonym(PKB::StorageAccessI
 	return result;
 }
 
-QP::QueryResult QP::Relationship::CallsT::executeWildcardSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& callee) {
+QP::QueryResult QP::Relationship::CallsT::executeWildcardSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& callee) {
 	QueryResult result = QueryResult();
 	vector<string> column;
 	ProcRefSet procedures = pkb.getProcedures();
@@ -112,8 +77,8 @@ QP::QueryResult QP::Relationship::CallsT::executeWildcardSynonym(PKB::StorageAcc
 	return result;
 }
 
-QP::QueryResult QP::Relationship::CallsT::executeSynonymName(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
-                                                             const ReferenceArgument& callee) {
+QP::QueryResult QP::Relationship::CallsT::executeSynonymName(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& caller,
+                                                             const Types::ReferenceArgument& callee) {
 	QueryResult result = QueryResult();
 	vector<string> caller_column;
 	ProcRefSet callers = pkb.getCallerStar(callee.getName());
@@ -123,7 +88,7 @@ QP::QueryResult QP::Relationship::CallsT::executeSynonymName(PKB::StorageAccessI
 	result.addColumn(caller.getSynonym().symbol, caller_column);
 	return result;
 }
-QP::QueryResult QP::Relationship::CallsT::executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller) {
+QP::QueryResult QP::Relationship::CallsT::executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& caller) {
 	QueryResult result = QueryResult();
 	vector<string> caller_column;
 	ProcRefSet procedures = pkb.getProcedures();
@@ -137,8 +102,8 @@ QP::QueryResult QP::Relationship::CallsT::executeSynonymWildcard(PKB::StorageAcc
 	return result;
 }
 
-QP::QueryResult QP::Relationship::CallsT::executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& caller,
-                                                                const ReferenceArgument& callee) {
+QP::QueryResult QP::Relationship::CallsT::executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& caller,
+                                                                const Types::ReferenceArgument& callee) {
 	if (caller.getSynonym().symbol == callee.getSynonym().symbol) {
 		return {};
 	}
@@ -161,6 +126,6 @@ QP::QueryResult QP::Relationship::CallsT::executeSynonymSynonym(PKB::StorageAcce
 	return result;
 }
 
-QP::Types::ArgumentDispatcher QP::Relationship::CallsT::dispatcher = [](vector<ReferenceArgument> args) {
-	return CallDispatcherTemplate<CallsT>::argumentDispatcher(Types::ClauseType::CallT, std::move(args));
+QP::Types::ArgumentDispatcher QP::Relationship::CallsT::dispatcher = [](vector<Types::ReferenceArgument> args) {
+	return CallDispatcherTemplate<CallsT>::argumentDispatcher(Types::ClauseType::CallT, move(args));
 };
