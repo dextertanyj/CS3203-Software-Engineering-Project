@@ -6,6 +6,9 @@
 #include "WhileNode.h"
 
 void PKB::ControlFlowGraph::createNode(shared_ptr<StmtInfo> stmt_info) {
+	if (stmt_to_normal_node_store.find(stmt_info->getIdentifier()) != stmt_to_normal_node_store.end()) {
+		throw invalid_argument("Node has already been created.");
+	}
 	// Check node type and create respective node.
 	if (stmt_info->getType() == StmtType::IfStmt) {
 		shared_ptr<PKB::IfNode> to_insert = make_shared<PKB::IfNode>(PKB::IfNode(stmt_info));
@@ -34,9 +37,8 @@ bool PKB::ControlFlowGraph::checkNext(StmtRef prev, StmtRef next) {
 	if (prev_node_iter == stmt_to_normal_node_store.end() || next_node_iter == stmt_to_normal_node_store.end()) {
 		throw invalid_argument("One of the provided references is not an existing node.");
 	}
-	std::set<shared_ptr<PKB::NodeInterface>> next_nodes_of_prev_node = prev_node_iter->second->getNextNodes();
-	return any_of(next_nodes_of_prev_node.begin(), next_nodes_of_prev_node.end(),
-	              [next](shared_ptr<PKB::NodeInterface> next_node) { return next_node->getNodeRef() == next; });
+	StmtRefSet next_nodes_of_prev = this->getNextNodes(prev);
+	return any_of(next_nodes_of_prev.begin(), next_nodes_of_prev.end(), [next](StmtRef next_ref) { return next_ref == next; });
 }
 
 shared_ptr<PKB::NodeInterface> PKB::ControlFlowGraph::getNode(StmtRef ref) {
@@ -51,19 +53,37 @@ StmtRefSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef ref) {
 	shared_ptr<PKB::NodeInterface> curr_node = this->getNode(ref);
 	StmtRefSet prev_nodes;
 	for (auto node : curr_node->getPreviousNodes()) {
+		// If previous node is a dummy node, need to get the previous nodes of the dummy node.
+		if (node->getNodeType() == "dummy") {
+			auto dummy_prev_nodes = node->getPreviousNodes();
+			for (auto prev_of_dummy : dummy_prev_nodes) {
+				prev_nodes.insert(prev_of_dummy->getNodeRef());
+			}
+		}
 		prev_nodes.insert(node->getNodeRef());
 	}
 	return prev_nodes;
 }
 
 StmtRefSet PKB::ControlFlowGraph::getNextNodes(StmtRef ref) {
+
 	shared_ptr<PKB::NodeInterface> curr_node = this->getNode(ref);
 	StmtRefSet next_nodes;
+	// Edge case where this reference is an ifNode. Need to return the child nodes of the dummy, if there are any.
+	if (curr_node->getNodeType() == "if") {
+		set<shared_ptr<PKB::NodeInterface>> next_nodes_of_dummy = curr_node->getDummyNode()->getNextNodes();
+		for (auto next_node : next_nodes_of_dummy) {
+			next_nodes.insert(next_node->getNodeRef());
+		}
+	}
 	for (auto node : curr_node->getNextNodes()) {
-		// Edge case where a next node is a dummy node. Need to return the child nodes of the dummy, if there are any.
 		if (node->getNodeType() == "dummy") {
-			std::set<shared_ptr<PKB::NodeInterface>> next_nodes_of_dummy = node->getNextNodes();
-			for (auto next_node : next_nodes_of_dummy) next_nodes.insert(next_node->getNodeRef());
+			set<shared_ptr<PKB::NodeInterface>> next_of_dummy = node->getNextNodes();
+			for (auto next_node_of_dummy : next_of_dummy) {
+				next_nodes.insert(next_node_of_dummy->getNodeRef());
+			}
+		} else {
+			next_nodes.insert(node->getNodeRef());
 		}
 	}
 	return next_nodes;
@@ -74,6 +94,9 @@ void PKB::ControlFlowGraph::setNext(StmtRef prev, StmtRef next) {
 	auto next_node_iter = this->stmt_to_normal_node_store.find(next);
 	if (prev_node_iter == stmt_to_normal_node_store.end() || next_node_iter == stmt_to_normal_node_store.end()) {
 		throw invalid_argument("One of the provided references is not an existing node.");
+	}
+	if (prev == next) {
+		throw invalid_argument("Cannot set a node's direct next to itself.");
 	}
 	shared_ptr<PKB::NodeInterface> prev_node_ptr = prev_node_iter->second;
 	shared_ptr<PKB::NodeInterface> next_node_ptr = next_node_iter->second;
@@ -94,6 +117,9 @@ void PKB::ControlFlowGraph::setIfNext(StmtRef prev, StmtRef then_next, StmtRef e
 	    else_next_node_iter == stmt_to_normal_node_store.end()) {
 		throw invalid_argument("One of the provided references is not an existing node.");
 	}
+	if (prev >= then_next || prev >= else_next || then_next >= else_next) {
+		throw invalid_argument("Ordering or value(s) of provided statement references is invalid.");
+	}
 	shared_ptr<PKB::NodeInterface> if_ctrl_node = prev_node_iter->second;
 	shared_ptr<PKB::NodeInterface> then_next_node = then_next_node_iter->second;
 	shared_ptr<PKB::NodeInterface> else_next_node = else_next_node_iter->second;
@@ -108,6 +134,9 @@ void PKB::ControlFlowGraph::setIfExit(StmtRef then_prev, StmtRef else_prev, Stmt
 	if (then_prev_node_iter == stmt_to_normal_node_store.end() || else_prev_node_iter == stmt_to_normal_node_store.end() ||
 	    if_ctrl_node_iter == stmt_to_normal_node_store.end()) {
 		throw invalid_argument("One of the provided references is not an existing node.");
+	}
+	if (if_stmt_ref >= then_prev || if_stmt_ref >= else_prev || then_prev >= else_prev) {
+		throw invalid_argument("Ordering or value(s) of provided statement references is invalid.");
 	}
 	shared_ptr<PKB::NodeInterface> then_prev_node = then_prev_node_iter->second;
 	shared_ptr<PKB::NodeInterface> else_prev_node = else_prev_node_iter->second;
@@ -127,10 +156,7 @@ void PKB::ControlFlowGraph::clear() {
 	this->stmt_to_dummy_node_store.clear();
 }
 
-void PKB::ControlFlowGraph::removeNextConnection(StmtRef first, StmtRef second) {}
-
+// TODO: Next* TBD.
 void PKB::ControlFlowGraph::optimize() {}
-
 void PKB::ControlFlowGraph::populateUniqueIndex() {}
-
 bool PKB::ControlFlowGraph::checkNextStar(StmtRef i, StmtRef i1) { return false; }
