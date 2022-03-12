@@ -28,6 +28,9 @@ unordered_set<shared_ptr<TInfo>> PKB::InfoStore<TIdent, TContent, TInfo>::getAll
 
 template <typename TIdent, typename TContent, class TInfo>
 shared_ptr<TInfo> PKB::InfoStore<TIdent, TContent, TInfo>::get(const TIdent& identifier) const {
+	// Test the identifier by constructing a new TInfo object.
+	TInfo test = TInfo(identifier, TContent());
+
 	auto iter = store.find(identifier);
 	if (iter == store.end()) {
 		return nullptr;
