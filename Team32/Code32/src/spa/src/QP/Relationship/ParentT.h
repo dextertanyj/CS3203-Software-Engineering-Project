@@ -2,6 +2,7 @@
 #define SPA_SRC_QP_RELATIONSHIP_PARENTT_H
 
 #include "QP/QueryTypes.h"
+#include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Parent.h"
 
 class QP::Relationship::ParentT : public Parent {
@@ -34,6 +35,8 @@ public:
 	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent);
 	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const ReferenceArgument& parent,
 	                                         const ReferenceArgument& child);
+
+	static ArgumentDispatcher dispatcher;
 
 private:
 	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;

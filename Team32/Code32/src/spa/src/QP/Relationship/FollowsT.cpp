@@ -1,4 +1,6 @@
-#include "FollowsT.h"
+#include "QP/Relationship/FollowsT.h"
+
+#include "QP/Relationship/FollowsDispatcherTemplate.tpp"
 
 QP::QueryResult QP::Relationship::FollowsT::executeTrivial(PKB::StorageAccessInterface& pkb) {
 	if (getLeftStmt().getType() == ReferenceType::StatementIndex && getRightStmt().getType() == ReferenceType::StatementIndex) {
@@ -259,3 +261,7 @@ QP::QueryResult QP::Relationship::FollowsT::executeSynonymSynonym(PKB::StorageAc
 	result.addColumn(rear.getSynonym().symbol, rear_column);
 	return result;
 }
+
+QP::Types::ArgumentDispatcher QP::Relationship::FollowsT::dispatcher = [](vector<ReferenceArgument> args) {
+	return FollowsDispatcherTemplate<FollowsT>::argumentDispatcher(Types::ClauseType::FollowsT, std::move(args));
+};

@@ -1,5 +1,9 @@
 #include "CallsT.h"
 
+#include <utility>
+
+#include "QP/Relationship/CallDispatcherTemplate.tpp"
+
 QP::QueryResult QP::Relationship::CallsT::executeTrivial(PKB::StorageAccessInterface& pkb) {
 	if (getCallerEnt().getType() == ReferenceType::Name && getCalleeEnt().getType() == ReferenceType::Name) {
 		return executeTrivialNameName(pkb, getCallerEnt(), getCalleeEnt());
@@ -156,3 +160,7 @@ QP::QueryResult QP::Relationship::CallsT::executeSynonymSynonym(PKB::StorageAcce
 	result.addColumn(callee.getSynonym().symbol, callee_column);
 	return result;
 }
+
+QP::Types::ArgumentDispatcher QP::Relationship::CallsT::dispatcher = [](vector<ReferenceArgument> args) {
+	return CallDispatcherTemplate<CallsT>::argumentDispatcher(Types::ClauseType::CallT, std::move(args));
+};

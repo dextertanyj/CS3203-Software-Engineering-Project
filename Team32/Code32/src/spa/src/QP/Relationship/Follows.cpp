@@ -2,6 +2,8 @@
 
 #include <utility>
 
+#include "QP/Relationship/FollowsDispatcherTemplate.tpp"
+
 QP::Relationship::Follows::Follows(ReferenceArgument left_stmt, ReferenceArgument right_stmt)
 	: left_stmt(std::move(std::move(left_stmt))), right_stmt(std::move(std::move(right_stmt))) {}
 
@@ -262,3 +264,7 @@ QP::QueryResult QP::Relationship::Follows::executeSynonymSynonym(PKB::StorageAcc
 	result.addColumn(rear.getSynonym().symbol, rear_column);
 	return result;
 }
+
+QP::Types::ArgumentDispatcher QP::Relationship::Follows::dispatcher = [](vector<ReferenceArgument> args) {
+	return FollowsDispatcherTemplate<Follows>::argumentDispatcher(Types::ClauseType::Follows, std::move(args));
+};

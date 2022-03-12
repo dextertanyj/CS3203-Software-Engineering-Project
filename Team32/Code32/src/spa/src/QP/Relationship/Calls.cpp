@@ -1,5 +1,9 @@
 #include "Calls.h"
 
+#include <utility>
+
+#include "QP/Relationship/CallDispatcherTemplate.tpp"
+
 QP::Relationship::Calls::Calls(ReferenceArgument caller_ent, ReferenceArgument callee_ent)
 	: caller_ent(std::move(std::move(caller_ent))), callee_ent(std::move(std::move(callee_ent))) {}
 
@@ -168,3 +172,7 @@ QP::QueryResult QP::Relationship::Calls::executeSynonymSynonym(PKB::StorageAcces
 	result.addColumn(callee.getSynonym().symbol, callee_column);
 	return result;
 }
+
+QP::Types::ArgumentDispatcher QP::Relationship::Calls::dispatcher = [](vector<ReferenceArgument> args) {
+	return CallDispatcherTemplate<Calls>::argumentDispatcher(Types::ClauseType::Call, std::move(args));
+};

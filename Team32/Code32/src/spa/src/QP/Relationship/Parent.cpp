@@ -2,6 +2,8 @@
 
 #include <utility>
 
+#include "QP/Relationship/ParentDispatcherTemplate.tpp"
+
 QP::Relationship::Parent::Parent(ReferenceArgument parent_stmt, ReferenceArgument child_stmt)
 	: parent_stmt(std::move(std::move(parent_stmt))), child_stmt(std::move(std::move(child_stmt))) {}
 
@@ -282,4 +284,6 @@ QP::QueryResult QP::Relationship::Parent::executeSynonymSynonym(PKB::StorageAcce
 	return result;
 }
 
-// Executors
+QP::Types::ArgumentDispatcher QP::Relationship::Parent::dispatcher = [](vector<ReferenceArgument> args) {
+	return ParentDispatcherTemplate<Parent>::argumentDispatcher(Types::ClauseType::Parent, move(args));
+};
