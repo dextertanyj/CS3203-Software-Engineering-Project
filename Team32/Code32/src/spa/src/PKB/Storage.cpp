@@ -115,11 +115,15 @@ void PKB::Storage::setWhileControl(StmtRef index, VarRef name) {
 
 void PKB::Storage::setNode(shared_ptr<StmtInfo> info) { this->control_flow_graph.createNode(info); }
 
-void PKB::Storage::setNext(StmtRef previous, StmtRef next) {}
+void PKB::Storage::setNext(StmtRef previous, StmtRef next) { this->control_flow_graph.setNext(previous, next); }
 
-void PKB::Storage::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) {}
+void PKB::Storage::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) {
+	this->control_flow_graph.setIfNext(prev, then_next, else_next);
+}
 
-void PKB::Storage::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) {}
+void PKB::Storage::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) {
+	this->control_flow_graph.setIfExit(then_prev, else_prev, if_stmt_ref);
+}
 
 StmtInfoPtrSet PKB::Storage::getStatements() {
 	unordered_set<shared_ptr<StatementInfo>> set = statement_store.getAll();
@@ -235,15 +239,29 @@ vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::Storage::getStmtsWithPatternRHS(
 	return assign_store.getStmtsWithPatternRHS(expression, is_exact_match);
 }
 
-bool PKB::Storage::checkNext(StmtRef first, StmtRef second) { return false; }
+bool PKB::Storage::checkNext(StmtRef first, StmtRef second) { return control_flow_graph.checkNext(first, second); }
 
-bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return false; }
+bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return control_flow_graph.checkNextStar(first, second); }
 
-StmtInfoPtrSet PKB::Storage::getNext(StmtRef first) { return {}; }
+StmtInfoPtrSet PKB::Storage::getNext(StmtRef first) {
+	StmtRefSet next_refs = control_flow_graph.getNextNodes(first);
+	StmtInfoPtrSet next_stmt_infos;
+	for (auto ref : next_refs) {
+		next_stmt_infos.insert(statement_store.get(ref));
+	}
+	return next_stmt_infos;
+}
 
 StmtInfoPtrSet PKB::Storage::getNextStar(StmtRef node_ref) { return {}; }
 
-StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) { return {}; }
+StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) {
+	StmtRefSet prev_refs = control_flow_graph.getPreviousNodes(second);
+	StmtInfoPtrSet prev_stmt_infos;
+	for (auto ref : prev_refs) {
+		prev_stmt_infos.insert(statement_store.get(ref));
+	}
+	return prev_stmt_infos;
+}
 
 StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef node_ref) { return {}; }
 

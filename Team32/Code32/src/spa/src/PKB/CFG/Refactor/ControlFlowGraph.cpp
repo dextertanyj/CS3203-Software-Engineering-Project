@@ -47,38 +47,23 @@ shared_ptr<PKB::NodeInterface> PKB::ControlFlowGraph::getNode(StmtRef ref) {
 	return this->stmt_to_normal_node_store.find(ref)->second;
 }
 
-set<shared_ptr<PKB::NodeInterface>> PKB::ControlFlowGraph::getPreviousNodes(StmtRef ref) {
-	auto iter = this->stmt_to_normal_node_store.find(ref);
-	if (iter == this->stmt_to_normal_node_store.end()) {
-		throw invalid_argument("This node does not exist in the store.");
-	}
-	// Use a copy as we do not want to modify the direct nodes.
-	std::set<shared_ptr<PKB::NodeInterface>> prev_nodes = std::set(iter->second->getPreviousNodes());
-	for (auto node : prev_nodes) {
-		// Edge case where a previous node is a dummy node. Need to return the parent if node, not the dummy.
-		if (node->getNodeType() == "dummy") {
-			size_t if_ctrl_node_ref = node->getNodeRef();
-			shared_ptr<PKB::NodeInterface> prev_if_node = this->stmt_to_normal_node_store.find(if_ctrl_node_ref)->second;
-			prev_nodes.erase(node);
-			prev_nodes.insert(prev_if_node);
-		}
+StmtRefSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef ref) {
+	shared_ptr<PKB::NodeInterface> curr_node = this->getNode(ref);
+	StmtRefSet prev_nodes;
+	for (auto node : curr_node->getPreviousNodes()) {
+		prev_nodes.insert(node->getNodeRef());
 	}
 	return prev_nodes;
 }
 
-set<shared_ptr<PKB::NodeInterface>> PKB::ControlFlowGraph::getNextNodes(StmtRef ref) {
-	auto iter = this->stmt_to_normal_node_store.find(ref);
-	if (iter == this->stmt_to_normal_node_store.end()) {
-		throw invalid_argument("This node does not exist in the store.");
-	}
-	// Use a copy as we do not want to modify the direct nodes.
-	std::set<shared_ptr<PKB::NodeInterface>> next_nodes = std::set(iter->second->getNextNodes());
-	for (auto node : next_nodes) {
+StmtRefSet PKB::ControlFlowGraph::getNextNodes(StmtRef ref) {
+	shared_ptr<PKB::NodeInterface> curr_node = this->getNode(ref);
+	StmtRefSet next_nodes;
+	for (auto node : curr_node->getNextNodes()) {
 		// Edge case where a next node is a dummy node. Need to return the child nodes of the dummy, if there are any.
 		if (node->getNodeType() == "dummy") {
 			std::set<shared_ptr<PKB::NodeInterface>> next_nodes_of_dummy = node->getNextNodes();
-			next_nodes.erase(node);
-			next_nodes.insert(next_nodes_of_dummy.begin(), next_nodes_of_dummy.end());
+			for (auto next_node : next_nodes_of_dummy) next_nodes.insert(next_node->getNodeRef());
 		}
 	}
 	return next_nodes;
@@ -147,3 +132,5 @@ void PKB::ControlFlowGraph::removeNextConnection(StmtRef first, StmtRef second) 
 void PKB::ControlFlowGraph::optimize() {}
 
 void PKB::ControlFlowGraph::populateUniqueIndex() {}
+
+bool PKB::ControlFlowGraph::checkNextStar(StmtRef i, StmtRef i1) { return false; }
