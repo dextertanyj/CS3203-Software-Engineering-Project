@@ -306,6 +306,9 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Follows(*)") {
     // disallowed statement reference
     QP::QueryPreprocessor qpp5;
     REQUIRE_THROWS_AS(qpp5.parseQuery(UnivDeclarations + "Select s1 such that Follows(s1, \"x\")"), QP::QueryException);
+	// statement number with leading 0
+	QP::QueryPreprocessor qpp6;
+	REQUIRE_THROWS_AS(qpp6.parseQuery(UnivDeclarations + "Select s1 such that Follows(s1, 007)"), QP::QueryException);
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {

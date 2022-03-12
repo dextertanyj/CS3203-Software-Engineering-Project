@@ -255,7 +255,7 @@ QP::Types::ReferenceArgument QP::QueryPreprocessor::parseReferenceArgument() {
 		token_index++;
 		return Types::ReferenceArgument();
 	}
-	if (regex_search(this->query_tokens.at(token_index), regex("^[0-9]+$"))) {
+	if (this->query_tokens.at(token_index) == "0" || regex_search(this->query_tokens.at(token_index), regex("^[1-9][0-9]*$"))) {
 		token_index++;
 		return Types::ReferenceArgument(stoul(this->query_tokens.at(token_index - 1)));
 	}
