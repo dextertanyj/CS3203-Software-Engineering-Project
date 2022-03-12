@@ -8,7 +8,7 @@
 
 #include "DispatchProcessors.h"
 #include "QP/Dispatcher/StatementDispatcher.h"
-#include "QP/Executor/StatementRelationExecutor.tpp"
+#include "QP/Executor/StatementExecutor.tpp"
 
 template <QP::Types::ClauseType T>
 QP::Types::ArgumentDispatcher QP::Dispatcher::ParentDispatcher<T>::dispatcher =
@@ -34,13 +34,13 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 		{Types::ReferenceType::StatementIndex,
 	     [](vector<Types::ReferenceArgument> args) {
 			 return [lhs = args.at(0), rhs = args.at(1)](QP::StorageAdapter& storage) {
-				 return Executor::StatementRelationExecutor<T>::executeTrivialIndexIndex(storage, lhs, rhs);
+				 return Executor::StatementExecutor<T>::executeTrivialIndexIndex(storage, lhs, rhs);
 			 };
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](vector<Types::ReferenceArgument> args) {
 			 return [lhs = args.at(0)](QP::StorageAdapter& storage) {
-				 return Executor::StatementRelationExecutor<T>::executeTrivialIndexWildcard(storage, lhs);
+				 return Executor::StatementExecutor<T>::executeTrivialIndexWildcard(storage, lhs);
 			 };
 		 }},
 		{Types::DesignEntity::Stmt, lambda_index_synonym<T>()},
@@ -60,13 +60,13 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 		{Types::ReferenceType::StatementIndex,
 	     [](vector<Types::ReferenceArgument> args) {
 			 return [rhs = args.at(1)](QP::StorageAdapter& storage) {
-				 return Executor::StatementRelationExecutor<T>::executeTrivialWildcardIndex(storage, rhs);
+				 return Executor::StatementExecutor<T>::executeTrivialWildcardIndex(storage, rhs);
 			 };
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](vector<Types::ReferenceArgument> /*args*/) {
 			 return [](QP::StorageAdapter& storage) {
-				 return Executor::StatementRelationExecutor<T>::executeTrivialWildcardWildcard(storage);
+				 return Executor::StatementExecutor<T>::executeTrivialWildcardWildcard(storage);
 			 };
 		 }},
 		{Types::DesignEntity::Stmt, lambda_wildcard_synonym<T>()},
@@ -86,19 +86,19 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 		{Types::ReferenceType::StatementIndex,
 	     [](vector<QP::Types::ReferenceArgument> args) {
 			 return pair{[lhs = args.at(0), rhs = args.at(1)](QP::StorageAdapter& storage) {
-							 return Executor::StatementRelationExecutor<T>::executeTrivialSynonymIndex(storage, lhs, rhs);
+							 return Executor::StatementExecutor<T>::executeTrivialSynonymIndex(storage, lhs, rhs);
 						 },
 		                 [lhs = args.at(0), rhs = args.at(1)](QP::StorageAdapter& storage) {
-							 return Executor::StatementRelationExecutor<T>::executeSynonymIndex(storage, lhs, rhs);
+							 return Executor::StatementExecutor<T>::executeSynonymIndex(storage, lhs, rhs);
 						 }};
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](vector<QP::Types::ReferenceArgument> args) {
 			 return pair{[lhs = args.at(0)](QP::StorageAdapter& storage) {
-							 return Executor::StatementRelationExecutor<T>::executeTrivialSynonymWildcard(storage, lhs);
+							 return Executor::StatementExecutor<T>::executeTrivialSynonymWildcard(storage, lhs);
 						 },
 		                 [lhs = args.at(0)](QP::StorageAdapter& storage) {
-							 return Executor::StatementRelationExecutor<T>::executeSynonymWildcard(storage, lhs);
+							 return Executor::StatementExecutor<T>::executeSynonymWildcard(storage, lhs);
 						 }};
 		 }},
 		{Types::DesignEntity::Stmt, lambda_synonym_synonym<T>()},

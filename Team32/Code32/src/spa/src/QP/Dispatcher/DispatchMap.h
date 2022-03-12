@@ -6,10 +6,10 @@
 #include "QP/Dispatcher/FollowsDispatcher.tpp"
 #include "QP/Dispatcher/ModifiesDispatcher.h"
 #include "QP/Dispatcher/ParentDispatcher.tpp"
+#include "QP/Dispatcher/PatternAssignDispatcher.h"
 #include "QP/Dispatcher/UsesDispatcher.h"
 #include "QP/QP.h"
 #include "QP/QueryTypes.h"
-#include "QP/Relationship/Pattern.h"
 
 struct QP::Dispatcher::DispatchMap {
 	Types::ArgumentDispatchMap dispatch_map = {
@@ -20,7 +20,7 @@ struct QP::Dispatcher::DispatchMap {
 		{Types::ClauseType::UnknownModifies, QP::Dispatcher::ModifiesDispatcher::dispatcher},
 		{Types::ClauseType::Parent, QP::Dispatcher::ParentDispatcher<Types::ClauseType::Parent>::dispatcher},
 		{Types::ClauseType::ParentT, QP::Dispatcher::ParentDispatcher<Types::ClauseType::ParentT>::dispatcher},
-		{Types::ClauseType::PatternAssign, QP::Relationship::Pattern::dispatcher},
+		{Types::ClauseType::PatternAssign, QP::Dispatcher::PatternAssignDispatcher::dispatcher},
 		{Types::ClauseType::UnknownUses, QP::Dispatcher::UsesDispatcher::dispatcher}};
 	unordered_map<string, Types::ClauseType> clause_map = {
 		{"Calls", Types::ClauseType::Call},

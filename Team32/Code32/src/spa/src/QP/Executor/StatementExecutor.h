@@ -1,5 +1,5 @@
-#ifndef SPA_STATEMENTRELATIONEXECUTOR_H
-#define SPA_STATEMENTRELATIONEXECUTOR_H
+#ifndef SPA_STATEMENTEXECUTOR_H
+#define SPA_STATEMENTEXECUTOR_H
 
 #include "QP/Executor/Executor.h"
 #include "QP/QueryResult.h"
@@ -8,7 +8,7 @@
 #include "QP/StorageAdapter.h"
 
 template <QP::Types::ClauseType T>
-class QP::Executor::StatementRelationExecutor {
+class QP::Executor::StatementExecutor {
 public:
 	// Trivial Executors
 	static QueryResult executeTrivialIndexIndex(QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
@@ -36,4 +36,4 @@ public:
 	                                         const Types::ReferenceArgument& rhs);
 };
 
-#endif  // SPA_STATEMENTRELATIONEXECUTOR_H
+#endif  // SPA_STATEMENTEXECUTOR_H

@@ -8,13 +8,15 @@ template <QP::Types::ClauseType T>
 class ProcedureVariableExecutor;
 
 template <QP::Types::ClauseType T>
-class StatementRelationExecutor;
+class StatementExecutor;
 
 template <QP::Types::ClauseType T>
 class StatementVariableExecutor;
 
 template <QP::Types::ClauseType T>
 class ProcedureExecutor;
+
+namespace PatternAssignExecutor {};
 }  // namespace QP::Executor
 
 #endif  // SPA_EXECUTOR_H
