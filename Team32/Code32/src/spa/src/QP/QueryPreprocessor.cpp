@@ -88,6 +88,7 @@ void QP::QueryPreprocessor::parseSelect() {
 
 	string current_token = query_tokens.at(token_index);
 	if (current_token == "BOOLEAN" && !has_boolean_synonym) {
+		token_index++;
 		return;
 	}
 	else if (Common::Validator::validateName(current_token)) {
