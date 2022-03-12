@@ -112,5 +112,3 @@ TEST_CASE("PKB::NodeRelation::setCFGIndex Test") {
 	relation.setCFGIndex(3);
 	REQUIRE_EQUALS(relation.getSelf().get()->getUniqueIndex(), 3);
 }
-
-// TODO: test for optimize

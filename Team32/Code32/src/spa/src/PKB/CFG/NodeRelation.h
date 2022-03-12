@@ -8,7 +8,6 @@
 #include <unordered_set>
 
 #include "Common/TypeDefs.h"
-#include "DummyNodeInfo.h"
 #include "NodeInfo.h"
 #include "PKB/PKB.h"
 #include "PKB/TransitiveRelationStore.h"
