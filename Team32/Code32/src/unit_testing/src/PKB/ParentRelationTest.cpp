@@ -130,7 +130,7 @@ TEST_CASE("PKB::ParentRelation Overall Test") {
 }
 
 TEST_CASE("PKB::ParentRelation::optimize Test") {
-	PKB::StatementRelationStore<PKB::ParentRelation> store = PKB::StatementRelationStore<PKB::ParentRelation>();
+	PKB::Types::ParentStore store = PKB::Types::ParentStore();
 	shared_ptr<StmtInfo> s1 = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
 	shared_ptr<StmtInfo> s2 = TestUtilities::createStmtInfo(7, StmtType::Assign);
 	shared_ptr<StmtInfo> s3 = TestUtilities::createStmtInfo(3, StmtType::IfStmt);
@@ -145,7 +145,7 @@ TEST_CASE("PKB::ParentRelation::optimize Test") {
 	REQUIRE(find(store.getReverse(2).begin(), store.getReverse(2).end(), s3) != store.getReverse(2).end());
 	REQUIRE(find(store.getForward(3).begin(), store.getForward(3).end(), s1) != store.getForward(3).end());
 	REQUIRE_EQUALS(store.getReverseTransitive(2).size(), 0);
-	REQUIRE_NOTHROW(PKB::ParentRelation::optimize(store));
+	REQUIRE_NOTHROW(store.optimize());
 	REQUIRE_EQUALS(store.getReverseTransitive(2).size(), 5);
 	REQUIRE_EQUALS(store.getForwardTransitive(4).size(), 2);
 	REQUIRE(find(store.getForwardTransitive(4).begin(), store.getForwardTransitive(4).end(), s3) != store.getForwardTransitive(4).end());

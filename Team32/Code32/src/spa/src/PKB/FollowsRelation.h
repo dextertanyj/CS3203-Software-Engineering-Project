@@ -4,31 +4,32 @@
 #include <unordered_set>
 
 #include "Common/TypeDefs.h"
+#include "PKB/OrderedStatementTransitiveRelation.h"
 #include "PKB/PKB.h"
-#include "PKB/StatementRelationStore.h"
+#include "PKB/StatementInfo.h"
+#include "PKB/TransitiveRelationStore.h"
 
-class PKB::FollowsRelation {
+class PKB::FollowsRelation : public PKB::OrderedStatementTransitiveRelation {
 public:
-	explicit FollowsRelation(shared_ptr<StmtInfo> self);
+	using OrderedStatementTransitiveRelation::OrderedStatementTransitiveRelation;
 	void insertForward(const shared_ptr<StmtInfo>& following_to_insert);
 	void insertReverse(const shared_ptr<StmtInfo>& follower_to_insert);
-	void appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>> followings);
-	void appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>> followers);
 
-	StmtInfoPtrSet getForward();
-	StmtInfoPtrSet getReverse();
-	StmtInfoPtrSet getForwardTransitive();
-	StmtInfoPtrSet getReverseTransitive();
-	static void optimize(StatementRelationStore<FollowsRelation>& store);
+	[[nodiscard]] StmtInfoPtrSet getForward() const;
+	[[nodiscard]] StmtInfoPtrSet getReverse() const;
 
 private:
-	shared_ptr<StmtInfo> self;
 	shared_ptr<StmtInfo> following;
 	shared_ptr<StmtInfo> follower;
-	StmtInfoPtrSet following_transitive;
-	StmtInfoPtrSet followers_transitive;
-	static unordered_set<shared_ptr<StmtInfo>> populateTransitive(StatementRelationStore<FollowsRelation>& store, FollowsRelation& current,
-	                                                              unordered_set<shared_ptr<StmtInfo>> previous);
 };
+
+// Template specializations for Follows relationship.
+
+template <>
+void PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::FollowsRelation>::optimize();
+
+template <>
+StmtInfoPtrSet PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::FollowsRelation>::populateTransitive(FollowsRelation& current,
+                                                                                                         StmtInfoPtrSet previous);
 
 #endif  // SPA_SRC_PKB_FOLLOWSRELATION_H
