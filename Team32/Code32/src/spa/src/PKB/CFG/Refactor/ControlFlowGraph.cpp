@@ -55,12 +55,11 @@ StmtRefSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef ref) {
 	for (auto node : curr_node->getPreviousNodes()) {
 		// If previous node is a dummy node, need to get the previous nodes of the dummy node.
 		if (node->getNodeType() == "dummy") {
-			auto dummy_prev_nodes = node->getPreviousNodes();
-			for (auto prev_of_dummy : dummy_prev_nodes) {
-				prev_nodes.insert(prev_of_dummy->getNodeRef());
-			}
+			StmtRefSet prev_of_dummy = collectPreviousOfDummy(node);
+			prev_nodes.insert(prev_of_dummy.begin(), prev_of_dummy.end());
+		} else {
+			prev_nodes.insert(node->getNodeRef());
 		}
-		prev_nodes.insert(node->getNodeRef());
 	}
 	return prev_nodes;
 }
@@ -68,16 +67,10 @@ StmtRefSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef ref) {
 StmtRefSet PKB::ControlFlowGraph::getNextNodes(StmtRef ref) {
 	shared_ptr<PKB::NodeInterface> curr_node = this->getNode(ref);
 	StmtRefSet next_nodes;
-	// Edge case where this reference is an ifNode. Need to return the child nodes of the dummy, if there are any.
-	if (curr_node->getNodeType() == "if") {
-		set<shared_ptr<PKB::NodeInterface>> next_nodes_of_dummy = curr_node->getDummyNode()->getNextNodes();
-		for (auto next_node : next_nodes_of_dummy) {
-			next_nodes.insert(next_node->getNodeRef());
-		}
-	}
 	for (auto node : curr_node->getNextNodes()) {
 		if (node->getNodeType() == "dummy") {
-			set<shared_ptr<PKB::NodeInterface>> next_of_dummy = node->getNextNodes();
+			shared_ptr<PKB::NodeInterface> lowest_dummy_node = findLowestDummy(node);
+			set<shared_ptr<PKB::NodeInterface>> next_of_dummy = lowest_dummy_node->getNextNodes();
 			for (auto next_node_of_dummy : next_of_dummy) {
 				next_nodes.insert(next_node_of_dummy->getNodeRef());
 			}
@@ -119,6 +112,9 @@ void PKB::ControlFlowGraph::setIfNext(StmtRef prev, StmtRef then_next, StmtRef e
 	if (prev >= then_next || prev >= else_next || then_next >= else_next) {
 		throw invalid_argument("Ordering or value(s) of provided statement references is invalid.");
 	}
+	if (prev_node_iter->second->getNodeType() != "if") {
+		throw invalid_argument("First argument must refer to an if statement.");
+	}
 	shared_ptr<PKB::NodeInterface> if_ctrl_node = prev_node_iter->second;
 	shared_ptr<PKB::NodeInterface> then_next_node = then_next_node_iter->second;
 	shared_ptr<PKB::NodeInterface> else_next_node = else_next_node_iter->second;
@@ -137,12 +133,25 @@ void PKB::ControlFlowGraph::setIfExit(StmtRef then_prev, StmtRef else_prev, Stmt
 	if (if_stmt_ref >= then_prev || if_stmt_ref >= else_prev || then_prev >= else_prev) {
 		throw invalid_argument("Ordering or value(s) of provided statement references is invalid.");
 	}
+	if (if_ctrl_node_iter->second->getNodeType() != "if") {
+		throw invalid_argument("Third argument must refer to an if control statement.");
+	}
 	shared_ptr<PKB::NodeInterface> then_prev_node = then_prev_node_iter->second;
 	shared_ptr<PKB::NodeInterface> else_prev_node = else_prev_node_iter->second;
-	// set ending nodes to the dummy node of the if control node.
 	shared_ptr<PKB::NodeInterface> dummy_node = if_ctrl_node_iter->second->getDummyNode();
-	setConnection(then_prev_node, dummy_node);
-	setConnection(else_prev_node, dummy_node);
+	// Edge cases where last node(s) is also an if statement.
+	if (then_prev_node->getNodeType() == "if") {
+		shared_ptr<NodeInterface> dummy_node_of_then_prev = then_prev_node->getDummyNode();
+		setConnection(dummy_node_of_then_prev, dummy_node);
+	} else {
+		setConnection(then_prev_node, dummy_node);
+	}
+	if (else_prev_node->getNodeType() == "if") {
+		shared_ptr<NodeInterface> dummy_node_of_else_prev = else_prev_node->getDummyNode();
+		setConnection(dummy_node_of_else_prev, dummy_node);
+	} else {
+		setConnection(else_prev_node, dummy_node);
+	}
 }
 
 void PKB::ControlFlowGraph::setConnection(shared_ptr<PKB::NodeInterface> prev, shared_ptr<PKB::NodeInterface> next) {
@@ -150,11 +159,32 @@ void PKB::ControlFlowGraph::setConnection(shared_ptr<PKB::NodeInterface> prev, s
 	next->insertPrevious(prev);
 }
 
+shared_ptr<PKB::NodeInterface> PKB::ControlFlowGraph::findLowestDummy(shared_ptr<PKB::NodeInterface> dummy_node) {
+	shared_ptr<PKB::NodeInterface> result = dummy_node;
+	while (result->getNextNodes().size() == 1 && result->getNextNodes().begin()->get()->getNodeType() == "dummy") {
+		result = *result->getNextNodes().begin();
+	}
+	return result;
+}
+
+StmtRefSet PKB::ControlFlowGraph::collectPreviousOfDummy(shared_ptr<PKB::NodeInterface> dummy_node) {
+	StmtRefSet collection;
+	for (auto prev_node : dummy_node->getPreviousNodes()) {
+		if (prev_node->getNodeType() == "dummy") {
+			StmtRefSet sub_collection = collectPreviousOfDummy(prev_node);
+			collection.insert(sub_collection.begin(), sub_collection.end());
+		} else {
+			collection.insert(prev_node->getNodeRef());
+		}
+	}
+	return collection;
+}
+
+
 void PKB::ControlFlowGraph::clear() {
 	this->stmt_to_normal_node_store.clear();
 	this->stmt_to_dummy_node_store.clear();
 }
-
 // TODO: Next* TBD.
 void PKB::ControlFlowGraph::optimize() {}
 void PKB::ControlFlowGraph::populateUniqueIndex() {}
