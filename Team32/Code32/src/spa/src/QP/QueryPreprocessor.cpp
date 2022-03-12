@@ -8,9 +8,9 @@
 #include "QP/QueryExpressionLexer.h"
 #include "QP/QueryTypes.h"
 
-regex QP::QueryPreprocessor::invalid_chars_regex = regex(R"([^a-zA-Z0-9\s,"_\(\);\+\-\*\/%])");
+regex QP::QueryPreprocessor::invalid_chars_regex = regex(R"([^a-zA-Z0-9\s,"_\(\);\+\-\*\/%<>])");
 regex QP::QueryPreprocessor::query_token_regex =
-	regex(R"(Follows\*|Calls\*|Parent\*|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\+|-|\*|\/|%|_|,|\")");
+	regex(R"(Follows\*|Calls\*|Parent\*|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\+|-|\*|\/|%|_|,|\"|<|>)");
 
 QP::QueryProperties QP::QueryPreprocessor::parseQuery(string query) {
 	this->token_index = 0;
@@ -72,20 +72,45 @@ void QP::QueryPreprocessor::parseDeclaration(const Types::DesignEntity& type) {
 		if (existing_declarations.find(current_token) != existing_declarations.end()) {
 			throw QueryException("Duplicate synonym.");
 		}
-		this->existing_declarations.insert({current_token, {type, current_token}});
-		current_token = this->query_tokens.at(++token_index);
 	}
 	token_index++;
 }
 
 void QP::QueryPreprocessor::parseSelect() {
 	matchTokenOrThrow("Select");
+	// for the special case where BOOLEAN is a declared synonym
+	bool has_boolean_synonym = false;
+	auto boolean_synonym_search_result = existing_declarations.find("BOOLEAN");
+	if (boolean_synonym_search_result != existing_declarations.end()) {
+		has_boolean_synonym = true;
+	}
+
+	string current_token = query_tokens.at(token_index);
+	if (current_token == "BOOLEAN" && !has_boolean_synonym) {
+		return;
+	}
+	else if (Common::Validator::validateName(current_token)) {
+		parseSelectSynonymToken(false);
+	}
+	else {
+		matchTokenOrThrow("<");
+		parseSelectSynonymToken(true);
+		matchTokenOrThrow(">");
+	}
+}
+
+void QP::QueryPreprocessor::parseSelectSynonymToken(bool returns_tuple) {
 	auto synonym_search_result = existing_declarations.find(query_tokens.at(token_index));
 	if (synonym_search_result != existing_declarations.end()) {
-		select_list.push_back({synonym_search_result->second.type, synonym_search_result->second.symbol});
+		select_list.push_back({ synonym_search_result->second.type, synonym_search_result->second.symbol });
 		token_index++;
-	} else {
+	}
+	else {
 		throw QueryException("Undeclared query synonym.");
+	}
+	if (returns_tuple && query_tokens.at(token_index) == ",") {
+		token_index++;
+		parseSelectSynonymToken(true);
 	}
 }
 

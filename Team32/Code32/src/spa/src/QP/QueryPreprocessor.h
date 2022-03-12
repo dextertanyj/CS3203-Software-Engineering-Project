@@ -46,6 +46,7 @@ private:
 
 	// Parsing Rules
 	optional<Types::DesignEntity> parseDesignEntity();
+	void parseSelectSynonymToken(bool returns_tuple);
 	unique_ptr<Relationship::Relation> parseClause();
 	unique_ptr<Relationship::Relation> parseClause(Types::ClauseType type);
 	unique_ptr<Relationship::Relation> parseAssignPattern(Types::Declaration synonym);
