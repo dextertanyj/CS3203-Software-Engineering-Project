@@ -4,8 +4,9 @@
 #include "QP/QP.h"
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
+#include "QP/Dispatcher/Dispatcher.h"
 
-namespace QP::DispatchProcessors {
+namespace QP::Dispatcher::DispatchProcessors {
 Types::ExecutorSetBundle processSingleArgument(Types::ClauseType type,
                                                unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> map,
                                                vector<Types::ReferenceArgument> args);

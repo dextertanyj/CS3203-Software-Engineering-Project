@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "QP/DispatchProcessors.h"
+#include "QP/Dispatcher/DispatchProcessors.h"
 #include "QP/QueryUtils.h"
 
 // Trivial Executors
@@ -125,7 +125,7 @@ QP::QueryResult QP::Relationship::Pattern::executeSynonymExpression(QP::StorageA
 }
 
 QP::Types::ArgumentDispatcher QP::Relationship::Pattern::dispatcher = [](vector<Types::ReferenceArgument> args) {
-	return DispatchProcessors::processTripleArgument(Types::ClauseType::PatternAssign, argument_dispatch_map, std::move(args));
+	return Dispatcher::DispatchProcessors::processTripleArgument(Types::ClauseType::PatternAssign, argument_dispatch_map, std::move(args));
 };
 
 unordered_map<QP::Types::ArgumentDispatchKey,

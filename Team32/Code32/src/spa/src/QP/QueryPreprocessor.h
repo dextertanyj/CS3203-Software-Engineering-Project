@@ -11,7 +11,7 @@
 #include <vector>
 
 #include "Common/ExpressionProcessor/Expression.h"
-#include "QP/Dispatcher.h"
+#include "QP/Dispatcher/DispatchMap.h"
 #include "QP/QueryEvaluator.h"
 #include "QP/QueryExpressionLexer.h"
 #include "QP/QueryProperties.h"
@@ -56,7 +56,7 @@ private:
 
 	static regex invalid_chars_regex;
 	static regex query_token_regex;
-	QP::Dispatcher dispatcher;
+	QP::Dispatcher::DispatchMap dispatcher;
 };
 
 #endif  // SPA_SRC_QP_QUERYPREPROCESSOR_H

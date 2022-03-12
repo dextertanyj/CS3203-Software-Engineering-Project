@@ -2,7 +2,7 @@
 
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
-#include "QP/Dispatcher.h"
+#include "QP/Dispatcher/DispatchMap.h"
 #include "QP/QueryExpressionLexer.h"
 #include "QP/ReferenceArgument.h"
 #include "catch.hpp"
@@ -10,7 +10,7 @@
 using namespace QP::Types;
 
 TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
-	QP::Dispatcher dispatcher;
+	QP::DispatchMap dispatcher;
 	Declaration assign_declaration = {DesignEntity::Assign, "a"};
 	Declaration var_declaration = {DesignEntity::Variable, "v"};
 	Declaration stmt1_declaration = {DesignEntity::Stmt, "s1"};
@@ -66,7 +66,7 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 };
 
 TEST_CASE("QP::QueryEvaluator::execute") {
-	QP::Dispatcher dispatcher;
+	QP::DispatchMap dispatcher;
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);

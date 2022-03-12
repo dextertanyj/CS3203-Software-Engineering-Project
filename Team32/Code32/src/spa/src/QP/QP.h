@@ -15,10 +15,13 @@ class QueryPreprocessor;
 class QueryProcessor;
 class QueryProperties;
 class QueryResult;
-struct Dispatcher;
+struct DispatchMap;
 class StorageAdapter;
 namespace Utilities {};
 namespace Types {};
+
+namespace Dispatcher {};
+namespace Executor {};
 
 namespace DispatchProcessors {};
 

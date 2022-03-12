@@ -1,5 +1,5 @@
 #include "QP/Relationship/CallsT.h"
-#include "QP/Relationship/CallsHandler.tpp"
+#include "QP/Dispatcher/CallsDispatcher.tpp"
 
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
@@ -29,54 +29,54 @@ TEST_CASE("QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::execute
 	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("Trivial: Name & Name") {
-		QP::QueryResult result1 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeTrivialNameName(pkbA, proc1, proc3);
-		QP::QueryResult result2 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeTrivialNameName(pkbA, proc2, proc1);
+		QP::QueryResult result1 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeTrivialNameName(pkbA, proc1, proc3);
+		QP::QueryResult result2 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeTrivialNameName(pkbA, proc2, proc1);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Name & Wildcard Or Synonym") {
-		QP::QueryResult result1 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeTrivialNameWildcardOrSynonym(pkbA, proc1);
-		QP::QueryResult result2 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeTrivialNameWildcardOrSynonym(pkbA, proc3);
+		QP::QueryResult result1 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeTrivialNameWildcardOrSynonym(pkbA, proc1);
+		QP::QueryResult result2 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeTrivialNameWildcardOrSynonym(pkbA, proc3);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Wildcard Or Synonym & Name") {
-		QP::QueryResult result1 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeTrivialWildcardOrSynonymName(pkbA, proc2);
-		QP::QueryResult result2 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeTrivialWildcardOrSynonymName(pkbA, proc1);
+		QP::QueryResult result1 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeTrivialWildcardOrSynonymName(pkbA, proc2);
+		QP::QueryResult result2 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeTrivialWildcardOrSynonymName(pkbA, proc1);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Wildcard Or Synonym & Wildcard Or Synonym But Not Both Synonym") {
-		QP::QueryResult result = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeTrivialWildcardOrSynonymWildcardOrSynonym(pkbA);
+		QP::QueryResult result = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeTrivialWildcardOrSynonymWildcardOrSynonym(pkbA);
 
 		REQUIRE(result.getResult());
 	}
 
 	SECTION("Trivial: Wildcard Or Synonym & Name") {
-		QP::QueryResult result1 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeTrivialWildcardOrSynonymName(pkbA, proc2);
-		QP::QueryResult result2 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeTrivialWildcardOrSynonymName(pkbA, proc1);
+		QP::QueryResult result1 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeTrivialWildcardOrSynonymName(pkbA, proc2);
+		QP::QueryResult result2 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeTrivialWildcardOrSynonymName(pkbA, proc1);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Synonym & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeTrivialSynonymSynonym(pkbA, proc_synonym_1, proc_synonym_2);
-		QP::QueryResult result2 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeTrivialSynonymSynonym(pkbA, proc_synonym_1, proc_synonym_1);
+		QP::QueryResult result1 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeTrivialSynonymSynonym(pkbA, proc_synonym_1, proc_synonym_2);
+		QP::QueryResult result2 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeTrivialSynonymSynonym(pkbA, proc_synonym_1, proc_synonym_1);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Name & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeNameSynonym(pkbA, proc1, proc_synonym_1);
-		QP::QueryResult result2 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeNameSynonym(pkbA, proc3, proc_synonym_1);
+		QP::QueryResult result1 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeNameSynonym(pkbA, proc1, proc_synonym_1);
+		QP::QueryResult result2 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeNameSynonym(pkbA, proc3, proc_synonym_1);
 
 		vector<string> expected_result = {"proc2", "proc3"};
 		vector<string> actual_result = result1.getSynonymResult("p1");
@@ -85,7 +85,7 @@ TEST_CASE("QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::execute
 	}
 
 	SECTION("Wildcard & Synonym") {
-		QP::QueryResult result = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeWildcardSynonym(pkbA, proc_synonym_1);
+		QP::QueryResult result = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeWildcardSynonym(pkbA, proc_synonym_1);
 
 		vector<string> expected_result = {"proc2", "proc3"};
 		vector<string> actual_result = result.getSynonymResult("p1");
@@ -94,8 +94,8 @@ TEST_CASE("QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::execute
 	}
 
 	SECTION("Synonym & Name") {
-		QP::QueryResult result1 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeSynonymName(pkbA, proc_synonym_1, proc3);
-		QP::QueryResult result2 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeSynonymName(pkbA, proc_synonym_1, proc1);
+		QP::QueryResult result1 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeSynonymName(pkbA, proc_synonym_1, proc3);
+		QP::QueryResult result2 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeSynonymName(pkbA, proc_synonym_1, proc1);
 
 		vector<string> expected_result = {"proc1", "proc2"};
 		vector<string> actual_result = result1.getSynonymResult("p1");
@@ -104,7 +104,7 @@ TEST_CASE("QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::execute
 	}
 
 	SECTION("Synonym & Wildcard") {
-		QP::QueryResult result = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeSynonymWildcard(pkbA, proc_synonym_1);
+		QP::QueryResult result = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeSynonymWildcard(pkbA, proc_synonym_1);
 
 		vector<string> expected_result = {"proc1", "proc2"};
 		vector<string> actual_result = result.getSynonymResult("p1");
@@ -113,8 +113,8 @@ TEST_CASE("QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::execute
 	}
 
 	SECTION("Synonym & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeSynonymSynonym(pkbA, proc_synonym_1, proc_synonym_2);
-		QP::QueryResult result2 = QP::Relationship::CallsHandler<QP::Types::ClauseType::CallT>::executeSynonymSynonym(pkbA, proc_synonym_1, proc_synonym_1);
+		QP::QueryResult result1 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeSynonymSynonym(pkbA, proc_synonym_1, proc_synonym_2);
+		QP::QueryResult result2 = QP::Relationship::CallsExecutor<QP::Types::ClauseType::CallT>::executeSynonymSynonym(pkbA, proc_synonym_1, proc_synonym_1);
 
 		vector<string> expected_result_1 = {"proc1", "proc1", "proc2"};
 		vector<string> expected_result_2 = {"proc2", "proc3", "proc3"};

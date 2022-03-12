@@ -2,7 +2,7 @@
 
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
-#include "QP/Relationship/Modifies.h"
+#include "QP/Dispatchers/Modifies.h"
 #include "catch.hpp"
 
 using namespace QP::Types;

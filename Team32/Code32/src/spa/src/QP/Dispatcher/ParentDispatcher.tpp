@@ -1,45 +1,46 @@
 #ifndef SPA_SRC_QP_RELATIONSHIP_PARENTDISPATCHERTEMPLATE_TPP
 #define SPA_SRC_QP_RELATIONSHIP_PARENTDISPATCHERTEMPLATE_TPP
 
-#include "QP/Relationship/ParentDispatcher.h"
+#include "ParentDispatcher.h"
 
 #include <unordered_map>
 #include <utility>
 
-#include "QP/DispatchProcessors.h"
-#include "QP/Relationship/StatementRelationExecutor.tpp"
+#include "DispatchProcessors.h"
+#include "QP/Dispatcher/StatementDispatcher.h"
+#include "QP/Executor/StatementRelationExecutor.tpp"
 
 template <QP::Types::ClauseType T>
-QP::Types::ArgumentDispatcher QP::Relationship::ParentDispatcher<T>::dispatcher =
+QP::Types::ArgumentDispatcher QP::Dispatcher::ParentDispatcher<T>::dispatcher =
 	[](vector<Types::ReferenceArgument> args) { return argumentDispatcher(T, move(args)); };
 
 template <QP::Types::ClauseType T>
-QP::Types::ExecutorSetBundle QP::Relationship::ParentDispatcher<T>::argumentDispatcher(Types::ClauseType type,
-                                                                                               vector<Types::ReferenceArgument> args) {
+QP::Types::ExecutorSetBundle QP::Dispatcher::ParentDispatcher<T>::argumentDispatcher(Types::ClauseType type,
+                                                                                     vector<Types::ReferenceArgument> args) {
 	return DispatchProcessors::processDoubleArgument(type, ParentDispatcher<T>::argument_dispatch_map, std::move(args));
 };
 
 template <QP::Types::ClauseType T>
 const unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>
-	QP::Relationship::ParentDispatcher<T>::argument_dispatch_map = {{Types::ReferenceType::StatementIndex, getIndexMap()},
-                                                                            {Types::ReferenceType::Wildcard, getWildcardMap()},
-                                                                            {Types::DesignEntity::Stmt, getSynonymMap()},
-                                                                            {Types::DesignEntity::While, getSynonymMap()},
-                                                                            {Types::DesignEntity::If, getSynonymMap()}};
+	QP::Dispatcher::ParentDispatcher<T>::argument_dispatch_map = {{Types::ReferenceType::StatementIndex, getIndexMap()},
+                                                                  {Types::ReferenceType::Wildcard, getWildcardMap()},
+                                                                  {Types::DesignEntity::Stmt, getSynonymMap()},
+                                                                  {Types::DesignEntity::While, getSynonymMap()},
+                                                                  {Types::DesignEntity::If, getSynonymMap()}};
 
 template <QP::Types::ClauseType T>
-unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Relationship::ParentDispatcher<T>::getIndexMap() {
+unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::ParentDispatcher<T>::getIndexMap() {
 	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
 		{Types::ReferenceType::StatementIndex,
 	     [](vector<Types::ReferenceArgument> args) {
-			 return [parent = args.at(0), child = args.at(1)](QP::StorageAdapter& pkb) {
-				 return StatementRelationExecutor<T>::executeTrivialIndexIndex(pkb, parent, child);
+			 return [lhs = args.at(0), rhs = args.at(1)](QP::StorageAdapter& storage) {
+				 return Executor::StatementRelationExecutor<T>::executeTrivialIndexIndex(storage, lhs, rhs);
 			 };
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](vector<Types::ReferenceArgument> args) {
-			 return [parent = args.at(0)](QP::StorageAdapter& pkb) {
-				 return StatementRelationExecutor<T>::executeTrivialIndexWildcard(pkb, parent);
+			 return [lhs = args.at(0)](QP::StorageAdapter& storage) {
+				 return Executor::StatementRelationExecutor<T>::executeTrivialIndexWildcard(storage, lhs);
 			 };
 		 }},
 		{Types::DesignEntity::Stmt, lambda_index_synonym<T>()},
@@ -54,18 +55,19 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 }
 
 template <QP::Types::ClauseType T>
-unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>
-QP::Relationship::ParentDispatcher<T>::getWildcardMap() {
+unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::ParentDispatcher<T>::getWildcardMap() {
 	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
 		{Types::ReferenceType::StatementIndex,
 	     [](vector<Types::ReferenceArgument> args) {
-			 return [child = args.at(1)](QP::StorageAdapter& pkb) {
-				 return StatementRelationExecutor<T>::executeTrivialWildcardIndex(pkb, child);
+			 return [rhs = args.at(1)](QP::StorageAdapter& storage) {
+				 return Executor::StatementRelationExecutor<T>::executeTrivialWildcardIndex(storage, rhs);
 			 };
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](vector<Types::ReferenceArgument> /*args*/) {
-			 return [](QP::StorageAdapter& pkb) { return StatementRelationExecutor<T>::executeTrivialWildcardWildcard(pkb); };
+			 return [](QP::StorageAdapter& storage) {
+				 return Executor::StatementRelationExecutor<T>::executeTrivialWildcardWildcard(storage);
+			 };
 		 }},
 		{Types::DesignEntity::Stmt, lambda_wildcard_synonym<T>()},
 		{Types::DesignEntity::Call, lambda_wildcard_synonym<T>()},
@@ -79,25 +81,24 @@ QP::Relationship::ParentDispatcher<T>::getWildcardMap() {
 }
 
 template <QP::Types::ClauseType T>
-unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>
-QP::Relationship::ParentDispatcher<T>::getSynonymMap() {
+unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::ParentDispatcher<T>::getSynonymMap() {
 	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
 		{Types::ReferenceType::StatementIndex,
 	     [](vector<QP::Types::ReferenceArgument> args) {
-			 return pair{[parent = args.at(0), child = args.at(1)](QP::StorageAdapter& pkb) {
-							 return StatementRelationExecutor<T>::executeTrivialSynonymIndex(pkb, parent, child);
+			 return pair{[lhs = args.at(0), rhs = args.at(1)](QP::StorageAdapter& storage) {
+							 return Executor::StatementRelationExecutor<T>::executeTrivialSynonymIndex(storage, lhs, rhs);
 						 },
-		                 [parent = args.at(0), child = args.at(1)](QP::StorageAdapter& pkb) {
-							 return StatementRelationExecutor<T>::executeSynonymIndex(pkb, parent, child);
+		                 [lhs = args.at(0), rhs = args.at(1)](QP::StorageAdapter& storage) {
+							 return Executor::StatementRelationExecutor<T>::executeSynonymIndex(storage, lhs, rhs);
 						 }};
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](vector<QP::Types::ReferenceArgument> args) {
-			 return pair{[parent = args.at(0)](QP::StorageAdapter& pkb) {
-							 return StatementRelationExecutor<T>::executeTrivialSynonymWildcard(pkb, parent);
+			 return pair{[lhs = args.at(0)](QP::StorageAdapter& storage) {
+							 return Executor::StatementRelationExecutor<T>::executeTrivialSynonymWildcard(storage, lhs);
 						 },
-		                 [parent = args.at(0)](QP::StorageAdapter& pkb) {
-							 return StatementRelationExecutor<T>::executeSynonymWildcard(pkb, parent);
+		                 [lhs = args.at(0)](QP::StorageAdapter& storage) {
+							 return Executor::StatementRelationExecutor<T>::executeSynonymWildcard(storage, lhs);
 						 }};
 		 }},
 		{Types::DesignEntity::Stmt, lambda_synonym_synonym<T>()},

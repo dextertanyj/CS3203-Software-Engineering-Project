@@ -4,17 +4,12 @@
 #include <unordered_map>
 #include <vector>
 
+#include "QP/Dispatcher/Dispatcher.h"
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
-#include "QP/Relationship/Relationship.h"
-
-namespace QP::Relationship {
-template <QP::Types::ClauseType T>
-class FollowsDispatcher;
-}
 
 template <QP::Types::ClauseType T>
-class QP::Relationship::FollowsDispatcher {
+class QP::Dispatcher::FollowsDispatcher {
 public:
 	static Types::ArgumentDispatcher dispatcher;
 

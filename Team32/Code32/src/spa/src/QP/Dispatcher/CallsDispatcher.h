@@ -1,20 +1,14 @@
-#ifndef SPA_SRC_QP_RELATIONSHIP_PARENTDISPATCHERTEMPLATE_H
-#define SPA_SRC_QP_RELATIONSHIP_PARENTDISPATCHERTEMPLATE_H
+#ifndef SPA_SRC_QP_RELATIONSHIP_CALLSHANDLER_H
+#define SPA_SRC_QP_RELATIONSHIP_CALLSHANDLER_H
 
-#include <unordered_map>
-#include <vector>
-
+#include "QP/QueryResult.h"
 #include "QP/QueryTypes.h"
+#include "QP/StorageAdapter.h"
 #include "QP/ReferenceArgument.h"
-#include "QP/Relationship/Relationship.h"
-
-namespace QP::Relationship {
-template <QP::Types::ClauseType T>
-class ParentDispatcher;
-}
+#include "QP/Dispatcher/Dispatcher.h"
 
 template <QP::Types::ClauseType T>
-class QP::Relationship::ParentDispatcher {
+class QP::Dispatcher::CallsDispatcher {
 public:
 	static Types::ArgumentDispatcher dispatcher;
 
@@ -22,9 +16,9 @@ private:
 	static Types::ExecutorSetBundle argumentDispatcher(Types::ClauseType type, vector<Types::ReferenceArgument> arguments);
 	static const unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>>
 		argument_dispatch_map;
-	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getIndexMap();
+	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getNameMap();
 	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getWildcardMap();
 	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getSynonymMap();
 };
 
-#endif  // SPA_SRC_QP_RELATIONSHIP_PARENTDISPATCHERTEMPLATE_H
+#endif  // SPA_SRC_QP_RELATIONSHIP_CALLSHANDLER_H

@@ -1,6 +1,6 @@
-#include "QP/DispatchProcessors.h"
+#include "DispatchProcessors.h"
 
-QP::Types::ExecutorSetBundle QP::DispatchProcessors::processSingleArgument(
+QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processSingleArgument(
 	Types::ClauseType type, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> map,
 	vector<Types::ReferenceArgument> args) {
 	if (args.size() != 1) {
@@ -17,7 +17,7 @@ QP::Types::ExecutorSetBundle QP::DispatchProcessors::processSingleArgument(
 	return {type, iter->second(args)};
 }
 
-QP::Types::ExecutorSetBundle QP::DispatchProcessors::processDoubleArgument(
+QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processDoubleArgument(
 	Types::ClauseType type,
 	unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>> map,
 	vector<Types::ReferenceArgument> args) {
@@ -44,7 +44,7 @@ QP::Types::ExecutorSetBundle QP::DispatchProcessors::processDoubleArgument(
 	return {type, inner_map_iter->second(args)};
 }
 
-QP::Types::ExecutorSetBundle QP::DispatchProcessors::processDoubleArgument(
+QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processDoubleArgument(
 	unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>> map,
 	vector<Types::ReferenceArgument> args) {
 	if (args.size() != 2) {
@@ -70,7 +70,7 @@ QP::Types::ExecutorSetBundle QP::DispatchProcessors::processDoubleArgument(
 	return {inner_map_iter->second.first, inner_map_iter->second.second(args)};
 }
 
-QP::Types::ExecutorSetBundle QP::DispatchProcessors::processTripleArgument(
+QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processTripleArgument(
 	Types::ClauseType type,
 	unordered_map<Types::ArgumentDispatchKey,
                   unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>>>
