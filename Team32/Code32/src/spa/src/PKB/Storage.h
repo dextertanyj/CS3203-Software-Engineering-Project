@@ -149,9 +149,9 @@ private:
 	PVRelationStore<UsesPRelation> uses_p_store;
 	PVRelationStore<PKB::ModifiesPRelation> modifies_p_store;
 	AssignStore assign_store;
-	ControlFlowGraph control_flow_graph;
 	SVRelationStore<PKB::IfControlRelation> if_control_store;
 	PKB::SVRelationStore<PKB::WhileControlRelation> while_control_store;
+	PKB::ControlFlowGraph control_flow_graph;
 	NextStarQueryCache next_cache;
 
 	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
