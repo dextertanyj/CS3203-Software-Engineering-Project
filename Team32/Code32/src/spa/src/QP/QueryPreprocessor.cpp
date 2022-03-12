@@ -64,7 +64,7 @@ void QP::QueryPreprocessor::parseDeclaration(const Types::DesignEntity& type) {
 	if (existing_declarations.find(current_token) != existing_declarations.end()) {
 		throw QueryException("Duplicate synonym.");
 	}
-	this->existing_declarations.insert({ current_token, {type, current_token} });
+	this->existing_declarations.insert({current_token, {type, current_token}});
 	current_token = this->query_tokens.at(++token_index);
 	while (current_token != ";") {
 		matchTokenOrThrow(",");
@@ -72,7 +72,7 @@ void QP::QueryPreprocessor::parseDeclaration(const Types::DesignEntity& type) {
 		if (existing_declarations.find(current_token) != existing_declarations.end()) {
 			throw QueryException("Duplicate synonym.");
 		}
-		this->existing_declarations.insert({ current_token, {type, current_token} });
+		this->existing_declarations.insert({current_token, {type, current_token}});
 		current_token = this->query_tokens.at(++token_index);
 	}
 	token_index++;
@@ -90,11 +90,9 @@ void QP::QueryPreprocessor::parseSelect() {
 	if (current_token == "BOOLEAN" && !has_boolean_synonym) {
 		token_index++;
 		return;
-	}
-	else if (Common::Validator::validateName(current_token)) {
+	} else if (Common::Validator::validateName(current_token)) {
 		parseSelectSynonymToken(false);
-	}
-	else {
+	} else {
 		matchTokenOrThrow("<");
 		parseSelectSynonymToken(true);
 		matchTokenOrThrow(">");
@@ -104,10 +102,9 @@ void QP::QueryPreprocessor::parseSelect() {
 void QP::QueryPreprocessor::parseSelectSynonymToken(bool returns_tuple) {
 	auto synonym_search_result = existing_declarations.find(query_tokens.at(token_index));
 	if (synonym_search_result != existing_declarations.end()) {
-		select_list.push_back({ synonym_search_result->second.type, synonym_search_result->second.symbol });
+		select_list.push_back({synonym_search_result->second.type, synonym_search_result->second.symbol});
 		token_index++;
-	}
-	else {
+	} else {
 		throw QueryException("Undeclared query synonym.");
 	}
 	if (returns_tuple && query_tokens.at(token_index) == ",") {
