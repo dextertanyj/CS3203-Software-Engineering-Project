@@ -180,7 +180,6 @@ StmtRefSet PKB::ControlFlowGraph::collectPreviousOfDummy(shared_ptr<PKB::NodeInt
 	return collection;
 }
 
-
 void PKB::ControlFlowGraph::clear() {
 	this->stmt_to_normal_node_store.clear();
 	this->stmt_to_dummy_node_store.clear();
