@@ -9,16 +9,20 @@
 #include "QP/Relationship/Relation.h"
 
 using namespace std;
+using QP::Types::ClauseList;
+using QP::Types::ConnectedSynonyms;
+using QP::Types::DeclarationList;
+using QP::Types::Node;
 
 class QP::QueryGraph {
 public:
-	explicit QueryGraph(const Types::DeclarationList& declarations);
-	void setEdges(const Types::ClauseList& clause_list);
-	unordered_map<string, Types::Node> getNodes();
-	unordered_map<string, size_t> getSynonymsInGroup(const string& selected_synonym);
+	explicit QueryGraph(const DeclarationList& declarations);
+	void setEdges(const ClauseList& clause_list);
+	unordered_map<string, Node> getNodes();
+	ConnectedSynonyms getConnectedSynonyms(const DeclarationList& select_list);
 
 private:
-	unordered_map<string, Types::Node> nodes;
+	unordered_map<string, Node> nodes;
 	void setEdge(const shared_ptr<Relationship::Relation>& relation);
 	void addEdge(const pair<string, string>& symbols);
 };

@@ -3,20 +3,23 @@
 #include <queue>
 #include <vector>
 
-QP::QueryGraph::QueryGraph(const Types::DeclarationList& declarations) {
-	for (const Types::Declaration& declaration : declarations) {
-		Types::Node node = {declaration.symbol, {}};
+using QP::Types::Clause;
+using QP::Types::Declaration;
+
+QP::QueryGraph::QueryGraph(const DeclarationList& declarations) {
+	for (const Declaration& declaration : declarations) {
+		Node node = {declaration.symbol, {}};
 		nodes.insert({declaration.symbol, node});
 	}
 }
 
-void QP::QueryGraph::setEdges(const Types::ClauseList& clause_list) {
-	for (const Types::Clause& clause : clause_list) {
+void QP::QueryGraph::setEdges(const ClauseList& clause_list) {
+	for (const Clause& clause : clause_list) {
 		setEdge(clause.relation);
 	}
 }
 
-unordered_map<string, QP::Types::Node> QP::QueryGraph::getNodes() { return nodes; }
+unordered_map<string, Node> QP::QueryGraph::getNodes() { return nodes; }
 
 void QP::QueryGraph::setEdge(const shared_ptr<Relationship::Relation>& relation) {
 	vector<string> declarations = relation->getDeclarationSymbols();
@@ -27,28 +30,42 @@ void QP::QueryGraph::setEdge(const shared_ptr<Relationship::Relation>& relation)
 }
 
 void QP::QueryGraph::addEdge(const pair<string, string>& symbols) {
-	Types::Node& node = this->nodes.at(symbols.first);
+	Node& node = this->nodes.at(symbols.first);
 	if (find(node.adjacent_symbols.begin(), node.adjacent_symbols.end(), symbols.second) == node.adjacent_symbols.end()) {
 		node.adjacent_symbols.push_back(symbols.second);
 	}
 }
 
-unordered_map<string, size_t> QP::QueryGraph::getSynonymsInGroup(const string& selected_synonym) {
-	// Run BFS on the selected node
+ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& select_list) {
 	unordered_map<string, size_t> result;
+	unordered_map<size_t, DeclarationList> group_to_selected_declarations;
+	DeclarationList selected_declarations;
 	unordered_set<string> unvisited_nodes;
+	unordered_map<string, Declaration> selected_nodes;
 	size_t group_number = 0;
 
 	for (auto& node : nodes) {
 		unvisited_nodes.insert(node.first);
 	}
 
+	for (const Declaration& declaration : select_list) {
+		selected_nodes.insert({declaration.symbol, declaration});
+	}
+
 	queue<string> queue;
-	queue.push(selected_synonym);
+	if (!selected_nodes.empty()) {
+		queue.push(selected_nodes.begin()->first);
+	} else {
+		queue.push(*unvisited_nodes.begin());
+	}
 
 	while (!queue.empty()) {
 		string symbol = queue.front();
 		result.insert({symbol, group_number});
+		if (selected_nodes.find(symbol) != selected_nodes.end()) {
+			selected_declarations.push_back(selected_nodes[symbol]);
+			selected_nodes.erase(symbol);
+		}
 		unvisited_nodes.erase(symbol);
 		queue.pop();
 
@@ -59,13 +76,24 @@ unordered_map<string, size_t> QP::QueryGraph::getSynonymsInGroup(const string& s
 			}
 		}
 
-		// If queue is empty but there are still unvisited nodes,
-		// we add an unvisited node to queue
-		if (queue.empty() && !unvisited_nodes.empty()) {
-			queue.push(*unvisited_nodes.begin());
+		if (queue.empty()) {
+			group_to_selected_declarations.insert({group_number, selected_declarations});
+			selected_declarations.clear();
 			group_number++;
+		}
+
+		if (queue.empty() && !unvisited_nodes.empty()) {
+			if (!selected_nodes.empty()) {
+				queue.push(selected_nodes.begin()->first);
+			} else {
+				queue.push(*unvisited_nodes.begin());
+			}
 		}
 	}
 
-	return result;
+	return {
+		group_number,
+		result,
+		group_to_selected_declarations,
+	};
 }

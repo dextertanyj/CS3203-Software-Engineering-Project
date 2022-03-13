@@ -77,6 +77,12 @@ typedef unordered_map<ClauseType, ArgumentDispatcher> ArgumentDispatchMap;
 
 typedef vector<Declaration> DeclarationList;
 typedef vector<Clause> ClauseList;
+
+typedef struct ConnectedSynonyms {
+	size_t number_of_groups;
+	unordered_map<string, size_t> synonyms_in_group;
+	unordered_map<size_t, DeclarationList> group_to_selected_declarations;
+} ConnectedSynonyms;
 }  // namespace QP::Types
 
 #endif  // SPA_SRC_QP_QUERYTYPES_H

@@ -12,6 +12,8 @@ unordered_set<string> QP::QueryResult::getSynonymsStored() { return synonyms_sto
 
 vector<string> QP::QueryResult::getSynonymResult(const string& synonym) { return table.at(synonym); }
 
+size_t QP::QueryResult::getTableSize() { return table.begin()->second.size(); }
+
 void QP::QueryResult::addColumn(const string& synonym, const vector<string>& column) {
 	if (column.empty()) {
 		result = false;
@@ -32,6 +34,21 @@ void QP::QueryResult::joinResult(QueryResult& query_result) {
 	}
 
 	joinWithSameSynonym(query_result);
+}
+
+void QP::QueryResult::filterBySelect(const QP::Types::DeclarationList& select_list) {
+	unordered_map<string, vector<string>> filtered_table;
+	unordered_set<string> filtered_synonyms;
+
+	for (auto const& declaration : select_list) {
+		filtered_table.insert({declaration.symbol, this->table[declaration.symbol]});
+		filtered_synonyms.insert(declaration.symbol);
+	}
+
+	removeDuplicateRows(filtered_table);
+
+	this->table = filtered_table;
+	this->synonyms_stored = filtered_synonyms;
 }
 
 void QP::QueryResult::joinWithDifferentSynonym(QueryResult& query_result) {
@@ -171,7 +188,7 @@ unordered_map<string, vector<string>> QP::QueryResult::getSubTableWithRow(const 
 	}
 
 	unordered_map<string, vector<string>> sub_table = this->table;
-	size_t number_of_rows = table.begin()->second.size();
+	size_t number_of_rows = getTableSize();
 
 	size_t pos = 0;
 	for (size_t i = 0; i < number_of_rows; i++) {
@@ -183,4 +200,25 @@ unordered_map<string, vector<string>> QP::QueryResult::getSubTableWithRow(const 
 	}
 
 	return sub_table;
+}
+
+void QP::QueryResult::removeDuplicateRows(unordered_map<string, vector<string>>& table) {
+	unordered_set<string> rows;
+	size_t number_of_rows = table.begin()->second.size();
+
+	size_t pos = 0;
+	for (size_t i = 0; i < number_of_rows; i++) {
+		string row;
+		for (auto const& pair : table) {
+			row.append(pair.second[pos]);
+			row.append(" ");
+		}
+
+		if (rows.find(row) != rows.end()) {
+			removeRow(table, pos);
+		} else {
+			pos++;
+			rows.insert(row);
+		}
+	}
 }

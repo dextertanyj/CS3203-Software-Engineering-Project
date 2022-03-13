@@ -155,6 +155,7 @@ TEST_CASE("One pattern clause") {
 		vector<string> result = processor.processQuery(query);
 
 		vector<string> expected_result = {"2", "3"};
+		sort(result.begin(), result.end());
 		REQUIRE(result == expected_result);
 	}
 
