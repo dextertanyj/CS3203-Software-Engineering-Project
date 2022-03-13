@@ -3,6 +3,8 @@ on: [ push, pull_request ]
 
 env:
   BUILD_TYPE: Debug
+  CXX: /usr/bin/clang++-12
+  CC: /usr/bin/clang-12
 
 jobs:
   profile-ubuntu:
@@ -19,7 +21,7 @@ jobs:
       - name: Configure CMake
         shell: bash
         working-directory: ${{runner.workspace}}/build
-        run: cmake ${{github.workspace}}/Team32/Code32/ -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        run: cmake ${{github.workspace}}/Team32/Code32/ -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX
 
       - name: Build project
         working-directory: ${{runner.workspace}}/build
