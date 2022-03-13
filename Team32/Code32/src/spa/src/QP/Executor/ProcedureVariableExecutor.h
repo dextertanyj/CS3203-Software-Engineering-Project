@@ -11,20 +11,20 @@ template <QP::Types::ClauseType T>
 class QP::Executor::ProcedureVariableExecutor {
 public:
 	// Trivial Executors
-	static QueryResult executeTrivialNameName(QP::StorageAdapter& storage, const Types::ReferenceArgument& left_ent,
-	                                          const Types::ReferenceArgument& right_ent);
-	static QueryResult executeTrivialNameWildcardOrSynonym(QP::StorageAdapter& storage, const Types::ReferenceArgument& left_ent);
-	static QueryResult executeTrivialSynonymName(QP::StorageAdapter& storage, const Types::ReferenceArgument& right_ent);
+	static QueryResult executeTrivialNameName(QP::StorageAdapter& storage, const Types::ReferenceArgument& procedure,
+	                                          const Types::ReferenceArgument& variable);
+	static QueryResult executeTrivialNameWildcardOrSynonym(QP::StorageAdapter& storage, const Types::ReferenceArgument& procedure);
+	static QueryResult executeTrivialSynonymName(QP::StorageAdapter& storage, const Types::ReferenceArgument& variable);
 	static QueryResult executeTrivialSynonymWildcardOrSynonym(QP::StorageAdapter& storage);
 
 	// Executors
-	static QueryResult executeNameSynonym(QP::StorageAdapter& storage, const Types::ReferenceArgument& left_ent,
-	                                      const Types::ReferenceArgument& right_ent);
-	static QueryResult executeSynonymName(QP::StorageAdapter& storage, const Types::ReferenceArgument& left_ent,
-	                                      const Types::ReferenceArgument& right_ent);
-	static QueryResult executeSynonymWildcard(QP::StorageAdapter& storage, const Types::ReferenceArgument& left_ent);
-	static QueryResult executeSynonymSynonym(QP::StorageAdapter& storage, const Types::ReferenceArgument& left_ent,
-	                                         const Types::ReferenceArgument& right_ent);
+	static QueryResult executeNameSynonym(QP::StorageAdapter& storage, const Types::ReferenceArgument& procedure,
+	                                      const Types::ReferenceArgument& variable);
+	static QueryResult executeSynonymName(QP::StorageAdapter& storage, const Types::ReferenceArgument& procedure,
+	                                      const Types::ReferenceArgument& variable);
+	static QueryResult executeSynonymWildcard(QP::StorageAdapter& storage, const Types::ReferenceArgument& procedure);
+	static QueryResult executeSynonymSynonym(QP::StorageAdapter& storage, const Types::ReferenceArgument& procedure,
+	                                         const Types::ReferenceArgument& variable);
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_PROCEDUREVARIABLEEXECUTOR_H

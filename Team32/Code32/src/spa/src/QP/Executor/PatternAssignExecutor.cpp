@@ -39,6 +39,7 @@ QP::QueryResult QP::Executor::PatternAssignExecutor::executeNameWildcard(QP::Sto
 	QP::QueryResult result = QP::QueryResult();
 	vector<string> statement_result;
 	auto results = storage.getStmtsWithPatternLHS(name.getName());
+	statement_result.reserve(results.size());
 	for (auto const& entry : results) {
 		statement_result.push_back(to_string(entry->getIdentifier()));
 	}
@@ -89,6 +90,7 @@ QP::QueryResult QP::Executor::PatternAssignExecutor::executeNameExpression(QP::S
 	vector<string> statement_result;
 	auto results = storage.getStmtsWithPattern(name.getName(), expression.getExpression(),
 	                                           expression.getType() == QP::Types::ReferenceType::ExactExpression);
+	statement_result.reserve(results.size());
 	for (auto const& entry : results) {
 		statement_result.push_back(to_string(entry->getIdentifier()));
 	}
@@ -103,6 +105,7 @@ QP::QueryResult QP::Executor::PatternAssignExecutor::executeWildcardExpression(Q
 	vector<string> statement_result;
 	auto result_pairs =
 		storage.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == QP::Types::ReferenceType::ExactExpression);
+	statement_result.reserve(result_pairs.size());
 	for (auto const& pair : result_pairs) {
 		statement_result.push_back(to_string(pair.first->getIdentifier()));
 	}

@@ -43,13 +43,13 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 				 return Executor::StatementExecutor<T>::executeTrivialIndexWildcard(storage, lhs);
 			 };
 		 }},
-		{Types::DesignEntity::Stmt, lambda_index_synonym<T>()},
-		{Types::DesignEntity::Call, lambda_index_synonym<T>()},
-		{Types::DesignEntity::Assign, lambda_index_synonym<T>()},
-		{Types::DesignEntity::Print, lambda_index_synonym<T>()},
-		{Types::DesignEntity::Read, lambda_index_synonym<T>()},
-		{Types::DesignEntity::While, lambda_index_synonym<T>()},
-		{Types::DesignEntity::If, lambda_index_synonym<T>()},
+		{Types::DesignEntity::Stmt, lambdaIndexSynonym<T>()},
+		{Types::DesignEntity::Call, lambdaIndexSynonym<T>()},
+		{Types::DesignEntity::Assign, lambdaIndexSynonym<T>()},
+		{Types::DesignEntity::Print, lambdaIndexSynonym<T>()},
+		{Types::DesignEntity::Read, lambdaIndexSynonym<T>()},
+		{Types::DesignEntity::While, lambdaIndexSynonym<T>()},
+		{Types::DesignEntity::If, lambdaIndexSynonym<T>()},
 	};
 	return map;
 }
@@ -67,13 +67,13 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 	     [](vector<Types::ReferenceArgument> /*args*/) {
 			 return [](QP::StorageAdapter& storage) { return Executor::StatementExecutor<T>::executeTrivialWildcardWildcard(storage); };
 		 }},
-		{Types::DesignEntity::Stmt, lambda_wildcard_synonym<T>()},
-		{Types::DesignEntity::Call, lambda_wildcard_synonym<T>()},
-		{Types::DesignEntity::Assign, lambda_wildcard_synonym<T>()},
-		{Types::DesignEntity::Print, lambda_wildcard_synonym<T>()},
-		{Types::DesignEntity::Read, lambda_wildcard_synonym<T>()},
-		{Types::DesignEntity::While, lambda_wildcard_synonym<T>()},
-		{Types::DesignEntity::If, lambda_wildcard_synonym<T>()},
+		{Types::DesignEntity::Stmt, lambdaWildcardSynonym<T>()},
+		{Types::DesignEntity::Call, lambdaWildcardSynonym<T>()},
+		{Types::DesignEntity::Assign, lambdaWildcardSynonym<T>()},
+		{Types::DesignEntity::Print, lambdaWildcardSynonym<T>()},
+		{Types::DesignEntity::Read, lambdaWildcardSynonym<T>()},
+		{Types::DesignEntity::While, lambdaWildcardSynonym<T>()},
+		{Types::DesignEntity::If, lambdaWildcardSynonym<T>()},
 	};
 	return map;
 }
@@ -99,13 +99,13 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 							 return Executor::StatementExecutor<T>::executeSynonymWildcard(storage, lhs);
 						 }};
 		 }},
-		{Types::DesignEntity::Stmt, lambda_synonym_synonym<T>()},
-		{Types::DesignEntity::Call, lambda_synonym_synonym<T>()},
-		{Types::DesignEntity::Assign, lambda_synonym_synonym<T>()},
-		{Types::DesignEntity::Print, lambda_synonym_synonym<T>()},
-		{Types::DesignEntity::Read, lambda_synonym_synonym<T>()},
-		{Types::DesignEntity::While, lambda_synonym_synonym<T>()},
-		{Types::DesignEntity::If, lambda_synonym_synonym<T>()},
+		{Types::DesignEntity::Stmt, lambdaSynonymSynonym<T>()},
+		{Types::DesignEntity::Call, lambdaSynonymSynonym<T>()},
+		{Types::DesignEntity::Assign, lambdaSynonymSynonym<T>()},
+		{Types::DesignEntity::Print, lambdaSynonymSynonym<T>()},
+		{Types::DesignEntity::Read, lambdaSynonymSynonym<T>()},
+		{Types::DesignEntity::While, lambdaSynonymSynonym<T>()},
+		{Types::DesignEntity::If, lambdaSynonymSynonym<T>()},
 	};
 	return map;
 }

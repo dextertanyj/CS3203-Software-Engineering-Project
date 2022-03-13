@@ -5,21 +5,21 @@
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeTrivialNameName(QP::StorageAdapter &storage,
-                                                                                   const Types::ReferenceArgument &left_ent,
-                                                                                   const Types::ReferenceArgument &right_ent) {
-	return QueryResult(storage.checkProcedureVariableRelation<T>(left_ent.getName(), right_ent.getName()));
+                                                                                   const Types::ReferenceArgument &procedure,
+                                                                                   const Types::ReferenceArgument &variable) {
+	return QueryResult(storage.checkProcedureVariableRelation<T>(procedure.getName(), variable.getName()));
 }
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeTrivialNameWildcardOrSynonym(QP::StorageAdapter &storage,
-                                                                                                const Types::ReferenceArgument &left_ent) {
-	return QueryResult(!storage.getVariableByProcedure<T>(left_ent.getName()).empty());
+                                                                                                const Types::ReferenceArgument &procedure) {
+	return QueryResult(!storage.getVariableByProcedure<T>(procedure.getName()).empty());
 }
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeTrivialSynonymName(QP::StorageAdapter &storage,
-                                                                                      const Types::ReferenceArgument &right_ent) {
-	return QueryResult(!storage.getProcedureByVariable<T>(right_ent.getName()).empty());
+                                                                                      const Types::ReferenceArgument &variable) {
+	return QueryResult(!storage.getProcedureByVariable<T>(variable.getName()).empty());
 }
 
 template <QP::Types::ClauseType T>
@@ -36,9 +36,9 @@ QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeTrivialSynony
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeNameSynonym(QP::StorageAdapter &storage,
-                                                                               const Types::ReferenceArgument &left_ent,
-                                                                               const Types::ReferenceArgument &right_ent) {
-	VarRefSet var_set = storage.getVariableByProcedure<T>(left_ent.getName());
+                                                                               const Types::ReferenceArgument &procedure,
+                                                                               const Types::ReferenceArgument &variable) {
+	VarRefSet var_set = storage.getVariableByProcedure<T>(procedure.getName());
 	vector<string> column;
 
 	for (auto const &var : var_set) {
@@ -46,27 +46,27 @@ QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeNameSynonym(Q
 	}
 
 	QueryResult result = QueryResult();
-	result.addColumn(right_ent.getSynonym().symbol, column);
+	result.addColumn(variable.getSynonym().symbol, column);
 	return result;
 }
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeSynonymName(QP::StorageAdapter &storage,
-                                                                               const Types::ReferenceArgument &left_ent,
-                                                                               const Types::ReferenceArgument &right_ent) {
-	ProcRefSet proc_set = storage.getProcedureByVariable<T>(right_ent.getName());
+                                                                               const Types::ReferenceArgument &procedure,
+                                                                               const Types::ReferenceArgument &variable) {
+	ProcRefSet proc_set = storage.getProcedureByVariable<T>(variable.getName());
 	vector<string> column;
 	for (auto const &proc : proc_set) {
 		column.push_back(proc);
 	}
 	QueryResult result = QueryResult();
-	result.addColumn(left_ent.getSynonym().symbol, column);
+	result.addColumn(procedure.getSynonym().symbol, column);
 	return result;
 }
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeSynonymWildcard(QP::StorageAdapter &storage,
-                                                                                   const Types::ReferenceArgument &left_ent) {
+                                                                                   const Types::ReferenceArgument &procedure) {
 	unordered_set<ProcRef> proc_set = storage.getProcedures();
 	vector<string> column;
 	for (auto const &proc : proc_set) {
@@ -76,14 +76,14 @@ QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeSynonymWildca
 		}
 	}
 	QueryResult result = QueryResult();
-	result.addColumn(left_ent.getSynonym().symbol, column);
+	result.addColumn(procedure.getSynonym().symbol, column);
 	return result;
 }
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeSynonymSynonym(QP::StorageAdapter &storage,
-                                                                                  const Types::ReferenceArgument &left_ent,
-                                                                                  const Types::ReferenceArgument &right_ent) {
+                                                                                  const Types::ReferenceArgument &procedure,
+                                                                                  const Types::ReferenceArgument &variable) {
 	unordered_set<ProcRef> proc_set = storage.getProcedures();
 	vector<string> proc_column;
 	vector<string> var_column;
@@ -95,8 +95,8 @@ QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeSynonymSynony
 		}
 	}
 	QueryResult result = QueryResult();
-	result.addColumn(left_ent.getSynonym().symbol, proc_column);
-	result.addColumn(right_ent.getSynonym().symbol, var_column);
+	result.addColumn(procedure.getSynonym().symbol, proc_column);
+	result.addColumn(variable.getSynonym().symbol, var_column);
 	return result;
 }
 

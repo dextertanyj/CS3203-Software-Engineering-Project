@@ -6,7 +6,7 @@
 #include "QP/ReferenceArgument.h"
 
 template <QP::Types::ClauseType T>
-static QP::Types::ExecutorSetFactory lambda_index_synonym() {
+static QP::Types::ExecutorSetFactory lambdaIndexSynonym() {
 	static const QP::Types::ExecutorSetFactory lambda = [](vector<QP::Types::ReferenceArgument> args) {
 		return pair{[lhs = args.at(0), rhs = args.at(1)](QP::StorageAdapter& storage) {
 						return QP::Executor::StatementExecutor<T>::executeTrivialIndexSynonym(storage, lhs, rhs);
@@ -19,7 +19,7 @@ static QP::Types::ExecutorSetFactory lambda_index_synonym() {
 }
 
 template <QP::Types::ClauseType T>
-static QP::Types::ExecutorSetFactory lambda_wildcard_synonym() {
+static QP::Types::ExecutorSetFactory lambdaWildcardSynonym() {
 	static const QP::Types::ExecutorSetFactory lambda = [](vector<QP::Types::ReferenceArgument> args) {
 		return pair{[rhs = args.at(1)](QP::StorageAdapter& storage) {
 						return QP::Executor::StatementExecutor<T>::executeTrivialWildcardSynonym(storage, rhs);
@@ -32,7 +32,7 @@ static QP::Types::ExecutorSetFactory lambda_wildcard_synonym() {
 }
 
 template <QP::Types::ClauseType T>
-static QP::Types::ExecutorSetFactory lambda_synonym_synonym() {
+static QP::Types::ExecutorSetFactory lambdaSynonymSynonym() {
 	static const QP::Types::ExecutorSetFactory lambda = [](vector<QP::Types::ReferenceArgument> args) {
 		return pair{[lhs = args.at(0), rhs = args.at(1)](QP::StorageAdapter& storage) {
 						return QP::Executor::StatementExecutor<T>::executeTrivialSynonymSynonym(storage, lhs, rhs);

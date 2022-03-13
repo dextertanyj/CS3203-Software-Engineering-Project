@@ -60,7 +60,7 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 			 };
 		 }},
 		{Types::ReferenceType::Wildcard,
-	     [](vector<Types::ReferenceArgument> args) {
+	     [](vector<Types::ReferenceArgument> /*args*/) {
 			 return [](QP::StorageAdapter& pkb) {
 				 return Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymWildcardOrSynonym(pkb);
 			 };
