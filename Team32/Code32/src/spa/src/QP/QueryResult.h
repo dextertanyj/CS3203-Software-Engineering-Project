@@ -10,12 +10,15 @@
 #include "QP/QP.h"
 #include "QP/QueryTypes.h"
 
+using QP::Types::ResultRow;
+using QP::Types::ResultTable;
+
 class QP::QueryResult {
 public:
 	QueryResult();
 	explicit QueryResult(bool result);
 	[[nodiscard]] bool getResult() const;
-	unordered_map<string, vector<string>> getTable();
+	ResultTable getTable();
 	unordered_set<string> getSynonymsStored();
 	vector<string> getSynonymResult(const string& synonym);
 	size_t getTableSize();
@@ -26,14 +29,14 @@ public:
 private:
 	bool result;
 	unordered_set<string> synonyms_stored;
-	unordered_map<string, vector<string>> table;
+	ResultTable table;
 	void joinWithDifferentSynonym(QueryResult& query_result);
 	void joinWithSameSynonym(QueryResult& query_result);
-	unordered_map<string, vector<string>> getSubTableWithRow(const unordered_map<string, string>& row);
-	static bool contains(unordered_map<string, vector<string>>& table, const unordered_map<string, string>& row);
-	static bool isRowMatch(const unordered_map<string, string>& row, unordered_map<string, vector<string>>& table, size_t row_number);
-	static void removeRow(unordered_map<string, vector<string>>& table, size_t row_number);
-	static void removeDuplicateRows(unordered_map<string, vector<string>>& table);
+	ResultTable getSubTableWithRow(const ResultRow& row);
+	static bool contains(ResultTable& table, const ResultRow& row);
+	static bool isRowMatch(const ResultRow& row, ResultTable& table, size_t row_number);
+	static void removeRow(ResultTable& table, size_t row_number);
+	static void removeDuplicateRows(ResultTable& table);
 };
 
 #endif  // SPA_SRC_QP_QUERYRESULT_H

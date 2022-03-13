@@ -1,5 +1,6 @@
 #include "QP/QueryGraph.h"
 
+#include "QP/ConnectedSynonyms.h"
 #include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Relation.h"
 #include "catch.hpp"
@@ -71,19 +72,23 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 	};
 	QP::QueryGraph graph = QP::QueryGraph(declaration_list);
 	graph.setEdges(clause_list);
+	
 	ConnectedSynonyms synonyms = graph.getConnectedSynonyms(select_list);
 
-	size_t group_with_a = synonyms.synonyms_in_group["a"];
-	size_t group_with_d = synonyms.synonyms_in_group["d"];
-	size_t group_with_f = synonyms.synonyms_in_group["f"];
-	REQUIRE(synonyms.number_of_groups == 3);
-	REQUIRE(synonyms.synonyms_in_group["b"] == group_with_a);
-	REQUIRE(synonyms.synonyms_in_group["c"] == group_with_a);
-	REQUIRE(synonyms.synonyms_in_group["e"] == group_with_d);
+	size_t number_of_groups = synonyms.getNumberOfGroups();
+	unordered_map<string, size_t> synonyms_in_group = synonyms.getSynonymsInGroup();
+	unordered_map<size_t, DeclarationList> group_to_selected_declarations = synonyms.getGroupToSelectedDeclarations();
+	size_t group_with_a = synonyms_in_group["a"];
+	size_t group_with_d = synonyms_in_group["d"];
+	size_t group_with_f = synonyms_in_group["f"];
+	REQUIRE(number_of_groups == 3);
+	REQUIRE(synonyms_in_group["b"] == group_with_a);
+	REQUIRE(synonyms_in_group["c"] == group_with_a);
+	REQUIRE(synonyms_in_group["e"] == group_with_d);
 	REQUIRE(group_with_d != group_with_a);
 	REQUIRE(group_with_f != group_with_a);
 	REQUIRE(group_with_f != group_with_d);
-	REQUIRE(synonyms.group_to_selected_declarations[group_with_a].size() == 2);
-	REQUIRE(synonyms.group_to_selected_declarations[group_with_d].size() == 1);
-	REQUIRE(synonyms.group_to_selected_declarations[group_with_f].empty());
+	REQUIRE(group_to_selected_declarations[group_with_a].size() == 2);
+	REQUIRE(group_to_selected_declarations[group_with_d].size() == 1);
+	REQUIRE(group_to_selected_declarations[group_with_f].empty());
 }
