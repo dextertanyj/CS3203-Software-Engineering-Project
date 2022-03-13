@@ -13,31 +13,29 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialIndexIndex(con
 	return QueryResult(storage.checkStatementRelation<T>(lhs.getStatementIndex(), rhs.getStatementIndex()));
 }
 
-// TODO: Deduplicate the following cases
-template <>
-inline QP::QueryResult QP::Executor::StatementExecutor<QP::Types::ClauseType::ParentT>::executeTrivialIndexIndex(
-	const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs, const Types::ReferenceArgument& rhs) {
-	StmtInfoPtrSet rhs_set = storage.getReverseStatements<QP::Types::ClauseType::ParentT>(lhs.getStatementIndex());
+template <QP::Types::ClauseType T>
+QP::QueryResult executeTrivialIndexIndexTransitive(const QP::StorageAdapter& storage, const QP::Types::ReferenceArgument& lhs,
+                                                   const QP::Types::ReferenceArgument& rhs) {
+	StmtInfoPtrSet rhs_set = storage.getReverseStatements<T>(lhs.getStatementIndex());
 	StmtRef rhs_index = rhs.getStatementIndex();
 	for (auto const& rhs_statement : rhs_set) {
 		if (rhs_statement->getIdentifier() == rhs_index) {
-			return QueryResult(true);
+			return QP::QueryResult(true);
 		}
 	}
 	return {};
 }
 
 template <>
+inline QP::QueryResult QP::Executor::StatementExecutor<QP::Types::ClauseType::ParentT>::executeTrivialIndexIndex(
+	const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs, const Types::ReferenceArgument& rhs) {
+	return executeTrivialIndexIndexTransitive<QP::Types::ClauseType::ParentT>(storage, lhs, rhs);
+}
+
+template <>
 inline QP::QueryResult QP::Executor::StatementExecutor<QP::Types::ClauseType::FollowsT>::executeTrivialIndexIndex(
 	const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs, const Types::ReferenceArgument& rhs) {
-	StmtInfoPtrSet rhs_set = storage.getReverseStatements<QP::Types::ClauseType::FollowsT>(lhs.getStatementIndex());
-	StmtRef rhs_index = rhs.getStatementIndex();
-	for (auto const& rhs_statement : rhs_set) {
-		if (rhs_statement->getIdentifier() == rhs_index) {
-			return QueryResult(true);
-		}
-	}
-	return {};
+	return executeTrivialIndexIndexTransitive<QP::Types::ClauseType::FollowsT>(storage, lhs, rhs);
 }
 
 template <QP::Types::ClauseType T>
