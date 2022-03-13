@@ -6,5 +6,5 @@
 
 const QP::Types::ArgumentDispatcher QP::Dispatcher::PatternAssignDispatcher::dispatcher = [](vector<QP::Types::ReferenceArgument> args) {
 	return QP::Dispatcher::DispatchProcessors::processTripleArgument(
-		Types::ClauseType::PatternAssign, QP::Dispatcher::PatternAssignDispatcher::argument_dispatch_map, move(args));
+		QP::Types::ClauseType::PatternAssign, QP::Dispatcher::PatternAssignDispatcher::argument_dispatch_map, move(args));
 };
