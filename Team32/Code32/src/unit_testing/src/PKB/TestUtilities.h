@@ -2,9 +2,9 @@
 #define UNIT_TESTING_SRC_PKB_TESTUTILITIES_H
 
 #include "Common/TypeDefs.h"
+#include "PKB/CFG/NodeInfo.h"
 #include "PKB/Storage.h"
 #include "PKB/Types.h"
-#include "PKB/CFG/NodeInfo.h"
 
 namespace TestUtilities {
 inline shared_ptr<StmtInfo> createStmtInfo(StmtRef stmt_no, StmtType type) {
@@ -24,7 +24,6 @@ inline shared_ptr<PKB::NodeInfo> createNodeInfo(StmtRef stmt_no, StmtType type) 
 	store.insert(stmt_no, type);
 	return store.get(stmt_no);
 }
-
 
 inline PKB::Storage generateFollowsTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
@@ -75,16 +74,21 @@ inline PKB::Storage generateModifyTestPKB() {
 inline PKB::Storage generateNextTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
-	pkb.setStmtType(2, StmtType::WhileStmt);
+	pkb.setStmtType(2, StmtType::IfStmt);
 	pkb.setStmtType(3, StmtType::Assign);
-	pkb.setStmtType(4, StmtType::Read);
-	pkb.setStmtType(5, StmtType::IfStmt);
+	pkb.setStmtType(4, StmtType::IfStmt);
+	pkb.setStmtType(5, StmtType::Read);
 	pkb.setStmtType(6, StmtType::IfStmt);
-	pkb.setStmtType(7, StmtType::Assign);
-	pkb.setStmtType(8, StmtType::Call);
-	pkb.setStmtType(9, StmtType::Assign);
-	pkb.setStmtType(10, StmtType::Print);
+	pkb.setStmtType(7, StmtType::Read);
+	pkb.setStmtType(8, StmtType::Assign);
+	pkb.setStmtType(9, StmtType::Print);
+	pkb.setStmtType(10, StmtType::IfStmt);
 	pkb.setStmtType(11, StmtType::Assign);
+	pkb.setStmtType(12, StmtType::Print);
+	pkb.setStmtType(13, StmtType::Assign);
+	pkb.setStmtType(14, StmtType::Print);
+	pkb.setStmtType(15, StmtType::Call);
+	pkb.setStmtType(16, StmtType::Call);
 	return pkb;
 }
 
