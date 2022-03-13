@@ -31,8 +31,6 @@ TEST_CASE("QP::QueryPreprocessor::tokenizeQuery Invalid tokenizer input") {
 	REQUIRE_THROWS_AS(qpp1.parseQuery("'"), QP::QueryTokenizationException);
 	REQUIRE_THROWS_AS(qpp1.parseQuery(":"), QP::QueryTokenizationException);
 	REQUIRE_THROWS_AS(qpp1.parseQuery("\\"), QP::QueryTokenizationException);
-	REQUIRE_THROWS_AS(qpp1.parseQuery(">"), QP::QueryTokenizationException);
-	REQUIRE_THROWS_AS(qpp1.parseQuery("<"), QP::QueryTokenizationException);
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid declarations") {
@@ -109,7 +107,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid declarations") {
 	REQUIRE_THROWS_AS(qpp7.parseQuery("read a; print b; procedure a; Select a"), QP::QueryException);
 }
 
-TEST_CASE("QP::QueryPreprocessor::parseQuery Select") {
+TEST_CASE("QP::QueryPreprocessor::parseQuery Select single") {
 	QP::QueryPreprocessor qpp1;
 	QP::QueryProperties qp1 = qpp1.parseQuery("print a; if b; Select a");
 	REQUIRE(qp1.getSelectList()[0].type == QP::Types::DesignEntity::Print);
@@ -120,15 +118,76 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Select") {
 	REQUIRE(qp2.getSelectList()[0].type == QP::Types::DesignEntity::If);
 	REQUIRE(qp2.getSelectList()[0].symbol == "b");
 
-	// undeclared synonym
+	// select BOOLEAN synonym
 	QP::QueryPreprocessor qpp3;
-	REQUIRE_THROWS_AS(qpp3.parseQuery("print a; if b; Select unknownSynonym"), QP::QueryException);
-	// more than 1 synonym
+	QP::QueryProperties qp3 = qpp3.parseQuery("if BOOLEAN; Select BOOLEAN");
+	REQUIRE(qp3.getSelectList()[0].type == QP::Types::DesignEntity::If);
+	REQUIRE(qp3.getSelectList()[0].symbol == "BOOLEAN");
+
+	// undeclared synonym
 	QP::QueryPreprocessor qpp4;
-	REQUIRE_THROWS_AS(qpp4.parseQuery("print a; if b; Select a,b"), QP::QueryException);
-	// more than 1 select
+	REQUIRE_THROWS_AS(qpp4.parseQuery("print a; if b; Select unknownSynonym"), QP::QueryException);
+	// more than 1 synonym
 	QP::QueryPreprocessor qpp5;
-	REQUIRE_THROWS_AS(qpp5.parseQuery("print a; if b; Select a Select b"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp5.parseQuery("print a; if b; Select a,b"), QP::QueryException);
+	// more than 1 select
+	QP::QueryPreprocessor qpp6;
+	REQUIRE_THROWS_AS(qpp6.parseQuery("print a; if b; Select a Select b"), QP::QueryException);
+}
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery Select tuple") {
+	QP::QueryPreprocessor qpp1;
+	QP::QueryProperties qp1 = qpp1.parseQuery("print a; if b; Select <a>");
+	REQUIRE(qp1.getSelectList()[0].type == QP::Types::DesignEntity::Print);
+	REQUIRE(qp1.getSelectList()[0].symbol == "a");
+
+	QP::QueryPreprocessor qpp2;
+	QP::QueryProperties qp2 = qpp2.parseQuery("print a; if b; Select <a,b>");
+	REQUIRE(qp2.getSelectList()[0].type == QP::Types::DesignEntity::Print);
+	REQUIRE(qp2.getSelectList()[0].symbol == "a");
+	REQUIRE(qp2.getSelectList()[1].type == QP::Types::DesignEntity::If);
+	REQUIRE(qp2.getSelectList()[1].symbol == "b");
+	// Same synonym
+	QP::QueryPreprocessor qpp3;
+	QP::QueryProperties qp3 = qpp3.parseQuery("print a; if b; Select <b,b>");
+	REQUIRE(qp3.getSelectList()[0].type == QP::Types::DesignEntity::If);
+	REQUIRE(qp3.getSelectList()[0].symbol == "b");
+	REQUIRE(qp3.getSelectList()[1].type == QP::Types::DesignEntity::If);
+	REQUIRE(qp3.getSelectList()[1].symbol == "b");
+	// many synonym
+	QP::QueryPreprocessor qpp4;
+	QP::QueryProperties qp4 = qpp4.parseQuery(UnivDeclarations + "Select <s1, s2, p1, p2, c1, c2, w1,w2,i1,i2,a1,a2>");
+	REQUIRE(qp4.getSelectList()[0].type == QP::Types::DesignEntity::Stmt);
+	REQUIRE(qp4.getSelectList()[0].symbol == "s1");
+	REQUIRE(qp4.getSelectList()[1].type == QP::Types::DesignEntity::Stmt);
+	REQUIRE(qp4.getSelectList()[1].symbol == "s2");
+	REQUIRE(qp4.getSelectList()[7].type == QP::Types::DesignEntity::While);
+	REQUIRE(qp4.getSelectList()[7].symbol == "w2");
+	REQUIRE(qp4.getSelectList()[11].type == QP::Types::DesignEntity::Assign);
+	REQUIRE(qp4.getSelectList()[11].symbol == "a2");
+
+	// empty tuple
+	QP::QueryPreprocessor qpp5;
+	REQUIRE_THROWS_AS(qpp5.parseQuery("print a; if b; Select <>"), QP::QueryException);
+	// Missing <>
+	QP::QueryPreprocessor qpp6;
+	REQUIRE_THROWS_AS(qpp6.parseQuery("print a; if b; Select a,b"), QP::QueryException);
+	// undeclared synonym
+	QP::QueryPreprocessor qpp7;
+	REQUIRE_THROWS_AS(qpp7.parseQuery("print a; if b; Select <a,b,undeclaredSynonym>"), QP::QueryException);
+}
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery Select BOOLEAN") {
+	QP::QueryPreprocessor qpp1;
+	QP::QueryProperties qp1 = qpp1.parseQuery("if i; Select BOOLEAN");
+	REQUIRE(qp1.getSelectList().size() == 0);
+
+	// lower case
+	QP::QueryPreprocessor qpp2;
+	REQUIRE_THROWS_AS(qpp2.parseQuery("if i; Select boolean"), QP::QueryException);
+	// tuple
+	QP::QueryPreprocessor qpp3;
+	REQUIRE_THROWS_AS(qpp3.parseQuery("if i; Select <BOOLEAN>"), QP::QueryException);
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Parent(*)") {
@@ -252,6 +311,9 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Follows(*)") {
     // disallowed statement reference
     QP::QueryPreprocessor qpp5;
     REQUIRE_THROWS_AS(qpp5.parseQuery(UnivDeclarations + "Select s1 such that Follows(s1, \"x\")"), QP::QueryException);
+	// statement number with leading 0
+	QP::QueryPreprocessor qpp6;
+	REQUIRE_THROWS_AS(qpp6.parseQuery(UnivDeclarations + "Select s1 such that Follows(s1, 007)"), QP::QueryException);
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {

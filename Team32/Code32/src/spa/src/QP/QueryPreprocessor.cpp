@@ -8,9 +8,9 @@
 #include "QP/QueryExpressionLexer.h"
 #include "QP/QueryTypes.h"
 
-regex QP::QueryPreprocessor::invalid_chars_regex = regex(R"([^a-zA-Z0-9\s,"_\(\);\+\-\*\/%])");
+regex QP::QueryPreprocessor::invalid_chars_regex = regex(R"([^a-zA-Z0-9\s,"_\(\);\+\-\*\/%<>])");
 regex QP::QueryPreprocessor::query_token_regex =
-	regex(R"(Follows\*|Calls\*|Parent\*|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\+|-|\*|\/|%|_|,|\")");
+	regex(R"(Follows\*|Calls\*|Parent\*|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\+|-|\*|\/|%|_|,|\"|<|>)");
 
 QP::QueryProperties QP::QueryPreprocessor::parseQuery(string query) {
 	this->token_index = 0;
@@ -77,9 +77,31 @@ void QP::QueryPreprocessor::parseDeclaration(const Types::DesignEntity& type) {
 	}
 	token_index++;
 }
-
 void QP::QueryPreprocessor::parseSelect() {
 	matchTokenOrThrow("Select");
+	string current_token = query_tokens.at(token_index);
+	if (current_token == "BOOLEAN" && existing_declarations.find("BOOLEAN") == existing_declarations.end()) {
+		token_index++;
+	} else {
+		parseSelectList();
+	}
+}
+
+void QP::QueryPreprocessor::parseSelectList() {
+	if (query_tokens.at(token_index) == "<") {
+		matchTokenOrThrow("<");
+		parseSelectSynonym();
+		while (query_tokens.at(token_index) == ",") {
+			matchTokenOrThrow(",");
+			parseSelectSynonym();
+		}
+		matchTokenOrThrow(">");
+	} else {
+		parseSelectSynonym();
+	}
+}
+
+void QP::QueryPreprocessor::parseSelectSynonym() {
 	auto synonym_search_result = existing_declarations.find(query_tokens.at(token_index));
 	if (synonym_search_result != existing_declarations.end()) {
 		select_list.push_back({synonym_search_result->second.type, synonym_search_result->second.symbol});
@@ -231,7 +253,7 @@ QP::Types::ReferenceArgument QP::QueryPreprocessor::parseReferenceArgument() {
 		token_index++;
 		return Types::ReferenceArgument();
 	}
-	if (regex_search(this->query_tokens.at(token_index), regex("^[0-9]+$"))) {
+	if (Common::Validator::validateInteger(this->query_tokens.at(token_index))) {
 		token_index++;
 		return Types::ReferenceArgument(stoul(this->query_tokens.at(token_index - 1)));
 	}
