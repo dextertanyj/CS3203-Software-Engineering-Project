@@ -98,7 +98,7 @@ QP::QueryResult QP::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, 
 	}
 
 	if (!select_list.empty()) {
-		result_list[0].filterByDeclarations(select_list);
+		result_list[0].filterBySelect(select_list);
 	}
 
 	return result_list[0];

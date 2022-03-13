@@ -5,6 +5,8 @@
 #include "QP/QueryTypes.h"
 
 #define TUPLE_SEPERATOR " "
+#define TRUE "TRUE"
+#define FALSE "FALSE"
 
 using namespace std;
 using QP::Types::Declaration;
@@ -20,7 +22,7 @@ vector<string> QP::QueryFormatter::formatResult(QueryProperties& query_propertie
 }
 
 vector<string> QP::QueryFormatter::formatBooleanResult(QueryResult& query_result) {
-	string result = query_result.getResult() ? "TRUE" : "FALSE";
+	string result = query_result.getResult() ? TRUE : FALSE;
 	return {result};
 }
 
@@ -29,9 +31,9 @@ vector<string> QP::QueryFormatter::formatNonBooleanResult(QueryProperties& query
 		return {};
 	}
 
-	vector<string> result;
-	DeclarationList select_list = query_properties.getSelectList();
 	size_t table_size = query_result.getTableSize();
+	vector<string> result(table_size);
+	DeclarationList select_list = query_properties.getSelectList();
 
 	for (size_t i = 0; i < table_size; i++) {
 		string row;
@@ -40,7 +42,7 @@ vector<string> QP::QueryFormatter::formatNonBooleanResult(QueryProperties& query
 			row.append(TUPLE_SEPERATOR);
 		}
 		row.pop_back();
-		result.push_back(row);
+		result[i] = row;
 	}
 
 	return result;

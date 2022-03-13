@@ -36,7 +36,7 @@ void QP::QueryResult::joinResult(QueryResult& query_result) {
 	joinWithSameSynonym(query_result);
 }
 
-void QP::QueryResult::filterByDeclarations(const QP::Types::DeclarationList& select_list) {
+void QP::QueryResult::filterBySelect(const QP::Types::DeclarationList& select_list) {
 	unordered_map<string, vector<string>> filtered_table;
 	unordered_set<string> filtered_synonyms;
 

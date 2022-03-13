@@ -21,7 +21,7 @@ public:
 	size_t getTableSize();
 	void addColumn(const string& synonym, const vector<string>& column);
 	void joinResult(QueryResult& query_result);
-	void filterByDeclarations(const QP::Types::DeclarationList& select_list);
+	void filterBySelect(const QP::Types::DeclarationList& select_list);
 
 private:
 	bool result;
