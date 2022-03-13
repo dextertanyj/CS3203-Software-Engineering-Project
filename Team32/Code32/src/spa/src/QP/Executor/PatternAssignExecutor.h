@@ -12,22 +12,23 @@
 
 namespace QP::Executor::PatternAssignExecutor {
 // Trivial Executors
-QueryResult executeTrivialNameWildcard(QP::StorageAdapter& storage, const Types::ReferenceArgument& name);
-QueryResult executeTrivialSynonymOrWildcardWildcard(QP::StorageAdapter& storage);
-QueryResult executeTrivialNameExpression(QP::StorageAdapter& storage, const Types::ReferenceArgument& name,
+QueryResult executeTrivialNameWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& name);
+QueryResult executeTrivialSynonymOrWildcardWildcard(const QP::StorageAdapter& storage);
+QueryResult executeTrivialNameExpression(const QP::StorageAdapter& storage, const Types::ReferenceArgument& name,
                                          const Types::ReferenceArgument& expression);
-QueryResult executeTrivialSynonymOrWildcardExpression(QP::StorageAdapter& storage, const Types::ReferenceArgument& expression);
+QueryResult executeTrivialSynonymOrWildcardExpression(const QP::StorageAdapter& storage, const Types::ReferenceArgument& expression);
 
 // Executors
-QueryResult executeNameWildcard(QP::StorageAdapter& storage, const Types::ReferenceArgument& assign, const Types::ReferenceArgument& name);
-QueryResult executeWildcardWildcard(QP::StorageAdapter& storage, const Types::ReferenceArgument& assign);
-QueryResult executeSynonymWildcard(QP::StorageAdapter& storage, const Types::ReferenceArgument& assign,
+QueryResult executeNameWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& assign,
+                                const Types::ReferenceArgument& name);
+QueryResult executeWildcardWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& assign);
+QueryResult executeSynonymWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& assign,
                                    const Types::ReferenceArgument& synonym);
-QueryResult executeNameExpression(QP::StorageAdapter& storage, const Types::ReferenceArgument& assign, const Types::ReferenceArgument& name,
-                                  const Types::ReferenceArgument& expression);
-QueryResult executeWildcardExpression(QP::StorageAdapter& storage, const Types::ReferenceArgument& assign,
+QueryResult executeNameExpression(const QP::StorageAdapter& storage, const Types::ReferenceArgument& assign,
+                                  const Types::ReferenceArgument& name, const Types::ReferenceArgument& expression);
+QueryResult executeWildcardExpression(const QP::StorageAdapter& storage, const Types::ReferenceArgument& assign,
                                       const Types::ReferenceArgument& expression);
-QueryResult executeSynonymExpression(QP::StorageAdapter& storage, const Types::ReferenceArgument& assign,
+QueryResult executeSynonymExpression(const QP::StorageAdapter& storage, const Types::ReferenceArgument& assign,
                                      const Types::ReferenceArgument& synonym, const Types::ReferenceArgument& expression);
 };  // namespace QP::Executor::PatternAssignExecutor
 

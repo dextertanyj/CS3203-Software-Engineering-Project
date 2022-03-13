@@ -66,13 +66,13 @@ typedef struct Node {
 	vector<string> adjacent_symbols;
 } Node;
 
-typedef function<QP::QueryResult(QP::StorageAdapter&)> Executor;
+typedef function<QP::QueryResult(const QP::StorageAdapter&)> Executor;
 typedef variant<Executor, pair<Executor, Executor>> ExecutorSet;
-typedef function<ExecutorSet(vector<ReferenceArgument>)> ExecutorSetFactory;
+typedef function<ExecutorSet(const vector<ReferenceArgument>&)> ExecutorSetFactory;
 typedef pair<ClauseType, ExecutorSetFactory> ExecutorSetFactoryBundle;
 typedef variant<ReferenceType, DesignEntity> ArgumentDispatchKey;
 typedef pair<ClauseType, ExecutorSet> ExecutorSetBundle;
-typedef function<ExecutorSetBundle(vector<ReferenceArgument>)> ArgumentDispatcher;
+typedef function<ExecutorSetBundle(const vector<ReferenceArgument>&)> ArgumentDispatcher;
 typedef unordered_map<ClauseType, ArgumentDispatcher> ArgumentDispatchMap;
 
 typedef vector<Declaration> DeclarationList;

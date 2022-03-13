@@ -11,20 +11,20 @@ template <QP::Types::ClauseType T>
 class QP::Executor::StatementVariableExecutor {
 public:
 	// Trivial Executors
-	static QueryResult executeTrivialIndexName(QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
+	static QueryResult executeTrivialIndexName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
 	                                           const Types::ReferenceArgument& variable);
-	static QueryResult executeTrivialIndexWildcardOrSynonym(QP::StorageAdapter& storage, const Types::ReferenceArgument& index);
-	static QueryResult executeTrivialSynonymName(QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
+	static QueryResult executeTrivialIndexWildcardOrSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index);
+	static QueryResult executeTrivialSynonymName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
 	                                             const Types::ReferenceArgument& variable);
-	static QueryResult executeTrivialSynonymWildcardOrSynonym(QP::StorageAdapter& storage, const Types::ReferenceArgument& index);
+	static QueryResult executeTrivialSynonymWildcardOrSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index);
 
 	// Executors
-	static QueryResult executeSynonymName(QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
+	static QueryResult executeSynonymName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
 	                                      const Types::ReferenceArgument& variable);
-	static QueryResult executeSynonymWildcard(QP::StorageAdapter& storage, const Types::ReferenceArgument& index);
-	static QueryResult executeSynonymSynonym(QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
+	static QueryResult executeSynonymWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index);
+	static QueryResult executeSynonymSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
 	                                         const Types::ReferenceArgument& variable);
-	static QueryResult executeIndexSynonym(QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
+	static QueryResult executeIndexSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
 	                                       const Types::ReferenceArgument& variable);
 };
 

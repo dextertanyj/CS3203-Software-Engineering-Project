@@ -4,7 +4,7 @@
 #include "QP/Executor/ProcedureExecutor.h"
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeTrivialNameName(QP::StorageAdapter& storage,
+QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeTrivialNameName(const QP::StorageAdapter& storage,
                                                                            const QP::Types::ReferenceArgument& lhs,
                                                                            const QP::Types::ReferenceArgument& rhs) {
 	return QP::QueryResult(storage.checkProcedureRelation<T>(lhs.getName(), rhs.getName()));
@@ -12,7 +12,7 @@ QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeTrivialNameName(QP::S
 
 template <>
 inline QP::QueryResult QP::Executor::ProcedureExecutor<QP::Types::ClauseType::CallT>::executeTrivialNameName(
-	QP::StorageAdapter& storage, const QP::Types::ReferenceArgument& lhs, const QP::Types::ReferenceArgument& rhs) {
+	const QP::StorageAdapter& storage, const QP::Types::ReferenceArgument& lhs, const QP::Types::ReferenceArgument& rhs) {
 	ProcRefSet rhs_set = storage.getReverseProcedures<QP::Types::ClauseType::CallT>(lhs.getName());
 	for (auto const& rhs_reference : rhs_set) {
 		if (rhs_reference == rhs.getName()) {
@@ -23,19 +23,19 @@ inline QP::QueryResult QP::Executor::ProcedureExecutor<QP::Types::ClauseType::Ca
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeTrivialNameWildcardOrSynonym(QP::StorageAdapter& storage,
+QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeTrivialNameWildcardOrSynonym(const QP::StorageAdapter& storage,
                                                                                         const Types::ReferenceArgument& lhs) {
 	return QueryResult(!storage.getReverseProcedures<T>(lhs.getName()).empty());
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymName(QP::StorageAdapter& storage,
+QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymName(const QP::StorageAdapter& storage,
                                                                                         const Types::ReferenceArgument& rhs) {
 	return QueryResult(!storage.template getForwardProcedures<T>(rhs.getName()).empty());
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymWildcardOrSynonym(QP::StorageAdapter& storage) {
+QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymWildcardOrSynonym(const QP::StorageAdapter& storage) {
 	ProcRefSet proc_set = storage.getProcedures();
 	for (auto const& proc : proc_set) {
 		ProcRefSet lhs_set = storage.getForwardProcedures<T>(proc);
@@ -47,7 +47,7 @@ QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSyno
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeTrivialSynonymSynonym(QP::StorageAdapter& storage,
+QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeTrivialSynonymSynonym(const QP::StorageAdapter& storage,
                                                                                  const Types::ReferenceArgument& lhs,
                                                                                  const Types::ReferenceArgument& rhs) {
 	if (lhs.getSynonym().symbol == rhs.getSynonym().symbol) {
@@ -58,7 +58,8 @@ QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeTrivialSynonymSynonym
 
 // Executors
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeNameSynonym(QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
+QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeNameSynonym(const QP::StorageAdapter& storage,
+                                                                       const Types::ReferenceArgument& lhs,
                                                                        const Types::ReferenceArgument& rhs) {
 	QueryResult result = QueryResult();
 	vector<string> column;
@@ -72,7 +73,7 @@ QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeNameSynonym(QP::Stora
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeWildcardSynonym(QP::StorageAdapter& storage,
+QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeWildcardSynonym(const QP::StorageAdapter& storage,
                                                                            const Types::ReferenceArgument& rhs) {
 	QueryResult result = QueryResult();
 	vector<string> column;
@@ -89,7 +90,8 @@ QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeWildcardSynonym(QP::S
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeSynonymName(QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
+QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeSynonymName(const QP::StorageAdapter& storage,
+                                                                       const Types::ReferenceArgument& lhs,
                                                                        const Types::ReferenceArgument& rhs) {
 	QueryResult result = QueryResult();
 	vector<string> lhs_column;
@@ -102,7 +104,7 @@ QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeSynonymName(QP::Stora
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeSynonymWildcard(QP::StorageAdapter& storage,
+QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeSynonymWildcard(const QP::StorageAdapter& storage,
                                                                            const Types::ReferenceArgument& lhs) {
 	QueryResult result = QueryResult();
 	vector<string> lhs_column;
@@ -118,7 +120,8 @@ QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeSynonymWildcard(QP::S
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeSynonymSynonym(QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
+QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeSynonymSynonym(const QP::StorageAdapter& storage,
+                                                                          const Types::ReferenceArgument& lhs,
                                                                           const Types::ReferenceArgument& rhs) {
 	if (lhs.getSynonym().symbol == rhs.getSynonym().symbol) {
 		return {};

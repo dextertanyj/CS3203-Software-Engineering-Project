@@ -6,20 +6,20 @@
 #include "QP/QueryUtils.h"
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeTrivialIndexName(QP::StorageAdapter& storage,
+QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeTrivialIndexName(const QP::StorageAdapter& storage,
                                                                                     const Types::ReferenceArgument& index,
                                                                                     const Types::ReferenceArgument& variable) {
 	return QueryResult(storage.checkStatementVariableRelation<T>(index.getStatementIndex(), variable.getName()));
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeTrivialIndexWildcardOrSynonym(QP::StorageAdapter& storage,
+QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeTrivialIndexWildcardOrSynonym(const QP::StorageAdapter& storage,
                                                                                                  const Types::ReferenceArgument& index) {
 	return QueryResult(!storage.getVariableByStatement<T>(index.getStatementIndex()).empty());
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeTrivialSynonymName(QP::StorageAdapter& storage,
+QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeTrivialSynonymName(const QP::StorageAdapter& storage,
                                                                                       const Types::ReferenceArgument& index,
                                                                                       const Types::ReferenceArgument& variable) {
 	StmtInfoPtrSet index_set = storage.getStatementByVariable<T>(variable.getName());
@@ -32,7 +32,7 @@ QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeTrivialSynony
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeTrivialSynonymWildcardOrSynonym(QP::StorageAdapter& storage,
+QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeTrivialSynonymWildcardOrSynonym(const QP::StorageAdapter& storage,
                                                                                                    const Types::ReferenceArgument& index) {
 	StmtInfoPtrSet index_set = storage.getStatements();
 	for (auto const& res_index : index_set) {
@@ -49,7 +49,7 @@ QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeTrivialSynony
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeSynonymName(QP::StorageAdapter& storage,
+QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeSynonymName(const QP::StorageAdapter& storage,
                                                                                const Types::ReferenceArgument& index,
                                                                                const Types::ReferenceArgument& variable) {
 	StmtInfoPtrSet index_set = storage.getStatementByVariable<T>(variable.getName());
@@ -65,7 +65,7 @@ QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeSynonymName(Q
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeSynonymWildcard(QP::StorageAdapter& storage,
+QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeSynonymWildcard(const QP::StorageAdapter& storage,
                                                                                    const Types::ReferenceArgument& index) {
 	StmtInfoPtrSet index_set = storage.getStatements();
 	vector<string> column;
@@ -85,7 +85,7 @@ QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeSynonymWildca
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeSynonymSynonym(QP::StorageAdapter& storage,
+QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeSynonymSynonym(const QP::StorageAdapter& storage,
                                                                                   const Types::ReferenceArgument& index,
                                                                                   const Types::ReferenceArgument& variable) {
 	StmtInfoPtrSet index_set = storage.getStatements();
@@ -110,7 +110,7 @@ QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeSynonymSynony
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeIndexSynonym(QP::StorageAdapter& storage,
+QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeIndexSynonym(const QP::StorageAdapter& storage,
                                                                                 const Types::ReferenceArgument& index,
                                                                                 const Types::ReferenceArgument& variable) {
 	VarRefSet var_set = storage.getVariableByStatement<T>(index.getStatementIndex());

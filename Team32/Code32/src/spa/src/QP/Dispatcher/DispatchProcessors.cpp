@@ -2,7 +2,7 @@
 
 QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processSingleArgument(
 	Types::ClauseType type, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> map,
-	vector<Types::ReferenceArgument> args) {
+	const vector<Types::ReferenceArgument>& args) {
 	if (args.size() != 1) {
 		throw QP::QueryException("Incorrect number of arguments.");
 	}
@@ -20,7 +20,7 @@ QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processSingleAr
 QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processDoubleArgument(
 	Types::ClauseType type,
 	unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>> map,
-	vector<Types::ReferenceArgument> args) {
+	const vector<Types::ReferenceArgument>& args) {
 	if (args.size() != 2) {
 		throw QP::QueryException("Incorrect number of arguments.");
 	}
@@ -46,7 +46,7 @@ QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processDoubleAr
 
 QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processDoubleArgument(
 	unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>> map,
-	vector<Types::ReferenceArgument> args) {
+	const vector<Types::ReferenceArgument>& args) {
 	if (args.size() != 2) {
 		throw QP::QueryException("Incorrect number of arguments.");
 	}
@@ -75,7 +75,7 @@ QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processTripleAr
 	unordered_map<Types::ArgumentDispatchKey,
                   unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>>>
 		map,
-	vector<Types::ReferenceArgument> args) {
+	const vector<Types::ReferenceArgument>& args) {
 	if (args.size() != 3) {
 		throw QP::QueryException("Incorrect number of arguments.");
 	}
