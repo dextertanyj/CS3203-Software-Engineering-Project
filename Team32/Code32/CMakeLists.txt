@@ -20,7 +20,7 @@ endif()
 
 if(NOT MSVC)
   set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Werror")
-  set(CMAKE_CXX_FLAGS_COVERAGE "-g -Wall -Werror --coverage")
+  set(CMAKE_CXX_FLAGS_COVERAGE "-g -Wall -Werror -fprofile-instr-generate -fcoverage-mapping")
   set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif()
 
