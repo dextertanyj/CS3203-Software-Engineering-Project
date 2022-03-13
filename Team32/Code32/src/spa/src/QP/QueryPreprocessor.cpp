@@ -79,36 +79,35 @@ void QP::QueryPreprocessor::parseDeclaration(const Types::DesignEntity& type) {
 }
 void QP::QueryPreprocessor::parseSelect() {
 	matchTokenOrThrow("Select");
-	// for the special case where BOOLEAN is a declared synonym
-	bool has_boolean_synonym = false;
-	auto boolean_synonym_search_result = existing_declarations.find("BOOLEAN");
-	if (boolean_synonym_search_result != existing_declarations.end()) {
-		has_boolean_synonym = true;
-	}
-
 	string current_token = query_tokens.at(token_index);
-	if (current_token == "BOOLEAN" && !has_boolean_synonym) {
+	if (current_token == "BOOLEAN" && existing_declarations.find("BOOLEAN") == existing_declarations.end()) {
 		token_index++;
-	} else if (Common::Validator::validateName(current_token)) {
-		parseSelectSynonymToken(false);
 	} else {
-		matchTokenOrThrow("<");
-		parseSelectSynonymToken(true);
-		matchTokenOrThrow(">");
+		parseSelectList();
 	}
 }
 
-void QP::QueryPreprocessor::parseSelectSynonymToken(bool returns_tuple) {
+void QP::QueryPreprocessor::parseSelectList() {
+	if (query_tokens.at(token_index) == "<") {
+		matchTokenOrThrow("<");
+		parseSelectSynonym();
+		while (query_tokens.at(token_index) == ",") {
+			matchTokenOrThrow(",");
+			parseSelectSynonym();
+		}
+		matchTokenOrThrow(">");
+	} else {
+		parseSelectSynonym();
+	}
+}
+
+void QP::QueryPreprocessor::parseSelectSynonym() {
 	auto synonym_search_result = existing_declarations.find(query_tokens.at(token_index));
 	if (synonym_search_result != existing_declarations.end()) {
 		select_list.push_back({synonym_search_result->second.type, synonym_search_result->second.symbol});
 		token_index++;
 	} else {
 		throw QueryException("Undeclared query synonym.");
-	}
-	if (returns_tuple && query_tokens.at(token_index) == ",") {
-		token_index++;
-		parseSelectSynonymToken(true);
 	}
 }
 
@@ -254,7 +253,7 @@ QP::Types::ReferenceArgument QP::QueryPreprocessor::parseReferenceArgument() {
 		token_index++;
 		return Types::ReferenceArgument();
 	}
-	if (this->query_tokens.at(token_index) == "0" || regex_search(this->query_tokens.at(token_index), regex("^[1-9][0-9]*$"))) {
+	if (Common::Validator::validateInteger(this->query_tokens.at(token_index))) {
 		token_index++;
 		return Types::ReferenceArgument(stoul(this->query_tokens.at(token_index - 1)));
 	}
