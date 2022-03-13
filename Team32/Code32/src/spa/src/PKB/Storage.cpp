@@ -10,7 +10,7 @@ using namespace std;
 void PKB::Storage::setStmtType(StmtRef index, StmtType type) {
 	statement_store.insert(index, type);
 	shared_ptr<StmtInfo> info = statement_store.get(index);
-	setNode(info);
+	setNode(move(info));
 }
 
 void PKB::Storage::setConstant(ConstVal value) { constant_store.insert(value); }
@@ -113,7 +113,7 @@ void PKB::Storage::setWhileControl(StmtRef index, VarRef name) {
 	while_control_store.set(info, name);
 }
 
-void PKB::Storage::setNode(shared_ptr<StmtInfo> info) { this->control_flow_graph.createNode(info); }
+void PKB::Storage::setNode(shared_ptr<StmtInfo> info) { this->control_flow_graph.createNode(move(info)); }
 
 void PKB::Storage::setNext(StmtRef previous, StmtRef next) { this->control_flow_graph.setNext(previous, next); }
 

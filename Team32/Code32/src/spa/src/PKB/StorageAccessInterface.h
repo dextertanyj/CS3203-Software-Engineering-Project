@@ -62,7 +62,7 @@ public:
 	virtual StmtInfoPtrSet getNext(StmtRef first) = 0;
 	virtual StmtInfoPtrSet getNextStar(StmtRef node_ref) = 0;
 	virtual StmtInfoPtrSet getPrevious(StmtRef second) = 0;
-	virtual StmtInfoPtrSet getPreviousStar(StmtRef second) = 0;
+	virtual StmtInfoPtrSet getPreviousStar(StmtRef node_ref) = 0;
 
 	// Control Variable get methods
 	virtual bool checkIfControl(StmtRef index, VarRef name) = 0;

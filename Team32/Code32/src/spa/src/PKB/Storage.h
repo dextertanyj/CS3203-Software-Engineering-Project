@@ -115,7 +115,7 @@ public:
 	StmtInfoPtrSet getNext(StmtRef first) override;
 	StmtInfoPtrSet getNextStar(StmtRef node_ref) override;
 	StmtInfoPtrSet getPrevious(StmtRef second) override;
-	StmtInfoPtrSet getPreviousStar(StmtRef second) override;
+	StmtInfoPtrSet getPreviousStar(StmtRef node_ref) override;
 
 	// Control Variable get methods
 	bool checkIfControl(StmtRef index, VarRef name) override;
