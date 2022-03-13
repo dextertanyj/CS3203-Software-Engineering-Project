@@ -163,6 +163,6 @@ const unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::Arg
                              {QP::Types::DesignEntity::Read, statement_map},      {QP::Types::DesignEntity::While, statement_map},
                              {QP::Types::DesignEntity::If, statement_map}};
 }  // namespace
-};  // namespace QP::Relationship::ModifiesDispatcher
+};  // namespace QP::Dispatcher::ModifiesDispatcher
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_MODIFIES_H

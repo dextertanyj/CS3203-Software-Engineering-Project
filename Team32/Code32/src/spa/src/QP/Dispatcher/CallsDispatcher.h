@@ -1,11 +1,11 @@
 #ifndef SPA_SRC_QP_RELATIONSHIP_CALLSHANDLER_H
 #define SPA_SRC_QP_RELATIONSHIP_CALLSHANDLER_H
 
+#include "QP/Dispatcher/Dispatcher.h"
 #include "QP/QueryResult.h"
 #include "QP/QueryTypes.h"
-#include "QP/StorageAdapter.h"
 #include "QP/ReferenceArgument.h"
-#include "QP/Dispatcher/Dispatcher.h"
+#include "QP/StorageAdapter.h"
 
 template <QP::Types::ClauseType T>
 class QP::Dispatcher::CallsDispatcher {

@@ -8,8 +8,8 @@
 // Trivial Executors
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialIndexIndex(QP::StorageAdapter& storage,
-                                                                                     const Types::ReferenceArgument& lhs,
-                                                                                     const Types::ReferenceArgument& rhs) {
+                                                                             const Types::ReferenceArgument& lhs,
+                                                                             const Types::ReferenceArgument& rhs) {
 	return QueryResult(storage.checkStatementRelation<T>(lhs.getStatementIndex(), rhs.getStatementIndex()));
 }
 
@@ -42,14 +42,14 @@ inline QP::QueryResult QP::Executor::StatementExecutor<QP::Types::ClauseType::Fo
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialIndexWildcard(QP::StorageAdapter& storage,
-                                                                                        const Types::ReferenceArgument& lhs) {
+                                                                                const Types::ReferenceArgument& lhs) {
 	return QueryResult(!storage.getReverseStatements<T>(lhs.getStatementIndex()).empty());
 }
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialIndexSynonym(QP::StorageAdapter& storage,
-                                                                                       const Types::ReferenceArgument& lhs,
-                                                                                       const Types::ReferenceArgument& rhs) {
+                                                                               const Types::ReferenceArgument& lhs,
+                                                                               const Types::ReferenceArgument& rhs) {
 	StmtInfoPtrSet rhs_set = storage.getReverseStatements<T>(lhs.getStatementIndex());
 	if (rhs.getSynonym().type == Types::DesignEntity::Stmt) {
 		return QueryResult(!rhs_set.empty());
@@ -65,7 +65,7 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialIndexSynonym(Q
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialWildcardIndex(QP::StorageAdapter& storage,
-                                                                                        const Types::ReferenceArgument& rhs) {
+                                                                                const Types::ReferenceArgument& rhs) {
 	return QueryResult(!storage.getForwardStatements<T>(rhs.getStatementIndex()).empty());
 }
 
@@ -106,7 +106,7 @@ inline QP::QueryResult QP::Executor::StatementExecutor<QP::Types::ClauseType::Pa
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialWildcardSynonym(QP::StorageAdapter& storage,
-                                                                                          const Types::ReferenceArgument& rhs) {
+                                                                                  const Types::ReferenceArgument& rhs) {
 	StmtInfoPtrSet statements = storage.getStatements();
 	for (auto const& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, rhs.getSynonym().type)) {
@@ -122,8 +122,8 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialWildcardSynony
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialSynonymIndex(QP::StorageAdapter& storage,
-                                                                                       const Types::ReferenceArgument& lhs,
-                                                                                       const Types::ReferenceArgument& rhs) {
+                                                                               const Types::ReferenceArgument& lhs,
+                                                                               const Types::ReferenceArgument& rhs) {
 	StmtInfoPtrSet lhs_set = storage.getForwardStatements<T>(rhs.getStatementIndex());
 	for (auto const& lhs_statement : lhs_set) {
 		if (Utilities::checkStmtTypeMatch(lhs_statement, lhs.getSynonym().type)) {
@@ -135,7 +135,7 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialSynonymIndex(Q
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialSynonymWildcard(QP::StorageAdapter& storage,
-                                                                                          const Types::ReferenceArgument& lhs) {
+                                                                                  const Types::ReferenceArgument& lhs) {
 	StmtInfoPtrSet statements = storage.getStatements();
 	for (auto const& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, lhs.getSynonym().type)) {
@@ -152,8 +152,8 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialSynonymWildcar
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialSynonymSynonym(QP::StorageAdapter& storage,
-                                                                                         const Types::ReferenceArgument& lhs,
-                                                                                         const Types::ReferenceArgument& rhs) {
+                                                                                 const Types::ReferenceArgument& lhs,
+                                                                                 const Types::ReferenceArgument& rhs) {
 	if (lhs.getSynonym().symbol == rhs.getSynonym().symbol) {
 		return {};
 	}
@@ -177,9 +177,8 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialSynonymSynonym
 
 // Executors
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::StatementExecutor<T>::executeIndexSynonym(QP::StorageAdapter& storage,
-                                                                                const Types::ReferenceArgument& lhs,
-                                                                                const Types::ReferenceArgument& rhs) {
+QP::QueryResult QP::Executor::StatementExecutor<T>::executeIndexSynonym(QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
+                                                                        const Types::ReferenceArgument& rhs) {
 	StmtInfoPtrSet statements = storage.getReverseStatements<T>(lhs.getStatementIndex());
 	vector<string> column;
 
@@ -195,7 +194,7 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeIndexSynonym(QP::Stor
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeWildcardSynonym(QP::StorageAdapter& storage,
-                                                                                   const Types::ReferenceArgument& rhs) {
+                                                                           const Types::ReferenceArgument& rhs) {
 	StmtInfoPtrSet statements = storage.getStatements();
 	vector<string> column;
 	for (auto const& statement : statements) {
@@ -214,9 +213,8 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeWildcardSynonym(QP::S
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::StatementExecutor<T>::executeSynonymIndex(QP::StorageAdapter& storage,
-                                                                                const Types::ReferenceArgument& lhs,
-                                                                                const Types::ReferenceArgument& rhs) {
+QP::QueryResult QP::Executor::StatementExecutor<T>::executeSynonymIndex(QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
+                                                                        const Types::ReferenceArgument& rhs) {
 	StmtInfoPtrSet lhs_set = storage.getForwardStatements<T>(rhs.getStatementIndex());
 	vector<string> column;
 	for (auto const& lhs_statement : lhs_set) {
@@ -232,7 +230,7 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeSynonymIndex(QP::Stor
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeSynonymWildcard(QP::StorageAdapter& storage,
-                                                                                   const Types::ReferenceArgument& lhs) {
+                                                                           const Types::ReferenceArgument& lhs) {
 	StmtInfoPtrSet statements = storage.getStatements();
 	vector<string> column;
 	for (auto const& statement : statements) {
@@ -251,9 +249,8 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeSynonymWildcard(QP::S
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::StatementExecutor<T>::executeSynonymSynonym(QP::StorageAdapter& storage,
-                                                                                  const Types::ReferenceArgument& lhs,
-                                                                                  const Types::ReferenceArgument& rhs) {
+QP::QueryResult QP::Executor::StatementExecutor<T>::executeSynonymSynonym(QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
+                                                                          const Types::ReferenceArgument& rhs) {
 	if (lhs.getSynonym().symbol == rhs.getSynonym().symbol) {
 		return {};
 	}

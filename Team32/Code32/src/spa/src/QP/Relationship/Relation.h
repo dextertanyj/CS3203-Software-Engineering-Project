@@ -1,11 +1,11 @@
 #ifndef SPA_SRC_QP_RELATIONSHIP_RELATION_H
 #define SPA_SRC_QP_RELATIONSHIP_RELATION_H
 
-#include "QP/StorageAdapter.h"
 #include "QP/QueryResult.h"
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Relationship.h"
+#include "QP/StorageAdapter.h"
 
 class QP::Relationship::Relation {
 public:

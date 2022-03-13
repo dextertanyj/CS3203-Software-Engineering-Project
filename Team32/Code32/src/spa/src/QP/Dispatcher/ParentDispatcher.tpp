@@ -65,9 +65,7 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](vector<Types::ReferenceArgument> /*args*/) {
-			 return [](QP::StorageAdapter& storage) {
-				 return Executor::StatementExecutor<T>::executeTrivialWildcardWildcard(storage);
-			 };
+			 return [](QP::StorageAdapter& storage) { return Executor::StatementExecutor<T>::executeTrivialWildcardWildcard(storage); };
 		 }},
 		{Types::DesignEntity::Stmt, lambda_wildcard_synonym<T>()},
 		{Types::DesignEntity::Call, lambda_wildcard_synonym<T>()},

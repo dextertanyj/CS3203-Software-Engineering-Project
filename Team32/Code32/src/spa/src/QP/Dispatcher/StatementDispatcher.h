@@ -1,8 +1,8 @@
 #ifndef SPA_STATEMENTDISPATCHER_H
 #define SPA_STATEMENTDISPATCHER_H
 
-#include "QP/QueryTypes.h"
 #include "QP/Executor/Executor.h"
+#include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
 
 template <QP::Types::ClauseType T>

@@ -5,11 +5,11 @@
 #include <utility>
 
 #include "QP/Dispatcher/Dispatcher.h"
+#include "QP/Executor/PatternAssignExecutor.h"
 #include "QP/Executor/ProcedureVariableExecutor.tpp"
 #include "QP/Executor/StatementVariableExecutor.tpp"
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
-#include "QP/Executor/PatternAssignExecutor.h"
 
 namespace QP::Dispatcher::PatternAssignDispatcher {
 extern const QP::Types::ArgumentDispatcher dispatcher;

@@ -1,10 +1,10 @@
 #ifndef SPA_SRC_QP_DISPATCHPROCESSORS_H
 #define SPA_SRC_QP_DISPATCHPROCESSORS_H
 
+#include "QP/Dispatcher/Dispatcher.h"
 #include "QP/QP.h"
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
-#include "QP/Dispatcher/Dispatcher.h"
 
 namespace QP::Dispatcher::DispatchProcessors {
 Types::ExecutorSetBundle processSingleArgument(Types::ClauseType type,
@@ -23,6 +23,6 @@ Types::ExecutorSetBundle processTripleArgument(
                   unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>>>
 		map,
 	vector<Types::ReferenceArgument> args);
-};  // namespace QP::DispatchProcessors
+};  // namespace QP::Dispatcher::DispatchProcessors
 
 #endif  // SPA_SRC_QP_DISPATCHPROCESSORS_H

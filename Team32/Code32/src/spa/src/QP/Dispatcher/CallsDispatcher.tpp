@@ -61,16 +61,18 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](vector<Types::ReferenceArgument> args) {
-			 return
-				 [](QP::StorageAdapter& pkb) { return Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymWildcardOrSynonym(pkb); };
+			 return [](QP::StorageAdapter& pkb) {
+				 return Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymWildcardOrSynonym(pkb);
+			 };
 		 }},
 		{Types::DesignEntity::Procedure,
 	     [](vector<Types::ReferenceArgument> args) {
-			 return pair{
-				 [](QP::StorageAdapter& pkb) { return Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymWildcardOrSynonym(pkb); },
-				 [callee = args.at(1)](QP::StorageAdapter& pkb) {
-					 return Executor::ProcedureExecutor<T>::executeWildcardSynonym(pkb, callee);
-				 }};
+			 return pair{[](QP::StorageAdapter& pkb) {
+							 return Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymWildcardOrSynonym(pkb);
+						 },
+		                 [callee = args.at(1)](QP::StorageAdapter& pkb) {
+							 return Executor::ProcedureExecutor<T>::executeWildcardSynonym(pkb, callee);
+						 }};
 		 }},
 	};
 	return map;
@@ -90,11 +92,12 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](vector<Types::ReferenceArgument> args) {
-			 return pair{
-				 [](QP::StorageAdapter& pkb) { return Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymWildcardOrSynonym(pkb); },
-				 [caller = args.at(0)](QP::StorageAdapter& pkb) {
-					 return Executor::ProcedureExecutor<T>::executeSynonymWildcard(pkb, caller);
-				 }};
+			 return pair{[](QP::StorageAdapter& pkb) {
+							 return Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymWildcardOrSynonym(pkb);
+						 },
+		                 [caller = args.at(0)](QP::StorageAdapter& pkb) {
+							 return Executor::ProcedureExecutor<T>::executeSynonymWildcard(pkb, caller);
+						 }};
 		 }},
 		{Types::DesignEntity::Procedure,
 	     [](vector<Types::ReferenceArgument> args) {
