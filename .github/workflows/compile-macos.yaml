@@ -26,34 +26,30 @@ jobs:
         shell: bash
         run: cmake --build . --config $BUILD_TYPE --parallel 8
 
-      - name: Baseline coverage
-        shell: bash
-        working-directory: ${{runner.workspace}}
-        run: |
-          brew install lcov
-          mkdir ${{runner.workspace}}/coverage
-          lcov -z -d ./build/src/spa/CMakeFiles/spa.dir/src
-          lcov -c -i -d ./build/src/spa/CMakeFiles/spa.dir/src -o ./coverage/coverage_base.info
-
       - name: Run unit tests
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: ./src/unit_testing/unit_testing
+        run: LLVM_PROFILE_FILE="unit_testing.profraw" ./src/unit_testing/unit_testing
 
       - name: Run integration tests
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: ./src/integration_testing/integration_testing
+        run: LLVM_PROFILE_FILE="integration_testing.profraw" ./src/integration_testing/integration_testing
 
       - name: Analyse coverage
         shell: bash
-        working-directory: ${{runner.workspace}}
+        working-directory: ${{runner.workspace}}/build
         run: |
-          lcov -c -d ./build/src/spa/CMakeFiles/spa.dir/src -o ./coverage/coverage.info
-          lcov -a ./coverage/coverage_base.info -a ./coverage/coverage.info -o ./coverage/coverage_total.info
-          lcov -r ./coverage/coverage_total.info '/Library/Developer/CommandLineTools/SDKs/*' -o ./coverage/coverage_filtered.info
+          xcrun llvm-profdata merge -sparse unit_testing.profraw -o unit_testing.profdata
+          xcrun llvm-profdata merge -sparse integration_testing.profraw -o integration_testing.profdata
+          xcrun llvm-cov show ./src/unit_testing/unit_testing \
+           -ignore-filename-regex='^${{github.workspace}}/Team32/Code32/(src/(unit|integration)_testing/.*$|lib.catch_tools.h$)' \
+           -instr-profile=unit_testing.profdata > unit_testing.txt
+          xcrun llvm-cov show ./src/integration_testing/integration_testing \
+           -ignore-filename-regex='^${{github.workspace}}/Team32/Code32/(src/(unit|integration)_testing/.*$|lib.catch_tools.h$)' \
+           -instr-profile=integration_testing.profdata > integration_testing.txt
 
       - name: Upload coverage
         uses: codecov/codecov-action@v2
         with:
-          files: ${{runner.workspace}}/coverage/coverage_filtered.info
+          files: ${{runner.workspace}}/build/unit_testing.txt, ${{runner.workspace}}/build/integration_testing.txt
