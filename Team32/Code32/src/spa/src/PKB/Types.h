@@ -19,7 +19,6 @@ typedef InfoStore<StmtRef, NodeInfo, NodeInfo> NodeStore;
 typedef TransitiveRelationStore<ProcRef, ProcedureInfo, CallRelation> CallStore;
 typedef TransitiveRelationStore<StmtRef, StmtInfo, ParentRelation> ParentStore;
 typedef TransitiveRelationStore<StmtRef, StmtInfo, FollowsRelation> FollowsStore;
-typedef InfoStore<StmtRef, StmtType, NodeInfo> NodeStore;
 }  // namespace PKB::Types
 
 #endif  // SPA_SRC_PKB_TYPES_H

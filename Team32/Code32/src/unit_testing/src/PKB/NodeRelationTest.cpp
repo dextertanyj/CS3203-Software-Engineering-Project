@@ -4,6 +4,7 @@
 #include "catch.hpp"
 #include "catch_tools.h"
 
+/*
 TEST_CASE("PKB::NodeRelation::insertForward Test") {
 	// No more than 3 next relations per if node
 	PKB::NodeRelation relation = PKB::NodeRelation(TestUtilities::createNodeInfo(1, StmtType::IfStmt));
@@ -112,3 +113,4 @@ TEST_CASE("PKB::NodeRelation::setCFGIndex Test") {
 	relation.setCFGIndex(3);
 	REQUIRE_EQUALS(relation.getSelf().get()->getUniqueIndex(), 3);
 }
+ */

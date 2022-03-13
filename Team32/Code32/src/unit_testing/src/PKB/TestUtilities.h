@@ -19,11 +19,13 @@ inline shared_ptr<PKB::ProcedureInfo> createProcedureInfo(ProcRef name) {
 	return store.get(name);
 };
 
+/*
 inline shared_ptr<PKB::NodeInfo> createNodeInfo(StmtRef stmt_no, StmtType type) {
 	PKB::Types::NodeStore store;
 	store.insert(stmt_no, type);
 	return store.get(stmt_no);
 }
+ */
 
 inline PKB::Storage generateFollowsTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
