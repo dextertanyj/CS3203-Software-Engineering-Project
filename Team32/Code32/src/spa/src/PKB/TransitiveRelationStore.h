@@ -20,12 +20,13 @@ public:
 	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getForwardTransitive(TIdent name) const;
 	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getReverseTransitive(TIdent name) const;
 
-	void optimize();
+	void optimize() = delete;
 	void clear();
 
 private:
-	unordered_map<ProcRef, TRelation> map;
-	unordered_set<shared_ptr<TInfo>> populateTransitive(TRelation& current, unordered_set<shared_ptr<TInfo>> previous);
+	unordered_map<TIdent, TRelation> map;
+	// NOLINTNEXTLINE(modernize-use-equals-delete)
+	unordered_set<shared_ptr<TInfo>> populateTransitive(TRelation& current, unordered_set<shared_ptr<TInfo>> previous) = delete;
 };
 
 #endif  // SPA_SRC_PKB_TRANSITIVERELATIONSTORE_H

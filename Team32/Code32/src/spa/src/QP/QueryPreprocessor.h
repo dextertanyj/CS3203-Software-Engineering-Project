@@ -1,32 +1,30 @@
 #ifndef SPA_SRC_QP_QUERYPREPROCESSOR_H
 #define SPA_SRC_QP_QUERYPREPROCESSOR_H
 
+#include <functional>
 #include <memory>
-#include <set>
+#include <optional>
+#include <regex>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "Common/ExpressionProcessor/Expression.h"
+#include "QP/Dispatcher.h"
 #include "QP/QueryEvaluator.h"
 #include "QP/QueryExpressionLexer.h"
 #include "QP/QueryProperties.h"
 #include "QP/QueryResult.h"
-#include "QP/ReferenceArgument.h"
-#include "QP/Relationship/Calls.h"
-#include "QP/Relationship/CallsT.h"
 #include "QP/Relationship/Follows.h"
 #include "QP/Relationship/FollowsT.h"
+#include "QP/Relationship/Modifies.h"
 #include "QP/Relationship/ModifiesP.h"
 #include "QP/Relationship/ModifiesS.h"
 #include "QP/Relationship/Parent.h"
 #include "QP/Relationship/ParentT.h"
 #include "QP/Relationship/UsesP.h"
 #include "QP/Relationship/UsesS.h"
-
-using std::set;
-using std::string;
-using std::vector;
 
 class QP::QueryPreprocessor {
 public:
@@ -39,34 +37,33 @@ private:
 	QueryProperties parseQuery();
 
 	// Parsing clauses/2nd level nodes
-	void parseDeclaration(size_t& token_index);
-	void parseSelect(size_t& token_index);
-	void parseSuchThat(size_t& token_index);
-	void parsePattern(size_t& token_index);
+	void parseDeclarations();
+	void parseDeclaration(const Types::DesignEntity& type);
+	void parseSelect();
+	void parseClauses();
+	void parseSuchThat();
+	void parsePattern();
 
 	// Parsing Rules
-	DesignEntity parseDesignEntity(size_t& token_index);
-	unique_ptr<Relationship::Relation> parseRelation(size_t& token_index);
-	unique_ptr<Relationship::Follows> parseFollows(size_t& token_index);
-	unique_ptr<Relationship::Parent> parseParent(size_t& token_index);
-	unique_ptr<Relationship::UsesP> parseUsesP(size_t& token_index);
-	unique_ptr<Relationship::UsesS> parseUsesS(size_t& token_index);
-	unique_ptr<Relationship::ModifiesP> parseModifiesP(size_t& token_index);
-	unique_ptr<Relationship::ModifiesS> parseModifiesS(size_t& token_index);
-	unique_ptr<Relationship::Calls> parseCalls(size_t& token_index);
-	ReferenceArgument parseQueryEntRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities);
-	ReferenceArgument parseQueryStmtRef(size_t& token_index, const set<DesignEntity>& accepted_design_entities);
-	Common::ExpressionProcessor::Expression parseExpression(size_t& token_index);
+	optional<Types::DesignEntity> parseDesignEntity();
+	unique_ptr<Relationship::Relation> parseClause();
+	unique_ptr<Relationship::Relation> parseClause(Types::ClauseType type);
+	unique_ptr<Relationship::Relation> parseAssignPattern(Types::Declaration synonym);
+	Types::ReferenceArgument parseReferenceArgument();
+	Common::ExpressionProcessor::Expression parseExpression();
 
 	// Helper methods
-	static bool isIdentOrName(const string& token);
-	void matchTokenOrThrow(const string& token, size_t& token_index);
+	void matchTokenOrThrow(const string& token);
 
+	size_t token_index;
 	vector<string> query_tokens;
-	DeclarationList declaration_list;
-	DeclarationList select_list;
-	ClauseList clause_list;
-	QueryResult query_result;
+	unordered_map<string, Types::Declaration> existing_declarations;
+	Types::DeclarationList select_list;
+	Types::ClauseList clause_list;
+
+	static regex invalid_chars_regex;
+	static regex query_token_regex;
+	QP::Dispatcher dispatcher;
 };
 
 #endif  // SPA_SRC_QP_QUERYPREPROCESSOR_H

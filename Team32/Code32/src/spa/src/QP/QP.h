@@ -15,8 +15,11 @@ class QueryPreprocessor;
 class QueryProcessor;
 class QueryProperties;
 class QueryResult;
+struct Dispatcher;
 namespace Utilities {};
 namespace Types {};
+
+namespace DispatchProcessors {};
 
 struct QueryException : public runtime_error {
 	using runtime_error::runtime_error;

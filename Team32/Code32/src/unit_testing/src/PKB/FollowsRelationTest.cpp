@@ -131,7 +131,7 @@ TEST_CASE("PKB::FollowsRelation Overall Test") {
 }
 
 TEST_CASE("PKB::FollowsRelation::optimize Test") {
-	PKB::StatementRelationStore<PKB::FollowsRelation> store = PKB::StatementRelationStore<PKB::FollowsRelation>();
+	PKB::Types::FollowsStore store = PKB::Types::FollowsStore();
 	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(1, StmtType::Call);
 	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
 	shared_ptr<StmtInfo> s_2_1 = TestUtilities::createStmtInfo(3, StmtType::Read);
@@ -148,7 +148,7 @@ TEST_CASE("PKB::FollowsRelation::optimize Test") {
 	REQUIRE(find(store.getForward(2).begin(), store.getForward(2).end(), s_1) != store.getForward(2).end());
 	REQUIRE_EQUALS(store.getForwardTransitive(2).size(), 0);
 	REQUIRE_EQUALS(store.getReverseTransitive(2).size(), 0);
-	REQUIRE_NOTHROW(PKB::FollowsRelation::optimize(store));
+	REQUIRE_NOTHROW(store.optimize());
 	REQUIRE_EQUALS(store.getForwardTransitive(6).size(), 2);
 	REQUIRE(find(store.getForwardTransitive(6).begin(), store.getForwardTransitive(6).end(), s_2) != store.getForwardTransitive(6).end());
 	REQUIRE(find(store.getForwardTransitive(6).begin(), store.getForwardTransitive(6).end(), s_1) != store.getForwardTransitive(6).end());

@@ -1,9 +1,10 @@
 #include "QP/QueryGraph.h"
 
 #include "QP/ReferenceArgument.h"
-#include "QP/Relationship/Parent.h"
-#include "QP/Relationship/UsesS.h"
+#include "QP/Relationship/Relation.h"
 #include "catch.hpp"
+
+using namespace QP::Types;
 
 TEST_CASE("QP::QueryGraph::QueryGraph Should initialize nodes") {
 	DeclarationList list = {{DesignEntity::Stmt, "s"}, {DesignEntity::Variable, "v"}};
@@ -21,8 +22,10 @@ TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
 	ReferenceArgument a = ReferenceArgument(declaration_a);
 	ReferenceArgument v = ReferenceArgument(declaration_v);
 	ClauseList clause_list = {
-		{make_unique<QP::Relationship::Parent>(s, a)},
-		{make_unique<QP::Relationship::UsesS>(a, v)},
+		{make_unique<QP::Relationship::Relation>(ClauseType::Parent, vector<ReferenceArgument>({s, a}),
+	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
+		{make_unique<QP::Relationship::Relation>(ClauseType::UsesS, vector<ReferenceArgument>({a, v}),
+	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
 	};
 
 	QP::QueryGraph graph = QP::QueryGraph(list);
@@ -41,8 +44,13 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 	Declaration declaration_d = {DesignEntity::Assign, "d"};
 	Declaration declaration_e = {DesignEntity::Variable, "e"};
 	Declaration declaration_f = {DesignEntity::Variable, "f"};
-	DeclarationList list = {
+	DeclarationList declaration_list = {
 		declaration_a, declaration_b, declaration_c, declaration_d, declaration_e, declaration_f,
+	};
+	DeclarationList select_list = {
+		declaration_a,
+		declaration_b,
+		declaration_e,
 	};
 	ReferenceArgument a = ReferenceArgument(declaration_a);
 	ReferenceArgument b = ReferenceArgument(declaration_b);
@@ -52,17 +60,16 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 	ReferenceArgument f = ReferenceArgument(declaration_f);
 	ReferenceArgument wildcard = ReferenceArgument();
 	ClauseList clause_list = {
-		{make_unique<QP::Relationship::Parent>(a, b)},
-		{make_unique<QP::Relationship::Parent>(a, c)},
-		{make_unique<QP::Relationship::UsesS>(d, e)},
-		{make_unique<QP::Relationship::UsesS>(d, wildcard)},
+		{make_unique<QP::Relationship::Relation>(ClauseType::Parent, vector<ReferenceArgument>({a, b}),
+	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
+		{make_unique<QP::Relationship::Relation>(ClauseType::Parent, vector<ReferenceArgument>({a, c}),
+	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
+		{make_unique<QP::Relationship::Relation>(ClauseType::UsesS, vector<ReferenceArgument>({d, e}),
+	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
+		{make_unique<QP::Relationship::Relation>(ClauseType::UsesS, vector<ReferenceArgument>({d, wildcard}),
+	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
 	};
-	DeclarationList select_list = {
-		declaration_a,
-		declaration_b,
-		declaration_e,
-	};
-	QP::QueryGraph graph = QP::QueryGraph(list);
+	QP::QueryGraph graph = QP::QueryGraph(declaration_list);
 	graph.setEdges(clause_list);
 	ConnectedSynonyms synonyms = graph.getConnectedSynonyms(select_list);
 

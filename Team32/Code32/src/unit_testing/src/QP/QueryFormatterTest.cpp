@@ -3,13 +3,13 @@
 #include "catch.hpp"
 
 TEST_CASE("QP::QueryFormatter::formatResult No results") {
-	QP::QueryProperties properties = QP::QueryProperties({}, {{DesignEntity::Stmt, "s"}}, {});
+	QP::QueryProperties properties = QP::QueryProperties({}, {{QP::Types::DesignEntity::Stmt, "s"}}, {});
 	QP::QueryResult result = QP::QueryResult();
 	REQUIRE(QP::QueryFormatter::formatResult(properties, result).empty());
 }
 
 TEST_CASE("QP::QueryFormatter::formatResult List of statement number") {
-	QP::QueryProperties properties = QP::QueryProperties({}, {{DesignEntity::Stmt, "s"}}, {});
+	QP::QueryProperties properties = QP::QueryProperties({}, {{QP::Types::DesignEntity::Stmt, "s"}}, {});
 	QP::QueryResult result = QP::QueryResult();
 	result.addColumn("s", {"1", "2", "3"});
 
@@ -30,9 +30,9 @@ TEST_CASE("QP::QueryFormatter::formatResult Boolean") {
 }
 
 TEST_CASE("QP::QueryFormatter::formatResult Tuple") {
-	DeclarationList select_list = {
-		{DesignEntity::Stmt, "s"},
-		{DesignEntity::Stmt, "s1"},
+	QP::Types::DeclarationList select_list = {
+		{QP::Types::DesignEntity::Stmt, "s"},
+		{QP::Types::DesignEntity::Stmt, "s1"},
 	};
 	QP::QueryProperties properties = QP::QueryProperties({}, select_list, {});
 	QP::QueryResult result = QP::QueryResult();

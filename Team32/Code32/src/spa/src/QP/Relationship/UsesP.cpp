@@ -2,66 +2,24 @@
 
 #include <utility>
 
-QP::Relationship::UsesP::UsesP(ReferenceArgument left_ent, ReferenceArgument right_ent) {
-	if (left_ent.getType() == ReferenceType::Wildcard) {
-		throw QueryException("Ambiguous wildcard _.");
-	}
-	this->left_ent = std::move(std::move(left_ent));
-	this->right_ent = std::move(std::move(right_ent));
+QP::QueryResult QP::Relationship::UsesP::executeTrivialNameName(PKB::StorageAccessInterface &pkb, const Types::ReferenceArgument &left_ent,
+                                                                const Types::ReferenceArgument &right_ent) {
+	return QueryResult(pkb.checkUses(left_ent.getName(), right_ent.getName()));
 }
 
-ReferenceArgument QP::Relationship::UsesP::getLeftEnt() { return left_ent; }
-
-ReferenceArgument QP::Relationship::UsesP::getRightEnt() { return right_ent; }
-
-vector<string> QP::Relationship::UsesP::getDeclarationSymbols() {
-	vector<string> declaration_symbols;
-	if (this->left_ent.getType() == ReferenceType::Synonym) {
-		declaration_symbols.push_back(this->left_ent.getSynonym().symbol);
-	}
-	if (this->right_ent.getType() == ReferenceType::Synonym) {
-		declaration_symbols.push_back(this->right_ent.getSynonym().symbol);
-	}
-	return declaration_symbols;
+QP::QueryResult QP::Relationship::UsesP::executeTrivialNameWildcardOrSynonym(PKB::StorageAccessInterface &pkb,
+                                                                             const Types::ReferenceArgument &left_ent) {
+	VarRefSet var_set = pkb.getUsesByProc(left_ent.getName());
+	return QueryResult(!var_set.empty());
 }
 
-QP::QueryResult QP::Relationship::UsesP::executeTrivial(PKB::StorageAccessInterface &pkb) {
-	if (left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Name) {
-		return QueryResult(pkb.checkUses(left_ent.getName(), right_ent.getName()));
-	}
-	if ((left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Wildcard) ||
-	    (left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Synonym)) {
-		VarRefSet var_set = pkb.getUsesByProc(left_ent.getName());
-		return QueryResult(!var_set.empty());
-	}
-	if (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Name) {
-		ProcRefSet proc_set = pkb.getProcUsesByVar(right_ent.getName());
-		return QueryResult(!proc_set.empty());
-	}
-	if ((left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Wildcard) ||
-	    (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Synonym)) {
-		return executeTrivialBothUnknown(pkb);
-	}
-	return {};
+QP::QueryResult QP::Relationship::UsesP::executeTrivialSynonymName(PKB::StorageAccessInterface &pkb,
+                                                                   const Types::ReferenceArgument &right_ent) {
+	ProcRefSet proc_set = pkb.getProcUsesByVar(right_ent.getName());
+	return QueryResult(!proc_set.empty());
 }
 
-QP::QueryResult QP::Relationship::UsesP::executeNonTrivial(PKB::StorageAccessInterface &pkb) {
-	if (left_ent.getType() == ReferenceType::Name && right_ent.getType() == ReferenceType::Synonym) {
-		return executeNonTrivialLeftEntVarName(pkb);
-	}
-	if (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Name) {
-		return executeNonTrivialRightEntVarName(pkb);
-	}
-	if (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Wildcard) {
-		return executeNonTrivialRightEntUnderscore(pkb);
-	}
-	if (left_ent.getType() == ReferenceType::Synonym && right_ent.getType() == ReferenceType::Synonym) {
-		return executeNonTrivialRightEntSynonym(pkb);
-	}
-	return {};
-}
-
-QP::QueryResult QP::Relationship::UsesP::executeTrivialBothUnknown(PKB::StorageAccessInterface &pkb) {
+QP::QueryResult QP::Relationship::UsesP::executeTrivialSynonymWildcardOrSynonym(PKB::StorageAccessInterface &pkb) {
 	unordered_set<ProcRef> proc_set = pkb.getProcedures();
 	for (auto const &proc : proc_set) {
 		VarRefSet var_set = pkb.getUsesByProc(proc);
@@ -72,7 +30,8 @@ QP::QueryResult QP::Relationship::UsesP::executeTrivialBothUnknown(PKB::StorageA
 	return {};
 }
 
-QP::QueryResult QP::Relationship::UsesP::executeNonTrivialLeftEntVarName(PKB::StorageAccessInterface &pkb) {
+QP::QueryResult QP::Relationship::UsesP::executeNameSynonym(PKB::StorageAccessInterface &pkb, const Types::ReferenceArgument &left_ent,
+                                                            const Types::ReferenceArgument &right_ent) {
 	VarRefSet var_set = pkb.getUsesByProc(left_ent.getName());
 	vector<string> column;
 
@@ -85,7 +44,8 @@ QP::QueryResult QP::Relationship::UsesP::executeNonTrivialLeftEntVarName(PKB::St
 	return result;
 }
 
-QP::QueryResult QP::Relationship::UsesP::executeNonTrivialRightEntVarName(PKB::StorageAccessInterface &pkb) {
+QP::QueryResult QP::Relationship::UsesP::executeSynonymName(PKB::StorageAccessInterface &pkb, const Types::ReferenceArgument &left_ent,
+                                                            const Types::ReferenceArgument &right_ent) {
 	ProcRefSet proc_set = pkb.getProcUsesByVar(right_ent.getName());
 	vector<string> column;
 	for (auto const &proc : proc_set) {
@@ -96,7 +56,8 @@ QP::QueryResult QP::Relationship::UsesP::executeNonTrivialRightEntVarName(PKB::S
 	return result;
 }
 
-QP::QueryResult QP::Relationship::UsesP::executeNonTrivialRightEntUnderscore(PKB::StorageAccessInterface &pkb) {
+QP::QueryResult QP::Relationship::UsesP::executeSynonymWildcard(PKB::StorageAccessInterface &pkb,
+                                                                const Types::ReferenceArgument &left_ent) {
 	unordered_set<ProcRef> proc_set = pkb.getProcedures();
 	vector<string> column;
 	for (auto const &proc : proc_set) {
@@ -110,7 +71,8 @@ QP::QueryResult QP::Relationship::UsesP::executeNonTrivialRightEntUnderscore(PKB
 	return result;
 }
 
-QP::QueryResult QP::Relationship::UsesP::executeNonTrivialRightEntSynonym(PKB::StorageAccessInterface &pkb) {
+QP::QueryResult QP::Relationship::UsesP::executeSynonymSynonym(PKB::StorageAccessInterface &pkb, const Types::ReferenceArgument &left_ent,
+                                                               const Types::ReferenceArgument &right_ent) {
 	unordered_set<ProcRef> proc_set = pkb.getProcedures();
 	vector<string> proc_column;
 	vector<string> var_column;

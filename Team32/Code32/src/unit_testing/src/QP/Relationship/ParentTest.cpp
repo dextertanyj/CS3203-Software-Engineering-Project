@@ -4,6 +4,8 @@
 #include "PKB/Storage.h"
 #include "catch.hpp"
 
+using namespace QP::Types;
+
 TEST_CASE("QP::Relationship::Parent::execute") {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
@@ -23,120 +25,88 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 	ReferenceArgument if_synonym = ReferenceArgument({QP::Types::DesignEntity::If, "if"});
 	ReferenceArgument wildcard = ReferenceArgument();
 
-	SECTION("trivial: stmtNumber & stmtNumber") {
-		QP::Relationship::Parent parent1 = QP::Relationship::Parent(stmt_no1, stmt_no2);
-		QP::Relationship::Parent parent2 = QP::Relationship::Parent(stmt_no1, stmt_no3);
-
-		QP::QueryResult result1 = parent1.execute(pkb, true);
-		QP::QueryResult result2 = parent2.execute(pkb, true);
+	SECTION("Trivial: Index & Index") {
+		QP::QueryResult result1 = QP::Relationship::Parent::executeTrivialIndexIndex(pkb, stmt_no1, stmt_no2);
+		QP::QueryResult result2 = QP::Relationship::Parent::executeTrivialIndexIndex(pkb, stmt_no1, stmt_no3);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: stmtNumber & wildcard") {
-		QP::Relationship::Parent parent1 = QP::Relationship::Parent(stmt_no1, wildcard);
-		QP::Relationship::Parent parent2 = QP::Relationship::Parent(stmt_no4, wildcard);
-
-		QP::QueryResult result1 = parent1.execute(pkb, true);
-		QP::QueryResult result2 = parent2.execute(pkb, true);
+	SECTION("Trivial: Index & Wildcard") {
+		QP::QueryResult result1 = QP::Relationship::Parent::executeTrivialIndexWildcard(pkb, stmt_no1);
+		QP::QueryResult result2 = QP::Relationship::Parent::executeTrivialIndexWildcard(pkb, stmt_no4);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: stmtNumber & synonym") {
-		QP::Relationship::Parent parent1 = QP::Relationship::Parent(stmt_no1, stmt_synonym);
-		QP::Relationship::Parent parent2 = QP::Relationship::Parent(stmt_no1, assign_synonym);
-
-		QP::QueryResult result1 = parent1.execute(pkb, true);
-		QP::QueryResult result2 = parent2.execute(pkb, true);
+	SECTION("Trivial: Index & Synonym") {
+		QP::QueryResult result1 = QP::Relationship::Parent::executeTrivialIndexSynonym(pkb, stmt_no1, stmt_synonym);
+		QP::QueryResult result2 = QP::Relationship::Parent::executeTrivialIndexSynonym(pkb, stmt_no1, assign_synonym);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: wildcard & stmtNumber") {
-		QP::Relationship::Parent parent1 = QP::Relationship::Parent(wildcard, stmt_no2);
-		QP::Relationship::Parent parent2 = QP::Relationship::Parent(wildcard, stmt_no1);
-
-		QP::QueryResult result1 = parent1.execute(pkb, true);
-		QP::QueryResult result2 = parent2.execute(pkb, true);
+	SECTION("Trivial: Wildcard & Index") {
+		QP::QueryResult result1 = QP::Relationship::Parent::executeTrivialWildcardIndex(pkb, stmt_no2);
+		QP::QueryResult result2 = QP::Relationship::Parent::executeTrivialWildcardIndex(pkb, stmt_no1);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: wildcard & wildcard") {
-		QP::Relationship::Parent parent = QP::Relationship::Parent(wildcard, wildcard);
-
-		QP::QueryResult result = parent.execute(pkb, true);
+	SECTION("Trivial: Wildcard & Wildcard") {
+		QP::QueryResult result = QP::Relationship::Parent::executeTrivialWildcardWildcard(pkb);
 
 		REQUIRE(result.getResult());
 	}
 
-	SECTION("trivial: wildcard & synonym") {
-		QP::Relationship::Parent parent1 = QP::Relationship::Parent(wildcard, stmt_synonym);
-		QP::Relationship::Parent parent2 = QP::Relationship::Parent(wildcard, assign_synonym);
-
-		QP::QueryResult result1 = parent1.execute(pkb, true);
-		QP::QueryResult result2 = parent2.execute(pkb, true);
+	SECTION("Trivial: Wildcard & Synonym") {
+		QP::QueryResult result1 = QP::Relationship::Parent::executeTrivialWildcardSynonym(pkb, stmt_synonym);
+		QP::QueryResult result2 = QP::Relationship::Parent::executeTrivialWildcardSynonym(pkb, assign_synonym);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: synonym & stmtNumber") {
-		QP::Relationship::Parent parent1 = QP::Relationship::Parent(assign_synonym, stmt_no2);
-		QP::Relationship::Parent parent2 = QP::Relationship::Parent(assign_synonym, stmt_no3);
-
-		QP::QueryResult result1 = parent1.execute(pkb, true);
-		QP::QueryResult result2 = parent2.execute(pkb, true);
+	SECTION("Trivial: Synonym & Index") {
+		QP::QueryResult result1 = QP::Relationship::Parent::executeTrivialSynonymIndex(pkb, assign_synonym, stmt_no2);
+		QP::QueryResult result2 = QP::Relationship::Parent::executeTrivialSynonymIndex(pkb, assign_synonym, stmt_no3);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: synonym & wildcard") {
-		QP::Relationship::Parent parent1 = QP::Relationship::Parent(assign_synonym, wildcard);
-		QP::Relationship::Parent parent2 = QP::Relationship::Parent(if_synonym, wildcard);
-
-		QP::QueryResult result1 = parent1.execute(pkb, true);
-		QP::QueryResult result2 = parent2.execute(pkb, true);
+	SECTION("Trivial: Synonym & Wildcard") {
+		QP::QueryResult result1 = QP::Relationship::Parent::executeTrivialSynonymWildcard(pkb, assign_synonym);
+		QP::QueryResult result2 = QP::Relationship::Parent::executeTrivialSynonymWildcard(pkb, if_synonym);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: synonym & synonym") {
-		QP::Relationship::Parent parent1 = QP::Relationship::Parent(assign_synonym, stmt_synonym);
-		QP::Relationship::Parent parent2 = QP::Relationship::Parent(if_synonym, stmt_synonym);
-
-		QP::QueryResult result1 = parent1.execute(pkb, true);
-		QP::QueryResult result2 = parent2.execute(pkb, true);
+	SECTION("Trivial: Synonym & Synonym") {
+		QP::QueryResult result1 = QP::Relationship::Parent::executeTrivialSynonymSynonym(pkb, assign_synonym, stmt_synonym);
+		QP::QueryResult result2 = QP::Relationship::Parent::executeTrivialSynonymSynonym(pkb, if_synonym, stmt_synonym);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: synonym & stmtNumber") {
-		QP::Relationship::Parent parent1 = QP::Relationship::Parent(assign_synonym, stmt_no2);
-		QP::Relationship::Parent parent2 = QP::Relationship::Parent(if_synonym, stmt_no2);
-
-		QP::QueryResult result1 = parent1.execute(pkb, false);
-		QP::QueryResult result2 = parent2.execute(pkb, false);
+	SECTION("Synonym & Index") {
+		QP::QueryResult result1 = QP::Relationship::Parent::executeSynonymIndex(pkb, assign_synonym, stmt_no2);
+		QP::QueryResult result2 = QP::Relationship::Parent::executeSynonymIndex(pkb, if_synonym, stmt_no2);
 
 		vector<string> expected_result = {"1"};
 		REQUIRE(result1.getSynonymResult("a") == expected_result);
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: synonym & wildcard") {
-		QP::Relationship::Parent parent1 = QP::Relationship::Parent(stmt_synonym, wildcard);
-		QP::Relationship::Parent parent2 = QP::Relationship::Parent(if_synonym, wildcard);
-
-		QP::QueryResult result1 = parent1.execute(pkb, false);
-		QP::QueryResult result2 = parent2.execute(pkb, false);
+	SECTION("Synonym & Wildcard") {
+		QP::QueryResult result1 = QP::Relationship::Parent::executeSynonymWildcard(pkb, stmt_synonym);
+		QP::QueryResult result2 = QP::Relationship::Parent::executeSynonymWildcard(pkb, if_synonym);
 
 		vector<string> expected_result = {"1", "2", "3"};
 		vector<string> actual_result = result1.getSynonymResult("s");
@@ -145,12 +115,9 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: synonym & synonym") {
-		QP::Relationship::Parent parent1 = QP::Relationship::Parent(stmt_synonym, if_synonym);
-		QP::Relationship::Parent parent2 = QP::Relationship::Parent(if_synonym, assign_synonym);
-
-		QP::QueryResult result1 = parent1.execute(pkb, false);
-		QP::QueryResult result2 = parent2.execute(pkb, false);
+	SECTION("Synonym & Synonym") {
+		QP::QueryResult result1 = QP::Relationship::Parent::executeSynonymSynonym(pkb, stmt_synonym, if_synonym);
+		QP::QueryResult result2 = QP::Relationship::Parent::executeSynonymSynonym(pkb, if_synonym, assign_synonym);
 
 		vector<string> expected_stmt_result = {"3"};
 		vector<string> expected_if_result = {"4"};
@@ -159,24 +126,18 @@ TEST_CASE("QP::Relationship::Parent::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: wildcard & synonym") {
-		QP::Relationship::Parent parent1 = QP::Relationship::Parent(wildcard, if_synonym);
-		QP::Relationship::Parent parent2 = QP::Relationship::Parent(wildcard, assign_synonym);
-
-		QP::QueryResult result1 = parent1.execute(pkb, false);
-		QP::QueryResult result2 = parent2.execute(pkb, false);
+	SECTION("Wildcard & Synonym") {
+		QP::QueryResult result1 = QP::Relationship::Parent::executeWildcardSynonym(pkb, if_synonym);
+		QP::QueryResult result2 = QP::Relationship::Parent::executeWildcardSynonym(pkb, assign_synonym);
 
 		vector<string> expected_result = {"4"};
 		REQUIRE(result1.getSynonymResult("if") == expected_result);
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: stmtNumber & synonym") {
-		QP::Relationship::Parent parent1 = QP::Relationship::Parent(stmt_no1, stmt_synonym);
-		QP::Relationship::Parent parent2 = QP::Relationship::Parent(stmt_no1, if_synonym);
-
-		QP::QueryResult result1 = parent1.execute(pkb, false);
-		QP::QueryResult result2 = parent2.execute(pkb, false);
+	SECTION("Index & Synonym") {
+		QP::QueryResult result1 = QP::Relationship::Parent::executeIndexSynonym(pkb, stmt_no1, stmt_synonym);
+		QP::QueryResult result2 = QP::Relationship::Parent::executeIndexSynonym(pkb, stmt_no1, if_synonym);
 
 		vector<string> expected_result = {"2"};
 		REQUIRE(result1.getSynonymResult("s") == expected_result);

@@ -4,6 +4,8 @@
 #include "PKB/Storage.h"
 #include "catch.hpp"
 
+using namespace QP::Types;
+
 TEST_CASE("QP::Relationship::UsesP::execute") {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
@@ -23,74 +25,54 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
 	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
-	ReferenceArgument wildcard = ReferenceArgument();
 
-	SECTION("trivial: varName & varName") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, x);
-		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no1, y);
-
-		QP::QueryResult result1 = uses1.execute(pkb, true);
-		QP::QueryResult result2 = uses2.execute(pkb, true);
+	SECTION("Trivial: Name & Name") {
+		QP::QueryResult result1 = QP::Relationship::UsesP::executeTrivialNameName(pkb, left_proc_no1, x);
+		QP::QueryResult result2 = QP::Relationship::UsesP::executeTrivialNameName(pkb, left_proc_no1, y);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: varName & wildcard") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, wildcard);
-		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no2, wildcard);
-
-		QP::QueryResult result1 = uses1.execute(pkb, true);
-		QP::QueryResult result2 = uses2.execute(pkb, true);
+	SECTION("Trivial: Name & Wildcard") {
+		QP::QueryResult result1 = QP::Relationship::UsesP::executeTrivialNameWildcardOrSynonym(pkb, left_proc_no1);
+		QP::QueryResult result2 = QP::Relationship::UsesP::executeTrivialNameWildcardOrSynonym(pkb, left_proc_no2);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: varName & synonym") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, var);
-		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no2, var);
-
-		QP::QueryResult result1 = uses1.execute(pkb, true);
-		QP::QueryResult result2 = uses2.execute(pkb, true);
+	SECTION("Trivial: Name & Synonym") {
+		QP::QueryResult result1 = QP::Relationship::UsesP::executeTrivialNameWildcardOrSynonym(pkb, left_proc_no1);
+		QP::QueryResult result2 = QP::Relationship::UsesP::executeTrivialNameWildcardOrSynonym(pkb, left_proc_no2);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: synonym & varName") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, x);
-		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no3, y);
-
-		QP::QueryResult result1 = uses1.execute(pkb, true);
-		QP::QueryResult result2 = uses2.execute(pkb, true);
+	SECTION("Trivial: Synonym & Name") {
+		QP::QueryResult result1 = QP::Relationship::UsesP::executeTrivialSynonymName(pkb, x);
+		QP::QueryResult result2 = QP::Relationship::UsesP::executeTrivialSynonymName(pkb, y);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("trivial: synonym & wildcard") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, wildcard);
-
-		QP::QueryResult result1 = uses1.execute(pkb, true);
+	SECTION("Trivial: Synonym & Wildcard") {
+		QP::QueryResult result1 = QP::Relationship::UsesP::executeTrivialSynonymWildcardOrSynonym(pkb);
 
 		REQUIRE(result1.getResult());
 	}
 
-	SECTION("trivial: synonym & synonym") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, var);
-
-		QP::QueryResult result1 = uses1.execute(pkb, true);
+	SECTION("Trivial: Synonym & Synonym") {
+		QP::QueryResult result1 = QP::Relationship::UsesP::executeTrivialSynonymWildcardOrSynonym(pkb);
 
 		REQUIRE(result1.getResult());
 	}
 
-	SECTION("non-trivial: varName & synonym") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no1, var);
-		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no2, var);
-
-		QP::QueryResult result1 = uses1.execute(pkb, false);
-		QP::QueryResult result2 = uses2.execute(pkb, false);
+	SECTION("Name & Synonym") {
+		QP::QueryResult result1 = QP::Relationship::UsesP::executeNameSynonym(pkb, left_proc_no1, var);
+		QP::QueryResult result2 = QP::Relationship::UsesP::executeNameSynonym(pkb, left_proc_no2, var);
 
 		vector<string> expected_result1 = {"x", "z"};
 		vector<string> actual_result1 = result1.getSynonymResult("var");
@@ -99,12 +81,9 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: synonym & varName") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, x);
-		QP::Relationship::UsesP uses2 = QP::Relationship::UsesP(left_proc_no3, y);
-
-		QP::QueryResult result1 = uses1.execute(pkb, false);
-		QP::QueryResult result2 = uses2.execute(pkb, false);
+	SECTION("Synonym & Name") {
+		QP::QueryResult result1 = QP::Relationship::UsesP::executeSynonymName(pkb, left_proc_no3, x);
+		QP::QueryResult result2 = QP::Relationship::UsesP::executeSynonymName(pkb, left_proc_no3, y);
 
 		vector<string> expected_result1 = {"A"};
 		vector<string> actual_result1 = result1.getSynonymResult("procedure");
@@ -113,10 +92,8 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 		REQUIRE(!result2.getResult());
 	}
 
-	SECTION("non-trivial: synonym & wildcard") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, wildcard);
-
-		QP::QueryResult result1 = uses1.execute(pkb, false);
+	SECTION("Synonym & Wildcard") {
+		QP::QueryResult result1 = QP::Relationship::UsesP::executeSynonymWildcard(pkb, left_proc_no3);
 
 		vector<string> expected_result1 = {"A"};
 		vector<string> actual_result1 = result1.getSynonymResult("procedure");
@@ -124,10 +101,8 @@ TEST_CASE("QP::Relationship::UsesP::execute") {
 		REQUIRE(actual_result1 == expected_result1);
 	}
 
-	SECTION("non-trivial: synonym & synonym") {
-		QP::Relationship::UsesP uses1 = QP::Relationship::UsesP(left_proc_no3, var);
-
-		QP::QueryResult result1 = uses1.execute(pkb, false);
+	SECTION("Synonym & Synonym") {
+		QP::QueryResult result1 = QP::Relationship::UsesP::executeSynonymSynonym(pkb, left_proc_no3, var);
 
 		vector<string> expected_proc_result1 = {"A", "A"};
 		vector<string> actual_proc_result1 = result1.getSynonymResult("procedure");

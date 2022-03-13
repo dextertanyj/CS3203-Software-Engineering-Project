@@ -2,13 +2,18 @@
 
 #include <utility>
 
+#include "QP/QueryUtils.h"
+
+using QP::Types::Clause;
+using QP::Types::DesignEntity;
+
 QP::QueryEvaluator::QueryEvaluator(PKB::StorageAccessInterface& pkb) : pkb(pkb) {}
 
 QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 	QueryGraph graph = buildGraph(query_properties);
 	DeclarationList select_list = query_properties.getSelectList();
 	ConnectedSynonyms connected_synonyms = graph.getConnectedSynonyms(select_list);
-	vector<pair<ClauseList, DeclarationList>> clauses_in_group = splitClauses(query_properties, connected_synonyms);
+	vector<pair<Types::ClauseList, Types::DeclarationList>> clauses_in_group = splitClauses(query_properties, connected_synonyms);
 
 	QueryResult result = QueryResult();
 
@@ -189,7 +194,6 @@ QP::QueryGraph QP::QueryEvaluator::buildGraph(QueryProperties& query_properties)
 vector<pair<ClauseList, DeclarationList>> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties,
                                                                            ConnectedSynonyms& connected_synonyms) {
 	vector<pair<ClauseList, DeclarationList>> result(connected_synonyms.number_of_groups + 1);
-
 	for (const Clause& clause : query_properties.getClauseList()) {
 		vector<string> declarations = clause.relation->getDeclarationSymbols();
 		if (declarations.empty()) {

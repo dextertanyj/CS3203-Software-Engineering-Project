@@ -1,6 +1,10 @@
 #include "QueryGraph.h"
 
 #include <queue>
+#include <vector>
+
+using QP::Types::Clause;
+using QP::Types::Declaration;
 
 QP::QueryGraph::QueryGraph(const DeclarationList& declarations) {
 	for (const Declaration& declaration : declarations) {
@@ -65,7 +69,7 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 		unvisited_nodes.erase(symbol);
 		queue.pop();
 
-		Node node = this->nodes.at(symbol);
+		Types::Node node = this->nodes.at(symbol);
 		for (const string& adjacent_symbol : node.adjacent_symbols) {
 			if (unvisited_nodes.find(adjacent_symbol) != unvisited_nodes.end()) {
 				queue.push(adjacent_symbol);

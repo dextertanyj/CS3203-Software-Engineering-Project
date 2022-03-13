@@ -79,7 +79,7 @@ TEST_CASE("PKB::UsesSRelation") {
 		transitive_rel_store.set(procedure_store.get(sub_proc_1), procedure_store.get(sub_proc_2));
 		call_graph.sort(procedure_store, transitive_rel_store);
 
-		PKB::StatementRelationStore<PKB::ParentRelation> parent_store = PKB::StatementRelationStore<PKB::ParentRelation>();
+		PKB::Types::ParentStore parent_store = PKB::Types::ParentStore();
 		VarRefSet var_refs_cd = {"c", "d"};
 		VarRefSet var_refs_efg = {"e", "f", "g"};
 
@@ -95,7 +95,7 @@ TEST_CASE("PKB::UsesSRelation") {
 		parent_store.set(s2, s4);
 		parent_store.set(s2, s3);
 
-		PKB::ParentRelation::optimize(parent_store);
+		parent_store.optimize();
 		PKB::UsesSRelation::optimize(parent_store, call_statement_store, procedure_store, call_graph, store);
 		/* If optimize works correctly:
 		 * 1) var 'a' from s3 propagates up to s2 and s1.

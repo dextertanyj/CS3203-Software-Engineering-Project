@@ -1,13 +1,7 @@
 #include "FollowsRelation.h"
 
-#include <utility>
-
-using namespace std;
-
-PKB::FollowsRelation::FollowsRelation(shared_ptr<StmtInfo> self) : self(std::move(self)) {}
-
 void PKB::FollowsRelation::insertForward(const shared_ptr<StmtInfo>& following_to_insert) {
-	if (self->getIdentifier() <= following_to_insert->getIdentifier()) {
+	if (getSelf()->getIdentifier() <= following_to_insert->getIdentifier()) {
 		throw invalid_argument("Statement out of order");
 	}
 	if (this->following != nullptr) {
@@ -17,7 +11,7 @@ void PKB::FollowsRelation::insertForward(const shared_ptr<StmtInfo>& following_t
 }
 
 void PKB::FollowsRelation::insertReverse(const shared_ptr<StmtInfo>& follower_to_insert) {
-	if (self->getIdentifier() >= follower_to_insert->getIdentifier()) {
+	if (getSelf()->getIdentifier() >= follower_to_insert->getIdentifier()) {
 		throw invalid_argument("Statement out of order");
 	}
 	if (this->follower != nullptr) {
@@ -26,60 +20,42 @@ void PKB::FollowsRelation::insertReverse(const shared_ptr<StmtInfo>& follower_to
 	this->follower = follower_to_insert;
 }
 
-void PKB::FollowsRelation::appendForwardTransitive(StmtInfoPtrSet followings) {
-	for (const auto& following_to_insert : followings) {
-		if (self->getIdentifier() <= following_to_insert->getIdentifier()) {
-			throw invalid_argument("Statement out of order");
-		}
-	}
-	this->following_transitive.insert(followings.begin(), followings.end());
-}
-
-void PKB::FollowsRelation::appendReverseTransitive(StmtInfoPtrSet followers) {
-	for (const auto& follower_to_insert : followers) {
-		if (self->getIdentifier() >= follower_to_insert->getIdentifier()) {
-			throw invalid_argument("Statement out of order");
-		}
-	}
-	this->followers_transitive.insert(followers.begin(), followers.end());
-}
-
-StmtInfoPtrSet PKB::FollowsRelation::getForward() {
+StmtInfoPtrSet PKB::FollowsRelation::getForward() const {
 	if (following == nullptr) {
 		return {};
 	}
 	return {following};
 }
 
-StmtInfoPtrSet PKB::FollowsRelation::getReverse() {
+StmtInfoPtrSet PKB::FollowsRelation::getReverse() const {
 	if (follower == nullptr) {
 		return {};
 	}
 	return {follower};
 }
 
-StmtInfoPtrSet PKB::FollowsRelation::getForwardTransitive() { return following_transitive; }
+// Template specializations for Follows relationship.
 
-StmtInfoPtrSet PKB::FollowsRelation::getReverseTransitive() { return followers_transitive; }
-
-void PKB::FollowsRelation::optimize(PKB::StatementRelationStore<PKB::FollowsRelation>& store) {
-	for (auto& item : store.map) {
+template <>
+void PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::FollowsRelation>::optimize() {
+	for (auto& item : map) {
 		if (item.second.getForward().empty()) {
-			PKB::FollowsRelation::populateTransitive(store, item.second, {});
+			populateTransitive(item.second, {});
 		}
 	}
 }
 
-StmtInfoPtrSet PKB::FollowsRelation::populateTransitive(PKB::StatementRelationStore<PKB::FollowsRelation>& store,
-                                                        PKB::FollowsRelation& current, StmtInfoPtrSet previous) {
+template <>
+StmtInfoPtrSet PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::FollowsRelation>::populateTransitive(FollowsRelation& current,
+                                                                                                         StmtInfoPtrSet previous) {
 	current.appendForwardTransitive(previous);
-	previous.insert(current.self);
+	previous.insert(current.getSelf());
 	StmtInfoPtrSet result;
-	if (current.follower != nullptr) {
-		auto follower = store.map.find(current.follower->getIdentifier());
-		result = populateTransitive(store, follower->second, previous);
+	if (!current.getReverse().empty()) {
+		auto follower = map.find((*current.getReverse().begin())->getIdentifier());
+		result = populateTransitive(follower->second, previous);
 	}
 	current.appendReverseTransitive(result);
-	result.insert(current.self);
+	result.insert(current.getSelf());
 	return result;
 }

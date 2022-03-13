@@ -1,34 +1,51 @@
 #ifndef SPA_SRC_QP_RELATIONSHIP_PATTERN_H
 #define SPA_SRC_QP_RELATIONSHIP_PATTERN_H
 
-#include <optional>
 #include <string>
-#include <vector>
+#include <unordered_map>
 
 #include "Common/ExpressionProcessor/Expression.h"
-#include "QP/QueryExpressionLexer.h"
+#include "PKB/StorageAccessInterface.h"
+#include "QP/QueryResult.h"
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
-#include "QP/Relationship/Relation.h"
+#include "QP/Relationship/Relationship.h"
 
-class QP::Relationship::Pattern : public Relation {
+class QP::Relationship::Pattern {
 public:
-	Pattern(ReferenceArgument syn_assign, ReferenceArgument ent_ref, ReferenceArgument expression);
+	// Trivial Executors
+	static QueryResult executeTrivialNameWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& name);
+	static QueryResult executeTrivialSynonymOrWildcardWildcard(PKB::StorageAccessInterface& pkb);
+	static QueryResult executeTrivialNameExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& name,
+	                                                const Types::ReferenceArgument& expression);
+	static QueryResult executeTrivialSynonymOrWildcardExpression(PKB::StorageAccessInterface& pkb,
+	                                                             const Types::ReferenceArgument& expression);
 
-	ReferenceArgument getSynAssign();
-	ReferenceArgument getEntRef();
-	ReferenceType getExpressionType();
-	Common::ExpressionProcessor::Expression getExpression();
+	// Executors
+	static QueryResult executeNameWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
+	                                       const Types::ReferenceArgument& name);
+	static QueryResult executeWildcardWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign);
+	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
+	                                          const Types::ReferenceArgument& synonym);
+	static QueryResult executeNameExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
+	                                         const Types::ReferenceArgument& name, const Types::ReferenceArgument& expression);
+	static QueryResult executeWildcardExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
+	                                             const Types::ReferenceArgument& expression);
+	static QueryResult executeSynonymExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
+	                                            const Types::ReferenceArgument& synonym, const Types::ReferenceArgument& expression);
 
-	vector<string> getDeclarationSymbols() override;
+	static Types::ArgumentDispatcher dispatcher;
 
 private:
-	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
-	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
+	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getNameMap();
+	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getWildcardMap();
+	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getVariableSynonymMap();
 
-	ReferenceArgument syn_assign;
-	ReferenceArgument ent_ref;
-	ReferenceArgument expression;
+	static unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>> getSynonymMap();
+
+	static unordered_map<Types::ArgumentDispatchKey,
+	                     unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>>>
+		argument_dispatch_map;
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_PATTERN_H

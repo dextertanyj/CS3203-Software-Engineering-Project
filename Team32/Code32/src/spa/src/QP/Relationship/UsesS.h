@@ -1,33 +1,32 @@
 #ifndef SPA_SRC_QP_RELATIONSHIP_USESS_H
 #define SPA_SRC_QP_RELATIONSHIP_USESS_H
 
+#include "PKB/StorageAccessInterface.h"
+#include "QP/QueryResult.h"
 #include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
-#include "QP/Relationship/Relation.h"
+#include "QP/Relationship/Relationship.h"
 
-class QP::Relationship::UsesS : public Relation {
+class QP::Relationship::UsesS {
 public:
-	UsesS(ReferenceArgument stmt, ReferenceArgument ent);
+	// Trivial Executors
 
-	ReferenceArgument getStmt();
-	ReferenceArgument getEnt();
+	static QueryResult executeTrivialIndexName(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt,
+	                                           const Types::ReferenceArgument& ent);
+	static QueryResult executeTrivialIndexWildcardOrSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt);
+	static QueryResult executeTrivialSynonymName(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt,
+	                                             const Types::ReferenceArgument& ent);
+	static QueryResult executeTrivialSynonymWildcardOrSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt);
 
-	vector<string> getDeclarationSymbols() override;
+	// Executors
 
-private:
-	ReferenceArgument stmt;
-	ReferenceArgument ent;
-
-	QueryResult executeTrivial(PKB::StorageAccessInterface& pkb) override;
-	QueryResult executeNonTrivial(PKB::StorageAccessInterface& pkb) override;
-
-	QueryResult executeTrivialEntVarName(PKB::StorageAccessInterface& pkb);
-	QueryResult executeTrivialEntUnknown(PKB::StorageAccessInterface& pkb);
-
-	QueryResult executeNonTrivialEntVarName(PKB::StorageAccessInterface& pkb);
-	QueryResult executeNonTrivialEntUnderscore(PKB::StorageAccessInterface& pkb);
-	QueryResult executeNonTrivialEntSynonym(PKB::StorageAccessInterface& pkb);
-	QueryResult executeNonTrivialStmtStmtNo(PKB::StorageAccessInterface& pkb);
+	static QueryResult executeSynonymName(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt,
+	                                      const Types::ReferenceArgument& ent);
+	static QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt);
+	static QueryResult executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt,
+	                                         const Types::ReferenceArgument& ent);
+	static QueryResult executeIndexSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& stmt,
+	                                       const Types::ReferenceArgument& ent);
 };
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_USESS_H

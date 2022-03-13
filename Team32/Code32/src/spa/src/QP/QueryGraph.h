@@ -1,13 +1,18 @@
 #ifndef SPA_SRC_QP_QUERYGRAPH_H
 #define SPA_SRC_QP_QUERYGRAPH_H
 
+#include <memory>
 #include <string>
 #include <unordered_map>
-#include <vector>
 
 #include "QP/QueryProperties.h"
+#include "QP/Relationship/Relation.h"
 
 using namespace std;
+using QP::Types::ClauseList;
+using QP::Types::ConnectedSynonyms;
+using QP::Types::DeclarationList;
+using QP::Types::Node;
 
 class QP::QueryGraph {
 public:

@@ -1,79 +1,42 @@
 #include "QP/Relationship/Pattern.h"
 
-QP::Relationship::Pattern::Pattern(ReferenceArgument syn_assign, ReferenceArgument ent_ref, ReferenceArgument expression)
-	: syn_assign(std::move(syn_assign)), ent_ref(std::move(ent_ref)), expression(std::move(expression)) {}
+#include <utility>
 
-ReferenceArgument QP::Relationship::Pattern::getSynAssign() { return this->syn_assign; }
+#include "QP/DispatchProcessors.h"
+#include "QP/QueryUtils.h"
 
-ReferenceArgument QP::Relationship::Pattern::getEntRef() { return this->ent_ref; }
-
-ReferenceType QP::Relationship::Pattern::getExpressionType() { return this->expression.getType(); }
-
-Common::ExpressionProcessor::Expression QP::Relationship::Pattern::getExpression() { return this->expression.getExpression(); }
-
-vector<string> QP::Relationship::Pattern::getDeclarationSymbols() {
-	vector<string> declaration_symbols = {this->syn_assign.getSynonym().symbol};
-	if (this->ent_ref.getType() == ReferenceType::Synonym) {
-		declaration_symbols.push_back(this->ent_ref.getSynonym().symbol);
-	}
-	return declaration_symbols;
-}
-
-static QP::QueryResult executeTrivialNameWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& /*assign*/,
-                                                  const ReferenceArgument& name, const ReferenceArgument& /*wildcard*/) {
+// Trivial Executors
+QP::QueryResult QP::Relationship::Pattern::executeTrivialNameWildcard(PKB::StorageAccessInterface& pkb,
+                                                                      const Types::ReferenceArgument& name) {
 	return QP::QueryResult(!pkb.getStmtsWithPatternLHS(name.getName()).empty());
 }
 
-static QP::QueryResult executeTrivialSynonymOrWildcardWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& /*assign*/,
-                                                               const ReferenceArgument& /*synonym_or_wildcard*/,
-                                                               const ReferenceArgument& /*wildcard*/) {
-	auto stmt_set = pkb.getStatements();
-	for (auto const& stmt : stmt_set) {
-		if (QP::Utilities::checkStmtTypeMatch(stmt, DesignEntity::Assign)) {
+QP::QueryResult QP::Relationship::Pattern::executeTrivialSynonymOrWildcardWildcard(PKB::StorageAccessInterface& pkb) {
+	auto statements = pkb.getStatements();
+	for (auto const& statement : statements) {
+		if (QP::Utilities::checkStmtTypeMatch(statement, Types::DesignEntity::Assign)) {
 			return QP::QueryResult(true);
 		}
 	}
 	return {};
 }
 
-static QP::QueryResult executeTrivialNameExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& /*assign*/,
-                                                    const ReferenceArgument& name, const ReferenceArgument& expression) {
+QP::QueryResult QP::Relationship::Pattern::executeTrivialNameExpression(PKB::StorageAccessInterface& pkb,
+                                                                        const Types::ReferenceArgument& name,
+                                                                        const Types::ReferenceArgument& expression) {
 	return QP::QueryResult(
 		pkb.patternExists(name.getName(), expression.getExpression(), expression.getType() == QP::Types::ReferenceType::ExactExpression));
 }
 
-static QP::QueryResult executeTrivialSynonymOrWildcardExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& /*assign*/,
-                                                                 const ReferenceArgument& /*synonym_or_wildcard*/,
-                                                                 const ReferenceArgument& expression) {
+QP::QueryResult QP::Relationship::Pattern::executeTrivialSynonymOrWildcardExpression(PKB::StorageAccessInterface& pkb,
+                                                                                     const Types::ReferenceArgument& expression) {
 	return QP::QueryResult(
 		!pkb.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == QP::Types::ReferenceType::ExactExpression).empty());
 }
 
-QP::QueryResult QP::Relationship::Pattern::executeTrivial(PKB::StorageAccessInterface& pkb) {
-	if (ent_ref.getType() == Types::ReferenceType::Name) {
-		switch (expression.getType()) {
-			case Types::ReferenceType::Wildcard:
-				return executeTrivialNameWildcard(pkb, syn_assign, ent_ref, expression);
-			case Types::ReferenceType::SubExpression:
-			case Types::ReferenceType::ExactExpression:
-				return executeTrivialNameExpression(pkb, syn_assign, ent_ref, expression);
-			default:
-				throw logic_error("Incorrect arguments received.");
-		}
-	}
-	switch (expression.getType()) {
-		case Types::ReferenceType::Wildcard:
-			return executeTrivialSynonymOrWildcardWildcard(pkb, syn_assign, ent_ref, expression);
-		case Types::ReferenceType::SubExpression:
-		case Types::ReferenceType::ExactExpression:
-			return executeTrivialSynonymOrWildcardExpression(pkb, syn_assign, ent_ref, expression);
-		default:
-			throw logic_error("Incorrect arguments received.");
-	}
-}
-
-static QP::QueryResult executeNameWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign, const ReferenceArgument& name,
-                                           const ReferenceArgument& /*wildcard*/) {
+// Executors
+QP::QueryResult QP::Relationship::Pattern::executeNameWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
+                                                               const Types::ReferenceArgument& name) {
 	QP::QueryResult result = QP::QueryResult();
 	vector<string> statement_result;
 	auto results = pkb.getStmtsWithPatternLHS(name.getName());
@@ -85,13 +48,13 @@ static QP::QueryResult executeNameWildcard(PKB::StorageAccessInterface& pkb, con
 	return result;
 }
 
-static QP::QueryResult executeWildcardWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
-                                               const ReferenceArgument& /*wildcard*/, const ReferenceArgument& /*wildcard*/) {
+QP::QueryResult QP::Relationship::Pattern::executeWildcardWildcard(PKB::StorageAccessInterface& pkb,
+                                                                   const Types::ReferenceArgument& assign) {
 	QP::QueryResult result = QP::QueryResult();
 	vector<string> statement_result;
 	auto results = pkb.getStatements();
 	for (auto const& entry : results) {
-		if (QP::Utilities::checkStmtTypeMatch(entry, DesignEntity::Assign)) {
+		if (QP::Utilities::checkStmtTypeMatch(entry, Types::DesignEntity::Assign)) {
 			statement_result.push_back(to_string(entry->getIdentifier()));
 		}
 	}
@@ -100,15 +63,15 @@ static QP::QueryResult executeWildcardWildcard(PKB::StorageAccessInterface& pkb,
 	return result;
 }
 
-static QP::QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
-                                              const ReferenceArgument& synonym, const ReferenceArgument& /*wildcard*/) {
+QP::QueryResult QP::Relationship::Pattern::executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
+                                                                  const Types::ReferenceArgument& synonym) {
 	QP::QueryResult result = QP::QueryResult();
 	vector<string> statement_result;
 	vector<string> variable_result;
 	for (auto const& var_ref : pkb.getVariables()) {
-		auto stmt_set = pkb.getStmtsWithPatternLHS(var_ref);
-		for (auto const& stmt : stmt_set) {
-			statement_result.push_back(to_string(stmt->getIdentifier()));
+		auto statements = pkb.getStmtsWithPatternLHS(var_ref);
+		for (auto const& statement : statements) {
+			statement_result.push_back(to_string(statement->getIdentifier()));
 			variable_result.push_back(var_ref);
 		}
 	}
@@ -118,8 +81,9 @@ static QP::QueryResult executeSynonymWildcard(PKB::StorageAccessInterface& pkb, 
 	return result;
 }
 
-static QP::QueryResult executeNameExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
-                                             const ReferenceArgument& name, const ReferenceArgument& expression) {
+QP::QueryResult QP::Relationship::Pattern::executeNameExpression(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& assign,
+                                                                 const Types::ReferenceArgument& name,
+                                                                 const Types::ReferenceArgument& expression) {
 	QP::QueryResult result = QP::QueryResult();
 	vector<string> statement_result;
 	auto results = pkb.getStmtsWithPattern(name.getName(), expression.getExpression(),
@@ -131,8 +95,9 @@ static QP::QueryResult executeNameExpression(PKB::StorageAccessInterface& pkb, c
 	return result;
 }
 
-static QP::QueryResult executeWildcardExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
-                                                 const ReferenceArgument& wildcard, const ReferenceArgument& expression) {
+QP::QueryResult QP::Relationship::Pattern::executeWildcardExpression(PKB::StorageAccessInterface& pkb,
+                                                                     const Types::ReferenceArgument& assign,
+                                                                     const Types::ReferenceArgument& expression) {
 	QP::QueryResult result = QP::QueryResult();
 	vector<string> statement_result;
 	auto result_pairs =
@@ -145,8 +110,10 @@ static QP::QueryResult executeWildcardExpression(PKB::StorageAccessInterface& pk
 	return result;
 }
 
-static QP::QueryResult executeSynonymExpression(PKB::StorageAccessInterface& pkb, const ReferenceArgument& assign,
-                                                const ReferenceArgument& synonym, const ReferenceArgument& expression) {
+QP::QueryResult QP::Relationship::Pattern::executeSynonymExpression(PKB::StorageAccessInterface& pkb,
+                                                                    const Types::ReferenceArgument& assign,
+                                                                    const Types::ReferenceArgument& synonym,
+                                                                    const Types::ReferenceArgument& expression) {
 	QP::QueryResult result = QP::QueryResult();
 	vector<string> statement_result;
 	vector<string> variable_result;
@@ -162,39 +129,110 @@ static QP::QueryResult executeSynonymExpression(PKB::StorageAccessInterface& pkb
 	return result;
 }
 
-QP::QueryResult QP::Relationship::Pattern::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
-	switch (ent_ref.getType()) {
-		case Types::ReferenceType::Name:
-			switch (expression.getType()) {
-				case Types::ReferenceType::Wildcard:
-					return executeNameWildcard(pkb, syn_assign, ent_ref, expression);
-				case Types::ReferenceType::SubExpression:
-				case Types::ReferenceType::ExactExpression:
-					return executeNameExpression(pkb, syn_assign, ent_ref, expression);
-				default:
-					throw logic_error("Incorrect arguments received.");
-			}
-		case Types::ReferenceType::Wildcard:
-			switch (expression.getType()) {
-				case Types::ReferenceType::Wildcard:
-					return executeWildcardWildcard(pkb, syn_assign, ent_ref, expression);
-				case Types::ReferenceType::SubExpression:
-				case Types::ReferenceType::ExactExpression:
-					return executeWildcardExpression(pkb, syn_assign, ent_ref, expression);
-				default:
-					throw logic_error("Incorrect arguments received.");
-			}
-		case Types::ReferenceType::Synonym:
-			switch (expression.getType()) {
-				case Types::ReferenceType::Wildcard:
-					return executeSynonymWildcard(pkb, syn_assign, ent_ref, expression);
-				case Types::ReferenceType::SubExpression:
-				case Types::ReferenceType::ExactExpression:
-					return executeSynonymExpression(pkb, syn_assign, ent_ref, expression);
-				default:
-					throw logic_error("Incorrect arguments received.");
-			}
-		default:
-			throw logic_error("Incorrect arguments received.");
-	}
+QP::Types::ArgumentDispatcher QP::Relationship::Pattern::dispatcher = [](vector<Types::ReferenceArgument> args) {
+	return DispatchProcessors::processTripleArgument(Types::ClauseType::PatternAssign, argument_dispatch_map, std::move(args));
+};
+
+unordered_map<QP::Types::ArgumentDispatchKey,
+              unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>>
+	QP::Relationship::Pattern::argument_dispatch_map = {{Types::DesignEntity::Assign, getSynonymMap()}};
+
+unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>
+QP::Relationship::Pattern::getSynonymMap() {
+	static unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>> map =
+		{{Types::ReferenceType::Name, getNameMap()},
+	     {Types::ReferenceType::Wildcard, getWildcardMap()},
+	     {Types::DesignEntity::Variable, getVariableSynonymMap()}};
+	return map;
+}
+
+unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Relationship::Pattern::getNameMap() {
+	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
+		{Types::ReferenceType::Wildcard,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[variable = args.at(1)](PKB::StorageAccessInterface& pkb) { return executeTrivialNameWildcard(pkb, variable); },
+		                 [assign = args.at(0), variable = args.at(1)](PKB::StorageAccessInterface& pkb) {
+							 return executeNameWildcard(pkb, assign, variable);
+						 }};
+		 }},
+		{Types::ReferenceType::ExactExpression,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[variable = args.at(1), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeTrivialNameExpression(pkb, variable, expression);
+						 },
+		                 [assign = args.at(0), variable = args.at(1), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeNameExpression(pkb, assign, variable, expression);
+						 }};
+		 }},
+		{Types::ReferenceType::SubExpression,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[variable = args.at(1), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeTrivialNameExpression(pkb, variable, expression);
+						 },
+		                 [assign = args.at(0), variable = args.at(1), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeNameExpression(pkb, assign, variable, expression);
+						 }};
+		 }},
+	};
+	return map;
+}
+
+unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Relationship::Pattern::getWildcardMap() {
+	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
+		{Types::ReferenceType::Wildcard,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[](PKB::StorageAccessInterface& pkb) { return executeTrivialSynonymOrWildcardWildcard(pkb); },
+		                 [assign = args.at(0)](PKB::StorageAccessInterface& pkb) { return executeWildcardWildcard(pkb, assign); }};
+		 }},
+		{Types::ReferenceType::ExactExpression,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeTrivialSynonymOrWildcardExpression(pkb, expression);
+						 },
+		                 [assign = args.at(0), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeWildcardExpression(pkb, assign, expression);
+						 }};
+		 }},
+		{Types::ReferenceType::SubExpression,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeTrivialSynonymOrWildcardExpression(pkb, expression);
+						 },
+		                 [assign = args.at(0), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeWildcardExpression(pkb, assign, expression);
+						 }};
+		 }},
+	};
+	return map;
+}
+
+unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Relationship::Pattern::getVariableSynonymMap() {
+	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
+		{Types::ReferenceType::Wildcard,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[](PKB::StorageAccessInterface& pkb) { return executeTrivialSynonymOrWildcardWildcard(pkb); },
+		                 [assign = args.at(0), variable = args.at(1)](PKB::StorageAccessInterface& pkb) {
+							 return executeSynonymWildcard(pkb, assign, variable);
+						 }};
+		 }},
+		{Types::ReferenceType::ExactExpression,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeTrivialSynonymOrWildcardExpression(pkb, expression);
+						 },
+		                 [assign = args.at(0), variable = args.at(1), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeSynonymExpression(pkb, assign, variable, expression);
+						 }};
+		 }},
+		{Types::ReferenceType::SubExpression,
+	     [](vector<Types::ReferenceArgument> args) {
+			 return pair{[expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeTrivialSynonymOrWildcardExpression(pkb, expression);
+						 },
+		                 [assign = args.at(0), variable = args.at(1), expression = args.at(2)](PKB::StorageAccessInterface& pkb) {
+							 return executeSynonymExpression(pkb, assign, variable, expression);
+						 }};
+		 }},
+	};
+	return map;
 }

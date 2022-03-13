@@ -1,142 +1,125 @@
-#include "Calls.h"
+#include "QP/Relationship/Calls.h"
 
-QP::Relationship::Calls::Calls(ReferenceArgument caller_ent, ReferenceArgument callee_ent)
-	: caller_ent(std::move(std::move(caller_ent))), callee_ent(std::move(std::move(callee_ent))) {}
+#include <utility>
+#include <vector>
 
-ReferenceArgument QP::Relationship::Calls::getCallerEnt() { return caller_ent; }
+#include "QP/Relationship/CallDispatcherTemplate.tpp"
 
-ReferenceArgument QP::Relationship::Calls::getCalleeEnt() { return callee_ent; }
-
-vector<string> QP::Relationship::Calls::getDeclarationSymbols() {
-	vector<string> declaration_symbols;
-	if (this->caller_ent.getType() == ReferenceType::Synonym) {
-		declaration_symbols.push_back(this->caller_ent.getSynonym().symbol);
-	}
-	if (this->callee_ent.getType() == ReferenceType::Synonym) {
-		declaration_symbols.push_back(this->callee_ent.getSynonym().symbol);
-	}
-	return declaration_symbols;
+// Trivial Executors
+QP::QueryResult QP::Relationship::Calls::executeTrivialNameName(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& caller,
+                                                                const Types::ReferenceArgument& callee) {
+	return QueryResult(pkb.checkCall(caller.getName(), callee.getName()));
 }
 
-QP::QueryResult QP::Relationship::Calls::executeTrivial(PKB::StorageAccessInterface& pkb) {
-	if (caller_ent.getType() == ReferenceType::Name) {
-		return executeTrivialCallerVarName(pkb);
-	} else {
-		return executeTrivialCallerUnderscoreSynonym(pkb);
-	}
+QP::QueryResult QP::Relationship::Calls::executeTrivialNameWildcardOrSynonym(PKB::StorageAccessInterface& pkb,
+                                                                             const Types::ReferenceArgument& caller) {
+	return QueryResult(!pkb.getCallee(caller.getName()).empty());
 }
 
-QP::QueryResult QP::Relationship::Calls::executeNonTrivial(PKB::StorageAccessInterface& pkb) {
-	if (caller_ent.getType() == ReferenceType::Name) {
-		return executeNonTrivialCallerVarName(pkb);
-	} else if (caller_ent.getType() == ReferenceType::Wildcard) {
-		return executeNonTrivialCallerUnderscore(pkb);
-	} else {
-		return executeNonTrivialCallerSynonym(pkb);
-	}
+QP::QueryResult QP::Relationship::Calls::executeTrivialWildcardOrSynonymName(PKB::StorageAccessInterface& pkb,
+                                                                             const Types::ReferenceArgument& callee) {
+	return QueryResult(!pkb.getCaller(callee.getName()).empty());
 }
 
-QP::QueryResult QP::Relationship::Calls::executeTrivialCallerVarName(PKB::StorageAccessInterface& pkb) {
-	if (callee_ent.getType() == ReferenceType::Name) {
-		return QueryResult(pkb.checkCall(caller_ent.getName(), callee_ent.getName()));
-	} else {
-		ProcRefSet proc_set = pkb.getCallee(caller_ent.getName());
-		return QueryResult(!proc_set.empty());
-	}
-}
-
-QP::QueryResult QP::Relationship::Calls::executeTrivialCallerUnderscoreSynonym(PKB::StorageAccessInterface& pkb) {
-	if (callee_ent.getType() == ReferenceType::Synonym && caller_ent.getType() == ReferenceType::Synonym) {
-		if (callee_ent.getSynonym().symbol == caller_ent.getSynonym().symbol) {
-			return {};
+QP::QueryResult QP::Relationship::Calls::executeTrivialWildcardOrSynonymWildcardOrSynonym(PKB::StorageAccessInterface& pkb) {
+	ProcRefSet proc_set = pkb.getProcedures();
+	for (auto const& proc : proc_set) {
+		ProcRefSet caller_set = pkb.getCaller(proc);
+		if (!caller_set.empty()) {
+			return QueryResult(true);
 		}
 	}
 
-	if (callee_ent.getType() == ReferenceType::Name) {
-		ProcRefSet proc_set = pkb.getCaller(callee_ent.getName());
-		return QueryResult(!proc_set.empty());
-	} else {
-		ProcRefSet proc_set = pkb.getProcedures();
-		for (auto const& proc : proc_set) {
-			ProcRefSet caller_set = pkb.getCaller(proc);
-			if (!caller_set.empty()) {
-				return QueryResult(true);
-			}
-		}
+	return {};
+}
 
+QP::QueryResult QP::Relationship::Calls::executeTrivialSynonymSynonym(PKB::StorageAccessInterface& pkb,
+                                                                      const Types::ReferenceArgument& caller,
+                                                                      const Types::ReferenceArgument& callee) {
+	if (caller.getSynonym().symbol == callee.getSynonym().symbol) {
 		return {};
 	}
+	return executeTrivialWildcardOrSynonymWildcardOrSynonym(pkb);
 }
 
-QP::QueryResult QP::Relationship::Calls::executeNonTrivialCallerVarName(PKB::StorageAccessInterface& pkb) {
-	if (callee_ent.getType() == ReferenceType::Synonym) {
-		vector<string> column;
-		ProcRefSet callee_set = pkb.getCallee(caller_ent.getName());
-		for (auto const& callee : callee_set) {
-			column.push_back(callee);
-		}
-
-		QueryResult result = QueryResult();
-		result.addColumn(callee_ent.getSynonym().symbol, column);
-		return result;
-	} else {
-		throw QueryException("Invalid non trivial case.");
-	}
-}
-
-QP::QueryResult QP::Relationship::Calls::executeNonTrivialCallerUnderscore(PKB::StorageAccessInterface& pkb) {
-	if (callee_ent.getType() == ReferenceType::Synonym) {
-		vector<string> column;
-		ProcRefSet proc_set = pkb.getProcedures();
-		for (auto const& proc : proc_set) {
-			ProcRefSet caller_set = pkb.getCaller(proc);
-			if (!caller_set.empty()) {
-				column.push_back(proc);
-			}
-		}
-
-		QueryResult result = QueryResult();
-		result.addColumn(callee_ent.getSynonym().symbol, column);
-		return result;
-	} else {
-		throw QueryException("Invalid non trivial case.");
-	}
-}
-
-QP::QueryResult QP::Relationship::Calls::executeNonTrivialCallerSynonym(PKB::StorageAccessInterface& pkb) {
+// Executors
+QP::QueryResult QP::Relationship::Calls::executeNameSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& caller,
+                                                            const Types::ReferenceArgument& callee) {
 	QueryResult result = QueryResult();
-	vector<string> caller_column;
-
-	if (callee_ent.getType() == ReferenceType::Name) {
-		ProcRefSet caller_set = pkb.getCaller(callee_ent.getName());
-		for (auto const& caller : caller_set) {
-			caller_column.push_back(caller);
-		}
-	} else if (callee_ent.getType() == ReferenceType::Wildcard) {
-		ProcRefSet proc_set = pkb.getProcedures();
-		for (auto const& proc : proc_set) {
-			ProcRefSet callee_set = pkb.getCallee(proc);
-			if (!callee_set.empty()) {
-				caller_column.push_back(proc);
-			}
-		}
-	} else if (callee_ent.getType() == ReferenceType::Synonym) {
-		if (callee_ent.getSynonym().symbol == caller_ent.getSynonym().symbol) {
-			return {};
-		}
-
-		vector<string> callee_column;
-		ProcRefSet proc_set = pkb.getProcedures();
-		for (auto const& proc : proc_set) {
-			ProcRefSet callee_set = pkb.getCallee(proc);
-			for (auto const& callee : callee_set) {
-				caller_column.push_back(proc);
-				callee_column.push_back(callee);
-			}
-		}
-		result.addColumn(callee_ent.getSynonym().symbol, callee_column);
+	vector<string> column;
+	ProcRefSet callees = pkb.getCallee(caller.getName());
+	for (auto const& callee_reference : callees) {
+		column.push_back(callee_reference);
 	}
 
-	result.addColumn(caller_ent.getSynonym().symbol, caller_column);
+	result.addColumn(callee.getSynonym().symbol, column);
 	return result;
 }
+
+QP::QueryResult QP::Relationship::Calls::executeWildcardSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& callee) {
+	QueryResult result = QueryResult();
+	vector<string> column;
+	ProcRefSet procedures = pkb.getProcedures();
+	for (auto const& procedure : procedures) {
+		ProcRefSet callers = pkb.getCaller(procedure);
+		if (!callers.empty()) {
+			column.push_back(procedure);
+		}
+	}
+
+	result.addColumn(callee.getSynonym().symbol, column);
+	return result;
+}
+
+QP::QueryResult QP::Relationship::Calls::executeSynonymName(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& caller,
+                                                            const Types::ReferenceArgument& callee) {
+	QueryResult result = QueryResult();
+	vector<string> caller_column;
+	ProcRefSet callers = pkb.getCaller(callee.getName());
+	for (auto const& caller_reference : callers) {
+		caller_column.push_back(caller_reference);
+	}
+	result.addColumn(caller.getSynonym().symbol, caller_column);
+	return result;
+}
+QP::QueryResult QP::Relationship::Calls::executeSynonymWildcard(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& caller) {
+	QueryResult result = QueryResult();
+	vector<string> caller_column;
+	ProcRefSet procedures = pkb.getProcedures();
+	for (auto const& procedure : procedures) {
+		ProcRefSet callees = pkb.getCallee(procedure);
+		if (!callees.empty()) {
+			caller_column.push_back(procedure);
+		}
+	}
+	result.addColumn(caller.getSynonym().symbol, caller_column);
+	return result;
+}
+
+QP::QueryResult QP::Relationship::Calls::executeSynonymSynonym(PKB::StorageAccessInterface& pkb, const Types::ReferenceArgument& caller,
+                                                               const Types::ReferenceArgument& callee) {
+	if (caller.getSynonym().symbol == callee.getSynonym().symbol) {
+		return {};
+	}
+
+	QueryResult result = QueryResult();
+	vector<string> caller_column;
+	vector<string> callee_column;
+
+	ProcRefSet procedures = pkb.getProcedures();
+	for (auto const& procedure : procedures) {
+		ProcRefSet callees = pkb.getCallee(procedure);
+		for (auto const& callee_reference : callees) {
+			caller_column.push_back(procedure);
+			callee_column.push_back(callee_reference);
+		}
+	}
+
+	result.addColumn(caller.getSynonym().symbol, caller_column);
+	result.addColumn(callee.getSynonym().symbol, callee_column);
+	return result;
+}
+
+QP::Types::ArgumentDispatcher QP::Relationship::Calls::dispatcher = [](vector<Types::ReferenceArgument> args) {
+	return CallDispatcherTemplate<Calls>::argumentDispatcher(Types::ClauseType::Call, move(args));
+};
