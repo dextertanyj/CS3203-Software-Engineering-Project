@@ -10,7 +10,7 @@
 using namespace QP::Types;
 
 TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
-	QP::DispatchMap dispatcher;
+	QP::Dispatcher::DispatchMap dispatcher;
 	Declaration assign_declaration = {DesignEntity::Assign, "a"};
 	Declaration var_declaration = {DesignEntity::Variable, "v"};
 	Declaration stmt1_declaration = {DesignEntity::Stmt, "s1"};
@@ -66,7 +66,7 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 };
 
 TEST_CASE("QP::QueryEvaluator::execute") {
-	QP::DispatchMap dispatcher;
+	QP::Dispatcher::DispatchMap dispatcher;
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);

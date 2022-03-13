@@ -23,9 +23,9 @@ TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
 	ReferenceArgument v = ReferenceArgument(declaration_v);
 	ClauseList clause_list = {
 		{make_unique<QP::Relationship::Relation>(ClauseType::Parent, vector<ReferenceArgument>({s, a}),
-	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
+	                                             [](QP::StorageAdapter& store) { return QP::QueryResult(); })},
 		{make_unique<QP::Relationship::Relation>(ClauseType::UsesS, vector<ReferenceArgument>({a, v}),
-	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
+	                                             [](QP::StorageAdapter& store) { return QP::QueryResult(); })},
 	};
 
 	QP::QueryGraph graph = QP::QueryGraph(list);
@@ -61,13 +61,13 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 	ReferenceArgument wildcard = ReferenceArgument();
 	ClauseList clause_list = {
 		{make_unique<QP::Relationship::Relation>(ClauseType::Parent, vector<ReferenceArgument>({a, b}),
-	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
+	                                             [](QP::StorageAdapter& store) { return QP::QueryResult(); })},
 		{make_unique<QP::Relationship::Relation>(ClauseType::Parent, vector<ReferenceArgument>({a, c}),
-	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
+	                                             [](QP::StorageAdapter& store) { return QP::QueryResult(); })},
 		{make_unique<QP::Relationship::Relation>(ClauseType::UsesS, vector<ReferenceArgument>({d, e}),
-	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
+	                                             [](QP::StorageAdapter& pkb) { return QP::QueryResult(); })},
 		{make_unique<QP::Relationship::Relation>(ClauseType::UsesS, vector<ReferenceArgument>({d, wildcard}),
-	                                             [](PKB::StorageAccessInterface& pkb) { return QP::QueryResult(); })},
+	                                             [](QP::StorageAdapter& pkb) { return QP::QueryResult(); })},
 	};
 	QP::QueryGraph graph = QP::QueryGraph(declaration_list);
 	graph.setEdges(clause_list);

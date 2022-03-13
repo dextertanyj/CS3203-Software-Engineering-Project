@@ -26,7 +26,7 @@ template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeTrivialSynonymWildcardOrSynonym(QP::StorageAdapter &storage) {
 	unordered_set<ProcRef> proc_set = storage.getProcedures();
 	for (auto const &proc : proc_set) {
-		VarRefSet var_set = storage.getProcedureByVariable<T>(proc);
+		VarRefSet var_set = storage.getVariableByProcedure<T>(proc);
 		if (!var_set.empty()) {
 			return QueryResult(true);
 		}
