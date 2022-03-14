@@ -7,8 +7,6 @@
 class PKB::DummyNode : public PKB::NodeInterface {
 public:
 	DummyNode(size_t ref);
-	shared_ptr<PKB::NodeInterface> getDummyNode() override;
-	void setDummyNode(shared_ptr<PKB::NodeInterface> to_insert) override;
 	size_t getNodeRef() override;
 	~DummyNode(){};
 

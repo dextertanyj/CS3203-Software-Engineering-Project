@@ -94,7 +94,7 @@ void PKB::ControlFlowGraph::setNext(StmtRef prev, StmtRef next) {
 	shared_ptr<PKB::NodeInterface> next_node_ptr = next_node_iter->second;
 	if (prev_node_ptr->getNodeType() == NodeType::If) {
 		// Dummy node of the if node connects to the next node.
-		shared_ptr<PKB::NodeInterface> dummy_node = prev_node_ptr->getDummyNode();
+		shared_ptr<PKB::NodeInterface> dummy_node = dynamic_pointer_cast<IfNode>(prev_node_ptr)->getDummyNode();
 		this->setConnection(dummy_node, next_node_ptr);
 	} else {
 		this->setConnection(prev_node_ptr, next_node_ptr);
@@ -138,16 +138,16 @@ void PKB::ControlFlowGraph::setIfExit(StmtRef then_prev, StmtRef else_prev, Stmt
 	}
 	shared_ptr<PKB::NodeInterface> then_prev_node = then_prev_node_iter->second;
 	shared_ptr<PKB::NodeInterface> else_prev_node = else_prev_node_iter->second;
-	shared_ptr<PKB::NodeInterface> dummy_node = if_ctrl_node_iter->second->getDummyNode();
+	shared_ptr<PKB::NodeInterface> dummy_node = dynamic_pointer_cast<IfNode>(if_ctrl_node_iter->second)->getDummyNode();
 	// Edge cases where last node(s) is also an if statement.
 	if (then_prev_node->getNodeType() == NodeType::If) {
-		shared_ptr<NodeInterface> dummy_node_of_then_prev = then_prev_node->getDummyNode();
+		shared_ptr<NodeInterface> dummy_node_of_then_prev = dynamic_pointer_cast<IfNode>(then_prev_node)->getDummyNode();
 		setConnection(dummy_node_of_then_prev, dummy_node);
 	} else {
 		setConnection(then_prev_node, dummy_node);
 	}
 	if (else_prev_node->getNodeType() == NodeType::If) {
-		shared_ptr<NodeInterface> dummy_node_of_else_prev = else_prev_node->getDummyNode();
+		shared_ptr<NodeInterface> dummy_node_of_else_prev = dynamic_pointer_cast<IfNode>(else_prev_node)->getDummyNode();
 		setConnection(dummy_node_of_else_prev, dummy_node);
 	} else {
 		setConnection(else_prev_node, dummy_node);

@@ -1,11 +1,11 @@
 #include "PKB/CFG/Refactor/NodeInterface.h"
 
 #include "../TestUtilities.h"
-#include "PKB/PKB.h"
 #include "PKB/CFG/Refactor/DummyNode.h"
 #include "PKB/CFG/Refactor/IfNode.h"
 #include "PKB/CFG/Refactor/NonConditionalNode.h"
 #include "PKB/CFG/Refactor/WhileNode.h"
+#include "PKB/PKB.h"
 #include "catch.hpp"
 #include "climits"
 
@@ -125,46 +125,22 @@ TEST_CASE("PKB::NodeInterface::getGraphIndex Test") {
 
 TEST_CASE("PKB::NodeInterface::setDummyNode Test") {
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
-	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
-	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 
 	shared_ptr<PKB::NodeInterface> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
-	shared_ptr<PKB::NodeInterface> while_node = make_shared<PKB::WhileNode>(PKB::WhileNode(while_stmt));
-	shared_ptr<PKB::NodeInterface> print_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(print_stmt));
-	shared_ptr<PKB::NodeInterface> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
-
 	shared_ptr<PKB::NodeInterface> dummy_node = make_shared<PKB::NodeInterface>(PKB::DummyNode(1));
 
 	// Only if nodes are allowed to have dummy nodes.
-	CHECK_NOTHROW(if_node->setDummyNode(dummy_node));
-	CHECK_THROWS(while_node->setDummyNode(dummy_node));
-	CHECK_THROWS(print_node->setDummyNode(dummy_node));
-	CHECK_THROWS(read_node->setDummyNode(dummy_node));
-
-	CHECK_THROWS(dummy_node->setDummyNode(read_node));
+	CHECK_NOTHROW(dynamic_pointer_cast<PKB::IfNode>(if_node)->setDummyNode(dummy_node));
 }
 
 TEST_CASE("PKB::NodeInterface::getDummyNode Test") {
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
-	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
-	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 
 	shared_ptr<PKB::NodeInterface> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
-	shared_ptr<PKB::NodeInterface> while_node = make_shared<PKB::WhileNode>(PKB::WhileNode(while_stmt));
-	shared_ptr<PKB::NodeInterface> print_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(print_stmt));
-	shared_ptr<PKB::NodeInterface> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
-
-	// Only if nodes are allowed to have dummy nodes.
-	CHECK_THROWS(while_node->getDummyNode());
-	CHECK_THROWS(print_node->getDummyNode());
-	CHECK_THROWS(read_node->getDummyNode());
 
 	shared_ptr<PKB::NodeInterface> dummy_node = make_shared<PKB::NodeInterface>(PKB::DummyNode(1));
-	CHECK_NOTHROW(if_node->setDummyNode(dummy_node));
-	REQUIRE(if_node->getDummyNode() == dummy_node);
-	CHECK_THROWS(dummy_node->getDummyNode());
+	CHECK_NOTHROW(dynamic_pointer_cast<PKB::IfNode>(if_node)->setDummyNode(dummy_node));
+	REQUIRE(dynamic_pointer_cast<PKB::IfNode>(if_node)->getDummyNode() == dummy_node);
 }
 
 TEST_CASE("PKB::NodeInterface::getNodeRef Test") {

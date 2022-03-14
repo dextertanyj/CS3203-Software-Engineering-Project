@@ -8,11 +8,4 @@ PKB::NonConditionalNode::NonConditionalNode(shared_ptr<StmtInfo> info) {
 	this->node_type = NodeType::NonConditional;
 }
 
-void PKB::NonConditionalNode::setDummyNode(shared_ptr<PKB::NodeInterface> to_insert) {
-	throw logic_error("Non conditional node should not call setDummyNode.");
-}
-
-shared_ptr<PKB::NodeInterface> PKB::NonConditionalNode::getDummyNode() {
-	throw logic_error("Non conditional node should not call getDummyNode.");
-}
 size_t PKB::NonConditionalNode::getNodeRef() { return this->statement_info->getIdentifier(); }

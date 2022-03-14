@@ -7,8 +7,6 @@
 class PKB::NonConditionalNode : public PKB::NodeInterface {
 public:
 	NonConditionalNode(shared_ptr<StmtInfo> info);
-	shared_ptr<PKB::NodeInterface> getDummyNode() override;
-	void setDummyNode(shared_ptr<PKB::NodeInterface> to_insert) override;
 	size_t getNodeRef() override;
 
 private:

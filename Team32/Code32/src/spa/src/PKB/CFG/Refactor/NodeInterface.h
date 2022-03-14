@@ -22,10 +22,6 @@ public:
 	NodeType getNodeType() { return this->node_type; }
 
 	virtual size_t getNodeRef() { throw logic_error("getNodeRef should not be called in base class"); }
-	virtual shared_ptr<PKB::NodeInterface> getDummyNode() { throw logic_error("getDummyNode should not be called in base class"); };
-	virtual void setDummyNode(shared_ptr<PKB::NodeInterface> to_insert) {
-		throw logic_error("setDummyNode should not be called in base class");
-	};
 	virtual ~NodeInterface(){};
 
 protected:

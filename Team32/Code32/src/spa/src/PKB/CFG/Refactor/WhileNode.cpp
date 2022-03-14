@@ -8,9 +8,4 @@ PKB::WhileNode::WhileNode(shared_ptr<StmtInfo> info) {
 	this->node_type = NodeType::While;
 }
 
-shared_ptr<PKB::NodeInterface> PKB::WhileNode::getDummyNode() { throw logic_error("While node should not call getDummyNode."); }
-
-void PKB::WhileNode::setDummyNode(shared_ptr<PKB::NodeInterface> to_insert) {
-	throw logic_error("While node should not call setDummyNode.");
-}
 size_t PKB::WhileNode::getNodeRef() { return this->statement_info->getIdentifier(); }
