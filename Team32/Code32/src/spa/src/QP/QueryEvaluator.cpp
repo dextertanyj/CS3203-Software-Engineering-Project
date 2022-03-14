@@ -196,8 +196,6 @@ QP::QueryGraph QP::QueryEvaluator::buildGraph(QueryProperties& query_properties)
 vector<pair<ClauseList, DeclarationList>> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties,
                                                                            ConnectedSynonyms& connected_synonyms) {
 	size_t number_of_groups = connected_synonyms.getNumberOfGroups();
-	unordered_map<string, size_t> synonyms_in_group = connected_synonyms.getSynonymsInGroup();
-	unordered_map<size_t, DeclarationList> group_to_selected_declarations = connected_synonyms.getGroupToSelectedDeclarations();
 
 	vector<pair<ClauseList, DeclarationList>> result(number_of_groups + 1);
 	for (const Clause& clause : query_properties.getClauseList()) {
@@ -205,14 +203,14 @@ vector<pair<ClauseList, DeclarationList>> QP::QueryEvaluator::splitClauses(Query
 		if (declarations.empty()) {
 			result[number_of_groups].first.push_back(clause);
 		} else {
-			size_t group_number = synonyms_in_group[declarations[0]];
+			size_t group_number = connected_synonyms.getGroupNumber(declarations[0]);
 			result[group_number].first.push_back(clause);
 		}
 	}
 
 	result[number_of_groups].second = {};
 	for (size_t i = 0; i < number_of_groups; i++) {
-		result[i].second = group_to_selected_declarations[i];
+		result[i].second = connected_synonyms.getGroupSynonyms(i);
 	}
 
 	return result;

@@ -13,12 +13,13 @@ public:
 	                  unordered_map<size_t, DeclarationList> group_to_selected_declarations);
 
 	size_t getNumberOfGroups();
-	unordered_map<string, size_t> getSynonymsInGroup();
-	unordered_map<size_t, DeclarationList> getGroupToSelectedDeclarations();
 
 	void setNumberOfGroups(size_t number_of_groups);
-	void insertSynonym(string synoym_symbol, size_t group_number);
-	void insertSelectedDeclarations(size_t group_number, DeclarationList select_list);
+	void insertSynonym(const string& synoym_symbol, size_t group_number);
+	void insertSelectedDeclarations(size_t group_number, const DeclarationList& select_list);
+
+	[[nodiscard]] size_t getGroupNumber(const string& synonym) const;
+	[[nodiscard]] DeclarationList getGroupSynonyms(size_t group_number) const;
 
 private:
 	size_t number_of_groups;
