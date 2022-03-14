@@ -5,7 +5,7 @@ PKB::IfNode::IfNode(shared_ptr<StmtInfo> info) {
 		throw invalid_argument("Provided statement info is not an if statement");
 	}
 	this->statement_info = info;
-	this->node_type = "if";
+	this->node_type = NodeType::If;
 }
 shared_ptr<PKB::NodeInterface> PKB::IfNode::getDummyNode() { return this->dummy_node; }
 

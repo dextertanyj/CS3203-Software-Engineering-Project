@@ -75,6 +75,8 @@ typedef struct AssignRelation {
 	Common::ExpressionProcessor::Expression expression;
 } AssignRelation;
 
+enum class NodeType { Dummy, If, While, NonConditional };
+
 namespace Types {};
 }  // namespace PKB
 

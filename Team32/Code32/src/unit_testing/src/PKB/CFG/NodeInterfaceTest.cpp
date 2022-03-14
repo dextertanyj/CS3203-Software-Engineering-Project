@@ -1,6 +1,7 @@
 #include "PKB/CFG/Refactor/NodeInterface.h"
 
 #include "../TestUtilities.h"
+#include "PKB/PKB.h"
 #include "PKB/CFG/Refactor/DummyNode.h"
 #include "PKB/CFG/Refactor/IfNode.h"
 #include "PKB/CFG/Refactor/NonConditionalNode.h"
@@ -107,19 +108,19 @@ TEST_CASE("PKB::NodeInterface::getPreviousNodes Test") {
 	REQUIRE(read_node->getPreviousNodes() == set({if_node}));
 }
 
-TEST_CASE("PKB::NodeInterface::setUniqueIndex Test") {
+TEST_CASE("PKB::NodeInterface::setGraphIndex Test") {
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
 	shared_ptr<PKB::NodeInterface> if_node = make_shared<PKB::NodeInterface>(PKB::IfNode(if_stmt));
-	CHECK_NOTHROW(if_node->setUniqueIndex(5));
-	CHECK_THROWS(if_node->setUniqueIndex(6));  // Reassignment not allowed.
+	CHECK_NOTHROW(if_node->setGraphIndex(5));
+	CHECK_THROWS(if_node->setGraphIndex(6));  // Reassignment not allowed.
 }
 
-TEST_CASE("PKB::NodeInterface::getUniqueIndex Test") {
+TEST_CASE("PKB::NodeInterface::getGraphIndex Test") {
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
 	shared_ptr<PKB::NodeInterface> if_node = make_shared<PKB::NodeInterface>(PKB::IfNode(if_stmt));
-	REQUIRE(if_node->getUniqueIndex() == 0);
-	if_node->setUniqueIndex(5);
-	REQUIRE(if_node->getUniqueIndex() == 5);
+	REQUIRE(if_node->getGraphIndex() == 0);
+	if_node->setGraphIndex(5);
+	REQUIRE(if_node->getGraphIndex() == 5);
 }
 
 TEST_CASE("PKB::NodeInterface::setDummyNode Test") {
@@ -196,10 +197,10 @@ TEST_CASE("PKB::NodeInterface::getNodeType Test") {
 	shared_ptr<PKB::NodeInterface> print_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(print_stmt));
 	shared_ptr<PKB::NodeInterface> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
 
-	REQUIRE(if_node->getNodeType() == "if");
-	REQUIRE(while_node->getNodeType() == "while");
-	REQUIRE(print_node->getNodeType() == "non_conditional");
-	REQUIRE(read_node->getNodeType() == "non_conditional");
+	REQUIRE(if_node->getNodeType() == PKB::NodeType::If);
+	REQUIRE(while_node->getNodeType() == PKB::NodeType::While);
+	REQUIRE(print_node->getNodeType() == PKB::NodeType::NonConditional);
+	REQUIRE(read_node->getNodeType() == PKB::NodeType::NonConditional);
 }
 
 TEST_CASE("PKB::NodeInterface Comparator Test") {

@@ -21,7 +21,7 @@ public:
 	void optimize();
 
 private:
-	void populateUniqueIndex();
+	void populateGraphIndex();
 	shared_ptr<PKB::NodeInterface> findLowestDummy(shared_ptr<PKB::NodeInterface> dummy_node);
 	StmtRefSet collectPreviousOfDummy(shared_ptr<PKB::NodeInterface> dummy_node);
 	shared_ptr<PKB::NodeInterface> getNode(StmtRef ref);

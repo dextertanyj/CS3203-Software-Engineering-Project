@@ -5,7 +5,7 @@ PKB::NonConditionalNode::NonConditionalNode(shared_ptr<StmtInfo> info) {
 		throw invalid_argument("Provided statement info cannot be a conditional statement");
 	}
 	this->statement_info = info;
-	this->node_type = "non_conditional";
+	this->node_type = NodeType::NonConditional;
 }
 
 void PKB::NonConditionalNode::setDummyNode(shared_ptr<PKB::NodeInterface> to_insert) {

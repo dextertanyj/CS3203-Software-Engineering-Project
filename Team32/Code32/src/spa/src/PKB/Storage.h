@@ -145,11 +145,11 @@ private:
 	SVRelationStore<UsesSRelation> uses_s_store;
 	SVRelationStore<ModifiesSRelation> modifies_s_store;
 	PVRelationStore<UsesPRelation> uses_p_store;
-	PVRelationStore<PKB::ModifiesPRelation> modifies_p_store;
+	PVRelationStore<ModifiesPRelation> modifies_p_store;
 	AssignStore assign_store;
-	SVRelationStore<PKB::IfControlRelation> if_control_store;
-	PKB::SVRelationStore<PKB::WhileControlRelation> while_control_store;
-	PKB::ControlFlowGraph control_flow_graph;
+	SVRelationStore<IfControlRelation> if_control_store;
+	SVRelationStore<WhileControlRelation> while_control_store;
+	ControlFlowGraph control_flow_graph;
 
 	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
 	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set);

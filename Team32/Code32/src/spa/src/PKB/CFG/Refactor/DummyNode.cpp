@@ -2,7 +2,7 @@
 
 PKB::DummyNode::DummyNode(size_t ref) {
 	this->if_control_stmt_ref = ref;
-	this->node_type = "dummy";
+	this->node_type = NodeType::Dummy;
 }
 shared_ptr<PKB::NodeInterface> PKB::DummyNode::getDummyNode() { throw logic_error("Dummy node should not call getDummyNode."); }
 

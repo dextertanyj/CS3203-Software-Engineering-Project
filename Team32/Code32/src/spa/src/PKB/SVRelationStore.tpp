@@ -20,7 +20,7 @@ void PKB::SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRef variabl
 	}
 
 	if (!T::validate(this, statement, variable)) {
-		throw invalid_argument("Relationship setConnection error.");
+		throw invalid_argument("Relationship set error.");
 	}
 
 	auto variable_iter = variable_key_map.find(variable);
@@ -49,7 +49,7 @@ void PKB::SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRefSet vari
 	}
 
 	if (!T::validate(this, statement, variables)) {
-		throw invalid_argument("Relationship setConnection error.");
+		throw invalid_argument("Relationship set error.");
 	}
 
 	auto statement_iter = statement_key_map.find(index);

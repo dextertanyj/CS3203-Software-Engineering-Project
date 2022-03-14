@@ -12,14 +12,14 @@ public:
 	void insertPrevious(shared_ptr<PKB::NodeInterface> prev) { this->previous_nodes.insert(prev); }
 	set<shared_ptr<PKB::NodeInterface>> getPreviousNodes() { return this->previous_nodes; };
 	set<shared_ptr<PKB::NodeInterface>> getNextNodes() { return this->next_nodes; };
-	size_t getUniqueIndex() { return this->unique_index; }
-	void setUniqueIndex(size_t index) {
-		if (this->unique_index != 0) {
-			throw invalid_argument("Node has already been assigned a unique CFG index.");
+	size_t getGraphIndex() { return this->graph_index; }
+	void setGraphIndex(size_t index) {
+		if (this->graph_index != 0) {
+			throw invalid_argument("Node has already been assigned a unique graph index.");
 		}
-		this->unique_index = index;
+		this->graph_index = index;
 	}
-	string getNodeType() { return this->node_type; }
+	NodeType getNodeType() { return this->node_type; }
 
 	virtual size_t getNodeRef() { throw logic_error("getNodeRef should not be called in base class"); }
 	virtual shared_ptr<PKB::NodeInterface> getDummyNode() { throw logic_error("getDummyNode should not be called in base class"); };
@@ -29,8 +29,8 @@ public:
 	virtual ~NodeInterface(){};
 
 protected:
-	size_t unique_index = 0;  // Default to 0 for convenience when populating unique index later.
-	string node_type;
+	size_t graph_index = 0;  // Default to 0 for convenience when populating graph index later.
+	NodeType node_type;
 	set<shared_ptr<PKB::NodeInterface>> previous_nodes;
 	set<shared_ptr<PKB::NodeInterface>> next_nodes;
 };
