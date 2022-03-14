@@ -25,7 +25,6 @@ private:
 	shared_ptr<PKB::NodeInterface> findLowestDummy(shared_ptr<PKB::NodeInterface> dummy_node);
 	StmtRefSet collectPreviousOfDummy(shared_ptr<PKB::NodeInterface> dummy_node);
 	shared_ptr<PKB::NodeInterface> getNode(StmtRef ref);
-	void setConnection(shared_ptr<PKB::NodeInterface> prev, shared_ptr<PKB::NodeInterface> next);
 	void createDummyNode(shared_ptr<PKB::IfNode> if_node);
 	unordered_map<StmtRef, shared_ptr<PKB::NodeInterface>> stmt_to_normal_node_store;
 	// TODO: Next* Query Cache can be built into this class in the future.

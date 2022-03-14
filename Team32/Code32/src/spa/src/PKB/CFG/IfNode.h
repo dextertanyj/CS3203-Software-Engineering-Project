@@ -11,7 +11,9 @@ public:
 	shared_ptr<PKB::NodeInterface> getDummyNode();
 	void setDummyNode(shared_ptr<PKB::NodeInterface> to_insert);
 	void insertNext(shared_ptr<PKB::NodeInterface> next) override;
-	void insertPrevious(shared_ptr<PKB::NodeInterface> prev) override;
+	void insertPrevious(shared_ptr<PKB::NodeInterface> prev, bool to_dummy = true) override;
+	void insertIfNext(shared_ptr<PKB::NodeInterface> first, shared_ptr<PKB::NodeInterface> second, shared_ptr<PKB::IfNode> self);
+	void insertIfExit(shared_ptr<PKB::NodeInterface> first, shared_ptr<PKB::NodeInterface> second);
 
 private:
 	shared_ptr<StmtInfo> statement_info;
