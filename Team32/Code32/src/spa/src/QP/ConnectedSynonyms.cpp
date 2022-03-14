@@ -8,7 +8,7 @@ QP::Types::ConnectedSynonyms::ConnectedSynonyms(size_t number_of_groups, unorder
 	  synonyms_in_group(move(synonyms_in_group)),
 	  group_to_selected_declarations(move(group_to_selected_declarations)) {}
 
-size_t QP::Types::ConnectedSynonyms::getNumberOfGroups() { return number_of_groups; }
+size_t QP::Types::ConnectedSynonyms::getNumberOfGroups() const { return number_of_groups; }
 
 void QP::Types::ConnectedSynonyms::setNumberOfGroups(size_t number_of_groups) { this->number_of_groups = number_of_groups; }
 
