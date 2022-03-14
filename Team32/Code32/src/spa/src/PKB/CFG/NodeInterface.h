@@ -22,7 +22,7 @@ public:
 	NodeType getNodeType() { return this->node_type; }
 
 	virtual size_t getNodeRef() { throw logic_error("getNodeRef should not be called in base class"); }
-	virtual ~NodeInterface(){};
+	virtual ~NodeInterface() = default;
 
 protected:
 	size_t graph_index = 0;  // Default to 0 for convenience when populating graph index later.

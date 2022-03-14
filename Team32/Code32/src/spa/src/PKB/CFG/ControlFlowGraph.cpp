@@ -38,7 +38,7 @@ bool PKB::ControlFlowGraph::checkNext(StmtRef prev, StmtRef next) {
 		throw invalid_argument("One of the provided references is not an existing node.");
 	}
 	StmtRefSet next_nodes_of_prev = this->getNextNodes(prev);
-	return any_of(next_nodes_of_prev.begin(), next_nodes_of_prev.end(), [next](StmtRef next_ref) { return next_ref == next; });
+	return find(next_nodes_of_prev.begin(), next_nodes_of_prev.end(), next) != next_nodes_of_prev.end();
 }
 
 shared_ptr<PKB::NodeInterface> PKB::ControlFlowGraph::getNode(StmtRef ref) {
