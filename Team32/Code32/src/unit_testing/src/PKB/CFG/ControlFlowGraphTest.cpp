@@ -1,11 +1,11 @@
-#include "PKB/CFG/Refactor/ControlFlowGraph.h"
+#include "PKB/CFG/ControlFlowGraph.h"
 
 #include "../TestUtilities.h"
-#include "PKB/CFG/Refactor/DummyNode.h"
-#include "PKB/CFG/Refactor/IfNode.h"
-#include "PKB/CFG/Refactor/NodeInterface.h"
-#include "PKB/CFG/Refactor/NonConditionalNode.h"
-#include "PKB/CFG/Refactor/WhileNode.h"
+#include "PKB/CFG/DummyNode.h"
+#include "PKB/CFG/IfNode.h"
+#include "PKB/CFG/NodeInterface.h"
+#include "PKB/CFG/NonConditionalNode.h"
+#include "PKB/CFG/WhileNode.h"
 #include "catch.hpp"
 
 TEST_CASE("PKB::ControlFlowGraph::createNode Test") {

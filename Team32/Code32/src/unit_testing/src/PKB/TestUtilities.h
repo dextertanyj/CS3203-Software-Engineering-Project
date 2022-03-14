@@ -2,7 +2,6 @@
 #define UNIT_TESTING_SRC_PKB_TESTUTILITIES_H
 
 #include "Common/TypeDefs.h"
-#include "PKB/CFG/NodeInfo.h"
 #include "PKB/Storage.h"
 #include "PKB/Types.h"
 
@@ -18,14 +17,6 @@ inline shared_ptr<PKB::ProcedureInfo> createProcedureInfo(ProcRef name) {
 	store.insert(name, {});
 	return store.get(name);
 };
-
-/*
-inline shared_ptr<PKB::NodeInfo> createNodeInfo(StmtRef stmt_no, StmtType type) {
-	PKB::Types::NodeStore store;
-	store.insert(stmt_no, type);
-	return store.get(stmt_no);
-}
- */
 
 inline PKB::Storage generateFollowsTestPKB() {
 	PKB::Storage pkb = PKB::Storage();

@@ -13,8 +13,6 @@ class Storage;
 
 class StatementInfo;
 class ProcedureInfo;
-class NodeInfo;
-class DummyNodeInfo;
 
 template <typename TIdent, typename TContent, class TInfo>
 class InfoStore;
@@ -43,7 +41,6 @@ class ModifiesPRelation;
 class ParentRelation;
 class UsesSRelation;
 class UsesPRelation;
-class NodeRelation;
 class NodeInterface;
 class IfNode;
 class WhileNode;
