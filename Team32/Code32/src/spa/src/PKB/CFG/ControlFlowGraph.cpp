@@ -12,7 +12,6 @@ void PKB::ControlFlowGraph::createNode(shared_ptr<StmtInfo> stmt_info) {
 	// Check node type and create respective node.
 	if (stmt_info->getType() == StmtType::IfStmt) {
 		shared_ptr<PKB::IfNode> to_insert = make_shared<PKB::IfNode>(PKB::IfNode(stmt_info));
-		this->createDummyNode(to_insert);
 		this->stmt_to_normal_node_store.insert({stmt_info->getIdentifier(), to_insert});
 
 	} else if (stmt_info->getType() == StmtType::WhileStmt) {
@@ -22,12 +21,6 @@ void PKB::ControlFlowGraph::createNode(shared_ptr<StmtInfo> stmt_info) {
 		shared_ptr<PKB::NonConditionalNode> to_insert = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(stmt_info));
 		this->stmt_to_normal_node_store.insert({stmt_info->getIdentifier(), to_insert});
 	}
-}
-
-void PKB::ControlFlowGraph::createDummyNode(shared_ptr<PKB::IfNode> if_node) {
-	PKB::DummyNode dummy = PKB::DummyNode(if_node->getNodeRef());
-	shared_ptr<PKB::DummyNode> dummy_ptr = make_shared<PKB::DummyNode>(dummy);
-	if_node->setDummyNode(dummy_ptr);
 }
 
 bool PKB::ControlFlowGraph::checkNext(StmtRef prev, StmtRef next) {
