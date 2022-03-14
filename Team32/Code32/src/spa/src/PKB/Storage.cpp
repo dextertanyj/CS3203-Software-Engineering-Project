@@ -243,25 +243,11 @@ bool PKB::Storage::checkNext(StmtRef first, StmtRef second) { return control_flo
 
 bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return control_flow_graph.checkNextStar(first, second); }
 
-StmtInfoPtrSet PKB::Storage::getNext(StmtRef first) {
-	StmtRefSet next_refs = control_flow_graph.getNextNodes(first);
-	StmtInfoPtrSet next_stmt_infos;
-	for (auto ref : next_refs) {
-		next_stmt_infos.insert(statement_store.get(ref));
-	}
-	return next_stmt_infos;
-}
+StmtInfoPtrSet PKB::Storage::getNext(StmtRef first) { return control_flow_graph.getNextNodes(first); }
 
 StmtInfoPtrSet PKB::Storage::getNextStar(StmtRef node_ref) { return {}; }
 
-StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) {
-	StmtRefSet prev_refs = control_flow_graph.getPreviousNodes(second);
-	StmtInfoPtrSet prev_stmt_infos;
-	for (auto ref : prev_refs) {
-		prev_stmt_infos.insert(statement_store.get(ref));
-	}
-	return prev_stmt_infos;
-}
+StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) { return control_flow_graph.getPreviousNodes(second); }
 
 StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef node_ref) { return {}; }
 

@@ -29,8 +29,9 @@ bool PKB::ControlFlowGraph::checkNext(StmtRef prev, StmtRef next) {
 	if (prev_node_iter == stmt_to_normal_node_store.end() || next_node_iter == stmt_to_normal_node_store.end()) {
 		throw invalid_argument("One of the provided references is not an existing node.");
 	}
-	StmtRefSet next_nodes_of_prev = this->getNextNodes(prev);
-	return find(next_nodes_of_prev.begin(), next_nodes_of_prev.end(), next) != next_nodes_of_prev.end();
+	StmtInfoPtrSet next_nodes_of_prev = this->getNextNodes(prev);
+	return any_of(next_nodes_of_prev.begin(), next_nodes_of_prev.end(),
+	              [next](shared_ptr<StmtInfo> next_info) { return next_info->getIdentifier() == next; });
 }
 
 shared_ptr<PKB::NodeInterface> PKB::ControlFlowGraph::getNode(StmtRef ref) {
@@ -41,33 +42,36 @@ shared_ptr<PKB::NodeInterface> PKB::ControlFlowGraph::getNode(StmtRef ref) {
 	return this->stmt_to_normal_node_store.find(ref)->second;
 }
 
-StmtRefSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef ref) {
+StmtInfoPtrSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef ref) {
 	shared_ptr<PKB::NodeInterface> curr_node = this->getNode(ref);
-	StmtRefSet prev_nodes;
+	StmtInfoPtrSet prev_nodes;
 	for (auto node : curr_node->getPreviousNodes()) {
 		// If previous node is a dummy node, need to get the previous nodes of the dummy node.
 		if (node->getNodeType() == NodeType::Dummy) {
-			StmtRefSet prev_of_dummy = collectPreviousOfDummy(node);
+			StmtInfoPtrSet prev_of_dummy = collectPreviousOfDummy(node);
 			prev_nodes.insert(prev_of_dummy.begin(), prev_of_dummy.end());
 		} else {
-			prev_nodes.insert(node->getNodeRef());
+			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(node);
+			prev_nodes.insert(stmt_node->getStmtInfo());
 		}
 	}
 	return prev_nodes;
 }
 
-StmtRefSet PKB::ControlFlowGraph::getNextNodes(StmtRef ref) {
+StmtInfoPtrSet PKB::ControlFlowGraph::getNextNodes(StmtRef ref) {
 	shared_ptr<PKB::NodeInterface> curr_node = this->getNode(ref);
-	StmtRefSet next_nodes;
+	StmtInfoPtrSet next_nodes;
 	for (auto node : curr_node->getNextNodes()) {
 		if (node->getNodeType() == NodeType::Dummy) {
 			shared_ptr<PKB::NodeInterface> lowest_dummy_node = findLowestDummy(node);
 			set<shared_ptr<PKB::NodeInterface>> next_of_dummy = lowest_dummy_node->getNextNodes();
 			for (auto next_node_of_dummy : next_of_dummy) {
-				next_nodes.insert(next_node_of_dummy->getNodeRef());
+				shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(next_node_of_dummy);
+				next_nodes.insert(stmt_node->getStmtInfo());
 			}
 		} else {
-			next_nodes.insert(node->getNodeRef());
+			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(node);
+			next_nodes.insert(stmt_node->getStmtInfo());
 		}
 	}
 	return next_nodes;
@@ -130,14 +134,15 @@ shared_ptr<PKB::NodeInterface> PKB::ControlFlowGraph::findLowestDummy(shared_ptr
 	return result;
 }
 
-StmtRefSet PKB::ControlFlowGraph::collectPreviousOfDummy(shared_ptr<PKB::NodeInterface> dummy_node) {
-	StmtRefSet collection;
+StmtInfoPtrSet PKB::ControlFlowGraph::collectPreviousOfDummy(shared_ptr<PKB::NodeInterface> dummy_node) {
+	StmtInfoPtrSet collection;
 	for (auto prev_node : dummy_node->getPreviousNodes()) {
 		if (prev_node->getNodeType() == NodeType::Dummy) {
-			StmtRefSet sub_collection = collectPreviousOfDummy(prev_node);
+			StmtInfoPtrSet sub_collection = collectPreviousOfDummy(prev_node);
 			collection.insert(sub_collection.begin(), sub_collection.end());
 		} else {
-			collection.insert(prev_node->getNodeRef());
+			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(prev_node);
+			collection.insert(stmt_node->getStmtInfo());
 		}
 	}
 	return collection;

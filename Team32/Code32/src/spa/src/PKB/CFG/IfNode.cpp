@@ -2,17 +2,16 @@
 
 #include "DummyNode.h"
 
-PKB::IfNode::IfNode(shared_ptr<StmtInfo> info) {
+PKB::IfNode::IfNode(shared_ptr<StmtInfo> info) : PKB::StatementNode(info) {
 	if (info->getType() != StmtType::IfStmt) {
 		throw invalid_argument("Provided statement info is not an if statement");
 	}
-	this->statement_info = info;
 	this->node_type = NodeType::If;
 	this->dummy_node = make_shared<PKB::DummyNode>(PKB::DummyNode(info->getIdentifier()));
 }
 shared_ptr<PKB::NodeInterface> PKB::IfNode::getDummyNode() { return this->dummy_node; }
 
-size_t PKB::IfNode::getNodeRef() { return this->statement_info->getIdentifier(); }
+size_t PKB::IfNode::getNodeRef() { return this->stmt_info->getIdentifier(); }
 
 void PKB::IfNode::insertNext(shared_ptr<PKB::NodeInterface> next) { this->dummy_node->insertNext(next); }
 

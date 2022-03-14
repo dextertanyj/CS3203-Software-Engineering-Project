@@ -1,10 +1,10 @@
 #ifndef SPA_IFNODE_H
 #define SPA_IFNODE_H
 
-#include "NodeInterface.h"
 #include "PKB/PKB.h"
+#include "StatementNode.h"
 
-class PKB::IfNode : public PKB::NodeInterface {
+class PKB::IfNode : public PKB::StatementNode {
 public:
 	IfNode(shared_ptr<StmtInfo> info);
 	size_t getNodeRef() override;
@@ -15,7 +15,6 @@ public:
 	void insertIfExit(shared_ptr<PKB::NodeInterface> first, shared_ptr<PKB::NodeInterface> second);
 
 private:
-	shared_ptr<StmtInfo> statement_info;
 	shared_ptr<PKB::DummyNode> dummy_node;
 };
 

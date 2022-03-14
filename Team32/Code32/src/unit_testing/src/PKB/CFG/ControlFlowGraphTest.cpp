@@ -106,10 +106,10 @@ TEST_CASE("PKB::ControlFlowGraph::getNextNodes Test") {
 	cfg.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
 	cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
 
-	CHECK(cfg.getNextNodes(if_stmt->getIdentifier()) == StmtRefSet{2, 4});
-	CHECK(cfg.getNextNodes(while_stmt->getIdentifier()) == StmtRefSet{5, 3});
-	CHECK(cfg.getNextNodes(print_stmt->getIdentifier()) == StmtRefSet{2});
-	CHECK(cfg.getNextNodes(read_stmt->getIdentifier()) == StmtRefSet{5});
+	CHECK(cfg.getNextNodes(if_stmt->getIdentifier()) == unordered_set{while_stmt, read_stmt});
+	CHECK(cfg.getNextNodes(while_stmt->getIdentifier()) == unordered_set{assign_stmt, print_stmt});
+	CHECK(cfg.getNextNodes(print_stmt->getIdentifier()) == unordered_set{while_stmt});
+	CHECK(cfg.getNextNodes(read_stmt->getIdentifier()) == unordered_set{assign_stmt});
 	CHECK(cfg.getNextNodes(assign_stmt->getIdentifier()).empty());
 }
 
@@ -144,10 +144,10 @@ TEST_CASE("PKB::ControlFlowGraph::getPreviousNodes Test") {
 	cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
 
 	CHECK(cfg.getPreviousNodes(if_stmt->getIdentifier()).empty());
-	CHECK(cfg.getPreviousNodes(while_stmt->getIdentifier()) == StmtRefSet{1, 3});
-	CHECK(cfg.getPreviousNodes(print_stmt->getIdentifier()) == StmtRefSet{2});
-	CHECK(cfg.getPreviousNodes(read_stmt->getIdentifier()) == StmtRefSet{1});
-	CHECK(cfg.getPreviousNodes(assign_stmt->getIdentifier()) == StmtRefSet{2, 4});
+	CHECK(cfg.getPreviousNodes(while_stmt->getIdentifier()) == unordered_set{if_stmt, print_stmt});
+	CHECK(cfg.getPreviousNodes(print_stmt->getIdentifier()) == unordered_set{while_stmt});
+	CHECK(cfg.getPreviousNodes(read_stmt->getIdentifier()) == unordered_set{if_stmt});
+	CHECK(cfg.getPreviousNodes(assign_stmt->getIdentifier()) == unordered_set{while_stmt, read_stmt});
 }
 
 TEST_CASE("PKB::ControlFlowGraph::checkNext Test") {
@@ -242,27 +242,28 @@ TEST_CASE("PKB::ControlFlowGraph Overall Complicated CFG Stress Test") {
 	cfg.setIfExit(assign_stmt_8->getIdentifier(), assign_stmt_9->getIdentifier(), if_stmt_7->getIdentifier());
 	cfg.setNext(if_stmt_1->getIdentifier(), call_stmt_10->getIdentifier());
 
-	CHECK(cfg.getNextNodes(if_stmt_1->getIdentifier()) == StmtRefSet{2, 7});
-	CHECK(cfg.getNextNodes(if_stmt_2->getIdentifier()) == StmtRefSet{3, 4});
-	CHECK(cfg.getNextNodes(print_stmt_3->getIdentifier()) == StmtRefSet{10});
-	CHECK(cfg.getNextNodes(if_stmt_4->getIdentifier()) == StmtRefSet{5, 6});
-	CHECK(cfg.getNextNodes(read_stmt_5->getIdentifier()) == StmtRefSet{10});
-	CHECK(cfg.getNextNodes(assign_stmt_6->getIdentifier()) == StmtRefSet{10});
-	CHECK(cfg.getNextNodes(if_stmt_7->getIdentifier()) == StmtRefSet{8, 9});
-	CHECK(cfg.getNextNodes(assign_stmt_8->getIdentifier()) == StmtRefSet{10});
-	CHECK(cfg.getNextNodes(assign_stmt_9->getIdentifier()) == StmtRefSet{10});
+	CHECK(cfg.getNextNodes(if_stmt_1->getIdentifier()) == unordered_set{if_stmt_2, if_stmt_7});
+	CHECK(cfg.getNextNodes(if_stmt_2->getIdentifier()) == unordered_set{print_stmt_3, if_stmt_4});
+	CHECK(cfg.getNextNodes(print_stmt_3->getIdentifier()) == unordered_set{call_stmt_10});
+	CHECK(cfg.getNextNodes(if_stmt_4->getIdentifier()) == unordered_set{read_stmt_5, assign_stmt_6});
+	CHECK(cfg.getNextNodes(read_stmt_5->getIdentifier()) == unordered_set{call_stmt_10});
+	CHECK(cfg.getNextNodes(assign_stmt_6->getIdentifier()) == unordered_set{call_stmt_10});
+	CHECK(cfg.getNextNodes(if_stmt_7->getIdentifier()) == unordered_set{assign_stmt_8, assign_stmt_9});
+	CHECK(cfg.getNextNodes(assign_stmt_8->getIdentifier()) == unordered_set{call_stmt_10});
+	CHECK(cfg.getNextNodes(assign_stmt_9->getIdentifier()) == unordered_set{call_stmt_10});
 	CHECK(cfg.getNextNodes(call_stmt_10->getIdentifier()).empty());
 
 	CHECK(cfg.getPreviousNodes(if_stmt_1->getIdentifier()).empty());
-	CHECK(cfg.getPreviousNodes(if_stmt_2->getIdentifier()) == StmtRefSet{1});
-	CHECK(cfg.getPreviousNodes(print_stmt_3->getIdentifier()) == StmtRefSet{2});
-	CHECK(cfg.getPreviousNodes(if_stmt_4->getIdentifier()) == StmtRefSet{2});
-	CHECK(cfg.getPreviousNodes(read_stmt_5->getIdentifier()) == StmtRefSet{4});
-	CHECK(cfg.getPreviousNodes(assign_stmt_6->getIdentifier()) == StmtRefSet{4});
-	CHECK(cfg.getPreviousNodes(if_stmt_7->getIdentifier()) == StmtRefSet{1});
-	CHECK(cfg.getPreviousNodes(assign_stmt_8->getIdentifier()) == StmtRefSet{7});
-	CHECK(cfg.getPreviousNodes(assign_stmt_9->getIdentifier()) == StmtRefSet{7});
-	CHECK(cfg.getPreviousNodes(call_stmt_10->getIdentifier()) == StmtRefSet{3, 5, 6, 8, 9});
+	CHECK(cfg.getPreviousNodes(if_stmt_2->getIdentifier()) == unordered_set{if_stmt_1});
+	CHECK(cfg.getPreviousNodes(print_stmt_3->getIdentifier()) == unordered_set{if_stmt_2});
+	CHECK(cfg.getPreviousNodes(if_stmt_4->getIdentifier()) == unordered_set{if_stmt_2});
+	CHECK(cfg.getPreviousNodes(read_stmt_5->getIdentifier()) == unordered_set{if_stmt_4});
+	CHECK(cfg.getPreviousNodes(assign_stmt_6->getIdentifier()) == unordered_set{if_stmt_4});
+	CHECK(cfg.getPreviousNodes(if_stmt_7->getIdentifier()) == unordered_set{if_stmt_1});
+	CHECK(cfg.getPreviousNodes(assign_stmt_8->getIdentifier()) == unordered_set{if_stmt_7});
+	CHECK(cfg.getPreviousNodes(assign_stmt_9->getIdentifier()) == unordered_set{if_stmt_7});
+	CHECK(cfg.getPreviousNodes(call_stmt_10->getIdentifier()) ==
+	      unordered_set{print_stmt_3, read_stmt_5, assign_stmt_6, assign_stmt_8, assign_stmt_9});
 }
 
 // TODO: When Next* has been implemented.

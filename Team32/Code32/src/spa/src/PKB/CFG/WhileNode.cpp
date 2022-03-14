@@ -2,15 +2,14 @@
 
 #include "IfNode.h"
 
-PKB::WhileNode::WhileNode(shared_ptr<StmtInfo> info) {
+PKB::WhileNode::WhileNode(shared_ptr<StmtInfo> info) : PKB::StatementNode(info) {
 	if (info->getType() != StmtType::WhileStmt) {
 		throw invalid_argument("Provided statement info is not a while statement");
 	}
-	this->statement_info = info;
 	this->node_type = NodeType::While;
 }
 
-size_t PKB::WhileNode::getNodeRef() { return this->statement_info->getIdentifier(); }
+size_t PKB::WhileNode::getNodeRef() { return this->stmt_info->getIdentifier(); }
 
 void PKB::WhileNode::insertNext(shared_ptr<PKB::NodeInterface> next) {
 	if (this->next_nodes.size() == 2) {

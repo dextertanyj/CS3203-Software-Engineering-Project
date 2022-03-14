@@ -46,6 +46,7 @@ class IfNode;
 class WhileNode;
 class DummyNode;
 class NonConditionalNode;
+class StatementNode;
 class ControlFlowGraph;
 
 typedef struct IfControlRelation {
