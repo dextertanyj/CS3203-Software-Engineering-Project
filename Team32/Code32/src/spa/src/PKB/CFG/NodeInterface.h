@@ -8,8 +8,6 @@
 
 class PKB::NodeInterface {
 public:
-	void insertNext(shared_ptr<PKB::NodeInterface> next) { this->next_nodes.insert(next); }
-	void insertPrevious(shared_ptr<PKB::NodeInterface> prev) { this->previous_nodes.insert(prev); }
 	set<shared_ptr<PKB::NodeInterface>> getPreviousNodes() { return this->previous_nodes; };
 	set<shared_ptr<PKB::NodeInterface>> getNextNodes() { return this->next_nodes; };
 	size_t getGraphIndex() { return this->graph_index; }
@@ -21,7 +19,9 @@ public:
 	}
 	NodeType getNodeType() { return this->node_type; }
 
-	virtual size_t getNodeRef() { throw logic_error("getNodeRef should not be called in base class"); }
+	virtual void insertNext(shared_ptr<PKB::NodeInterface> next) = 0;
+	virtual void insertPrevious(shared_ptr<PKB::NodeInterface> prev) = 0;
+	virtual size_t getNodeRef() = 0;
 	virtual ~NodeInterface() = default;
 
 protected:

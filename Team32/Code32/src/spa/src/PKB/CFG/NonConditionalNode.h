@@ -8,6 +8,8 @@ class PKB::NonConditionalNode : public PKB::NodeInterface {
 public:
 	NonConditionalNode(shared_ptr<StmtInfo> info);
 	size_t getNodeRef() override;
+	void insertNext(shared_ptr<PKB::NodeInterface> next) override;
+	void insertPrevious(shared_ptr<PKB::NodeInterface> prev) override;
 
 private:
 	shared_ptr<StmtInfo> statement_info;

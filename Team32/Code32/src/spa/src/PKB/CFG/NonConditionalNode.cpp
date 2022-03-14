@@ -9,3 +9,17 @@ PKB::NonConditionalNode::NonConditionalNode(shared_ptr<StmtInfo> info) {
 }
 
 size_t PKB::NonConditionalNode::getNodeRef() { return this->statement_info->getIdentifier(); }
+
+void PKB::NonConditionalNode::insertNext(shared_ptr<PKB::NodeInterface> next) {
+	if (this->next_nodes.size() == 1) {
+		throw logic_error("Non-conditional node cannot have more than 1 next statement.");
+	}
+	this->next_nodes.insert(next);
+}
+
+void PKB::NonConditionalNode::insertPrevious(shared_ptr<PKB::NodeInterface> prev) {
+	if (this->previous_nodes.size() == 1) {
+		throw logic_error("Non-dummy node cannot have more than 1 previous node.");
+	}
+	this->previous_nodes.insert(prev);
+}

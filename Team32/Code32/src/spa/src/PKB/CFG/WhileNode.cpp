@@ -9,3 +9,16 @@ PKB::WhileNode::WhileNode(shared_ptr<StmtInfo> info) {
 }
 
 size_t PKB::WhileNode::getNodeRef() { return this->statement_info->getIdentifier(); }
+
+void PKB::WhileNode::insertNext(shared_ptr<PKB::NodeInterface> next) {
+	if (this->next_nodes.size() == 2) {
+		throw logic_error("While Node cannot have more than 2 next statements.");
+	}
+	this->next_nodes.insert(next);
+}
+void PKB::WhileNode::insertPrevious(shared_ptr<PKB::NodeInterface> prev) {
+	if (this->previous_nodes.size() == 2) {
+		throw logic_error("While node cannot have more than 2 previous nodes.");
+	}
+	this->previous_nodes.insert(prev);
+}

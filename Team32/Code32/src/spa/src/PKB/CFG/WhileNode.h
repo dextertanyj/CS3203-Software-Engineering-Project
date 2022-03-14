@@ -8,7 +8,8 @@ class PKB::WhileNode : public PKB::NodeInterface {
 public:
 	WhileNode(shared_ptr<StmtInfo> info);
 	size_t getNodeRef() override;
-	~WhileNode(){};
+	void insertNext(shared_ptr<PKB::NodeInterface> next) override;
+	void insertPrevious(shared_ptr<PKB::NodeInterface> prev) override;
 
 private:
 	shared_ptr<StmtInfo> statement_info;
