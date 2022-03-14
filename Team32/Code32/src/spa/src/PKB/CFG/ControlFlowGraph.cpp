@@ -27,7 +27,6 @@ void PKB::ControlFlowGraph::createNode(shared_ptr<StmtInfo> stmt_info) {
 void PKB::ControlFlowGraph::createDummyNode(shared_ptr<PKB::IfNode> if_node) {
 	PKB::DummyNode dummy = PKB::DummyNode(if_node->getNodeRef());
 	shared_ptr<PKB::DummyNode> dummy_ptr = make_shared<PKB::DummyNode>(dummy);
-	this->stmt_to_dummy_node_store.insert({if_node->getNodeRef(), dummy_ptr});
 	if_node->setDummyNode(dummy_ptr);
 }
 
@@ -180,10 +179,8 @@ StmtRefSet PKB::ControlFlowGraph::collectPreviousOfDummy(shared_ptr<PKB::NodeInt
 	return collection;
 }
 
-void PKB::ControlFlowGraph::clear() {
-	this->stmt_to_normal_node_store.clear();
-	this->stmt_to_dummy_node_store.clear();
-}
+void PKB::ControlFlowGraph::clear() { this->stmt_to_normal_node_store.clear(); }
+
 // TODO: Next* TBD.
 void PKB::ControlFlowGraph::optimize() {}
 void PKB::ControlFlowGraph::populateGraphIndex() {}
