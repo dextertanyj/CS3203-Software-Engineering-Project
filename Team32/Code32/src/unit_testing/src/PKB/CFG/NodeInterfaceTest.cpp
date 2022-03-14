@@ -110,14 +110,14 @@ TEST_CASE("PKB::NodeInterface::getPreviousNodes Test") {
 
 TEST_CASE("PKB::NodeInterface::setGraphIndex Test") {
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<PKB::NodeInterface> if_node = make_shared<PKB::NodeInterface>(PKB::IfNode(if_stmt));
+	shared_ptr<PKB::NodeInterface> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
 	CHECK_NOTHROW(if_node->setGraphIndex(5));
 	CHECK_THROWS(if_node->setGraphIndex(6));  // Reassignment not allowed.
 }
 
 TEST_CASE("PKB::NodeInterface::getGraphIndex Test") {
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<PKB::NodeInterface> if_node = make_shared<PKB::NodeInterface>(PKB::IfNode(if_stmt));
+	shared_ptr<PKB::NodeInterface> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
 	REQUIRE(if_node->getGraphIndex() == 0);
 	if_node->setGraphIndex(5);
 	REQUIRE(if_node->getGraphIndex() == 5);
@@ -127,7 +127,7 @@ TEST_CASE("PKB::NodeInterface::setDummyNode Test") {
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
 
 	shared_ptr<PKB::NodeInterface> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
-	shared_ptr<PKB::NodeInterface> dummy_node = make_shared<PKB::NodeInterface>(PKB::DummyNode(1));
+	shared_ptr<PKB::NodeInterface> dummy_node = make_shared<PKB::DummyNode>(PKB::DummyNode(1));
 
 	// Only if nodes are allowed to have dummy nodes.
 	CHECK_NOTHROW(dynamic_pointer_cast<PKB::IfNode>(if_node)->setDummyNode(dummy_node));
@@ -138,7 +138,7 @@ TEST_CASE("PKB::NodeInterface::getDummyNode Test") {
 
 	shared_ptr<PKB::NodeInterface> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
 
-	shared_ptr<PKB::NodeInterface> dummy_node = make_shared<PKB::NodeInterface>(PKB::DummyNode(1));
+	shared_ptr<PKB::NodeInterface> dummy_node = make_shared<PKB::DummyNode>(PKB::DummyNode(1));
 	CHECK_NOTHROW(dynamic_pointer_cast<PKB::IfNode>(if_node)->setDummyNode(dummy_node));
 	REQUIRE(dynamic_pointer_cast<PKB::IfNode>(if_node)->getDummyNode() == dummy_node);
 }
