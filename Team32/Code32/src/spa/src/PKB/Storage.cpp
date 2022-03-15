@@ -245,11 +245,11 @@ bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return control
 
 StmtInfoPtrSet PKB::Storage::getNext(StmtRef first) { return control_flow_graph.getNextNodes(first); }
 
-StmtInfoPtrSet PKB::Storage::getNextStar(StmtRef node_ref) { return {}; }
+StmtInfoPtrSet PKB::Storage::getNextStar(StmtRef node_ref) { return control_flow_graph.getNextStarNodes(node_ref); }
 
 StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) { return control_flow_graph.getPreviousNodes(second); }
 
-StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef node_ref) { return {}; }
+StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef node_ref) { return control_flow_graph.getPreviousStarNodes(node_ref); }
 
 bool PKB::Storage::checkWhileControl(StmtRef index, VarRef name) { return while_control_store.check(index, name); }
 
