@@ -266,8 +266,86 @@ TEST_CASE("PKB::ControlFlowGraph Overall Complicated CFG Stress Test") {
 	      unordered_set{print_stmt_3, read_stmt_5, assign_stmt_6, assign_stmt_8, assign_stmt_9});
 }
 
-// TODO: When Next* has been implemented.
-// TEST_CASE("PKB::ControlFlowGraph::checkNextStar Test") {}
+TEST_CASE("PKB::ControlFlowGraph::checkNextStar Test") {
+	/* SIMPLE Code:
+	 * 1. if (x==0) then {
+	 * 2.   while (y<2) {
+	 * 3.     print(y);
+	 *      }
+	 *    } else {
+	 * 4.   read x;
+	 *    }
+	 * 5. z = 5;
+	 * 6. call Monk;
+	 * */
+	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
+	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
+	shared_ptr<StmtInfo> assign_stmt = TestUtilities::createStmtInfo(5, StmtType::Assign);
+	shared_ptr<StmtInfo> call_stmt = TestUtilities::createStmtInfo(6, StmtType::Call);
 
-// TODO: When optimize has been implemented.
-// TEST_CASE("PKB::ControlFlowGraph::optimize Test") {}
+	cfg.createNode(if_stmt);
+	cfg.createNode(while_stmt);
+	cfg.createNode(print_stmt);
+	cfg.createNode(read_stmt);
+	cfg.createNode(assign_stmt);
+	cfg.createNode(call_stmt);
+
+	cfg.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
+	cfg.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
+	cfg.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
+	cfg.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
+	cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
+	cfg.setNext(assign_stmt->getIdentifier(), call_stmt->getIdentifier());
+
+	CHECK(cfg.getNextStarNodes(1) == unordered_set{print_stmt, while_stmt, read_stmt, assign_stmt, call_stmt});
+	CHECK(cfg.getNextStarNodes(2) == unordered_set{print_stmt, assign_stmt, call_stmt});
+	CHECK(cfg.getNextStarNodes(3) == unordered_set{while_stmt, assign_stmt, call_stmt});
+	CHECK(cfg.getNextStarNodes(4) == unordered_set{assign_stmt, call_stmt});
+	CHECK(cfg.getNextStarNodes(5) == unordered_set{call_stmt});
+	CHECK(cfg.getNextStarNodes(6) == StmtInfoPtrSet{});
+}
+
+TEST_CASE("PKB::ControlFlowGraph::optimize Test") {
+	/* SIMPLE Code:
+	 * 1. if (x==0) then {
+	 * 2.   while (y<2) {
+	 * 3.     print(y);
+	 *      }
+	 *    } else {
+	 * 4.   read x;
+	 *    }
+	 * 5. z = 5;
+	 * 6. call Monk;
+	 * */
+	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
+	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
+	shared_ptr<StmtInfo> assign_stmt = TestUtilities::createStmtInfo(5, StmtType::Assign);
+	shared_ptr<StmtInfo> call_stmt = TestUtilities::createStmtInfo(6, StmtType::Call);
+
+	cfg.createNode(if_stmt);
+	cfg.createNode(while_stmt);
+	cfg.createNode(print_stmt);
+	cfg.createNode(read_stmt);
+	cfg.createNode(assign_stmt);
+	cfg.createNode(call_stmt);
+
+	cfg.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
+	cfg.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
+	cfg.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
+	cfg.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
+	cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
+	cfg.setNext(assign_stmt->getIdentifier(), call_stmt->getIdentifier());
+
+	CHECK(cfg.getPreviousStarNodes(1) == StmtInfoPtrSet{});
+	CHECK(cfg.getPreviousStarNodes(2) == unordered_set{if_stmt, print_stmt});
+	CHECK(cfg.getPreviousStarNodes(3) == unordered_set{if_stmt, while_stmt});
+	CHECK(cfg.getPreviousStarNodes(4) == unordered_set{if_stmt});
+	CHECK(cfg.getPreviousStarNodes(5) == unordered_set{if_stmt, while_stmt, read_stmt, print_stmt});
+	CHECK(cfg.getPreviousStarNodes(6) == unordered_set{if_stmt, while_stmt, read_stmt, print_stmt, assign_stmt});
+}
