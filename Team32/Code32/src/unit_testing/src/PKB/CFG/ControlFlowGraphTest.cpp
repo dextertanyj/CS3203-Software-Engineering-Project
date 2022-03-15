@@ -308,7 +308,7 @@ TEST_CASE("PKB::ControlFlowGraph::checkNextStar Test") {
 	CHECK(cfg.getNextStarNodes(6) == StmtInfoPtrSet{});
 }
 
-TEST_CASE("PKB::ControlFlowGraph::optimize Test") {
+TEST_CASE("PKB::ControlFlowGraph::getPreviousStar Test") {
 	/* SIMPLE Code:
 	 * 1. if (x==0) then {
 	 * 2.   while (y<2) {
@@ -349,3 +349,6 @@ TEST_CASE("PKB::ControlFlowGraph::optimize Test") {
 	CHECK(cfg.getPreviousStarNodes(5) == unordered_set{if_stmt, while_stmt, read_stmt, print_stmt});
 	CHECK(cfg.getPreviousStarNodes(6) == unordered_set{if_stmt, while_stmt, read_stmt, print_stmt, assign_stmt});
 }
+
+// TODO
+// TEST_CASE("PKB::ControlFlowGraph::optimize Test") {}
