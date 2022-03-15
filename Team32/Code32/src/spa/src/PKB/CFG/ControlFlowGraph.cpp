@@ -59,7 +59,6 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef ref) {
 }
 
 StmtInfoPtrSet PKB::ControlFlowGraph::getNextNodes(StmtRef ref) {
-
 	shared_ptr<PKB::NodeInterface> curr_node = this->getNode(ref);
 	StmtInfoPtrSet next_nodes;
 	for (auto node : curr_node->getNextNodes()) {
@@ -112,6 +111,9 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getPreviousStarNodes(StmtRef ref) {
 		node_queue.pop();
 		set<shared_ptr<PKB::NodeInterface>> curr_prev_nodes = curr_node->getPreviousNodes();
 		for (auto node : curr_prev_nodes) {
+			if (visited_set.find(node) != visited_set.end()) {
+				continue;
+			}
 			if (node->getNodeType() == NodeType::Dummy) {
 				StmtInfoPtrSet prev_of_dummy = collectPreviousOfDummy(node);
 				prev_star_nodes.insert(prev_of_dummy.begin(), prev_of_dummy.end());
