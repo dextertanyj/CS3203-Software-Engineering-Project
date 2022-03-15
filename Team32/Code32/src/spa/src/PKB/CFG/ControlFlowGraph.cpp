@@ -141,7 +141,12 @@ void PKB::ControlFlowGraph::setNext(StmtRef prev, StmtRef next) {
 		throw invalid_argument("Cannot set a node's direct next to itself.");
 	}
 	prev_node_iter->second->insertNext(next_node_iter->second);
-	next_node_iter->second->insertPrevious(prev_node_iter->second);
+	if (prev_node_iter->second->getNodeType() == NodeType::If) {
+		shared_ptr<PKB::IfNode> prev_if_node = dynamic_pointer_cast<IfNode>(prev_node_iter->second);
+		next_node_iter->second->insertPrevious(prev_if_node->getDummyNode());
+	} else {
+		next_node_iter->second->insertPrevious(prev_node_iter->second);
+	}
 }
 
 void PKB::ControlFlowGraph::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) {
@@ -189,7 +194,6 @@ shared_ptr<StmtInfo> PKB::ControlFlowGraph::collectNextOfDummy(shared_ptr<PKB::N
 	if (next_node_of_dummy.size() > 1) {
 		throw logic_error("There should only be one next node of dummy.");
 	}
-
 	shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(*(next_node_of_dummy.begin()));
 	return stmt_node->getStmtInfo();
 }

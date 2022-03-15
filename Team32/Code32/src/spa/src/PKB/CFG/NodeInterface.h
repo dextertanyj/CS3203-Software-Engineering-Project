@@ -20,7 +20,7 @@ public:
 	NodeType getNodeType() { return this->node_type; }
 
 	virtual void insertNext(shared_ptr<PKB::NodeInterface> next) = 0;
-	virtual void insertPrevious(shared_ptr<PKB::NodeInterface> prev, bool to_dummy = true) = 0;
+	virtual void insertPrevious(shared_ptr<PKB::NodeInterface> prev) = 0;
 	virtual size_t getNodeRef() = 0;
 	virtual ~NodeInterface() = default;
 

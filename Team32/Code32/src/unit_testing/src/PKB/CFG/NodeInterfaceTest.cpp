@@ -103,8 +103,8 @@ TEST_CASE("PKB::NodeInterface::insertPrevious Test") {
 	shared_ptr<PKB::NodeInterface> print_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(print_stmt));
 	shared_ptr<PKB::NodeInterface> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
 
-	CHECK_NOTHROW(while_node->insertPrevious(if_node, false));
-	CHECK_NOTHROW(read_node->insertPrevious(if_node, false));
+	CHECK_NOTHROW(while_node->insertPrevious(if_node));
+	CHECK_NOTHROW(read_node->insertPrevious(if_node));
 	CHECK_THROWS(read_node->insertPrevious(print_node));
 	CHECK_NOTHROW(while_node->insertPrevious(print_node));
 	CHECK_THROWS(while_node->insertPrevious(read_node));
@@ -122,8 +122,8 @@ TEST_CASE("PKB::NodeInterface::getPreviousNodes Test") {
 	shared_ptr<PKB::NodeInterface> print_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(print_stmt));
 	shared_ptr<PKB::NodeInterface> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
 
-	while_node->insertPrevious(if_node, false);
-	read_node->insertPrevious(if_node, false);
+	while_node->insertPrevious(if_node);
+	read_node->insertPrevious(if_node);
 	while_node->insertPrevious(print_node);
 	print_node->insertPrevious(while_node);
 
