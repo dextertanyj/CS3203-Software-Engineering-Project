@@ -13,8 +13,8 @@
 
 struct QP::Dispatcher::DispatchMap {
 	Types::ArgumentDispatchMap dispatch_map = {
-		{Types::ClauseType::Call, QP::Dispatcher::CallsDispatcher<Types::ClauseType::Call>::dispatcher},
-		{Types::ClauseType::CallT, QP::Dispatcher::CallsDispatcher<Types::ClauseType::CallT>::dispatcher},
+		{Types::ClauseType::Calls, QP::Dispatcher::CallsDispatcher<Types::ClauseType::Calls>::dispatcher},
+		{Types::ClauseType::CallsT, QP::Dispatcher::CallsDispatcher<Types::ClauseType::CallsT>::dispatcher},
 		{Types::ClauseType::Follows, QP::Dispatcher::FollowsDispatcher<Types::ClauseType::Follows>::dispatcher},
 		{Types::ClauseType::FollowsT, QP::Dispatcher::FollowsDispatcher<Types::ClauseType::FollowsT>::dispatcher},
 		{Types::ClauseType::UnknownModifies, QP::Dispatcher::ModifiesDispatcher::dispatcher},
@@ -23,8 +23,8 @@ struct QP::Dispatcher::DispatchMap {
 		{Types::ClauseType::PatternAssign, QP::Dispatcher::PatternAssignDispatcher::dispatcher},
 		{Types::ClauseType::UnknownUses, QP::Dispatcher::UsesDispatcher::dispatcher}};
 	unordered_map<string, Types::ClauseType> clause_map = {
-		{"Calls", Types::ClauseType::Call},
-		{"Calls*", Types::ClauseType::CallT},
+		{"Calls", Types::ClauseType::Calls},
+		{"Calls*", Types::ClauseType::CallsT},
 		{"Follows", Types::ClauseType::Follows},
 		{"Follows*", Types::ClauseType::FollowsT},
 		{"Modifies", Types::ClauseType::UnknownModifies},

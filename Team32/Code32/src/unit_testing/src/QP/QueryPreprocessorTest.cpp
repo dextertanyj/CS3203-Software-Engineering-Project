@@ -554,61 +554,61 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Calls(*)") {
     QP::QueryPreprocessor qpp1;
     QP::QueryProperties qp1 = qpp1.parseQuery(UnivDeclarations + "Select pc1 such that Calls(pc1, pc2)");
 	clause = qp1.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Call);
+	REQUIRE(clause->getType() == ClauseType::Calls);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"pc1", "pc2"}));
 
     QP::QueryPreprocessor qpp2;
     QP::QueryProperties qp2 = qpp2.parseQuery(UnivDeclarations + "Select pc1 such that Calls(pc1, _)");
 	clause = qp2.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Call);
+	REQUIRE(clause->getType() == ClauseType::Calls);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"pc1"}));
 
     QP::QueryPreprocessor qpp3;
     QP::QueryProperties qp3 = qpp3.parseQuery(UnivDeclarations + "Select pc1 such that Calls(pc1, \"procedure1\")");
 	clause = qp3.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Call);
+	REQUIRE(clause->getType() == ClauseType::Calls);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"pc1"}));
 
     QP::QueryPreprocessor qpp4;
     QP::QueryProperties qp4 = qpp4.parseQuery(UnivDeclarations + "Select pc1 such that Calls(\"procedure1\", pc1)");
 	clause = qp4.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Call);
+	REQUIRE(clause->getType() == ClauseType::Calls);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"pc1"}));
 
     QP::QueryPreprocessor qpp5;
     QP::QueryProperties qp5 = qpp5.parseQuery(UnivDeclarations + "Select i1 such that Calls(\"procedure1\", \"procedure2\")");
 	clause = qp5.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Call);
+	REQUIRE(clause->getType() == ClauseType::Calls);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({}));
 
     QP::QueryPreprocessor qpp6;
     QP::QueryProperties qp6 = qpp6.parseQuery(UnivDeclarations + "Select w2 such that Calls(\"procedure1\", _)");
 	clause = qp6.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Call);
+	REQUIRE(clause->getType() == ClauseType::Calls);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({}));
 
     QP::QueryPreprocessor qpp7;
     QP::QueryProperties qp7 = qpp7.parseQuery(UnivDeclarations + "Select s1 such that Calls(_, pc2)");
 	clause = qp7.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Call);
+	REQUIRE(clause->getType() == ClauseType::Calls);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"pc2"}));
 
     QP::QueryPreprocessor qpp8;
     QP::QueryProperties qp8 = qpp8.parseQuery(UnivDeclarations + "Select i1 such that Calls*(_, \"procedure1\")");
 	clause = qp8.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::CallT);
+	REQUIRE(clause->getType() == ClauseType::CallsT);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({}));
 
     QP::QueryPreprocessor qpp9;
     QP::QueryProperties qp9 = qpp9.parseQuery(UnivDeclarations + "Select w2 such that Calls(_, _)");
 	clause = qp9.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Call);
+	REQUIRE(clause->getType() == ClauseType::Calls);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({}));
 
     QP::QueryPreprocessor qpp10;
     QP::QueryProperties qp10 = qpp10.parseQuery(UnivDeclarations + "Select pc2 such that Calls*(pc1, pc2)");
 	clause = qp10.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::CallT);
+	REQUIRE(clause->getType() == ClauseType::CallsT);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"pc1", "pc2"}));
 }
 

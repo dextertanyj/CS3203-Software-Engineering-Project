@@ -11,9 +11,9 @@ QP::QueryResult QP::Executor::ProcedureExecutor<T>::executeTrivialNameName(const
 }
 
 template <>
-inline QP::QueryResult QP::Executor::ProcedureExecutor<QP::Types::ClauseType::CallT>::executeTrivialNameName(
+inline QP::QueryResult QP::Executor::ProcedureExecutor<QP::Types::ClauseType::CallsT>::executeTrivialNameName(
 	const QP::StorageAdapter& storage, const QP::Types::ReferenceArgument& lhs, const QP::Types::ReferenceArgument& rhs) {
-	ProcRefSet rhs_set = storage.getReverseProcedures<QP::Types::ClauseType::CallT>(lhs.getName());
+	ProcRefSet rhs_set = storage.getReverseProcedures<QP::Types::ClauseType::CallsT>(lhs.getName());
 	for (auto const& rhs_reference : rhs_set) {
 		if (rhs_reference == rhs.getName()) {
 			return QueryResult(true);

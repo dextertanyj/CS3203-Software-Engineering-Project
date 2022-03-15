@@ -78,27 +78,27 @@ public:
 	template <Types::ClauseType T>
 	[[nodiscard]] inline bool checkProcedureRelation(const ProcRef& lhs, const ProcRef& rhs) const = delete;
 	template <>
-	[[nodiscard]] inline bool checkProcedureRelation<Types::ClauseType::Call>(const ProcRef& lhs, const ProcRef& rhs) const {
+	[[nodiscard]] inline bool checkProcedureRelation<Types::ClauseType::Calls>(const ProcRef& lhs, const ProcRef& rhs) const {
 		return pkb.checkCall(lhs, rhs);
 	}
 	template <Types::ClauseType T>
 	[[nodiscard]] inline ProcRefSet getForwardProcedures(const ProcRef& procedure) const = delete;
 	template <>
-	[[nodiscard]] inline ProcRefSet getForwardProcedures<Types::ClauseType::Call>(const ProcRef& procedure) const {
+	[[nodiscard]] inline ProcRefSet getForwardProcedures<Types::ClauseType::Calls>(const ProcRef& procedure) const {
 		return pkb.getCaller(procedure);
 	}
 	template <>
-	[[nodiscard]] inline ProcRefSet getForwardProcedures<Types::ClauseType::CallT>(const ProcRef& procedure) const {
+	[[nodiscard]] inline ProcRefSet getForwardProcedures<Types::ClauseType::CallsT>(const ProcRef& procedure) const {
 		return pkb.getCallerStar(procedure);
 	}
 	template <Types::ClauseType T>
 	[[nodiscard]] inline ProcRefSet getReverseProcedures(const ProcRef& procedure) const = delete;
 	template <>
-	[[nodiscard]] inline ProcRefSet getReverseProcedures<Types::ClauseType::Call>(const ProcRef& procedure) const {
+	[[nodiscard]] inline ProcRefSet getReverseProcedures<Types::ClauseType::Calls>(const ProcRef& procedure) const {
 		return pkb.getCallee(procedure);
 	}
 	template <>
-	[[nodiscard]] inline ProcRefSet getReverseProcedures<Types::ClauseType::CallT>(const ProcRef& procedure) const {
+	[[nodiscard]] inline ProcRefSet getReverseProcedures<Types::ClauseType::CallsT>(const ProcRef& procedure) const {
 		return pkb.getCalleeStar(procedure);
 	}
 
