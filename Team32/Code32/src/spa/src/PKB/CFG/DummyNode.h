@@ -4,15 +4,18 @@
 #include "NodeInterface.h"
 #include "PKB/PKB.h"
 
-class PKB::DummyNode : public PKB::NodeInterface {
+class PKB::DummyNode : public PKB::NodeInterface, public enable_shared_from_this<DummyNode> {
 public:
-	DummyNode(size_t ref);
-	size_t getNodeRef() override;
-	void insertNext(shared_ptr<PKB::NodeInterface> next) override;
-	void insertPrevious(shared_ptr<PKB::NodeInterface> prev) override;
+	explicit DummyNode(StmtRef ref);
+	void setConnection(shared_ptr<NodeInterface> next) override;
+	void setNext(shared_ptr<PKB::NodeInterface> next) override;
+	void setPrevious(shared_ptr<PKB::NodeInterface> prev) override;
+
+	StmtRef getNodeRef() override;
+	~DummyNode() override = default;
 
 private:
-	size_t if_control_stmt_ref;
+	StmtRef if_control_stmt_ref;
 };
 
 #endif  // SPA_DUMMYNODE_H

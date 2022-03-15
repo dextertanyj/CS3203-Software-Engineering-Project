@@ -1,18 +1,21 @@
 #ifndef SPA_STATEMENTNODE_H
 #define SPA_STATEMENTNODE_H
 
+#include <utility>
+
 #include "NodeInterface.h"
 #include "PKB/PKB.h"
 
-class PKB::StatementNode : public PKB::NodeInterface {
+class PKB::StatementNode : public PKB::NodeInterface, public enable_shared_from_this<StatementNode> {
 public:
-	StatementNode(shared_ptr<StmtInfo> info) { this->stmt_info = info; }
-	shared_ptr<StmtInfo> getStmtInfo() { return this->stmt_info; };
-	virtual void insertNext(shared_ptr<PKB::NodeInterface> next) = 0;
-	virtual void insertPrevious(shared_ptr<PKB::NodeInterface> prev) = 0;
-	virtual size_t getNodeRef() = 0;
+	StatementNode(NodeType type, shared_ptr<StmtInfo> info);
+	void setConnection(shared_ptr<NodeInterface> next) override;
 
-protected:
+	shared_ptr<StmtInfo> getStmtInfo() { return this->stmt_info; };
+	StmtRef getNodeRef() override;
+	~StatementNode() override = default;
+
+private:
 	shared_ptr<StmtInfo> stmt_info;
 };
 

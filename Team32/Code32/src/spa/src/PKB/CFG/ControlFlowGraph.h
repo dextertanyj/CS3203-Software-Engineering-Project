@@ -25,11 +25,10 @@ public:
 
 private:
 	void populateGraphIndex();
-	shared_ptr<StmtInfo> collectNextOfDummy(shared_ptr<PKB::NodeInterface> dummy_node);
-	StmtInfoPtrSet collectPreviousOfDummy(shared_ptr<PKB::NodeInterface> dummy_node);
-	shared_ptr<PKB::NodeInterface> getNode(StmtRef ref);
-	unordered_map<StmtRef, shared_ptr<PKB::NodeInterface>> stmt_to_normal_node_store;
-	// TODO: Next* Query Cache can be built into this class in the future.
+	shared_ptr<StmtInfo> collectNextOfDummy(shared_ptr<NodeInterface> dummy_node);
+	StmtInfoPtrSet collectPreviousOfDummy(shared_ptr<NodeInterface> dummy_node);
+	shared_ptr<PKB::StatementNode> getNode(StmtRef ref);
+	unordered_map<StmtRef, shared_ptr<PKB::StatementNode>> stmt_to_normal_node_store;
 };
 
 #endif  // SPA_CONTROLFLOWGRAPH_H

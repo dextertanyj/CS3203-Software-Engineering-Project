@@ -30,7 +30,7 @@ TEST_CASE("PKB::NodeInterface Constructor Test") {
 	CHECK_NOTHROW(PKB::DummyNode(INT_MAX));
 }
 
-TEST_CASE("PKB::NodeInterface::insertNext Test") {
+TEST_CASE("PKB::NodeInterface::setNext Test") {
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
 	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
@@ -41,8 +41,8 @@ TEST_CASE("PKB::NodeInterface::insertNext Test") {
 	shared_ptr<PKB::NodeInterface> print_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(print_stmt));
 	shared_ptr<PKB::NodeInterface> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
 
-	CHECK_NOTHROW(while_node->insertNext(print_node));
-	CHECK_NOTHROW(print_node->insertNext(while_node));
+	CHECK_NOTHROW(if_node->setNext(print_node));
+	CHECK_NOTHROW(print_node->setNext(while_node));
 }
 
 TEST_CASE("PKB::IfNode::insertIfNext Test") {
@@ -51,11 +51,11 @@ TEST_CASE("PKB::IfNode::insertIfNext Test") {
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 
 	shared_ptr<PKB::IfNode> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
-	shared_ptr<PKB::NodeInterface> while_node = make_shared<PKB::WhileNode>(PKB::WhileNode(while_stmt));
-	shared_ptr<PKB::NodeInterface> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
+	shared_ptr<PKB::StatementNode> while_node = make_shared<PKB::WhileNode>(PKB::WhileNode(while_stmt));
+	shared_ptr<PKB::StatementNode> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
 
-	CHECK_NOTHROW(if_node->insertIfNext(while_node, read_node, if_node));
-	CHECK_THROWS(if_node->insertIfNext(while_node, read_node, if_node));
+	CHECK_NOTHROW(if_node->insertIfNext(while_node, read_node));
+	CHECK_THROWS(if_node->insertIfNext(while_node, read_node));
 }
 
 TEST_CASE("PKB::IfNode::insertIfExit Test") {
@@ -64,8 +64,8 @@ TEST_CASE("PKB::IfNode::insertIfExit Test") {
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 
 	shared_ptr<PKB::IfNode> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
-	shared_ptr<PKB::NodeInterface> while_node = make_shared<PKB::WhileNode>(PKB::WhileNode(while_stmt));
-	shared_ptr<PKB::NodeInterface> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
+	shared_ptr<PKB::StatementNode> while_node = make_shared<PKB::WhileNode>(PKB::WhileNode(while_stmt));
+	shared_ptr<PKB::StatementNode> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
 
 	CHECK_NOTHROW(if_node->insertIfExit(while_node, read_node));
 	CHECK_THROWS(if_node->insertIfExit(while_node, read_node));
@@ -78,21 +78,21 @@ TEST_CASE("PKB::NodeInterface::getNextNodes Test") {
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 
 	shared_ptr<PKB::IfNode> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
-	shared_ptr<PKB::NodeInterface> while_node = make_shared<PKB::WhileNode>(PKB::WhileNode(while_stmt));
-	shared_ptr<PKB::NodeInterface> print_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(print_stmt));
-	shared_ptr<PKB::NodeInterface> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
+	shared_ptr<PKB::StatementNode> while_node = make_shared<PKB::WhileNode>(PKB::WhileNode(while_stmt));
+	shared_ptr<PKB::StatementNode> print_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(print_stmt));
+	shared_ptr<PKB::StatementNode> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
 
-	if_node->insertIfNext(while_node, read_node, if_node);
-	while_node->insertNext(print_node);
-	print_node->insertNext(while_node);
+	if_node->insertIfNext(while_node, read_node);
+	while_node->setNext(print_node);
+	print_node->setNext(while_node);
 
-	REQUIRE(if_node->getNextNodes() == set{while_node, read_node});
-	REQUIRE(while_node->getNextNodes() == set({print_node}));
-	REQUIRE(print_node->getNextNodes() == set({while_node}));
+	REQUIRE(if_node->getNextNodes() == set<shared_ptr<PKB::NodeInterface>>({while_node, read_node}));
+	REQUIRE(while_node->getNextNodes() == set<shared_ptr<PKB::NodeInterface>>({print_node}));
+	REQUIRE(print_node->getNextNodes() == set<shared_ptr<PKB::NodeInterface>>({while_node}));
 	REQUIRE(read_node->getNextNodes().empty());
 }
 
-TEST_CASE("PKB::NodeInterface::insertPrevious Test") {
+TEST_CASE("PKB::NodeInterface::setPrevious Test") {
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
 	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
@@ -103,12 +103,12 @@ TEST_CASE("PKB::NodeInterface::insertPrevious Test") {
 	shared_ptr<PKB::NodeInterface> print_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(print_stmt));
 	shared_ptr<PKB::NodeInterface> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
 
-	CHECK_NOTHROW(while_node->insertPrevious(if_node));
-	CHECK_NOTHROW(read_node->insertPrevious(if_node));
-	CHECK_THROWS(read_node->insertPrevious(print_node));
-	CHECK_NOTHROW(while_node->insertPrevious(print_node));
-	CHECK_THROWS(while_node->insertPrevious(read_node));
-	CHECK_NOTHROW(print_node->insertPrevious(while_node));
+	CHECK_NOTHROW(while_node->setPrevious(if_node));
+	CHECK_NOTHROW(read_node->setPrevious(if_node));
+	CHECK_THROWS(read_node->setPrevious(print_node));
+	CHECK_NOTHROW(while_node->setPrevious(print_node));
+	CHECK_THROWS(while_node->setPrevious(read_node));
+	CHECK_NOTHROW(print_node->setPrevious(while_node));
 }
 
 TEST_CASE("PKB::NodeInterface::getPreviousNodes Test") {
@@ -122,10 +122,10 @@ TEST_CASE("PKB::NodeInterface::getPreviousNodes Test") {
 	shared_ptr<PKB::NodeInterface> print_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(print_stmt));
 	shared_ptr<PKB::NodeInterface> read_node = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(read_stmt));
 
-	while_node->insertPrevious(if_node);
-	read_node->insertPrevious(if_node);
-	while_node->insertPrevious(print_node);
-	print_node->insertPrevious(while_node);
+	while_node->setPrevious(if_node);
+	read_node->setPrevious(if_node);
+	while_node->setPrevious(print_node);
+	print_node->setPrevious(while_node);
 
 	REQUIRE(if_node->getPreviousNodes().empty());
 	REQUIRE(while_node->getPreviousNodes() == set({if_node, print_node}));
@@ -146,14 +146,6 @@ TEST_CASE("PKB::NodeInterface::getGraphIndex Test") {
 	REQUIRE(if_node->getGraphIndex() == 0);
 	if_node->setGraphIndex(5);
 	REQUIRE(if_node->getGraphIndex() == 5);
-}
-
-TEST_CASE("PKB::NodeInterface::getDummyNode Test") {
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<PKB::IfNode> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
-	shared_ptr<PKB::NodeInterface> dummy = if_node->getDummyNode();
-	REQUIRE(dummy->getNodeRef() == 1);
-	REQUIRE(if_node->getDummyNode()->getNodeType() == PKB::NodeType::Dummy);
 }
 
 TEST_CASE("PKB::NodeInterface::getNodeRef Test") {

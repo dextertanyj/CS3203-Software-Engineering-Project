@@ -1,14 +1,14 @@
 #ifndef SPA_WHILENODE_H
 #define SPA_WHILENODE_H
 
+#include "PKB/CFG/StatementNode.h"
 #include "PKB/PKB.h"
-#include "StatementNode.h"
 
 class PKB::WhileNode : public PKB::StatementNode {
 public:
-	WhileNode(shared_ptr<StmtInfo> info);
-	size_t getNodeRef() override;
-	void insertNext(shared_ptr<PKB::NodeInterface> next) override;
-	void insertPrevious(shared_ptr<PKB::NodeInterface> prev) override;
+	explicit WhileNode(const shared_ptr<StmtInfo>& info);
+	void setNext(shared_ptr<NodeInterface> next) override;
+	void setPrevious(shared_ptr<NodeInterface> prev) override;
 };
+
 #endif  // SPA_WHILENODE_H

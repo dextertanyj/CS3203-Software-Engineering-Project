@@ -1,27 +1,21 @@
-#include "NonConditionalNode.h"
+#include "PKB/CFG/NonConditionalNode.h"
 
-#include "IfNode.h"
-
-PKB::NonConditionalNode::NonConditionalNode(shared_ptr<StmtInfo> info) : PKB::StatementNode(info) {
+PKB::NonConditionalNode::NonConditionalNode(shared_ptr<StmtInfo> info) : PKB::StatementNode(NodeType::NonConditional, info) {
 	if (info->getType() == StmtType::IfStmt || info->getType() == StmtType::WhileStmt) {
 		throw invalid_argument("Provided statement info cannot be a conditional statement");
 	}
-	this->stmt_info = info;
-	this->node_type = NodeType::NonConditional;
 }
 
-size_t PKB::NonConditionalNode::getNodeRef() { return this->stmt_info->getIdentifier(); }
-
-void PKB::NonConditionalNode::insertNext(shared_ptr<PKB::NodeInterface> next) {
-	if (this->next_nodes.size() == 1) {
+void PKB::NonConditionalNode::setNext(shared_ptr<NodeInterface> next) {
+	if (getNextNodes().size() == 1) {
 		throw logic_error("Non-conditional node cannot have more than 1 next statement.");
 	}
-	this->next_nodes.insert(next);
+	this->insertNext(next);
 }
 
-void PKB::NonConditionalNode::insertPrevious(shared_ptr<PKB::NodeInterface> prev) {
-	if (this->previous_nodes.size() == 1) {
+void PKB::NonConditionalNode::setPrevious(shared_ptr<NodeInterface> prev) {
+	if (getPreviousNodes().size() == 1) {
 		throw logic_error("Non-dummy node cannot have more than 1 previous node.");
 	}
-	this->previous_nodes.insert(prev);
+	this->insertPrevious(prev);
 }
