@@ -56,6 +56,22 @@ public:
 	virtual ProcRefSet getCaller(const ProcRef& callee) = 0;
 	virtual ProcRefSet getCallerStar(const ProcRef& callee) = 0;
 
+	// CFG Next Methods
+	virtual bool checkNext(StmtRef first, StmtRef second) = 0;
+	virtual bool checkNextStar(StmtRef first, StmtRef second) = 0;
+	virtual StmtInfoPtrSet getNext(StmtRef first) = 0;
+	virtual StmtInfoPtrSet getNextStar(StmtRef node_ref) = 0;
+	virtual StmtInfoPtrSet getPrevious(StmtRef second) = 0;
+	virtual StmtInfoPtrSet getPreviousStar(StmtRef node_ref) = 0;
+
+	// Control Variable get methods
+	virtual bool checkIfControl(StmtRef index, VarRef name) = 0;
+	virtual bool checkWhileControl(StmtRef index, VarRef name) = 0;
+	virtual VarRefSet getIfControlVar(StmtRef index) = 0;
+	virtual VarRefSet getWhileControlVar(StmtRef index) = 0;
+	virtual StmtInfoPtrSet getIfControlStmt(VarRef name) = 0;
+	virtual StmtInfoPtrSet getWhileControlStmt(VarRef name) = 0;
+
 	virtual ~StorageAccessInterface() = default;
 };
 

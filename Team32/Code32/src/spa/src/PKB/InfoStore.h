@@ -11,8 +11,8 @@ template <typename TIdent, typename TContent, class TInfo>
 class PKB::InfoStore {
 public:
 	InfoStore();
-	void insert(const TIdent& procedure, TContent statements);
-	[[nodiscard]] shared_ptr<TInfo> get(const TIdent& procedure) const;
+	void insert(const TIdent& identifier, TContent content);
+	[[nodiscard]] shared_ptr<TInfo> get(const TIdent& identifier) const;
 	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getAll() const;
 	void clear();
 

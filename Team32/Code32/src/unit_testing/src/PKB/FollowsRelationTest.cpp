@@ -1,6 +1,5 @@
 #include "PKB/FollowsRelation.h"
 
-#include "PKB/Storage.h"
 #include "TestUtilities.h"
 #include "catch.hpp"
 #include "catch_tools.h"

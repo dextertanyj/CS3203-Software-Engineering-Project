@@ -7,7 +7,11 @@ using namespace std;
 
 // This method will store information about a statement into PKB's statement map.
 // Source Processor is guaranteed to call this method before storing relationships and variables.
-void PKB::Storage::setStmtType(StmtRef index, StmtType type) { statement_store.insert(index, type); }
+void PKB::Storage::setStmtType(StmtRef index, StmtType type) {
+	statement_store.insert(index, type);
+	shared_ptr<StmtInfo> info = statement_store.get(index);
+	setNode(move(info));
+}
 
 void PKB::Storage::setConstant(ConstVal value) { constant_store.insert(value); }
 
@@ -87,6 +91,38 @@ void PKB::Storage::setUses(StmtRef index, VarRefSet names) {
 void PKB::Storage::setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) {
 	shared_ptr<StmtInfo> statement = statement_store.get(index);
 	return assign_store.setAssign(statement, move(variable), move(expression));
+}
+
+void PKB::Storage::setIfControl(StmtRef index, VarRefSet names) {
+	shared_ptr<StmtInfo> info = statement_store.get(index);
+	if_control_store.set(info, names);
+}
+
+void PKB::Storage::setIfControl(StmtRef index, VarRef name) {
+	shared_ptr<StmtInfo> info = statement_store.get(index);
+	if_control_store.set(info, name);
+}
+
+void PKB::Storage::setWhileControl(StmtRef index, VarRefSet names) {
+	shared_ptr<StmtInfo> info = statement_store.get(index);
+	while_control_store.set(info, names);
+}
+
+void PKB::Storage::setWhileControl(StmtRef index, VarRef name) {
+	shared_ptr<StmtInfo> info = statement_store.get(index);
+	while_control_store.set(info, name);
+}
+
+void PKB::Storage::setNode(shared_ptr<StmtInfo> info) { this->control_flow_graph.createNode(move(info)); }
+
+void PKB::Storage::setNext(StmtRef previous, StmtRef next) { this->control_flow_graph.setNext(previous, next); }
+
+void PKB::Storage::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) {
+	this->control_flow_graph.setIfNext(prev, then_next, else_next);
+}
+
+void PKB::Storage::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) {
+	this->control_flow_graph.setIfExit(then_prev, else_prev, if_stmt_ref);
 }
 
 StmtInfoPtrSet PKB::Storage::getStatements() {
@@ -203,6 +239,30 @@ vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::Storage::getStmtsWithPatternRHS(
 	return assign_store.getStmtsWithPatternRHS(expression, is_exact_match);
 }
 
+bool PKB::Storage::checkNext(StmtRef first, StmtRef second) { return control_flow_graph.checkNext(first, second); }
+
+bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return control_flow_graph.checkNextStar(first, second); }
+
+StmtInfoPtrSet PKB::Storage::getNext(StmtRef first) { return control_flow_graph.getNextNodes(first); }
+
+StmtInfoPtrSet PKB::Storage::getNextStar(StmtRef node_ref) { return control_flow_graph.getNextStarNodes(node_ref); }
+
+StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) { return control_flow_graph.getPreviousNodes(second); }
+
+StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef node_ref) { return control_flow_graph.getPreviousStarNodes(node_ref); }
+
+bool PKB::Storage::checkWhileControl(StmtRef index, VarRef name) { return while_control_store.check(index, name); }
+
+bool PKB::Storage::checkIfControl(StmtRef index, VarRef name) { return if_control_store.check(index, name); }
+
+StmtInfoPtrSet PKB::Storage::getIfControlStmt(VarRef name) { return if_control_store.getByVar(name); }
+
+StmtInfoPtrSet PKB::Storage::getWhileControlStmt(VarRef name) { return while_control_store.getByVar(name); }
+
+VarRefSet PKB::Storage::getIfControlVar(StmtRef index) { return if_control_store.getByStmt(index); }
+
+VarRefSet PKB::Storage::getWhileControlVar(StmtRef index) { return while_control_store.getByStmt(index); }
+
 void PKB::Storage::populateComplexRelations() {
 	call_statement_store.populate(procedure_store, call_store);
 	call_store.optimize();
@@ -222,7 +282,9 @@ void PKB::Storage::clear() {
 	uses_s_store.clear();
 	uses_p_store.clear();
 	modifies_s_store.clear();
+	modifies_p_store.clear();
 	statement_store.clear();
+	control_flow_graph.clear();
 }
 
 ProcRefSet PKB::Storage::procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>> &set) {

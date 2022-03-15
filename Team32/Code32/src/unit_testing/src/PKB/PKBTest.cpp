@@ -349,8 +349,8 @@ TEST_CASE("PKB::Uses Methods Test") {
 	StmtRef s2 = 2;
 	StmtRef s3 = 3;
 	StmtRef s4 = 4;
-	//StmtRef s5 = 5;
-	//StmtRef s6 = 6;
+	StmtRef s5 = 5;
+	StmtRef s6 = 6;
 	StmtRef s_max = SIZE_MAX;
 	StmtRef s_zero = 0;
 	VarRef x = "x";
@@ -462,7 +462,6 @@ TEST_CASE("PKB::Uses Methods Test") {
 		CHECK_THROWS(pkb.getUsesByStmt(0));
 	}
 
-	/*
 	SECTION("PKB::getUsesByProc Test") {
 		pkb.setUses(s1, a);
 		pkb.setUses(s6, x);
@@ -516,7 +515,6 @@ TEST_CASE("PKB::Uses Methods Test") {
 
 		CHECK_FALSE(pkb.checkUses(proc_2, a));
 	}
-	 */
 }
 
 TEST_CASE("PKB::Modifies Methods Test") {
@@ -621,7 +619,6 @@ TEST_CASE("PKB::Modifies Methods Test") {
 		CHECK(pkb.getModifiesByStmt(s4).empty());
 	}
 
-	/*
 	SECTION("PKB::getModifiesByProc Test") {
 		pkb.setModifies(s2, x);
 		pkb.setModifies(s5, y);
@@ -674,6 +671,133 @@ TEST_CASE("PKB::Modifies Methods Test") {
 
 		CHECK_FALSE(pkb.checkModifies(proc_2, x));
 	}
-	 */
 }
 
+/* SIMPLE Code
+ * 1. x = x + 1;
+ * 2. if (x==5) then {
+ * 3.     x = x - 1;
+ * 4.   if (y>0) then {
+ * 5.     read y;
+ *      } else {
+ * 6.     if (z<5) then {
+ * 7.       read z;
+ *        } else {
+ * 8.       x = y + 1;
+ *        }
+ * 9.     print y;
+ *      }
+ * } else {
+ * 10. if (a==b) then {
+ * 11.   b = c - 1;
+ * 12.   print b;
+ *    } else {
+ * 13.   a = b;
+ *    }
+ * 14.  print a;
+ * 15.  call Kappa;
+ * }
+ * 16. call Monk;
+ *
+ */
+TEST_CASE("PKB::Next Methods Test") {
+	PKB::Storage pkb = TestUtilities::generateNextTestPKB();
+	unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
+	pkb.setNext(1, 2);
+	pkb.setNext(3, 4);
+	pkb.setNext(6, 9);
+	pkb.setNext(11, 12);
+	pkb.setNext(10, 14);
+	pkb.setNext(14, 15);
+	pkb.setNext(2, 16);
+	pkb.setIfNext(2, 3, 10);
+	pkb.setIfNext(4, 5, 6);
+	pkb.setIfNext(6, 7, 8);
+	pkb.setIfNext(10, 11, 13);
+	pkb.setIfExit(4, 15, 2);
+	pkb.setIfExit(5, 9, 4);
+	pkb.setIfExit(7, 8, 6);
+	pkb.setIfExit(12, 13, 10);
+	shared_ptr<StmtInfo> s_1 = stmt_info_map.at(1);
+	shared_ptr<StmtInfo> s_2 = stmt_info_map.at(2);
+	shared_ptr<StmtInfo> s_3 = stmt_info_map.at(3);
+	shared_ptr<StmtInfo> s_4 = stmt_info_map.at(4);
+	shared_ptr<StmtInfo> s_5 = stmt_info_map.at(5);
+	shared_ptr<StmtInfo> s_6 = stmt_info_map.at(6);
+	shared_ptr<StmtInfo> s_7 = stmt_info_map.at(7);
+	shared_ptr<StmtInfo> s_8 = stmt_info_map.at(8);
+	shared_ptr<StmtInfo> s_9 = stmt_info_map.at(9);
+	shared_ptr<StmtInfo> s_10 = stmt_info_map.at(10);
+	shared_ptr<StmtInfo> s_11 = stmt_info_map.at(11);
+	shared_ptr<StmtInfo> s_12 = stmt_info_map.at(12);
+	shared_ptr<StmtInfo> s_13 = stmt_info_map.at(13);
+	shared_ptr<StmtInfo> s_14 = stmt_info_map.at(14);
+	shared_ptr<StmtInfo> s_15 = stmt_info_map.at(15);
+	shared_ptr<StmtInfo> s_16 = stmt_info_map.at(16);
+
+	SECTION("PKB::checkNext Test") {
+		CHECK(pkb.checkNext(1, 2));
+		CHECK(pkb.checkNext(2, 10));
+		CHECK(pkb.checkNext(6, 7));
+		CHECK(pkb.checkNext(7, 9));
+		CHECK(pkb.checkNext(8, 9));
+		CHECK(pkb.checkNext(9, 16));
+		CHECK(pkb.checkNext(11, 12));
+		CHECK(pkb.checkNext(12, 14));
+		CHECK(pkb.checkNext(14, 15));
+		CHECK(pkb.checkNext(15, 16));
+
+		CHECK_FALSE(pkb.checkNext(6, 9));
+		CHECK_FALSE(pkb.checkNext(7, 8));
+		CHECK_FALSE(pkb.checkNext(10, 14));
+		CHECK_FALSE(pkb.checkNext(11, 14));
+		CHECK_FALSE(pkb.checkNext(2, 16));
+	}
+
+	SECTION("PKB::getNext Test") {
+		CHECK(pkb.getNext(1) == StmtInfoPtrSet{s_2});
+		CHECK(pkb.getNext(2) == StmtInfoPtrSet{s_3, s_10});
+		CHECK(pkb.getNext(4) == StmtInfoPtrSet{s_5, s_6});
+		CHECK(pkb.getNext(5) == StmtInfoPtrSet{s_16});
+		CHECK(pkb.getNext(6) == StmtInfoPtrSet{s_7, s_8});
+		CHECK(pkb.getNext(7) == StmtInfoPtrSet{s_9});
+		CHECK(pkb.getNext(8) == StmtInfoPtrSet{s_9});
+		CHECK(pkb.getNext(9) == StmtInfoPtrSet{s_16});
+		CHECK(pkb.getNext(12) == StmtInfoPtrSet{s_14});
+		CHECK(pkb.getNext(15) == StmtInfoPtrSet{s_16});
+	}
+
+	SECTION("PKB::getPrevious Test") {
+		CHECK(pkb.getPrevious(2) == StmtInfoPtrSet{s_1});
+		CHECK(pkb.getPrevious(3) == StmtInfoPtrSet{s_2});
+		CHECK(pkb.getPrevious(6) == StmtInfoPtrSet{s_4});
+		CHECK(pkb.getPrevious(7) == StmtInfoPtrSet{s_6});
+		CHECK(pkb.getPrevious(9) == StmtInfoPtrSet{s_7, s_8});
+		CHECK(pkb.getPrevious(10) == StmtInfoPtrSet{s_2});
+		CHECK(pkb.getPrevious(13) == StmtInfoPtrSet{s_10});
+		CHECK(pkb.getPrevious(14) == StmtInfoPtrSet{s_12, s_13});
+		CHECK(pkb.getPrevious(15) == StmtInfoPtrSet{s_14});
+		CHECK(pkb.getPrevious(16) == StmtInfoPtrSet{s_5, s_9, s_15});
+	}
+
+	SECTION("PKB::getNextStar Test") {
+		CHECK(pkb.getNextStar(2) == StmtInfoPtrSet{s_3, s_4, s_5, s_6, s_7, s_8, s_9, s_10, s_11, s_12, s_13, s_14, s_15, s_16});
+		CHECK(pkb.getNextStar(3) == StmtInfoPtrSet{s_4, s_5, s_6, s_7, s_8, s_9, s_16});
+		CHECK(pkb.getNextStar(6) == StmtInfoPtrSet{s_7, s_8, s_9, s_16});
+		CHECK(pkb.getNextStar(8) == StmtInfoPtrSet{s_9, s_16});
+		CHECK(pkb.getNextStar(10) == StmtInfoPtrSet{s_11, s_12, s_13, s_14, s_15, s_16});
+		CHECK(pkb.getNextStar(11) == StmtInfoPtrSet{s_12, s_14, s_15, s_16});
+		CHECK(pkb.getNextStar(12) == StmtInfoPtrSet{s_14, s_15, s_16});
+		CHECK(pkb.getNextStar(14) == StmtInfoPtrSet{s_15, s_16});
+	}
+
+	SECTION("PKB::getPreviousStar Test") {
+		CHECK(pkb.getPreviousStar(2) == StmtInfoPtrSet{s_1});
+		CHECK(pkb.getPreviousStar(4) == StmtInfoPtrSet{s_1, s_2, s_3});
+		CHECK(pkb.getPreviousStar(7) == StmtInfoPtrSet{s_1, s_2, s_3, s_4, s_6});
+		CHECK(pkb.getPreviousStar(9) == StmtInfoPtrSet{s_1, s_2, s_3, s_4, s_6, s_7, s_8});
+		CHECK(pkb.getPreviousStar(13) == StmtInfoPtrSet{s_1, s_2, s_10});
+		CHECK(pkb.getPreviousStar(14) == StmtInfoPtrSet{s_1, s_2, s_10, s_11, s_12, s_13});
+		CHECK(pkb.getPreviousStar(16) == StmtInfoPtrSet{s_1, s_2, s_3, s_4, s_5, s_6, s_7, s_8, s_9, s_10, s_11, s_12, s_13, s_14, s_15});
+	}
+}

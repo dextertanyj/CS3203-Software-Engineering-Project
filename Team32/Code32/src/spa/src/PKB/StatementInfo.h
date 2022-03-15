@@ -13,7 +13,6 @@ private:
 	StatementInfo(StmtRef index, StmtType type);
 	StmtRef index;
 	StmtType type;
-
 	friend class PKB::InfoStore<StmtRef, StmtType, StatementInfo>;
 };
 

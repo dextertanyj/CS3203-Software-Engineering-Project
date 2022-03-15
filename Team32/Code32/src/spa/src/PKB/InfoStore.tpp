@@ -9,12 +9,12 @@ template <typename TIdent, typename TContent, class TInfo>
 PKB::InfoStore<TIdent, TContent, TInfo>::InfoStore() = default;
 
 template <typename TIdent, typename TContent, class TInfo>
-void PKB::InfoStore<TIdent, TContent, TInfo>::insert(const TIdent& ident, TContent content) {
-	if (store.find(ident) != store.end()) {
+void PKB::InfoStore<TIdent, TContent, TInfo>::insert(const TIdent& identifier, TContent content) {
+	if (store.find(identifier) != store.end()) {
 		throw logic_error("Already defined.");
 	}
-	shared_ptr<TInfo> info = shared_ptr<TInfo>(new TInfo(ident, std::move(content)));
-	store.insert({ident, std::move(info)});
+	shared_ptr<TInfo> info = shared_ptr<TInfo>(new TInfo(identifier, std::move(content)));
+	store.insert({identifier, std::move(info)});
 }
 
 template <typename TIdent, typename TContent, class TInfo>
@@ -27,11 +27,11 @@ unordered_set<shared_ptr<TInfo>> PKB::InfoStore<TIdent, TContent, TInfo>::getAll
 }
 
 template <typename TIdent, typename TContent, class TInfo>
-shared_ptr<TInfo> PKB::InfoStore<TIdent, TContent, TInfo>::get(const TIdent& ident) const {
+shared_ptr<TInfo> PKB::InfoStore<TIdent, TContent, TInfo>::get(const TIdent& identifier) const {
 	// Test the identifier by constructing a new TInfo object.
-	TInfo test = TInfo(ident, TContent());
+	TInfo test = TInfo(identifier, TContent());
 
-	auto iter = store.find(ident);
+	auto iter = store.find(identifier);
 	if (iter == store.end()) {
 		return nullptr;
 	}

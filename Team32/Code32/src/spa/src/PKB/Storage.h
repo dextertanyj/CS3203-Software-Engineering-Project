@@ -10,6 +10,7 @@
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
 #include "PKB/AssignStore.h"
+#include "PKB/CFG/ControlFlowGraph.h"
 #include "PKB/CallRelation.h"
 #include "PKB/CallStatementStore.h"
 #include "PKB/FollowsRelation.h"
@@ -46,6 +47,13 @@ public:
 	void setUses(StmtRef index, VarRefSet names) override;
 	void setModifies(StmtRef index, VarRefSet names) override;
 	void setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) override;
+	void setIfControl(StmtRef index, VarRefSet names) override;
+	void setIfControl(StmtRef index, VarRef name) override;
+	void setWhileControl(StmtRef index, VarRefSet names) override;
+	void setWhileControl(StmtRef index, VarRef name) override;
+	void setNext(StmtRef previous, StmtRef next) override;
+	void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) override;
+	void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) override;
 
 	// Get methods called by PQL
 
@@ -100,6 +108,22 @@ public:
 	ProcRefSet getCaller(const ProcRef& callee) override;
 	ProcRefSet getCallerStar(const ProcRef& callee) override;
 
+	// CFG Node get methods
+	bool checkNext(StmtRef first, StmtRef second) override;
+	bool checkNextStar(StmtRef first, StmtRef second) override;
+	StmtInfoPtrSet getNext(StmtRef first) override;
+	StmtInfoPtrSet getNextStar(StmtRef node_ref) override;
+	StmtInfoPtrSet getPrevious(StmtRef second) override;
+	StmtInfoPtrSet getPreviousStar(StmtRef node_ref) override;
+
+	// Control Variable get methods
+	bool checkIfControl(StmtRef index, VarRef name) override;
+	bool checkWhileControl(StmtRef index, VarRef name) override;
+	VarRefSet getIfControlVar(StmtRef index) override;
+	VarRefSet getWhileControlVar(StmtRef index) override;
+	StmtInfoPtrSet getIfControlStmt(VarRef name) override;
+	StmtInfoPtrSet getWhileControlStmt(VarRef name) override;
+
 	// Others
 	void populateComplexRelations() override;
 	void clear();
@@ -120,11 +144,15 @@ private:
 	SVRelationStore<UsesSRelation> uses_s_store;
 	SVRelationStore<ModifiesSRelation> modifies_s_store;
 	PVRelationStore<UsesPRelation> uses_p_store;
-	PVRelationStore<PKB::ModifiesPRelation> modifies_p_store;
+	PVRelationStore<ModifiesPRelation> modifies_p_store;
 	AssignStore assign_store;
+	SVRelationStore<IfControlRelation> if_control_store;
+	SVRelationStore<WhileControlRelation> while_control_store;
+	ControlFlowGraph control_flow_graph;
 
 	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
 	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set);
+	void setNode(shared_ptr<StmtInfo> info);
 };
 
 #endif

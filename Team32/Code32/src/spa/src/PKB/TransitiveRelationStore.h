@@ -20,7 +20,7 @@ public:
 	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getForwardTransitive(TIdent name) const;
 	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getReverseTransitive(TIdent name) const;
 
-	void optimize() = delete;
+	void optimize();
 	void clear();
 
 private:

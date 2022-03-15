@@ -14,7 +14,7 @@ TEST_CASE("QP::QueryGraph::QueryGraph Should initialize nodes") {
 	REQUIRE(nodes.size() == 2);
 }
 
-TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
+TEST_CASE("QP::QueryGraph::setEdges Should setConnection edges") {
 	Declaration declaration_s = {DesignEntity::Stmt, "s"};
 	Declaration declaration_v = {DesignEntity::Variable, "v"};
 	Declaration declaration_a = {DesignEntity::Assign, "a"};
