@@ -1,9 +1,12 @@
-#include "ControlFlowGraph.h"
+#include "PKB/CFG/ControlFlowGraph.h"
 
-#include "DummyNode.h"
-#include "IfNode.h"
-#include "NonConditionalNode.h"
-#include "WhileNode.h"
+#include <utility>
+
+#include "PKB/CFG/DummyNode.h"
+#include "PKB/CFG/IfNode.h"
+#include "PKB/CFG/NonConditionalNode.h"
+#include "PKB/CFG/StatementNode.h"
+#include "PKB/CFG/WhileNode.h"
 
 void PKB::ControlFlowGraph::createNode(shared_ptr<StmtInfo> stmt_info) {
 	if (stmt_to_normal_node_store.find(stmt_info->getIdentifier()) != stmt_to_normal_node_store.end()) {
@@ -11,14 +14,14 @@ void PKB::ControlFlowGraph::createNode(shared_ptr<StmtInfo> stmt_info) {
 	}
 	// Check node type and create respective node.
 	if (stmt_info->getType() == StmtType::IfStmt) {
-		shared_ptr<PKB::IfNode> to_insert = make_shared<PKB::IfNode>(PKB::IfNode(stmt_info));
+		shared_ptr<PKB::IfNode> to_insert = make_shared<PKB::IfNode>(stmt_info);
 		this->stmt_to_normal_node_store.insert({stmt_info->getIdentifier(), to_insert});
 
 	} else if (stmt_info->getType() == StmtType::WhileStmt) {
-		shared_ptr<PKB::WhileNode> to_insert = make_shared<PKB::WhileNode>(PKB::WhileNode(stmt_info));
+		shared_ptr<PKB::WhileNode> to_insert = make_shared<PKB::WhileNode>(stmt_info);
 		this->stmt_to_normal_node_store.insert({stmt_info->getIdentifier(), to_insert});
 	} else {
-		shared_ptr<PKB::NonConditionalNode> to_insert = make_shared<PKB::NonConditionalNode>(PKB::NonConditionalNode(stmt_info));
+		shared_ptr<PKB::NonConditionalNode> to_insert = make_shared<PKB::NonConditionalNode>(stmt_info);
 		this->stmt_to_normal_node_store.insert({stmt_info->getIdentifier(), to_insert});
 	}
 }
@@ -34,7 +37,7 @@ bool PKB::ControlFlowGraph::checkNext(StmtRef prev, StmtRef next) {
 	              [next](shared_ptr<StmtInfo> next_info) { return next_info->getIdentifier() == next; });
 }
 
-shared_ptr<PKB::NodeInterface> PKB::ControlFlowGraph::getNode(StmtRef ref) {
+shared_ptr<PKB::StatementNode> PKB::ControlFlowGraph::getNode(StmtRef ref) {
 	auto iter = stmt_to_normal_node_store.find(ref);
 	if (iter == stmt_to_normal_node_store.end()) {
 		throw invalid_argument("This node does not exist in the store.");
@@ -43,9 +46,9 @@ shared_ptr<PKB::NodeInterface> PKB::ControlFlowGraph::getNode(StmtRef ref) {
 }
 
 StmtInfoPtrSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef ref) {
-	shared_ptr<PKB::NodeInterface> curr_node = this->getNode(ref);
+	shared_ptr<PKB::StatementNode> curr_node = this->getNode(ref);
 	StmtInfoPtrSet prev_nodes;
-	for (auto node : curr_node->getPreviousNodes()) {
+	for (const auto& node : curr_node->getPreviousNodes()) {
 		// If previous node is a dummy node, need to get the previous nodes of the dummy node.
 		if (node->getNodeType() == NodeType::Dummy) {
 			StmtInfoPtrSet prev_of_dummy = collectPreviousOfDummy(node);
@@ -59,14 +62,14 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef ref) {
 }
 
 StmtInfoPtrSet PKB::ControlFlowGraph::getNextNodes(StmtRef ref) {
-	shared_ptr<PKB::NodeInterface> curr_node = this->getNode(ref);
+	shared_ptr<PKB::StatementNode> curr_node = this->getNode(ref);
 	StmtInfoPtrSet next_nodes;
-	for (auto node : curr_node->getNextNodes()) {
+	for (const auto& node : curr_node->getNextNodes()) {
 		if (node->getNodeType() == NodeType::Dummy) {
 			shared_ptr<StmtInfo> next_of_dummy = collectNextOfDummy(node);
 			next_nodes.insert(next_of_dummy);
 		} else {
-			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(node);
+			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
 			next_nodes.insert(stmt_node->getStmtInfo());
 		}
 	}
@@ -82,7 +85,7 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getNextStarNodes(StmtRef ref) {
 		shared_ptr<PKB::NodeInterface> curr_node = node_queue.front();
 		node_queue.pop();
 		set<shared_ptr<PKB::NodeInterface>> curr_next_nodes = curr_node->getNextNodes();
-		for (auto node : curr_next_nodes) {
+		for (const auto& node : curr_next_nodes) {
 			if (visited_set.find(node) != visited_set.end()) {
 				continue;
 			}
@@ -91,7 +94,7 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getNextStarNodes(StmtRef ref) {
 				next_star_nodes.insert(next_of_dummy);
 				node_queue.push(stmt_to_normal_node_store.at(next_of_dummy->getIdentifier()));
 			} else {
-				shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(node);
+				shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
 				next_star_nodes.insert(stmt_node->getStmtInfo());
 				node_queue.push(node);
 			}
@@ -121,7 +124,7 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getPreviousStarNodes(StmtRef ref) {
 					node_queue.push(stmt_to_normal_node_store.at(prev->getIdentifier()));
 				}
 			} else {
-				shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(node);
+				shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
 				prev_star_nodes.insert(stmt_node->getStmtInfo());
 				node_queue.push(node);
 			}
@@ -140,13 +143,7 @@ void PKB::ControlFlowGraph::setNext(StmtRef prev, StmtRef next) {
 	if (prev == next) {
 		throw invalid_argument("Cannot set a node's direct next to itself.");
 	}
-	prev_node_iter->second->insertNext(next_node_iter->second);
-	if (prev_node_iter->second->getNodeType() == NodeType::If) {
-		shared_ptr<PKB::IfNode> prev_if_node = dynamic_pointer_cast<IfNode>(prev_node_iter->second);
-		next_node_iter->second->insertPrevious(prev_if_node->getDummyNode());
-	} else {
-		next_node_iter->second->insertPrevious(prev_node_iter->second);
-	}
+	prev_node_iter->second->setConnection(next_node_iter->second);
 }
 
 void PKB::ControlFlowGraph::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) {
@@ -163,8 +160,8 @@ void PKB::ControlFlowGraph::setIfNext(StmtRef prev, StmtRef then_next, StmtRef e
 	if (prev_node_iter->second->getNodeType() != NodeType::If) {
 		throw invalid_argument("First argument must refer to an if statement.");
 	}
-	shared_ptr<PKB::IfNode> if_ctrl_node = dynamic_pointer_cast<IfNode>(prev_node_iter->second);
-	if_ctrl_node->insertIfNext(then_next_node_iter->second, else_next_node_iter->second, if_ctrl_node);
+	shared_ptr<PKB::IfNode> if_ctrl_node = dynamic_pointer_cast<PKB::IfNode>(prev_node_iter->second);
+	if_ctrl_node->insertIfNext(then_next_node_iter->second, else_next_node_iter->second);
 }
 
 void PKB::ControlFlowGraph::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) {
@@ -181,7 +178,7 @@ void PKB::ControlFlowGraph::setIfExit(StmtRef then_prev, StmtRef else_prev, Stmt
 	if (if_ctrl_node_iter->second->getNodeType() != NodeType::If) {
 		throw invalid_argument("Third argument must refer to an if control statement.");
 	}
-	shared_ptr<PKB::IfNode> if_node = dynamic_pointer_cast<IfNode>(if_ctrl_node_iter->second);
+	shared_ptr<PKB::IfNode> if_node = dynamic_pointer_cast<PKB::IfNode>(if_ctrl_node_iter->second);
 	if_node->insertIfExit(then_prev_node_iter->second, else_prev_node_iter->second);
 }
 
@@ -194,18 +191,18 @@ shared_ptr<StmtInfo> PKB::ControlFlowGraph::collectNextOfDummy(shared_ptr<PKB::N
 	if (next_node_of_dummy.size() > 1) {
 		throw logic_error("There should only be one next node of dummy.");
 	}
-	shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(*(next_node_of_dummy.begin()));
+	shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(*(next_node_of_dummy.begin()));
 	return stmt_node->getStmtInfo();
 }
 
 StmtInfoPtrSet PKB::ControlFlowGraph::collectPreviousOfDummy(shared_ptr<PKB::NodeInterface> dummy_node) {
 	StmtInfoPtrSet collection;
-	for (auto prev_node : dummy_node->getPreviousNodes()) {
+	for (const auto& prev_node : dummy_node->getPreviousNodes()) {
 		if (prev_node->getNodeType() == NodeType::Dummy) {
 			StmtInfoPtrSet sub_collection = collectPreviousOfDummy(prev_node);
 			collection.insert(sub_collection.begin(), sub_collection.end());
 		} else {
-			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(prev_node);
+			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(prev_node);
 			collection.insert(stmt_node->getStmtInfo());
 		}
 	}

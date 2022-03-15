@@ -1,14 +1,13 @@
 #ifndef SPA_NONCONDITIONALNODE_H
 #define SPA_NONCONDITIONALNODE_H
 
+#include "PKB/CFG/StatementNode.h"
 #include "PKB/PKB.h"
-#include "StatementNode.h"
 
 class PKB::NonConditionalNode : public PKB::StatementNode {
 public:
-	NonConditionalNode(shared_ptr<StmtInfo> info);
-	size_t getNodeRef() override;
-	void insertNext(shared_ptr<PKB::NodeInterface> next) override;
-	void insertPrevious(shared_ptr<PKB::NodeInterface> prev) override;
+	explicit NonConditionalNode(shared_ptr<StmtInfo> info);
+	void setPrevious(shared_ptr<NodeInterface> prev) override;
+	void setNext(shared_ptr<NodeInterface> next) override;
 };
 #endif  // SPA_NONCONDITIONALNODE_H

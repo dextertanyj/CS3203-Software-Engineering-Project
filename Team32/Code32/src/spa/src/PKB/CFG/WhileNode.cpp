@@ -1,25 +1,20 @@
-#include "WhileNode.h"
+#include "PKB/CFG/WhileNode.h"
 
-#include "IfNode.h"
-
-PKB::WhileNode::WhileNode(shared_ptr<StmtInfo> info) : PKB::StatementNode(info) {
+PKB::WhileNode::WhileNode(const shared_ptr<StmtInfo>& info) : PKB::StatementNode(NodeType::While, info) {
 	if (info->getType() != StmtType::WhileStmt) {
 		throw invalid_argument("Provided statement info is not a while statement");
 	}
-	this->node_type = NodeType::While;
 }
 
-size_t PKB::WhileNode::getNodeRef() { return this->stmt_info->getIdentifier(); }
-
-void PKB::WhileNode::insertNext(shared_ptr<PKB::NodeInterface> next) {
-	if (this->next_nodes.size() == 2) {
+void PKB::WhileNode::setNext(shared_ptr<NodeInterface> next) {
+	if (getNextNodes().size() > 1) {
 		throw logic_error("While Node cannot have more than 2 next statements.");
 	}
-	this->next_nodes.insert(next);
+	insertNext(next);
 }
-void PKB::WhileNode::insertPrevious(shared_ptr<PKB::NodeInterface> prev) {
-	if (this->previous_nodes.size() == 2) {
+void PKB::WhileNode::setPrevious(shared_ptr<NodeInterface> prev) {
+	if (getPreviousNodes().size() > 1) {
 		throw logic_error("While node cannot have more than 2 previous nodes.");
 	}
-	this->previous_nodes.insert(prev);
+	insertPrevious(prev);
 }
