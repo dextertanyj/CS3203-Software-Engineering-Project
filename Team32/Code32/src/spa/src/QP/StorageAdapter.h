@@ -25,6 +25,14 @@ public:
 	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::Follows>(StmtRef lhs, StmtRef rhs) const {
 		return pkb.checkFollows(lhs, rhs);
 	};
+	template <>
+	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::Next>(StmtRef lhs, StmtRef rhs) const {
+		return pkb.checkNext(lhs, rhs);
+	};
+	template <>
+	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::NextT>(StmtRef lhs, StmtRef rhs) const {
+		return pkb.checkNextStar(lhs, rhs);
+	};
 	template <Types::ClauseType T>
 	[[nodiscard]] inline StmtInfoPtrSet getForwardStatements(StmtRef index) const = delete;
 	template <>
@@ -51,6 +59,14 @@ public:
 	[[nodiscard]] inline StmtInfoPtrSet getForwardStatements<Types::ClauseType::FollowsT>(StmtRef index) const {
 		return pkb.getPrecedingStar(index);
 	};
+	template <>
+	[[nodiscard]] inline StmtInfoPtrSet getForwardStatements<Types::ClauseType::Next>(StmtRef index) const {
+		return pkb.getPrevious(index);
+	};
+	template <>
+	[[nodiscard]] inline StmtInfoPtrSet getForwardStatements<Types::ClauseType::NextT>(StmtRef index) const {
+		return pkb.getPreviousStar(index);
+	};
 	template <Types::ClauseType T>
 	[[nodiscard]] inline StmtInfoPtrSet getReverseStatements(StmtRef index) const = delete;
 	template <>
@@ -73,6 +89,15 @@ public:
 	[[nodiscard]] inline StmtInfoPtrSet getReverseStatements<Types::ClauseType::FollowsT>(StmtRef index) const {
 		return pkb.getFollowerStar(index);
 	};
+	template <>
+	[[nodiscard]] inline StmtInfoPtrSet getReverseStatements<Types::ClauseType::Next>(StmtRef index) const {
+		return pkb.getNext(index);
+	};
+	template <>
+	[[nodiscard]] inline StmtInfoPtrSet getReverseStatements<Types::ClauseType::NextT>(StmtRef index) const {
+		return pkb.getNextStar(index);
+	};
+
 
 	// Calls
 	template <Types::ClauseType T>

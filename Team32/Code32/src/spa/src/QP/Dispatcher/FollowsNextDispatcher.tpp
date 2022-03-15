@@ -1,7 +1,7 @@
 #ifndef SPA_SRC_RELATIONSHIP_FOLLOWSDISPATCHERTEMPLATE_TPP
 #define SPA_SRC_RELATIONSHIP_FOLLOWSDISPATCHERTEMPLATE_TPP
 
-#include "FollowsDispatcher.h"
+#include "FollowsNextDispatcher.h"
 
 #include <unordered_map>
 #include <utility>
@@ -11,18 +11,18 @@
 #include "QP/Executor/StatementExecutor.tpp"
 
 template <QP::Types::ClauseType T>
-QP::Types::ArgumentDispatcher QP::Dispatcher::FollowsDispatcher<T>::dispatcher =
+QP::Types::ArgumentDispatcher QP::Dispatcher::FollowsNextDispatcher<T>::dispatcher =
 	[](const vector<Types::ReferenceArgument>& args) { return argumentDispatcher(T, args); };
 
 template <QP::Types::ClauseType T>
-QP::Types::ExecutorSetBundle QP::Dispatcher::FollowsDispatcher<T>::argumentDispatcher(Types::ClauseType type,
+QP::Types::ExecutorSetBundle QP::Dispatcher::FollowsNextDispatcher<T>::argumentDispatcher(Types::ClauseType type,
                                                                                       const vector<Types::ReferenceArgument>& args) {
-	return DispatchProcessors::processDoubleArgument(type, FollowsDispatcher<T>::argument_dispatch_map, args);
+	return DispatchProcessors::processDoubleArgument(type, FollowsNextDispatcher<T>::argument_dispatch_map, args);
 };
 
 template <QP::Types::ClauseType T>
 const unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>
-	QP::Dispatcher::FollowsDispatcher<T>::argument_dispatch_map = {{Types::ReferenceType::StatementIndex, getIndexMap()},
+	QP::Dispatcher::FollowsNextDispatcher<T>::argument_dispatch_map = {{Types::ReferenceType::StatementIndex, getIndexMap()},
                                                                    {Types::ReferenceType::Wildcard, getWildcardMap()},
                                                                    {Types::DesignEntity::Stmt, getSynonymMap()},
                                                                    {Types::DesignEntity::Call, getSynonymMap()},
@@ -33,7 +33,7 @@ const unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::Arg
                                                                    {Types::DesignEntity::If, getSynonymMap()}};
 
 template <QP::Types::ClauseType T>
-unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::FollowsDispatcher<T>::getIndexMap() {
+unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::FollowsNextDispatcher<T>::getIndexMap() {
 	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
 		{Types::ReferenceType::StatementIndex,
 	     [](const vector<Types::ReferenceArgument>& args) {
@@ -59,7 +59,7 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 }
 
 template <QP::Types::ClauseType T>
-unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::FollowsDispatcher<T>::getWildcardMap() {
+unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::FollowsNextDispatcher<T>::getWildcardMap() {
 	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
 		{Types::ReferenceType::StatementIndex,
 	     [](const vector<Types::ReferenceArgument>& args) {
@@ -84,7 +84,7 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 }
 
 template <QP::Types::ClauseType T>
-unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::FollowsDispatcher<T>::getSynonymMap() {
+unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::FollowsNextDispatcher<T>::getSynonymMap() {
 	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
 		{Types::ReferenceType::StatementIndex,
 	     [](vector<QP::Types::ReferenceArgument> args) {
