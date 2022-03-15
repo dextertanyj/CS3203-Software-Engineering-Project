@@ -779,4 +779,25 @@ TEST_CASE("PKB::Next Methods Test") {
 		CHECK(pkb.getPrevious(15) == StmtInfoPtrSet{s_14});
 		CHECK(pkb.getPrevious(16) == StmtInfoPtrSet{s_5, s_9, s_15});
 	}
+
+	SECTION("PKB::getNextStar Test") {
+		CHECK(pkb.getNextStar(2) == StmtInfoPtrSet{s_3, s_4, s_5, s_6, s_7, s_8, s_9, s_10, s_11, s_12, s_13, s_14, s_15, s_16});
+		CHECK(pkb.getNextStar(3) == StmtInfoPtrSet{s_4, s_5, s_6, s_7, s_8, s_9, s_16});
+		CHECK(pkb.getNextStar(6) == StmtInfoPtrSet{s_7, s_8, s_9, s_16});
+		CHECK(pkb.getNextStar(8) == StmtInfoPtrSet{s_9, s_16});
+		CHECK(pkb.getNextStar(10) == StmtInfoPtrSet{s_11, s_12, s_13, s_14, s_15, s_16});
+		CHECK(pkb.getNextStar(11) == StmtInfoPtrSet{s_12, s_14, s_15, s_16});
+		CHECK(pkb.getNextStar(12) == StmtInfoPtrSet{s_14, s_15, s_16});
+		CHECK(pkb.getNextStar(14) == StmtInfoPtrSet{s_15, s_16});
+	}
+
+	SECTION("PKB::getPreviousStar Test") {
+		CHECK(pkb.getPreviousStar(2) == StmtInfoPtrSet{s_1});
+		CHECK(pkb.getPreviousStar(4) == StmtInfoPtrSet{s_1, s_2, s_3});
+		CHECK(pkb.getPreviousStar(7) == StmtInfoPtrSet{s_1, s_2, s_3, s_4, s_6});
+		CHECK(pkb.getPreviousStar(9) == StmtInfoPtrSet{s_1, s_2, s_3, s_4, s_6, s_7, s_8});
+		CHECK(pkb.getPreviousStar(13) == StmtInfoPtrSet{s_1, s_2, s_10});
+		CHECK(pkb.getPreviousStar(14) == StmtInfoPtrSet{s_1, s_2, s_10, s_11, s_12, s_13});
+		CHECK(pkb.getPreviousStar(16) == StmtInfoPtrSet{s_1, s_2, s_3, s_4, s_5, s_6, s_7, s_8, s_9, s_10, s_11, s_12, s_13, s_14, s_15});
+	}
 }

@@ -1,9 +1,9 @@
 #ifndef SPA_CONTROLFLOWGRAPH_H
 #define SPA_CONTROLFLOWGRAPH_H
 
+#include <queue>
 #include <set>
 #include <unordered_map>
-#include <queue>
 
 #include "NodeInterface.h"
 #include "PKB/PKB.h"

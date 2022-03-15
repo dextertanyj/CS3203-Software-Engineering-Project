@@ -186,7 +186,9 @@ shared_ptr<StmtInfo> PKB::ControlFlowGraph::collectNextOfDummy(shared_ptr<PKB::N
 		result = *result->getNextNodes().begin();
 	}
 	set<shared_ptr<PKB::NodeInterface>> next_node_of_dummy = result->getNextNodes();
-	if (next_node_of_dummy.size() > 1) throw logic_error("There should only be one next node of dummy.");
+	if (next_node_of_dummy.size() > 1) {
+		throw logic_error("There should only be one next node of dummy.");
+	}
 
 	shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(*(next_node_of_dummy.begin()));
 	return stmt_node->getStmtInfo();
