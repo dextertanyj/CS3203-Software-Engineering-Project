@@ -6,7 +6,7 @@ QP::QueryResult::QueryResult(bool result) { this->result = result; }
 
 bool QP::QueryResult::getResult() const { return result; }
 
-unordered_map<string, vector<string>> QP::QueryResult::getTable() { return table; }
+ResultTable QP::QueryResult::getTable() { return table; }
 
 unordered_set<string> QP::QueryResult::getSynonymsStored() { return synonyms_stored; }
 
@@ -37,7 +37,7 @@ void QP::QueryResult::joinResult(QueryResult& query_result) {
 }
 
 void QP::QueryResult::filterBySelect(const QP::Types::DeclarationList& select_list) {
-	unordered_map<string, vector<string>> filtered_table;
+	ResultTable filtered_table;
 	unordered_set<string> filtered_synonyms;
 
 	for (auto const& declaration : select_list) {
@@ -55,7 +55,7 @@ void QP::QueryResult::joinWithDifferentSynonym(QueryResult& query_result) {
 	unordered_set<string> common_synonyms;
 	unordered_set<string> old_synonyms;
 	unordered_set<string> new_synonyms;
-	unordered_map<string, vector<string>> new_table;
+	ResultTable new_table;
 
 	for (string const& synonym : query_result.getSynonymsStored()) {
 		new_table.insert({synonym, {}});
@@ -75,12 +75,12 @@ void QP::QueryResult::joinWithDifferentSynonym(QueryResult& query_result) {
 
 	size_t number_of_rows = table.begin()->second.size();
 	for (size_t i = 0; i < number_of_rows; i++) {
-		unordered_map<string, string> row;
+		ResultRow row;
 		for (string const& common_syn : common_synonyms) {
 			row.insert({common_syn, table[common_syn][i]});
 		}
 
-		unordered_map<string, vector<string>> sub_table = query_result.getSubTableWithRow(row);
+		ResultTable sub_table = query_result.getSubTableWithRow(row);
 		if (!sub_table.begin()->second.empty()) {
 			size_t sub_table_size = sub_table.begin()->second.size();
 
@@ -113,8 +113,8 @@ void QP::QueryResult::joinWithDifferentSynonym(QueryResult& query_result) {
 }
 
 void QP::QueryResult::joinWithSameSynonym(QueryResult& query_result) {
-	unordered_map<string, vector<string>> final_result;
-	unordered_map<string, vector<string>> smaller_table;
+	ResultTable final_result;
+	ResultTable smaller_table;
 	unordered_set<string> synonyms;
 	if (this->table.size() > query_result.getTable().size()) {
 		final_result = this->table;
@@ -127,10 +127,10 @@ void QP::QueryResult::joinWithSameSynonym(QueryResult& query_result) {
 	}
 
 	size_t number_of_rows = final_result.begin()->second.size();
-	unordered_map<string, vector<string>> temp = final_result;
+	ResultTable temp = final_result;
 	size_t pos = 0;
 	for (size_t i = 0; i < number_of_rows; i++) {
-		unordered_map<string, string> row;
+		ResultRow row;
 		for (const string& synonym : synonyms) {
 			row.insert({synonym, temp.at(synonym)[i]});
 		}
@@ -149,7 +149,7 @@ void QP::QueryResult::joinWithSameSynonym(QueryResult& query_result) {
 	}
 }
 
-bool QP::QueryResult::contains(unordered_map<string, vector<string>>& table, const unordered_map<string, string>& row) {
+bool QP::QueryResult::contains(ResultTable& table, const ResultRow& row) {
 	size_t number_of_rows = table.begin()->second.size();
 	for (size_t i = 0; i < number_of_rows; i++) {
 		if (isRowMatch(row, table, i)) {
@@ -160,8 +160,7 @@ bool QP::QueryResult::contains(unordered_map<string, vector<string>>& table, con
 	return false;
 }
 
-bool QP::QueryResult::isRowMatch(const unordered_map<string, string>& row, unordered_map<string, vector<string>>& table,
-                                 size_t row_number) {
+bool QP::QueryResult::isRowMatch(const ResultRow& row, ResultTable& table, size_t row_number) {
 	bool has_match = true;
 	for (const auto& iterator : row) {
 		if (table.at(iterator.first)[row_number] != iterator.second) {
@@ -173,7 +172,7 @@ bool QP::QueryResult::isRowMatch(const unordered_map<string, string>& row, unord
 	return has_match;
 }
 
-void QP::QueryResult::removeRow(unordered_map<string, vector<string>>& table, size_t row_number) {
+void QP::QueryResult::removeRow(ResultTable& table, size_t row_number) {
 	for (auto iterator = table.begin(); iterator != table.end(); ++iterator) {
 		vector<string> col = iterator->second;
 		// Narrowing conversion, implementation defined behaviour for values greater than long.
@@ -182,12 +181,12 @@ void QP::QueryResult::removeRow(unordered_map<string, vector<string>>& table, si
 	}
 }
 
-unordered_map<string, vector<string>> QP::QueryResult::getSubTableWithRow(const unordered_map<string, string>& row) {
+ResultTable QP::QueryResult::getSubTableWithRow(const ResultRow& row) {
 	if (row.empty()) {
 		return table;
 	}
 
-	unordered_map<string, vector<string>> sub_table = this->table;
+	ResultTable sub_table = this->table;
 	size_t number_of_rows = getTableSize();
 
 	size_t pos = 0;
@@ -202,7 +201,7 @@ unordered_map<string, vector<string>> QP::QueryResult::getSubTableWithRow(const 
 	return sub_table;
 }
 
-void QP::QueryResult::removeDuplicateRows(unordered_map<string, vector<string>>& table) {
+void QP::QueryResult::removeDuplicateRows(ResultTable& table) {
 	unordered_set<string> rows;
 	size_t number_of_rows = table.begin()->second.size();
 

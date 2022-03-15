@@ -4,6 +4,7 @@
 #include <vector>
 
 using QP::Types::Clause;
+using QP::Types::ConnectedSynonyms;
 using QP::Types::Declaration;
 
 QP::QueryGraph::QueryGraph(const DeclarationList& declarations) {
@@ -37,8 +38,7 @@ void QP::QueryGraph::addEdge(const pair<string, string>& symbols) {
 }
 
 ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& select_list) {
-	unordered_map<string, size_t> result;
-	unordered_map<size_t, DeclarationList> group_to_selected_declarations;
+	ConnectedSynonyms connected_synonyms = ConnectedSynonyms();
 	DeclarationList selected_declarations;
 	unordered_set<string> unvisited_nodes;
 	unordered_map<string, Declaration> selected_nodes;
@@ -53,15 +53,11 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 	}
 
 	queue<string> queue;
-	if (!selected_nodes.empty()) {
-		queue.push(selected_nodes.begin()->first);
-	} else {
-		queue.push(*unvisited_nodes.begin());
-	}
+	queue.push(*unvisited_nodes.begin());
 
 	while (!queue.empty()) {
 		string symbol = queue.front();
-		result.insert({symbol, group_number});
+		connected_synonyms.insertSynonym(symbol, group_number);
 		if (selected_nodes.find(symbol) != selected_nodes.end()) {
 			selected_declarations.push_back(selected_nodes[symbol]);
 			selected_nodes.erase(symbol);
@@ -77,23 +73,16 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 		}
 
 		if (queue.empty()) {
-			group_to_selected_declarations.insert({group_number, selected_declarations});
+			connected_synonyms.insertSelectedDeclarations(group_number, selected_declarations);
 			selected_declarations.clear();
 			group_number++;
-		}
 
-		if (queue.empty() && !unvisited_nodes.empty()) {
-			if (!selected_nodes.empty()) {
-				queue.push(selected_nodes.begin()->first);
-			} else {
+			if (!unvisited_nodes.empty()) {
 				queue.push(*unvisited_nodes.begin());
 			}
 		}
 	}
 
-	return {
-		group_number,
-		result,
-		group_to_selected_declarations,
-	};
+	connected_synonyms.setNumberOfGroups(group_number);
+	return connected_synonyms;
 }

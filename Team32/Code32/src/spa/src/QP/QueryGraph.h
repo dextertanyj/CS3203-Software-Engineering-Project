@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "QP/ConnectedSynonyms.h"
 #include "QP/QueryProperties.h"
 #include "QP/Relationship/Relation.h"
 

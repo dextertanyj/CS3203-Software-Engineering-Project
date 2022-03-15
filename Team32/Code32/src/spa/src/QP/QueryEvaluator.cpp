@@ -2,9 +2,11 @@
 
 #include <utility>
 
+#include "QP/ConnectedSynonyms.h"
 #include "QP/QueryUtils.h"
 
 using QP::Types::Clause;
+using QP::Types::ConnectedSynonyms;
 using QP::Types::DesignEntity;
 
 QP::QueryEvaluator::QueryEvaluator(PKB::StorageAccessInterface& pkb) : pkb(pkb) {}
@@ -193,20 +195,22 @@ QP::QueryGraph QP::QueryEvaluator::buildGraph(QueryProperties& query_properties)
 
 vector<pair<ClauseList, DeclarationList>> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties,
                                                                            ConnectedSynonyms& connected_synonyms) {
-	vector<pair<ClauseList, DeclarationList>> result(connected_synonyms.number_of_groups + 1);
+	size_t number_of_groups = connected_synonyms.getNumberOfGroups();
+
+	vector<pair<ClauseList, DeclarationList>> result(number_of_groups + 1);
 	for (const Clause& clause : query_properties.getClauseList()) {
 		vector<string> declarations = clause.relation->getDeclarationSymbols();
 		if (declarations.empty()) {
-			result[connected_synonyms.number_of_groups].first.push_back(clause);
+			result[number_of_groups].first.push_back(clause);
 		} else {
-			size_t group_number = connected_synonyms.synonyms_in_group[declarations[0]];
+			size_t group_number = connected_synonyms.getGroupNumber(declarations[0]);
 			result[group_number].first.push_back(clause);
 		}
 	}
 
-	result[connected_synonyms.number_of_groups].second = {};
-	for (size_t i = 0; i < connected_synonyms.number_of_groups; i++) {
-		result[i].second = connected_synonyms.group_to_selected_declarations[i];
+	result[number_of_groups].second = {};
+	for (size_t i = 0; i < number_of_groups; i++) {
+		result[i].second = connected_synonyms.getGroupSynonyms(i);
 	}
 
 	return result;
