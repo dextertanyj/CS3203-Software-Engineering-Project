@@ -1,13 +1,14 @@
-#include "QP/Relationship/ModifiesS.h"
-
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
+#include "QP/Executor/StatementVariableExecutor.tpp"
 #include "catch.hpp"
 
 using namespace QP::Types;
+using namespace QP::Executor;
 
-TEST_CASE("QP::Relationship::ModifiesS::execute") {
+TEST_CASE("StatementVariableExecutor<ClauseType::ModifiesS>::execute") {
 	PKB::Storage pkb = PKB::Storage();
+	QP::StorageAdapter store = QP::StorageAdapter(pkb);
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::WhileStmt);
 	pkb.setStmtType(3, StmtType::WhileStmt);
@@ -20,64 +21,68 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	ReferenceArgument stmt_no2 = ReferenceArgument(2);
 	ReferenceArgument stmt_no3 = ReferenceArgument(3);
 	ReferenceArgument stmt_no4 = ReferenceArgument(4);
-	ReferenceArgument stmt_synonym = ReferenceArgument({QP::Types::DesignEntity::Stmt, "s"});
-	ReferenceArgument assign_synonym = ReferenceArgument({QP::Types::DesignEntity::Assign, "a"});
-	ReferenceArgument if_synonym = ReferenceArgument({QP::Types::DesignEntity::If, "if"});
+	ReferenceArgument stmt_synonym = ReferenceArgument({DesignEntity::Stmt, "s"});
+	ReferenceArgument assign_synonym = ReferenceArgument({DesignEntity::Assign, "a"});
+	ReferenceArgument if_synonym = ReferenceArgument({DesignEntity::If, "if"});
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
-	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
+	ReferenceArgument var = ReferenceArgument({DesignEntity::Variable, "var"});
 
 	SECTION("Trivial: Index & Name") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesS::executeTrivialIndexName(pkb,stmt_no1, x);
-		QP::QueryResult result2 = QP::Relationship::ModifiesS::executeTrivialIndexName(pkb,stmt_no1, y);
+		QP::QueryResult result1 = StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialIndexName(store, stmt_no1, x);
+		QP::QueryResult result2 = StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialIndexName(store, stmt_no1, y);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Index & Wildcard") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesS::executeTrivialIndexWildcardOrSynonym(pkb, stmt_no1);
-		QP::QueryResult result2 = QP::Relationship::ModifiesS::executeTrivialIndexWildcardOrSynonym(pkb, stmt_no4);
+		QP::QueryResult result1 = StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialIndexWildcardOrSynonym(store, stmt_no1);
+		QP::QueryResult result2 = StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialIndexWildcardOrSynonym(store, stmt_no4);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Index & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesS::executeTrivialIndexWildcardOrSynonym(pkb, stmt_no1);
-		QP::QueryResult result2 = QP::Relationship::ModifiesS::executeTrivialIndexWildcardOrSynonym(pkb, stmt_no4);
+		QP::QueryResult result1 = StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialIndexWildcardOrSynonym(store, stmt_no1);
+		QP::QueryResult result2 = StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialIndexWildcardOrSynonym(store, stmt_no4);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Synonym & Name") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesS::executeTrivialSynonymName(pkb, assign_synonym, x);
-		QP::QueryResult result2 = QP::Relationship::ModifiesS::executeTrivialSynonymName(pkb, assign_synonym, y);
+		QP::QueryResult result1 = StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialSynonymName(store, assign_synonym, x);
+		QP::QueryResult result2 = StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialSynonymName(store, assign_synonym, y);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Synonym & Wildcard") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesS::executeTrivialSynonymWildcardOrSynonym(pkb, stmt_synonym);
-		QP::QueryResult result2 = QP::Relationship::ModifiesS::executeTrivialSynonymWildcardOrSynonym(pkb, if_synonym);
+		QP::QueryResult result1 =
+			StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialSynonymWildcardOrSynonym(store, stmt_synonym);
+		QP::QueryResult result2 =
+			StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialSynonymWildcardOrSynonym(store, if_synonym);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Synonym & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesS::executeTrivialSynonymWildcardOrSynonym(pkb, stmt_synonym);
-		QP::QueryResult result2 = QP::Relationship::ModifiesS::executeTrivialSynonymWildcardOrSynonym(pkb, if_synonym);
+		QP::QueryResult result1 =
+			StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialSynonymWildcardOrSynonym(store, stmt_synonym);
+		QP::QueryResult result2 =
+			StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialSynonymWildcardOrSynonym(store, if_synonym);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Synonym & Name") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesS::executeSynonymName(pkb, assign_synonym, x);
-		QP::QueryResult result2 = QP::Relationship::ModifiesS::executeSynonymName(pkb, if_synonym, y);
+		QP::QueryResult result1 = StatementVariableExecutor<ClauseType::ModifiesS>::executeSynonymName(store, assign_synonym, x);
+		QP::QueryResult result2 = StatementVariableExecutor<ClauseType::ModifiesS>::executeSynonymName(store, if_synonym, y);
 
 		vector<string> expected_result = {"1"};
 		REQUIRE(result1.getSynonymResult("a") == expected_result);
@@ -85,8 +90,8 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	}
 
 	SECTION("Synonym & Wildcard") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesS::executeSynonymWildcard(pkb, stmt_synonym);
-		QP::QueryResult result2 = QP::Relationship::ModifiesS::executeSynonymWildcard(pkb, if_synonym);
+		QP::QueryResult result1 = StatementVariableExecutor<ClauseType::ModifiesS>::executeSynonymWildcard(store, stmt_synonym);
+		QP::QueryResult result2 = StatementVariableExecutor<ClauseType::ModifiesS>::executeSynonymWildcard(store, if_synonym);
 
 		vector<string> expected_result = {"1", "2", "3"};
 		vector<string> actual_result = result1.getSynonymResult("s");
@@ -96,8 +101,8 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	}
 
 	SECTION("Synonym & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesS::executeSynonymSynonym(pkb, stmt_synonym, var);
-		QP::QueryResult result2 = QP::Relationship::ModifiesS::executeSynonymSynonym(pkb, if_synonym, var);
+		QP::QueryResult result1 = StatementVariableExecutor<ClauseType::ModifiesS>::executeSynonymSynonym(store, stmt_synonym, var);
+		QP::QueryResult result2 = StatementVariableExecutor<ClauseType::ModifiesS>::executeSynonymSynonym(store, if_synonym, var);
 
 		vector<string> expected_stmt_result = {"1", "2", "3"};
 		vector<string> expected_var_result = {"x", "x", "y"};
@@ -111,8 +116,8 @@ TEST_CASE("QP::Relationship::ModifiesS::execute") {
 	}
 
 	SECTION("Index & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesS::executeIndexSynonym(pkb, stmt_no1, var);
-		QP::QueryResult result2 = QP::Relationship::ModifiesS::executeIndexSynonym(pkb, stmt_no4, var);
+		QP::QueryResult result1 = StatementVariableExecutor<ClauseType::ModifiesS>::executeIndexSynonym(store, stmt_no1, var);
+		QP::QueryResult result2 = StatementVariableExecutor<ClauseType::ModifiesS>::executeIndexSynonym(store, stmt_no4, var);
 
 		vector<string> expected_result = {"x"};
 		vector<string> actual_result = result1.getSynonymResult("var");

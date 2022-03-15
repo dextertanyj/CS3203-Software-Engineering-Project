@@ -11,20 +11,11 @@
 #include <vector>
 
 #include "Common/ExpressionProcessor/Expression.h"
-#include "QP/Dispatcher.h"
+#include "QP/Dispatcher/DispatchMap.h"
 #include "QP/QueryEvaluator.h"
 #include "QP/QueryExpressionLexer.h"
 #include "QP/QueryProperties.h"
 #include "QP/QueryResult.h"
-#include "QP/Relationship/Follows.h"
-#include "QP/Relationship/FollowsT.h"
-#include "QP/Relationship/Modifies.h"
-#include "QP/Relationship/ModifiesP.h"
-#include "QP/Relationship/ModifiesS.h"
-#include "QP/Relationship/Parent.h"
-#include "QP/Relationship/ParentT.h"
-#include "QP/Relationship/UsesP.h"
-#include "QP/Relationship/UsesS.h"
 
 class QP::QueryPreprocessor {
 public:
@@ -65,7 +56,7 @@ private:
 
 	static regex invalid_chars_regex;
 	static regex query_token_regex;
-	QP::Dispatcher dispatcher;
+	QP::Dispatcher::DispatchMap dispatcher;
 };
 
 #endif  // SPA_SRC_QP_QUERYPREPROCESSOR_H

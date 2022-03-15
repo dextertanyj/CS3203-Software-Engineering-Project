@@ -7,7 +7,7 @@ template <class T>
 PKB::PVRelationStore<T>::PVRelationStore() = default;
 
 template <class T>
-void PKB::PVRelationStore<T>::set(const ProcRef& proc, VarRef variable) {
+void PKB::PVRelationStore<T>::set(const ProcRef& proc, const VarRef& variable) {
 	if (variable.length() == 0) {
 		throw invalid_argument("Variable name must have length more than 0.");
 	}
@@ -32,7 +32,7 @@ void PKB::PVRelationStore<T>::set(const ProcRef& proc, VarRef variable) {
 }
 
 template <class T>
-void PKB::PVRelationStore<T>::set(const ProcRef& proc, VarRefSet variables) {
+void PKB::PVRelationStore<T>::set(const ProcRef& proc, const VarRefSet& variables) {
 	for (const VarRef& variable : variables) {
 		if (variable.length() == 0) {
 			throw invalid_argument("Variable name must have length more than 0.");

@@ -9,7 +9,7 @@ using QP::Types::Clause;
 using QP::Types::ConnectedSynonyms;
 using QP::Types::DesignEntity;
 
-QP::QueryEvaluator::QueryEvaluator(PKB::StorageAccessInterface& pkb) : pkb(pkb) {}
+QP::QueryEvaluator::QueryEvaluator(PKB::StorageAccessInterface& pkb) : store(QP::StorageAdapter(pkb)) {}
 
 QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 	QueryGraph graph = buildGraph(query_properties);
@@ -75,7 +75,7 @@ QP::QueryResult QP::QueryEvaluator::executeGroupWithoutSelected(ClauseList& clau
 
 QP::QueryResult QP::QueryEvaluator::executeTrivialGroup(ClauseList& clauses) {
 	for (const Clause& clause : clauses) {
-		QueryResult result = clause.relation->execute(pkb, true);
+		QueryResult result = clause.relation->execute(store, true);
 		if (!result.getResult()) {
 			return {};
 		}
@@ -88,7 +88,7 @@ QP::QueryResult QP::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, 
 	vector<QueryResult> result_list;
 
 	for (const Clause& clause : clauses) {
-		QueryResult result = clause.relation->execute(pkb, false);
+		QueryResult result = clause.relation->execute(store, false);
 		if (!result.getResult()) {
 			return {};
 		}
@@ -132,7 +132,7 @@ QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) 
 }
 
 QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(const Declaration& declaration) {
-	StmtInfoPtrSet stmt_set = pkb.getStatements();
+	StmtInfoPtrSet stmt_set = store.getStatements();
 	QueryResult result = QueryResult();
 
 	vector<string> result_string;
@@ -147,7 +147,7 @@ QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(const Declaration& decla
 }
 
 QP::QueryResult QP::QueryEvaluator::getConstants(const string& symbol) {
-	unordered_set<ConstVal> constants = pkb.getConstants();
+	unordered_set<ConstVal> constants = store.getConstants();
 	QueryResult result = QueryResult();
 
 	vector<string> result_string;
@@ -161,7 +161,7 @@ QP::QueryResult QP::QueryEvaluator::getConstants(const string& symbol) {
 }
 
 QP::QueryResult QP::QueryEvaluator::getVariables(const string& symbol) {
-	VarRefSet var_set = pkb.getVariables();
+	VarRefSet var_set = store.getVariables();
 	QueryResult result = QueryResult();
 
 	vector<string> result_string;
@@ -174,7 +174,7 @@ QP::QueryResult QP::QueryEvaluator::getVariables(const string& symbol) {
 }
 
 QP::QueryResult QP::QueryEvaluator::getProcedures(const string& symbol) {
-	ProcRefSet proc_set = pkb.getProcedures();
+	ProcRefSet proc_set = store.getProcedures();
 	QueryResult result = QueryResult();
 
 	vector<string> result_string;

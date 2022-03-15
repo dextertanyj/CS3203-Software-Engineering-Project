@@ -15,8 +15,8 @@ template <class T>
 class PKB::PVRelationStore {
 public:
 	PVRelationStore();
-	void set(const ProcRef& proc, VarRef variable);
-	void set(const ProcRef& proc, unordered_set<VarRef> variables);
+	void set(const ProcRef& proc, const VarRef& variable);
+	void set(const ProcRef& proc, const unordered_set<VarRef>& variables);
 	bool check(const ProcRef& proc, const VarRef& variable);
 	VarRefSet getByProc(const ProcRef& proc);
 	ProcRefSet getByVar(const VarRef& variable);

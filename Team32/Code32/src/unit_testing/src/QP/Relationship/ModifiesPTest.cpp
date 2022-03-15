@@ -1,14 +1,14 @@
-#include "QP/Relationship/ModifiesP.h"
-
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
-#include "QP/Relationship/Modifies.h"
+#include "QP/Executor/ProcedureVariableExecutor.tpp"
 #include "catch.hpp"
 
 using namespace QP::Types;
+using namespace QP::Executor;
 
-TEST_CASE("QP::Relationship::ModifiesP::execute") {
+TEST_CASE("ProcedureVariableExecutor<ClauseType::ModifiesP>::execute") {
 	PKB::Storage pkb = PKB::Storage();
+	QP::StorageAdapter store = QP::StorageAdapter(pkb);
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::Print);
@@ -21,58 +21,62 @@ TEST_CASE("QP::Relationship::ModifiesP::execute") {
 
 	ReferenceArgument left_proc_no1 = ReferenceArgument("A");
 	ReferenceArgument left_proc_no2 = ReferenceArgument("B");
-	ReferenceArgument left_proc_no3 = ReferenceArgument({QP::Types::DesignEntity::Procedure, "procedure"});
+	ReferenceArgument left_proc_no3 = ReferenceArgument({DesignEntity::Procedure, "procedure"});
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
-	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
+	ReferenceArgument var = ReferenceArgument({DesignEntity::Variable, "var"});
 
 	SECTION("Trivial: Name & Name") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialNameName(pkb, left_proc_no1, x);
-		QP::QueryResult result2 = QP::Relationship::ModifiesP::executeTrivialNameName(pkb, left_proc_no1, y);
+		QP::QueryResult result1 = ProcedureVariableExecutor<ClauseType::ModifiesP>::executeTrivialNameName(store, left_proc_no1, x);
+		QP::QueryResult result2 = ProcedureVariableExecutor<ClauseType::ModifiesP>::executeTrivialNameName(store, left_proc_no1, y);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Name & Wildcard") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialNameWildcardOrSynonym(pkb, left_proc_no1);
-		QP::QueryResult result2 = QP::Relationship::ModifiesP::executeTrivialNameWildcardOrSynonym(pkb, left_proc_no2);
+		QP::QueryResult result1 =
+			ProcedureVariableExecutor<ClauseType::ModifiesP>::executeTrivialNameWildcardOrSynonym(store, left_proc_no1);
+		QP::QueryResult result2 =
+			ProcedureVariableExecutor<ClauseType::ModifiesP>::executeTrivialNameWildcardOrSynonym(store, left_proc_no2);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Name & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialNameWildcardOrSynonym(pkb, left_proc_no1);
-		QP::QueryResult result2 = QP::Relationship::ModifiesP::executeTrivialNameWildcardOrSynonym(pkb, left_proc_no2);
+		QP::QueryResult result1 =
+			ProcedureVariableExecutor<ClauseType::ModifiesP>::executeTrivialNameWildcardOrSynonym(store, left_proc_no1);
+		QP::QueryResult result2 =
+			ProcedureVariableExecutor<ClauseType::ModifiesP>::executeTrivialNameWildcardOrSynonym(store, left_proc_no2);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Synonym & Name") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialSynonymName(pkb, x);
-		QP::QueryResult result2 = QP::Relationship::ModifiesP::executeTrivialSynonymName(pkb, y);
+		QP::QueryResult result1 = ProcedureVariableExecutor<ClauseType::ModifiesP>::executeTrivialSynonymName(store, x);
+		QP::QueryResult result2 = ProcedureVariableExecutor<ClauseType::ModifiesP>::executeTrivialSynonymName(store, y);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Synonym & Wildcard") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialSynonymWildcardOrSynonym(pkb);
+		QP::QueryResult result1 = ProcedureVariableExecutor<ClauseType::ModifiesP>::executeTrivialSynonymWildcardOrSynonym(store);
 
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("Trivial: Synonym & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeTrivialSynonymWildcardOrSynonym(pkb);
+		QP::QueryResult result1 = ProcedureVariableExecutor<ClauseType::ModifiesP>::executeTrivialSynonymWildcardOrSynonym(store);
 
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("Name & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeNameSynonym(pkb, left_proc_no1, var);
-		QP::QueryResult result2 = QP::Relationship::ModifiesP::executeNameSynonym(pkb, left_proc_no2, var);
+		QP::QueryResult result1 = ProcedureVariableExecutor<ClauseType::ModifiesP>::executeNameSynonym(store, left_proc_no1, var);
+		QP::QueryResult result2 = ProcedureVariableExecutor<ClauseType::ModifiesP>::executeNameSynonym(store, left_proc_no2, var);
 
 		vector<string> expected_result1 = {"x", "z"};
 		vector<string> actual_result1 = result1.getSynonymResult("var");
@@ -82,8 +86,8 @@ TEST_CASE("QP::Relationship::ModifiesP::execute") {
 	}
 
 	SECTION("Synonym & Name") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeSynonymName(pkb, left_proc_no3, x);
-		QP::QueryResult result2 = QP::Relationship::ModifiesP::executeSynonymName(pkb, left_proc_no3, y);
+		QP::QueryResult result1 = ProcedureVariableExecutor<ClauseType::ModifiesP>::executeSynonymName(store, left_proc_no3, x);
+		QP::QueryResult result2 = ProcedureVariableExecutor<ClauseType::ModifiesP>::executeSynonymName(store, left_proc_no3, y);
 
 		vector<string> expected_result1 = {"A"};
 		vector<string> actual_result1 = result1.getSynonymResult("procedure");
@@ -93,7 +97,7 @@ TEST_CASE("QP::Relationship::ModifiesP::execute") {
 	}
 
 	SECTION("Synonym & Wildcard") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeSynonymWildcard(pkb, left_proc_no3);
+		QP::QueryResult result1 = ProcedureVariableExecutor<ClauseType::ModifiesP>::executeSynonymWildcard(store, left_proc_no3);
 
 		vector<string> expected_result1 = {"A"};
 		vector<string> actual_result1 = result1.getSynonymResult("procedure");
@@ -102,7 +106,7 @@ TEST_CASE("QP::Relationship::ModifiesP::execute") {
 	}
 
 	SECTION("Synonym & Synonym") {
-		QP::QueryResult result1 = QP::Relationship::ModifiesP::executeSynonymSynonym(pkb, left_proc_no3, var);
+		QP::QueryResult result1 = ProcedureVariableExecutor<ClauseType::ModifiesP>::executeSynonymSynonym(store, left_proc_no3, var);
 
 		vector<string> expected_proc_result1 = {"A", "A"};
 		vector<string> actual_proc_result1 = result1.getSynonymResult("procedure");

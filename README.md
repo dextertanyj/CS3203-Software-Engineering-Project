@@ -11,7 +11,8 @@ C++ Standard | C++17
 
 ### Additional Build Instructions
 
-No additional instructions required.
+For Linux users: \
+GCC is currently not supported due to [Bug 85282](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85282). Please use Clang (12.0.0 or above) instead.
 
 # Team Members
 

@@ -25,7 +25,7 @@ public:
 	static vector<pair<ClauseList, DeclarationList>> splitClauses(QueryProperties& query_properties, ConnectedSynonyms& connected_synonyms);
 
 private:
-	PKB::StorageAccessInterface& pkb;
+	QP::StorageAdapter store;
 	QueryResult executeGroupWithSelected(ClauseList& clauses, DeclarationList& select_list);
 	QueryResult executeGroupWithoutSelected(ClauseList& clauses, DeclarationList& select_list);
 	QueryResult executeTrivialGroup(ClauseList& clauses);
