@@ -58,6 +58,34 @@ public:
 		set_assign_call_count++;
 		set_assign_arguments.push_back({index, variable, expression});
 	};
+	virtual void setIfControl(StmtRef index, VarRefSet names) {
+		set_if_control_set_call_count++;
+		set_if_control_set_arguments.push_back({index, names});
+	};
+	virtual void setWhileControl(StmtRef index, VarRefSet names) {
+		set_while_control_set_call_count++;
+		set_while_control_set_arguments.push_back({index, names});
+	};
+	virtual void setIfControl(StmtRef index, VarRef name) {
+		set_if_control_call_count++;
+		set_if_control_arguments.push_back({index, name});
+	};
+	virtual void setWhileControl(StmtRef index, VarRef name) {
+		set_while_control_call_count++;
+		set_while_control_arguments.push_back({index, name});
+	};
+	virtual void setNext(StmtRef previous, StmtRef next) {
+		set_next_call_count++;
+		set_next_arguments.push_back({previous, next});
+	};
+	virtual void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) {
+		set_if_next_call_count++;
+		set_if_next_arguments.push_back({prev, then_next, else_next});
+	};
+	virtual void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) {
+		set_if_exit_call_count++;
+		set_if_exit_arguments.push_back({then_prev, else_prev, if_stmt_ref});
+	};
 	void populateComplexRelations() { populate_complex_relations_call_count++; };
 
 	vector<tuple<ProcRef, StmtRef, StmtRef>> set_proc_arguments;
@@ -84,6 +112,20 @@ public:
 	int set_modifies_set_call_count = 0;
 	vector<tuple<StmtRef, VarRef, Common::ExpressionProcessor::Expression>> set_assign_arguments;
 	int set_assign_call_count = 0;
+	vector<tuple<StmtRef, VarRef>> set_if_control_arguments;
+	int set_if_control_call_count = 0;
+	vector<tuple<StmtRef, unordered_set<VarRef>>> set_if_control_set_arguments;
+	int set_if_control_set_call_count = 0;
+	vector<tuple<StmtRef, VarRef>> set_while_control_arguments;
+	int set_while_control_call_count = 0;
+	vector<tuple<StmtRef, unordered_set<VarRef>>> set_while_control_set_arguments;
+	int set_while_control_set_call_count = 0;
+	vector<tuple<StmtRef, StmtRef>> set_next_arguments;
+	int set_next_call_count = 0;
+	vector<tuple<StmtRef, StmtRef, StmtRef>> set_if_next_arguments;
+	int set_if_next_call_count = 0;
+	vector<tuple<StmtRef, StmtRef, StmtRef>> set_if_exit_arguments;
+	int set_if_exit_call_count = 0;
 	int populate_complex_relations_call_count = 0;
 };
 
