@@ -50,19 +50,21 @@ class StatementNode;
 class ControlFlowGraph;
 
 typedef struct IfControlRelation {
-	static bool validate(SVRelationStore<IfControlRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& var) {
+	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const shared_ptr<StmtInfo>& statement, const VarRef& /*var*/) {
 		return statement->getType() == StmtType::IfStmt;
 	}
-	static bool validate(SVRelationStore<IfControlRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& var_set) {
+	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const shared_ptr<StmtInfo>& statement,
+	                     const VarRefSet& /*var_set*/) {
 		return statement->getType() == StmtType::IfStmt;
 	}
 } IfControlRelation;
 
 typedef struct WhileControlRelation {
-	static bool validate(SVRelationStore<WhileControlRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& var) {
+	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const shared_ptr<StmtInfo>& statement, const VarRef& /*var*/) {
 		return statement->getType() == StmtType::WhileStmt;
 	}
-	static bool validate(SVRelationStore<WhileControlRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& var_set) {
+	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const shared_ptr<StmtInfo>& statement,
+	                     const VarRefSet& /*var_set*/) {
 		return statement->getType() == StmtType::WhileStmt;
 	}
 } WhileControlRelation;

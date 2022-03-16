@@ -1,34 +1,43 @@
-#include "MockUtilities.h"
+#ifndef SPA_TESTUTILITIES_H
+#define SPA_TESTUTILITIES_H
 
-#include "../../Common/ExpressionProcessor/MockLexer.h"
-#include "Common/ExpressionProcessor/OperatorAcceptor.h"
+#include <memory>
+#include <string>
+#include <vector>
 
-using namespace std;
+#include "../Common/ExpressionProcessor/MockLexer.h"
+#include "Common/ExpressionProcessor/Expression.h"
+#include "SP/Node/StatementListNode.h"
+#include "SP/SP.h"
 
-Common::ExpressionProcessor::Expression createArithmeticExpression(vector<string> str_list) {
+namespace SP::TestUtilities {
+inline Common::ExpressionProcessor::Expression createArithmeticExpression(vector<string> str_list) {
 	MockLexer lex = MockLexer(move(str_list));
 	Common::ExpressionProcessor::Expression expression =
 		Common::ExpressionProcessor::Expression::parse(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	return expression;
-}
+};
 
-Common::ExpressionProcessor::Expression createRelationalExpression(vector<string> str_list) {
+inline Common::ExpressionProcessor::Expression createRelationalExpression(vector<string> str_list) {
 	MockLexer lex = MockLexer(move(str_list));
 	Common::ExpressionProcessor::Expression expression =
 		Common::ExpressionProcessor::Expression::parse(lex, Common::ExpressionProcessor::ExpressionType::Relational);
 	return expression;
-}
+};
 
-Common::ExpressionProcessor::Expression createConditionalExpression(vector<string> str_list) {
+inline Common::ExpressionProcessor::Expression createConditionalExpression(vector<string> str_list) {
 	MockLexer lex = MockLexer(move(str_list));
 	Common::ExpressionProcessor::Expression expression =
 		Common::ExpressionProcessor::Expression::parse(lex, Common::ExpressionProcessor::ExpressionType::Logical);
 	return expression;
-}
+};
 
-unique_ptr<SP::Node::StatementListNode> createStatementList(string str, StmtRef statement_count) {
+inline unique_ptr<SP::Node::StatementListNode> createStatementList(string str, StmtRef statement_count) {
 	SP::Lexer lex;
 	lex.initialize(move(str));
 	unique_ptr<SP::Node::StatementListNode> node = SP::Node::StatementListNode::parseStatementList(lex, statement_count);
 	return node;
-}
+};
+}  // namespace SP::TestUtilities
+
+#endif  // SPA_TESTUTILITIES_H

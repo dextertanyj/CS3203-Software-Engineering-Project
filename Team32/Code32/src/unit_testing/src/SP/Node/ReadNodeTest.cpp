@@ -1,5 +1,9 @@
 #include "SP/Node/ReadNode.h"
 
+#include <tuple>
+#include <vector>
+
+#include "../MockUtilities.h"
 #include "SP/Node/CallNode.h"
 #include "catch_tools.h"
 
@@ -74,11 +78,12 @@ TEST_CASE("SP::Node::ReadNode::parseReadStatement") {
 }
 
 TEST_CASE("SP::Node::ReadNode::extract Test") {
-	PKB::Storage pkb;
+	MockStorageUpdate pkb;
 	StmtRef statement_number = 2;
 	ReadNode node = ReadNode(statement_number, make_unique<VariableNode>("A"));
 	StmtRef result = node.extract(pkb);
 	REQUIRE_EQUALS(result, statement_number);
-	REQUIRE(pkb.checkModifies(statement_number, "A"));
-	REQUIRE_FALSE(pkb.checkUses(statement_number, "A"));
+	REQUIRE_EQUALS(pkb.set_stmt_type_call_count, 1);
+	REQUIRE_EQUALS(pkb.set_modifies_call_count, 1);
+	REQUIRE_EQUALS(pkb.set_modifies_arguments, vector<tuple<StmtRef, VarRef>>({{statement_number, "A"}}));
 }

@@ -2,6 +2,7 @@
 
 #include "SP/Node/PrintNode.h"
 #include "catch_tools.h"
+#include "../MockUtilities.h"
 
 using namespace std;
 using namespace SP::Node;
@@ -74,7 +75,7 @@ TEST_CASE("SP::Node::CallNode::parseCallStatement") {
 }
 
 TEST_CASE("SP::Node::CallNode::extract Test") {
-	PKB::Storage pkb;
+	MockStorageUpdate pkb;
 
 	StmtRef statement_number = 1;
 	CallNode node = CallNode(1, "Procedure");
