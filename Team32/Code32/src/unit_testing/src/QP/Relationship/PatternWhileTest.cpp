@@ -38,7 +38,6 @@ TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternWhile>::execute"
 	}
 
 	SECTION("Trivial: Wildcard or Synonym") {
-		// TODO
 		QP::QueryResult result1 = PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeTrivialWildcardOrSynonym(store);
 		REQUIRE(result1.getResult());
 	}
@@ -52,7 +51,6 @@ TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternWhile>::execute"
 	}
 
 	SECTION("Non-Trivial: Wildcard") {
-		// TODO
 		QP::QueryResult result1 = PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeWildcard(store, syn_while);
 
 		vector<string> expected_result = {"1", "2"};
@@ -62,7 +60,6 @@ TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternWhile>::execute"
 	}
 
 	SECTION("Non-Trivial: Synonym") {
-		// TODO
 		QP::QueryResult result1 = PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeSynonym(store, syn_while, syn_var);
 
 		vector<string> expected_result_w = {"1", "1", "2"};
