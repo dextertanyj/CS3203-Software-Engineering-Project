@@ -7,22 +7,12 @@
 #include "QP/ReferenceArgument.h"
 
 namespace QP::Dispatcher::DispatchProcessors {
-Types::ExecutorSetBundle processSingleArgument(Types::ClauseType type,
-                                               unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> map,
-                                               const vector<Types::ReferenceArgument>& args);
-Types::ExecutorSetBundle processDoubleArgument(
-	Types::ClauseType type,
-	unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>> map,
-	const vector<Types::ReferenceArgument>& args);
-Types::ExecutorSetBundle processDoubleArgument(
-	unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle>> map,
-	const vector<Types::ReferenceArgument>& args);
-Types::ExecutorSetBundle processTripleArgument(
-	Types::ClauseType type,
-	unordered_map<Types::ArgumentDispatchKey,
-                  unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>>>
-		map,
-	const vector<Types::ReferenceArgument>& args);
+template <typename T>
+Types::ExecutorSetBundle processArgument(Types::ClauseType type, T map, const vector<Types::ReferenceArgument>& args);
+
+template <typename T>
+Types::ExecutorSetBundle processArgument(T map, const vector<Types::ReferenceArgument>& args);
+
 Types::ExecutorSetBundle processPatternIfArgument(Types::ClauseType type,
                                                   unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map,
                                                   const vector<Types::ReferenceArgument>& args);

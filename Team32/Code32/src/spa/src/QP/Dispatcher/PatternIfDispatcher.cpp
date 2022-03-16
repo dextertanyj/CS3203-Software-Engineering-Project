@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "QP/Dispatcher/DispatchProcessors.h"
+#include "QP/Dispatcher/DispatchProcessors.tpp"
 
 const QP::Types::ArgumentDispatcher QP::Dispatcher::PatternIfDispatcher::dispatcher = [](const vector<QP::Types::ReferenceArgument>& args) {
 	return QP::Dispatcher::DispatchProcessors::processPatternIfArgument(QP::Types::ClauseType::PatternIf,
