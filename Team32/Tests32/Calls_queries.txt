@@ -1,0 +1,350 @@
+1 - Calls(synonym, synonym) positive
+procedure p; procedure q;
+Select p such that Calls(p, q)
+main, Mar5, Earth
+5000
+2 - Calls(synonym, synonym) positive
+procedure p, q;
+Select q such that Calls(p, q)
+Mar5, Earth, V3nu5, Jupit3r
+5000
+3 - Calls(synonym, synonym) trivial
+assign a; procedure p, q;
+Select a such that Calls(p, q)
+13
+5000
+4 - Calls(synonym, _) positive
+procedure p;
+Select p such that Calls(p, _)
+main, Mar5, Earth
+5000
+5 - Calls(synonym, name) positive
+procedure main;
+Select main such that Calls(main, "Jupit3r")
+Mar5
+5000
+6 - Calls(synonym, name) positive
+procedure p;
+Select p such that Calls(p, "Earth")
+main
+5000
+7 - Calls(synonym, name) negative
+procedure p;
+Select p such that Calls(p, "main")
+
+5000
+8 - Calls(name, synonym) positive
+procedure main;
+Select main such that Calls("main", main)
+Mar5, Earth
+5000
+9 - Calls(name, synonym) positive
+procedure Mar5;
+Select Mar5 such that Calls("Mar5", Mar5)
+Jupit3r
+5000
+10 - Calls(name, synonym) negative
+procedure p;
+Select v such that Calls("V3nu5", p)
+
+5000
+11 - Calls(name, _) positive
+procedure p;
+Select p such that Calls("main", _)
+main, Mar5, Earth, V3nu5, Jupit3r
+5000
+12 - Calls(name, _) negative
+variable v;
+Select v such that Calls("V3nu5", _)
+
+5000
+13 - Calls(name, name) positive
+procedure p;
+Select p such that Calls("main", "Mar5")
+main, Mar5, Earth, V3nu5, Jupit3r
+5000
+14 - Calls(name, name) negative
+procedure p;
+Select p such that Calls("main", "Jupit3r")
+
+5000
+15 - Calls(name, name) negative
+procedure p;
+Select p such that Calls("V3nu5", "Mar5")
+
+5000
+16 - Calls(_ , _) positive
+procedure p;
+Select p such that Calls(_, _)
+main, Mar5, Earth, V3nu5, Jupit3r
+5000
+17 - Calls(_ , synonym) positive
+procedure p;
+Select p such that Calls(_, p)
+Mar5, Earth, V3nu5, Jupit3r
+5000
+18 - Calls(_ , name) positive
+procedure p;
+Select p such that Calls(_, "Mar5")
+main, Mar5, Earth, V3nu5, Jupit3r
+5000
+19 - Calls(_ , name) negative
+procedure p;
+Select p such that Calls(_, "main")
+
+5000
+20 - Calls invalid synonym
+if i;
+Select i such that Calls("main", i)
+
+5000
+21 - Calls invalid name
+procedure p;
+Select p such that Calls(p, "0")
+
+5000
+22 - Calls invalid procedure
+procedure p;
+Select p such that Calls("test", "Mar5")
+
+5000
+23 - Calls invalid procedure
+procedure p;
+Select p such that Calls("main", "test")
+
+5000
+24 - Calls*(synonym, synonym) positive
+procedure p; procedure q;
+Select p such that Calls*(p, q)
+main, Mar5, Earth
+5000
+25 - Calls*(synonym, synonym) positive
+procedure p, q;
+Select q such that Calls*(p, q)
+Mar5, Earth, V3nu5, Jupit3r
+5000
+26 - Calls*(synonym, synonym) trivial
+assign a; procedure p, q;
+Select a such that Calls*(p, q)
+13
+5000
+27 - Calls*(synonym, _) positive
+procedure p;
+Select p such that Calls*(p, _)
+main, Mar5, Earth
+5000
+28 - Calls*(synonym, name) positive
+procedure main;
+Select main such that Calls*(main, "Jupit3r")
+main, Mar5
+5000
+29 - Calls*(synonym, name) positive
+procedure p;
+Select p such that Calls*(p, "Earth")
+main
+5000
+30 - Calls*(synonym, name) negative
+procedure p;
+Select p such that Calls*(p, "main")
+
+5000
+31 - Calls*(name, synonym) positive
+procedure main;
+Select main such that Calls*("main", main)
+Mar5, Earth, V3nu5, Jupit3r
+5000
+32 - Calls*(name, synonym) positive
+procedure Mar5;
+Select Mar5 such that Calls*("Mar5", Mar5)
+Jupit3r
+5000
+33 - Calls*(name, synonym) negative
+procedure p;
+Select v such that Calls*("V3nu5", p)
+
+5000
+34 - Calls*(name, _) positive
+procedure p;
+Select p such that Calls*("main", _)
+main, Mar5, Earth, V3nu5, Jupit3r
+5000
+35 - Calls*(name, _) negative
+variable v;
+Select v such that Calls*("V3nu5", _)
+
+5000
+36 - Calls*(name, name) positive
+procedure p;
+Select p such that Calls*("main", "Mar5")
+main, Mar5, Earth, V3nu5, Jupit3r
+5000
+37 - Calls*(name, name) positive
+procedure p;
+Select p such that Calls*("main", "Jupit3r")
+main, Mar5, Earth, V3nu5, Jupit3r
+5000
+38 - Calls*(name, name) negative
+procedure p;
+Select p such that Calls*("V3nu5", "Mar5")
+
+5000
+39 - Calls*(_ , _) positive
+procedure p;
+Select p such that Calls*(_, _)
+main, Mar5, Earth, V3nu5, Jupit3r
+5000
+40 - Calls*(_ , synonym) positive
+procedure p;
+Select p such that Calls*(_, p)
+Mar5, Earth, V3nu5, Jupit3r
+5000
+41 - Calls*(_ , name) positive
+procedure p;
+Select p such that Calls*(_, "Mar5")
+main, Mar5, Earth, V3nu5, Jupit3r
+5000
+42 - Calls*(_ , name) negative
+procedure p;
+Select p such that Calls*(_, "main")
+
+5000
+43 - Calls* invalid synonym
+if i;
+Select i such that Calls*("main", i)
+
+5000
+44 - Calls* invalid name
+procedure p;
+Select p such that Calls*(p, "0")
+
+5000
+45 - Calls* invalid procedure
+procedure p;
+Select p such that Calls*("test", "Mar5")
+
+5000
+46 - Calls* invalid procedure
+procedure p;
+Select p such that Calls*("main", "test")
+
+5000
+47 - Calls(synonym, _) multiple such that positive
+procedure p; procedure q;
+Select p such that Calls(p, _) such that Calls (q,_)
+main, Mar5, Earth
+5000
+48 - Calls(synonym, name) multiple such that positive
+procedure main;
+Select main such that Calls(main, "Mar5") such that Calls(main, "Earth")
+main
+5000
+49 - Calls(synonym, name) multiple such that negative
+procedure main;
+Select main such that Calls(main, "Mar5") such that Calls(main, "Earth") such that Calls(main, "Jupit3r")
+
+5000
+50 - Calls(name, synonym) multiple such that negative
+procedure main;
+Select main such that Calls("main", main) such that Calls("Jupit3r", main)
+
+5000
+51 - Calls(name, _) multiple such that positive
+procedure p;
+Select p such that Calls("main", _) such that Calls("Earth", _)
+main, Mar5, Earth, V3nu5, Jupit3r
+5000
+52 - Calls(name, _) multiple such that negative
+variable v;
+Select v such that Calls("main", _) such that Calls("Earth", _) such that Calls("V3nu5", _)
+
+5000
+53 - Calls(name, name) multiple such that positive
+procedure p;
+Select p such that Calls("main", "Mar5") such that Calls("main", "Earth")
+main, Mar5, Earth, V3nu5, Jupit3r
+5000
+54 - Calls(name, name) multiple such that negative
+procedure p;
+Select p such that Calls("main", "Mar5") such that Calls(“main”, “Earth”) such that Calls("main", "Jupit3r")
+
+5000
+55 - Calls(_ , synonym) multiple such that positive
+procedure p, q;
+Select p such that Calls(_, p) such that Calls(_,q)
+Mar5, Earth, V3nu5, Jupit3r
+5000
+56 - Calls(_ , name) multiple such that positive
+procedure p;
+Select p such that Calls(_, "Mar5") such that Calls(_, "Earth")
+main, Mar5, Earth, V3nu5, Jupit3r
+5000
+57 - Calls(_ , name) multiple such that negative
+procedure p;
+Select p such that Calls(_, "Mar5") such that Calls(_, "Earth") such that Calls(_, "main")
+
+5000
+58 - Calls mix positive
+procedure p;
+Select p such that Calls(p, _) and Calls (_, p) such that Calls(_, _)
+Mar5, Earth
+5000
+59 - Calls mix positive
+procedure main, Earth;
+Select main such that Calls(main, "Mar5") and Calls*(main, "V3nu5") such that Calls*(main, Earth)
+main
+5000
+60 - Calls mix positive
+procedure p;
+Select p such that Calls*("main", p) and Calls("Earth", p) such that Calls*("Mar5", _)
+V3nu5
+5000
+61 - Calls mix positive
+procedure p;
+Select p such that Calls*("main", p) and Calls("Earth", _) and Calls*("main", "Jupit3r")
+Mar5, Earth, V3nu5, Jupit3r
+5000
+62 - Calls mix positive
+procedure p, q;
+Select p such that Calls(p, q) and Calls(p, _) and Calls*(_, p)
+Mar5, Earth
+5000
+63 - Calls mix positive
+procedure p;
+Select p such that Calls(_, "Earth") such that Calls*(_, _) and Calls*("Mar5", "Jupit3r")
+main, Mar5, Earth, V3nu5, Jupit3r
+5000
+64 - Calls mix positive
+procedure p, q;
+Select p such that Calls(_, "Earth") such that Calls(_, "Mar5")  and Calls*(p, "V3nu5")
+main, Earth
+5000
+65 - Calls mix negative
+procedure p;
+Select p such that Calls(p, "Mar5") and Calls*(p, "V3nus5") and Calls*(p, "main")
+
+5000
+66 - Calls mix negative
+procedure p;
+Select p such that Calls*("main", p) and Calls("Jupit3r", _) and Calls*("main", "Jupit3r")
+
+5000
+67 - Calls mix negative
+procedure p, q;
+Select p such that Calls(p, q) such that Calls(p, _) and Calls*("v3nu5", p)
+
+5000
+68 - Calls mix negative
+procedure p, q;
+Select p such that Calls(_, "Earth") such that Calls*(_, _) and Calls*(_, "main")
+
+5000
+69 - Calls mix negative
+procedure p, q;
+Select p such that Calls(p, "Earth") such that Calls("Mar5", "Earth") such that Calls(p, _)
+
+5000
+70 - Calls mix negative
+procedure p;
+Select p such that Calls("Earth", p) such that Calls(p, _) and Calls*("main", "V3nu5")
+
+5000
