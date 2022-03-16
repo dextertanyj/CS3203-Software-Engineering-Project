@@ -32,6 +32,10 @@ struct QP::Dispatcher::DispatchMap {
 		{"Parent*", Types::ClauseType::ParentT},
 		{"Uses", Types::ClauseType::UnknownUses},
 	};
+	unordered_map<Types::DesignEntity, Types::ClauseType> pattern_clause_map = {
+		{Types::DesignEntity::If, Types::ClauseType::PatternIf},
+		{Types::DesignEntity::While, Types::ClauseType::PatternWhile},
+	};
 };
 
 #endif  // SPA_SRC_QP_DISPATCHER_H
