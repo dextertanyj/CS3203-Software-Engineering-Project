@@ -71,40 +71,4 @@ QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processArgument
 	auto result = processArgumentBundleRecurse(map, args);
 	return {result.first, result.second(args)};
 }
-
-inline QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processPatternIfArgument(
-	Types::ClauseType type, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map,
-	const vector<Types::ReferenceArgument>& args) {
-	if (type != Types::ClauseType::PatternIf) {
-		throw QP::QueryException("Incorrect dispatch processor called.");
-	}
-
-	if (args.size() != 4) {
-		throw QP::QueryException("Incorrect number of arguments.");
-	}
-
-	if (args.at(0).getType() != Types::ReferenceType::Synonym && args.at(0).getSynonym().type != Types::DesignEntity::If) {
-		throw QP::QueryException("Invalid first argument type.");
-	}
-
-	if (args.at(2).getType() != Types::ReferenceType::Wildcard) {
-		throw QP::QueryException("Incorrect third argument type.");
-	}
-
-	if (args.at(3).getType() != Types::ReferenceType::Wildcard) {
-		throw QP::QueryException("Incorrect fourth argument type.");
-	}
-
-	Types::ArgumentDispatchKey var_key = args.at(1).getType();
-	if (args.at(1).getType() == Types::ReferenceType::Synonym) {
-		var_key = args.at(1).getSynonym().type;
-	}
-
-	auto map_iter = map.find(var_key);
-	if (map_iter == map.end()) {
-		throw QP::QueryException("Incorrect second argument type.");
-	}
-	return {type, map_iter->second(args)};
-}
-
 #endif  // SPA_SRC_QP_DISPATCHER_DISPATCHPROCESSORS_TPP

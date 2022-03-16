@@ -15,16 +15,17 @@ namespace QP::Dispatcher::PatternIfDispatcher {
 extern const QP::Types::ArgumentDispatcher dispatcher;
 
 namespace {
-const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> argument_dispatch_map = {
-	{Types::ReferenceType::Name,
-     [](const vector<Types::ReferenceArgument>& args) {
+const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> name_map = {
+	{Types::ReferenceType::Wildcard, [](const vector<Types::ReferenceArgument>& args) {
 		 return pair{[variable = args.at(1)](const QP::StorageAdapter& storage) {
 						 return Executor::PatternContainerStatementExecutor<ClauseType::PatternIf>::executeTrivialName(storage, variable);
 					 },
 	                 [ifStmt = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
 						 return Executor::PatternContainerStatementExecutor<ClauseType::PatternIf>::executeName(storage, ifStmt, variable);
 					 }};
-	 }},
+	 }}};
+
+const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> wildcard_map = {
 	{Types::ReferenceType::Wildcard,
      [](const vector<Types::ReferenceArgument>& args) {
 		 return pair{
@@ -35,7 +36,10 @@ const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactor
 				 return Executor::PatternContainerStatementExecutor<ClauseType::PatternIf>::executeWildcard(storage, ifStmt);
 			 }};
 	 }},
-	{Types::DesignEntity::Variable,
+};
+
+const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> variable_synonym_map = {
+	{Types::ReferenceType::Wildcard,
      [](const vector<Types::ReferenceArgument>& args) {
 		 return pair{
 			 [ifStmt = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
@@ -46,6 +50,21 @@ const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactor
 			 }};
 	 }},
 };
+
+const unordered_map<
+	QP::Types::ArgumentDispatchKey,
+	unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>>
+	synonym_map = {
+		{Types::ReferenceType::Name, {{Types::ReferenceType::Wildcard, name_map}}},
+		{Types::ReferenceType::Wildcard, {{Types::ReferenceType::Wildcard, wildcard_map}}},
+		{Types::DesignEntity::Variable, {{Types::ReferenceType::Wildcard, variable_synonym_map}}},
+};
+
+unordered_map<QP::Types::ArgumentDispatchKey,
+              unordered_map<QP::Types::ArgumentDispatchKey,
+                            unordered_map<QP::Types::ArgumentDispatchKey,
+                                          unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>>>
+	argument_dispatch_map = {{Types::DesignEntity::If, synonym_map}};
 }  // namespace
 };  // namespace QP::Dispatcher::PatternIfDispatcher
 
