@@ -27,6 +27,7 @@ vector<StmtRef> SP::Node::StatementListNode::extract(PKB::StorageUpdateInterface
 	StmtRef previous = children.at(0);
 	for (auto iter = ++children.begin(); iter < children.end(); ++iter) {
 		pkb.setFollows(previous, *iter);
+		pkb.setNext(previous, *iter);
 		previous = *iter;
 	}
 	return children;

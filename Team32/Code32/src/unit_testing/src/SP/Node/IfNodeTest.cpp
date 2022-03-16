@@ -172,11 +172,24 @@ TEST_CASE("SP::Node::IfNode::extract Test") {
 		IfNode node = IfNode(statement_number, std::move(condition), std::move(then_body), std::move(else_body));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
+
+		// Parent relationship
 		REQUIRE_EQUALS(pkb.set_parent_call_count, 2);
 		REQUIRE_EQUALS(pkb.set_parent_arguments,
 		               vector<tuple<StmtRef, StmtRef>>{{statement_number, then_statement}, {statement_number, else_statement}});
 		REQUIRE_EQUALS(pkb.set_parent_arguments.size(), 2);
-		REQUIRE_EQUALS(pkb.set_follows_call_count, 0);
+
+		// if control variables
+		REQUIRE_EQUALS(pkb.set_if_control_set_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_if_control_set_arguments, vector<tuple<StmtRef, VarRefSet>>({{statement_number, {"x"}}}));
+
+		// Next relationship
+		REQUIRE_EQUALS(pkb.set_if_next_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_if_next_arguments,
+		               vector<tuple<StmtRef, StmtRef, StmtRef>>({{statement_number, then_statement, else_statement}}));
+		REQUIRE_EQUALS(pkb.set_if_exit_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_if_exit_arguments,
+		               vector<tuple<StmtRef, StmtRef, StmtRef>>({{then_statement, else_statement, statement_number}}));
 		REQUIRE(pkb.set_follows_arguments.empty());
 	}
 
@@ -189,7 +202,7 @@ TEST_CASE("SP::Node::IfNode::extract Test") {
 		StmtRef second_else_statement = 13;
 		StmtRef third_else_statement = 16;
 		unique_ptr<ExpressionNode> condition =
-			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "<", "0"})));
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "<", "y"})));
 		unique_ptr<StatementListNode> then_body = make_unique<StatementListNode>();
 		then_body->addStatementNode(make_unique<CallNode>(first_then_statement, "Procedure"));
 		then_body->addStatementNode(make_unique<ReadNode>(second_then_statement, make_unique<VariableNode>("A")));
@@ -209,11 +222,17 @@ TEST_CASE("SP::Node::IfNode::extract Test") {
 		                                                                         {statement_number, second_else_statement},
 		                                                                         {statement_number, third_else_statement}});
 		REQUIRE_EQUALS(pkb.set_parent_arguments.size(), 6);
-		REQUIRE_EQUALS(pkb.set_follows_call_count, 4);
-		REQUIRE_EQUALS(pkb.set_follows_arguments, vector<tuple<StmtRef, StmtRef>>{{first_then_statement, second_then_statement},
-		                                                                          {second_then_statement, third_then_statement},
-		                                                                          {first_else_statement, second_else_statement},
-		                                                                          {second_else_statement, third_else_statement}});
-		REQUIRE_EQUALS(pkb.set_follows_arguments.size(), 4);
+
+		// if control variables
+		REQUIRE_EQUALS(pkb.set_if_control_set_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_if_control_set_arguments, vector<tuple<StmtRef, VarRefSet>>({{statement_number, {"x", "y"}}}));
+
+		// Next relationship
+		REQUIRE_EQUALS(pkb.set_if_next_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_if_next_arguments,
+		               vector<tuple<StmtRef, StmtRef, StmtRef>>({{statement_number, first_then_statement, first_else_statement}}));
+		REQUIRE_EQUALS(pkb.set_if_exit_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_if_exit_arguments,
+		               vector<tuple<StmtRef, StmtRef, StmtRef>>({{third_then_statement, third_else_statement, statement_number}}));
 	}
 }
