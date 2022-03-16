@@ -33,6 +33,7 @@ public:
 	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::NextT>(StmtRef lhs, StmtRef rhs) const {
 		return pkb.checkNextStar(lhs, rhs);
 	};
+
 	template <Types::ClauseType T>
 	[[nodiscard]] inline StmtInfoPtrSet getForwardStatements(StmtRef index) const = delete;
 	template <>
@@ -67,6 +68,7 @@ public:
 	[[nodiscard]] inline StmtInfoPtrSet getForwardStatements<Types::ClauseType::NextT>(StmtRef index) const {
 		return pkb.getPreviousStar(index);
 	};
+
 	template <Types::ClauseType T>
 	[[nodiscard]] inline StmtInfoPtrSet getReverseStatements(StmtRef index) const = delete;
 	template <>
@@ -98,7 +100,6 @@ public:
 		return pkb.getNextStar(index);
 	};
 
-
 	// Calls
 	template <Types::ClauseType T>
 	[[nodiscard]] inline bool checkProcedureRelation(const ProcRef& lhs, const ProcRef& rhs) const = delete;
@@ -106,6 +107,7 @@ public:
 	[[nodiscard]] inline bool checkProcedureRelation<Types::ClauseType::Calls>(const ProcRef& lhs, const ProcRef& rhs) const {
 		return pkb.checkCall(lhs, rhs);
 	}
+
 	template <Types::ClauseType T>
 	[[nodiscard]] inline ProcRefSet getForwardProcedures(const ProcRef& procedure) const = delete;
 	template <>
@@ -116,6 +118,7 @@ public:
 	[[nodiscard]] inline ProcRefSet getForwardProcedures<Types::ClauseType::CallsT>(const ProcRef& procedure) const {
 		return pkb.getCallerStar(procedure);
 	}
+
 	template <Types::ClauseType T>
 	[[nodiscard]] inline ProcRefSet getReverseProcedures(const ProcRef& procedure) const = delete;
 	template <>
