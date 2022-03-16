@@ -29,8 +29,8 @@ protected:
 private:
 	size_t graph_index = 0;  // Default to 0 for convenience when populating graph index later.
 	NodeType node_type;
-	set<shared_ptr<NodeInterface>> previous_nodes;
-	set<shared_ptr<NodeInterface>> next_nodes;
+	vector<weak_ptr<NodeInterface>> previous_nodes;
+	vector<weak_ptr<NodeInterface>> next_nodes;
 };
 
 #endif  // SPA_NODEINTERFACE_H
