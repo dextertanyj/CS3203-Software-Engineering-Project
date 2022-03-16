@@ -26,6 +26,8 @@ TEST_CASE("SP::Processor::process Basic Test") {
 		REQUIRE_EQUALS(result.size(), 1);
 		REQUIRE_FALSE(pkb.checkModifies(1, "x"));
 		REQUIRE(pkb.checkUses(1, "x"));
+		REQUIRE_FALSE(pkb.checkModifies("main", "x"));
+		REQUIRE(pkb.checkUses("main", "x"));
 		REQUIRE_EQUALS(pkb.getParent(1), nullptr);
 		REQUIRE_EQUALS(pkb.getPreceding(1), nullptr);
 	}
@@ -37,6 +39,8 @@ TEST_CASE("SP::Processor::process Basic Test") {
 		REQUIRE_EQUALS(result.size(), 1);
 		REQUIRE(pkb.checkModifies(1, "x"));
 		REQUIRE_FALSE(pkb.checkUses(1, "x"));
+		REQUIRE(pkb.checkModifies("main", "x"));
+		REQUIRE_FALSE(pkb.checkUses("main", "x"));
 		REQUIRE_EQUALS(pkb.getParent(1), nullptr);
 		REQUIRE_EQUALS(pkb.getPreceding(1), nullptr);
 	}
@@ -50,6 +54,10 @@ TEST_CASE("SP::Processor::process Basic Test") {
 		REQUIRE_FALSE(pkb.checkModifies(1, "y"));
 		REQUIRE_FALSE(pkb.checkUses(1, "x"));
 		REQUIRE(pkb.checkUses(1, "y"));
+		REQUIRE(pkb.checkModifies("main", "x"));
+		REQUIRE_FALSE(pkb.checkModifies("main", "y"));
+		REQUIRE_FALSE(pkb.checkUses("main", "x"));
+		REQUIRE(pkb.checkUses("main", "y"));
 		REQUIRE_EQUALS(pkb.getConstants(), unordered_set<ConstVal>({1}));
 		REQUIRE_EQUALS(pkb.getVariables(), unordered_set<VarRef>({"x", "y"}));
 		REQUIRE_EQUALS(pkb.getParent(1), nullptr);
@@ -57,12 +65,12 @@ TEST_CASE("SP::Processor::process Basic Test") {
 	}
 
 	SECTION("Basic If Test") {
-		string source = "procedure main { if (x < 3) then { read x; } else { read y; x = y + 1; print x; } }";
+		string source = "procedure main { if (x < 3) then { read x; } else { read y; x = y + 1; print x; } read x; }";
 		source_processor.process(source);
 		unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_map = pkb.getStmtInfoMap();
 
 		SECTION("General") {
-			REQUIRE_EQUALS(pkb.getStatements().size(), 5);
+			REQUIRE_EQUALS(pkb.getStatements().size(), 6);
 			REQUIRE_EQUALS(pkb.getConstants(), unordered_set<ConstVal>({1, 3}));
 			REQUIRE_EQUALS(pkb.getVariables(), unordered_set<VarRef>({"x", "y"}));
 		}
@@ -73,6 +81,7 @@ TEST_CASE("SP::Processor::process Basic Test") {
 			REQUIRE_EQUALS(pkb.getParent(3)->getIdentifier(), 1);
 			REQUIRE_EQUALS(pkb.getParent(4)->getIdentifier(), 1);
 			REQUIRE_EQUALS(pkb.getParent(5)->getIdentifier(), 1);
+			REQUIRE_EQUALS(pkb.getParent(6), nullptr);
 			REQUIRE(pkb.checkParents(1, 2));
 			REQUIRE_FALSE(pkb.checkParents(2, 1));
 			std::unordered_set<shared_ptr<StmtInfo>> expected_children = {stmt_map.find(2)->second, stmt_map.find(3)->second,
@@ -90,42 +99,40 @@ TEST_CASE("SP::Processor::process Basic Test") {
 			REQUIRE_FALSE(pkb.checkFollows(4, 3));
 		}
 
-		/* TODO: Test Uses and modifies again after SP has incorporated Proc and Call functions.
 		SECTION("Use") {
-		    REQUIRE(pkb.checkUses(1, "x"));
-		    REQUIRE(pkb.checkUses(1, "y"));
-		    REQUIRE_FALSE(pkb.checkUses(2, "x"));
-		    REQUIRE_FALSE(pkb.checkUses(2, "y"));
-		    REQUIRE_FALSE(pkb.checkUses(3, "x"));
-		    REQUIRE_FALSE(pkb.checkUses(3, "y"));
-		    REQUIRE_FALSE(pkb.checkUses(4, "x"));
-		    REQUIRE(pkb.checkUses(4, "y"));
-		    REQUIRE(pkb.checkUses(5, "x"));
-		    REQUIRE_FALSE(pkb.checkUses(5, "y"));
-		    std::unordered_set<shared_ptr<StmtInfo>> expected_use_x = {stmt_map.find(1)->second, stmt_map.find(5)->second};
-		    REQUIRE_EQUALS(pkb.getStmtUsesByVar("x"), expected_use_x);
-		    std::unordered_set<VarRef> expected_use_stmt_4 = {"y"};
-		    REQUIRE_EQUALS(pkb.getUsesByStmt(4), expected_use_stmt_4);
+			REQUIRE(pkb.checkUses(1, "x"));
+			REQUIRE(pkb.checkUses(1, "y"));
+			REQUIRE_FALSE(pkb.checkUses(2, "x"));
+			REQUIRE_FALSE(pkb.checkUses(2, "y"));
+			REQUIRE_FALSE(pkb.checkUses(3, "x"));
+			REQUIRE_FALSE(pkb.checkUses(3, "y"));
+			REQUIRE_FALSE(pkb.checkUses(4, "x"));
+			REQUIRE(pkb.checkUses(4, "y"));
+			REQUIRE(pkb.checkUses(5, "x"));
+			REQUIRE_FALSE(pkb.checkUses(5, "y"));
+			std::unordered_set<shared_ptr<StmtInfo>> expected_use_x = {stmt_map.find(1)->second, stmt_map.find(5)->second};
+			REQUIRE_EQUALS(pkb.getStmtUsesByVar("x"), expected_use_x);
+			std::unordered_set<VarRef> expected_use_stmt_4 = {"y"};
+			REQUIRE_EQUALS(pkb.getUsesByStmt(4), expected_use_stmt_4);
 		}
 
 		SECTION("Modify") {
-		    REQUIRE(pkb.checkModifies(1, "x"));
-		    REQUIRE(pkb.checkModifies(1, "y"));
-		    REQUIRE(pkb.checkModifies(2, "x"));
-		    REQUIRE_FALSE(pkb.checkModifies(2, "y"));
-		    REQUIRE_FALSE(pkb.checkModifies(3, "x"));
-		    REQUIRE(pkb.checkModifies(3, "y"));
-		    REQUIRE(pkb.checkModifies(4, "x"));
-		    REQUIRE_FALSE(pkb.checkModifies(4, "y"));
-		    REQUIRE_FALSE(pkb.checkModifies(5, "x"));
-		    REQUIRE_FALSE(pkb.checkModifies(5, "y"));
-		    std::unordered_set<shared_ptr<StmtInfo>> expected_modify_x = {stmt_map.find(1)->second, stmt_map.find(2)->second,
-		                                                                  stmt_map.find(4)->second};
-		    REQUIRE_EQUALS(pkb.getStmtModifiesByVar("x"), expected_modify_x);
-		    std::unordered_set<VarRef> expected_modify_stmt_3 = {"y"};
-		    REQUIRE_EQUALS(pkb.getModifiesByStmt(3), expected_modify_stmt_3);
+			REQUIRE(pkb.checkModifies(1, "x"));
+			REQUIRE(pkb.checkModifies(1, "y"));
+			REQUIRE(pkb.checkModifies(2, "x"));
+			REQUIRE_FALSE(pkb.checkModifies(2, "y"));
+			REQUIRE_FALSE(pkb.checkModifies(3, "x"));
+			REQUIRE(pkb.checkModifies(3, "y"));
+			REQUIRE(pkb.checkModifies(4, "x"));
+			REQUIRE_FALSE(pkb.checkModifies(4, "y"));
+			REQUIRE_FALSE(pkb.checkModifies(5, "x"));
+			REQUIRE_FALSE(pkb.checkModifies(5, "y"));
+			std::unordered_set<shared_ptr<StmtInfo>> expected_modify_x = {stmt_map.find(1)->second, stmt_map.find(2)->second,
+			                                                              stmt_map.find(4)->second, stmt_map.find(6)->second};
+			REQUIRE_EQUALS(pkb.getStmtModifiesByVar("x"), expected_modify_x);
+			std::unordered_set<VarRef> expected_modify_stmt_3 = {"y"};
+			REQUIRE_EQUALS(pkb.getModifiesByStmt(3), expected_modify_stmt_3);
 		}
-		 */
 
 		SECTION("Pattern") {
 			shared_ptr<Common::ExpressionProcessor::ExpressionNode> root =
@@ -148,6 +155,15 @@ TEST_CASE("SP::Processor::process Basic Test") {
 			Common::ExpressionProcessor::Expression expression_2 =
 				Common::ExpressionProcessor::Expression(root_2, variables_2, constants_2);
 			REQUIRE_FALSE(pkb.patternExists("x", expression_2, true));
+		}
+
+		SECTION("Next") {
+			REQUIRE(pkb.checkNext(1, 2));
+			REQUIRE(pkb.checkNext(1, 3));
+			REQUIRE(pkb.checkNext(3, 4));
+			REQUIRE(pkb.checkNext(4, 5));
+			REQUIRE(pkb.checkNext(2, 6));
+			REQUIRE(pkb.checkNext(5, 6));
 		}
 	}
 
@@ -184,46 +200,85 @@ TEST_CASE("SP::Processor::process Basic Test") {
 			REQUIRE_FALSE(pkb.checkFollows(3, 2));
 		}
 
-		/* TODO: Test Uses and modifies again after SP has incorporated Proc and Call functions.
 		SECTION("Use") {
-		    REQUIRE(pkb.checkUses(1, "x"));
-		    REQUIRE_FALSE(pkb.checkUses(1, "y"));
-		    REQUIRE(pkb.checkUses(2, "x"));
-		    REQUIRE_FALSE(pkb.checkUses(2, "y"));
-		    REQUIRE_FALSE(pkb.checkUses(3, "x"));
-		    REQUIRE_FALSE(pkb.checkUses(3, "y"));
-		    std::unordered_set<shared_ptr<StmtInfo>> expected_use_x = {stmt_map.find(1)->second, stmt_map.find(2)->second};
-		    REQUIRE_EQUALS(pkb.getStmtUsesByVar("x"), expected_use_x);
-		    std::unordered_set<VarRef> expected_use_stmt_2 = {"x"};
-		    REQUIRE_EQUALS(pkb.getUsesByStmt(2), expected_use_stmt_2);
+			REQUIRE(pkb.checkUses(1, "x"));
+			REQUIRE_FALSE(pkb.checkUses(1, "y"));
+			REQUIRE(pkb.checkUses(2, "x"));
+			REQUIRE_FALSE(pkb.checkUses(2, "y"));
+			REQUIRE_FALSE(pkb.checkUses(3, "x"));
+			REQUIRE_FALSE(pkb.checkUses(3, "y"));
+			std::unordered_set<shared_ptr<StmtInfo>> expected_use_x = {stmt_map.find(1)->second, stmt_map.find(2)->second};
+			REQUIRE_EQUALS(pkb.getStmtUsesByVar("x"), expected_use_x);
+			std::unordered_set<VarRef> expected_use_stmt_2 = {"x"};
+			REQUIRE_EQUALS(pkb.getUsesByStmt(2), expected_use_stmt_2);
 		}
 
 		SECTION("Modify") {
-		    REQUIRE_FALSE(pkb.checkModifies(1, "x"));
-		    REQUIRE(pkb.checkModifies(1, "y"));
-		    REQUIRE_FALSE(pkb.checkModifies(2, "x"));
-		    REQUIRE_FALSE(pkb.checkModifies(2, "y"));
-		    REQUIRE_FALSE(pkb.checkModifies(3, "x"));
-		    REQUIRE(pkb.checkModifies(3, "y"));
-		    std::unordered_set<shared_ptr<StmtInfo>> expected_modify_x = {stmt_map.find(1)->second, stmt_map.find(3)->second};
-		    REQUIRE_EQUALS(pkb.getStmtModifiesByVar("y"), expected_modify_x);
-		    std::unordered_set<VarRef> expected_modify_stmt_3 = {"y"};
-		    REQUIRE_EQUALS(pkb.getModifiesByStmt(3), expected_modify_stmt_3);
-		    REQUIRE_EQUALS(pkb.getStmtModifiesByVar("Y"), std::unordered_set<shared_ptr<StmtInfo>>());
+			REQUIRE_FALSE(pkb.checkModifies(1, "x"));
+			REQUIRE(pkb.checkModifies(1, "y"));
+			REQUIRE_FALSE(pkb.checkModifies(2, "x"));
+			REQUIRE_FALSE(pkb.checkModifies(2, "y"));
+			REQUIRE_FALSE(pkb.checkModifies(3, "x"));
+			REQUIRE(pkb.checkModifies(3, "y"));
+			std::unordered_set<shared_ptr<StmtInfo>> expected_modify_x = {stmt_map.find(1)->second, stmt_map.find(3)->second};
+			REQUIRE_EQUALS(pkb.getStmtModifiesByVar("y"), expected_modify_x);
+			std::unordered_set<VarRef> expected_modify_stmt_3 = {"y"};
+			REQUIRE_EQUALS(pkb.getModifiesByStmt(3), expected_modify_stmt_3);
+			REQUIRE_EQUALS(pkb.getStmtModifiesByVar("Y"), std::unordered_set<shared_ptr<StmtInfo>>());
 		}
-		*/
+
+		SECTION("Next") {
+			REQUIRE(pkb.checkNext(1, 2));
+			REQUIRE(pkb.checkNext(2, 3));
+			REQUIRE(pkb.checkNext(3, 1));
+		}
+	}
+
+	SECTION("Basic Call Test") {
+		string source =
+			"procedure main { call middle; print a; read b; } procedure middle { call final; } procedure final { read x; print y; }";
+		source_processor.process(source);
+		unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_map = pkb.getStmtInfoMap();
+
+		SECTION("General") {
+			REQUIRE_EQUALS(pkb.getStatements().size(), 6);
+			REQUIRE_EQUALS(pkb.getVariables(), unordered_set<VarRef>({"a", "b", "x", "y"}));
+		}
+
+		SECTION("Call") {
+			REQUIRE(pkb.checkCall("main", "middle"));
+			REQUIRE(pkb.checkCall("middle", "final"));
+			REQUIRE_EQUALS(pkb.getCalleeStar("main"), unordered_set<ProcRef>({"middle", "final"}));
+			REQUIRE_EQUALS(pkb.getCallerStar("final"), unordered_set<ProcRef>({"main", "middle"}));
+		}
+
+		SECTION("Modifies Procedure") {
+			REQUIRE_EQUALS(pkb.getModifiesByProc("main"), unordered_set<VarRef>({"b", "x"}));
+			REQUIRE_EQUALS(pkb.getModifiesByProc("middle"), unordered_set<VarRef>({"x"}));
+			REQUIRE_EQUALS(pkb.getModifiesByProc("final"), unordered_set<VarRef>({"x"}));
+			REQUIRE_EQUALS(pkb.getProcModifiesByVar("x"), unordered_set<ProcRef>({"main", "middle", "final"}));
+			REQUIRE_EQUALS(pkb.getProcModifiesByVar("b"), unordered_set<ProcRef>({"main"}));
+		}
+
+		SECTION("Uses Procedure") {
+			REQUIRE_EQUALS(pkb.getUsesByProc("main"), unordered_set<VarRef>({"a", "y"}));
+			REQUIRE_EQUALS(pkb.getUsesByProc("middle"), unordered_set<VarRef>({"y"}));
+			REQUIRE_EQUALS(pkb.getUsesByProc("final"), unordered_set<VarRef>({"y"}));
+			REQUIRE_EQUALS(pkb.getProcUsesByVar("y"), unordered_set<ProcRef>({"main", "middle", "final"}));
+			REQUIRE_EQUALS(pkb.getProcUsesByVar("a"), unordered_set<ProcRef>({"main"}));
+		}
 	}
 
 	SECTION("Complex Test") {
 		string source =
 			"procedure main { if ( ((!(x < 5)) && (y > 10)) || (z == 1)) "
 			"then { read x; print y; while ( z < y ) { z = 5 * y + 2; }} else { read x; if (x == a) "
-			"then { print a; read z;} else { x = 3 * a + y + 2; } print x;}}";
+			"then { print a; read z;} else { x = 3 * a + y + 2; } print x;} read x; }";
 		source_processor.process(source);
 		unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_map = pkb.getStmtInfoMap();
 
 		SECTION("General") {
-			REQUIRE_EQUALS(pkb.getStatements().size(), 11);
+			REQUIRE_EQUALS(pkb.getStatements().size(), 12);
 			REQUIRE_EQUALS(pkb.getConstants(), unordered_set<ConstVal>({1, 2, 3, 5, 10}));
 			REQUIRE_EQUALS(pkb.getVariables(), unordered_set<VarRef>({"a", "x", "y", "z"}));
 		}
@@ -251,7 +306,7 @@ TEST_CASE("SP::Processor::process Basic Test") {
 		}
 
 		SECTION("Follow") {
-			REQUIRE_EQUALS(pkb.getFollowerStar(1), std::unordered_set<shared_ptr<StmtInfo>>());
+			REQUIRE_EQUALS(pkb.getFollowerStar(1), std::unordered_set<shared_ptr<StmtInfo>>({stmt_map.find(12)->second}));
 			std::unordered_set<shared_ptr<StmtInfo>> expected_follow_2 = {
 				stmt_map.find(3)->second,
 				stmt_map.find(4)->second,
@@ -272,51 +327,49 @@ TEST_CASE("SP::Processor::process Basic Test") {
 			REQUIRE_EQUALS(pkb.getPrecedingStar(11), expected_precede_11_star);
 		}
 
-		/* TODO: Test Uses and modifies again after SP has incorporated Proc and Call functions.
 		SECTION("Use") {
-		    std::unordered_set<shared_ptr<StmtInfo>> expected_use_x = {
-		        stmt_map.find(1)->second,
-		        stmt_map.find(7)->second,
-		        stmt_map.find(11)->second,
-		    };
+			std::unordered_set<shared_ptr<StmtInfo>> expected_use_x = {
+				stmt_map.find(1)->second,
+				stmt_map.find(7)->second,
+				stmt_map.find(11)->second,
+			};
 
-		    REQUIRE_EQUALS(pkb.getStmtUsesByVar("x"), expected_use_x);
-		    std::unordered_set<shared_ptr<StmtInfo>> expected_use_y = {
-		        stmt_map.find(1)->second, stmt_map.find(3)->second, stmt_map.find(4)->second,
-		        stmt_map.find(5)->second, stmt_map.find(7)->second, stmt_map.find(10)->second,
-		    };
-		    REQUIRE_EQUALS(pkb.getStmtUsesByVar("y"), expected_use_y);
-		    std::unordered_set<shared_ptr<StmtInfo>> expected_use_a = {
-		        stmt_map.find(1)->second,
-		        stmt_map.find(7)->second,
-		        stmt_map.find(8)->second,
-		        stmt_map.find(10)->second,
-		    };
-		    REQUIRE_EQUALS(pkb.getStmtUsesByVar("a"), expected_use_a);
-		    REQUIRE(pkb.checkUses(1, "z"));
-		    REQUIRE_FALSE(pkb.checkUses(2, "z"));
-		    REQUIRE_FALSE(pkb.checkUses(5, "z"));
-		    REQUIRE_FALSE(pkb.checkUses(9, "z"));
-		    std::unordered_set<VarRef> expected_use_1 = {"x", "y", "z", "a"};
-		    REQUIRE_EQUALS(pkb.getUsesByStmt(1), expected_use_1);
-		    std::unordered_set<VarRef> expected_use_5 = {"y"};
-		    REQUIRE_EQUALS(pkb.getUsesByStmt(5), expected_use_5);
-		    REQUIRE_EQUALS(pkb.getUsesByStmt(2), std::unordered_set<VarRef>());
+			REQUIRE_EQUALS(pkb.getStmtUsesByVar("x"), expected_use_x);
+			std::unordered_set<shared_ptr<StmtInfo>> expected_use_y = {
+				stmt_map.find(1)->second, stmt_map.find(3)->second, stmt_map.find(4)->second,
+				stmt_map.find(5)->second, stmt_map.find(7)->second, stmt_map.find(10)->second,
+			};
+			REQUIRE_EQUALS(pkb.getStmtUsesByVar("y"), expected_use_y);
+			std::unordered_set<shared_ptr<StmtInfo>> expected_use_a = {
+				stmt_map.find(1)->second,
+				stmt_map.find(7)->second,
+				stmt_map.find(8)->second,
+				stmt_map.find(10)->second,
+			};
+			REQUIRE_EQUALS(pkb.getStmtUsesByVar("a"), expected_use_a);
+			REQUIRE(pkb.checkUses(1, "z"));
+			REQUIRE_FALSE(pkb.checkUses(2, "z"));
+			REQUIRE_FALSE(pkb.checkUses(5, "z"));
+			REQUIRE_FALSE(pkb.checkUses(9, "z"));
+			std::unordered_set<VarRef> expected_use_1 = {"x", "y", "z", "a"};
+			REQUIRE_EQUALS(pkb.getUsesByStmt(1), expected_use_1);
+			std::unordered_set<VarRef> expected_use_5 = {"y"};
+			REQUIRE_EQUALS(pkb.getUsesByStmt(5), expected_use_5);
+			REQUIRE_EQUALS(pkb.getUsesByStmt(2), std::unordered_set<VarRef>());
 		}
 
 		SECTION("Modifies") {
-		    std::unordered_set<shared_ptr<StmtInfo>> expected_modify_x = {stmt_map.find(1)->second, stmt_map.find(2)->second,
-		                                                                  stmt_map.find(6)->second, stmt_map.find(7)->second,
-		                                                                  stmt_map.find(10)->second};
-		    REQUIRE_EQUALS(pkb.getStmtModifiesByVar("x"), expected_modify_x);
-		    REQUIRE_FALSE(pkb.checkModifies(3, "y"));
-		    REQUIRE(pkb.checkModifies(4, "z"));
-		    REQUIRE(pkb.checkModifies(5, "z"));
-		    REQUIRE_FALSE(pkb.checkModifies(10, "a"));
-		    std::unordered_set<VarRef> expected_modify_1 = {"x", "z"};
-		    REQUIRE_EQUALS(pkb.getModifiesByStmt(1), expected_modify_1);
+			std::unordered_set<shared_ptr<StmtInfo>> expected_modify_x = {stmt_map.find(1)->second,  stmt_map.find(2)->second,
+			                                                              stmt_map.find(6)->second,  stmt_map.find(7)->second,
+			                                                              stmt_map.find(10)->second, stmt_map.find(12)->second};
+			REQUIRE_EQUALS(pkb.getStmtModifiesByVar("x"), expected_modify_x);
+			REQUIRE_FALSE(pkb.checkModifies(3, "y"));
+			REQUIRE(pkb.checkModifies(4, "z"));
+			REQUIRE(pkb.checkModifies(5, "z"));
+			REQUIRE_FALSE(pkb.checkModifies(10, "a"));
+			std::unordered_set<VarRef> expected_modify_1 = {"x", "z"};
+			REQUIRE_EQUALS(pkb.getModifiesByStmt(1), expected_modify_1);
 		}
-		*/
 
 		SECTION("Pattern") {
 			shared_ptr<Common::ExpressionProcessor::ArithmeticNode> first =
@@ -359,6 +412,23 @@ TEST_CASE("SP::Processor::process Basic Test") {
 			REQUIRE_EQUALS(pkb.getStmtsWithPattern("z", sub_expression_2, true), std::unordered_set<shared_ptr<StmtInfo>>());
 			std::unordered_set<shared_ptr<StmtInfo>> expected_assign_x = {stmt_map.find(10)->second};
 			REQUIRE_EQUALS(pkb.getStmtsWithPatternLHS("x"), expected_assign_x);
+		}
+
+		SECTION("Next") {
+			REQUIRE(pkb.checkNext(1, 2));
+			REQUIRE(pkb.checkNext(2, 3));
+			REQUIRE(pkb.checkNext(3, 4));
+			REQUIRE(pkb.checkNext(4, 5));
+			REQUIRE(pkb.checkNext(5, 4));
+			REQUIRE(pkb.checkNext(4, 12));
+			REQUIRE(pkb.checkNext(1, 6));
+			REQUIRE(pkb.checkNext(6, 7));
+			REQUIRE(pkb.checkNext(7, 8));
+			REQUIRE(pkb.checkNext(8, 9));
+			REQUIRE(pkb.checkNext(9, 11));
+			REQUIRE(pkb.checkNext(7, 10));
+			REQUIRE(pkb.checkNext(10, 11));
+			REQUIRE(pkb.checkNext(11, 12));
 		}
 	}
 }
