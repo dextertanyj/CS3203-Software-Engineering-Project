@@ -16,21 +16,21 @@ QP::Types::ArgumentDispatcher QP::Dispatcher::FollowsNextDispatcher<T>::dispatch
 
 template <QP::Types::ClauseType T>
 QP::Types::ExecutorSetBundle QP::Dispatcher::FollowsNextDispatcher<T>::argumentDispatcher(Types::ClauseType type,
-                                                                                      const vector<Types::ReferenceArgument>& args) {
+                                                                                          const vector<Types::ReferenceArgument>& args) {
 	return DispatchProcessors::processDoubleArgument(type, FollowsNextDispatcher<T>::argument_dispatch_map, args);
 };
 
 template <QP::Types::ClauseType T>
 const unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>
 	QP::Dispatcher::FollowsNextDispatcher<T>::argument_dispatch_map = {{Types::ReferenceType::StatementIndex, getIndexMap()},
-                                                                   {Types::ReferenceType::Wildcard, getWildcardMap()},
-                                                                   {Types::DesignEntity::Stmt, getSynonymMap()},
-                                                                   {Types::DesignEntity::Call, getSynonymMap()},
-                                                                   {Types::DesignEntity::Assign, getSynonymMap()},
-                                                                   {Types::DesignEntity::Print, getSynonymMap()},
-                                                                   {Types::DesignEntity::Read, getSynonymMap()},
-                                                                   {Types::DesignEntity::While, getSynonymMap()},
-                                                                   {Types::DesignEntity::If, getSynonymMap()}};
+                                                                       {Types::ReferenceType::Wildcard, getWildcardMap()},
+                                                                       {Types::DesignEntity::Stmt, getSynonymMap()},
+                                                                       {Types::DesignEntity::Call, getSynonymMap()},
+                                                                       {Types::DesignEntity::Assign, getSynonymMap()},
+                                                                       {Types::DesignEntity::Print, getSynonymMap()},
+                                                                       {Types::DesignEntity::Read, getSynonymMap()},
+                                                                       {Types::DesignEntity::While, getSynonymMap()},
+                                                                       {Types::DesignEntity::If, getSynonymMap()}};
 
 template <QP::Types::ClauseType T>
 unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::FollowsNextDispatcher<T>::getIndexMap() {
