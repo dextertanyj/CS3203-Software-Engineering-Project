@@ -35,7 +35,7 @@ const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactor
 				 return Executor::PatternContainerStatementExecutor<ClauseType::PatternIf>::executeWildcard(storage, ifStmt);
 			 }};
 	 }},
-	{Types::ReferenceType::Synonym,
+	{Types::DesignEntity::Variable,
      [](const vector<Types::ReferenceArgument>& args) {
 		 return pair{
 			 [ifStmt = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {

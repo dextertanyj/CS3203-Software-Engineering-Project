@@ -645,6 +645,39 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid while pattern") {
 	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select w1 pattern w1(_, \"s\")"), QP::QueryException);
 }
 
+TEST_CASE("QP::QueryPreprocessor::parseQuery valid if pattern") {
+	shared_ptr<QP::Relationship::Relation> clause;
+
+	QP::QueryPreprocessor qpp1;
+	QP::QueryProperties qp1 = qpp1.parseQuery(UnivDeclarations + "Select i1 pattern i1(v1, _, _)");
+	clause = qp1.getClauseList()[0].relation;
+	REQUIRE(clause->getType() == ClauseType::PatternIf);
+	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"i1", "v1"}));
+
+	QP::QueryPreprocessor qpp2;
+	QP::QueryProperties qp2 = qpp2.parseQuery(UnivDeclarations + "Select i1 pattern i1(\"var\", _, _)");
+	clause = qp2.getClauseList()[0].relation;
+	REQUIRE(clause->getType() == ClauseType::PatternIf);
+	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"i1"}));
+
+	QP::QueryPreprocessor qpp3;
+	QP::QueryProperties qp3 = qpp3.parseQuery(UnivDeclarations + "Select w1 pattern i1(_, _, _)");
+	clause = qp3.getClauseList()[0].relation;
+	REQUIRE(clause->getType() == ClauseType::PatternIf);
+	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"i1"}));
+}
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery invalid if pattern") {
+	QP::QueryPreprocessor qpp1;
+	REQUIRE_THROWS_AS(qpp1.parseQuery(UnivDeclarations + "Select i1 pattern i1(v1, v2, _)"), QP::QueryException);
+
+	QP::QueryPreprocessor qpp2;
+	REQUIRE_THROWS_AS(qpp2.parseQuery(UnivDeclarations + "Select i1 pattern i1(\"var\", _)"), QP::QueryException);
+
+	QP::QueryPreprocessor qpp3;
+	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, \"s\", _)"), QP::QueryException);
+}
+
 TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that") {
 	shared_ptr<QP::Relationship::Relation> clause;
 	QP::QueryPreprocessor qpp1;
