@@ -7,6 +7,7 @@
 #include "QP/Dispatcher/ModifiesDispatcher.h"
 #include "QP/Dispatcher/ParentDispatcher.tpp"
 #include "QP/Dispatcher/PatternAssignDispatcher.h"
+#include "QP/Dispatcher/PatternIfDispatcher.h"
 #include "QP/Dispatcher/PatternWhileDispatcher.h"
 #include "QP/Dispatcher/UsesDispatcher.h"
 #include "QP/QP.h"
@@ -23,6 +24,7 @@ struct QP::Dispatcher::DispatchMap {
 		{Types::ClauseType::ParentT, QP::Dispatcher::ParentDispatcher<Types::ClauseType::ParentT>::dispatcher},
 		{Types::ClauseType::PatternAssign, QP::Dispatcher::PatternAssignDispatcher::dispatcher},
 		{Types::ClauseType::PatternWhile, QP::Dispatcher::PatternWhileDispatcher::dispatcher},
+		{Types::ClauseType::PatternIf, QP::Dispatcher::PatternIfDispatcher::dispatcher},
 		{Types::ClauseType::UnknownUses, QP::Dispatcher::UsesDispatcher::dispatcher}};
 	unordered_map<string, Types::ClauseType> clause_map = {
 		{"Calls", Types::ClauseType::Call},

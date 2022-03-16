@@ -23,6 +23,9 @@ Types::ExecutorSetBundle processTripleArgument(
                   unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>>>
 		map,
 	const vector<Types::ReferenceArgument>& args);
+Types::ExecutorSetBundle processPatternIfArgument(Types::ClauseType type,
+                                                  unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map,
+                                                  const vector<Types::ReferenceArgument>& args);
 };  // namespace QP::Dispatcher::DispatchProcessors
 
 #endif  // SPA_SRC_QP_DISPATCHPROCESSORS_H
