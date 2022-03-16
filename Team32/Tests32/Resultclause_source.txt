@@ -1,0 +1,15 @@
+procedure main {
+    print y;
+    if (x == y) then {
+        while (b > c) {
+            call mars;
+        }
+    } else {
+        read x;
+    }
+    read y;
+}
+
+procedure mars {
+   b = (5 + (b * c));
+}
