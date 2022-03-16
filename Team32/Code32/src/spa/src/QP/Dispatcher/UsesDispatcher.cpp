@@ -1,8 +1,8 @@
-#include "UsesDispatcher.h"
+#include "QP/Dispatcher/UsesDispatcher.h"
 
 #include <utility>
 
-#include "DispatchProcessors.h"
+#include "QP/Dispatcher/DispatchProcessors.tpp"
 
 using namespace QP::Executor;
 using namespace QP::Types;
@@ -135,5 +135,5 @@ const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, Exec
 	{DesignEntity::Print, statement_map}, {DesignEntity::While, statement_map},       {DesignEntity::If, statement_map}};
 
 const ArgumentDispatcher QP::Dispatcher::UsesDispatcher::dispatcher = [](vector<QP::Types::ReferenceArgument> args) {
-	return QP::Dispatcher::DispatchProcessors::processDoubleArgument(argument_dispatch_map, move(args));
+	return QP::Dispatcher::DispatchProcessors::processArgument(argument_dispatch_map, move(args));
 };
