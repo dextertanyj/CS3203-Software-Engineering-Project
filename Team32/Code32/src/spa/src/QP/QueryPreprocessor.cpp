@@ -166,12 +166,9 @@ void QP::QueryPreprocessor::parsePattern() {
 	}
 }
 
-void QP::QueryPreprocessor::parseClause(QP::Types::ClauseType type) {
-	parseClause(type, {});
-}
+void QP::QueryPreprocessor::parseClause(QP::Types::ClauseType type) { parseClause(type, {}); }
 
-void QP::QueryPreprocessor::parseClause(QP::Types::ClauseType type,
-                                        vector<QP::Types::ReferenceArgument> prefixes) {
+void QP::QueryPreprocessor::parseClause(QP::Types::ClauseType type, vector<QP::Types::ReferenceArgument> prefixes) {
 	QP::Types::ArgumentDispatcher argument_dispatcher = dispatcher.dispatch_map.at(type);
 	vector<Types::ReferenceArgument> arguments = parseArguments();
 	prefixes.insert(prefixes.end(), arguments.begin(), arguments.end());
@@ -204,7 +201,7 @@ void QP::QueryPreprocessor::parseAssignPattern(Types::ReferenceArgument synonym)
 		throw QueryException("Unexpected query expression: " + this->query_tokens.at(token_index) + ".");
 	}
 
-	vector<Types::ReferenceArgument> arguments = {synonym, variable, expression_argument};
+	vector<Types::ReferenceArgument> arguments = {move(synonym), move(variable), move(expression_argument)};
 
 	auto info = argument_dispatcher(arguments);
 

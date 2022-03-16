@@ -9,7 +9,6 @@
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::PatternContainerStatementExecutor<T>::executeTrivialName(const QP::StorageAdapter& storage,
                                                                                        const QP::Types::ReferenceArgument& var) {
-	
 	return QP::QueryResult(!storage.getControlStmt<T>(var.getName()).empty());
 }
 
@@ -22,7 +21,7 @@ QP::QueryResult QP::Executor::PatternContainerStatementExecutor<T>::executeTrivi
 			return QueryResult(true);
 		}
 	}
-	
+
 	return {};
 }
 
@@ -52,7 +51,7 @@ QP::QueryResult QP::Executor::PatternContainerStatementExecutor<T>::executeWildc
 		if (!Utilities::checkStmtTypeMatch(stmt_ref, stmt.getSynonym().type)) {
 			continue;
 		}
-		
+
 		VarRefSet var_set = storage.getControlVar<T>(stmt_ref->getIdentifier());
 		if (!var_set.empty()) {
 			column.push_back(to_string(stmt_ref->getIdentifier()));
