@@ -1,0 +1,185 @@
+1 - ModifiesP(synonym, synonym) positive
+procedure p; variable v;
+Select p such that Modifies(p, v)
+main, mars, earth
+5000
+2 - ModifiesP(synonym, synonym) positive
+procedure mars; variable x;
+Select x such that Modifies(mars, x)
+x, y, a, b
+5000
+3 - ModifiesP(synonym, synonym) trivial
+variable v; procedure p1, p2;
+Select p1 such that Modifies(p2, v)
+main, mars, earth, venus
+5000
+4 - ModifiesP(synonym, _) positive
+procedure p;
+Select p such that Modifies(p, _)
+main, mars, earth
+5000
+5 - ModifiesP(synonym, varName) positive
+procedure p;
+Select p such that Modifies(p, "x")
+main
+5000
+6 - ModifiesP(synonym, varName) positive
+procedure a;
+Select a such that Modifies(a, "a")
+main, mars, earth
+5000
+7 - ModifiesP(synonym, varName) negative
+procedure p;
+Select p such that Modifies(p, "z")
+
+5000
+8 - ModifiesP(name, synonym) positive
+variable main;
+Select main such that Modifies("main", main)
+x, y, a, b
+5000
+9 - ModifiesP(name, synonym) positive
+variable v;
+Select v such that Modifies("mars", v)
+a, b
+5000
+10 - ModifiesP(name, synonym) negative
+variable v;
+Select v such that Modifies("venus", v)
+
+5000
+11 - ModifiesP(name, _) positive
+variable v;
+Select v such that Modifies("main", _)
+x, y, z, a, b
+5000
+12 - ModifiesP(name, _) negative
+variable v;
+Select v such that Modifies("venus", _)
+
+5000
+13 - ModifiesP(name, varName) positive
+procedure p;
+Select p such that Modifies("main", "x")
+main, mars, earth, venus
+5000
+14 - ModifiesP(name, varName) negative
+procedure p;
+Select p such that Modifies("mars", "x")
+
+5000
+15 - ModifiesP invalid _
+variable v;
+Select v such that Modifies(_, v)
+
+5000
+16 - ModifiesP invalid synonym
+if i;
+Select i such that Modifies("main", i)
+
+5000
+17 - ModifiesP invalid varName
+procedure p;
+Select p such that Modifies(p, "0")
+
+5000
+18 - ModifiesP invalid procedure
+variable v;
+Select v such that Modifies("test", v)
+
+5000
+19 - ModifiesP invalid variable
+procedure p;
+Select p such that Modifies(p, "d")
+
+5000
+20 - ModifiesP(synonym, varName) multiple such that positive
+procedure p;
+Select p such that Modifies(p, "x") such that Modifies(p, "b")
+main
+5000
+21 - ModifiesP(synonym, varName) multiple such that negative
+procedure p;
+Select p such that Modifies(p, "x") such that Modifies(p, "b") such that Modifies(p, "c")
+
+5000
+22 - ModifiesP(name, synonym) multiple such that positive
+variable main;
+Select main such that Modifies("main", main) such that Modifies("mars", main)
+b, a
+5000
+23 - ModifiesP(name, synonym) multiple such that negative
+variable main;
+Select main such that Modifies("main", main) such that Modifies("mars", main) such that Modifies("venus", main)
+
+5000
+24 - ModifiesP(name, _) multiple such that positive
+variable v;
+Select v such that Modifies("main", _) such that Modifies("mars", _)
+x, y, z, a, b
+5000
+25 - ModifiesP(name, _) multiple such that negative
+variable v;
+Select v such that Modifies("main", _) such that Modifies("venus", _)
+
+5000
+26 - ModifiesP(name, varName) multiple such that positive
+procedure p;
+Select p such that Modifies("main", "x") such that Modifies("mars", "b")
+main, mars, earth, venus
+5000
+27 - ModifiesP(name, varName) multiple such that negative
+procedure p;
+Select p such that Modifies("main", "x") such that Modifies("mars", "x")
+
+5000
+28 - ModifiesP mix positive
+procedure p;
+Select p such that Modifies(p, "x") and Modifies("mars", "b")
+main
+5000
+29 - ModifiesP mix positive
+variable main;
+Select main such that Modifies("main", main) and Modifies("mars", main) such that Modifies("earth", _)
+b, a
+5000
+30 - ModifiesP mix positive
+variable v;
+Select v such that Modifies("main", _) and Modifies("mars", _)
+x, y, z, a, b
+5000
+31 - ModifiesP mix positive
+procedure p; variable v;
+Select p such that Modifies("main", "x") and Modifies(p, "b") and Modifies("mars", v)
+main, mars
+5000
+32 - ModifiesP mix positive
+procedure p, q; variable v;
+Select p such that Modifies(p, v) and Modifies(q, _) such that Modifies("mars", v)
+mars, main, earth
+5000
+33 - ModifiesP mix positive
+procedure p, q; variable v;
+Select p such that Modifies(p, v) and Modifies(p, _) such that Modifies(p, "y")
+main
+5000
+34 - ModifiesP mix negative
+procedure p;
+Select p such that Modifies(p, "x") and Modifies("mars", "b") and Modifies(p, "c")
+
+5000
+35 - ModifiesP mix negative
+variable main;
+Select main such that Modifies("main", main) and Modifies("mars", main) such that Modifies("venus", main)
+
+5000
+36 - ModifiesP mix negative
+variable v;
+Select v such that Modifies("main", _) and Modifies("venus", _)
+
+5000
+37 - ModifiesP mix negative
+procedure p;
+Select p such that Modifies("main", "z") and Modifies(p, "b")
+
+5000
