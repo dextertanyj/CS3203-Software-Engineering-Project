@@ -20,6 +20,9 @@ QP::Types::ExecutorSetFactory processArgumentRecurse(T map, const vector<QP::Typ
 template <>
 inline QP::Types::ExecutorSetFactory processArgumentRecurse(
 	unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map, const vector<QP::Types::ReferenceArgument>& args) {
+	if (args.size() != 1) {
+		throw QP::QueryException("Incorrect number of arguments.");
+	}
 	QP::Types::ArgumentDispatchKey key = args.at(0).getType();
 	if (args.at(0).getType() == QP::Types::ReferenceType::Synonym) {
 		key = args.at(0).getSynonym().type;
@@ -49,6 +52,9 @@ template <>
 inline QP::Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(
 	unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactoryBundle> map,
 	const vector<QP::Types::ReferenceArgument>& args) {
+	if (args.size() != 1) {
+		throw QP::QueryException("Incorrect number of arguments.");
+	}
 	QP::Types::ArgumentDispatchKey key = args.at(0).getType();
 	if (args.at(0).getType() == QP::Types::ReferenceType::Synonym) {
 		key = args.at(0).getSynonym().type;
