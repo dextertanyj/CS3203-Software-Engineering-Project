@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_RELATIONSHIP_FOLLOWSDISPATCHERTEMPLATE_H
-#define SPA_SRC_QP_RELATIONSHIP_FOLLOWSDISPATCHERTEMPLATE_H
+#ifndef SPA_SRC_QP_RELATIONSHIP_FOLLOWSNEXTDISPATCHERTEMPLATE_H
+#define SPA_SRC_QP_RELATIONSHIP_FOLLOWSNEXTDISPATCHERTEMPLATE_H
 
 #include <unordered_map>
 #include <vector>
@@ -9,7 +9,7 @@
 #include "QP/ReferenceArgument.h"
 
 template <QP::Types::ClauseType T>
-class QP::Dispatcher::FollowsDispatcher {
+class QP::Dispatcher::FollowsNextDispatcher {
 public:
 	static Types::ArgumentDispatcher dispatcher;
 

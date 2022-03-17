@@ -30,13 +30,17 @@ enum class DesignEntity {
 };
 
 enum class ClauseType {
-	Call,
-	CallT,
+	Affects,
+	AffectsT,
+	Calls,
+	CallsT,
 	Follows,
 	FollowsT,
 	UnknownModifies,
 	ModifiesP,
 	ModifiesS,
+	Next,
+	NextT,
 	Parent,
 	ParentT,
 	UnknownUses,
