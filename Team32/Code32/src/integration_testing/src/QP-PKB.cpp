@@ -274,12 +274,50 @@ TEST_CASE("Modifies clause") {
 };
 
 TEST_CASE("Calls clause") {
-	SECTION("Calls") {
+	PKB::Storage pkb = PKB::Storage();
+	pkb.setStmtType(1, StmtType::Call);
+	pkb.setStmtType(2, StmtType::Call);
+	pkb.setStmtType(3, StmtType::Call);
+	pkb.setStmtType(4, StmtType::Call);
+	pkb.setStmtType(5, StmtType::Assign);
+	pkb.setProc("proc1", 1, 1);
+	pkb.setProc("proc2", 2, 3);
+	pkb.setProc("proc3", 4, 4);
+	pkb.setProc("proc4", 5, 5);
+	pkb.setCall(1, "proc2");
+	pkb.setCall(2, "proc3");
+	pkb.setCall(3, "proc4");
+	pkb.setCall(4, "proc4");
+	pkb.populateComplexRelations();
 
+	QP::QueryProcessor processor = QP::QueryProcessor(pkb);
+
+	SECTION("Calls") {
+		string query1 = "procedure p; Select p such that Calls(p, \"proc2\")";
+		string query2 = "procedure p1, p2; Select <p1, p2> such that Calls(p1, p2)";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"proc1"};
+		vector<string> expected_result2 = {"proc1 proc2", "proc2 proc3", "proc2 proc4", "proc3 proc4"};
+		sort(result2.begin(), result2.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
 	}
 
 	SECTION("Calls*") {
+		string query1 = "procedure p; Select p such that Calls*(p, \"proc4\")";
+		string query2 = "Select BOOLEAN such that Calls*(\"proc2\", \"proc1\")";
 
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"proc1", "proc2", "proc3"};
+		vector<string> expected_result2 = {"FALSE"};
+		sort(result1.begin(), result1.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
 	}
 };
 
@@ -294,8 +332,49 @@ TEST_CASE("Next clause") {
 };
 
 TEST_CASE("Pattern clause") {
-	SECTION("Assign") {
+	PKB::Storage pkb = PKB::Storage();
+	pkb.setStmtType(1, StmtType::IfStmt);
+	pkb.setStmtType(2, StmtType::WhileStmt);
+	pkb.setStmtType(3, StmtType::Assign);
+	pkb.setStmtType(4, StmtType::IfStmt);
+	pkb.setStmtType(5, StmtType::Assign);
+	pkb.setStmtType(6, StmtType::WhileStmt);
+	
+	// Assign statements
+	vector<string> assign_token2 = {"x", "+", "1", "*", "9"};
+	QP::QueryExpressionLexer lexer2 = QP::QueryExpressionLexer(assign_token2);
+	auto expression2 = Common::ExpressionProcessor::Expression::parse(lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+	pkb.setAssign(3, "y", expression2);
+	vector<string> assign_token3 = {"x", "+", "y"};
+	QP::QueryExpressionLexer lexer3 = QP::QueryExpressionLexer(assign_token3);
+	auto expression3 = Common::ExpressionProcessor::Expression::parse(lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+	pkb.setAssign(5, "y", expression3);
+	
+	// While statements
+	pkb.setWhileControl(2, "x");
+	pkb.setWhileControl(2, "y");
 
+	// If statements
+	pkb.setIfControl(1, "x");
+	pkb.setIfControl(4, "y");
+	pkb.setIfControl(4, "z");
+
+	pkb.populateComplexRelations();
+
+	QP::QueryProcessor processor = QP::QueryProcessor(pkb);
+
+	SECTION("Assign") {
+		string query1 = "assign a; variable v; Select a pattern a(v, _\"1 * 9\"_)";
+		string query2 = "assign a; while w; Select <a, w> pattern a(\"y\", _)";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"3"};
+		vector<string> expected_result2 = {"3 2", "3 6", "5 2", "5 6"};
+		sort(result2.begin(), result2.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
 	}
 
 	SECTION("If") {
