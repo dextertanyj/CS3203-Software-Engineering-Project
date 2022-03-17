@@ -98,9 +98,9 @@ if i;
 Select i such that Calls("main", i)
 
 5000
-21 - Calls invalid name
-procedure p;
-Select p such that Calls(p, "0")
+21 - Calls invalid synonym
+while w;
+Select p such that Calls(w, "main")
 
 5000
 22 - Calls invalid procedure
@@ -213,9 +213,9 @@ if i;
 Select i such that Calls*("main", i)
 
 5000
-44 - Calls* invalid name
-procedure p;
-Select p such that Calls*(p, "0")
+44 - Calls* invalid synonym
+procedure p; assign a;
+Select p such that Calls*(p, a)
 
 5000
 45 - Calls* invalid procedure
