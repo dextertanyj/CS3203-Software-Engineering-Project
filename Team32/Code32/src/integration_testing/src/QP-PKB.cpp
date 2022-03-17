@@ -16,6 +16,7 @@ TEST_CASE("Basic select") {
 	pkb.setStmtType(4, StmtType::IfStmt);
 	pkb.setConstant({1, 4, 90, 2000});
 	pkb.setUses(3, "x");
+	pkb.setProc("proc", 1, 4);
 
 	QP::QueryProcessor processor = QP::QueryProcessor(pkb);
 
@@ -55,6 +56,117 @@ TEST_CASE("Basic select") {
 		vector<string> expected_result = {"1", "2000", "4", "90"};
 		sort(result.begin(), result.end());
 		REQUIRE(result == expected_result);
+	}
+
+	SECTION("Select procedure") {
+		string query = "procedure p; Select p";
+
+		vector<string> result = processor.processQuery(query);
+
+		REQUIRE(result == vector<string>{"proc"});
+	}
+
+	SECTION("Select tuple") {
+		string query1 = "stmt s; Select <s, s>";
+		string query2 = "stmt s; variable v; Select <s, v>";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"1 1", "2 2", "3 3", "4 4"};
+		vector<string> expected_result2 = {"1 x", "2 x", "3 x", "4 x"};
+		sort(result1.begin(), result1.end());
+		sort(result2.begin(), result2.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
+	}
+
+	SECTION("Select boolean") {
+		string query1 = "Select BOOLEAN";
+		string query2 = "Select BOOLEAN such that Uses(3, \"x\")";
+		string query3 = "Select BOOLEAN such that Uses(1, \"x\")";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+		vector<string> result3 = processor.processQuery(query3);
+		
+		REQUIRE(result1 == vector<string>{"TRUE"});
+		REQUIRE(result2 == vector<string>{"TRUE"});
+		REQUIRE(result3 == vector<string>{"FALSE"});
+	}
+};
+
+TEST_CASE("Parent clause") {
+	SECTION("Parent") {
+
+	}
+
+	SECTION("Parent*") {
+
+	}
+};
+
+TEST_CASE("Follows clause") {
+	SECTION("Follows") {
+
+	}
+
+	SECTION("Follows*") {
+
+	}
+};
+
+TEST_CASE("Uses clause") {
+	SECTION("UsesS") {
+
+	}
+
+	SECTION("UsesP") {
+
+	}
+};
+
+TEST_CASE("Modifies clause") {
+	SECTION("ModifiesS") {
+
+	}
+
+	SECTION("ModifiesP") {
+
+	}
+};
+
+TEST_CASE("Calls clause") {
+	SECTION("Calls") {
+
+	}
+
+	SECTION("Calls*") {
+
+	}
+};
+
+TEST_CASE("Next clause") {
+	SECTION("Next") {
+
+	}
+
+	SECTION("Next*") {
+
+	}
+};
+
+TEST_CASE("Pattern clause") {
+	SECTION("Assign") {
+
+	}
+
+	SECTION("If") {
+
+	}
+
+	SECTION("While") {
+
 	}
 };
 
@@ -249,4 +361,8 @@ TEST_CASE("One such that and one pattern") {
 		vector<string> expected_result = {"5"};
 		REQUIRE(result == expected_result);
 	}
+}
+
+TEST_CASE("Multiple clauses") {
+
 }

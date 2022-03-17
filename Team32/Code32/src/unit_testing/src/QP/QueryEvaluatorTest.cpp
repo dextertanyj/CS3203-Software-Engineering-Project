@@ -249,7 +249,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("Select boolean no clause") {
-		QP::QueryProperties properties = QP::QueryProperties(declarations, {}, {});
+		QP::QueryProperties properties = QP::QueryProperties({}, {}, {});
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
