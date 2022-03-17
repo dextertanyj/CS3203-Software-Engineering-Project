@@ -97,22 +97,88 @@ TEST_CASE("Basic select") {
 };
 
 TEST_CASE("Parent clause") {
-	SECTION("Parent") {
+	PKB::Storage pkb = PKB::Storage();
+	pkb.setStmtType(1, StmtType::IfStmt);
+	pkb.setStmtType(2, StmtType::Read);
+	pkb.setStmtType(3, StmtType::WhileStmt);
+	pkb.setStmtType(4, StmtType::IfStmt);
+	pkb.setParent(1, 2);
+	pkb.setParent(1, 3);
+	pkb.setParent(3, 4);
+	pkb.populateComplexRelations();
 
+	QP::QueryProcessor processor = QP::QueryProcessor(pkb);
+
+	SECTION("Parent") {
+		string query1 = "stmt s; Select s such that Parent(1, s)";
+		string query2 = "stmt s1, s2; Select <s1, s2> such that Parent(s1, s2)";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"2", "3"};
+		vector<string> expected_result2 = {"1 2", "1 3", "3 4"};
+		sort(result1.begin(), result1.end());
+		sort(result2.begin(), result2.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
 	}
 
 	SECTION("Parent*") {
+		string query1 = "stmt s; Select s such that Parent*(1, s)";
+		string query2 = "if i1, i2; Select BOOLEAN such that Parent*(i1, i2)";
 
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"2", "3", "4"};
+		vector<string> expected_result2 = {"TRUE"};
+		sort(result1.begin(), result1.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
 	}
 };
 
 TEST_CASE("Follows clause") {
-	SECTION("Follows") {
+	PKB::Storage pkb = PKB::Storage();
+	pkb.setStmtType(1, StmtType::IfStmt);
+	pkb.setStmtType(2, StmtType::Read);
+	pkb.setStmtType(3, StmtType::Print);
+	pkb.setStmtType(4, StmtType::Assign);
+	pkb.setStmtType(5, StmtType::Assign);
+	pkb.setFollows(1, 4);
+	pkb.setFollows(2, 3);
+	pkb.setFollows(4, 5);
+	pkb.populateComplexRelations();
 
+	QP::QueryProcessor processor = QP::QueryProcessor(pkb);
+
+	SECTION("Follows") {
+		string query1 = "read r; Select r such that Follows(r, 3)";
+		string query2 = "stmt s; assign a; Select <s, a> such that Follows(s, a)";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"2"};
+		vector<string> expected_result2 = {"1 4", "4 5"};
+		sort(result2.begin(), result2.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
 	}
 
 	SECTION("Follows*") {
+		string query1 = "stmt s; Select s such that Follows*(1, s)";
+		string query2 = "if i; assign a; Select BOOLEAN such that Follows*(i, a)";
 
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"4", "5"};
+		vector<string> expected_result2 = {"TRUE"};
+		sort(result1.begin(), result1.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
 	}
 };
 
