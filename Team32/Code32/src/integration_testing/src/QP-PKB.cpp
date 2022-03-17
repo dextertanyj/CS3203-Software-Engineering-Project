@@ -183,22 +183,93 @@ TEST_CASE("Follows clause") {
 };
 
 TEST_CASE("Uses clause") {
-	SECTION("UsesS") {
+	PKB::Storage pkb = PKB::Storage();
+	pkb.setStmtType(1, StmtType::IfStmt);
+	pkb.setStmtType(2, StmtType::Read);
+	pkb.setStmtType(3, StmtType::Print);
+	pkb.setStmtType(4, StmtType::Assign);
+	pkb.setStmtType(5, StmtType::Assign);
+	pkb.setUses(1, "a");
+	pkb.setUses(3, "b");
+	pkb.setUses(4, {"a", "x", "y"});
+	pkb.setUses(5, "z");
+	pkb.setProc("proc1", 1, 2);
+	pkb.setProc("proc2", 3, 5);
+	pkb.populateComplexRelations();
 
+	QP::QueryProcessor processor = QP::QueryProcessor(pkb);
+
+	SECTION("UsesS") {
+		string query1 = "assign a; Select a such that Uses(a, \"a\")";
+		string query2 = "stmt s; variable v; Select <s, v> such that Uses(s, v)";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"4"};
+		vector<string> expected_result2 = {"1 a", "3 b", "4 a", "4 x", "4 y", "5 z"};
+		sort(result2.begin(), result2.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
 	}
 
 	SECTION("UsesP") {
+		string query1 = "procedure BOOLEAN; Select BOOLEAN such that Uses(BOOLEAN, \"z\")";
+		string query2 = "procedure p; Select BOOLEAN such that Uses(p, \"a\")";
 
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"proc2"};
+		vector<string> expected_result2 = {"TRUE"};
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
 	}
 };
 
 TEST_CASE("Modifies clause") {
-	SECTION("ModifiesS") {
+	PKB::Storage pkb = PKB::Storage();
+	pkb.setStmtType(1, StmtType::Call);
+	pkb.setStmtType(2, StmtType::Read);
+	pkb.setStmtType(3, StmtType::Print);
+	pkb.setStmtType(4, StmtType::Assign);
+	pkb.setStmtType(5, StmtType::Assign);
+	pkb.setModifies(2, "x");
+	pkb.setModifies(4, "x");
+	pkb.setModifies(5, "z");
+	pkb.setProc("proc1", 1, 2);
+	pkb.setProc("proc2", 3, 5);
+	pkb.setCall(1, "proc2");
+	pkb.populateComplexRelations();
 
+	QP::QueryProcessor processor = QP::QueryProcessor(pkb);
+
+	SECTION("ModifiesS") {
+		string query1 = "assign a; Select a such that Modifies(a, \"x\")";
+		string query2 = "stmt s; variable v; Select <s, v> such that Modifies(s, v)";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"4"};
+		vector<string> expected_result2 = {"1 x", "1 z", "2 x", "4 x", "5 z"};
+		sort(result2.begin(), result2.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
 	}
 
 	SECTION("ModifiesP") {
+		string query1 = "procedure BOOLEAN; Select BOOLEAN such that Modifies(BOOLEAN, \"z\")";
+		string query2 = "Select BOOLEAN such that Modifies(\"proc1\", \"z\")";
 
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"proc1", "proc2"};
+		vector<string> expected_result2 = {"TRUE"};
+		sort(result1.begin(), result1.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
 	}
 };
 
