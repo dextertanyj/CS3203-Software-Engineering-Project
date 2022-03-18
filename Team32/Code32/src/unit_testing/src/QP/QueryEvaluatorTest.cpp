@@ -41,8 +41,8 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 	                                             dispatcher.dispatch_map.at(ClauseType::Parent)({stmt_no1, stmt_no2}).second)},
 		{make_unique<QP::Relationship::Relation>(ClauseType::ModifiesS, vector<ReferenceArgument>({a, v}),
 	                                             dispatcher.dispatch_map.at(ClauseType::UnknownModifies)({a, v}).second)},
-		{make_unique<QP::Relationship::Relation>(ClauseType::Call, vector<ReferenceArgument>({p, wildcard}),
-	                                             dispatcher.dispatch_map.at(ClauseType::Call)({p, wildcard}).second)},
+		{make_unique<QP::Relationship::Relation>(ClauseType::Calls, vector<ReferenceArgument>({p, wildcard}),
+	                                             dispatcher.dispatch_map.at(ClauseType::Calls)({p, wildcard}).second)},
 	};
 	QP::QueryProperties properties = QP::QueryProperties(declarations, select_list, clauses);
 	ConnectedSynonyms connected_synonyms = {

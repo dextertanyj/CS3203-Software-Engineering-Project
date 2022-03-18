@@ -163,10 +163,11 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialSynonymSynonym
 		}
 
 		StmtInfoPtrSet rhs_set = storage.getReverseStatements<T>(statement->getIdentifier());
-		for (auto const& rhs_statement : rhs_set) {
-			if (Utilities::checkStmtTypeMatch(rhs_statement, rhs.getSynonym().type)) {
-				return QueryResult(true);
-			}
+		bool match = any_of(rhs_set.begin(), rhs_set.end(), [&rhs](const auto& rhs_statement) {
+			return Utilities::checkStmtTypeMatch(rhs_statement, rhs.getSynonym().type);
+		});
+		if (match) {
+			return QueryResult(true);
 		}
 	}
 
@@ -249,33 +250,64 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeSynonymWildcard(const
 }
 
 template <QP::Types::ClauseType T>
+static QP::QueryResult executeStatementSynonymSynonym(const QP::StorageAdapter& storage, const QP::Types::ReferenceArgument& lhs,
+                                                      const QP::Types::ReferenceArgument& rhs) {
+	StmtInfoPtrSet statements = storage.getStatements();
+	vector<string> lhs_column;
+	vector<string> rhs_column;
+	for (auto const& statement : statements) {
+		if (!QP::Utilities::checkStmtTypeMatch(statement, lhs.getSynonym().type)) {
+			continue;
+		}
+
+		StmtInfoPtrSet rhs_set = storage.getReverseStatements<T>(statement->getIdentifier());
+		for (auto const& rhs_statement : rhs_set) {
+			if (!QP::Utilities::checkStmtTypeMatch(rhs_statement, rhs.getSynonym().type)) {
+				continue;
+			}
+			lhs_column.push_back(to_string(statement->getIdentifier()));
+			rhs_column.push_back(to_string(rhs_statement->getIdentifier()));
+		}
+	}
+	QP::QueryResult result = QP::QueryResult();
+	result.addColumn(lhs.getSynonym().symbol, lhs_column);
+	result.addColumn(rhs.getSynonym().symbol, rhs_column);
+	return result;
+}
+
+template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeSynonymSynonym(const QP::StorageAdapter& storage,
                                                                           const Types::ReferenceArgument& lhs,
                                                                           const Types::ReferenceArgument& rhs) {
 	if (lhs.getSynonym().symbol == rhs.getSynonym().symbol) {
 		return {};
 	}
+	return executeStatementSynonymSynonym<T>(storage, lhs, rhs);
+}
 
+// Next* specialization to account for semantically correct same synonym case.
+template <>
+inline QP::QueryResult QP::Executor::StatementExecutor<QP::Types::ClauseType::NextT>::executeSynonymSynonym(
+	const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs, const Types::ReferenceArgument& rhs) {
+	if (lhs.getSynonym().symbol != rhs.getSynonym().symbol) {
+		return executeStatementSynonymSynonym<QP::Types::ClauseType::NextT>(storage, lhs, rhs);
+	}
 	StmtInfoPtrSet statements = storage.getStatements();
-	vector<string> lhs_column;
-	vector<string> rhs_column;
+	vector<string> column;
 	for (auto const& statement : statements) {
-		if (!Utilities::checkStmtTypeMatch(statement, lhs.getSynonym().type)) {
+		if (!QP::Utilities::checkStmtTypeMatch(statement, lhs.getSynonym().type)) {
 			continue;
 		}
 
-		StmtInfoPtrSet rhs_set = storage.getReverseStatements<T>(statement->getIdentifier());
-		for (auto const& rhs_statement : rhs_set) {
-			if (Utilities::checkStmtTypeMatch(rhs_statement, rhs.getSynonym().type)) {
-				lhs_column.push_back(to_string(statement->getIdentifier()));
-				rhs_column.push_back(to_string(rhs_statement->getIdentifier()));
-			}
+		StmtInfoPtrSet others = storage.getReverseStatements<QP::Types::ClauseType::NextT>(statement->getIdentifier());
+		if (others.find(statement) == others.end()) {
+			continue;
 		}
+		column.push_back(to_string(statement->getIdentifier()));
 	}
-	QueryResult result = QueryResult();
-	result.addColumn(lhs.getSynonym().symbol, lhs_column);
-	result.addColumn(rhs.getSynonym().symbol, rhs_column);
+	QP::QueryResult result = QP::QueryResult();
+	result.addColumn(lhs.getSynonym().symbol, column);
 	return result;
 }
 
-#endif
+#endif  // SPA_STATEMENTEXECUTOR_TPP

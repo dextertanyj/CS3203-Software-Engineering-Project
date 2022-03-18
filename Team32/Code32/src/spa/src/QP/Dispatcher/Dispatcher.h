@@ -9,7 +9,7 @@ struct DispatchMap;
 namespace DispatchProcessors {};
 
 template <QP::Types::ClauseType T>
-class FollowsDispatcher;
+class FollowsNextDispatcher;
 
 template <QP::Types::ClauseType T>
 class ParentDispatcher;

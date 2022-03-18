@@ -1,5 +1,9 @@
 #include "SP/Node/PrintNode.h"
 
+#include <tuple>
+#include <vector>
+
+#include "../MockUtilities.h"
 #include "SP/Node/CallNode.h"
 #include "catch_tools.h"
 
@@ -74,11 +78,12 @@ TEST_CASE("SP::Node::PrintNode::parsePrintStatement") {
 }
 
 TEST_CASE("SP::Node::PrintNode::extract Test") {
-	PKB::Storage pkb;
+	MockStorageUpdate pkb;
 	StmtRef statement_number = 3;
 	PrintNode node = PrintNode(statement_number, make_unique<VariableNode>("A"));
 	StmtRef result = node.extract(pkb);
 	REQUIRE_EQUALS(result, statement_number);
-	REQUIRE(pkb.checkUses(statement_number, "A"));
-	REQUIRE_FALSE(pkb.checkModifies(statement_number, "A"));
+	REQUIRE_EQUALS(pkb.set_stmt_type_call_count, 1);
+	REQUIRE_EQUALS(pkb.set_uses_call_count, 1);
+	REQUIRE_EQUALS(pkb.set_uses_arguments, vector<tuple<StmtRef, VarRef>>({{statement_number, "A"}}));
 }

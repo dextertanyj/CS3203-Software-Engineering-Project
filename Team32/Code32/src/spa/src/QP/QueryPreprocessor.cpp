@@ -10,7 +10,7 @@
 
 regex QP::QueryPreprocessor::invalid_chars_regex = regex(R"([^a-zA-Z0-9\s,"_\(\);\+\-\*\/%<>])");
 regex QP::QueryPreprocessor::query_token_regex =
-	regex(R"(Follows\*|Calls\*|Parent\*|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\+|-|\*|\/|%|_|,|\"|<|>)");
+	regex(R"(Follows\*|Calls\*|Parent\*|Next\*|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\+|-|\*|\/|%|_|,|\"|<|>)");
 
 QP::QueryProperties QP::QueryPreprocessor::parseQuery(string query) {
 	this->token_index = 0;

@@ -2,7 +2,8 @@
 
 #include <memory>
 
-#include "../Node/MockUtilities.h"
+#include "../MockUtilities.h"
+#include "../TestUtilities.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/PrintNode.h"
@@ -16,40 +17,41 @@ using namespace SP::Node;
 TEST_CASE("SP::Node::WhileNode::equals") {
 	string stmt_1 = "print flag; call x; }";
 	string stmt_2 = "cenX = 0; read x; }";
-	unique_ptr<ExpressionNode> cond_expr = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
-	unique_ptr<StatementListNode> stmt_lst = createStatementList(stmt_1, 2);
+	unique_ptr<ExpressionNode> cond_expr =
+		make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
+	unique_ptr<StatementListNode> stmt_lst = SP::TestUtilities::createStatementList(stmt_1, 2);
 	shared_ptr<WhileNode> node = make_shared<WhileNode>(1, move(cond_expr), move(stmt_lst));
 
 	SECTION("Same Object Test") { REQUIRE(node->equals(node)); }
 
 	SECTION("Same Node Test") {
 		unique_ptr<ExpressionNode> cond_expr_2 =
-			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
-		unique_ptr<StatementListNode> stmt_lst_2 = createStatementList(stmt_1, 2);
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
+		unique_ptr<StatementListNode> stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_1, 2);
 		shared_ptr<WhileNode> other = make_shared<WhileNode>(1, move(cond_expr_2), move(stmt_lst_2));
 		REQUIRE(node->equals(other));
 	}
 
 	SECTION("Different StmtNo Test") {
 		unique_ptr<ExpressionNode> cond_expr_2 =
-			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
-		unique_ptr<StatementListNode> stmt_lst_2 = createStatementList(stmt_1, 2);
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
+		unique_ptr<StatementListNode> stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_1, 2);
 		shared_ptr<WhileNode> other = make_shared<WhileNode>(6, move(cond_expr_2), move(stmt_lst_2));
 		REQUIRE_FALSE(node->equals(other));
 	}
 
 	SECTION("Different CondExpr Test") {
 		unique_ptr<ExpressionNode> cond_expr_2 =
-			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "==", "0", ")"})));
-		unique_ptr<StatementListNode> stmt_lst_2 = createStatementList(stmt_1, 2);
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "==", "0", ")"})));
+		unique_ptr<StatementListNode> stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_1, 2);
 		shared_ptr<WhileNode> other = make_shared<WhileNode>(1, move(cond_expr_2), move(stmt_lst_2));
 		REQUIRE_FALSE(node->equals(other));
 	}
 
 	SECTION("Different StmtLst Test") {
 		unique_ptr<ExpressionNode> cond_expr_2 =
-			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
-		unique_ptr<StatementListNode> stmt_lst_2 = createStatementList(stmt_2, 2);
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
+		unique_ptr<StatementListNode> stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_2, 2);
 		shared_ptr<WhileNode> other = make_shared<WhileNode>(1, move(cond_expr_2), move(stmt_lst_2));
 		REQUIRE_FALSE(node->equals(other));
 	}
@@ -68,8 +70,8 @@ TEST_CASE("SP::Node::WhileNode::parseWhileStatement") {
 		lex.initialize("(x == 0) { count = count + 1; call readPoint; }");
 		unique_ptr<WhileNode> node = WhileNode::parseWhileStatement(lex, statement_count);
 		unique_ptr<ExpressionNode> cond_expr =
-			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "==", "0", ")"})));
-		unique_ptr<StatementListNode> stmt_lst = createStatementList("count = count + 1; call readPoint; }", 2);
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "==", "0", ")"})));
+		unique_ptr<StatementListNode> stmt_lst = SP::TestUtilities::createStatementList("count = count + 1; call readPoint; }", 2);
 		shared_ptr<WhileNode> expected = make_shared<WhileNode>(1, move(cond_expr), move(stmt_lst));
 		REQUIRE(node->equals(expected));
 		REQUIRE_EQUALS(statement_count, 4);
@@ -120,20 +122,23 @@ TEST_CASE("SP::Node::WhileNode::parseWhileStatement") {
 }
 
 TEST_CASE("SP::Node::WhileNode::extract Test") {
-	PKB::Storage pkb;
+	MockStorageUpdate pkb;
 
 	SECTION("Single enclosed statement") {
 		StmtRef statement_number = 2;
 		StmtRef innner_statement = 3;
-		unique_ptr<ExpressionNode> condition = make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "<", "0"})));
+		unique_ptr<ExpressionNode> condition =
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "<", "0"})));
 		unique_ptr<StatementListNode> body = make_unique<StatementListNode>();
 		body->addStatementNode(make_unique<CallNode>(innner_statement, "Procedure"));
 		WhileNode node = WhileNode(statement_number, std::move(condition), std::move(body));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
-
-		REQUIRE(pkb.checkParents(statement_number, innner_statement));
-		REQUIRE_FALSE(pkb.checkFollows(statement_number, innner_statement));
+		REQUIRE_EQUALS(pkb.set_parent_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_parent_arguments, vector<tuple<StmtRef, StmtRef>>{{statement_number, innner_statement}});
+		REQUIRE_EQUALS(pkb.set_parent_arguments.size(), 1);
+		REQUIRE_EQUALS(pkb.set_follows_call_count, 0);
+		REQUIRE(pkb.set_follows_arguments.empty());
 	}
 
 	SECTION("Multiple enclosed statements") {
@@ -142,7 +147,7 @@ TEST_CASE("SP::Node::WhileNode::extract Test") {
 		StmtRef second_innner_statement = 5;
 		StmtRef third_innner_statement = 8;
 		unique_ptr<ExpressionNode> condition =
-			make_unique<ExpressionNode>(createConditionalExpression(vector<string>({"x", "<", "0", ")"})));
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "<", "0", ")"})));
 		unique_ptr<StatementListNode> body = make_unique<StatementListNode>();
 		body->addStatementNode(make_unique<CallNode>(first_innner_statement, "Procedure"));
 		body->addStatementNode(make_unique<ReadNode>(second_innner_statement, make_unique<VariableNode>("A")));
@@ -150,14 +155,14 @@ TEST_CASE("SP::Node::WhileNode::extract Test") {
 		WhileNode node = WhileNode(statement_number, std::move(condition), std::move(body));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
-
-		REQUIRE(pkb.checkParents(statement_number, first_innner_statement));
-		REQUIRE(pkb.checkParents(statement_number, second_innner_statement));
-		REQUIRE(pkb.checkParents(statement_number, third_innner_statement));
-		REQUIRE_FALSE(pkb.checkParents(first_innner_statement, second_innner_statement));
-
-		REQUIRE(pkb.checkFollows(first_innner_statement, second_innner_statement));
-		REQUIRE(pkb.checkFollows(second_innner_statement, third_innner_statement));
-		REQUIRE_FALSE(pkb.checkFollows(statement_number, first_innner_statement));
+		REQUIRE_EQUALS(pkb.set_parent_call_count, 3);
+		REQUIRE_EQUALS(pkb.set_parent_arguments, vector<tuple<StmtRef, StmtRef>>{{statement_number, first_innner_statement},
+		                                                                         {statement_number, second_innner_statement},
+		                                                                         {statement_number, third_innner_statement}});
+		REQUIRE_EQUALS(pkb.set_parent_arguments.size(), 3);
+		REQUIRE_EQUALS(pkb.set_follows_call_count, 2);
+		REQUIRE_EQUALS(pkb.set_follows_arguments, vector<tuple<StmtRef, StmtRef>>{{first_innner_statement, second_innner_statement},
+		                                                                          {second_innner_statement, third_innner_statement}});
+		REQUIRE_EQUALS(pkb.set_follows_arguments.size(), 2);
 	}
 }
