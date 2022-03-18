@@ -89,7 +89,7 @@ TEST_CASE("Basic select") {
 		vector<string> result1 = processor.processQuery(query1);
 		vector<string> result2 = processor.processQuery(query2);
 		vector<string> result3 = processor.processQuery(query3);
-		
+
 		REQUIRE(result1 == vector<string>{"TRUE"});
 		REQUIRE(result2 == vector<string>{"TRUE"});
 		REQUIRE(result3 == vector<string>{"FALSE"});
@@ -322,13 +322,46 @@ TEST_CASE("Calls clause") {
 };
 
 TEST_CASE("Next clause") {
+	PKB::Storage pkb = PKB::Storage();
+	pkb.setStmtType(1, StmtType::Read);
+	pkb.setStmtType(2, StmtType::IfStmt);
+	pkb.setStmtType(3, StmtType::Call);
+	pkb.setStmtType(4, StmtType::WhileStmt);
+	pkb.setStmtType(5, StmtType::Assign);
+	pkb.setNext(1, 2);
+	pkb.setNext(2, 3);
+	pkb.setNext(4, 5);
+	pkb.setNext(5, 4);
+	pkb.populateComplexRelations();
+
+	QP::QueryProcessor processor = QP::QueryProcessor(pkb);
+
 	SECTION("Next") {
+		string query1 = "stmt s; Select s such that Next(s, 5)";
+		string query2 = "stmt s; read r; Select <s, r> such that Next(r, s)";
 
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"4"};
+		vector<string> expected_result2 = {"2 1"};
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
 	}
 
-	SECTION("Next*") {
+	//SECTION("Next*") {
+	//	string query1 = "read r; stmt s; Select s such that Next*(r, s)";
+	//	string query2 = "stmt s; Select BOOLEAN such that Next*(s, s)";
 
-	}
+	//	vector<string> result1 = processor.processQuery(query1);
+	//	vector<string> result2 = processor.processQuery(query2);
+
+	//	vector<string> expected_result1 = {"2", "3"};
+	//	vector<string> expected_result2 = {"TRUE"};
+	//	sort(result1.begin(), result1.end());
+	//	REQUIRE(result1 == expected_result1);
+	//	REQUIRE(result2 == expected_result2);
+	//}
 };
 
 TEST_CASE("Pattern clause") {
@@ -339,7 +372,7 @@ TEST_CASE("Pattern clause") {
 	pkb.setStmtType(4, StmtType::IfStmt);
 	pkb.setStmtType(5, StmtType::Assign);
 	pkb.setStmtType(6, StmtType::WhileStmt);
-	
+
 	// Assign statements
 	vector<string> assign_token2 = {"x", "+", "1", "*", "9"};
 	QP::QueryExpressionLexer lexer2 = QP::QueryExpressionLexer(assign_token2);
@@ -349,7 +382,7 @@ TEST_CASE("Pattern clause") {
 	QP::QueryExpressionLexer lexer3 = QP::QueryExpressionLexer(assign_token3);
 	auto expression3 = Common::ExpressionProcessor::Expression::parse(lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 	pkb.setAssign(5, "y", expression3);
-	
+
 	// While statements
 	pkb.setWhileControl(2, "x");
 	pkb.setWhileControl(2, "y");
@@ -377,13 +410,9 @@ TEST_CASE("Pattern clause") {
 		REQUIRE(result2 == expected_result2);
 	}
 
-	SECTION("If") {
+	SECTION("If") {}
 
-	}
-
-	SECTION("While") {
-
-	}
+	SECTION("While") {}
 };
 
 TEST_CASE("One such that clause") {
@@ -580,5 +609,90 @@ TEST_CASE("One such that and one pattern") {
 }
 
 TEST_CASE("Multiple clauses") {
+	PKB::Storage pkb = PKB::Storage();
+	pkb.setStmtType(1, StmtType::Read);
+	pkb.setStmtType(2, StmtType::IfStmt);
+	pkb.setStmtType(3, StmtType::Call);
+	pkb.setStmtType(4, StmtType::WhileStmt);
+	pkb.setStmtType(5, StmtType::Assign);
+	pkb.setStmtType(6, StmtType::Print);
+	pkb.setFollows(1, 2);
+	pkb.setParent(2, 3);
+	pkb.setParent(2, 4);
+	pkb.setParent(4, 5);
+	pkb.setNext(1, 2);
+	pkb.setNext(2, 3);
+	pkb.setNext(4, 5);
+	pkb.setNext(5, 4);
+	pkb.setUses(2, "x");
+	pkb.setUses(2, "y");
+	pkb.setUses(4, "z");
+	pkb.setUses(5, "w");
+	pkb.setModifies(1, "y");
+	pkb.setModifies(5, "x");
+	pkb.setWhileControl(4, "a");
+	pkb.setIfControl(2, "a");
+	pkb.setIfControl(2, "b");
+	pkb.setConstant({10, 20, 30});
+	pkb.setProc("proc1", 1, 5);
+	pkb.setProc("proc2", 6, 6);
+	pkb.setCall(3, "proc2");
+	pkb.populateComplexRelations();
 
+	QP::QueryProcessor processor = QP::QueryProcessor(pkb);
+
+	SECTION("Select boolean") {
+		string query1 = "read r; stmt s; if i; procedure p; while w; ";
+		query1 += "Select BOOLEAN such that Next(r, i) and Parent(2, w) and Uses(p, \"w\") and Calls(p, \"proc2\") and Follows(1, s)";
+		string query2 = "Select BOOLEAN such that Follows(1, 2) and Uses(2, \"a\") and Modifies(1, \"y\") and Calls( \"proc1\", \"proc2\")";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"TRUE"};
+		vector<string> expected_result2 = {"FALSE"};
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
+	}
+
+	SECTION("Select tuple") {
+		string query1 = "read r; stmt s; if i; while w; procedure p; ";
+		query1 += "Select <r, s, i, p> such that Next(r, i) and Parent(2, w) and Uses(p, \"w\") and Calls(p, \"proc2\") and Follows(1, s)";
+		string query2 = "read r; while w; ";
+		query2 += "Select <r, w> such that Follows(1, 2) and Uses(2, \"w\") and Modifies(1, \"y\") and Calls( \"proc1\", \"proc2\")";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"1 2 2 proc1"};
+		vector<string> expected_result2 = {"1 4"};
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
+	}
+
+	SECTION("Clauses form one group") {
+		string query = "read r; stmt s1, s2, s3; while w; constant c; procedure p; variable v, v1; if i; Select c ";
+		query += "such that Follows(r, i) and Parent(i, s2) and Parent*(s2, s3) and Calls(p, \"proc2\") and Uses(p, v) and Modifies(r, v) ";
+		//query += "pattern i(v1, _, _) and w(v1, _)";
+
+		vector<string> result = processor.processQuery(query);
+
+		vector<string> expected_result = {"10", "20", "30"};
+		sort(result.begin(), result.end());
+		REQUIRE(result == expected_result);
+	}
+
+	SECTION("Clauses form many groups") {
+		string query = "read r; stmt s1, s2, s3; while w; constant c; procedure p; variable v, v1; if i; Select c ";
+		query += "such that Follows(r, s1) and Parent(s1, s2) ";
+		query += "such that Calls(p, \"proc2\") and Uses(p, v) ";
+		//query += "pattern i(v1, _, _) and w(v1, _) ";
+		query += "such that Next(s3, _)";
+
+		vector<string> result = processor.processQuery(query);
+
+		vector<string> expected_result = {"10", "20", "30"};
+		sort(result.begin(), result.end());
+		REQUIRE(result == expected_result);
+	}
 }
