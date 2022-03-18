@@ -12,7 +12,8 @@ namespace Common::Converter {
 struct ConversionException : public runtime_error {
 	using runtime_error::runtime_error;
 };
-MathematicalOperator convertMathematical(const string& op);
+MathematicalOperator convertMathematical(const string& opr);
+string mathematicalToString(const MathematicalOperator& opr);
 ConstVal convertInteger(const string& integer);
 }  // namespace Common::Converter
 

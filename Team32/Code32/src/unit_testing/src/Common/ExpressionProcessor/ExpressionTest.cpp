@@ -284,3 +284,43 @@ TEST_CASE("Common::ExpressionProcessor::Expression::parse Logical Tests") {
 		REQUIRE_THROWS_AS(Expression::parse(lex, Common::ExpressionProcessor::ExpressionType::Logical), ExpressionProcessorException);
 	}
 }
+
+
+TEST_CASE("Common::ExpressionProcessor::Expression::contains Test") {
+	MockLexer lex = MockLexer(vector<string>({"(", "A", "-", "1", ")", "*", "B", "+", "2", "/", "3", ")"}));
+	Expression expression = Expression::parse(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+
+	SECTION("Single Variable Test") {
+		lex = MockLexer(vector<string>({"(", "A", ")"}));
+		Expression target = Expression::parse(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+		REQUIRE(expression.contains(target));
+	}
+
+	SECTION("Single Constant Test") {
+		lex = MockLexer(vector<string>({"(", "1", ")"}));
+		Expression target = Expression::parse(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+		REQUIRE(expression.contains(target));
+	}
+
+	SECTION("Operator Test") {
+		lex = MockLexer(vector<string>({"A", "-", "1"}));
+		Expression target = Expression::parse(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+		REQUIRE(expression.contains(target));
+
+		lex = MockLexer(vector<string>({"2", "/", "3"}));
+		target = Expression::parse(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+		REQUIRE(expression.contains(target));
+	}
+
+	SECTION("Bracketed Test") {
+		lex = MockLexer(vector<string>({"(", "A", "-", "1", ")", "*", "B"}));
+		Expression target = Expression::parse(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+		REQUIRE(expression.contains(target));
+	}
+
+	SECTION("Precedence Test") {
+		lex = MockLexer(vector<string>({"B", "+", "2"}));
+		Expression target = Expression::parse(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+		REQUIRE_FALSE(expression.contains(target));
+	}
+}

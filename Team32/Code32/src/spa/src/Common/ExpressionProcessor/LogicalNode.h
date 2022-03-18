@@ -6,6 +6,8 @@
 
 class Common::ExpressionProcessor::LogicalNode : public ExpressionNode {
 public:
+	explicit LogicalNode(vector<variant<shared_ptr<ExpressionNode>, MathematicalOperator, VarRef, ConstVal>> tokens)
+		: ExpressionNode(tokens){};
 	~LogicalNode() override = default;
 };
 

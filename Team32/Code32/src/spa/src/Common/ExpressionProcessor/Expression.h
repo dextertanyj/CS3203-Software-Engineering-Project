@@ -26,6 +26,7 @@ public:
 
 private:
 	shared_ptr<ExpressionNode> root;
+	string traversal;
 	unordered_set<VarRef> variables;
 	unordered_set<ConstVal> constants;
 

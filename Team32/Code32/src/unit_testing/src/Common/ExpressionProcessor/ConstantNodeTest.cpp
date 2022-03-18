@@ -5,50 +5,26 @@
 using namespace std;
 using namespace Common::ExpressionProcessor;
 
-TEST_CASE("Common::ExpressionProcessor::TerminalNode<ConstVal>::equals") {
+TEST_CASE("Common::ExpressionProcessor::TerminalNode<ConstVal>::traversal") {
 	shared_ptr<TerminalNode<ConstVal>> constant = make_shared<TerminalNode<ConstVal>>(1);
 
-	SECTION("Same Object Test") { REQUIRE(constant->equals(constant)); }
+	SECTION("Same Object Test") { REQUIRE_EQUALS(constant->traversal(), constant->traversal()); }
 
 	SECTION("Same Constant Value Test") {
 		shared_ptr<TerminalNode<ConstVal>> other = make_shared<TerminalNode<ConstVal>>(1);
-		REQUIRE(constant->equals(other));
+		REQUIRE_EQUALS(constant->traversal(), other->traversal());
 	}
 
 	SECTION("Different Constant Value Test") {
 		shared_ptr<TerminalNode<ConstVal>> other = make_shared<TerminalNode<ConstVal>>(2);
-		REQUIRE_FALSE(constant->equals(other));
+		REQUIRE(constant->traversal() != other->traversal());
 	}
 
 	SECTION("Different Expression Test") {
 		shared_ptr<ExpressionNode> other = make_shared<TerminalNode<string>>("A");
 		shared_ptr<ExpressionNode> other_operator = make_shared<ArithmeticNode>(
 			MathematicalOperator::Plus, make_unique<TerminalNode<ConstVal>>(2), make_unique<TerminalNode<ConstVal>>(3));
-		REQUIRE_FALSE(constant->equals(other));
-		REQUIRE_FALSE(constant->equals(other_operator));
-	}
-}
-
-TEST_CASE("Common::ExpressionProcessor::TerminalNode<ConstVal>::contains") {
-	shared_ptr<TerminalNode<ConstVal>> constant = make_shared<TerminalNode<ConstVal>>(1);
-
-	SECTION("Same Object Test") { REQUIRE(constant->contains(constant)); }
-
-	SECTION("Same Constant Value Test") {
-		shared_ptr<TerminalNode<ConstVal>> other = make_shared<TerminalNode<ConstVal>>(1);
-		REQUIRE(constant->contains(other));
-	}
-
-	SECTION("Common::ExpressionProcessor::TerminalNode<ConstVal>::contains Different Constant Value Test") {
-		shared_ptr<TerminalNode<ConstVal>> other = make_shared<TerminalNode<ConstVal>>(2);
-		REQUIRE_FALSE(constant->contains(other));
-	}
-
-	SECTION("Common::ExpressionProcessor::TerminalNode<ConstVal>::contains Different Expression Test") {
-		shared_ptr<ExpressionNode> other = make_shared<TerminalNode<string>>("A");
-		shared_ptr<ExpressionNode> contained = make_shared<ArithmeticNode>(
-			MathematicalOperator::Plus, make_unique<TerminalNode<ConstVal>>(1), make_unique<TerminalNode<ConstVal>>(2));
-		REQUIRE_FALSE(constant->contains(other));
-		REQUIRE_FALSE(constant->contains(contained));
+		REQUIRE(constant->traversal() != other->traversal());
+		REQUIRE(constant->traversal() != other_operator->traversal());
 	}
 }

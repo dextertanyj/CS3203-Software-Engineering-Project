@@ -23,70 +23,36 @@ TEST_CASE("Common::ExpressionProcessor::BinaryLogicalNode Invalid Operator Test"
 	                  ExpressionProcessorException);
 }
 
-TEST_CASE("Common::ExpressionProcessor::BinaryLogicalNode::equals") {
+TEST_CASE("Common::ExpressionProcessor::BinaryLogicalNode::traversal") {
 	shared_ptr<BinaryLogicalNode> op =
 		make_shared<BinaryLogicalNode>(MathematicalOperator::And, relational(MathematicalOperator::EQ, variable("A"), constant(1)),
 	                                   relational(MathematicalOperator::EQ, variable("B"), constant(2)));
 
-	SECTION("Same Object Test") { REQUIRE(op->equals(op)); }
+	SECTION("Same Object Test") { REQUIRE_EQUALS(op->traversal(), op->traversal()); }
 
 	SECTION("Same Structure Test") {
 		shared_ptr<BinaryLogicalNode> other =
 			make_shared<BinaryLogicalNode>(MathematicalOperator::And, relational(MathematicalOperator::EQ, variable("A"), constant(1)),
 		                                   relational(MathematicalOperator::EQ, variable("B"), constant(2)));
-		REQUIRE(op->equals(other));
+		REQUIRE_EQUALS(op->traversal(), other->traversal());
 	}
 
 	SECTION("Different Operator Test") {
 		shared_ptr<BinaryLogicalNode> other =
 			make_shared<BinaryLogicalNode>(MathematicalOperator::Or, relational(MathematicalOperator::EQ, variable("A"), constant(1)),
 		                                   relational(MathematicalOperator::EQ, variable("B"), constant(2)));
-		REQUIRE_FALSE(op->equals(other));
+		REQUIRE(op->traversal() != other->traversal());
 	}
 
 	SECTION("Different Subexpression Test") {
 		shared_ptr<BinaryLogicalNode> other =
 			make_shared<BinaryLogicalNode>(MathematicalOperator::And, relational(MathematicalOperator::NEQ, variable("A"), constant(1)),
 		                                   relational(MathematicalOperator::EQ, variable("B"), constant(2)));
-		REQUIRE_FALSE(op->equals(other));
+		REQUIRE(op->traversal() != other->traversal());
 	}
 
 	SECTION("Different Type Test") {
 		shared_ptr<ExpressionNode> other = variable("A");
-		REQUIRE_FALSE(op->equals(other));
-	}
-}
-
-TEST_CASE("Common::ExpressionProcessor::BinaryLogicalNode::contains") {
-	shared_ptr<BinaryLogicalNode> op =
-		make_shared<BinaryLogicalNode>(MathematicalOperator::And, relational(MathematicalOperator::EQ, variable("A"), constant(1)),
-	                                   relational(MathematicalOperator::EQ, variable("B"), constant(2)));
-
-	SECTION("Same Object Test") { REQUIRE(op->contains(op)); }
-
-	SECTION("Same Structure Test") {
-		shared_ptr<BinaryLogicalNode> other =
-			make_shared<BinaryLogicalNode>(MathematicalOperator::And, relational(MathematicalOperator::EQ, variable("A"), constant(1)),
-		                                   relational(MathematicalOperator::EQ, variable("B"), constant(2)));
-		REQUIRE(op->contains(other));
-	}
-
-	SECTION("Different Operator Test") {
-		shared_ptr<BinaryLogicalNode> other =
-			make_shared<BinaryLogicalNode>(MathematicalOperator::Or, relational(MathematicalOperator::EQ, variable("A"), constant(1)),
-		                                   relational(MathematicalOperator::EQ, variable("B"), constant(2)));
-		REQUIRE_FALSE(op->contains(other));
-	}
-
-	SECTION("Different Subexpression Test") {
-		shared_ptr<BinaryLogicalNode> other =
-			make_shared<BinaryLogicalNode>(MathematicalOperator::And, relational(MathematicalOperator::NEQ, variable("A"), constant(1)),
-		                                   relational(MathematicalOperator::EQ, variable("B"), constant(2)));
-		REQUIRE_FALSE(op->contains(other));
-	}
-
-	SECTION("Subexpression Test") {
-		shared_ptr<ExpressionNode> other = relational(MathematicalOperator::EQ, variable("B"), constant(2));
-		REQUIRE(op->contains(other));
+		REQUIRE(op->traversal() != other->traversal());
 	}
 }

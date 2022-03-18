@@ -20,50 +20,26 @@ TEST_CASE("Common::ExpressionProcessor::UnaryLogicalNode Invalid Operator Test")
 	                  ExpressionProcessorException);
 }
 
-TEST_CASE("Common::ExpressionProcessor::UnaryLogicalNode::equals") {
+TEST_CASE("Common::ExpressionProcessor::UnaryLogicalNode::traversal") {
 	shared_ptr<UnaryLogicalNode> op =
 		make_shared<UnaryLogicalNode>(MathematicalOperator::Not, relational(MathematicalOperator::EQ, variable("A"), constant(1)));
 
-	SECTION("Same Object Test") { REQUIRE(op->equals(op)); }
+	SECTION("Same Object Test") { REQUIRE_EQUALS(op->traversal(), op->traversal()); }
 
 	SECTION("Same Structure Test") {
 		shared_ptr<UnaryLogicalNode> other =
 			make_shared<UnaryLogicalNode>(MathematicalOperator::Not, relational(MathematicalOperator::EQ, variable("A"), constant(1)));
-		REQUIRE(op->equals(other));
+		REQUIRE_EQUALS(op->traversal(), other->traversal());
 	}
 
 	SECTION("Different Subexpression Test") {
 		shared_ptr<UnaryLogicalNode> other =
 			make_shared<UnaryLogicalNode>(MathematicalOperator::Not, relational(MathematicalOperator::NEQ, variable("A"), constant(1)));
-		REQUIRE_FALSE(op->equals(other));
+		REQUIRE(op->traversal() != other->traversal());
 	}
 
 	SECTION("Different Type Test") {
 		shared_ptr<ExpressionNode> other = variable("A");
-		REQUIRE_FALSE(op->equals(other));
-	}
-}
-
-TEST_CASE("Common::ExpressionProcessor::UnaryLogicalNode::contains") {
-	shared_ptr<UnaryLogicalNode> op =
-		make_shared<UnaryLogicalNode>(MathematicalOperator::Not, relational(MathematicalOperator::EQ, variable("A"), constant(1)));
-
-	SECTION("Same Object Test") { REQUIRE(op->contains(op)); }
-
-	SECTION("Same Structure Test") {
-		shared_ptr<UnaryLogicalNode> other =
-			make_shared<UnaryLogicalNode>(MathematicalOperator::Not, relational(MathematicalOperator::EQ, variable("A"), constant(1)));
-		REQUIRE(op->contains(other));
-	}
-
-	SECTION("Different Subexpression Test") {
-		shared_ptr<UnaryLogicalNode> other =
-			make_shared<UnaryLogicalNode>(MathematicalOperator::Not, relational(MathematicalOperator::NEQ, variable("A"), constant(1)));
-		REQUIRE_FALSE(op->contains(other));
-	}
-
-	SECTION("Subexpression Test") {
-		shared_ptr<ExpressionNode> other = variable("A");
-		REQUIRE(op->contains(other));
+		REQUIRE(op->traversal() != other->traversal());
 	}
 }

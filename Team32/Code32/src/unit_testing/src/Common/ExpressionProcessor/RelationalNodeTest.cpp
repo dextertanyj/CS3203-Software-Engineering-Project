@@ -16,54 +16,28 @@ TEST_CASE("Common::ExpressionProcessor::RelationalNode Invalid Operator Test") {
 	REQUIRE_THROWS_AS(RelationalNode(MathematicalOperator::And, variable("A"), constant(1)), ExpressionProcessorException);
 }
 
-TEST_CASE("Common::ExpressionProcessor::RelationalNode::equals ") {
+TEST_CASE("Common::ExpressionProcessor::RelationalNode::traversal") {
 	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant(1));
 
-	SECTION("Same Object Test") { REQUIRE(op->equals(op)); }
+	SECTION("Same Object Test") { REQUIRE_EQUALS(op->traversal(), op->traversal()); }
 
 	SECTION("Same Structure Test") {
 		shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant(1));
-		REQUIRE(op->equals(other));
+		REQUIRE_EQUALS(op->traversal(), other->traversal());
 	}
 
 	SECTION("Different Operator Test") {
 		shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::NEQ, variable("A"), constant(1));
-		REQUIRE_FALSE(op->equals(other));
+		REQUIRE(op->traversal() != other->traversal());
 	}
 
 	SECTION("Different Subexpression Test") {
 		shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("B"), constant(1));
-		REQUIRE_FALSE(op->equals(other));
+		REQUIRE(op->traversal() != other->traversal());
 	}
 
 	SECTION("Different Type Test") {
 		shared_ptr<ExpressionNode> other = variable("A");
-		REQUIRE_FALSE(op->equals(other));
-	}
-}
-
-TEST_CASE("Common::ExpressionProcessor::RelationalNode::contains") {
-	shared_ptr<RelationalNode> op = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant(1));
-
-	SECTION("Same Object Test") { REQUIRE(op->contains(op)); }
-
-	SECTION("Same Structure Test") {
-		shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("A"), constant(1));
-		REQUIRE(op->contains(other));
-	}
-
-	SECTION("Different Operator Test") {
-		shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::NEQ, variable("A"), constant(1));
-		REQUIRE_FALSE(op->contains(other));
-	}
-
-	SECTION("Different Subexpression Test") {
-		shared_ptr<RelationalNode> other = make_shared<RelationalNode>(MathematicalOperator::EQ, variable("B"), constant(1));
-		REQUIRE_FALSE(op->contains(other));
-	}
-
-	SECTION("Subexpression Test") {
-		shared_ptr<ExpressionNode> other = variable("A");
-		REQUIRE(op->contains(other));
+		REQUIRE(op->traversal() != other->traversal());
 	}
 }

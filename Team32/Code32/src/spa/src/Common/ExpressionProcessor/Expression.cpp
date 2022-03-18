@@ -34,7 +34,11 @@ struct ExtractVisitor {
 };
 
 Expression::Expression(shared_ptr<ExpressionNode> root, unordered_set<VarRef> variables, unordered_set<ConstVal> constants)
-	: root(move(root)), variables(move(variables)), constants(move(constants)) {}
+	: root(move(root)), variables(move(variables)), constants(move(constants)) {
+	if (this->root != nullptr) {
+		traversal = this->root->traversal();
+	}
+}
 
 Expression Expression::parse(LexerInterface& lex, ExpressionType type) {
 	Acceptor acceptor = OperatorAcceptor::getAcceptor(type);
@@ -188,9 +192,9 @@ bool Expression::checkExpressionType(const shared_ptr<ExpressionNode>& expressio
 	}
 }
 
-bool Expression::contains(const Expression& other) { return root->contains(other.root); }
+bool Expression::contains(const Expression& other) { return traversal.find(other.traversal) != std::string::npos; }
 
-bool Expression::equals(const Expression& other) { return root->equals(other.root); }
+bool Expression::equals(const Expression& other) { return traversal == other.traversal; }
 
 unordered_set<ConstVal> Expression::getConstants() { return constants; }
 unordered_set<VarRef> Expression::getVariables() { return variables; }
