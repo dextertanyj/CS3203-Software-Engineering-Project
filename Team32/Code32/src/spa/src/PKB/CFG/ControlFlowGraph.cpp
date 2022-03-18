@@ -37,6 +37,11 @@ bool PKB::ControlFlowGraph::checkNext(StmtRef prev, StmtRef next) {
 	              [next](shared_ptr<StmtInfo> next_info) { return next_info->getIdentifier() == next; });
 }
 
+bool PKB::ControlFlowGraph::checkNextStar(StmtRef prev, StmtRef next) {
+	StmtInfoPtrSet nexts = getNextStarNodes(prev);
+	return any_of(nexts.begin(), nexts.end(), [&next](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == next; });
+}
+
 shared_ptr<PKB::StatementNode> PKB::ControlFlowGraph::getNode(StmtRef ref) {
 	auto iter = stmt_to_normal_node_store.find(ref);
 	if (iter == stmt_to_normal_node_store.end()) {
@@ -214,4 +219,3 @@ void PKB::ControlFlowGraph::clear() { this->stmt_to_normal_node_store.clear(); }
 // TODO: Next* TBD.
 void PKB::ControlFlowGraph::optimize() {}
 void PKB::ControlFlowGraph::populateGraphIndex() {}
-bool PKB::ControlFlowGraph::checkNextStar(StmtRef i, StmtRef i1) { return false; }

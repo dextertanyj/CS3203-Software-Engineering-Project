@@ -64,16 +64,18 @@ public:
 	unordered_set<ProcRef> getProcedures() override;
 
 	// Parent get methods
+	bool checkParent(StmtRef parent, StmtRef child) override;
+	bool checkParentStar(StmtRef parent, StmtRef child) override;
 	shared_ptr<StmtInfo> getParent(StmtRef index) override;
 	StmtInfoPtrSet getChildren(StmtRef index) override;
-	bool checkParents(StmtRef parent, StmtRef child) override;
 	StmtInfoPtrSet getParentStar(StmtRef index) override;
 	StmtInfoPtrSet getChildStar(StmtRef index) override;
 
 	// Follow get methods
+	bool checkFollows(StmtRef front, StmtRef back) override;
+	bool checkFollowsStar(StmtRef front, StmtRef back) override;
 	shared_ptr<StmtInfo> getPreceding(StmtRef index) override;
 	shared_ptr<StmtInfo> getFollower(StmtRef index) override;
-	bool checkFollows(StmtRef front, StmtRef back) override;
 	StmtInfoPtrSet getFollowerStar(StmtRef index) override;
 	StmtInfoPtrSet getPrecedingStar(StmtRef index) override;
 
@@ -102,7 +104,8 @@ public:
 	                                                                  bool is_exact_match) override;
 
 	// Call get methods
-	bool checkCall(const ProcRef& caller, const ProcRef& callee) override;
+	bool checkCalls(const ProcRef& caller, const ProcRef& callee) override;
+	bool checkCallsStar(const ProcRef& caller, const ProcRef& callee) override;
 	ProcRefSet getCallee(const ProcRef& caller) override;
 	ProcRefSet getCalleeStar(const ProcRef& caller) override;
 	ProcRefSet getCaller(const ProcRef& callee) override;

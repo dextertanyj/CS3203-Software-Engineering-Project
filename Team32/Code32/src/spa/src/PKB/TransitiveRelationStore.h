@@ -14,6 +14,7 @@ public:
 	TransitiveRelationStore();
 	void set(shared_ptr<TInfo> front, shared_ptr<TInfo> back);
 	[[nodiscard]] bool isRelated(TIdent front, TIdent back) const;
+	[[nodiscard]] bool isTransitivelyRelated(TIdent front, TIdent back) const;
 
 	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getForward(TIdent name) const;
 	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getReverse(TIdent name) const;
