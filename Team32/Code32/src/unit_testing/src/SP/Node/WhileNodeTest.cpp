@@ -126,43 +126,63 @@ TEST_CASE("SP::Node::WhileNode::extract Test") {
 
 	SECTION("Single enclosed statement") {
 		StmtRef statement_number = 2;
-		StmtRef innner_statement = 3;
+		StmtRef inner_statement = 3;
 		unique_ptr<ExpressionNode> condition =
 			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "<", "0"})));
 		unique_ptr<StatementListNode> body = make_unique<StatementListNode>();
-		body->addStatementNode(make_unique<CallNode>(innner_statement, "Procedure"));
+		body->addStatementNode(make_unique<CallNode>(inner_statement, "Procedure"));
 		WhileNode node = WhileNode(statement_number, std::move(condition), std::move(body));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
 		REQUIRE_EQUALS(pkb.set_parent_call_count, 1);
-		REQUIRE_EQUALS(pkb.set_parent_arguments, vector<tuple<StmtRef, StmtRef>>{{statement_number, innner_statement}});
+		REQUIRE_EQUALS(pkb.set_parent_arguments, vector<tuple<StmtRef, StmtRef>>{{statement_number, inner_statement}});
 		REQUIRE_EQUALS(pkb.set_parent_arguments.size(), 1);
 		REQUIRE_EQUALS(pkb.set_follows_call_count, 0);
 		REQUIRE(pkb.set_follows_arguments.empty());
+
+		// while control variables
+		REQUIRE_EQUALS(pkb.set_while_control_set_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_while_control_set_arguments, vector<tuple<StmtRef, VarRefSet>>({{statement_number, {"x"}}}));
+
+		// Next relationship
+		REQUIRE_EQUALS(pkb.set_next_call_count, 2);
+		REQUIRE_EQUALS(pkb.set_next_arguments,
+		               vector<tuple<StmtRef, StmtRef>>({{statement_number, inner_statement}, {inner_statement, statement_number}}));
 	}
 
 	SECTION("Multiple enclosed statements") {
 		StmtRef statement_number = 2;
-		StmtRef first_innner_statement = 3;
-		StmtRef second_innner_statement = 5;
-		StmtRef third_innner_statement = 8;
+		StmtRef first_inner_statement = 3;
+		StmtRef second_inner_statement = 5;
+		StmtRef third_inner_statement = 8;
 		unique_ptr<ExpressionNode> condition =
-			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "<", "0", ")"})));
+			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "<", "y"})));
 		unique_ptr<StatementListNode> body = make_unique<StatementListNode>();
-		body->addStatementNode(make_unique<CallNode>(first_innner_statement, "Procedure"));
-		body->addStatementNode(make_unique<ReadNode>(second_innner_statement, make_unique<VariableNode>("A")));
-		body->addStatementNode(make_unique<PrintNode>(third_innner_statement, make_unique<VariableNode>("B")));
+		body->addStatementNode(make_unique<CallNode>(first_inner_statement, "Procedure"));
+		body->addStatementNode(make_unique<ReadNode>(second_inner_statement, make_unique<VariableNode>("A")));
+		body->addStatementNode(make_unique<PrintNode>(third_inner_statement, make_unique<VariableNode>("B")));
 		WhileNode node = WhileNode(statement_number, std::move(condition), std::move(body));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
 		REQUIRE_EQUALS(pkb.set_parent_call_count, 3);
-		REQUIRE_EQUALS(pkb.set_parent_arguments, vector<tuple<StmtRef, StmtRef>>{{statement_number, first_innner_statement},
-		                                                                         {statement_number, second_innner_statement},
-		                                                                         {statement_number, third_innner_statement}});
+		REQUIRE_EQUALS(pkb.set_parent_arguments, vector<tuple<StmtRef, StmtRef>>{{statement_number, first_inner_statement},
+		                                                                         {statement_number, second_inner_statement},
+		                                                                         {statement_number, third_inner_statement}});
 		REQUIRE_EQUALS(pkb.set_parent_arguments.size(), 3);
 		REQUIRE_EQUALS(pkb.set_follows_call_count, 2);
-		REQUIRE_EQUALS(pkb.set_follows_arguments, vector<tuple<StmtRef, StmtRef>>{{first_innner_statement, second_innner_statement},
-		                                                                          {second_innner_statement, third_innner_statement}});
+		REQUIRE_EQUALS(pkb.set_follows_arguments, vector<tuple<StmtRef, StmtRef>>{{first_inner_statement, second_inner_statement},
+		                                                                          {second_inner_statement, third_inner_statement}});
 		REQUIRE_EQUALS(pkb.set_follows_arguments.size(), 2);
+
+		// if control variables
+		REQUIRE_EQUALS(pkb.set_while_control_set_call_count, 1);
+		REQUIRE_EQUALS(pkb.set_while_control_set_arguments, vector<tuple<StmtRef, VarRefSet>>({{statement_number, {"x", "y"}}}));
+
+		// Next relationship
+		REQUIRE_EQUALS(pkb.set_next_call_count, 4);
+		REQUIRE_EQUALS(pkb.set_next_arguments, vector<tuple<StmtRef, StmtRef>>({{first_inner_statement, second_inner_statement},
+		                                                                           {second_inner_statement, third_inner_statement},
+		                                                                           {statement_number, first_inner_statement},
+		                                                                           {third_inner_statement, statement_number}}));
 	}
 }
