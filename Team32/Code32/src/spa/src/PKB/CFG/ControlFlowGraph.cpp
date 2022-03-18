@@ -85,7 +85,7 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getNextStarNodes(StmtRef ref) {
 	while (!info.node_queue.empty()) {
 		shared_ptr<PKB::NodeInterface> curr_node = info.node_queue.front();
 		info.node_queue.pop();
-		set<shared_ptr<PKB::NodeInterface>> curr_next_nodes = curr_node->getNextNodes();
+		unordered_set<shared_ptr<PKB::NodeInterface>> curr_next_nodes = curr_node->getNextNodes();
 		for (const auto& node : curr_next_nodes) {
 			processBFSVisit(info, node, &ControlFlowGraph::collectNextOfDummy);
 		}
@@ -100,7 +100,7 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getPreviousStarNodes(StmtRef ref) {
 	while (!info.node_queue.empty()) {
 		shared_ptr<PKB::NodeInterface> curr_node = info.node_queue.front();
 		info.node_queue.pop();
-		set<shared_ptr<PKB::NodeInterface>> curr_prev_nodes = curr_node->getPreviousNodes();
+		unordered_set<shared_ptr<PKB::NodeInterface>> curr_prev_nodes = curr_node->getPreviousNodes();
 		for (const auto& node : curr_prev_nodes) {
 			processBFSVisit(info, node, &ControlFlowGraph::collectPreviousOfDummy);
 		}
@@ -162,7 +162,7 @@ StmtInfoPtrSet PKB::ControlFlowGraph::collectNextOfDummy(const shared_ptr<PKB::N
 	while (result->getNextNodes().size() == 1 && result->getNextNodes().begin()->get()->getNodeType() == NodeType::Dummy) {
 		result = *result->getNextNodes().begin();
 	}
-	set<shared_ptr<PKB::NodeInterface>> next_node_of_dummy = result->getNextNodes();
+	unordered_set<shared_ptr<PKB::NodeInterface>> next_node_of_dummy = result->getNextNodes();
 	if (next_node_of_dummy.size() > 1) {
 		throw logic_error("There should only be one next node of dummy.");
 	}
