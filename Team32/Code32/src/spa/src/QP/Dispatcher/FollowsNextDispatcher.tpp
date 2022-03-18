@@ -16,7 +16,7 @@ QP::Types::ArgumentDispatcher QP::Dispatcher::FollowsNextDispatcher<T>::dispatch
 
 template <QP::Types::ClauseType T>
 QP::Types::ExecutorSetBundle QP::Dispatcher::FollowsNextDispatcher<T>::argumentDispatcher(Types::ClauseType type,
-                                                                                      const vector<Types::ReferenceArgument>& args) {
+                                                                                          const vector<Types::ReferenceArgument>& args) {
 	return DispatchProcessors::processArgument(type, FollowsNextDispatcher<T>::argument_dispatch_map, args);
 };
 
