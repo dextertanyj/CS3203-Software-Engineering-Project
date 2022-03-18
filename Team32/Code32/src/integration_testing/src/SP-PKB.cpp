@@ -82,8 +82,8 @@ TEST_CASE("SP::Processor::process Basic Test") {
 			REQUIRE_EQUALS(pkb.getParent(4)->getIdentifier(), 1);
 			REQUIRE_EQUALS(pkb.getParent(5)->getIdentifier(), 1);
 			REQUIRE_EQUALS(pkb.getParent(6), nullptr);
-			REQUIRE(pkb.checkParents(1, 2));
-			REQUIRE_FALSE(pkb.checkParents(2, 1));
+			REQUIRE(pkb.checkParent(1, 2));
+			REQUIRE_FALSE(pkb.checkParent(2, 1));
 			std::unordered_set<shared_ptr<StmtInfo>> expected_children = {stmt_map.find(2)->second, stmt_map.find(3)->second,
 			                                                              stmt_map.find(4)->second, stmt_map.find(5)->second};
 			REQUIRE_EQUALS(pkb.getChildren(1), expected_children);
@@ -182,8 +182,8 @@ TEST_CASE("SP::Processor::process Basic Test") {
 			REQUIRE_EQUALS(pkb.getParent(1), nullptr);
 			REQUIRE_EQUALS(pkb.getParent(2)->getIdentifier(), 1);
 			REQUIRE_EQUALS(pkb.getParent(3)->getIdentifier(), 1);
-			REQUIRE(pkb.checkParents(1, 2));
-			REQUIRE_FALSE(pkb.checkParents(2, 1));
+			REQUIRE(pkb.checkParent(1, 2));
+			REQUIRE_FALSE(pkb.checkParent(2, 1));
 			std::unordered_set<shared_ptr<StmtInfo>> expected_children = {
 				stmt_map.find(2)->second,
 				stmt_map.find(3)->second,
@@ -246,8 +246,8 @@ TEST_CASE("SP::Processor::process Basic Test") {
 		}
 
 		SECTION("Call") {
-			REQUIRE(pkb.checkCall("main", "middle"));
-			REQUIRE(pkb.checkCall("middle", "final"));
+			REQUIRE(pkb.checkCalls("main", "middle"));
+			REQUIRE(pkb.checkCalls("middle", "final"));
 			REQUIRE_EQUALS(pkb.getCalleeStar("main"), unordered_set<ProcRef>({"middle", "final"}));
 			REQUIRE_EQUALS(pkb.getCallerStar("final"), unordered_set<ProcRef>({"main", "middle"}));
 		}
