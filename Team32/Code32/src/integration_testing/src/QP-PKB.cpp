@@ -349,7 +349,7 @@ TEST_CASE("Next clause") {
 		REQUIRE(result2 == expected_result2);
 	}
 
-	//SECTION("Next*") {
+	// SECTION("Next*") {
 	//	string query1 = "read r; stmt s; Select s such that Next*(r, s)";
 	//	string query2 = "stmt s; Select BOOLEAN such that Next*(s, s)";
 
@@ -386,11 +386,16 @@ TEST_CASE("Pattern clause") {
 	// While statements
 	pkb.setWhileControl(2, "x");
 	pkb.setWhileControl(2, "y");
+	pkb.setUses(2, "x");
+	pkb.setUses(2, "y");
 
 	// If statements
 	pkb.setIfControl(1, "x");
 	pkb.setIfControl(4, "y");
 	pkb.setIfControl(4, "z");
+	pkb.setUses(1, "x");
+	pkb.setUses(4, "y");
+	pkb.setUses(4, "z");
 
 	pkb.populateComplexRelations();
 
@@ -410,9 +415,33 @@ TEST_CASE("Pattern clause") {
 		REQUIRE(result2 == expected_result2);
 	}
 
-	SECTION("If") {}
+	SECTION("If") {
+		string query1 = "if i; Select i pattern i(\"x\", _, _)";
+		string query2 = "if i; variable v; Select <i, v> pattern i(v, _, _)";
 
-	SECTION("While") {}
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"1"};
+		vector<string> expected_result2 = {"1 x", "4 y", "4 z"};
+		sort(result2.begin(), result2.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
+	}
+
+	SECTION("While") {
+		string query1 = "while w; Select w pattern w(\"x\", _)";
+		string query2 = "while w; variable v; Select v pattern w(v, _)";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"2"};
+		vector<string> expected_result2 = {"x", "y"};
+		sort(result2.begin(), result2.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
+	}
 };
 
 TEST_CASE("One such that clause") {
@@ -631,8 +660,11 @@ TEST_CASE("Multiple clauses") {
 	pkb.setModifies(1, "y");
 	pkb.setModifies(5, "x");
 	pkb.setWhileControl(4, "a");
+	pkb.setUses(4, "a");
 	pkb.setIfControl(2, "a");
 	pkb.setIfControl(2, "b");
+	pkb.setUses(2, "a");
+	pkb.setUses(2, "b");
 	pkb.setConstant({10, 20, 30});
 	pkb.setProc("proc1", 1, 5);
 	pkb.setProc("proc2", 6, 6);
@@ -644,7 +676,7 @@ TEST_CASE("Multiple clauses") {
 	SECTION("Select boolean") {
 		string query1 = "read r; stmt s; if i; procedure p; while w; ";
 		query1 += "Select BOOLEAN such that Next(r, i) and Parent(2, w) and Uses(p, \"w\") and Calls(p, \"proc2\") and Follows(1, s)";
-		string query2 = "Select BOOLEAN such that Follows(1, 2) and Uses(2, \"a\") and Modifies(1, \"y\") and Calls( \"proc1\", \"proc2\")";
+		string query2 = "Select BOOLEAN such that Follows(1, 2) and Uses(2, \"a\") and Modifies(1, \"x\") and Calls( \"proc1\", \"proc2\")";
 
 		vector<string> result1 = processor.processQuery(query1);
 		vector<string> result2 = processor.processQuery(query2);
@@ -673,7 +705,7 @@ TEST_CASE("Multiple clauses") {
 	SECTION("Clauses form one group") {
 		string query = "read r; stmt s1, s2, s3; while w; constant c; procedure p; variable v, v1; if i; Select c ";
 		query += "such that Follows(r, i) and Parent(i, s2) and Parent*(s2, s3) and Calls(p, \"proc2\") and Uses(p, v) and Modifies(r, v) ";
-		//query += "pattern i(v1, _, _) and w(v1, _)";
+		query += "pattern i(v1, _, _) and w(v1, _)";
 
 		vector<string> result = processor.processQuery(query);
 
@@ -686,7 +718,7 @@ TEST_CASE("Multiple clauses") {
 		string query = "read r; stmt s1, s2, s3; while w; constant c; procedure p; variable v, v1; if i; Select c ";
 		query += "such that Follows(r, s1) and Parent(s1, s2) ";
 		query += "such that Calls(p, \"proc2\") and Uses(p, v) ";
-		//query += "pattern i(v1, _, _) and w(v1, _) ";
+		query += "pattern i(v1, _, _) and w(v1, _) ";
 		query += "such that Next(s3, _)";
 
 		vector<string> result = processor.processQuery(query);
