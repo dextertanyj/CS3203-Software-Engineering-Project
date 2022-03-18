@@ -125,7 +125,7 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeTrivialSynonymWildcar
 
 template <QP::Types::ClauseType T>
 static QP::QueryResult executeTrivialStatementSynonymSynonym(const QP::StorageAdapter& storage, const QP::Types::ReferenceArgument& lhs,
-                                                      const QP::Types::ReferenceArgument& rhs) {
+                                                             const QP::Types::ReferenceArgument& rhs) {
 	StmtInfoPtrSet statements = storage.getStatements();
 	for (auto const& statement : statements) {
 		if (!QP::Utilities::checkStmtTypeMatch(statement, lhs.getSynonym().type)) {

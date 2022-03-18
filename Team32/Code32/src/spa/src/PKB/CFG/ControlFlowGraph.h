@@ -7,6 +7,7 @@
 
 #include "NodeInterface.h"
 #include "PKB/PKB.h"
+#include "PKB/Types.h"
 
 class PKB::ControlFlowGraph {
 public:
@@ -25,10 +26,12 @@ public:
 
 private:
 	void populateGraphIndex();
-	shared_ptr<StmtInfo> collectNextOfDummy(shared_ptr<NodeInterface> dummy_node);
-	StmtInfoPtrSet collectPreviousOfDummy(shared_ptr<NodeInterface> dummy_node);
-	shared_ptr<PKB::StatementNode> getNode(StmtRef ref);
-	unordered_map<StmtRef, shared_ptr<PKB::StatementNode>> stmt_to_normal_node_store;
+	StmtInfoPtrSet collectNextOfDummy(const shared_ptr<NodeInterface>& dummy_node);
+	StmtInfoPtrSet collectPreviousOfDummy(const shared_ptr<NodeInterface>& dummy_node);
+	shared_ptr<StatementNode> getNode(StmtRef ref);
+	unordered_map<StmtRef, shared_ptr<StatementNode>> stmt_to_normal_node_store;
+	void processBFSVisit(Types::BFSInfo& info, const shared_ptr<NodeInterface>& node,
+	                     StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
 };
 
 #endif  // SPA_CONTROLFLOWGRAPH_H
