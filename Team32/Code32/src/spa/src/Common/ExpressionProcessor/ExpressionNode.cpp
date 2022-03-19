@@ -4,6 +4,8 @@
 
 #include "Common/Converter.h"
 
+#define DELIMITER ","
+
 Common::ExpressionProcessor::ExpressionNode::ExpressionNode(
 	vector<variant<shared_ptr<ExpressionNode>, MathematicalOperator, VarRef, ConstVal>> tokens)
 	: tokens(move(tokens)) {}
@@ -15,8 +17,7 @@ string Common::ExpressionProcessor::ExpressionNode::traversal() {
 		              [&](const MathematicalOperator& opr) { traversal.append(Converter::mathematicalToString(opr)); },
 		              [&](const shared_ptr<ExpressionNode>& node) { traversal.append(node->traversal()); }},
 		      token);
-		// Delimiter to prevent a + ab from matching aa + b in postfix notation.
-		traversal += "|";
+		traversal += DELIMITER;  // Prevent a + bc from matching ab + c in postfix notation.
 	}
 	return traversal;
 }
