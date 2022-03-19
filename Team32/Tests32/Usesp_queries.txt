@@ -1,0 +1,185 @@
+1 - UsesP (synonym, synonym) positive
+procedure p; variable v;
+Select p such that Uses(p, v)
+main, Mars, Earth
+5000
+2 - UsesP(synonym, synonym) positive
+procedure Mars; variable x;
+Select x such that Uses(Mars, x)
+x, y, a, b
+5000
+3 - UsesP(synonym, synonym) trivial
+variable v; procedure p1, p2;
+Select p1 such that Uses(p2, v)
+main, Mars, Earth, Venus
+5000
+4 - UsesP(synonym, _) positive
+procedure p;
+Select p such that Uses(p, _)
+main, Mars, Earth
+5000
+5 - UsesP(synonym, varName) positive
+procedure p;
+Select p such that Uses(p, "x")
+main
+5000
+6 - UsesP(synonym, varName) positive
+procedure a;
+Select a such that Uses(a, "a")
+main, Mars, Earth
+5000
+7 - UsesP(synonym, varName) negative
+procedure p;
+Select p such that Uses(p, "z")
+
+5000
+8 - UsesP(name, synonym) positive
+variable main;
+Select main such that Uses("main", main)
+x, y, a, b
+5000
+9 - UsesP(name, synonym) positive
+variable v;
+Select v such that Uses("Mars", v)
+a, b
+5000
+10 - UsesP(name, synonym) negative
+variable v;
+Select v such that Uses("Venus", v)
+
+5000
+11 - UsesP(name, _) positive
+variable v;
+Select v such that Uses("main", _)
+x, y, z, a, b
+5000
+12 - UsesP(name, _) negative
+variable v;
+Select v such that Uses("Venus", _)
+
+5000
+13 - UsesP(name, varName) positive
+procedure p;
+Select p such that Uses("main", "x")
+main, Mars, Earth, Venus
+5000
+14 - UsesP(name, varName) negative
+procedure p;
+Select p such that Uses("Mars", "x")
+
+5000
+15 - UsesP invalid _
+variable v;
+Select v such that Uses(_, v)
+
+5000
+16 - UsesP invalid synonym
+if i;
+Select i such that Uses("main", i)
+
+5000
+17 - UsesP invalid varName
+procedure p;
+Select p such that Uses(p, "0")
+
+5000
+18 - UsesP invalid procedure
+variable v;
+Select v such that Uses("test", v)
+
+5000
+19 - UsesP invalid variable
+procedure p;
+Select p such that Uses(p, "d")
+
+5000
+20 - UsesP(synonym, varName) multiple such that positive
+procedure p;
+Select p such that Uses(p, "x") such that Uses(p, "b")
+main
+5000
+21 - UsesP(synonym, varName) multiple such that negative
+procedure p;
+Select p such that Uses(p, "x") such that Uses(p, "b") such that Uses(p, "c")
+
+5000
+22 - UsesP(name, synonym) multiple such that positive
+variable main;
+Select main such that Uses("main", main) such that Uses("Mars", main)
+b, a
+5000
+23 - UsesP(name, synonym) multiple such that negative
+variable main;
+Select main such that Uses("main", main) such that Uses("Mars", main) such that Uses("Venus", main)
+
+5000
+24 - UsesP(name, _) multiple such that positive
+variable v;
+Select v such that Uses("main", _) such that Uses("Mars", _)
+x, y, z, a, b
+5000
+25 - UsesP(name, _) multiple such that negative
+variable v;
+Select v such that Uses("main", _) such that Uses("Venus", _)
+
+5000
+26 - UsesP(name, varName) multiple such that positive
+procedure p;
+Select p such that Uses("main", "x") such that Uses("Mars", "b")
+main, Mars, Earth, Venus
+5000
+27 - UsesP(name, varName) multiple such that negative
+procedure p;
+Select p such that Uses("main", "x") such that Uses("Mars", "x")
+
+5000
+28 - UsesP mix positive
+procedure p;
+Select p such that Uses(p, "x") and Uses("Mars", "b")
+main
+5000
+29 - UsesP mix positive
+variable main;
+Select main such that Uses("main", main) and Uses("Mars", main) such that Uses("Earth", _)
+b, a
+5000
+30 - UsesP mix positive
+variable v;
+Select v such that Uses("main", _) and Uses("Mars", _)
+x, y, z, a, b
+5000
+31 - UsesP mix positive
+procedure p; variable v;
+Select p such that Uses("main", "x") and Uses(p, "b") and Uses("Mars", v)
+main, Mars
+5000
+32 - UsesP mix positive
+procedure p, q; variable v;
+Select p such that Uses(p, v) and Uses(q, _) such that Uses("Mars", v)
+Mars, main, Earth
+5000
+33 - UsesP mix positive
+procedure p, q; variable v;
+Select p such that Uses(p, v) and Uses(p, _) such that Uses(p, "y")
+main
+5000
+34 - UsesP mix negative
+procedure p;
+Select p such that Uses(p, "x") and Uses("Mars", "b") and Uses(p, "c")
+
+5000
+35 - UsesP mix negative
+variable main;
+Select main such that Uses("main", main) and Uses("Mars", main) such that Uses("Venus", main)
+
+5000
+36 - UsesP mix negative
+variable v;
+Select v such that Uses("main", _) and Uses("Venus", _)
+
+5000
+37 - UsesP mix negative
+procedure p;
+Select p such that Uses("main", "z") and Uses(p, "b")
+
+5000

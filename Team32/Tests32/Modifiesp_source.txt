@@ -1,0 +1,28 @@
+procedure main {
+    read x;
+    read y;
+    if (x == y) then {
+        call mars;
+    } else {
+        print x; call earth;
+    }
+    print y;
+}
+
+procedure earth {
+    read a;
+}
+
+procedure mars {
+    print z;
+    read b;
+    if (x == 1) then {
+       call venus;
+    } else {
+       call earth;
+    }
+}
+
+procedure venus {
+    print a;
+}

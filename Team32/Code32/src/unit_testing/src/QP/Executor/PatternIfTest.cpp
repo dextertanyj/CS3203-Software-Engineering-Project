@@ -54,7 +54,6 @@ TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternIf>::execute") {
 	}
 
 	SECTION("Non-Trivial: Wildcard") {
-		// TODO
 		QP::QueryResult result1 = PatternContainerStatementExecutor<ClauseType::PatternIf>::executeWildcard(store, syn_if);
 
 		vector<string> expected_result = {"1", "2"};
@@ -64,7 +63,6 @@ TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternIf>::execute") {
 	}
 
 	SECTION("Non-Trivial: Synonym") {
-		// TODO
 		QP::QueryResult result1 = PatternContainerStatementExecutor<ClauseType::PatternIf>::executeSynonym(store, syn_if, syn_var);
 
 		vector<string> expected_result_i = {"1", "1", "2"};

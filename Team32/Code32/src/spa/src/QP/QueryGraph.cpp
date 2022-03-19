@@ -38,6 +38,10 @@ void QP::QueryGraph::addEdge(const pair<string, string>& symbols) {
 }
 
 ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& select_list) {
+	if (nodes.empty()) {
+		return {};
+	}
+
 	ConnectedSynonyms connected_synonyms = ConnectedSynonyms();
 	DeclarationList selected_declarations;
 	unordered_set<string> unvisited_nodes;
