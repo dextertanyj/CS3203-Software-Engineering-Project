@@ -1,0 +1,50 @@
+1 - While statements
+while w;
+Select w
+1, 3, 4, 5, 6, 8
+5000
+2 - _ entref
+while w;
+Select w pattern w(_, _)
+1, 3, 4, 6, 8
+5000
+3 - synonym entref
+while w; variable v;
+Select w pattern w(v, _)
+1, 3, 4, 6, 8
+5000
+4 - synonym entref
+while w; variable v;
+Select v pattern w(v, _)
+a, b, c, j, x, y, z
+5000
+5 - varName entref
+while w;
+Select w pattern w("y", _)
+1, 3, 4
+5000
+6 - varName entref invalid
+while w;
+Select w pattern w("UNK", _)
+none
+5000
+7 - synonym entref invalid
+while w; constant c;
+Select c pattern w(c, _)
+none
+5000
+8 - synonym entref invalid
+while w; variable v;
+Select w pattern w(_, v)
+none
+5000
+9 - multiple while
+while w, w1;
+Select w pattern w("x", _) pattern w("a", _)
+3, 4
+5000
+10 - multiple while
+while w, w1; variable v;
+Select w pattern w("x", _) pattern w1("a", _)
+1, 3, 4, 6
+5000
