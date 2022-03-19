@@ -75,7 +75,7 @@ QP::QueryResult QP::QueryEvaluator::executeGroupWithoutSelected(ClauseList& clau
 
 QP::QueryResult QP::QueryEvaluator::executeTrivialGroup(ClauseList& clauses) {
 	for (const Clause& clause : clauses) {
-		QueryResult result = clause.relation->execute(store, true);
+		QueryResult result = clause.relation->executeTrivial(store);
 		if (!result.getResult()) {
 			return {};
 		}
@@ -88,7 +88,7 @@ QP::QueryResult QP::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, 
 	vector<QueryResult> result_list;
 
 	for (const Clause& clause : clauses) {
-		QueryResult result = clause.relation->execute(store, false);
+		QueryResult result = clause.relation->execute(store);
 		if (!result.getResult()) {
 			return {};
 		}

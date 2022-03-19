@@ -15,10 +15,6 @@ vector<string> QP::Relationship::Relation::getDeclarationSymbols() const {
 
 QP::Types::ClauseType QP::Relationship::Relation::getType() const { return type; }
 
-QP::QueryResult QP::Relationship::Relation::execute(QP::StorageAdapter& pkb, bool is_trivial) const {
-	return is_trivial ? executeTrivial(pkb) : execute(pkb);
-}
-
 QP::QueryResult QP::Relationship::Relation::executeTrivial(QP::StorageAdapter& pkb) const {
 	QueryResult result;
 	visit(Visitor{[&](const Types::Executor& exec) { result = exec(pkb); },
