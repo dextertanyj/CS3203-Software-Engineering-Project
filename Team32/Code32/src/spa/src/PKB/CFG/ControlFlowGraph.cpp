@@ -1,7 +1,5 @@
 #include "PKB/CFG/ControlFlowGraph.h"
 
-#include <utility>
-
 #include "PKB/CFG/DummyNode.h"
 #include "PKB/CFG/IfNode.h"
 #include "PKB/CFG/NonConditionalNode.h"
@@ -37,6 +35,11 @@ bool PKB::ControlFlowGraph::checkNext(StmtRef prev, StmtRef next) {
 	              [next](shared_ptr<StmtInfo> next_info) { return next_info->getIdentifier() == next; });
 }
 
+bool PKB::ControlFlowGraph::checkNextStar(StmtRef prev, StmtRef next) {
+	StmtInfoPtrSet nexts = getNextStarNodes(prev);
+	return any_of(nexts.begin(), nexts.end(), [&next](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == next; });
+}
+
 shared_ptr<PKB::StatementNode> PKB::ControlFlowGraph::getNode(StmtRef ref) {
 	auto iter = stmt_to_normal_node_store.find(ref);
 	if (iter == stmt_to_normal_node_store.end()) {
@@ -66,8 +69,8 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getNextNodes(StmtRef ref) {
 	StmtInfoPtrSet next_nodes;
 	for (const auto& node : curr_node->getNextNodes()) {
 		if (node->getNodeType() == NodeType::Dummy) {
-			shared_ptr<StmtInfo> next_of_dummy = collectNextOfDummy(node);
-			next_nodes.insert(next_of_dummy);
+			StmtInfoPtrSet next_of_dummy = collectNextOfDummy(node);
+			next_nodes.insert(next_of_dummy.begin(), next_of_dummy.end());
 		} else {
 			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
 			next_nodes.insert(stmt_node->getStmtInfo());
@@ -77,61 +80,33 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getNextNodes(StmtRef ref) {
 }
 
 StmtInfoPtrSet PKB::ControlFlowGraph::getNextStarNodes(StmtRef ref) {
-	queue<shared_ptr<PKB::NodeInterface>> node_queue;
-	unordered_set<shared_ptr<PKB::NodeInterface>> visited_set;
-	StmtInfoPtrSet next_star_nodes;
-	node_queue.push(this->getNode(ref));
-	while (!node_queue.empty()) {
-		shared_ptr<PKB::NodeInterface> curr_node = node_queue.front();
-		node_queue.pop();
-		set<shared_ptr<PKB::NodeInterface>> curr_next_nodes = curr_node->getNextNodes();
+	Types::BFSInfo info = {this->getNode(ref), {}, {}, {}};
+	info.node_queue.push(info.start_node);
+	while (!info.node_queue.empty()) {
+		shared_ptr<PKB::NodeInterface> curr_node = info.node_queue.front();
+		info.node_queue.pop();
+		unordered_set<shared_ptr<PKB::NodeInterface>> curr_next_nodes = curr_node->getNextNodes();
 		for (const auto& node : curr_next_nodes) {
-			if (visited_set.find(node) != visited_set.end()) {
-				continue;
-			}
-			if (node->getNodeType() == NodeType::Dummy) {
-				shared_ptr<StmtInfo> next_of_dummy = collectNextOfDummy(node);
-				next_star_nodes.insert(next_of_dummy);
-				node_queue.push(stmt_to_normal_node_store.at(next_of_dummy->getIdentifier()));
-			} else {
-				shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
-				next_star_nodes.insert(stmt_node->getStmtInfo());
-				node_queue.push(node);
-			}
+			processBFSVisit(info, node, &ControlFlowGraph::collectNextOfDummy);
 		}
-		visited_set.insert(curr_node);
+		info.visited_set.insert(curr_node);
 	}
-	return next_star_nodes;
+	return info.nodes;
 }
 
 StmtInfoPtrSet PKB::ControlFlowGraph::getPreviousStarNodes(StmtRef ref) {
-	queue<shared_ptr<PKB::NodeInterface>> node_queue;
-	unordered_set<shared_ptr<PKB::NodeInterface>> visited_set;
-	StmtInfoPtrSet prev_star_nodes;
-	node_queue.push(this->getNode(ref));
-	while (!node_queue.empty()) {
-		shared_ptr<PKB::NodeInterface> curr_node = node_queue.front();
-		node_queue.pop();
-		set<shared_ptr<PKB::NodeInterface>> curr_prev_nodes = curr_node->getPreviousNodes();
-		for (auto node : curr_prev_nodes) {
-			if (visited_set.find(node) != visited_set.end()) {
-				continue;
-			}
-			if (node->getNodeType() == NodeType::Dummy) {
-				StmtInfoPtrSet prev_of_dummy = collectPreviousOfDummy(node);
-				prev_star_nodes.insert(prev_of_dummy.begin(), prev_of_dummy.end());
-				for (auto prev : prev_of_dummy) {
-					node_queue.push(stmt_to_normal_node_store.at(prev->getIdentifier()));
-				}
-			} else {
-				shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
-				prev_star_nodes.insert(stmt_node->getStmtInfo());
-				node_queue.push(node);
-			}
+	Types::BFSInfo info = {this->getNode(ref), {}, {}, {}};
+	info.node_queue.push(info.start_node);
+	while (!info.node_queue.empty()) {
+		shared_ptr<PKB::NodeInterface> curr_node = info.node_queue.front();
+		info.node_queue.pop();
+		unordered_set<shared_ptr<PKB::NodeInterface>> curr_prev_nodes = curr_node->getPreviousNodes();
+		for (const auto& node : curr_prev_nodes) {
+			processBFSVisit(info, node, &ControlFlowGraph::collectPreviousOfDummy);
 		}
-		visited_set.insert(curr_node);
+		info.visited_set.insert(curr_node);
 	}
-	return prev_star_nodes;
+	return info.nodes;
 }
 
 void PKB::ControlFlowGraph::setNext(StmtRef prev, StmtRef next) {
@@ -182,20 +157,20 @@ void PKB::ControlFlowGraph::setIfExit(StmtRef then_prev, StmtRef else_prev, Stmt
 	if_node->insertIfExit(then_prev_node_iter->second, else_prev_node_iter->second);
 }
 
-shared_ptr<StmtInfo> PKB::ControlFlowGraph::collectNextOfDummy(shared_ptr<PKB::NodeInterface> dummy_node) {
+StmtInfoPtrSet PKB::ControlFlowGraph::collectNextOfDummy(const shared_ptr<PKB::NodeInterface>& dummy_node) {
 	shared_ptr<PKB::NodeInterface> result = dummy_node;
 	while (result->getNextNodes().size() == 1 && result->getNextNodes().begin()->get()->getNodeType() == NodeType::Dummy) {
 		result = *result->getNextNodes().begin();
 	}
-	set<shared_ptr<PKB::NodeInterface>> next_node_of_dummy = result->getNextNodes();
+	unordered_set<shared_ptr<PKB::NodeInterface>> next_node_of_dummy = result->getNextNodes();
 	if (next_node_of_dummy.size() > 1) {
 		throw logic_error("There should only be one next node of dummy.");
 	}
 	shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(*(next_node_of_dummy.begin()));
-	return stmt_node->getStmtInfo();
+	return {stmt_node->getStmtInfo()};
 }
 
-StmtInfoPtrSet PKB::ControlFlowGraph::collectPreviousOfDummy(shared_ptr<PKB::NodeInterface> dummy_node) {
+StmtInfoPtrSet PKB::ControlFlowGraph::collectPreviousOfDummy(const shared_ptr<PKB::NodeInterface>& dummy_node) {
 	StmtInfoPtrSet collection;
 	for (const auto& prev_node : dummy_node->getPreviousNodes()) {
 		if (prev_node->getNodeType() == NodeType::Dummy) {
@@ -209,9 +184,30 @@ StmtInfoPtrSet PKB::ControlFlowGraph::collectPreviousOfDummy(shared_ptr<PKB::Nod
 	return collection;
 }
 
+void PKB::ControlFlowGraph::processBFSVisit(Types::BFSInfo& info, const shared_ptr<PKB::NodeInterface>& node,
+                                            StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&)) {
+	if (node == info.start_node) {
+		shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
+		info.nodes.insert(stmt_node->getStmtInfo());
+	}
+	if (info.visited_set.find(node) != info.visited_set.end()) {
+		return;
+	}
+	if (node->getNodeType() == NodeType::Dummy) {
+		StmtInfoPtrSet real_nodes = (this->*collector)(node);
+		info.nodes.insert(real_nodes.begin(), real_nodes.end());
+		for (auto real_node : real_nodes) {
+			info.node_queue.push(stmt_to_normal_node_store.at(real_node->getIdentifier()));
+		}
+	} else {
+		shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
+		info.nodes.insert(stmt_node->getStmtInfo());
+		info.node_queue.push(node);
+	}
+}
+
 void PKB::ControlFlowGraph::clear() { this->stmt_to_normal_node_store.clear(); }
 
 // TODO: Next* TBD.
 void PKB::ControlFlowGraph::optimize() {}
 void PKB::ControlFlowGraph::populateGraphIndex() {}
-bool PKB::ControlFlowGraph::checkNextStar(StmtRef i, StmtRef i1) { return false; }

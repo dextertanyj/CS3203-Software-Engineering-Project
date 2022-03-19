@@ -156,8 +156,11 @@ TEST_CASE("SP::Node::StatementListNode::extract Test") {
 		vector<StmtRef> result = node.extract(pkb);
 		vector<StmtRef> expected = vector<StmtRef>({statement_number});
 		REQUIRE_EQUALS(expected, result);
+
 		REQUIRE_EQUALS(pkb.set_uses_call_count, 1);
 		REQUIRE_EQUALS(pkb.set_uses_arguments, vector<tuple<StmtRef, VarRef>>({{statement_number, "A"}}));
+
+		REQUIRE_EQUALS(pkb.set_next_call_count, 0);
 	}
 
 	SECTION("Multiple enclosed statements") {
@@ -177,5 +180,9 @@ TEST_CASE("SP::Node::StatementListNode::extract Test") {
 		REQUIRE_EQUALS(pkb.set_modifies_call_count, 1);
 		REQUIRE_EQUALS(pkb.set_modifies_arguments, vector<tuple<StmtRef, VarRef>>({{third_statement, "B"}}));
 		REQUIRE_EQUALS(pkb.set_modifies_arguments.size(), 1);
+
+		REQUIRE_EQUALS(pkb.set_next_call_count, 2);
+		REQUIRE_EQUALS(pkb.set_next_arguments,
+		               vector<tuple<StmtRef, StmtRef>>({{first_statement, second_statement}, {second_statement, third_statement}}));
 	}
 }

@@ -30,6 +30,7 @@ StmtRef SP::Node::IfNode::extract(PKB::StorageUpdateInterface& pkb) {
 	Common::ExpressionProcessor::Expression expression = cond_expr->extract();
 	pkb.setConstant(expression.getConstants());
 	pkb.setUses(stmt_ref, expression.getVariables());
+	pkb.setIfControl(stmt_ref, expression.getVariables());
 	vector<StmtRef> then_children = if_stmt_list->extract(pkb);
 	vector<StmtRef> else_children = else_stmt_list->extract(pkb);
 	for (auto iter = then_children.begin(); iter < then_children.end(); ++iter) {
@@ -38,6 +39,8 @@ StmtRef SP::Node::IfNode::extract(PKB::StorageUpdateInterface& pkb) {
 	for (auto iter = else_children.begin(); iter < else_children.end(); ++iter) {
 		pkb.setParent(stmt_ref, *iter);
 	}
+	pkb.setIfNext(stmt_ref, then_children.front(), else_children.front());
+	pkb.setIfExit(then_children.back(), else_children.back(), stmt_ref);
 	return stmt_ref;
 }
 

@@ -22,10 +22,13 @@ StmtRef SP::Node::WhileNode::extract(PKB::StorageUpdateInterface& pkb) {
 	Common::ExpressionProcessor::Expression expression = cond_expr->extract();
 	pkb.setConstant(expression.getConstants());
 	pkb.setUses(stmt_ref, expression.getVariables());
+	pkb.setWhileControl(stmt_ref, expression.getVariables());
 	vector<StmtRef> children = stmt_list->extract(pkb);
 	for (auto iter = children.begin(); iter < children.end(); ++iter) {
 		pkb.setParent(stmt_ref, *iter);
 	}
+	pkb.setNext(stmt_ref, children.front());
+	pkb.setNext(children.back(), stmt_ref);
 	return stmt_ref;
 }
 
