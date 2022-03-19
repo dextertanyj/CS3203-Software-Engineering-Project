@@ -41,7 +41,8 @@ QP::QueryProperties QP::QueryPreprocessor::parseQuery() {
 	while (token_index < this->query_tokens.size()) {
 		parseClauses();
 	}
-	Types::DeclarationList declarations = vector<Types::Declaration>(existing_declarations.size());
+	Types::DeclarationList declarations;
+	declarations.reserve(existing_declarations.size());
 	for (const auto& declaration_pair : existing_declarations) {
 		declarations.push_back(declaration_pair.second);
 	}
