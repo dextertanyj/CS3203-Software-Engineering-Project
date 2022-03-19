@@ -16,7 +16,7 @@ mars 7, main 7
 4 - Tuple 1 Clause positive
 procedure p; stmt s;
 Select <p, p> such that Uses(s, "b")
-mars main, main mars
+mars mars, main main
 5000
 5 - Tuple 1 Clause negative
 procedure p; assign a;
