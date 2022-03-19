@@ -111,12 +111,12 @@ Select s such that Next(s, "0")
 23 - Next*(synonym, synonym) positive
 stmt s; while w;
 Select s such that Next*(s, w)
-1, 2, 4, 5, 11, 12, 13, 14, 15, 16, 17, 18, 19
+1, 2, 3, 4, 5, 11, 12, 13, 14, 15, 16, 17, 18, 19
 5000
 24 - Next*(synonym, synonym) positive
 stmt s; while w;
 Select s such that Next*(w, s)
-4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16, 17, 18, 19, 20
+3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16, 17, 18, 19, 20
 5000
 25 - Next*(synonym, synonym) trivial
 assign a, a1; call c;
@@ -136,7 +136,7 @@ Select c such that Next*(c, _)
 28 - Next*(synonym, stmtNo) positive
 stmt s;
 Select s such that Next*(s, 13)
-11, 12, 14, 15, 16, 17, 18, 19
+11, 12, 13, 14, 15, 16, 17, 18, 19
 5000
 29 - Next*(synonym, stmtNo) positive
 while w;
