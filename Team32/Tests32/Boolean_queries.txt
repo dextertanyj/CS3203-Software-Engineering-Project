@@ -1,0 +1,40 @@
+1 - Boolean No Clause Trivial
+stmt s;
+Select BOOLEAN
+TRUE
+5000
+2 - Boolean 1 Clause positive
+procedure p;
+Select BOOLEAN such that Uses(p, "x")
+TRUE
+5000
+3 - Boolean 1 Clause negative
+stmt s;
+Select BOOLEAN such that Uses("main", "a")
+FALSE
+5000
+4 - Boolean Multiple Clauses positive
+procedure p; variable v;
+Select BOOLEAN such that Uses(p, "x") and Parent*(2, 4) such that Modifies("mars", v)
+TRUE
+5000
+5 - Boolean Multiple Clauses negative
+procedure p; variable v;
+Select BOOLEAN such that Uses(p, "x") and Parent(2, 4) such that Modifies("mars", v)
+FALSE
+5000
+6 - Boolean wrong spelling negative
+procedure p; variable v;
+Select Boolean such that Uses(p, "x") and Parent(6, 9) such that Modifies("mars", v)
+
+5000
+7 - Boolean invalid clause negative
+stmt s; variable v;
+Select BOOLEAN such that Calls(s, "mars") and Parent(6, 9) such that Modifies("mars", v)
+
+5000
+8 - Boolean Same Name Synonym
+stmt BOOLEAN;
+Select BOOLEAN such that Uses(BOOLEAN, "x")
+2
+5000

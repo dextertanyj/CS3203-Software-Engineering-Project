@@ -1,0 +1,50 @@
+1 - Single Tuple No Clause Trivial
+procedure p;
+Select <p>
+main, mars
+5000
+2 - Tuple No Clause Trivial
+procedure p; stmt s;
+Select <p, s>
+main 1, main 2, main 3, main 4, main 5, main 6, main 7, mars 1, mars 2, mars 3, mars 4, mars 5, mars 6, mars 7
+5000
+3 - Tuple 1 Clause positive
+procedure p; assign a;
+Select <p, a> such that Uses(a, "b")
+mars 7, main 7
+5000
+4 - Tuple 1 Clause positive
+procedure p; stmt s;
+Select <p, p> such that Uses(s, "b")
+mars mars, main main
+5000
+5 - Tuple 1 Clause negative
+procedure p; assign a;
+Select <p, a> such that Uses(a, "x")
+
+5000
+6 - Tuple Multiple Clause positive
+procedure p, q; stmt s;
+Select <p, s> such that Uses(s, _) such that Calls(p, q)
+main 7, main 4, main 3, main 2, main 1,
+5000
+7 - Tuple Multiple Clause positive
+procedure p, q; stmt s;
+Select <p, q, s> such that Uses(s, _) such that Calls(p, q)
+main mars 7, main mars 4, main mars 3, main mars 2, main mars 1,
+5000
+8 - Tuple Multiple Clause negative
+procedure p, q; stmt s;
+Select <p, s> such that Uses(s, _) such that Calls(p, q) such that Modifies(q, "a")
+
+5000
+9 - Tuple invalid elem
+procedure p, q; stmt s;
+Select <> such that Uses(s, _) such that Calls(p, q) such that Modifies(q, "a")
+
+5000
+10 - Tuple invalid elem
+procedure p, q; stmt s;
+Select <BOOLEAN> such that Uses(s, _) such that Calls(p, q) such that Modifies(q, "a")
+
+5000

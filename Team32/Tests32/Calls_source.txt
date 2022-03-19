@@ -1,0 +1,31 @@
+procedure main {
+    call Mar5;
+    print y;
+    if (x == y) then {
+        call Mar5;
+    } else {
+        read x; call Earth;
+    }
+    read y;
+}
+
+procedure Mar5 {
+   if (x == 1) then {
+      call Jupit3r;
+   } else {
+       read x;
+   }
+}
+
+procedure Earth {
+    call V3nu5;
+}
+
+procedure V3nu5 {
+    print y;
+    x = y + 3;
+}
+
+procedure Jupit3r {
+    read x; print y;
+}
