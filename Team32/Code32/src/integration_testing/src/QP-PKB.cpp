@@ -324,12 +324,13 @@ TEST_CASE("Calls clause") {
 TEST_CASE("Next clause") {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Read);
-	pkb.setStmtType(2, StmtType::IfStmt);
+	pkb.setStmtType(2, StmtType::Print);
 	pkb.setStmtType(3, StmtType::Call);
 	pkb.setStmtType(4, StmtType::WhileStmt);
 	pkb.setStmtType(5, StmtType::Assign);
 	pkb.setNext(1, 2);
 	pkb.setNext(2, 3);
+	pkb.setNext(3, 4);
 	pkb.setNext(4, 5);
 	pkb.setNext(5, 4);
 	pkb.populateComplexRelations();
@@ -349,19 +350,18 @@ TEST_CASE("Next clause") {
 		REQUIRE(result2 == expected_result2);
 	}
 
-	// SECTION("Next*") {
-	//	string query1 = "read r; stmt s; Select s such that Next*(r, s)";
-	//	string query2 = "stmt s; Select BOOLEAN such that Next*(s, s)";
+	SECTION("Next*") {
+		string query1 = "read r; stmt s; Select s such that Next*(r, s)";
+		string query2 = "stmt s; Select BOOLEAN such that Next*(s, s)";
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
 
-	//	vector<string> result1 = processor.processQuery(query1);
-	//	vector<string> result2 = processor.processQuery(query2);
-
-	//	vector<string> expected_result1 = {"2", "3"};
-	//	vector<string> expected_result2 = {"TRUE"};
-	//	sort(result1.begin(), result1.end());
-	//	REQUIRE(result1 == expected_result1);
-	//	REQUIRE(result2 == expected_result2);
-	//}
+		vector<string> expected_result1 = {"2", "3", "4", "5"};
+		vector<string> expected_result2 = {"TRUE"};
+		sort(result1.begin(), result1.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
+	}
 };
 
 TEST_CASE("Pattern clause") {
