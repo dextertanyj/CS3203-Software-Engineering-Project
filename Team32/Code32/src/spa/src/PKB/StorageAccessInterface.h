@@ -12,17 +12,19 @@ public:
 	virtual unordered_set<ProcRef> getProcedures() = 0;
 
 	// Parent get methods
+	virtual bool checkParent(StmtRef parent, StmtRef child) = 0;
+	virtual bool checkParentStar(StmtRef parent, StmtRef child) = 0;
 	virtual shared_ptr<StmtInfo> getParent(StmtRef index) = 0;
-	virtual StmtInfoPtrSet getChildren(StmtRef index) = 0;
-	virtual bool checkParents(StmtRef parent, StmtRef child) = 0;
 	virtual StmtInfoPtrSet getParentStar(StmtRef index) = 0;
+	virtual StmtInfoPtrSet getChildren(StmtRef index) = 0;
 	virtual StmtInfoPtrSet getChildStar(StmtRef index) = 0;
 
 	// Follow get methods
-	virtual shared_ptr<StmtInfo> getPreceding(StmtRef index) = 0;
-	virtual shared_ptr<StmtInfo> getFollower(StmtRef index) = 0;
 	virtual bool checkFollows(StmtRef front, StmtRef back) = 0;
+	virtual bool checkFollowsStar(StmtRef front, StmtRef back) = 0;
+	virtual shared_ptr<StmtInfo> getFollower(StmtRef index) = 0;
 	virtual StmtInfoPtrSet getFollowerStar(StmtRef index) = 0;
+	virtual shared_ptr<StmtInfo> getPreceding(StmtRef index) = 0;
 	virtual StmtInfoPtrSet getPrecedingStar(StmtRef index) = 0;
 
 	// Use get methods
@@ -49,8 +51,9 @@ public:
 	virtual vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
 	                                                                          bool is_exact_match) = 0;
 
-	// Call get methods
-	virtual bool checkCall(const ProcRef& caller, const ProcRef& callee) = 0;
+	// Calls get methods
+	virtual bool checkCalls(const ProcRef& caller, const ProcRef& callee) = 0;
+	virtual bool checkCallsStar(const ProcRef& caller, const ProcRef& callee) = 0;
 	virtual ProcRefSet getCallee(const ProcRef& caller) = 0;
 	virtual ProcRefSet getCalleeStar(const ProcRef& caller) = 0;
 	virtual ProcRefSet getCaller(const ProcRef& callee) = 0;

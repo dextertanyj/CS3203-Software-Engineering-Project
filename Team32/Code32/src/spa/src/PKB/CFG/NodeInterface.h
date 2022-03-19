@@ -2,7 +2,7 @@
 #define SPA_NODEINTERFACE_H
 
 #include <algorithm>
-#include <set>
+#include <unordered_set>
 
 #include "PKB/PKB.h"
 
@@ -14,8 +14,8 @@ public:
 	virtual void setPrevious(shared_ptr<NodeInterface> prev) = 0;
 	virtual void setNext(shared_ptr<NodeInterface> next) = 0;
 
-	[[nodiscard]] set<shared_ptr<NodeInterface>> getPreviousNodes() const;
-	[[nodiscard]] set<shared_ptr<NodeInterface>> getNextNodes() const;
+	[[nodiscard]] unordered_set<shared_ptr<NodeInterface>> getPreviousNodes() const;
+	[[nodiscard]] unordered_set<shared_ptr<NodeInterface>> getNextNodes() const;
 	[[nodiscard]] size_t getGraphIndex() const;
 	[[nodiscard]] NodeType getNodeType() const;
 

@@ -19,11 +19,19 @@ public:
 	[[nodiscard]] inline bool checkStatementRelation(StmtRef lhs, StmtRef rhs) const = delete;
 	template <>
 	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::Parent>(StmtRef lhs, StmtRef rhs) const {
-		return pkb.checkParents(lhs, rhs);
+		return pkb.checkParent(lhs, rhs);
+	};
+	template <>
+	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::ParentT>(StmtRef lhs, StmtRef rhs) const {
+		return pkb.checkParentStar(lhs, rhs);
 	};
 	template <>
 	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::Follows>(StmtRef lhs, StmtRef rhs) const {
 		return pkb.checkFollows(lhs, rhs);
+	};
+	template <>
+	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::FollowsT>(StmtRef lhs, StmtRef rhs) const {
+		return pkb.checkFollowsStar(lhs, rhs);
 	};
 	template <>
 	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::Next>(StmtRef lhs, StmtRef rhs) const {
@@ -105,7 +113,11 @@ public:
 	[[nodiscard]] inline bool checkProcedureRelation(const ProcRef& lhs, const ProcRef& rhs) const = delete;
 	template <>
 	[[nodiscard]] inline bool checkProcedureRelation<Types::ClauseType::Calls>(const ProcRef& lhs, const ProcRef& rhs) const {
-		return pkb.checkCall(lhs, rhs);
+		return pkb.checkCalls(lhs, rhs);
+	}
+	template <>
+	[[nodiscard]] inline bool checkProcedureRelation<Types::ClauseType::CallsT>(const ProcRef& lhs, const ProcRef& rhs) const {
+		return pkb.checkCallsStar(lhs, rhs);
 	}
 
 	template <Types::ClauseType T>

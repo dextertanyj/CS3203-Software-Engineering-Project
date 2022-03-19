@@ -62,6 +62,18 @@ TEST_CASE("PKB::PKB Follows Methods Test") {
 		CHECK_FALSE(pkb.checkFollows(s_3, s_2));
 	}
 
+	SECTION("PKB::PKB::checkFollowsStar Test") {
+		pkb.setFollows(s_1, s_2);
+		pkb.setFollows(s_2, s_3);
+		pkb.populateComplexRelations();
+
+		CHECK(pkb.checkFollowsStar(s_1, s_3));
+
+		CHECK_FALSE(pkb.checkFollowsStar(s_1, s_1));
+		CHECK_FALSE(pkb.checkFollowsStar(s_2, s_1));
+		CHECK_FALSE(pkb.checkFollowsStar(s_3, s_2));
+	}
+
 	SECTION("PKB::PKB::getFollower Test") {
 		pkb.setStmtType(SIZE_MAX, StmtType::Read);
 
@@ -198,16 +210,16 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 		CHECK_THROWS(pkb.setParent(s_3, s_zero));
 	}
 
-	SECTION("PKB::PKB::checkParents Test") {
+	SECTION("PKB::PKB::checkParent Test") {
 		unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
 		pkb.setParent(s_1, s_2);
 		pkb.setParent(s_2, s_3);
 		pkb.setParent(s_2, s_4);
 
 		// Ensure simple parent relation is stored successfully.
-		CHECK(pkb.checkParents(s_1, s_2));
-		CHECK(pkb.checkParents(s_2, s_3));
-		CHECK(pkb.checkParents(s_2, s_4));
+		CHECK(pkb.checkParent(s_1, s_2));
+		CHECK(pkb.checkParent(s_2, s_3));
+		CHECK(pkb.checkParent(s_2, s_4));
 		CHECK(pkb.getParent(s_2)->getIdentifier() == s_1);
 		CHECK(pkb.getParent(s_3)->getIdentifier() == s_2);
 		CHECK(pkb.getParent(s_4)->getIdentifier() == s_2);
@@ -225,13 +237,31 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 		CHECK(pkb.getChildren(s_2) == expected_child_set_s_2);
 
 		// Ensure Parent* behavior does not appear for simple parent relation.
-		CHECK_FALSE(pkb.checkParents(s_1, s_3));
-		CHECK_FALSE(pkb.checkParents(s_1, s_4));
+		CHECK_FALSE(pkb.checkParent(s_1, s_3));
+		CHECK_FALSE(pkb.checkParent(s_1, s_4));
 
 		// Test invalid check-parents cases.
-		CHECK_FALSE(pkb.checkParents(s_1, s_1));
-		CHECK_FALSE(pkb.checkParents(s_2, s_1));
-		CHECK_FALSE(pkb.checkParents(s_3, s_2));
+		CHECK_FALSE(pkb.checkParent(s_1, s_1));
+		CHECK_FALSE(pkb.checkParent(s_2, s_1));
+		CHECK_FALSE(pkb.checkParent(s_3, s_2));
+	}
+
+	SECTION("PKB::PKB::checkParentStar Test") {
+		unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
+		pkb.setParent(s_1, s_2);
+		pkb.setParent(s_2, s_3);
+		pkb.setParent(s_2, s_4);
+		pkb.populateComplexRelations();
+
+		CHECK(pkb.checkParentStar(s_1, s_4));
+		CHECK(pkb.checkParentStar(s_1, s_2));
+		CHECK(pkb.checkParentStar(s_1, s_3));
+		CHECK(pkb.checkParentStar(s_2, s_3));
+		CHECK(pkb.checkParentStar(s_2, s_4));
+
+		CHECK_FALSE(pkb.checkParentStar(s_1, s_1));
+		CHECK_FALSE(pkb.checkParentStar(s_2, s_1));
+		CHECK_FALSE(pkb.checkParentStar(s_3, s_2));
 	}
 
 	SECTION("PKB::PKB::getParent Test") {

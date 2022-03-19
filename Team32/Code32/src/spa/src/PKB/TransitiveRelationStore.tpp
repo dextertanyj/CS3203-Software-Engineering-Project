@@ -49,6 +49,19 @@ bool PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::isRelated(TIdent fr
 }
 
 template <typename TIdent, typename TInfo, class TRelation>
+bool PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::isTransitivelyRelated(TIdent front, TIdent back) const {
+	auto iter = map.find(front);
+	if (iter == map.end()) {
+		return false;
+	}
+	auto result = iter->second.getReverseTransitive();
+	if (result.empty()) {
+		return false;
+	}
+	return (any_of(result.begin(), result.end(), [back](const shared_ptr<TInfo>& ptr) { return ptr->getIdentifier() == back; }));
+}
+
+template <typename TIdent, typename TInfo, class TRelation>
 unordered_set<shared_ptr<TInfo>> PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::getForward(TIdent ident) const {
 	auto iter = map.find(ident);
 	if (iter == map.end()) {

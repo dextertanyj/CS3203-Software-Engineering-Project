@@ -86,9 +86,9 @@ TEST_CASE("PKB::NodeInterface::getNextNodes Test") {
 	while_node->setNext(print_node);
 	print_node->setNext(while_node);
 
-	REQUIRE(if_node->getNextNodes() == set<shared_ptr<PKB::NodeInterface>>({while_node, read_node}));
-	REQUIRE(while_node->getNextNodes() == set<shared_ptr<PKB::NodeInterface>>({print_node}));
-	REQUIRE(print_node->getNextNodes() == set<shared_ptr<PKB::NodeInterface>>({while_node}));
+	REQUIRE(if_node->getNextNodes() == unordered_set<shared_ptr<PKB::NodeInterface>>({while_node, read_node}));
+	REQUIRE(while_node->getNextNodes() == unordered_set<shared_ptr<PKB::NodeInterface>>({print_node}));
+	REQUIRE(print_node->getNextNodes() == unordered_set<shared_ptr<PKB::NodeInterface>>({while_node}));
 	REQUIRE(read_node->getNextNodes().empty());
 }
 
@@ -128,9 +128,9 @@ TEST_CASE("PKB::NodeInterface::getPreviousNodes Test") {
 	print_node->setPrevious(while_node);
 
 	REQUIRE(if_node->getPreviousNodes().empty());
-	REQUIRE(while_node->getPreviousNodes() == set({if_node, print_node}));
-	REQUIRE(print_node->getPreviousNodes() == set({while_node}));
-	REQUIRE(read_node->getPreviousNodes() == set({if_node}));
+	REQUIRE(while_node->getPreviousNodes() == unordered_set({if_node, print_node}));
+	REQUIRE(print_node->getPreviousNodes() == unordered_set({while_node}));
+	REQUIRE(read_node->getPreviousNodes() == unordered_set({if_node}));
 }
 
 TEST_CASE("PKB::NodeInterface::setGraphIndex Test") {
