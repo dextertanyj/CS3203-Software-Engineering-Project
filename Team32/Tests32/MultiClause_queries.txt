@@ -60,12 +60,12 @@ Select a such that Next (a, w) pattern a(v, _) pattern w(v, _)
 5000
 13 - assignment 2 2d modified
 
-Select BOOLEAN such that Affects (13, 17)
+Select BOOLEAN such that Next* (13, 17)
 FALSE
 5000
 14 - assignment 2 2e modified
-assign a;
-Select a such that Affects (a, 13) pattern a("v", "d+25")
+assign a; while w;
+Select a such that Next (w, a) pattern a("v", "d+25")
 12
 5000
 15 - assignment 2 2f modified
@@ -85,7 +85,7 @@ Select s such that Next* (s, s) such that Next* (cl, s)
 5000
 18 - assignment 2 2j
 assign a; if ifs;
-Select a such that Affects* (a, a) and Parent* (ifs, a)
+Select a such that Next* (a, a) and Parent* (ifs, a)
 21, 22
 5000
 19 - assignment 2 2k
