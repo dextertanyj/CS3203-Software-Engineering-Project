@@ -139,7 +139,9 @@ unordered_set<ProcRef> PKB::Storage::getProcedures() {
 	return procedureInfoToProcRef(procedures);
 }
 
-bool PKB::Storage::checkParents(StmtRef parent, StmtRef child) { return parent_store.isRelated(parent, child); }
+bool PKB::Storage::checkParent(StmtRef parent, StmtRef child) { return parent_store.isRelated(parent, child); }
+
+bool PKB::Storage::checkParentStar(StmtRef parent, StmtRef child) { return parent_store.isTransitivelyRelated(parent, child); }
 
 shared_ptr<StmtInfo> PKB::Storage::getParent(StmtRef index) {
 	auto result = parent_store.getForward(index);
@@ -156,6 +158,8 @@ StmtInfoPtrSet PKB::Storage::getParentStar(StmtRef index) { return parent_store.
 StmtInfoPtrSet PKB::Storage::getChildStar(StmtRef index) { return parent_store.getReverseTransitive(index); }
 
 bool PKB::Storage::checkFollows(StmtRef front, StmtRef back) { return follows_store.isRelated(front, back); }
+
+bool PKB::Storage::checkFollowsStar(StmtRef front, StmtRef back) { return follows_store.isTransitivelyRelated(front, back); }
 
 shared_ptr<StmtInfo> PKB::Storage::getPreceding(StmtRef index) {
 	auto result = follows_store.getForward(index);
@@ -177,7 +181,9 @@ StmtInfoPtrSet PKB::Storage::getPrecedingStar(StmtRef index) { return follows_st
 
 StmtInfoPtrSet PKB::Storage::getFollowerStar(StmtRef index) { return follows_store.getReverseTransitive(index); }
 
-bool PKB::Storage::checkCall(const ProcRef &caller, const ProcRef &callee) { return call_store.isRelated(caller, callee); }
+bool PKB::Storage::checkCalls(const ProcRef &caller, const ProcRef &callee) { return call_store.isRelated(caller, callee); }
+
+bool PKB::Storage::checkCallsStar(const ProcRef &caller, const ProcRef &callee) { return call_store.isTransitivelyRelated(caller, callee); }
 
 ProcRefSet PKB::Storage::getCallee(const ProcRef &caller) {
 	unordered_set<shared_ptr<ProcedureInfo>> callees = call_store.getReverse(caller);

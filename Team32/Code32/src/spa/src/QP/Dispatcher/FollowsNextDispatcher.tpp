@@ -1,12 +1,12 @@
 #ifndef SPA_SRC_RELATIONSHIP_FOLLOWSDISPATCHERTEMPLATE_TPP
 #define SPA_SRC_RELATIONSHIP_FOLLOWSDISPATCHERTEMPLATE_TPP
 
-#include "FollowsNextDispatcher.h"
+#include "QP/Dispatcher/FollowsNextDispatcher.h"
 
 #include <unordered_map>
 #include <utility>
 
-#include "DispatchProcessors.h"
+#include "QP/Dispatcher/DispatchProcessors.tpp"
 #include "QP/Dispatcher/StatementDispatcher.h"
 #include "QP/Executor/StatementExecutor.tpp"
 
@@ -17,7 +17,7 @@ QP::Types::ArgumentDispatcher QP::Dispatcher::FollowsNextDispatcher<T>::dispatch
 template <QP::Types::ClauseType T>
 QP::Types::ExecutorSetBundle QP::Dispatcher::FollowsNextDispatcher<T>::argumentDispatcher(Types::ClauseType type,
                                                                                           const vector<Types::ReferenceArgument>& args) {
-	return DispatchProcessors::processDoubleArgument(type, FollowsNextDispatcher<T>::argument_dispatch_map, args);
+	return DispatchProcessors::processArgument(type, FollowsNextDispatcher<T>::argument_dispatch_map, args);
 };
 
 template <QP::Types::ClauseType T>

@@ -301,8 +301,8 @@ TEST_CASE("PKB::ControlFlowGraph::checkNextStar Test") {
 	cfg.setNext(assign_stmt->getIdentifier(), call_stmt->getIdentifier());
 
 	CHECK(cfg.getNextStarNodes(1) == unordered_set{print_stmt, while_stmt, read_stmt, assign_stmt, call_stmt});
-	CHECK(cfg.getNextStarNodes(2) == unordered_set{print_stmt, assign_stmt, call_stmt});
-	CHECK(cfg.getNextStarNodes(3) == unordered_set{while_stmt, assign_stmt, call_stmt});
+	CHECK(cfg.getNextStarNodes(2) == unordered_set{while_stmt, print_stmt, assign_stmt, call_stmt});
+	CHECK(cfg.getNextStarNodes(3) == unordered_set{while_stmt, assign_stmt, call_stmt, print_stmt});
 	CHECK(cfg.getNextStarNodes(4) == unordered_set{assign_stmt, call_stmt});
 	CHECK(cfg.getNextStarNodes(5) == unordered_set{call_stmt});
 	CHECK(cfg.getNextStarNodes(6) == StmtInfoPtrSet{});
@@ -343,8 +343,8 @@ TEST_CASE("PKB::ControlFlowGraph::getPreviousStar Test") {
 	cfg.setNext(assign_stmt->getIdentifier(), call_stmt->getIdentifier());
 
 	CHECK(cfg.getPreviousStarNodes(1) == StmtInfoPtrSet{});
-	CHECK(cfg.getPreviousStarNodes(2) == unordered_set{if_stmt, print_stmt});
-	CHECK(cfg.getPreviousStarNodes(3) == unordered_set{if_stmt, while_stmt});
+	CHECK(cfg.getPreviousStarNodes(2) == unordered_set{while_stmt, if_stmt, print_stmt});
+	CHECK(cfg.getPreviousStarNodes(3) == unordered_set{if_stmt, while_stmt, print_stmt});
 	CHECK(cfg.getPreviousStarNodes(4) == unordered_set{if_stmt});
 	CHECK(cfg.getPreviousStarNodes(5) == unordered_set{if_stmt, while_stmt, read_stmt, print_stmt});
 	CHECK(cfg.getPreviousStarNodes(6) == unordered_set{if_stmt, while_stmt, read_stmt, print_stmt, assign_stmt});

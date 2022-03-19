@@ -3,7 +3,7 @@
 
 #include "QP/Dispatcher/CallsDispatcher.h"
 
-#include "DispatchProcessors.h"
+#include "QP/Dispatcher/DispatchProcessors.tpp"
 #include "QP/Executor/ProcedureExecutor.tpp"
 
 template <QP::Types::ClauseType T>
@@ -13,7 +13,7 @@ QP::Types::ArgumentDispatcher QP::Dispatcher::CallsDispatcher<T>::dispatcher =
 template <QP::Types::ClauseType T>
 QP::Types::ExecutorSetBundle QP::Dispatcher::CallsDispatcher<T>::argumentDispatcher(Types::ClauseType type,
                                                                                     const vector<Types::ReferenceArgument>& args) {
-	return DispatchProcessors::processDoubleArgument(type, argument_dispatch_map, args);
+	return DispatchProcessors::processArgument(type, argument_dispatch_map, args);
 };
 
 template <QP::Types::ClauseType T>

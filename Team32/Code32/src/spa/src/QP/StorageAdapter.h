@@ -19,11 +19,19 @@ public:
 	[[nodiscard]] inline bool checkStatementRelation(StmtRef lhs, StmtRef rhs) const = delete;
 	template <>
 	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::Parent>(StmtRef lhs, StmtRef rhs) const {
-		return pkb.checkParents(lhs, rhs);
+		return pkb.checkParent(lhs, rhs);
+	};
+	template <>
+	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::ParentT>(StmtRef lhs, StmtRef rhs) const {
+		return pkb.checkParentStar(lhs, rhs);
 	};
 	template <>
 	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::Follows>(StmtRef lhs, StmtRef rhs) const {
 		return pkb.checkFollows(lhs, rhs);
+	};
+	template <>
+	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::FollowsT>(StmtRef lhs, StmtRef rhs) const {
+		return pkb.checkFollowsStar(lhs, rhs);
 	};
 	template <>
 	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::Next>(StmtRef lhs, StmtRef rhs) const {
@@ -105,7 +113,11 @@ public:
 	[[nodiscard]] inline bool checkProcedureRelation(const ProcRef& lhs, const ProcRef& rhs) const = delete;
 	template <>
 	[[nodiscard]] inline bool checkProcedureRelation<Types::ClauseType::Calls>(const ProcRef& lhs, const ProcRef& rhs) const {
-		return pkb.checkCall(lhs, rhs);
+		return pkb.checkCalls(lhs, rhs);
+	}
+	template <>
+	[[nodiscard]] inline bool checkProcedureRelation<Types::ClauseType::CallsT>(const ProcRef& lhs, const ProcRef& rhs) const {
+		return pkb.checkCallsStar(lhs, rhs);
 	}
 
 	template <Types::ClauseType T>
@@ -200,6 +212,7 @@ public:
 		return pkb.getUsesByProc(procedure);
 	};
 
+	// Pattern Assign
 	[[nodiscard]] bool patternExists(const VarRef& name, const Common::ExpressionProcessor::Expression& expression,
 	                                 bool is_exact_match) const {
 		return pkb.patternExists(name, expression, is_exact_match);
@@ -212,6 +225,38 @@ public:
 	[[nodiscard]] vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(
 		const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) const {
 		return pkb.getStmtsWithPatternRHS(expression, is_exact_match);
+	}
+
+	// Pattern If and While
+	template <Types::ClauseType T>
+	[[nodiscard]] inline bool checkControl(const StmtRef& stmt, const VarRef& var) const = delete;
+	template <>
+	[[nodiscard]] inline bool checkControl<Types::ClauseType::PatternIf>(const StmtRef& stmt, const VarRef& var) const {
+		return pkb.checkIfControl(stmt, var);
+	}
+	template <>
+	[[nodiscard]] inline bool checkControl<Types::ClauseType::PatternWhile>(const StmtRef& stmt, const VarRef& var) const {
+		return pkb.checkWhileControl(stmt, var);
+	}
+	template <Types::ClauseType T>
+	[[nodiscard]] inline VarRefSet getControlVar(const StmtRef& stmt) const = delete;
+	template <>
+	[[nodiscard]] inline VarRefSet getControlVar<Types::ClauseType::PatternIf>(const StmtRef& stmt) const {
+		return pkb.getIfControlVar(stmt);
+	}
+	template <>
+	[[nodiscard]] inline VarRefSet getControlVar<Types::ClauseType::PatternWhile>(const StmtRef& stmt) const {
+		return pkb.getWhileControlVar(stmt);
+	}
+	template <Types::ClauseType T>
+	[[nodiscard]] inline StmtInfoPtrSet getControlStmt(const VarRef& var) const = delete;
+	template <>
+	[[nodiscard]] inline StmtInfoPtrSet getControlStmt<Types::ClauseType::PatternIf>(const VarRef& var) const {
+		return pkb.getIfControlStmt(var);
+	}
+	template <>
+	[[nodiscard]] inline StmtInfoPtrSet getControlStmt<Types::ClauseType::PatternWhile>(const VarRef& var) const {
+		return pkb.getWhileControlStmt(var);
 	}
 
 private:

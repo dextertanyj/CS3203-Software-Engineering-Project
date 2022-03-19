@@ -27,25 +27,27 @@ private:
 	// Starting point for recursive descent parser
 	QueryProperties parseQuery();
 
-	// Parsing clauses/2nd level nodes
+	// Parse constructs
 	void parseDeclarations();
-	void parseDeclaration(const Types::DesignEntity& type);
+	void parseDeclarations(const Types::DesignEntity& type);
 	void parseSelect();
 	void parseClauses();
-	void parseSuchThat();
-	void parsePattern();
 
 	// Parsing Rules
+	void parseDeclaration(const Types::DesignEntity& type);
 	optional<Types::DesignEntity> parseDesignEntity();
 	void parseSelectList();
+	void parseClauseLoop(void (QueryPreprocessor::*parser)());
 	void parseSelectSynonym();
-	unique_ptr<Relationship::Relation> parseClause();
-	unique_ptr<Relationship::Relation> parseClause(Types::ClauseType type);
-	unique_ptr<Relationship::Relation> parseAssignPattern(Types::Declaration synonym);
+	void parseSuchThatClause();
+	void parseClause(Types::ClauseType type);
+	void parseClause(Types::ClauseType type, vector<Types::ReferenceArgument> prefixes);
+	void parsePattern();
+	void parseAssignPattern(Types::ReferenceArgument synonym);
+
+	vector<Types::ReferenceArgument> parseArguments();
 	Types::ReferenceArgument parseReferenceArgument();
 	Common::ExpressionProcessor::Expression parseExpression();
-
-	// Helper methods
 	void matchTokenOrThrow(const string& token);
 
 	size_t token_index;
@@ -53,10 +55,10 @@ private:
 	unordered_map<string, Types::Declaration> existing_declarations;
 	Types::DeclarationList select_list;
 	Types::ClauseList clause_list;
+	QP::Dispatcher::DispatchMap dispatcher;
 
 	static regex invalid_chars_regex;
 	static regex query_token_regex;
-	QP::Dispatcher::DispatchMap dispatcher;
 };
 
 #endif  // SPA_SRC_QP_QUERYPREPROCESSOR_H

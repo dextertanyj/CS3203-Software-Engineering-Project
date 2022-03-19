@@ -26,8 +26,18 @@ void QP::QueryResult::addColumn(const string& synonym, const vector<string>& col
 }
 
 void QP::QueryResult::joinResult(QueryResult& query_result) {
-	for (string const& synonym : query_result.getSynonymsStored()) {
-		if (this->synonyms_stored.find(synonym) == synonyms_stored.end()) {
+	unordered_set<string> smaller_set;
+	unordered_set<string> larger_set;
+	if (query_result.getSynonymsStored().size() > synonyms_stored.size()) {
+		larger_set = query_result.getSynonymsStored();
+		smaller_set = synonyms_stored;
+	} else {
+		larger_set = synonyms_stored;
+		smaller_set = query_result.getSynonymsStored();
+	}
+
+	for (string const& synonym : smaller_set) {
+		if (larger_set.find(synonym) == larger_set.end()) {
 			joinWithDifferentSynonym(query_result);
 			return;
 		}
@@ -116,14 +126,17 @@ void QP::QueryResult::joinWithSameSynonym(QueryResult& query_result) {
 	ResultTable final_result;
 	ResultTable smaller_table;
 	unordered_set<string> synonyms;
-	if (this->table.size() > query_result.getTable().size()) {
+	unordered_set<string> final_synonyms;
+	if (this->synonyms_stored.size() > query_result.getSynonymsStored().size()) {
 		final_result = this->table;
 		smaller_table = query_result.getTable();
 		synonyms = query_result.getSynonymsStored();
+		final_synonyms = this->synonyms_stored;
 	} else {
 		final_result = query_result.getTable();
 		smaller_table = this->table;
 		synonyms = this->synonyms_stored;
+		final_synonyms = query_result.getSynonymsStored();
 	}
 
 	size_t number_of_rows = final_result.begin()->second.size();
@@ -142,7 +155,7 @@ void QP::QueryResult::joinWithSameSynonym(QueryResult& query_result) {
 		}
 	}
 
-	this->synonyms_stored = synonyms;
+	this->synonyms_stored = final_synonyms;
 	this->table = final_result;
 	if (final_result.begin()->second.empty()) {
 		this->result = false;
