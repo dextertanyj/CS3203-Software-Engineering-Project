@@ -127,7 +127,7 @@ void QP::QueryResult::joinWithSameSynonym(QueryResult& query_result) {
 	ResultTable smaller_table;
 	unordered_set<string> synonyms;
 	unordered_set<string> final_synonyms;
-	if (this->table.size() > query_result.getTable().size()) {
+	if (this->synonyms_stored.size() > query_result.getSynonymsStored().size()) {
 		final_result = this->table;
 		smaller_table = query_result.getTable();
 		synonyms = query_result.getSynonymsStored();
