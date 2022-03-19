@@ -86,7 +86,7 @@ Select s such that Next* (s, s) such that Next* (cl, s)
 18 - assignment 2 2j
 assign a; if ifs;
 Select a such that Next* (a, a) and Parent* (ifs, a)
-21, 22
+21, 22, 27
 5000
 19 - assignment 2 2k
 assign a; variable v; while w;
