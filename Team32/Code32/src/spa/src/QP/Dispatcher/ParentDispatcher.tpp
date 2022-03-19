@@ -1,12 +1,12 @@
 #ifndef SPA_SRC_QP_RELATIONSHIP_PARENTDISPATCHERTEMPLATE_TPP
 #define SPA_SRC_QP_RELATIONSHIP_PARENTDISPATCHERTEMPLATE_TPP
 
-#include "ParentDispatcher.h"
+#include "QP/Dispatcher/ParentDispatcher.h"
 
 #include <unordered_map>
 #include <utility>
 
-#include "DispatchProcessors.h"
+#include "QP/Dispatcher/DispatchProcessors.tpp"
 #include "QP/Dispatcher/StatementDispatcher.h"
 #include "QP/Executor/StatementExecutor.tpp"
 
@@ -17,7 +17,7 @@ QP::Types::ArgumentDispatcher QP::Dispatcher::ParentDispatcher<T>::dispatcher =
 template <QP::Types::ClauseType T>
 QP::Types::ExecutorSetBundle QP::Dispatcher::ParentDispatcher<T>::argumentDispatcher(Types::ClauseType type,
                                                                                      const vector<Types::ReferenceArgument>& args) {
-	return DispatchProcessors::processDoubleArgument(type, ParentDispatcher<T>::argument_dispatch_map, args);
+	return DispatchProcessors::processArgument(type, ParentDispatcher<T>::argument_dispatch_map, args);
 };
 
 template <QP::Types::ClauseType T>

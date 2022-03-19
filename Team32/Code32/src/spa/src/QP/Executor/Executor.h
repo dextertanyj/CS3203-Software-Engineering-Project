@@ -16,6 +16,9 @@ class StatementVariableExecutor;
 template <QP::Types::ClauseType T>
 class ProcedureExecutor;
 
+template <QP::Types::ClauseType T>
+class PatternContainerStatementExecutor;
+
 namespace PatternAssignExecutor {};
 }  // namespace QP::Executor
 
