@@ -33,3 +33,8 @@ stmt s; variable v;
 Select BOOLEAN such that Calls(s, "mars") and Parent(6, 9) such that Modifies("mars", v)
 
 5000
+8 - Boolean Same Name Synonym
+stmt BOOLEAN;
+Select BOOLEAN such that Uses(BOOLEAN, "x")
+2
+5000

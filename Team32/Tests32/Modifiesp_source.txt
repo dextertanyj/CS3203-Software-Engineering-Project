@@ -9,6 +9,10 @@ procedure main {
     print y;
 }
 
+procedure earth {
+    read a;
+}
+
 procedure mars {
     print z;
     read b;
@@ -17,10 +21,6 @@ procedure mars {
     } else {
        call earth;
     }
-}
-
-procedure earth {
-    read a;
 }
 
 procedure venus {
