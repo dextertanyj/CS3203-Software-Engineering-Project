@@ -55,7 +55,7 @@ Monk, Monkey, Kappa
 5000
 12 - assignment 2 2c modified
 assign a; variable v; while w;
-Select a such that Next(a, w) pattern a(v, _) pattern w(v, _)
+Select a such that Next(a, w) pattern w(v, _) such that Uses(a, v)
 7, 12
 5000
 13 - assignment 2 2d modified
