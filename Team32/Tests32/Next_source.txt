@@ -1,0 +1,39 @@
+procedure main {
+    print x;
+    read y;
+    while (x < 100000) {
+        y = a + 100;
+        print y;
+    }
+    if (x == y) then {
+        x = 10 + (3 * y);
+    } else {
+        read x; call earth;
+    }
+    read y;
+}
+
+procedure mars {
+    read z;
+    print b;
+    while (z < b) {
+        while (c < 10) {
+            c = c - 1;
+            if (b == 1) then {
+                print a;
+                call venus;
+            } else {
+               call earth;
+            }
+        }
+    }
+    print c;
+}
+
+procedure earth {
+    print a;
+}
+
+procedure venus {
+    read a;
+}
