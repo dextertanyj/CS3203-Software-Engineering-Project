@@ -197,4 +197,5 @@ bool Expression::contains(const Expression& other) { return traversal.find(other
 bool Expression::equals(const Expression& other) { return traversal == other.traversal; }
 
 unordered_set<ConstVal> Expression::getConstants() { return constants; }
+
 unordered_set<VarRef> Expression::getVariables() { return variables; }

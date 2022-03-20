@@ -32,6 +32,7 @@ vector<StmtRef> SP::Node::StatementListNode::extract(PKB::StorageUpdateInterface
 	}
 	return children;
 }
+
 bool SP::Node::StatementListNode::equals(const shared_ptr<StatementListNode>& object) {
 	if (this->stmt_list.size() != object->stmt_list.size()) {
 		return false;
