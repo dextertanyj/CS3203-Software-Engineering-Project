@@ -22,6 +22,6 @@ inline bool checkStmtTypeMatch(const shared_ptr<StmtInfo>& stmt, Types::DesignEn
 
 	return design_entity == Types::DesignEntity::Stmt || stmt->getType() == design_ent_to_stmt_type[design_entity];
 }
-};  // namespace QP::Utilities
+};
 
 #endif  // SPA_SRC_QP_QUERYUTILS_H

@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_PKB_USESRELATION_H
-#define SPA_SRC_PKB_USESRELATION_H
+#ifndef SPA_SRC_PKB_USESSRELATION_H
+#define SPA_SRC_PKB_USESSRELATION_H
 
 #include "PKB/CallStatementStore.h"
 #include "PKB/PKB.h"
@@ -22,4 +22,4 @@ private:
 	                                SVRelationStore<UsesSRelation>& store);
 };
 
-#endif  // SPA_SRC_PKB_USESRELATION_H
+#endif  // SPA_SRC_PKB_USESSRELATION_H

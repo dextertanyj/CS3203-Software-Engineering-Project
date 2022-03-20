@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_EXECUTOR_CALLEXECUTOR_H
-#define SPA_SRC_QP_EXECUTOR_CALLEXECUTOR_H
+#ifndef SPA_SRC_QP_EXECUTOR_PROCEDUREEXECUTOR_H
+#define SPA_SRC_QP_EXECUTOR_PROCEDUREEXECUTOR_H
 
 #include "QP/Executor/Executor.h"
 #include "QP/QueryResult.h"
@@ -30,4 +30,4 @@ public:
 	                                         const Types::ReferenceArgument& rhs);
 };
 
-#endif  // SPA_SRC_QP_EXECUTOR_CALLEXECUTOR_H
+#endif  // SPA_SRC_QP_EXECUTOR_PROCEDUREEXECUTOR_H

@@ -1,5 +1,5 @@
-#ifndef SPA_STATEMENTNODE_H
-#define SPA_STATEMENTNODE_H
+#ifndef SPA_SRC_PKB_CFG_STATEMENTNODE_H
+#define SPA_SRC_PKB_CFG_STATEMENTNODE_H
 
 #include <utility>
 
@@ -19,4 +19,4 @@ private:
 	shared_ptr<StmtInfo> stmt_info;
 };
 
-#endif  // SPA_STATEMENTNODE_H
+#endif  // SPA_SRC_PKB_CFG_STATEMENTNODE_H

@@ -1,5 +1,5 @@
-#ifndef SPA_WHILENODE_H
-#define SPA_WHILENODE_H
+#ifndef SPA_SRC_PKB_CFG_WHILENODE_H
+#define SPA_SRC_PKB_CFG_WHILENODE_H
 
 #include "PKB/CFG/StatementNode.h"
 #include "PKB/PKB.h"
@@ -11,4 +11,4 @@ public:
 	void setPrevious(shared_ptr<NodeInterface> prev) override;
 };
 
-#endif  // SPA_WHILENODE_H
+#endif  // SPA_SRC_PKB_CFG_WHILENODE_H

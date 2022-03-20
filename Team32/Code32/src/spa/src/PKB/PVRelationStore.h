@@ -1,5 +1,5 @@
-#ifndef SPA_PVRELATIONSTORE_H
-#define SPA_PVRELATIONSTORE_H
+#ifndef SPA_SRC_PKB_PVRELATIONSTORE_H
+#define SPA_SRC_PKB_PVRELATIONSTORE_H
 
 #include <string>
 #include <unordered_map>
@@ -30,4 +30,4 @@ private:
 	friend class ModifiesPRelation;
 };
 
-#endif  // SPA_PVRELATIONSTORE_H
+#endif  // SPA_SRC_PKB_PVRELATIONSTORE_H

@@ -213,4 +213,5 @@ void PKB::ControlFlowGraph::clear() { this->stmt_to_normal_node_store.clear(); }
 
 // TODO: Next* TBD.
 void PKB::ControlFlowGraph::optimize() {}
+
 void PKB::ControlFlowGraph::populateGraphIndex() {}

@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_DISPATCHER_H
-#define SPA_SRC_QP_DISPATCHER_H
+#ifndef SPA_SRC_QP_DISPATCHER_DISPATCHMAP_H
+#define SPA_SRC_QP_DISPATCHER_DISPATCHMAP_H
 
 #include "QP/Dispatcher/CallsDispatcher.tpp"
 #include "QP/Dispatcher/Dispatcher.h"
@@ -47,4 +47,4 @@ struct QP::Dispatcher::DispatchMap {
 	};
 };
 
-#endif  // SPA_SRC_QP_DISPATCHER_H
+#endif  // SPA_SRC_QP_DISPATCHER_DISPATCHMAP_H

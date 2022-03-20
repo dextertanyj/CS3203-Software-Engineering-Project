@@ -1,5 +1,5 @@
-#ifndef SPA_MODIFIESPRELATION_H
-#define SPA_MODIFIESPRELATION_H
+#ifndef SPA_SRC_PKB_MODIFIESPRELATION_H
+#define SPA_SRC_PKB_MODIFIESPRELATION_H
 
 #include "PKB/PKB.h"
 #include "PKB/PVRelationStore.h"
@@ -11,4 +11,4 @@ public:
 	static void optimize(const Types::ProcedureStore&, PVRelationStore<ModifiesPRelation>&, SVRelationStore<ModifiesSRelation>&);
 };
 
-#endif  // SPA_MODIFIESPRELATION_H
+#endif  // SPA_SRC_PKB_MODIFIESPRELATION_H

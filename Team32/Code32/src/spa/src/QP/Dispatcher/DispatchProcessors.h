@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_DISPATCHPROCESSORS_H
-#define SPA_SRC_QP_DISPATCHPROCESSORS_H
+#ifndef SPA_SRC_QP_DISPATCHER_DISPATCHPROCESSORS_H
+#define SPA_SRC_QP_DISPATCHER_DISPATCHPROCESSORS_H
 
 #include "QP/Dispatcher/Dispatcher.h"
 #include "QP/QP.h"
@@ -12,6 +12,6 @@ Types::ExecutorSetBundle processArgument(Types::ClauseType type, T map, const ve
 
 template <typename T>
 Types::ExecutorSetBundle processArgument(T map, const vector<Types::ReferenceArgument>& args);
-};  // namespace QP::Dispatcher::DispatchProcessors
+};
 
-#endif  // SPA_SRC_QP_DISPATCHPROCESSORS_H
+#endif  // SPA_SRC_QP_DISPATCHER_DISPATCHPROCESSORS_H

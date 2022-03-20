@@ -1,5 +1,5 @@
-#ifndef SPA_PATTERNASSIGNDISPATCHER_H
-#define SPA_PATTERNASSIGNDISPATCHER_H
+#ifndef SPA_SRC_QP_DISPATCHER_PATTERNASSIGNDISPATCHER_H
+#define SPA_SRC_QP_DISPATCHER_PATTERNASSIGNDISPATCHER_H
 
 #include <unordered_map>
 #include <utility>
@@ -106,7 +106,7 @@ const unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::Arg
 unordered_map<QP::Types::ArgumentDispatchKey,
               unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>>
 	argument_dispatch_map = {{Types::DesignEntity::Assign, synonym_map}};
-}  // namespace
-};  // namespace QP::Dispatcher::PatternAssignDispatcher
+}
+};
 
-#endif  // SPA_PATTERNASSIGNDISPATCHER_H
+#endif  // SPA_SRC_QP_DISPATCHER_PATTERNASSIGNDISPATCHER_H

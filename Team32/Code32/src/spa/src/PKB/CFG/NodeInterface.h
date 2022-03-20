@@ -1,5 +1,5 @@
-#ifndef SPA_NODEINTERFACE_H
-#define SPA_NODEINTERFACE_H
+#ifndef SPA_SRC_PKB_CFG_NODEINTERFACE_H
+#define SPA_SRC_PKB_CFG_NODEINTERFACE_H
 
 #include <algorithm>
 #include <unordered_set>
@@ -33,4 +33,4 @@ private:
 	vector<weak_ptr<NodeInterface>> next_nodes;
 };
 
-#endif  // SPA_NODEINTERFACE_H
+#endif  // SPA_SRC_PKB_CFG_NODEINTERFACE_H

@@ -39,6 +39,6 @@ struct ReferenceArgumentException : public logic_error {
 // struct QuerySyntaxException : public runtime_error {
 //     using runtime_error::runtime_error;
 // };
-}  // namespace QP
+}
 
 #endif  // SPA_SRC_QP_QP_H

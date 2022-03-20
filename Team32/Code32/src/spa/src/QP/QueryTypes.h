@@ -85,6 +85,6 @@ typedef vector<Clause> ClauseList;
 
 typedef unordered_map<string, vector<string>> ResultTable;
 typedef unordered_map<string, string> ResultRow;
-}  // namespace QP::Types
+}
 
 #endif  // SPA_SRC_QP_QUERYTYPES_H

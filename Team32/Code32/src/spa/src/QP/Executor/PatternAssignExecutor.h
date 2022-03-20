@@ -1,9 +1,5 @@
-//
-// Created by Dexter on 12/3/22.
-//
-
-#ifndef SPA_PATTERNASSIGNEXECUTOR_H
-#define SPA_PATTERNASSIGNEXECUTOR_H
+#ifndef SPA_SRC_QP_EXECUTOR_PATTERNASSIGNEXECUTOR_H
+#define SPA_SRC_QP_EXECUTOR_PATTERNASSIGNEXECUTOR_H
 
 #include "QP/Executor/Executor.h"
 #include "QP/QueryResult.h"
@@ -30,6 +26,6 @@ QueryResult executeWildcardExpression(const QP::StorageAdapter& storage, const T
                                       const Types::ReferenceArgument& expression);
 QueryResult executeSynonymExpression(const QP::StorageAdapter& storage, const Types::ReferenceArgument& assign,
                                      const Types::ReferenceArgument& synonym, const Types::ReferenceArgument& expression);
-};  // namespace QP::Executor::PatternAssignExecutor
+};
 
-#endif  // SPA_PATTERNASSIGNEXECUTOR_H
+#endif  // SPA_SRC_QP_EXECUTOR_PATTERNASSIGNEXECUTOR_H
