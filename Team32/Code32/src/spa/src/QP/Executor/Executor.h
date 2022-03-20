@@ -1,5 +1,5 @@
-#ifndef SPA_EXECUTOR_H
-#define SPA_EXECUTOR_H
+#ifndef SPA_SRC_QP_EXECUTOR_EXECUTOR_H
+#define SPA_SRC_QP_EXECUTOR_EXECUTOR_H
 
 #include "QP/QueryTypes.h"
 
@@ -22,4 +22,4 @@ class PatternContainerStatementExecutor;
 namespace PatternAssignExecutor {};
 }
 
-#endif  // SPA_EXECUTOR_H
+#endif  // SPA_SRC_QP_EXECUTOR_EXECUTOR_H

@@ -1,5 +1,5 @@
-#ifndef SPA_CONTROLFLOWGRAPH_H
-#define SPA_CONTROLFLOWGRAPH_H
+#ifndef SPA_SRC_PKB_CFG_CONTROLFLOWGRAPH_H
+#define SPA_SRC_PKB_CFG_CONTROLFLOWGRAPH_H
 
 #include <queue>
 #include <set>
@@ -34,4 +34,4 @@ private:
 	                     StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
 };
 
-#endif  // SPA_CONTROLFLOWGRAPH_H
+#endif  // SPA_SRC_PKB_CFG_CONTROLFLOWGRAPH_H

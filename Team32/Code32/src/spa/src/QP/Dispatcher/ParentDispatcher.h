@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_RELATIONSHIP_PARENTDISPATCHERTEMPLATE_H
-#define SPA_SRC_QP_RELATIONSHIP_PARENTDISPATCHERTEMPLATE_H
+#ifndef SPA_SRC_QP_DISPATCHER_PARENTDISPATCHER_H
+#define SPA_SRC_QP_DISPATCHER_PARENTDISPATCHER_H
 
 #include <unordered_map>
 #include <vector>
@@ -22,4 +22,4 @@ private:
 	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getSynonymMap();
 };
 
-#endif  // SPA_SRC_QP_RELATIONSHIP_PARENTDISPATCHERTEMPLATE_H
+#endif  // SPA_SRC_QP_DISPATCHER_PARENTDISPATCHER_H

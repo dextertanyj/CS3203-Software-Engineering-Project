@@ -1,5 +1,5 @@
-#ifndef SPA_STATEMENTVARIABLEEXECUTOR_TPP
-#define SPA_STATEMENTVARIABLEEXECUTOR_TPP
+#ifndef SPA_SRC_QP_EXECUTOR_STATEMENTVARIABLEEXECUTOR_TPP
+#define SPA_SRC_QP_EXECUTOR_STATEMENTVARIABLEEXECUTOR_TPP
 
 #include "QP/Executor/StatementVariableExecutor.h"
 
@@ -125,4 +125,4 @@ QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeIndexSynonym(
 	return result;
 }
 
-#endif
+#endif  // SPA_SRC_QP_EXECUTOR_STATEMENTVARIABLEEXECUTOR_TPP

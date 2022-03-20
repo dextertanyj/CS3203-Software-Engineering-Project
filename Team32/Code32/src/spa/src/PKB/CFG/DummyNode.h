@@ -1,5 +1,5 @@
-#ifndef SPA_DUMMYNODE_H
-#define SPA_DUMMYNODE_H
+#ifndef SPA_SRC_PKB_CFG_DUMMYNODE_H
+#define SPA_SRC_PKB_CFG_DUMMYNODE_H
 
 #include "NodeInterface.h"
 #include "PKB/PKB.h"
@@ -18,4 +18,4 @@ private:
 	StmtRef if_control_stmt_ref;
 };
 
-#endif  // SPA_DUMMYNODE_H
+#endif  // SPA_SRC_PKB_CFG_DUMMYNODE_H

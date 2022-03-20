@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_RELATIONSHIP_MODIFIES_H
-#define SPA_SRC_QP_RELATIONSHIP_MODIFIES_H
+#ifndef SPA_SRC_QP_DISPATCHER_MODIFIESDISPATCHER_H
+#define SPA_SRC_QP_DISPATCHER_MODIFIESDISPATCHER_H
 
 #include <unordered_map>
 #include <utility>
@@ -13,4 +13,4 @@ namespace QP::Dispatcher::ModifiesDispatcher {
 extern const QP::Types::ArgumentDispatcher dispatcher;
 };
 
-#endif  // SPA_SRC_QP_RELATIONSHIP_MODIFIES_H
+#endif  // SPA_SRC_QP_DISPATCHER_MODIFIESDISPATCHER_H

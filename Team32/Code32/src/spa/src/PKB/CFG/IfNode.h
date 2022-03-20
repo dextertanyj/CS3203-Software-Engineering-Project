@@ -1,5 +1,5 @@
-#ifndef SPA_IFNODE_H
-#define SPA_IFNODE_H
+#ifndef SPA_SRC_PKB_CFG_IFNODE_H
+#define SPA_SRC_PKB_CFG_IFNODE_H
 
 #include "PKB/CFG/StatementNode.h"
 #include "PKB/PKB.h"
@@ -18,4 +18,4 @@ private:
 	shared_ptr<PKB::DummyNode> dummy_node;
 };
 
-#endif  // SPA_IFNODE_H
+#endif  // SPA_SRC_PKB_CFG_IFNODE_H

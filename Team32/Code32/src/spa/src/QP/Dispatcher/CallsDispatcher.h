@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_RELATIONSHIP_CALLSHANDLER_H
-#define SPA_SRC_QP_RELATIONSHIP_CALLSHANDLER_H
+#ifndef SPA_SRC_QP_DISPATCHER_CALLSDISPATCHER_H
+#define SPA_SRC_QP_DISPATCHER_CALLSDISPATCHER_H
 
 #include "QP/Dispatcher/Dispatcher.h"
 #include "QP/QueryResult.h"
@@ -21,4 +21,4 @@ private:
 	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getSynonymMap();
 };
 
-#endif  // SPA_SRC_QP_RELATIONSHIP_CALLSHANDLER_H
+#endif  // SPA_SRC_QP_DISPATCHER_CALLSDISPATCHER_H

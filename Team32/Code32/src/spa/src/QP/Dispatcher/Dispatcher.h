@@ -1,5 +1,5 @@
-#ifndef SPA_DISPATCHER_H
-#define SPA_DISPATCHER_H
+#ifndef SPA_SRC_QP_DISPATCHER_DISPATCHER_H
+#define SPA_SRC_QP_DISPATCHER_DISPATCHER_H
 
 #include "QP/QueryTypes.h"
 
@@ -21,4 +21,4 @@ namespace Modifies {};
 namespace Uses {};
 }
 
-#endif  // SPA_DISPATCHER_H
+#endif  // SPA_SRC_QP_DISPATCHER_DISPATCHER_H

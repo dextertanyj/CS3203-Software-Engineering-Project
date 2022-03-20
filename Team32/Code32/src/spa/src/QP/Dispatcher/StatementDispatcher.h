@@ -1,5 +1,5 @@
-#ifndef SPA_STATEMENTDISPATCHER_H
-#define SPA_STATEMENTDISPATCHER_H
+#ifndef SPA_SRC_QP_DISPATCHER_STATEMENTDISPATCHER_H
+#define SPA_SRC_QP_DISPATCHER_STATEMENTDISPATCHER_H
 
 #include "QP/Executor/Executor.h"
 #include "QP/QueryTypes.h"
@@ -44,4 +44,4 @@ static QP::Types::ExecutorSetFactory lambdaSynonymSynonym() {
 	return lambda;
 }
 
-#endif  // SPA_STATEMENTDISPATCHER_H
+#endif  // SPA_SRC_QP_DISPATCHER_STATEMENTDISPATCHER_H

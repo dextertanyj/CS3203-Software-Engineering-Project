@@ -1,5 +1,5 @@
-#ifndef SPA_STORAGEADAPTER_H
-#define SPA_STORAGEADAPTER_H
+#ifndef SPA_SRC_QP_STORAGEADAPTER_H
+#define SPA_SRC_QP_STORAGEADAPTER_H
 
 #include "PKB/StorageAccessInterface.h"
 #include "QP/QP.h"
@@ -263,4 +263,4 @@ private:
 	PKB::StorageAccessInterface& pkb;
 };
 
-#endif  // SPA_STORAGEADAPTER_H
+#endif  // SPA_SRC_QP_STORAGEADAPTER_H

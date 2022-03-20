@@ -1,5 +1,5 @@
-#ifndef SPA_PATTERNWHILEDISPATCHER_H
-#define SPA_PATTERNWHILEDISPATCHER_H
+#ifndef SPA_SRC_QP_DISPATCHER_PATTERNWHILEDISPATCHER_H
+#define SPA_SRC_QP_DISPATCHER_PATTERNWHILEDISPATCHER_H
 
 #include <unordered_map>
 #include <utility>
@@ -63,4 +63,4 @@ unordered_map<QP::Types::ArgumentDispatchKey,
 }  // namespace
 };
 
-#endif  // SPA_PATTERNWHILEDISPATCHER_H
+#endif  // SPA_SRC_QP_DISPATCHER_PATTERNWHILEDISPATCHER_H

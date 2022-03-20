@@ -1,5 +1,5 @@
-#ifndef SPA_STATEMENTVARIABLEEXECUTOR_H
-#define SPA_STATEMENTVARIABLEEXECUTOR_H
+#ifndef SPA_SRC_QP_EXECUTOR_STATEMENTVARIABLEEXECUTOR_H
+#define SPA_SRC_QP_EXECUTOR_STATEMENTVARIABLEEXECUTOR_H
 
 #include "QP/Executor/Executor.h"
 #include "QP/QueryResult.h"
@@ -28,4 +28,4 @@ public:
 	                                       const Types::ReferenceArgument& variable);
 };
 
-#endif  // SPA_STATEMENTVARIABLEEXECUTOR_H
+#endif  // SPA_SRC_QP_EXECUTOR_STATEMENTVARIABLEEXECUTOR_H

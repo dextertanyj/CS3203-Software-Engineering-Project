@@ -1,5 +1,5 @@
-#ifndef SPA_USESPRELATION_H
-#define SPA_USESPRELATION_H
+#ifndef SPA_SRC_PKB_USESPRELATION_H
+#define SPA_SRC_PKB_USESPRELATION_H
 
 #include "PKB/PKB.h"
 #include "PKB/PVRelationStore.h"
@@ -11,4 +11,4 @@ class PKB::UsesPRelation {
 public:
 	static void optimize(const Types::ProcedureStore&, PVRelationStore<UsesPRelation>&, SVRelationStore<UsesSRelation>&);
 };
-#endif  // SPA_USESPRELATION_H
+#endif  // SPA_SRC_PKB_USESPRELATION_H

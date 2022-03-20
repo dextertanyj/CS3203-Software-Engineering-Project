@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_RELATIONSHIP_USES_H
-#define SPA_SRC_QP_RELATIONSHIP_USES_H
+#ifndef SPA_SRC_QP_DISPATCHER_USESDISPATCHER_H
+#define SPA_SRC_QP_DISPATCHER_USESDISPATCHER_H
 
 #include <unordered_map>
 #include <utility>
@@ -14,4 +14,4 @@ namespace QP::Dispatcher::UsesDispatcher {
 extern const QP::Types::ArgumentDispatcher dispatcher;
 }
 
-#endif  // SPA_SRC_QP_RELATIONSHIP_USES_H
+#endif  // SPA_SRC_QP_DISPATCHER_USESDISPATCHER_H

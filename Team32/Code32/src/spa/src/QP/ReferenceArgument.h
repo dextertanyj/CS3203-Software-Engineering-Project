@@ -1,5 +1,5 @@
-#ifndef SPA_REFERENCEARGUMENT_H
-#define SPA_REFERENCEARGUMENT_H
+#ifndef SPA_SRC_QP_REFERENCEARGUMENT_H
+#define SPA_SRC_QP_REFERENCEARGUMENT_H
 
 #include <string>
 #include <variant>
@@ -76,4 +76,4 @@ private:
 	variant<monostate, Declaration, string, StmtRef, pair<Common::ExpressionProcessor::Expression, bool>> value;
 };
 
-#endif  // SPA_REFERENCEARGUMENT_H
+#endif  // SPA_SRC_QP_REFERENCEARGUMENT_H

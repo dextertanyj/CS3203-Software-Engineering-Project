@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_RELATIONSHIP_CALLSHANDLER_TPP
-#define SPA_SRC_QP_RELATIONSHIP_CALLSHANDLER_TPP
+#ifndef SPA_SRC_QP_DISPATCHER_CALLSDISPATCHER_TPP
+#define SPA_SRC_QP_DISPATCHER_CALLSDISPATCHER_TPP
 
 #include "QP/Dispatcher/CallsDispatcher.h"
 
@@ -112,4 +112,4 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 	return map;
 }
 
-#endif  // SPA_SRC_QP_RELATIONSHIP_CALLSHANDLER_TPP
+#endif  // SPA_SRC_QP_DISPATCHER_CALLSDISPATCHER_TPP
