@@ -123,142 +123,147 @@ assign a, a1; call c;
 Select a such that Next*(a1, c)
 4, 7, 15
 5000
-26 - Next*(synonym, _) positive
+26 - Next*(synonym, synonym) trivial
+assign a, a1;
+Select a such that Next*(a1, a1)
+4, 7, 15
+5000
+27 - Next*(synonym, _) positive
 print pr;
 Select pr such that Next*(pr, _)
 1, 5, 12, 17
 5000
-27 - Next*(synonym, _) positive
+28 - Next*(synonym, _) positive
 call c;
 Select c such that Next*(c, _)
 9, 18, 19
 5000
-28 - Next*(synonym, stmtNo) positive
+29 - Next*(synonym, stmtNo) positive
 stmt s;
 Select s such that Next*(s, 13)
 11, 12, 13, 14, 15, 16, 17, 18, 19
 5000
-29 - Next*(synonym, stmtNo) positive
+30 - Next*(synonym, stmtNo) positive
 while w;
 Select w such that Next*(w, 6)
 3
 5000
-30 - Next*(synonym, stmtNo) negative
+31 - Next*(synonym, stmtNo) negative
 stmt s;
 Select s such that Next*(s, 11)
 
 5000
-31 - Next*(stmtNo, synonym) positive
+32 - Next*(stmtNo, synonym) positive
 while w;
 Select w such that Next*(14, w)
 13, 14
 5000
-32 - Next*(stmtNo, synonym) positive
+33 - Next*(stmtNo, synonym) positive
 stmt s;
 Select s such that Next*(14, s)
 13, 14, 15, 16, 17, 18, 19, 20
 5000
-33 - Next*(stmtNo, synonym) negative
+34 - Next*(stmtNo, synonym) negative
 stmt s;
 Select s such that Next*(10, s)
 
 5000
-34 - Next*(stmtNo, _) positive
+35 - Next*(stmtNo, _) positive
 stmt s;
 Select s such that Next*(15, _)
 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22
 5000
-35 - Next*(stmtNo, _) negative
+36 - Next*(stmtNo, _) negative
 variable v;
 Select v such that Next*(20, _)
 
 5000
-36 - Next*(stmtNo, stmtNo) positive
+37 - Next*(stmtNo, stmtNo) positive
 assign a;
 Select a such that Next*(13, 20)
 4, 7, 15
 5000
-37 - Next*(_ , _) positive
+38 - Next*(_ , _) positive
 procedure p;
 Select p such that Next*(_, _)
 main, mars, earth, venus
 5000
-38 - Next*(_ , synonym) positive
+39 - Next*(_ , synonym) positive
 if ifs;
 Select ifs such that Next*(_, ifs)
 6, 16
 5000
-39 - Next*(_ , stmtNo) positive
+40 - Next*(_ , stmtNo) positive
 stmt s;
 Select s such that Next*(_, 6)
 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22
 5000
-40 - Next*(_ , stmtNo) negative
+41 - Next*(_ , stmtNo) negative
 procedure p;
 Select p such that Next*(_, 1)
 
 5000
-41 - Next mix positive
+42 - Next mix positive
 while w;
 Select w such that Next*(w, _) and Next*(_, w) such that Next(_, _)
 3, 13, 14
 5000
-42 - Next mix positive
+43 - Next mix positive
 stmt s; assign a;
 Select s such that Next(s, 14) and Next*(s, 18) such that Next*(s, a)
 13, 18, 19
 5000
-43 - Next mix positive
+44 - Next mix positive
 stmt s; assign a;
 Select s such that Next*(14, s) and Next*(17, a) such that Next*(18, _)
 13, 14, 15, 16, 17, 18, 19, 20
 5000
-44 - Next mix positive
+45 - Next mix positive
 read r;
 Select r such that Next*(7, r) and Next(5, _) and Next(19, 14)
 10
 5000
-45 - Next mix positive
+46 - Next mix positive
 stmt s1, s2;
 Select s1 such that Next*(s1, s1) and Next(s1, _) and Next(_, s1)
 3, 4, 5, 13, 14, 15, 16, 17, 18, 19
 5000
-46 - Next mix positive
+47 - Next mix positive
 procedure p;
 Select p such that Next(_, 6) such that Next*(_, _) and Next*(3, 3)
 main, mars, earth, venus
 5000
-47 - Next mix positive
+48 - Next mix positive
 assign a;
 Select a such that Next*(_, 2) such that Next(_, 19) and Next*(a, 14)
 15
 5000
-48 - Next mix negative
+49 - Next mix negative
 stmt s1, s2;
 Select p such that Next(s1, 14) and Next*(s1, s2) and Next(s1, 13)
 
 5000
-49 - Next mix negative
+50 - Next mix negative
 stmt s; assign a;
 Select a such that Next*(s, 6) and Next(_, 4) and Next(6, s)
 
 5000
-50 - Next mix negative
+51 - Next mix negative
 procedure p, q;
 Select p such that Next(p, q) such that Next(_, p) and Next*(6, 7)
 
 5000
-51 - Next mix negative
+52 - Next mix negative
 read r; print pr;
 Select p such that Next(_ , pr) such that Next*(pr, _) and Next(pr, r)
 
 5000
-52 - Next mix negative
+53 - Next mix negative
 while w; print pr;
 Select p such that Next*(_, 4) such that Next(w, pr) such that Next*(20, _)
 
 5000
-53 - Next mix negative
+54 - Next mix negative
 while w; call cl;
 Select p such that Next(w, w) such that Next*(w, cl) and Next*(_, 11)
 
