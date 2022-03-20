@@ -1,0 +1,17 @@
+procedure PatternWhile {
+    while (((x >= 0) || (x <= 0)) && (!(y==0)) ) {
+        print 	x;
+    }
+    while ( a+b+c > x-y-z ) {
+        while ( x*y*z == a-b-c ) {
+            while ( 1==2 ) {
+                while ( 1!=x ) {
+                    print 	i;
+                }
+            }
+        }
+    }
+    while (j == 1000) {
+        print 	x;
+    }
+}

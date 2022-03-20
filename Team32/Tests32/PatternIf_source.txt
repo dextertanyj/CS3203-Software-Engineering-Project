@@ -1,0 +1,23 @@
+procedure PatternIf {
+    if (((x >= 0) || (x <= 0)) && !(y==0) ) then {
+        print 	x;
+    } 
+    else {print i;}
+    if ( a+b+c > x-y-z ) then {
+        if ( x*y*z == a-b-c ) then {
+            if ( 1==2 ) then {
+                if ( 1!=x ) then {
+                    print 	i;
+                } 
+                else {print i;}
+            } 
+            else {print i;}
+        } 
+        else {print i;}
+    } 
+    else {print i;}
+    if (j == 1000) then {
+        print 	x;
+    } 
+    else {print i;}
+}

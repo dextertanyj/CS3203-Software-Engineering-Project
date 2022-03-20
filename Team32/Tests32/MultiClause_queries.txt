@@ -1,0 +1,105 @@
+1 - such that clauses only 1
+stmt s; assign a; call c;
+Select s such that Parent* (s, c) and Uses(c, "x") such that Follows(a, s)
+6, 8, 24
+5000
+2 - such that clauses only 2
+stmt s; assign a; call c;
+Select BOOLEAN such that Parent* (s, c) and Uses(c, "x") such that Follows(a, s)
+TRUE
+5000
+3 - such that clauses only 3
+assign a, a1, a2; variable v, v1, v2;
+Select <a, a1, a2> such that Uses (a, v1) such that Modifies(a, v) such that Modifies(a, "v") such that Modifies(a1, v1)  such that Uses(a1, v2) such that Modifies(a2, v2) such that Uses(a2, v)
+12 7 22, 12 21 22, 12 27 21, 12 27 22
+5000
+4 - such that clauses only 4
+assign a, a1, a2; variable v, v1, v2;
+Select <v, v1, v2> such that Uses (a, v1) and Modifies(a, v) and Modifies(a, "v") and Modifies(a1, v1)  such that Uses(a1, v2) and Modifies(a2, v2) and Uses(a2, v)
+v d a, v d d
+5000
+5 - pattern clauses only 1
+if ifs; assign a; while w; variable v, v1;
+Select v pattern ifs(v, _, _) pattern w(v1, _) pattern a(v, _"d"_)
+a, t
+5000
+6 - pattern clauses only 2
+if ifs; assign a; while w; variable v;
+Select BOOLEAN pattern ifs(v, _, _) pattern w(v, _) pattern a(v, _)
+FALSE
+5000
+7 - pattern clauses only 3
+assign a, a1; variable v, v1; while w;
+Select <v, v1> pattern w(v, _) and w(v1, _) and a(v, _) and a1(v1, _)
+c c, c y, d d, x x, y c, y y
+5000
+8 - such that pattern 1
+procedure p; stmt s; call c; while w; variable v;
+Select s such that Parent*(s, c) pattern w(v, _) such that Uses(s, v)
+6, 8, 24, 25
+5000
+9 - such that pattern 2
+assign a; print p; variable v;
+Select BOOLEAN such that Uses (p, v) pattern a(v, _"v*y"_)
+FALSE
+5000
+10 - such that pattern 3
+procedure p, p1, p2; variable v; while w;
+Select <p, p1, p1, p2> such that Calls (p, p1) and Calls(p1, p2) and Modifies(p2, v) pattern w(v, _)
+Kappa Monkey Monkey Pig, Monk Kappa Kappa Monkey, Monk Monkey Monkey Pig
+5000
+11 - assignment 2 2b
+procedure p;
+Select p such that Calls (p, _) and Uses(p, "x")
+Monk, Monkey, Kappa
+5000
+12 - assignment 2 2c modified
+assign a; variable v; while w;
+Select a such that Next(a, w) pattern w(v, _) such that Uses(a, v)
+7, 12
+5000
+13 - assignment 2 2d modified
+ 
+Select BOOLEAN such that Next* (13, 17)
+TRUE
+5000
+14 - assignment 2 2e modified
+assign a; while w;
+Select a such that Next (w, a) pattern a("v", "d+25")
+12
+5000
+15 - assignment 2 2f modified
+assign a; if ifs; while w;
+Select <w, ifs> pattern w ("c", _) such that Parent(ifs, a) pattern a(_, _"x"_)
+8 14, 8 20, 19 14, 19 20
+5000
+16 - assignment 2 2h 
+assign a, a1;
+Select a pattern a ("x", _) and pattern  a1 (_, _"x"_)
+none
+5000
+17 - assignment 2 2i
+stmt s; call cl;
+Select s such that Next* (s, s) such that Next* (cl, s)
+6, 7, 8, 9, 10, 11, 12, 25, 26, 27
+5000
+18 - assignment 2 2j
+assign a; if ifs;
+Select a such that Next* (a, a) and Parent* (ifs, a)
+21, 22, 27
+5000
+19 - assignment 2 2k
+assign a; variable v; while w;
+Select <a, v> such that Follows (w, a) pattern w (v, _)
+12 c, 12 y, 13 d
+5000
+20 - assignment 2 2l
+procedure p; if ifs; variable v;
+Select p pattern ifs (v, _, _) such that Modifies (p, v) and Uses (p, v) 
+Kappa, Monk, Monkey, Pig
+5000
+21 - assignment 2 2m modified
+assign a, a1; variable v;
+Select a1 such that Next(a, a1) pattern a (v, _) such that Uses(a1, v)
+17
+5000
