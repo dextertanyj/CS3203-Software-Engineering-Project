@@ -12,6 +12,6 @@ Types::ExecutorSetBundle processArgument(Types::ClauseType type, T map, const ve
 
 template <typename T>
 Types::ExecutorSetBundle processArgument(T map, const vector<Types::ReferenceArgument>& args);
-};  // namespace QP::Dispatcher::DispatchProcessors
+};
 
 #endif  // SPA_SRC_QP_DISPATCHPROCESSORS_H

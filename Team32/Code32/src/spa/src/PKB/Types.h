@@ -27,6 +27,6 @@ typedef struct BFSInfo {
 	unordered_set<shared_ptr<PKB::NodeInterface>> visited_set;
 	StmtInfoPtrSet nodes;
 } BFSInfo;
-}  // namespace PKB::Types
+}
 
 #endif  // SPA_SRC_PKB_TYPES_H

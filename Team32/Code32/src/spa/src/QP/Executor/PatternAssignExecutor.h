@@ -30,6 +30,6 @@ QueryResult executeWildcardExpression(const QP::StorageAdapter& storage, const T
                                       const Types::ReferenceArgument& expression);
 QueryResult executeSynonymExpression(const QP::StorageAdapter& storage, const Types::ReferenceArgument& assign,
                                      const Types::ReferenceArgument& synonym, const Types::ReferenceArgument& expression);
-};  // namespace QP::Executor::PatternAssignExecutor
+};
 
 #endif  // SPA_PATTERNASSIGNEXECUTOR_H

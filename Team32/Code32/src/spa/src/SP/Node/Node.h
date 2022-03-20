@@ -16,6 +16,6 @@ class StatementListNode;
 class StatementNode;
 class VariableNode;
 class WhileNode;
-}  // namespace SP::Node
+}
 
 #endif  // SPA_SRC_SP_NODE_NODE_H

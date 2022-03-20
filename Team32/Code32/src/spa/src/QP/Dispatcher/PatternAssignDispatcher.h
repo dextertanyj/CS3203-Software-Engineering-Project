@@ -107,6 +107,6 @@ unordered_map<QP::Types::ArgumentDispatchKey,
               unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>>
 	argument_dispatch_map = {{Types::DesignEntity::Assign, synonym_map}};
 }  // namespace
-};  // namespace QP::Dispatcher::PatternAssignDispatcher
+};
 
 #endif  // SPA_PATTERNASSIGNDISPATCHER_H

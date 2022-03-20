@@ -11,6 +11,6 @@
 
 namespace QP::Dispatcher::ModifiesDispatcher {
 extern const QP::Types::ArgumentDispatcher dispatcher;
-};  // namespace QP::Dispatcher::ModifiesDispatcher
+};
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_MODIFIES_H

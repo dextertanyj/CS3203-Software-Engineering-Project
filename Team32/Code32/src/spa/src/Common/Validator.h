@@ -9,6 +9,6 @@ namespace Common::Validator {
 bool validateArithmeticOperator(const string& op);
 bool validateName(const string& name);
 bool validateInteger(const string& integer);
-}  // namespace Common::Validator
+}
 
 #endif  // SPA_SRC_COMMON_VALIDATOR_H

@@ -26,6 +26,6 @@ bool acceptBinaryLogical(const string& op);
 bool acceptBinaryLogical(MathematicalOperator op);
 bool acceptLogicalStrict(const string& op);
 bool acceptLogicalStrict(MathematicalOperator op);
-};  // namespace Common::ExpressionProcessor::OperatorAcceptor
+};
 
 #endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_OPERATORACCEPTOR_H

@@ -20,6 +20,6 @@ template <QP::Types::ClauseType T>
 class PatternContainerStatementExecutor;
 
 namespace PatternAssignExecutor {};
-}  // namespace QP::Executor
+}
 
 #endif  // SPA_EXECUTOR_H

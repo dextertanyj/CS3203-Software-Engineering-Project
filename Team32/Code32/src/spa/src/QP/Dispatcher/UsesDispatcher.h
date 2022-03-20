@@ -12,6 +12,6 @@
 
 namespace QP::Dispatcher::UsesDispatcher {
 extern const QP::Types::ArgumentDispatcher dispatcher;
-}  // namespace QP::Dispatcher::UsesDispatcher
+}
 
 #endif  // SPA_SRC_QP_RELATIONSHIP_USES_H

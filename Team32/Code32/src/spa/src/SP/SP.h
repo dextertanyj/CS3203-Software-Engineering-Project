@@ -20,6 +20,6 @@ class Processor;
 class Lexer;
 class Parser;
 class DesignExtractor;
-}  // namespace SP
+}
 
 #endif  // SPA_SRC_SP_SP_H

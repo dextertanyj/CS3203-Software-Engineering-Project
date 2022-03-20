@@ -78,6 +78,6 @@ typedef struct AssignRelation {
 enum class NodeType { Dummy, If, While, NonConditional };
 
 namespace Types {};
-}  // namespace PKB
+}
 
 #endif  // SPA_SRC_PKB_PKB_H

@@ -19,6 +19,6 @@ class CallsDispatcher;
 
 namespace Modifies {};
 namespace Uses {};
-}  // namespace QP::Dispatcher
+}
 
 #endif  // SPA_DISPATCHER_H

@@ -25,6 +25,6 @@ class VariableNode;  // NOLINT(bugprone-forward-declaration-namespace)
 template <typename T>
 class TerminalNode;
 enum class ExpressionType { Arithmetic, Relational, Logical };
-}  // namespace Common::ExpressionProcessor
+}
 
 #endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSIONPROCESSOR_H

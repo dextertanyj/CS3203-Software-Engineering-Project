@@ -61,6 +61,6 @@ unordered_map<QP::Types::ArgumentDispatchKey,
               unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>>
 	argument_dispatch_map = {{Types::DesignEntity::While, synonym_map}};
 }  // namespace
-};  // namespace QP::Dispatcher::PatternWhileDispatcher
+};
 
 #endif  // SPA_PATTERNWHILEDISPATCHER_H

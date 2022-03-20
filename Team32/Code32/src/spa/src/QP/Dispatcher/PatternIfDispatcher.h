@@ -66,6 +66,6 @@ unordered_map<QP::Types::ArgumentDispatchKey,
                                           unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>>>
 	argument_dispatch_map = {{Types::DesignEntity::If, synonym_map}};
 }  // namespace
-};  // namespace QP::Dispatcher::PatternIfDispatcher
+};
 
 #endif  // SPA_PATTERNIFDISPATCHER_H
