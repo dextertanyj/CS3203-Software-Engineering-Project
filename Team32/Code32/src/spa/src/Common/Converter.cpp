@@ -1,55 +1,34 @@
 #include "Common/Converter.h"
 
 #include <string>
+#include <unordered_map>
 
 #include "Common/Validator.h"
 
 using namespace std;
 
-MathematicalOperator Common::Converter::convertMathematical(const string& op) {
-	if (op == "+") {
-		return MathematicalOperator::Plus;
+MathematicalOperator Common::Converter::convertMathematical(const string& opr) {
+	static const unordered_map<string, MathematicalOperator> map = {
+		{"+", MathematicalOperator::Plus},   {"-", MathematicalOperator::Minus},  {"*", MathematicalOperator::Times},
+		{"/", MathematicalOperator::Divide}, {"%", MathematicalOperator::Modulo}, {">", MathematicalOperator::GT},
+		{">=", MathematicalOperator::GTE},   {"<", MathematicalOperator::LT},     {"<=", MathematicalOperator::LTE},
+		{"==", MathematicalOperator::EQ},    {"!=", MathematicalOperator::NEQ},   {"!", MathematicalOperator::Not},
+		{"&&", MathematicalOperator::And},   {"||", MathematicalOperator::Or}};
+	auto iter = map.find(opr);
+	if (iter == map.end()) {
+		throw ConversionException("Expected mathematical symbol, got " + opr + " instead.");
 	}
-	if (op == "-") {
-		return MathematicalOperator::Minus;
-	}
-	if (op == "*") {
-		return MathematicalOperator::Times;
-	}
-	if (op == "/") {
-		return MathematicalOperator::Divide;
-	}
-	if (op == "%") {
-		return MathematicalOperator::Modulo;
-	}
-	if (op == ">") {
-		return MathematicalOperator::GT;
-	}
-	if (op == ">=") {
-		return MathematicalOperator::GTE;
-	}
-	if (op == "<") {
-		return MathematicalOperator::LT;
-	}
-	if (op == "<=") {
-		return MathematicalOperator::LTE;
-	}
-	if (op == "==") {
-		return MathematicalOperator::EQ;
-	}
-	if (op == "!=") {
-		return MathematicalOperator::NEQ;
-	}
-	if (op == "!") {
-		return MathematicalOperator::Not;
-	}
-	if (op == "&&") {
-		return MathematicalOperator::And;
-	}
-	if (op == "||") {
-		return MathematicalOperator::Or;
-	}
-	throw ConversionException("Expected mathematical symbol, got " + op + " instead.");
+	return iter->second;
+}
+
+string Common::Converter::mathematicalToString(const MathematicalOperator& opr) {
+	static const unordered_map<MathematicalOperator, string> map = {
+		{MathematicalOperator::Plus, "+"},   {MathematicalOperator::Minus, "-"},  {MathematicalOperator::Times, "*"},
+		{MathematicalOperator::Divide, "/"}, {MathematicalOperator::Modulo, "%"}, {MathematicalOperator::GT, ">"},
+		{MathematicalOperator::GTE, ">="},   {MathematicalOperator::LT, "<"},     {MathematicalOperator::LTE, "<="},
+		{MathematicalOperator::EQ, "=="},    {MathematicalOperator::NEQ, "!="},   {MathematicalOperator::Not, "!"},
+		{MathematicalOperator::And, "&&"},   {MathematicalOperator::Or, "||"}};
+	return map.at(opr);
 }
 
 ConstVal Common::Converter::convertInteger(const string& integer) {
