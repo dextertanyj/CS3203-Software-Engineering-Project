@@ -146,8 +146,8 @@ TEST_CASE("SP::Node::ProcedureNode::extract Test") {
 		statements->addStatementNode(make_unique<ReadNode>(statement_number, make_unique<VariableNode>("A")));
 		ProcedureNode node = ProcedureNode("Procedure", move(statements), statement_number, statement_number);
 		node.extract(pkb);
-		REQUIRE_EQUALS(pkb.set_modifies_call_count, 1);
-		REQUIRE_EQUALS(pkb.set_modifies_arguments, vector<tuple<StmtRef, VarRef>>({{statement_number, "A"}}));
+		REQUIRE_EQUALS(pkb.set_proc_arguments, vector<tuple<ProcRef, StmtRef, StmtRef>>({{"Procedure", 1, 1}}));
+		REQUIRE_EQUALS(pkb.set_stmt_type_call_count, 1);
 	}
 
 	SECTION("Multiple statements") {
@@ -160,9 +160,7 @@ TEST_CASE("SP::Node::ProcedureNode::extract Test") {
 		statements->addStatementNode(make_unique<PrintNode>(third_statement_number, make_unique<VariableNode>("B")));
 		ProcedureNode node = ProcedureNode("Procedure", move(statements), first_statement_number, third_statement_number);
 		node.extract(pkb);
-		REQUIRE_EQUALS(pkb.set_modifies_call_count, 1);
-		REQUIRE_EQUALS(pkb.set_modifies_arguments, vector<tuple<StmtRef, VarRef>>({{second_statement_number, "A"}}));
-		REQUIRE_EQUALS(pkb.set_uses_call_count, 1);
-		REQUIRE_EQUALS(pkb.set_uses_arguments, vector<tuple<StmtRef, VarRef>>({{third_statement_number, "B"}}));
+		REQUIRE_EQUALS(pkb.set_proc_arguments, vector<tuple<ProcRef, StmtRef, StmtRef>>({{"Procedure", 1, 3}}));
+		REQUIRE_EQUALS(pkb.set_stmt_type_call_count, 3);
 	}
 }

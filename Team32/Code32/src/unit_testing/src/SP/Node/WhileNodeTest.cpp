@@ -174,7 +174,7 @@ TEST_CASE("SP::Node::WhileNode::extract Test") {
 		                                                                          {second_inner_statement, third_inner_statement}});
 		REQUIRE_EQUALS(pkb.set_follows_arguments.size(), 2);
 
-		// if control variables
+		// while control variables
 		REQUIRE_EQUALS(pkb.set_while_control_set_call_count, 1);
 		REQUIRE_EQUALS(pkb.set_while_control_set_arguments, vector<tuple<StmtRef, VarRefSet>>({{statement_number, {"x", "y"}}}));
 
