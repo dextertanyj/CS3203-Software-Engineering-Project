@@ -30,15 +30,16 @@ private:
 	unordered_set<VarRef> variables;
 	unordered_set<ConstVal> constants;
 
-	static shared_ptr<ExpressionNode> construct(LexerInterface& lex, Acceptor acceptor, unordered_set<VarRef>& variables,
-	                                            unordered_set<ConstVal>& constants, shared_ptr<ExpressionNode> lhs, int precedence);
-	static variant<ParenthesesWrapper, shared_ptr<ExpressionNode>> parseTerminal(LexerInterface& lex, Acceptor acceptor,
+	static ParenthesizedExpression construct(LexerInterface& lex, Acceptor acceptor, unordered_set<VarRef>& variables,
+	                                            unordered_set<ConstVal>& constants, ParenthesizedExpression lhs, int precedence);
+	static ParenthesizedExpression parseTerminal(LexerInterface& lex, Acceptor acceptor,
 	                                                                             unordered_set<VarRef>& variables,
 	                                                                             unordered_set<ConstVal>& constants);
 	static shared_ptr<ExpressionNode> parseTerminalSafe(LexerInterface& lex, Acceptor acceptor, unordered_set<VarRef>& variables,
 	                                                    unordered_set<ConstVal>& constants);
+	static shared_ptr<ExpressionNode> getExpression(const ParenthesizedExpression& expression);
 	static bool checkExpressionType(const shared_ptr<ExpressionNode>& expression, ExpressionType type);
-	static int getPrecedence(MathematicalOperator op);
+	static int getPrecedence(MathematicalOperator opr);
 };
 
 #endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSION_H

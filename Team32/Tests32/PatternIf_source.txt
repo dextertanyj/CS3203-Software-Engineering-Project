@@ -1,5 +1,5 @@
 procedure PatternIf {
-    if (((x >= 0) || (x <= 0)) && !(y==0) ) then {
+    if (((x >= 0) || (x <= 0)) && (!(y==0)) ) then {
         print 	x;
     } 
     else {print i;}
