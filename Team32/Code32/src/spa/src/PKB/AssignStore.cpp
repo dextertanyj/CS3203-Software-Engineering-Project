@@ -55,8 +55,8 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) 
 	return result;
 }
 
-StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(
-	const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) {
+StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
+                                                              bool is_exact_match) {
 	StmtInfoPtrVarRefSet result;
 	for (auto& assignment : store) {
 		AssignRelation assign_relation = assignment.second;
