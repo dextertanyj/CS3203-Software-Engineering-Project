@@ -6,6 +6,8 @@ QP::Types::ReferenceArgument::ReferenceArgument() = default;
 
 QP::Types::ReferenceArgument::ReferenceArgument(QP::Types::Declaration synonym) : value(synonym) {}
 
+QP::Types::ReferenceArgument::ReferenceArgument(QP::Types::Attribute attribute) : value(attribute) {}
+
 QP::Types::ReferenceArgument::ReferenceArgument(string name) : value(name) {}
 
 QP::Types::ReferenceArgument::ReferenceArgument(StmtRef statement_index) : value(statement_index) {}
@@ -21,6 +23,7 @@ QP::Types::ReferenceType QP::Types::ReferenceArgument::getType() const {
 	              [&type](const pair<Common::ExpressionProcessor::Expression, bool>& arg) {
 					  type = arg.second ? QP::Types::ReferenceType::ExactExpression : QP::Types::ReferenceType::SubExpression;
 				  },
+	              [&type](const SynonymAttribute& /*unused*/) { type = QP::Types::ReferenceType::Attribute; },
 	              [&type](const monostate& /*unused*/) { type = QP::Types::ReferenceType::Wildcard; }},
 	      value);
 	return type;
@@ -32,6 +35,14 @@ QP::Types::Declaration QP::Types::ReferenceArgument::getSynonym() const {
 	              [&synonym](Declaration arg) { synonym = move(arg); }},
 	      value);
 	return synonym;
+}
+
+QP::Types::SynonymAttribute QP::Types::ReferenceArgument::getAttribute() const {
+	SynonymAttribute attribute;
+	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Synonym not stored."); },
+	              [&attribute](SynonymAttribute arg) { attribute = move(arg); }},
+	      value);
+	return attribute;
 }
 
 string QP::Types::ReferenceArgument::getName() const {

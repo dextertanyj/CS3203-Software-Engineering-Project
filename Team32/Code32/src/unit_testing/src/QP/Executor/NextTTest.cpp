@@ -26,11 +26,11 @@ TEST_CASE("StatementExecutor<ClauseType::NextT>::execute") {
 	ReferenceArgument stmt_no3 = ReferenceArgument(3);
 	ReferenceArgument stmt_no4 = ReferenceArgument(4);
 	ReferenceArgument stmt_no5 = ReferenceArgument(5);
-	ReferenceArgument stmt_synonym = ReferenceArgument({DesignEntity::Stmt, "s"});
-	ReferenceArgument assign_synonym = ReferenceArgument({DesignEntity::Assign, "a"});
-	ReferenceArgument read_synonym = ReferenceArgument({DesignEntity::Read, "r"});
-	ReferenceArgument while_synonym = ReferenceArgument({DesignEntity::While, "w"});
-	ReferenceArgument print_synonym = ReferenceArgument({DesignEntity::Print, "p"});
+	ReferenceArgument stmt_synonym = ReferenceArgument(Declaration{DesignEntity::Stmt, "s"});
+	ReferenceArgument assign_synonym = ReferenceArgument(Declaration{DesignEntity::Assign, "a"});
+	ReferenceArgument read_synonym = ReferenceArgument(Declaration{DesignEntity::Read, "r"});
+	ReferenceArgument while_synonym = ReferenceArgument(Declaration{DesignEntity::While, "w"});
+	ReferenceArgument print_synonym = ReferenceArgument(Declaration{DesignEntity::Print, "p"});
 	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("Trivial: Index & Index") {

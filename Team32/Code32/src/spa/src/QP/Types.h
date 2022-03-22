@@ -63,10 +63,10 @@ typedef struct Declaration {
 	bool operator==(const Declaration& other) const { return type == other.type && symbol == other.symbol; }
 } Declaration;
 
-typedef struct SynonymAttribute {
+typedef struct Attribute {
 	Declaration synonym;      // NOLINT(misc-non-private-member-variables-in-classes)
 	AttributeType attribute;  // NOLINT(misc-non-private-member-variables-in-classes)
-	bool operator==(const SynonymAttribute& other) const { return synonym == other.synonym && attribute == other.attribute; }
+	bool operator==(const Attribute& other) const { return synonym == other.synonym && attribute == other.attribute; }
 } SynonymAttribute;
 
 typedef struct Clause {
