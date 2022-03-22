@@ -27,11 +27,11 @@ TEST_CASE("QP::ReferenceArgument Test") {
 		REQUIRE_EQUALS(arg.getSynonym().symbol, "ifs");
 	}
 
-	SECTION("Synonym") {
-		QP::Types::ReferenceArgument arg = QP::Types::ReferenceArgument({{QP::Types::DesignEntity::If, "ifs"}, QP::Types::AttributeType::Index});
+	SECTION("Attribute") {
+		QP::Types::ReferenceArgument arg = QP::Types::ReferenceArgument({QP::Types::AttributeType::Name, {QP::Types::DesignEntity::Read, "r"}});
 		REQUIRE_EQUALS(arg.getType(), QP::Types::ReferenceType::Attribute);
-		REQUIRE_EQUALS(arg.getAttribute().synonym.type, QP::Types::DesignEntity::If);
-		REQUIRE_EQUALS(arg.getAttribute().synonym.symbol, "ifs");
-		REQUIRE_EQUALS(arg.getAttribute().attribute, QP::Types::AttributeType::Index);
+		REQUIRE_EQUALS(arg.getAttribute().synonym.type, QP::Types::DesignEntity::Read);
+		REQUIRE_EQUALS(arg.getAttribute().synonym.symbol, "r");
+		REQUIRE_EQUALS(arg.getAttribute().attribute, QP::Types::AttributeType::Name);
 	}
 }

@@ -23,7 +23,7 @@ QP::Types::ReferenceType QP::Types::ReferenceArgument::getType() const {
 	              [&type](const pair<Common::ExpressionProcessor::Expression, bool>& arg) {
 					  type = arg.second ? QP::Types::ReferenceType::ExactExpression : QP::Types::ReferenceType::SubExpression;
 				  },
-	              [&type](const SynonymAttribute& /*unused*/) { type = QP::Types::ReferenceType::Attribute; },
+	              [&type](const Attribute& /*unused*/) { type = QP::Types::ReferenceType::Attribute; },
 	              [&type](const monostate& /*unused*/) { type = QP::Types::ReferenceType::Wildcard; }},
 	      value);
 	return type;
@@ -37,10 +37,10 @@ QP::Types::Declaration QP::Types::ReferenceArgument::getSynonym() const {
 	return synonym;
 }
 
-QP::Types::SynonymAttribute QP::Types::ReferenceArgument::getAttribute() const {
-	SynonymAttribute attribute;
+QP::Types::Attribute QP::Types::ReferenceArgument::getAttribute() const {
+	Attribute attribute;
 	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Synonym not stored."); },
-	              [&attribute](SynonymAttribute arg) { attribute = move(arg); }},
+	              [&attribute](Attribute arg) { attribute = move(arg); }},
 	      value);
 	return attribute;
 }

@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_QUERYTYPES_H
-#define SPA_SRC_QP_QUERYTYPES_H
+#ifndef SPA_SRC_QP_TYPES_H
+#define SPA_SRC_QP_TYPES_H
 
 #include <functional>
 #include <memory>
@@ -52,7 +52,7 @@ enum class ClauseType {
 };
 
 enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression, Attribute };
-enum class AttributeType { Name, Index, Value };
+enum class AttributeType { Index, Name, Value };
 
 class ReferenceArgument;
 class ConnectedSynonyms;
@@ -64,10 +64,11 @@ typedef struct Declaration {
 } Declaration;
 
 typedef struct Attribute {
-	Declaration synonym;      // NOLINT(misc-non-private-member-variables-in-classes)
-	AttributeType attribute;  // NOLINT(misc-non-private-member-variables-in-classes)
-	bool operator==(const Attribute& other) const { return synonym == other.synonym && attribute == other.attribute; }
-} SynonymAttribute;
+	// We cast 0 rather than use a concrete enum value to prevent favouring a particular value if the enum is updated.
+	AttributeType attribute = static_cast<AttributeType>(0);  // NOLINT(misc-non-private-member-variables-in-classes)
+	Declaration synonym;                                      // NOLINT(misc-non-private-member-variables-in-classes)
+	bool operator==(const Attribute& other) const { return attribute == other.attribute && synonym == other.synonym; }
+} Attribute;
 
 typedef struct Clause {
 	shared_ptr<Relationship::Relation> relation;
@@ -94,4 +95,4 @@ typedef unordered_map<string, vector<string>> ResultTable;
 typedef unordered_map<string, string> ResultRow;
 }
 
-#endif  // SPA_SRC_QP_QUERYTYPES_H
+#endif  // SPA_SRC_QP_TYPES_H

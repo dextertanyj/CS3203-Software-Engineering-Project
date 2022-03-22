@@ -62,7 +62,7 @@ public:
 	 * @throws ReferenceArgumentException if a synonym and attribute are not stored.
 	 * @return the synonym and attribute stored.
 	 */
-	[[nodiscard]] SynonymAttribute getAttribute() const;
+	[[nodiscard]] Attribute getAttribute() const;
 
 	/**
 	 * Returns the name stored.
