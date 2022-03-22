@@ -10,6 +10,7 @@ struct ExpressionProcessorException : public runtime_error {
 	using runtime_error::runtime_error;
 };
 namespace OperatorAcceptor {};
+class ExpressionParser;
 class LexerInterface;
 class Expression;
 class ExpressionNode;

@@ -1,5 +1,6 @@
 #include "SP/Node/ExpressionNode.h"
 
+#include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
 using namespace std;
@@ -8,7 +9,7 @@ SP::Node::ExpressionNode::ExpressionNode(Common::ExpressionProcessor::Expression
 
 unique_ptr<SP::Node::ExpressionNode> SP::Node::ExpressionNode::parseExpression(Lexer& lex,
                                                                                Common::ExpressionProcessor::ExpressionType type) {
-	Common::ExpressionProcessor::Expression expression = Common::ExpressionProcessor::Expression::parse(lex, type);
+	Common::ExpressionProcessor::Expression expression = Common::ExpressionProcessor::ExpressionParser{}.parse(lex, type);
 	return make_unique<ExpressionNode>(expression);
 }
 
