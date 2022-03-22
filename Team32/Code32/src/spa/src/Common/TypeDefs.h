@@ -6,6 +6,8 @@
 #include <unordered_set>
 #include <vector>
 
+#include "Common/Hash.h"
+
 using namespace std;
 
 template <class... Ts>
@@ -36,6 +38,7 @@ typedef unordered_set<shared_ptr<StmtInfo>> StmtInfoPtrSet;
 typedef unordered_set<VarRef> VarRefSet;
 typedef unordered_set<ProcRef> ProcRefSet;
 typedef unordered_set<StmtRef> StmtRefSet;
+typedef unordered_set<pair<shared_ptr<StmtInfo>, VarRef>, Common::Hash::PairHash> StmtInfoPtrVarRefSet;
 
 enum class MathematicalOperator { Plus, Minus, Times, Divide, Modulo, EQ, NEQ, LT, LTE, GT, GTE, And, Or, Not };
 

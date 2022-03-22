@@ -162,7 +162,7 @@ TEST_CASE("PKB::AssignStore::getStmtsWithPatternRHS Exact Match Test") {
 	REQUIRE_EQUALS(map.size(), 3);
 
 	// Exact match of partialOpTree- only statement 3 should be in the list
-	vector<pair<shared_ptr<StmtInfo>, VarRef>> lst = store.getStmtsWithPatternRHS(getPartialOpTree(), true);
+	StmtInfoPtrVarRefSet lst = store.getStmtsWithPatternRHS(getPartialOpTree(), true);
 	REQUIRE_EQUALS(lst.size(), 1);
 	REQUIRE(find_if(lst.begin(), lst.end(), [](const pair<shared_ptr<StmtInfo>, VarRef>& node) {
 				return node.first->getIdentifier() == 3 && node.second == "z";
