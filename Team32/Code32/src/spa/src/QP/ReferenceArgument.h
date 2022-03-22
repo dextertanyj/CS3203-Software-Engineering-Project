@@ -7,7 +7,7 @@
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
 #include "QP/QP.h"
-#include "QP/QueryTypes.h"
+#include "QP/Types.h"
 
 using namespace std;
 
@@ -22,8 +22,14 @@ public:
 	 * Constructs a ReferenceArgument object with synonym type.
 	 * @param synonym
 	 */
-
 	explicit ReferenceArgument(Declaration synonym);
+
+	/**
+	 * Constructs a ReferenceArgument object with synonym and attribute type.
+	 * @param attribute
+	 */
+	explicit ReferenceArgument(Attribute attribute);
+
 	/**
 	 * Constructs a ReferenceArgument object with synonym type.
 	 * @param name
@@ -52,6 +58,13 @@ public:
 	[[nodiscard]] Declaration getSynonym() const;
 
 	/**
+	 * Returns the synonym and attribute stored.
+	 * @throws ReferenceArgumentException if a synonym and attribute are not stored.
+	 * @return the synonym and attribute stored.
+	 */
+	[[nodiscard]] Attribute getAttribute() const;
+
+	/**
 	 * Returns the name stored.
 	 * @throws ReferenceArgumentException if a name is not stored.
 	 * @return the name stored.
@@ -73,7 +86,7 @@ public:
 	[[nodiscard]] Common::ExpressionProcessor::Expression getExpression() const;
 
 private:
-	variant<monostate, Declaration, string, StmtRef, pair<Common::ExpressionProcessor::Expression, bool>> value;
+	variant<monostate, Declaration, Attribute, string, StmtRef, pair<Common::ExpressionProcessor::Expression, bool>> value;
 };
 
 #endif  // SPA_SRC_QP_REFERENCEARGUMENT_H

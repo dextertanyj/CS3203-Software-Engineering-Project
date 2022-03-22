@@ -8,7 +8,7 @@
 
 #include "Common/TypeDefs.h"
 #include "QP/QP.h"
-#include "QP/QueryTypes.h"
+#include "QP/Types.h"
 
 using QP::Types::ResultRow;
 using QP::Types::ResultTable;

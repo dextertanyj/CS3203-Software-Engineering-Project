@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "QP/QueryTypes.h"
+#include "QP/Types.h"
 
 #define TUPLE_SEPERATOR " "
 #define TRUE "TRUE"

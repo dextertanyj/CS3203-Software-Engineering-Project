@@ -6,7 +6,7 @@
 
 #include "Common/Validator.h"
 #include "QP/QueryExpressionLexer.h"
-#include "QP/QueryTypes.h"
+#include "QP/Types.h"
 
 regex QP::QueryPreprocessor::invalid_chars_regex = regex(R"([^a-zA-Z0-9\s,"_\(\);\+\-\*\/%<>])");
 regex QP::QueryPreprocessor::query_token_regex =

@@ -22,8 +22,8 @@ TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternWhile>::execute"
 	pkb.setUses(4, "a");
 	pkb.populateComplexRelations();
 
-	ReferenceArgument syn_while = ReferenceArgument({QP::Types::DesignEntity::While, "w"});
-	ReferenceArgument syn_var = ReferenceArgument({QP::Types::DesignEntity::Variable, "v"});
+	ReferenceArgument syn_while = ReferenceArgument(Declaration{QP::Types::DesignEntity::While, "w"});
+	ReferenceArgument syn_var = ReferenceArgument(Declaration{QP::Types::DesignEntity::Variable, "v"});
 	ReferenceArgument a = ReferenceArgument("a");
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");

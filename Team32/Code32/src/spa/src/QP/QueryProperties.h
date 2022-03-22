@@ -1,7 +1,7 @@
 #ifndef SPA_SRC_QP_QUERYPROPERTIES_H
 #define SPA_SRC_QP_QUERYPROPERTIES_H
 
-#include "QP/QueryTypes.h"
+#include "QP/Types.h"
 
 using namespace std;
 

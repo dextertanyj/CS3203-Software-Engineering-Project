@@ -21,10 +21,10 @@ TEST_CASE("ProcedureVariableExecutor<ClauseType::ModifiesP>::execute") {
 
 	ReferenceArgument left_proc_no1 = ReferenceArgument("A");
 	ReferenceArgument left_proc_no2 = ReferenceArgument("B");
-	ReferenceArgument left_proc_no3 = ReferenceArgument({DesignEntity::Procedure, "procedure"});
+	ReferenceArgument left_proc_no3 = ReferenceArgument(Declaration{DesignEntity::Procedure, "procedure"});
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
-	ReferenceArgument var = ReferenceArgument({DesignEntity::Variable, "var"});
+	ReferenceArgument var = ReferenceArgument(Declaration{DesignEntity::Variable, "var"});
 
 	SECTION("Trivial: Name & Name") {
 		QP::QueryResult result1 = ProcedureVariableExecutor<ClauseType::ModifiesP>::executeTrivialNameName(store, left_proc_no1, x);
