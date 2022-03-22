@@ -1,8 +1,10 @@
 #ifndef SPA_SRC_COMMON_HASH_H
 #define SPA_SRC_COMMON_HASH_H
 
+#include <functional>
 #include <memory>
 #include <utility>
+#include <vector>
 
 // See https://stackoverflow.com/questions/4948780/magic-number-in-boosthash-combine
 #define GOLDEN_RATIO 0x9e3779b9
