@@ -1,12 +1,12 @@
 #ifndef SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSIONPROCESSOR_H
 #define SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSIONPROCESSOR_H
 
+#include <memory>
 #include <stdexcept>
-
-using namespace std;
+#include <variant>
 
 namespace Common::ExpressionProcessor {
-struct ExpressionProcessorException : public runtime_error {
+struct ExpressionProcessorException : public std::runtime_error {
 	using runtime_error::runtime_error;
 };
 namespace OperatorAcceptor {};
@@ -26,7 +26,7 @@ class VariableNode;  // NOLINT(bugprone-forward-declaration-namespace)
 template <typename T>
 class TerminalNode;
 enum class ExpressionType { Arithmetic, Relational, Logical };
-typedef variant<ParenthesesWrapper, shared_ptr<ExpressionNode>> ParenthesizedExpression;
+typedef std::variant<ParenthesesWrapper, std::shared_ptr<ExpressionNode>> ParenthesizedExpression;
 }  // namespace Common::ExpressionProcessor
 
 #endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSIONPROCESSOR_H
