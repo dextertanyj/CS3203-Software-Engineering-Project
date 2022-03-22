@@ -83,8 +83,9 @@ typedef unordered_map<ClauseType, ArgumentDispatcher> ArgumentDispatchMap;
 typedef vector<Declaration> DeclarationList;
 typedef vector<Clause> ClauseList;
 
-typedef unordered_map<string, vector<string>> ResultTable;
+class ResultTable;
 typedef unordered_map<string, string> ResultRow;
+typedef vector<string> ResultColumn;
 }
 
 #endif  // SPA_SRC_QP_QUERYTYPES_H

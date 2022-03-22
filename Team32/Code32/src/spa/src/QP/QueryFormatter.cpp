@@ -31,7 +31,7 @@ vector<string> QP::QueryFormatter::formatNonBooleanResult(QueryProperties& query
 		return {};
 	}
 
-	size_t table_size = query_result.getTableSize();
+	size_t table_size = query_result.getNumberOfRows();
 	vector<string> result(table_size);
 	DeclarationList select_list = query_properties.getSelectList();
 
