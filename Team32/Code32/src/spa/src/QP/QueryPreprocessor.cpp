@@ -285,7 +285,7 @@ Common::ExpressionProcessor::Expression QP::QueryPreprocessor::parseExpression()
 	}
 	QueryExpressionLexer lexer = QueryExpressionLexer(expression);
 	Common::ExpressionProcessor::Expression arithmetic_expression =
-		Common::ExpressionProcessor::ExpressionParser{}.parse(lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+		Common::ExpressionProcessor::ExpressionParser{lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
 	if (!lexer.readToken().empty()) {
 		throw QueryException("Invalid expression.");
 	}

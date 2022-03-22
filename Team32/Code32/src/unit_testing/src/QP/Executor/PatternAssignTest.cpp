@@ -18,15 +18,15 @@ TEST_CASE("PatternAssignExecutor::execute") {
 
 	vector<string> assign_token1 = {"1"};
 	QP::QueryExpressionLexer lexer1 = QP::QueryExpressionLexer(assign_token1);
-	auto expression1 = ExpressionParser{}.parse(lexer1, ExpressionType::Arithmetic);
+	auto expression1 = ExpressionParser{lexer1, ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(1, "x", expression1);
 	vector<string> assign_token2 = {"x", "+", "1"};
 	QP::QueryExpressionLexer lexer2 = QP::QueryExpressionLexer(assign_token2);
-	auto expression2 = ExpressionParser{}.parse(lexer2, ExpressionType::Arithmetic);
+	auto expression2 = ExpressionParser{lexer2, ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(2, "y", expression2);
 	vector<string> assign_token3 = {"x", "+", "y"};
 	QP::QueryExpressionLexer lexer3 = QP::QueryExpressionLexer(assign_token3);
-	auto expression3 = ExpressionParser{}.parse(lexer3, ExpressionType::Arithmetic);
+	auto expression3 = ExpressionParser{lexer3, ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(3, "y", expression3);
 
 	pkb.setModifies(1, "x");
@@ -45,13 +45,13 @@ TEST_CASE("PatternAssignExecutor::execute") {
 
 	vector<string> query_token1 = {"1"};
 	QP::QueryExpressionLexer lexer4 = QP::QueryExpressionLexer(query_token1);
-	auto query_expression1 = ExpressionParser{}.parse(lexer4, ExpressionType::Arithmetic);
+	auto query_expression1 = ExpressionParser{lexer4, ExpressionType::Arithmetic}.parse();
 	vector<string> query_token2 = {"0"};
 	QP::QueryExpressionLexer lexer5 = QP::QueryExpressionLexer(query_token2);
-	auto query_expression2 = ExpressionParser{}.parse(lexer5, ExpressionType::Arithmetic);
+	auto query_expression2 = ExpressionParser{lexer5, ExpressionType::Arithmetic}.parse();
 	vector<string> query_token3 = {"x"};
 	QP::QueryExpressionLexer lexer6 = QP::QueryExpressionLexer(query_token3);
-	auto query_expression3 = ExpressionParser{}.parse(lexer6, ExpressionType::Arithmetic);
+	auto query_expression3 = ExpressionParser{lexer6, ExpressionType::Arithmetic}.parse();
 
 	SECTION("Trivial: Wildcard & Wildcard") {
 		QP::QueryResult result1 = PatternAssignExecutor::executeTrivialSynonymOrWildcardWildcard(store);

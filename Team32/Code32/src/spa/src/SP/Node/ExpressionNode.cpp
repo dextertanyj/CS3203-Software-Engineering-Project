@@ -9,7 +9,7 @@ SP::Node::ExpressionNode::ExpressionNode(Common::ExpressionProcessor::Expression
 
 unique_ptr<SP::Node::ExpressionNode> SP::Node::ExpressionNode::parseExpression(Lexer& lex,
                                                                                Common::ExpressionProcessor::ExpressionType type) {
-	Common::ExpressionProcessor::Expression expression = Common::ExpressionProcessor::ExpressionParser{}.parse(lex, type);
+	Common::ExpressionProcessor::Expression expression = Common::ExpressionProcessor::ExpressionParser{lex, type}.parse();
 	return make_unique<ExpressionNode>(expression);
 }
 

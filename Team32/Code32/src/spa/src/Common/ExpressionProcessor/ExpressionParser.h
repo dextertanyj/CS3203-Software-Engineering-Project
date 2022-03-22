@@ -9,17 +9,20 @@
 
 class Common::ExpressionProcessor::ExpressionParser {
 public:
-	ExpressionParser() = default;
-	Expression parse(LexerInterface& lex, ExpressionType type);
+	ExpressionParser(LexerInterface& lex, ExpressionType type);
+	Expression parse();
 
 private:
+	LexerInterface& lex;
+	ExpressionType type;
 	unordered_set<VarRef> variables;
 	unordered_set<ConstVal> constants;
 
-	ParenthesizedExpression construct(LexerInterface& lex, Acceptor acceptor, ParenthesizedExpression lhs, int precedence);
-	ParenthesizedExpression parseTerminal(LexerInterface& lex, Acceptor acceptor);
-	shared_ptr<ExpressionNode> parseTerminalSafe(LexerInterface& lex, Acceptor acceptor);
-	shared_ptr<UnaryLogicalNode> parseUnaryLogical(LexerInterface& lex, Acceptor acceptor);
+	ParenthesizedExpression construct(Acceptor acceptor, ParenthesizedExpression lhs, int precedence);
+	ParenthesizedExpression parseTerminal(Acceptor acceptor);
+	shared_ptr<ExpressionNode> parseTerminalSafe(Acceptor acceptor);
+	shared_ptr<UnaryLogicalNode> parseUnaryLogical();
+	shared_ptr<BinaryLogicalNode> parseBinaryLogical(ParenthesizedExpression lhs);
 
 	static shared_ptr<ExpressionNode> getExpression(const ParenthesizedExpression& expression);
 	static bool checkExpressionType(const shared_ptr<ExpressionNode>& expression, ExpressionType type);
