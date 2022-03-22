@@ -75,6 +75,9 @@ public:
 	virtual StmtInfoPtrSet getIfControlStmt(VarRef name) = 0;
 	virtual StmtInfoPtrSet getWhileControlStmt(VarRef name) = 0;
 
+	// Attribute get methods
+	virtual ProcRef getCalledProcedure(StmtRef index) = 0;
+
 	virtual ~StorageAccessInterface() = default;
 };
 

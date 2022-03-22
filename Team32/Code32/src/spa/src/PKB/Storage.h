@@ -127,6 +127,9 @@ public:
 	StmtInfoPtrSet getIfControlStmt(VarRef name) override;
 	StmtInfoPtrSet getWhileControlStmt(VarRef name) override;
 
+	// Attribute get methods
+	ProcRef getCalledProcedure(StmtRef index) override;
+
 	// Others
 	void populateComplexRelations() override;
 	void clear();

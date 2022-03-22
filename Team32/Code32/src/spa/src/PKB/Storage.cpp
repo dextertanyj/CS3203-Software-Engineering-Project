@@ -269,6 +269,8 @@ VarRefSet PKB::Storage::getIfControlVar(StmtRef index) { return if_control_store
 
 VarRefSet PKB::Storage::getWhileControlVar(StmtRef index) { return while_control_store.getByStmt(index); }
 
+ProcRef PKB::Storage::getCalledProcedure(StmtRef index) { return call_statement_store.getProcedure(index); };
+
 void PKB::Storage::populateComplexRelations() {
 	call_statement_store.populate(procedure_store, call_store);
 	call_store.optimize();

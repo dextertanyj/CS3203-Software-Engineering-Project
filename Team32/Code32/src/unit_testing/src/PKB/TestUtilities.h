@@ -64,6 +64,27 @@ inline PKB::Storage generateModifyTestPKB() {
 	return pkb;
 };
 
+inline PKB::Storage generateCallsTestPKB() {
+	PKB::Storage pkb = PKB::Storage();
+	pkb.setStmtType(1, StmtType::Call);
+	pkb.setStmtType(2, StmtType::Call);
+	pkb.setStmtType(3, StmtType::Call);
+	pkb.setStmtType(4, StmtType::Call);
+	pkb.setStmtType(5, StmtType::Read);
+	pkb.setStmtType(6, StmtType::Print);
+	pkb.setProc("procedure_1", 1, 1);
+	pkb.setProc("procedure_2", 2, 2);
+	pkb.setProc("procedure_3", 3, 4);
+	pkb.setProc("procedure_4", 5, 5);
+	pkb.setProc("procedure_5", 6, 6);
+	pkb.setCall(1, "procedure_3");
+	pkb.setCall(2, "procedure_3");
+	pkb.setCall(3, "procedure_4");
+	pkb.setCall(4, "procedure_5");
+	pkb.populateComplexRelations();
+	return pkb;
+};
+
 inline PKB::Storage generateNextTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
