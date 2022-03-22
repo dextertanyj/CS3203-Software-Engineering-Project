@@ -37,6 +37,8 @@ private:
 	                                                                             unordered_set<ConstVal>& constants);
 	static shared_ptr<ExpressionNode> parseTerminalSafe(LexerInterface& lex, Acceptor acceptor, unordered_set<VarRef>& variables,
 	                                                    unordered_set<ConstVal>& constants);
+	static shared_ptr<UnaryLogicalNode> parseUnaryLogical(LexerInterface& lex, Acceptor acceptor, unordered_set<VarRef>& variables,
+	                                                      unordered_set<ConstVal>& constants);
 	static shared_ptr<ExpressionNode> getExpression(const ParenthesizedExpression& expression);
 	static bool checkExpressionType(const shared_ptr<ExpressionNode>& expression, ExpressionType type);
 	static int getPrecedence(MathematicalOperator opr);
