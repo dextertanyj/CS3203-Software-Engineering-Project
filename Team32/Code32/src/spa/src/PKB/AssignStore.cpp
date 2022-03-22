@@ -74,7 +74,7 @@ bool PKB::AssignStore::compareExpressions(PKB::AssignRelation& relation, const V
 		return false;
 	}
 	if (is_exact_match) {
-		return relation.expression.equals(op_tree);
+		return relation.expression == op_tree;
 	}
 	return relation.expression.contains(op_tree);
 }

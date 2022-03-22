@@ -39,7 +39,7 @@ TEST_CASE("SP::Node::ExpressionNode::extract Test") {
 		Common::ExpressionProcessor::Expression expected = SP::TestUtilities::createArithmeticExpression(tokens);
 		ExpressionNode node = ExpressionNode(expression);
 		Common::ExpressionProcessor::Expression result = node.extract();
-		REQUIRE(result.equals(expression));
+		REQUIRE(result == expression);
 	}
 
 	SECTION("Relational Expressions") {
@@ -48,7 +48,7 @@ TEST_CASE("SP::Node::ExpressionNode::extract Test") {
 		Common::ExpressionProcessor::Expression expected = SP::TestUtilities::createRelationalExpression(tokens);
 		ExpressionNode node = ExpressionNode(expression);
 		Common::ExpressionProcessor::Expression result = node.extract();
-		REQUIRE(result.equals(expression));
+		REQUIRE(result == expression);
 	}
 
 	SECTION("Logical Expressions") {
@@ -57,6 +57,6 @@ TEST_CASE("SP::Node::ExpressionNode::extract Test") {
 		Common::ExpressionProcessor::Expression expected = SP::TestUtilities::createConditionalExpression(tokens);
 		ExpressionNode node = ExpressionNode(expression);
 		Common::ExpressionProcessor::Expression result = node.extract();
-		REQUIRE(result.equals(expression));
+		REQUIRE(result == expression);
 	}
 }

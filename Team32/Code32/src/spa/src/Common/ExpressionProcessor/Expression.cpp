@@ -9,10 +9,10 @@ Expression::Expression(shared_ptr<ExpressionNode> root, unordered_set<VarRef> va
 	}
 }
 
-bool Expression::contains(const Expression& other) { return traversal.find(other.traversal) != std::string::npos; }
+unordered_set<ConstVal> Expression::getConstants() const { return constants; }
 
-bool Expression::equals(const Expression& other) { return traversal == other.traversal; }
+unordered_set<VarRef> Expression::getVariables() const { return variables; }
 
-unordered_set<ConstVal> Expression::getConstants() { return constants; }
+bool Expression::contains(const Expression& other) const { return traversal.find(other.traversal) != std::string::npos; }
 
-unordered_set<VarRef> Expression::getVariables() { return variables; }
+bool Expression::operator==(const Expression& other) const { return traversal == other.traversal; }

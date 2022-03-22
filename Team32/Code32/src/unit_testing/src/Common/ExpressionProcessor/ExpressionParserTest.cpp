@@ -43,7 +43,7 @@ TEST_CASE("Common::ExpressionProcessor::ExpressionParser{}.parse Arithmetic Test
 		unordered_set<VarRef> variables = unordered_set<VarRef>();
 		unordered_set<ConstVal> constants = unordered_set<ConstVal>({1});
 		Expression expected = Expression(root, variables, constants);
-		REQUIRE(expression.equals(expected));
+		REQUIRE(expression == expected);
 		REQUIRE_EQUALS(expression.getConstants(), constants);
 		REQUIRE_EQUALS(expression.getVariables(), variables);
 		REQUIRE_EQUALS(lex.readToken(), ")");
@@ -57,7 +57,7 @@ TEST_CASE("Common::ExpressionProcessor::ExpressionParser{}.parse Arithmetic Test
 		unordered_set<VarRef> variables = unordered_set<VarRef>();
 		unordered_set<ConstVal> constants = unordered_set<ConstVal>({1, 2});
 		Expression expected = Expression(root, variables, constants);
-		REQUIRE(expression.equals(expected));
+		REQUIRE(expression == expected);
 		REQUIRE_EQUALS(expression.getConstants(), constants);
 		REQUIRE_EQUALS(expression.getVariables(), variables);
 		REQUIRE_EQUALS(lex.readToken(), ";");
@@ -70,7 +70,7 @@ TEST_CASE("Common::ExpressionProcessor::ExpressionParser{}.parse Arithmetic Test
 		unordered_set<VarRef> variables = unordered_set<VarRef>();
 		unordered_set<ConstVal> constants = unordered_set<ConstVal>({1});
 		Expression expected = Expression(root, variables, constants);
-		REQUIRE(expression.equals(expected));
+		REQUIRE(expression == expected);
 		REQUIRE_EQUALS(expression.getConstants(), constants);
 		REQUIRE_EQUALS(expression.getVariables(), variables);
 		REQUIRE_EQUALS(lex.readToken(), ")");
@@ -87,7 +87,7 @@ TEST_CASE("Common::ExpressionProcessor::ExpressionParser{}.parse Arithmetic Test
 		unordered_set<VarRef> variables = unordered_set<VarRef>({"A", "B"});
 		unordered_set<ConstVal> constants = unordered_set<ConstVal>({1, 2, 3});
 		Expression expected = Expression(root, variables, constants);
-		REQUIRE(expression.equals(expected));
+		REQUIRE(expression == expected);
 		REQUIRE_EQUALS(expression.getConstants(), constants);
 		REQUIRE_EQUALS(expression.getVariables(), variables);
 		REQUIRE_EQUALS(lex.readToken(), ")");
@@ -121,7 +121,7 @@ TEST_CASE("Common::ExpressionProcessor::ExpressionParser{}.parse Relational Test
 		unordered_set<VarRef> variables = unordered_set<VarRef>();
 		unordered_set<ConstVal> constants = unordered_set<ConstVal>({1, 2});
 		Expression expected = Expression(root, variables, constants);
-		REQUIRE(expression.equals(expected));
+		REQUIRE(expression == expected);
 		REQUIRE_EQUALS(expression.getConstants(), constants);
 		REQUIRE_EQUALS(expression.getVariables(), variables);
 		REQUIRE_EQUALS(lex.readToken(), ";");
@@ -136,7 +136,7 @@ TEST_CASE("Common::ExpressionProcessor::ExpressionParser{}.parse Relational Test
 		unordered_set<VarRef> variables = unordered_set<VarRef>();
 		unordered_set<ConstVal> constants = unordered_set<ConstVal>({1, 2, 3});
 		Expression expected = Expression(root, variables, constants);
-		REQUIRE(expression.equals(expected));
+		REQUIRE(expression == expected);
 		REQUIRE_EQUALS(expression.getConstants(), constants);
 		REQUIRE_EQUALS(expression.getVariables(), variables);
 		REQUIRE_EQUALS(lex.readToken(), ";");
@@ -198,7 +198,7 @@ TEST_CASE("Common::ExpressionProcessor::ExpressionParser{}.parse Logical Tests")
 		unordered_set<VarRef> variables = unordered_set<VarRef>({"x"});
 		unordered_set<ConstVal> constants = unordered_set<ConstVal>({1});
 		Expression expected = Expression(root, variables, constants);
-		REQUIRE(expression.equals(expected));
+		REQUIRE(expression == expected);
 		REQUIRE_EQUALS(expression.getConstants(), constants);
 		REQUIRE_EQUALS(expression.getVariables(), variables);
 	}
@@ -212,7 +212,7 @@ TEST_CASE("Common::ExpressionProcessor::ExpressionParser{}.parse Logical Tests")
 		unordered_set<VarRef> variables = unordered_set<VarRef>({"x", "y"});
 		unordered_set<ConstVal> constants = unordered_set<ConstVal>({1});
 		Expression expected = Expression(root, variables, constants);
-		REQUIRE(expression.equals(expected));
+		REQUIRE(expression == expected);
 		REQUIRE_EQUALS(expression.getConstants(), constants);
 		REQUIRE_EQUALS(expression.getVariables(), variables);
 	}
@@ -232,7 +232,7 @@ TEST_CASE("Common::ExpressionProcessor::ExpressionParser{}.parse Logical Tests")
 		unordered_set<VarRef> variables = unordered_set<VarRef>();
 		unordered_set<ConstVal> constants = unordered_set<ConstVal>({1, 2, 3, 4, 5, 6, 7});
 		Expression expected = Expression(root, variables, constants);
-		REQUIRE(expression.equals(expected));
+		REQUIRE(expression == expected);
 		REQUIRE_EQUALS(expression.getConstants(), constants);
 		REQUIRE_EQUALS(expression.getVariables(), variables);
 	}

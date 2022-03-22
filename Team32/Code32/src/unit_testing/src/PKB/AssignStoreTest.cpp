@@ -35,7 +35,7 @@ TEST_CASE("PKB::AssignStore::setAssign Success Test") {
 	REQUIRE_EQUALS(map.size(), 1);
 	REQUIRE_EQUALS(obj->first, 1);
 	REQUIRE_EQUALS(obj->second.variable, "x");
-	REQUIRE(obj->second.expression.equals(getBasicOpTree()));
+	REQUIRE(obj->second.expression == getBasicOpTree());
 }
 
 TEST_CASE("PKB::AssignStore::setAssign Duplicate StmtNo Test") {

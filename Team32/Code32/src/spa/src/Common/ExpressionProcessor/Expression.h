@@ -17,10 +17,10 @@ using namespace std;
 class Common::ExpressionProcessor::Expression {
 public:
 	Expression(shared_ptr<ExpressionNode> root, unordered_set<VarRef> variables, unordered_set<ConstVal> constants);
-	unordered_set<ConstVal> getConstants();
-	unordered_set<VarRef> getVariables();
-	bool equals(const Expression& other);
-	bool contains(const Expression& other);
+	[[nodiscard]] unordered_set<ConstVal> getConstants() const;
+	[[nodiscard]] unordered_set<VarRef> getVariables() const;
+	[[nodiscard]] bool operator==(const Expression& other) const;
+	[[nodiscard]] bool contains(const Expression& other) const;
 
 private:
 	shared_ptr<ExpressionNode> root;
