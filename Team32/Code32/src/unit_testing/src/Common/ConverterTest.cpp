@@ -1,6 +1,7 @@
+#include "Common/Converter.h"
+
 #include <climits>
 
-#include "Common/Converter.h"
 #include "catch_tools.h"
 
 TEST_CASE("Common::Converter::convertMathematical Test") {

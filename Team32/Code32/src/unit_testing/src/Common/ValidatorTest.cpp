@@ -1,4 +1,5 @@
 #include "Common/Validator.h"
+
 #include "catch_tools.h"
 
 TEST_CASE("Common::Validator::validateArithmeticOperator Test") {
