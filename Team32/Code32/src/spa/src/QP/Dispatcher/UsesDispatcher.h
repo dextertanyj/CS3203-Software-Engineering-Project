@@ -7,8 +7,8 @@
 #include "QP/Dispatcher/Dispatcher.h"
 #include "QP/Executor/ProcedureVariableExecutor.tpp"
 #include "QP/Executor/StatementVariableExecutor.tpp"
-#include "QP/Types.h"
 #include "QP/ReferenceArgument.h"
+#include "QP/Types.h"
 
 namespace QP::Dispatcher::UsesDispatcher {
 extern const QP::Types::ArgumentDispatcher dispatcher;

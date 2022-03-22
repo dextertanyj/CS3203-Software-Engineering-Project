@@ -8,8 +8,8 @@
 #include "QP/Executor/PatternAssignExecutor.h"
 #include "QP/Executor/ProcedureVariableExecutor.tpp"
 #include "QP/Executor/StatementVariableExecutor.tpp"
-#include "QP/Types.h"
 #include "QP/ReferenceArgument.h"
+#include "QP/Types.h"
 
 namespace QP::Dispatcher::PatternAssignDispatcher {
 extern const QP::Types::ArgumentDispatcher dispatcher;

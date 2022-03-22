@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "QP/Dispatcher/Dispatcher.h"
-#include "QP/Types.h"
 #include "QP/ReferenceArgument.h"
+#include "QP/Types.h"
 
 template <QP::Types::ClauseType T>
 class QP::Dispatcher::ParentDispatcher {

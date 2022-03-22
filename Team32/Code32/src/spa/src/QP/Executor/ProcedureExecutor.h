@@ -3,9 +3,9 @@
 
 #include "QP/Executor/Executor.h"
 #include "QP/QueryResult.h"
-#include "QP/Types.h"
 #include "QP/ReferenceArgument.h"
 #include "QP/StorageAdapter.h"
+#include "QP/Types.h"
 
 template <QP::Types::ClauseType T>
 class QP::Executor::ProcedureExecutor {
