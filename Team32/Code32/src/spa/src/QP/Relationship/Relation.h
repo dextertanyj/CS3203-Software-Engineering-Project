@@ -2,7 +2,7 @@
 #define SPA_SRC_QP_RELATIONSHIP_RELATION_H
 
 #include "QP/QueryResult.h"
-#include "QP/QueryTypes.h"
+#include "QP/Types.h"
 #include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Relationship.h"
 #include "QP/StorageAdapter.h"

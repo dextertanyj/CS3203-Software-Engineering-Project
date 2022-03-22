@@ -7,7 +7,7 @@
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
 #include "QP/QP.h"
-#include "QP/QueryTypes.h"
+#include "QP/Types.h"
 
 using namespace std;
 

@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "QP/Dispatcher/Dispatcher.h"
-#include "QP/QueryTypes.h"
+#include "QP/Types.h"
 #include "QP/ReferenceArgument.h"
 
 template <QP::Types::ClauseType T>

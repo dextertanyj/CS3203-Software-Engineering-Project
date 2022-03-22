@@ -3,7 +3,7 @@
 
 #include "QP/Dispatcher/Dispatcher.h"
 #include "QP/QueryResult.h"
-#include "QP/QueryTypes.h"
+#include "QP/Types.h"
 #include "QP/ReferenceArgument.h"
 #include "QP/StorageAdapter.h"
 

@@ -6,7 +6,7 @@
 
 #include "QP/Dispatcher/Dispatcher.h"
 #include "QP/Executor/PatternContainerStatementExecutor.tpp"
-#include "QP/QueryTypes.h"
+#include "QP/Types.h"
 #include "QP/ReferenceArgument.h"
 
 using QP::Types::ClauseType;

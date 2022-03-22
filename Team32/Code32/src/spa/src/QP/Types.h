@@ -51,7 +51,8 @@ enum class ClauseType {
 	PatternWhile,
 };
 
-enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression };
+enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression, Attribute };
+enum class AttributeType { Name, Index, Value };
 
 class ReferenceArgument;
 class ConnectedSynonyms;
@@ -61,6 +62,12 @@ typedef struct Declaration {
 	string symbol;      // NOLINT(misc-non-private-member-variables-in-classes)
 	bool operator==(const Declaration& other) const { return type == other.type && symbol == other.symbol; }
 } Declaration;
+
+typedef struct SynonymAttribute {
+	Declaration synonym;      // NOLINT(misc-non-private-member-variables-in-classes)
+	AttributeType attribute;  // NOLINT(misc-non-private-member-variables-in-classes)
+	bool operator==(const SynonymAttribute& other) const { return synonym == other.synonym && attribute == other.attribute; }
+} SynonymAttribute;
 
 typedef struct Clause {
 	shared_ptr<Relationship::Relation> relation;

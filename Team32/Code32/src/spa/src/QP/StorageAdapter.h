@@ -3,7 +3,7 @@
 
 #include "PKB/StorageAccessInterface.h"
 #include "QP/QP.h"
-#include "QP/QueryTypes.h"
+#include "QP/Types.h"
 
 class QP::StorageAdapter {
 public:
