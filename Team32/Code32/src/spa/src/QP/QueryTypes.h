@@ -84,7 +84,7 @@ typedef vector<Declaration> DeclarationList;
 typedef vector<Clause> ClauseList;
 
 class ResultTable;
-typedef unordered_map<string, string> ResultRow;
+typedef vector<string> ResultRow;
 typedef vector<string> ResultColumn;
 }
 

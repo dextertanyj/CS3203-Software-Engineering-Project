@@ -1,29 +1,94 @@
 #include "ResultTable.h"
 
+#include <cassert>
 #include <iostream>
 
 QP::Types::ResultTable::ResultTable() {}
 
-QP::Types::ResultTable::ResultTable(unordered_set<string> synonyms_stored, unordered_map<string, vector<string>> table)
-	: synonyms_stored(synonyms_stored), table(table) {}
+QP::Types::ResultTable::ResultTable(vector<string> synonyms_stored) {
+	for (size_t i = 0; i < synonyms_stored.size(); i++) {
+		this->synonyms_stored.insert({synonyms_stored[i], i});
+	}
+}
+
+QP::Types::ResultTable::ResultTable(vector<string> synonyms_stored, vector<ResultRow> table) : table(table) {
+	for (size_t i = 0; i < synonyms_stored.size(); i++) {
+		this->synonyms_stored.insert({synonyms_stored[i], i});
+	}
+}
 
 size_t QP::Types::ResultTable::getNumberOfRows() {
-	if (table.empty()) {
-		return 0;
-	}
-
-	return table.begin()->second.size();
+	return table.size();
 }
 
 size_t QP::Types::ResultTable::getNumberOfColumns() { return synonyms_stored.size(); }
 
-unordered_map<string, vector<string>> QP::Types::ResultTable::getTable() { return table; }
+vector<ResultRow> QP::Types::ResultTable::getTable() { return table; }
 
-unordered_set<string> QP::Types::ResultTable::getSynonymsStored() { return synonyms_stored; }
+unordered_map<string, size_t> QP::Types::ResultTable::getSynonymsStored() {
+	return synonyms_stored;
+}
 
-ResultColumn QP::Types::ResultTable::getColumn(const string& synonym) { return table.at(synonym); }
+ResultColumn QP::Types::ResultTable::getColumn(const string& synonym) {
+	try {
+		size_t col_pos = synonyms_stored.at(synonym);
+		vector<string> column(getNumberOfRows());
+		for (auto const& row : table) {
+			column.push_back(row[col_pos]);
+		}
+		return column;
+	} catch (const std::out_of_range& e) {
+		return {};
+	}
+}
 
-bool QP::Types::ResultTable::contains(const ResultRow& row) {
+void QP::Types::ResultTable::insertRow(const ResultRow& row) {
+	assert(row.size() == getNumberOfColumns);
+
+	table.push_back(row);
+}
+
+void QP::Types::ResultTable::insertColumn(const string& synonym, const ResultColumn& column) {
+	synonyms_stored.insert({synonym, getNumberOfColumns()});
+
+	size_t pos = 0;
+	for (auto row : table) {
+		row.push_back(column[pos]);
+		pos++;
+	}
+}
+
+void QP::Types::ResultTable::filterBySelect(const QP::Types::DeclarationList& select_list) {
+	for (auto const& declaration : select_list) {
+		removeColumn(declaration.symbol);
+	}
+
+	removeDuplicateRows();
+}
+
+QP::Types::ResultTable QP::Types::ResultTable::joinTables(pair<ResultTable&, ResultTable&> tables) {
+	ResultTable larger_table;
+	ResultTable smaller_table;
+
+	if (tables.first.getNumberOfColumns() >= tables.second.getNumberOfColumns()) {
+		larger_table = tables.first;
+		smaller_table = tables.second;
+	} else {
+		larger_table = tables.second;
+		smaller_table = tables.first;
+	}
+
+	unordered_map<string, size_t> larger_set = larger_table.getSynonymsStored();
+	for (auto const& pair : smaller_table.getSynonymsStored()) {
+		if (larger_set.find(pair.first) == larger_set.end()) {
+			return joinWithDifferentSynonym(larger_table, smaller_table);
+		}
+	}
+
+	return joinWithSameSynonym(larger_table, smaller_table);
+}
+
+bool QP::Types::ResultTable::contains(const unordered_map<string, string>& row) {
 	size_t number_of_rows = getNumberOfRows();
 	for (size_t i = 0; i < number_of_rows; i++) {
 		if (isRowMatch(row, i)) {
@@ -34,10 +99,11 @@ bool QP::Types::ResultTable::contains(const ResultRow& row) {
 	return false;
 }
 
-bool QP::Types::ResultTable::isRowMatch(const ResultRow& row, size_t row_number) {
+bool QP::Types::ResultTable::isRowMatch(const unordered_map<string, string>& sub_row, size_t row_number) {
 	bool has_match = true;
-	for (const auto& iterator : row) {
-		if (table.at(iterator.first)[row_number] != iterator.second) {
+	ResultRow& row = table.at(row_number);
+	for (const auto& iterator : sub_row) {
+		if (row.at(synonyms_stored.at(iterator.first)) != iterator.second) {
 			has_match = false;
 			break;
 		}
@@ -47,11 +113,16 @@ bool QP::Types::ResultTable::isRowMatch(const ResultRow& row, size_t row_number)
 }
 
 void QP::Types::ResultTable::removeRow(size_t row_number) {
-	for (auto iterator = table.begin(); iterator != table.end(); ++iterator) {
-		vector<string> col = iterator->second;
-		// Narrowing conversion, implementation defined behaviour for values greater than long.
-		col.erase(col.begin() + static_cast<vector<string>::difference_type>(row_number));
-		table[iterator->first] = col;
+	table.erase(table.begin() + row_number);
+}
+
+void QP::Types::ResultTable::removeColumn(const string& synonym) {
+	size_t col_number = synonyms_stored.at(synonym);
+	synonyms_stored.erase(synonym);
+	size_t pos = 0;
+	for (auto row : table) {
+		row.erase(row.begin() + col_number);
+		pos++;
 	}
 }
 
@@ -61,60 +132,19 @@ void QP::Types::ResultTable::removeDuplicateRows() {
 
 	size_t pos = 0;
 	for (size_t i = 0; i < number_of_rows; i++) {
-		string row;
-		for (auto const& pair : table) {
-			row.append(pair.second[pos]);
-			row.append(" ");
+		string row_string;
+		for (auto const& value : table.at(i)) {
+			row_string.append(value);
+			row_string.append(" ");
 		}
 
-		if (rows.find(row) != rows.end()) {
+		if (rows.find(row_string) != rows.end()) {
 			removeRow(pos);
 		} else {
 			pos++;
-			rows.insert(row);
+			rows.insert(row_string);
 		}
 	}
-}
-
-void QP::Types::ResultTable::insertColumn(const string& synonym, const ResultColumn& column) {
-	synonyms_stored.insert(synonym);
-	table.insert({synonym, column});
-}
-
-void QP::Types::ResultTable::filterBySelect(const QP::Types::DeclarationList& select_list) {
-	unordered_map<string, vector<string>> filtered_table;
-	unordered_set<string> filtered_synonyms;
-
-	for (auto const& declaration : select_list) {
-		filtered_table.insert({declaration.symbol, this->table[declaration.symbol]});
-		filtered_synonyms.insert(declaration.symbol);
-	}
-
-	this->table = filtered_table;
-	this->synonyms_stored = filtered_synonyms;
-	removeDuplicateRows();
-}
-
-QP::Types::ResultTable QP::Types::ResultTable::joinTables(pair<ResultTable&, ResultTable&> tables) {
-	ResultTable larger_table = tables.first;
-	ResultTable smaller_table = tables.second;
-
-	if (tables.first.getNumberOfColumns() >= tables.second.getNumberOfColumns()) {
-		larger_table = tables.first;
-		smaller_table = tables.second;
-	} else {
-		larger_table = tables.second;
-		smaller_table = tables.first;
-	}
-
-	unordered_set<string> larger_set = larger_table.getSynonymsStored();
-	for (string const& synonym : smaller_table.getSynonymsStored()) {
-		if (larger_set.find(synonym) == larger_set.end()) {
-			return joinWithDifferentSynonym(larger_table, smaller_table);
-		}
-	}
-
-	return joinWithSameSynonym(larger_table, smaller_table);
 }
 
 QP::Types::ResultTable QP::Types::ResultTable::joinWithSameSynonym(ResultTable& larger_table, ResultTable& smaller_table) {

@@ -1,6 +1,9 @@
 #ifndef SPA_SRC_QP_RESULTTABLE_H
 #define SPA_SRC_QP_RESULTTABLE_H
 
+#include <vector>
+#include <utility>
+
 #include "QP/QP.h"
 #include "QP/QueryTypes.h"
 
@@ -10,25 +13,28 @@ using QP::Types::ResultRow;
 class QP::Types::ResultTable {
 public:
 	ResultTable();
-	ResultTable(unordered_set<string> synonyms_stored, unordered_map<string, ResultColumn> table);
+	ResultTable(vector<string> synonyms_stored);
+	ResultTable(vector<string> synonyms_stored, vector<ResultRow> table);
 	size_t getNumberOfRows();
 	size_t getNumberOfColumns();
-	unordered_map<string, vector<string>> getTable();
-	unordered_set<string> getSynonymsStored();
+	vector<ResultRow> getTable();
+	unordered_map<string, size_t> getSynonymsStored();
 	ResultColumn getColumn(const string& synonym);
+	void insertRow(const ResultRow& row);
 	void insertColumn(const string& synonym, const ResultColumn& column);
 	void filterBySelect(const QP::Types::DeclarationList& select_list);
 	static ResultTable joinTables(pair<ResultTable&, ResultTable&> tables);
 
 private:
-	unordered_set<string> synonyms_stored;
-	unordered_map<string, ResultColumn> table;
+	unordered_map<string, size_t> synonyms_stored;
+	vector<ResultRow> table;
 
-	ResultTable getSubTableWithRow(const ResultRow& row);
-	bool contains(const ResultRow& row);
-	bool isRowMatch(const ResultRow& row, size_t row_number);
+	bool contains(const unordered_map<string, string>& row);
+	bool isRowMatch(const unordered_map<string, string>& sub_row, size_t row_number);
 	void removeRow(size_t row_number);
+	void removeColumn(const string& synonym);
 	void removeDuplicateRows();
+	ResultTable getSubTableWithRow(const ResultRow& row);
 	static ResultTable joinWithSameSynonym(ResultTable& larger_table, ResultTable& smaller_table);
 	static ResultTable joinWithDifferentSynonym(ResultTable& larger_table, ResultTable& smaller_table);
 };
