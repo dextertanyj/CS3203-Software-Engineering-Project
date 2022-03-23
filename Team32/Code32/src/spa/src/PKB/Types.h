@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <queue>
+#include <stack>
 #include <unordered_set>
 #include <vector>
 
@@ -27,6 +28,14 @@ typedef struct BFSInfo {
 	unordered_set<shared_ptr<PKB::NodeInterface>> visited_set;
 	StmtInfoPtrSet nodes;
 } BFSInfo;
+
+typedef struct DFSInfo {
+	const shared_ptr<PKB::NodeInterface>& start_node;
+	VarRef variable;
+	stack<shared_ptr<PKB::NodeInterface>> node_stack;
+	unordered_set<shared_ptr<PKB::NodeInterface>> visited_set;
+	StmtInfoPtrSet nodes;
+} DFSInfo;
 }
 
 #endif  // SPA_SRC_PKB_TYPES_H

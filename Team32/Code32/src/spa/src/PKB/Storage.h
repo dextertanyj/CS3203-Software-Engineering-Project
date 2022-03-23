@@ -165,7 +165,7 @@ private:
 	SVRelationStore<WhileControlRelation> while_control_store;
 	ControlFlowGraph control_flow_graph;
 	NextManager next_manager = NextManager(control_flow_graph);
-	AffectsManager affects_manager = AffectsManager(control_flow_graph);
+	AffectsManager affects_manager = AffectsManager(control_flow_graph, modifies_s_store, uses_s_store);
 
 	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
 	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set);

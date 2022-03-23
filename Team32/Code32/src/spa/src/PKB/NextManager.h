@@ -2,7 +2,11 @@
 #define SPA_NEXTMANAGER_H
 
 #include "PKB/CFG/ControlFlowGraph.h"
+#include "PKB/CFG/NodeInterface.h"
+#include "PKB/CFG/StatementNode.h"
+#include "PKB/CFG/IfNode.h"
 #include "PKB/PKB.h"
+#include "PKB/Types.h"
 
 using namespace std;
 
@@ -23,6 +27,8 @@ public:
 
 private:
 	ControlFlowGraph* control_flow_graph;
+	void processBFSVisit(Types::BFSInfo& info, const shared_ptr<NodeInterface>& node,
+	                     StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
 };
 
 #endif  // SPA_NEXTMANAGER_H
