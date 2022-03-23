@@ -18,8 +18,8 @@ TEST_CASE("QP::ResulTable::joinResult Should join tables where one is a subset o
 
 	REQUIRE(joined_table.getNumberOfColumns() == 2);
 	REQUIRE(joined_table.getNumberOfRows() == 2);
-	REQUIRE(joined_table.getColumn("a") == vector<string>({"1", "3"}));
-	REQUIRE(joined_table.getColumn("b") == vector<string>({"5", "7"}));
+	REQUIRE(joined_table.containsRow({"1", "5"}));
+	REQUIRE(joined_table.containsRow({"3", "7"}));
 }
 
 TEST_CASE("QP::QueryResult::joinResult Should join tables with exact same synonyms") {
@@ -34,8 +34,7 @@ TEST_CASE("QP::QueryResult::joinResult Should join tables with exact same synony
 
 	ResultTable joined_table = ResultTable::joinTables(table_one, table_two);
 
-	REQUIRE(joined_table.getColumn("a") == vector<string>({"3"}));
-	REQUIRE(joined_table.getColumn("b") == vector<string>({"7"}));
+	REQUIRE(joined_table.containsRow({"3", "7"}));
 }
 
 TEST_CASE("QP::ResulTable::joinResult Should join tables with different synonyms") {
@@ -58,10 +57,10 @@ TEST_CASE("QP::ResulTable::joinResult Should join tables with different synonyms
 	REQUIRE(joined_table.getNumberOfColumns() == 3);
 	REQUIRE(joined_table.getNumberOfRows() == 4);
 	REQUIRE(joined_table.getSynonymsStored() == vector<string>({"b", "c", "a"}));
-	REQUIRE(joined_table.getRow(0) == vector<string>({"1", "5", "1"}));
-	REQUIRE(joined_table.getRow(1) == vector<string>({"3", "7", "4"}));
-	REQUIRE(joined_table.getRow(2) == vector<string>({"3", "4", "4"}));
-	REQUIRE(joined_table.getRow(3) == vector<string>({"1", "9", "1"}));
+	REQUIRE(joined_table.containsRow({"1", "5", "1"}));
+	REQUIRE(joined_table.containsRow({"3", "7", "4"}));
+	REQUIRE(joined_table.containsRow({"3", "4", "4"}));
+	REQUIRE(joined_table.containsRow({"1", "9", "1"}));
 }
 
 TEST_CASE("QP::ResulTable::joinResult Should join tables without any common synonym") {
@@ -78,12 +77,12 @@ TEST_CASE("QP::ResulTable::joinResult Should join tables without any common syno
 
 	REQUIRE(joined_table.getNumberOfColumns() == 5);
 	REQUIRE(joined_table.getNumberOfRows() == 6);
-	REQUIRE(joined_table.getRow(0) == vector<string>({"1", "5", "9", "3", "7"}));
-	REQUIRE(joined_table.getRow(1) == vector<string>({"1", "5", "9", "1", "1"}));
-	REQUIRE(joined_table.getRow(2) == vector<string>({"2", "5", "8", "3", "7"}));
-	REQUIRE(joined_table.getRow(3) == vector<string>({"2", "5", "8", "1", "1"}));
-	REQUIRE(joined_table.getRow(4) == vector<string>({"2", "6", "7", "3", "7"}));
-	REQUIRE(joined_table.getRow(5) == vector<string>({"2", "6", "7", "1", "1"}));
+	REQUIRE(joined_table.containsRow({"1", "5", "9", "3", "7"}));
+	REQUIRE(joined_table.containsRow({"1", "5", "9", "1", "1"}));
+	REQUIRE(joined_table.containsRow({"2", "5", "8", "3", "7"}));
+	REQUIRE(joined_table.containsRow({"2", "5", "8", "1", "1"}));
+	REQUIRE(joined_table.containsRow({"2", "6", "7", "3", "7"}));
+	REQUIRE(joined_table.containsRow({"2", "6", "7", "1", "1"}));
 	REQUIRE(joined_table.getSynonymsStored() == vector<string>({"c", "d", "e", "a", "b"}));
 	REQUIRE(joined_table.getSynonymsStoredMap().at("c") == 0);
 	REQUIRE(joined_table.getSynonymsStoredMap().at("d") == 1);
@@ -107,6 +106,9 @@ TEST_CASE("QP::ResultTable::filterBySelect Should filter table") {
 	ResultTable filtered_table = table.filterBySelect(select_list);
 
 	REQUIRE(filtered_table.getNumberOfColumns() == 2);
-	REQUIRE(filtered_table.getColumn("a") == vector<string>({"1", "3", "5", "7"}));
-	REQUIRE(filtered_table.getColumn("c") == vector<string>({"2", "4", "6", "8"}));
+	REQUIRE(filtered_table.getNumberOfRows() == 4);
+	REQUIRE(filtered_table.containsRow({"1", "2"}));
+	REQUIRE(filtered_table.containsRow({"3", "4"}));
+	REQUIRE(filtered_table.containsRow({"5", "6"}));
+	REQUIRE(filtered_table.containsRow({"7", "8"}));
 }

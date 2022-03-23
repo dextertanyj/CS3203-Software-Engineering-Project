@@ -25,6 +25,7 @@ public:
 	ResultRow getRow(size_t row_number);
 	void insertRow(const ResultRow& row);
 	ResultTable filterBySelect(const QP::Types::DeclarationList& select_list);
+	bool containsRow(const ResultRow& row);
 	static ResultTable joinTables(ResultTable table_one, ResultTable table_two);
 
 private:

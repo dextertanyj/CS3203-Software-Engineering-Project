@@ -68,6 +68,15 @@ QP::Types::ResultTable QP::Types::ResultTable::filterBySelect(const QP::Types::D
 	return filtered_table;
 }
 
+bool QP::Types::ResultTable::containsRow(const ResultRow& row) {
+	unordered_set<ResultRow, Common::Hash::VectorHash> rows;
+	for (auto const& row : table) {
+		rows.insert(row);
+	}
+
+	return rows.find(row) != rows.end();
+}
+
 QP::Types::ResultTable QP::Types::ResultTable::joinTables(ResultTable table_one, ResultTable table_two) {
 	ResultTable larger_table;
 	ResultTable smaller_table;
