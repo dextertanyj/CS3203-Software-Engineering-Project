@@ -3,7 +3,7 @@
 #include <utility>
 
 #include "QP/Executor/AttributeExecutor.h"
-#include "QP/Executor/WithExecutor.h"
+#include "QP/Executor/WithExecutor.tpp"
 
 using namespace QP::Types;
 using namespace QP::Executor;
@@ -122,18 +122,14 @@ ExecutorSet processorHandler(const vector<ReferenceArgument>& arguments) {
 	auto executor = getExecutor<TAttribute, TLeft, TRight>(arguments);
 	ExecutorSet result;
 	visit(Visitor{
-			  [&](const WithExecutorFunction<TAttribute, TLeft, TRight>& executor) {
-				  result = [&](const QP::StorageAdapter& store) {
-					  return executor(store, arguments.at(0), arguments.at(1), lhs_executors, rhs_executors);
-				  };
+			  [=, lhs = arguments.at(0), rhs = arguments.at(1), &result](const WithExecutorFunction<TAttribute, TLeft, TRight>& executor) {
+				  result = [=](const QP::StorageAdapter& store) { return executor(store, lhs, rhs, lhs_executors, rhs_executors); };
 			  },
-			  [&](const pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>& executors) {
-				  result = pair{[&](const QP::StorageAdapter& store) {
-									return executors.first(store, arguments.at(0), arguments.at(1), lhs_executors, rhs_executors);
-								},
-		                        [&](const QP::StorageAdapter& store) {
-									return executors.second(store, arguments.at(0), arguments.at(1), lhs_executors, rhs_executors);
-								}};
+			  [=, lhs = arguments.at(0), rhs = arguments.at(1), &result](
+				  const pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>& executors) {
+				  result = pair{
+					  [=](const QP::StorageAdapter& store) { return executors.first(store, lhs, rhs, lhs_executors, rhs_executors); },
+					  [=](const QP::StorageAdapter& store) { return executors.second(store, lhs, rhs, lhs_executors, rhs_executors); }};
 			  },
 		  },
 	      executor);

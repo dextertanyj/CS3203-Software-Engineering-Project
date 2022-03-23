@@ -1,3 +1,6 @@
+#ifndef SPA_SRC_QP_EXECUTOR_WITHEXECUTOR_TPP
+#define SPA_SRC_QP_EXECUTOR_WITHEXECUTOR_TPP
+
 #include "QP/Executor/WithExecutor.h"
 
 template <typename TAttribute, typename TValues>
@@ -6,6 +9,10 @@ struct HashInfo {
 	unordered_set<TValues> values;
 	QP::Types::AttributeMapper<TAttribute, TValues> mapper;
 };
+
+namespace std {
+string to_string(string str) { return str; };
+}
 
 template <typename TAttribute, typename TBuild, typename TProbe>
 static QP::QueryResult find(const QP::StorageAdapter& store, HashInfo<TAttribute, TBuild> build_info,
@@ -29,11 +36,11 @@ QP::QueryResult QP::Executor::WithExecutor::executeTrivialAttributeAttribute(
 	unordered_set<TRight> right_values = rhs_executors.first(store, rhs);
 	unordered_set<TAttribute> attributes;
 	if (left_values.size() < right_values.size()) {
-		return find(store, {lhs.getSynonym().symbol, move(left_values), lhs_executors.second},
-		            {rhs.getSynonym().symbol, move(right_values), rhs_executors.second});
+		return find<TAttribute, TLeft, TRight>(store, {lhs.getAttribute().synonym.symbol, move(left_values), lhs_executors.second},
+		                                       {rhs.getAttribute().synonym.symbol, move(right_values), rhs_executors.second});
 	}
-	return find(store, {rhs.getSynonym().symbol, move(right_values), rhs_executors.second},
-	            {lhs.getSynonym().symbol, move(left_values), lhs_executors.second});
+	return find<TAttribute, TRight, TLeft>(store, {rhs.getAttribute().synonym.symbol, move(right_values), rhs_executors.second},
+	                                       {lhs.getAttribute().synonym.symbol, move(left_values), lhs_executors.second});
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
@@ -41,8 +48,7 @@ QP::QueryResult QP::Executor::WithExecutor::executeTrivialAttributeConstant(
 	const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs, const Types::ReferenceArgument& rhs,
 	Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors, Types::WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	unordered_set<TLeft> left_values = lhs_executors.first(store, lhs);
-	TAttribute right_value = (*rhs_executors.first(store, rhs).begin());
-	vector<string> left_column;
+	TAttribute right_value = rhs_executors.second(store, (*rhs_executors.first(store, rhs).begin()));
 	for (const auto& left : left_values) {
 		if (lhs_executors.second(store, left) == right_value) {
 			return QueryResult(true);
@@ -58,12 +64,24 @@ QP::QueryResult QP::Executor::WithExecutor::executeTrivialConstantAttribute(
 	return executeTrivialAttributeConstant(store, rhs, lhs, rhs_executors, lhs_executors);
 }
 
+template <typename TAttribute, typename TLeft, typename TRight>
+QP::QueryResult QP::Executor::WithExecutor::executeTrivialConstantConstant(
+	const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs, const Types::ReferenceArgument& rhs,
+	Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors, Types::WithInternalExecutors<TAttribute, TRight> rhs_executors) {
+	TAttribute left_value = lhs_executors.second(store, (*lhs_executors.first(store, lhs).begin()));
+	TAttribute right_value = rhs_executors.second(store, (*rhs_executors.first(store, rhs).begin()));
+	if (left_value == right_value) {
+		return QueryResult(true);
+	}
+	return {};
+}
+
 template <typename TAttribute, typename TBuild, typename TProbe>
 static QP::QueryResult hashJoin(const QP::StorageAdapter& store, HashInfo<TAttribute, TBuild> build_info,
                                 HashInfo<TAttribute, TProbe> probe_info) {
 	unordered_multimap<TAttribute, TBuild> build_table;
 	for (const auto& build : build_info.values) {
-		build_table.insert(build_info.mapper(store, build), build);
+		build_table.insert({build_info.mapper(store, build), build});
 	}
 	vector<string> build_column;
 	vector<string> probe_column;
@@ -71,8 +89,8 @@ static QP::QueryResult hashJoin(const QP::StorageAdapter& store, HashInfo<TAttri
 		TAttribute attribute = probe_info.mapper(store, probe);
 		auto iter = build_table.equal_range(attribute);
 		for_each(iter.first, iter.second, [&](const auto& pair) {
-			build_column.push_back(pair.second);
-			probe_column.push_back(probe);
+			build_column.push_back(to_string(pair.second));
+			probe_column.push_back(to_string(probe));
 		});
 	}
 	QP::QueryResult result;
@@ -90,11 +108,11 @@ QP::QueryResult QP::Executor::WithExecutor::executeAttributeAttribute(const QP::
 	unordered_set<TRight> right_values = rhs_executors.first(store, rhs);
 	// Reduce memory usage by building hash table on smaller set.
 	if (left_values.size() < right_values.size()) {
-		return hashJoin(store, {lhs.getSynonym().symbol, move(left_values), lhs_executors.second},
-		                {rhs.getSynonym().symbol, move(right_values), rhs_executors.second});
+		return hashJoin<TAttribute, TLeft, TRight>(store, {lhs.getAttribute().synonym.symbol, move(left_values), lhs_executors.second},
+		                                           {rhs.getAttribute().synonym.symbol, move(right_values), rhs_executors.second});
 	}
-	return hashJoin(store, {rhs.getSynonym().symbol, move(right_values), rhs_executors.second},
-	                {lhs.getSynonym().symbol, move(left_values), lhs_executors.second});
+	return hashJoin<TAttribute, TRight, TLeft>(store, {rhs.getAttribute().synonym.symbol, move(right_values), rhs_executors.second},
+	                                           {lhs.getAttribute().synonym.symbol, move(left_values), lhs_executors.second});
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
@@ -103,15 +121,15 @@ QP::QueryResult QP::Executor::WithExecutor::executeAttributeConstant(const QP::S
                                                                      Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                                                      Types::WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	unordered_set<TLeft> left_values = lhs_executors.first(store, lhs);
-	TAttribute right_value = (*rhs_executors.first(store, rhs).begin());
+	TAttribute right_value = rhs_executors.second(store, (*rhs_executors.first(store, rhs).begin()));
 	vector<string> left_column;
 	for (const auto& left : left_values) {
 		if (lhs_executors.second(store, left) == right_value) {
-			left_column.push_back(left);
+			left_column.push_back(to_string(left));
 		}
 	}
 	QueryResult result;
-	result.addColumn(lhs.getSynonym().symbol, left_column);
+	result.addColumn(lhs.getAttribute().synonym.symbol, left_column);
 	return result;
 }
 
@@ -122,3 +140,5 @@ QP::QueryResult QP::Executor::WithExecutor::executeConstantAttribute(const QP::S
                                                                      Types::WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	return executeAttributeConstant(store, rhs, lhs, rhs_executors, lhs_executors);
 }
+
+#endif  // SPA_SRC_QP_EXECUTOR_WITHEXECUTOR_TPP

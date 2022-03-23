@@ -41,20 +41,6 @@ std::unordered_set<QP::Types::Name> QP::Executor::AttributeExecutor::selectVaria
 	return store.getVariables();
 }
 
-template <typename T>
-T QP::Executor::AttributeExecutor::identity(const QP::StorageAdapter& /*store*/, const T& value) {
-	return value;
-}
-
 QP::Types::Name QP::Executor::AttributeExecutor::callToProcedure(const QP::StorageAdapter& store, const Types::Number& value) {
 	return store.getCalledProcedure(value);
-}
-
-template <QP::Types::ClauseType T>
-QP::Types::Name QP::Executor::AttributeExecutor::statementToVariable(const QP::StorageAdapter& store, const Types::Number& value) {
-	auto variable_set = store.getVariableByStatement<T>(value);
-	if (variable_set.empty()) {
-		throw QP::QueryException("Corresponding variable not found.");
-	}
-	return *variable_set.begin();
 }
