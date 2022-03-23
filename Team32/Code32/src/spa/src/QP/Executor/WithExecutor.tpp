@@ -3,6 +3,7 @@
 
 #include "QP/Executor/WithExecutor.h"
 
+namespace {
 template <typename TAttribute, typename TValues>
 struct HashInfo {
 	std::string symbol;
@@ -10,8 +11,15 @@ struct HashInfo {
 	QP::Types::AttributeMapper<TAttribute, TValues> mapper;
 };
 
-namespace std {
-string to_string(string str) { return str; };
+template <typename T>
+inline std::string safe_to_string(T value) {
+	return std::to_string(value);
+}
+
+template <>
+inline std::string safe_to_string(std::string value) {
+	return value;
+}
 }
 
 template <typename TAttribute, typename TBuild, typename TProbe>
@@ -65,9 +73,11 @@ QP::QueryResult QP::Executor::WithExecutor::executeTrivialConstantAttribute(
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult QP::Executor::WithExecutor::executeTrivialConstantConstant(
-	const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs, const Types::ReferenceArgument& rhs,
-	Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors, Types::WithInternalExecutors<TAttribute, TRight> rhs_executors) {
+QP::QueryResult QP::Executor::WithExecutor::executeTrivialConstantConstant(const QP::StorageAdapter& store,
+                                                                           const Types::ReferenceArgument& lhs,
+                                                                           const Types::ReferenceArgument& rhs,
+                                                                           Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
+                                                                           Types::WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	TAttribute left_value = lhs_executors.second(store, (*lhs_executors.first(store, lhs).begin()));
 	TAttribute right_value = rhs_executors.second(store, (*rhs_executors.first(store, rhs).begin()));
 	if (left_value == right_value) {
@@ -89,8 +99,8 @@ static QP::QueryResult hashJoin(const QP::StorageAdapter& store, HashInfo<TAttri
 		TAttribute attribute = probe_info.mapper(store, probe);
 		auto iter = build_table.equal_range(attribute);
 		for_each(iter.first, iter.second, [&](const auto& pair) {
-			build_column.push_back(to_string(pair.second));
-			probe_column.push_back(to_string(probe));
+			build_column.push_back(safe_to_string(pair.second));
+			probe_column.push_back(safe_to_string(probe));
 		});
 	}
 	QP::QueryResult result;
@@ -125,7 +135,7 @@ QP::QueryResult QP::Executor::WithExecutor::executeAttributeConstant(const QP::S
 	vector<string> left_column;
 	for (const auto& left : left_values) {
 		if (lhs_executors.second(store, left) == right_value) {
-			left_column.push_back(to_string(left));
+			left_column.push_back(safe_to_string(left));
 		}
 	}
 	QueryResult result;

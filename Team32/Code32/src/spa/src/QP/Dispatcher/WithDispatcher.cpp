@@ -8,18 +8,6 @@
 using namespace QP::Types;
 using namespace QP::Executor;
 
-namespace std {
-template <>
-struct hash<pair<QP::Types::DesignEntity, QP::Types::AttributeType>> {
-	size_t operator()(const pair<QP::Types::DesignEntity, QP::Types::AttributeType>& pair) const {
-		std::size_t seed = PAIR_SEED;
-		Common::Hash::combineHash(seed, pair.first);
-		Common::Hash::combineHash(seed, pair.second);
-		return seed;
-	}
-};
-}
-
 namespace {
 template <typename TAttribute, typename TLeft, typename TRight>
 const unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> attribute_executor_map = {
