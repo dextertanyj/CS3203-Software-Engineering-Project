@@ -2,8 +2,6 @@
 #define SPA_SRC_QP_QUERYRESULT_H
 
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 #include "Common/TypeDefs.h"
@@ -25,7 +23,6 @@ public:
 	ResultTable getTable();
 	ResultColumn getSynonymResult(const string& synonym);
 	size_t getNumberOfRows();
-	void addColumn(const string& synonym, const ResultColumn& column);
 	void addRow(const ResultRow& row);
 	void joinResult(QueryResult& query_result);
 	void filterBySelect(const QP::Types::DeclarationList& select_list);

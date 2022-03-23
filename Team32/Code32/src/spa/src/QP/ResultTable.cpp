@@ -43,34 +43,28 @@ void QP::Types::ResultTable::insertRow(const ResultRow& row) {
 	table.push_back(row);
 }
 
-void QP::Types::ResultTable::insertColumn(const string& synonym, const ResultColumn& column) {
-	synonyms_to_index_map.insert({synonym, getNumberOfColumns()});
-	synonyms_stored.push_back(synonym);
-
-	if (getNumberOfColumns() == 1) {
-		for (string const& value : column) {
-			ResultRow row;
-			row.push_back(value);
-			table.push_back(row);
-		}
-		return;
-	}
-
-	for (int i = 0; i < getNumberOfRows(); i++) {
-		ResultRow row = getRow(i);
-		row.push_back(column[i]);
-		table.at(i) = row;
-	}
-}
-
 QP::Types::ResultTable QP::Types::ResultTable::filterBySelect(const QP::Types::DeclarationList& select_list) {
-	ResultTable filtered_table;
-
+	vector<string> synonyms;
+	synonyms.reserve(select_list.size());
 	for (auto const& declaration : select_list) {
-		filtered_table.insertColumn(declaration.symbol, getColumn(declaration.symbol));
+		synonyms.push_back(declaration.symbol);
+	}
+	
+	ResultTable filtered_table = ResultTable(synonyms);
+
+	unordered_set<ResultRow, Common::Hash::VectorHash> rows;
+	for (auto const& row : table) {
+		ResultRow sub_row(select_list.size());
+		for (int i = 0; i < select_list.size(); i++) {
+			sub_row[i] = row.at(synonyms_to_index_map.at(select_list[i].symbol));
+		}
+
+		if (rows.find(sub_row) == rows.end()) {
+			rows.insert(sub_row);
+			filtered_table.insertRow(sub_row);
+		}
 	}
 
-	filtered_table.removeDuplicateRows();
 	return filtered_table;
 }
 
@@ -112,22 +106,6 @@ unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> QP::Types::Resul
 }
 
 void QP::Types::ResultTable::removeRow(size_t row_number) { table.erase(table.begin() + row_number); }
-
-void QP::Types::ResultTable::removeDuplicateRows() {
-	unordered_set<ResultRow, Common::Hash::VectorHash> rows;
-	size_t number_of_rows = getNumberOfRows();
-
-	size_t pos = 0;
-	for (size_t i = 0; i < number_of_rows; i++) {
-		ResultRow row = getRow(pos);
-		if (rows.find(row) != rows.end()) {
-			removeRow(pos);
-		} else {
-			pos++;
-			rows.insert(row);
-		}
-	}
-}
 
 ResultRow QP::Types::ResultTable::getSubRow(vector<string> synonyms, size_t row_number) {
 	ResultRow sub_row;

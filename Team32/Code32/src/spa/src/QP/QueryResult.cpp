@@ -14,16 +14,6 @@ ResultColumn QP::QueryResult::getSynonymResult(const string& synonym) { return t
 
 size_t QP::QueryResult::getNumberOfRows() { return table.getNumberOfRows(); }
 
-void QP::QueryResult::addColumn(const string& synonym, const ResultColumn& column) {
-	if (column.empty()) {
-		result = false;
-		return;
-	}
-
-	result = true;
-	table.insertColumn(synonym, column);
-}
-
 void QP::QueryResult::addRow(const ResultRow& row) {
 	result = true;
 	table.insertRow(row);

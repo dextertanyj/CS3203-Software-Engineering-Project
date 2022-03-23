@@ -133,56 +133,46 @@ QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) 
 
 QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(const Declaration& declaration) {
 	StmtInfoPtrSet stmt_set = store.getStatements();
-	QueryResult result = QueryResult();
+	QueryResult result = QueryResult({declaration.symbol});
 
-	vector<string> result_string;
 	for (auto const& stmt : stmt_set) {
 		if (Utilities::checkStmtTypeMatch(stmt, declaration.type)) {
-			result_string.push_back(to_string(stmt->getIdentifier()));
+			result.addRow({to_string(stmt->getIdentifier())});
 		}
 	}
 
-	result.addColumn(declaration.symbol, result_string);
 	return result;
 }
 
 QP::QueryResult QP::QueryEvaluator::getConstants(const string& symbol) {
 	unordered_set<ConstVal> constants = store.getConstants();
-	QueryResult result = QueryResult();
+	QueryResult result = QueryResult({symbol});
 
-	vector<string> result_string;
-	result_string.reserve(constants.size());
 	for (auto const& constant : constants) {
-		result_string.push_back(to_string(constant));
+		result.addRow({to_string(constant)});
 	}
-
-	result.addColumn(symbol, result_string);
 	return result;
 }
 
 QP::QueryResult QP::QueryEvaluator::getVariables(const string& symbol) {
 	VarRefSet var_set = store.getVariables();
-	QueryResult result = QueryResult();
+	QueryResult result = QueryResult({symbol});
 
-	vector<string> result_string;
 	for (auto const& var : var_set) {
-		result_string.push_back(var);
+		result.addRow({var});
 	}
 
-	result.addColumn(symbol, result_string);
 	return result;
 }
 
 QP::QueryResult QP::QueryEvaluator::getProcedures(const string& symbol) {
 	ProcRefSet proc_set = store.getProcedures();
-	QueryResult result = QueryResult();
+	QueryResult result = QueryResult({symbol});
 
-	vector<string> result_string;
 	for (auto const& proc : proc_set) {
-		result_string.push_back(proc);
+		result.addRow({proc});
 	}
 
-	result.addColumn(symbol, result_string);
 	return result;
 }
 

@@ -97,10 +97,12 @@ TEST_CASE("QP::ResultTable::filterBySelect Should filter table") {
 		{QP::Types::DesignEntity::Stmt, "a"},
 		{QP::Types::DesignEntity::Stmt, "c"},
 	};
-	ResultTable table;
-	table.insertColumn("a", {"1", "3", "5", "1", "7"});
-	table.insertColumn("b", {"a", "b", "c", "d", "e"});
-	table.insertColumn("c", {"2", "4", "6", "2", "8"});
+	ResultTable table = ResultTable({"a", "b", "c"});
+	table.insertRow({"1", "a", "2"});
+	table.insertRow({"3", "b", "4"});
+	table.insertRow({"5", "c", "6"});
+	table.insertRow({"1", "d", "2"});
+	table.insertRow({"7", "e", "8"});
 
 	ResultTable filtered_table = table.filterBySelect(select_list);
 

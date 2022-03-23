@@ -24,7 +24,6 @@ public:
 	ResultColumn getColumn(const string& synonym);
 	ResultRow getRow(size_t row_number);
 	void insertRow(const ResultRow& row);
-	void insertColumn(const string& synonym, const ResultColumn& column);
 	ResultTable filterBySelect(const QP::Types::DeclarationList& select_list);
 	static ResultTable joinTables(ResultTable& table_one, ResultTable& table_two);
 
@@ -35,7 +34,6 @@ private:
 
 	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> buildHashTable(vector<string> synonyms);
 	void removeRow(size_t row_number);
-	void removeDuplicateRows();
 	ResultRow getSubRow(vector<string> synonyms, size_t row_number);
 	static ResultTable intersectTables(ResultTable& larger_table, ResultTable& smaller_table);
 	static ResultTable crossJoinTables(ResultTable& table_one, ResultTable& table_two);
