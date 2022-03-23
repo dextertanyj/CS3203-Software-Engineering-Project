@@ -9,6 +9,9 @@ using namespace QP::Types;
 using namespace QP::Executor;
 
 namespace {
+
+// Executor maps
+
 template <typename TAttribute, typename TLeft, typename TRight>
 const unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> attribute_executor_map = {
 	{ReferenceType::Name, pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>(
@@ -34,6 +37,18 @@ const unordered_map<ReferenceType, unordered_map<ReferenceType, WithExecutorFunc
 	{ReferenceType::Name, constant_executor_map<TAttribute, TLeft, TRight>},
 	{ReferenceType::StatementIndex, constant_executor_map<TAttribute, TLeft, TRight>},
 	{ReferenceType::Attribute, attribute_executor_map<TAttribute, TLeft, TRight>}};
+
+template <typename TAttribute, typename TLeft, typename TRight>
+WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<ReferenceArgument>& arguments) {
+	ReferenceType lhs = arguments.at(0).getType();
+	ReferenceType rhs = arguments.at(1).getType();
+	unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> inner_map =
+		executor_map<TAttribute, TLeft, TRight>.at(lhs);
+	auto executor = inner_map.at(rhs);
+	return executor;
+}
+
+// Attribute selection maps
 
 const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Number, Number>> number_attribute_map = {
 	{ReferenceType::StatementIndex, {AttributeExecutor::extractNumber, AttributeExecutor::identity<Number>}},
@@ -70,16 +85,6 @@ const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, N
      {AttributeExecutor::selectProcedures, AttributeExecutor::identity<Name>}},
 };
 
-template <typename TAttribute, typename TLeft, typename TRight>
-WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<ReferenceArgument>& arguments) {
-	ReferenceType lhs = arguments.at(0).getType();
-	ReferenceType rhs = arguments.at(1).getType();
-	unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> inner_map =
-		executor_map<TAttribute, TLeft, TRight>.at(lhs);
-	auto executor = inner_map.at(rhs);
-	return executor;
-}
-
 template <typename TAttribute, typename T>
 unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<TAttribute, T>> getAttributeMap() = delete;
 template <>
@@ -96,7 +101,7 @@ inline unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, 
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-ExecutorSet processorHandler(const vector<ReferenceArgument>& arguments) {
+ExecutorSet dispatchHandler(const vector<ReferenceArgument>& arguments) {
 	WithClauseArgumentDispatchKey lhs_key = arguments.at(0).getType();
 	if (arguments.at(0).getType() == ReferenceType::Attribute) {
 		lhs_key = pair{arguments.at(0).getAttribute().synonym.type, arguments.at(0).getAttribute().attribute};
@@ -124,20 +129,22 @@ ExecutorSet processorHandler(const vector<ReferenceArgument>& arguments) {
 	return result;
 }
 
+// Dispatch handler maps
+
 const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>> number_handler_map = {
-	{ReferenceType::StatementIndex, processorHandler<Number, Number, Number>},
-	{AttributeType::Index, processorHandler<Number, Number, Number>},
-	{AttributeType::Value, processorHandler<Number, Number, Number>}};
+	{ReferenceType::StatementIndex, dispatchHandler<Number, Number, Number>},
+	{AttributeType::Index, dispatchHandler<Number, Number, Number>},
+	{AttributeType::Value, dispatchHandler<Number, Number, Number>}};
 
 const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>> name_handler_map = {
-	{ReferenceType::Name, processorHandler<Name, Name, Name>},
-	{AttributeType::Name, processorHandler<Name, Name, Name>},
-	{AttributeType::Variable, processorHandler<Name, Name, Number>}};
+	{ReferenceType::Name, dispatchHandler<Name, Name, Name>},
+	{AttributeType::Name, dispatchHandler<Name, Name, Name>},
+	{AttributeType::Variable, dispatchHandler<Name, Name, Number>}};
 
 const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>> variable_handler_map = {
-	{ReferenceType::Name, processorHandler<Name, Name, Name>},
-	{AttributeType::Name, processorHandler<Name, Name, Name>},
-	{AttributeType::Variable, processorHandler<Name, Number, Name>}};
+	{ReferenceType::Name, dispatchHandler<Name, Number, Name>},
+	{AttributeType::Name, dispatchHandler<Name, Number, Name>},
+	{AttributeType::Variable, dispatchHandler<Name, Number, Number>}};
 
 const unordered_map<WithClauseBasicDispatchKey,
                     unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>>>
@@ -147,7 +154,6 @@ const unordered_map<WithClauseBasicDispatchKey,
                    {ReferenceType::Name, name_handler_map},
                    {AttributeType::Name, name_handler_map},
                    {AttributeType::Variable, variable_handler_map}};
-
 }
 
 QP::Types::ExecutorSetBundle QP::Dispatcher::WithDispatcher::dispatcher(const vector<Types::ReferenceArgument>& arguments) {
