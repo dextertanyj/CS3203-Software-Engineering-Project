@@ -90,13 +90,17 @@ typedef pair<ClauseType, ExecutorSet> ExecutorSetBundle;
 typedef function<ExecutorSetBundle(const vector<ReferenceArgument>&)> ArgumentDispatcher;
 typedef unordered_map<ClauseType, ArgumentDispatcher> ArgumentDispatchMap;
 
-// Types for with clause execution
-template <typename TAttribute>
-using WithConstantExtractor = std::function<TAttribute(const ReferenceArgument&)>;
+// Types for attribute selection
+typedef std::string Name;
+typedef unsigned long long Number;
 template <typename TSynonym>
 using SelectExecutor = std::function<std::unordered_set<TSynonym>(const QP::StorageAdapter&, const ReferenceArgument&)>;
 template <typename TAttribute, typename TSynonym>
 using AttributeMapper = std::function<TAttribute(const QP::StorageAdapter&, const TSynonym&)>;
+
+// Types for with clause execution
+template <typename TAttribute>
+using WithConstantExtractor = std::function<TAttribute(const ReferenceArgument&)>;
 template <typename TAttribute, typename TSynonym>
 using WithInternalExecutors = std::pair<SelectExecutor<TSynonym>, AttributeMapper<TAttribute, TSynonym>>;
 

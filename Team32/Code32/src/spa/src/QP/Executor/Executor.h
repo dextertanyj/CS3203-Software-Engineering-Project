@@ -21,6 +21,8 @@ class PatternContainerStatementExecutor;
 
 namespace WithExecutor {}
 
+namespace AttributeExecutor {}
+
 namespace PatternAssignExecutor {}
 }
 

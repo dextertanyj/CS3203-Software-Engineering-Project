@@ -259,6 +259,9 @@ public:
 		return pkb.getWhileControlStmt(var);
 	}
 
+	// With
+	[[nodiscard]] inline ProcRef getCalledProcedure(const StmtRef& stmt) const { return ""; };
+
 private:
 	PKB::StorageAccessInterface& pkb;
 };
