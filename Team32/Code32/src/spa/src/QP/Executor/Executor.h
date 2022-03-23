@@ -19,7 +19,9 @@ class ProcedureExecutor;
 template <QP::Types::ClauseType T>
 class PatternContainerStatementExecutor;
 
-namespace PatternAssignExecutor {};
+namespace WithExecutor {}
+
+namespace PatternAssignExecutor {}
 }
 
 #endif  // SPA_SRC_QP_EXECUTOR_EXECUTOR_H

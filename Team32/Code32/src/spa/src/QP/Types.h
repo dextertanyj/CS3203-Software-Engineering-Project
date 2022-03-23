@@ -49,6 +49,7 @@ enum class ClauseType {
 	PatternAssign,
 	PatternIf,
 	PatternWhile,
+	With
 };
 
 enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression, Attribute };
@@ -79,6 +80,7 @@ typedef struct Node {
 	vector<string> adjacent_symbols;
 } Node;
 
+// Types for such-that and pattern clause execution
 typedef function<QP::QueryResult(const QP::StorageAdapter&)> Executor;
 typedef variant<Executor, pair<Executor, Executor>> ExecutorSet;
 typedef function<ExecutorSet(const vector<ReferenceArgument>&)> ExecutorSetFactory;
@@ -87,6 +89,16 @@ typedef variant<ReferenceType, DesignEntity> ArgumentDispatchKey;
 typedef pair<ClauseType, ExecutorSet> ExecutorSetBundle;
 typedef function<ExecutorSetBundle(const vector<ReferenceArgument>&)> ArgumentDispatcher;
 typedef unordered_map<ClauseType, ArgumentDispatcher> ArgumentDispatchMap;
+
+// Types for with clause execution
+template <typename TAttribute>
+using WithConstantExtractor = std::function<TAttribute(const ReferenceArgument&)>;
+template <typename TSynonym>
+using SelectExecutor = std::function<std::unordered_set<TSynonym>(const QP::StorageAdapter&, const ReferenceArgument&)>;
+template <typename TAttribute, typename TSynonym>
+using AttributeMapper = std::function<TAttribute(const QP::StorageAdapter&, const TSynonym&)>;
+template <typename TAttribute, typename TSynonym>
+using WithInternalExecutors = std::pair<SelectExecutor<TSynonym>, AttributeMapper<TAttribute, TSynonym>>;
 
 typedef vector<Declaration> DeclarationList;
 typedef vector<Clause> ClauseList;
