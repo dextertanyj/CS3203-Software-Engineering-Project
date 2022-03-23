@@ -20,11 +20,13 @@ class QP::QueryResult {
 public:
 	QueryResult();
 	explicit QueryResult(bool result);
+	explicit QueryResult(vector<string> synonyms);
 	[[nodiscard]] bool getResult() const;
 	ResultTable getTable();
 	ResultColumn getSynonymResult(const string& synonym);
 	size_t getNumberOfRows();
 	void addColumn(const string& synonym, const ResultColumn& column);
+	void addRow(const ResultRow& row);
 	void joinResult(QueryResult& query_result);
 	void filterBySelect(const QP::Types::DeclarationList& select_list);
 

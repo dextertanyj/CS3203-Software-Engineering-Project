@@ -1,8 +1,10 @@
 #include "QP/QueryResult.h"
 
-QP::QueryResult::QueryResult() { this->result = false; }
+QP::QueryResult::QueryResult() : result(false) {}
 
-QP::QueryResult::QueryResult(bool result) { this->result = result; }
+QP::QueryResult::QueryResult(bool result) : result(result) {}
+
+QP::QueryResult::QueryResult(vector<string> synonyms) : result(false), table(ResultTable(synonyms)) {}
 
 bool QP::QueryResult::getResult() const { return result; }
 
@@ -22,8 +24,13 @@ void QP::QueryResult::addColumn(const string& synonym, const ResultColumn& colum
 	table.insertColumn(synonym, column);
 }
 
+void QP::QueryResult::addRow(const ResultRow& row) {
+	result = true;
+	table.insertRow(row);
+}
+
 void QP::QueryResult::joinResult(QueryResult& query_result) {
-	this->table = ResultTable::joinTables(make_pair(this->table, query_result.getTable()));
+	this->table = ResultTable::joinTables(this->table, query_result.getTable());
 	this->result = table.getNumberOfRows() == 0 ? false : true;
 }
 

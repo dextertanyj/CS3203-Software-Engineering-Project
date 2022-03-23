@@ -14,7 +14,7 @@ TEST_CASE("QP::ResulTable::joinResult Should join tables where one is a subset o
 	table_two.insertRow({"2", "6"});
 	table_two.insertRow({"3", "7"});
 
-	ResultTable joined_table = ResultTable::joinTables({table_one, table_two});
+	ResultTable joined_table = ResultTable::joinTables(table_one, table_two);
 
 	REQUIRE(joined_table.getNumberOfColumns() == 2);
 	REQUIRE(joined_table.getNumberOfRows() == 2);
@@ -32,7 +32,7 @@ TEST_CASE("QP::QueryResult::joinResult Should join tables with exact same synony
 	table_two.insertRow({"2", "6"});
 	table_two.insertRow({"3", "7"});
 
-	ResultTable joined_table = ResultTable::joinTables({table_one, table_two});
+	ResultTable joined_table = ResultTable::joinTables(table_one, table_two);
 
 	REQUIRE(joined_table.getColumn("a") == vector<string>({"3"}));
 	REQUIRE(joined_table.getColumn("b") == vector<string>({"7"}));
@@ -53,7 +53,7 @@ TEST_CASE("QP::ResulTable::joinResult Should join tables with different synonyms
 	table_two.insertRow({"3", "4"});
 	table_two.insertRow({"1", "9"});
 
-	ResultTable joined_table = ResultTable::joinTables({table_one, table_two});
+	ResultTable joined_table = ResultTable::joinTables(table_one, table_two);
 
 	REQUIRE(joined_table.getNumberOfColumns() == 3);
 	REQUIRE(joined_table.getNumberOfRows() == 4);
@@ -74,7 +74,7 @@ TEST_CASE("QP::ResulTable::joinResult Should join tables without any common syno
 	table_two.insertRow({"2", "5", "8"});
 	table_two.insertRow({"2", "6", "7"});
 
-	ResultTable joined_table = ResultTable::joinTables({table_one, table_two});
+	ResultTable joined_table = ResultTable::joinTables(table_one, table_two);
 
 	REQUIRE(joined_table.getNumberOfColumns() == 5);
 	REQUIRE(joined_table.getNumberOfRows() == 6);

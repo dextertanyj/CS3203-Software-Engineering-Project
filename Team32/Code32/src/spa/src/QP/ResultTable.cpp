@@ -74,26 +74,26 @@ QP::Types::ResultTable QP::Types::ResultTable::filterBySelect(const QP::Types::D
 	return filtered_table;
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::joinTables(pair<ResultTable&, ResultTable&> tables) {
+QP::Types::ResultTable QP::Types::ResultTable::joinTables(ResultTable& table_one, ResultTable& table_two) {
 	ResultTable larger_table;
 	ResultTable smaller_table;
 
-	if (tables.first.getNumberOfColumns() >= tables.second.getNumberOfColumns()) {
-		larger_table = tables.first;
-		smaller_table = tables.second;
+	if (table_one.getNumberOfColumns() >= table_two.getNumberOfColumns()) {
+		larger_table = table_one;
+		smaller_table = table_two;
 	} else {
-		larger_table = tables.second;
-		smaller_table = tables.first;
+		larger_table = table_two;
+		smaller_table = table_one;
 	}
 
 	unordered_map<string, size_t> larger_set = larger_table.getSynonymsStoredMap();
 	for (auto const& synonym : smaller_table.getSynonymsStored()) {
 		if (larger_set.find(synonym) == larger_set.end()) {
-			return joinWithDifferentSynonym(make_pair(larger_table, smaller_table));
+			return crossJoinTables(larger_table, smaller_table);
 		}
 	}
 
-	return joinWithSameSynonym(make_pair(larger_table, smaller_table));
+	return intersectTables(larger_table, smaller_table);
 }
 
 unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> QP::Types::ResultTable::buildHashTable(vector<string> synonyms) {
@@ -138,33 +138,33 @@ ResultRow QP::Types::ResultTable::getSubRow(vector<string> synonyms, size_t row_
 	return sub_row;
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::joinWithSameSynonym(pair<ResultTable&, ResultTable&> tables) {
-	vector<string> common_synonyms = tables.second.getSynonymsStored();
-	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> hashmap = tables.second.buildHashTable(common_synonyms);
+QP::Types::ResultTable QP::Types::ResultTable::intersectTables(ResultTable& larger_table, ResultTable& smaller_table) {
+	vector<string> common_synonyms = smaller_table.getSynonymsStored();
+	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> hashmap = smaller_table.buildHashTable(common_synonyms);
 
-	size_t number_of_rows = tables.first.getNumberOfRows();
+	size_t number_of_rows = larger_table.getNumberOfRows();
 	size_t pos = 0;
 	for (size_t i = 0; i < number_of_rows; i++) {
-		auto range = hashmap.equal_range(tables.first.getSubRow(common_synonyms, pos));
+		auto range = hashmap.equal_range(larger_table.getSubRow(common_synonyms, pos));
 		if (range.first == range.second) {
-			tables.first.removeRow(pos);
+			larger_table.removeRow(pos);
 		} else {
 			pos++;
 		}
 	}
 
-	return tables.first;
+	return larger_table;
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::joinWithDifferentSynonym(pair<ResultTable&, ResultTable&> tables) {
+QP::Types::ResultTable QP::Types::ResultTable::crossJoinTables(ResultTable& table_one, ResultTable& table_two) {
 	ResultTable larger_table;
 	ResultTable smaller_table;
-	if (tables.first.getNumberOfRows() >= tables.second.getNumberOfRows()) {
-		larger_table = tables.first;
-		smaller_table = tables.second;
+	if (table_one.getNumberOfRows() >= table_two.getNumberOfRows()) {
+		larger_table = table_one;
+		smaller_table = table_two;
 	} else {
-		larger_table = tables.second;
-		smaller_table = tables.first;
+		larger_table = table_two;
+		smaller_table = table_one;
 	}
 
 	vector<string> common_synonyms;

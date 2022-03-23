@@ -26,7 +26,7 @@ public:
 	void insertRow(const ResultRow& row);
 	void insertColumn(const string& synonym, const ResultColumn& column);
 	ResultTable filterBySelect(const QP::Types::DeclarationList& select_list);
-	static ResultTable joinTables(pair<ResultTable&, ResultTable&> tables);
+	static ResultTable joinTables(ResultTable& table_one, ResultTable& table_two);
 
 private:
 	unordered_map<string, size_t> synonyms_to_index_map;
@@ -37,8 +37,8 @@ private:
 	void removeRow(size_t row_number);
 	void removeDuplicateRows();
 	ResultRow getSubRow(vector<string> synonyms, size_t row_number);
-	static ResultTable joinWithSameSynonym(pair<ResultTable&, ResultTable&> tables);
-	static ResultTable joinWithDifferentSynonym(pair<ResultTable&, ResultTable&> tables);
+	static ResultTable intersectTables(ResultTable& larger_table, ResultTable& smaller_table);
+	static ResultTable crossJoinTables(ResultTable& table_one, ResultTable& table_two);
 };
 
 #endif  // SPA_SRC_QP_RESULTTABLE_H
