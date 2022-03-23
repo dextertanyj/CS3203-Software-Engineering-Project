@@ -38,7 +38,7 @@ ResultColumn QP::Types::ResultTable::getColumn(const string& synonym) {
 ResultRow QP::Types::ResultTable::getRow(size_t row_number) { return table.at(row_number); }
 
 void QP::Types::ResultTable::insertRow(const ResultRow& row) {
-	assert(row.size() == getNumberOfColumns);
+	assert(row.size() == getNumberOfColumns());
 
 	table.push_back(row);
 }
@@ -68,7 +68,7 @@ QP::Types::ResultTable QP::Types::ResultTable::filterBySelect(const QP::Types::D
 	return filtered_table;
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::joinTables(ResultTable& table_one, ResultTable& table_two) {
+QP::Types::ResultTable QP::Types::ResultTable::joinTables(ResultTable table_one, ResultTable table_two) {
 	ResultTable larger_table;
 	ResultTable smaller_table;
 
@@ -116,7 +116,7 @@ ResultRow QP::Types::ResultTable::getSubRow(vector<string> synonyms, size_t row_
 	return sub_row;
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::intersectTables(ResultTable& larger_table, ResultTable& smaller_table) {
+QP::Types::ResultTable QP::Types::ResultTable::intersectTables(ResultTable larger_table, ResultTable smaller_table) {
 	vector<string> common_synonyms = smaller_table.getSynonymsStored();
 	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> hashmap = smaller_table.buildHashTable(common_synonyms);
 
@@ -134,7 +134,7 @@ QP::Types::ResultTable QP::Types::ResultTable::intersectTables(ResultTable& larg
 	return larger_table;
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::crossJoinTables(ResultTable& table_one, ResultTable& table_two) {
+QP::Types::ResultTable QP::Types::ResultTable::crossJoinTables(ResultTable table_one, ResultTable table_two) {
 	ResultTable larger_table;
 	ResultTable smaller_table;
 	if (table_one.getNumberOfRows() >= table_two.getNumberOfRows()) {
