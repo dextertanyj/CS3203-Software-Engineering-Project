@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <cassert>
-#include <iostream>
 
 QP::Types::ResultTable::ResultTable() {}
 
@@ -90,17 +89,15 @@ QP::Types::ResultTable QP::Types::ResultTable::joinTables(pair<ResultTable&, Res
 	unordered_map<string, size_t> larger_set = larger_table.getSynonymsStoredMap();
 	for (auto const& synonym : smaller_table.getSynonymsStored()) {
 		if (larger_set.find(synonym) == larger_set.end()) {
-			return joinWithDifferentSynonym({larger_table, smaller_table});
+			return joinWithDifferentSynonym(make_pair(larger_table, smaller_table));
 		}
 	}
 
-	return joinWithSameSynonym({larger_table, smaller_table});
-
-	// return joinWithDifferentSynonym(tables);
+	return joinWithSameSynonym(make_pair(larger_table, smaller_table));
 }
 
-unordered_multimap<ResultRow, int, Common::Hash::VectorHash> QP::Types::ResultTable::buildHashTable(vector<string> synonyms) {
-	unordered_multimap<ResultRow, int, Common::Hash::VectorHash> map;
+unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> QP::Types::ResultTable::buildHashTable(vector<string> synonyms) {
+	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> map;
 	size_t row_number = 0;
 	for (ResultRow const& row : table) {
 		ResultRow sub_row;
@@ -112,30 +109,6 @@ unordered_multimap<ResultRow, int, Common::Hash::VectorHash> QP::Types::ResultTa
 	}
 
 	return map;
-}
-
-bool QP::Types::ResultTable::contains(const unordered_map<string, string>& row) {
-	size_t number_of_rows = getNumberOfRows();
-	for (size_t i = 0; i < number_of_rows; i++) {
-		if (isRowMatch(row, i)) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool QP::Types::ResultTable::isRowMatch(const unordered_map<string, string>& sub_row, size_t row_number) {
-	bool has_match = true;
-	ResultRow& row = table.at(row_number);
-	for (const auto& iterator : sub_row) {
-		if (row.at(synonyms_to_index_map.at(iterator.first)) != iterator.second) {
-			has_match = false;
-			break;
-		}
-	}
-
-	return has_match;
 }
 
 void QP::Types::ResultTable::removeRow(size_t row_number) { table.erase(table.begin() + row_number); }
@@ -166,16 +139,14 @@ ResultRow QP::Types::ResultTable::getSubRow(vector<string> synonyms, size_t row_
 }
 
 QP::Types::ResultTable QP::Types::ResultTable::joinWithSameSynonym(pair<ResultTable&, ResultTable&> tables) {
+	vector<string> common_synonyms = tables.second.getSynonymsStored();
+	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> hashmap = tables.second.buildHashTable(common_synonyms);
+
 	size_t number_of_rows = tables.first.getNumberOfRows();
 	size_t pos = 0;
 	for (size_t i = 0; i < number_of_rows; i++) {
-		unordered_map<string, string> row;
-		for (auto const& synonym : tables.second.getSynonymsStored()) {
-			size_t col_pos = tables.first.getSynonymsStoredMap().at(synonym);
-			row.insert({synonym, tables.first.getTable().at(pos).at(col_pos)});
-		}
-
-		if (!tables.second.contains(row)) {
+		auto range = hashmap.equal_range(tables.first.getSubRow(common_synonyms, pos));
+		if (range.first == range.second) {
 			tables.first.removeRow(pos);
 		} else {
 			pos++;
@@ -211,7 +182,7 @@ QP::Types::ResultTable QP::Types::ResultTable::joinWithDifferentSynonym(pair<Res
 	final_synonyms.insert(final_synonyms.end(), new_synonyms.begin(), new_synonyms.end());
 	ResultTable final_table = ResultTable(final_synonyms);
 
-	unordered_multimap hashmap = smaller_table.buildHashTable(common_synonyms);
+	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> hashmap = smaller_table.buildHashTable(common_synonyms);
 	for (size_t i = 0; i < larger_table.getNumberOfRows(); i++) {
 		auto range = hashmap.equal_range(larger_table.getSubRow(common_synonyms, i));
 		for (auto it = range.first; it != range.second; it++) {

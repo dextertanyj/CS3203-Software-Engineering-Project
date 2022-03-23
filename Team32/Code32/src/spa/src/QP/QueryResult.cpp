@@ -23,10 +23,8 @@ void QP::QueryResult::addColumn(const string& synonym, const ResultColumn& colum
 }
 
 void QP::QueryResult::joinResult(QueryResult& query_result) {
-	this->table = ResultTable::joinTables({this->table, query_result.getTable()});
+	this->table = ResultTable::joinTables(make_pair(this->table, query_result.getTable()));
 	this->result = table.getNumberOfRows() == 0 ? false : true;
 }
 
-void QP::QueryResult::filterBySelect(const QP::Types::DeclarationList& select_list) { 
-	table = table.filterBySelect(select_list);
-}
+void QP::QueryResult::filterBySelect(const QP::Types::DeclarationList& select_list) { table = table.filterBySelect(select_list); }

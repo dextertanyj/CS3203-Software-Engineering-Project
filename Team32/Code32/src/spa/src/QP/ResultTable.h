@@ -2,12 +2,12 @@
 #define SPA_SRC_QP_RESULTTABLE_H
 
 #include <map>
-#include <vector>
 #include <utility>
+#include <vector>
 
+#include "Common/Hash.h"
 #include "QP/QP.h"
 #include "QP/Types.h"
-#include "Common/Hash.h"
 
 using QP::Types::ResultColumn;
 using QP::Types::ResultRow;
@@ -33,11 +33,8 @@ private:
 	vector<string> synonyms_stored;
 	vector<ResultRow> table;
 
-	unordered_multimap<ResultRow, int, Common::Hash::VectorHash> buildHashTable(vector<string> synonyms);
-	bool contains(const unordered_map<string, string>& row);
-	bool isRowMatch(const unordered_map<string, string>& sub_row, size_t row_number);
+	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> buildHashTable(vector<string> synonyms);
 	void removeRow(size_t row_number);
-	void removeColumn(const string& synonym);
 	void removeDuplicateRows();
 	ResultRow getSubRow(vector<string> synonyms, size_t row_number);
 	static ResultTable joinWithSameSynonym(pair<ResultTable&, ResultTable&> tables);

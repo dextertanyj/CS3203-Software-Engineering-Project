@@ -5,11 +5,14 @@
 using QP::Types::ResultTable;
 
 TEST_CASE("QP::ResulTable::joinResult Should join tables where one is a subset of another") {
-	ResultTable table_one;
-	ResultTable table_two;
-	table_one.insertColumn("a", {"3", "1"});
-	table_two.insertColumn("a", {"1", "2", "2", "3"});
-	table_two.insertColumn("b", {"5", "5", "6", "7"});
+	ResultTable table_one = ResultTable(vector<string>({"a"}));
+	ResultTable table_two = ResultTable(vector<string>({"a", "b"}));
+	table_one.insertRow({"3"});
+	table_one.insertRow({"1"});
+	table_two.insertRow({"1", "5"});
+	table_two.insertRow({"2", "5"});
+	table_two.insertRow({"2", "6"});
+	table_two.insertRow({"3", "7"});
 
 	ResultTable joined_table = ResultTable::joinTables({table_one, table_two});
 
