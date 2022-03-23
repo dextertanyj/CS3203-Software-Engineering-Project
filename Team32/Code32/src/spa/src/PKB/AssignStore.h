@@ -18,8 +18,7 @@ public:
 	StmtInfoPtrSet getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
 	                                   bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& var_name);
-	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
-	                                                                  bool is_exact_match);
+	StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression, bool is_exact_match);
 	unordered_map<StmtRef, PKB::AssignRelation> getAssignMap();
 	void clear();
 

@@ -240,8 +240,7 @@ StmtInfoPtrSet PKB::Storage::getStmtsWithPattern(const VarRef &name, const Commo
 
 StmtInfoPtrSet PKB::Storage::getStmtsWithPatternLHS(const VarRef &name) { return assign_store.getStmtsWithPatternLHS(name); }
 
-vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::Storage::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression &expression,
-                                                                                bool is_exact_match) {
+StmtInfoPtrVarRefSet PKB::Storage::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression &expression, bool is_exact_match) {
 	return assign_store.getStmtsWithPatternRHS(expression, is_exact_match);
 }
 

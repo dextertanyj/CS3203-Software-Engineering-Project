@@ -146,7 +146,7 @@ TEST_CASE("SP::Processor::process Basic Test") {
 			};
 			REQUIRE_EQUALS(pkb.getStmtsWithPattern("x", expression, true), expected_pattern_x);
 			REQUIRE_EQUALS(pkb.getStmtsWithPatternLHS("x"), expected_pattern_x);
-			vector<pair<shared_ptr<StmtInfo>, VarRef>> expected_vector{make_pair(stmt_map.find(4)->second, "x")};
+			StmtInfoPtrVarRefSet expected_vector{make_pair(stmt_map.find(4)->second, "x")};
 			REQUIRE_EQUALS(pkb.getStmtsWithPatternRHS(expression, true), expected_vector);
 			shared_ptr<Common::ExpressionProcessor::ExpressionNode> root_2 =
 				arithmetic(MathematicalOperator::Plus, variable("x"), constant(1));
@@ -403,7 +403,7 @@ TEST_CASE("SP::Processor::process Basic Test") {
 			REQUIRE_FALSE(pkb.patternExists("z", sub_expression_2_swap, false));
 			REQUIRE_FALSE(pkb.patternExists("z", sub_expression_2_swap, true));
 
-			vector<pair<shared_ptr<StmtInfo>, VarRef>> expected_stmts_with_sub_exp_2 = {
+			StmtInfoPtrVarRefSet expected_stmts_with_sub_exp_2 = {
 				make_pair(stmt_map.find(5)->second, "z"),
 			};
 			REQUIRE_EQUALS(pkb.getStmtsWithPatternRHS(sub_expression_2, false), expected_stmts_with_sub_exp_2);

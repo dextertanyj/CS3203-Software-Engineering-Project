@@ -222,8 +222,8 @@ public:
 		return pkb.getStmtsWithPattern(name, expression, is_exact_match);
 	};
 	[[nodiscard]] StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& name) const { return pkb.getStmtsWithPatternLHS(name); };
-	[[nodiscard]] vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(
-		const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) const {
+	[[nodiscard]] StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
+	                                                          bool is_exact_match) const {
 		return pkb.getStmtsWithPatternRHS(expression, is_exact_match);
 	}
 
