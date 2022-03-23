@@ -2,9 +2,9 @@
 #define SPA_NEXTMANAGER_H
 
 #include "PKB/CFG/ControlFlowGraph.h"
+#include "PKB/CFG/IfNode.h"
 #include "PKB/CFG/NodeInterface.h"
 #include "PKB/CFG/StatementNode.h"
-#include "PKB/CFG/IfNode.h"
 #include "PKB/PKB.h"
 #include "PKB/Types.h"
 
