@@ -703,6 +703,74 @@ TEST_CASE("PKB::Modifies Methods Test") {
 	}
 }
 
+TEST_CASE("PKB::Calls Methods Test") {
+	PKB::Storage pkb = TestUtilities::generateCallsTestPKB();
+	unordered_map<StmtRef, shared_ptr<StmtInfo>> stmt_info_map = pkb.getStmtInfoMap();
+	shared_ptr<StmtInfo> s_1 = stmt_info_map.at(1);
+	shared_ptr<StmtInfo> s_2 = stmt_info_map.at(2);
+	shared_ptr<StmtInfo> s_3 = stmt_info_map.at(3);
+	shared_ptr<StmtInfo> s_4 = stmt_info_map.at(4);
+	shared_ptr<StmtInfo> s_5 = stmt_info_map.at(5);
+	shared_ptr<StmtInfo> s_6 = stmt_info_map.at(6);
+
+	SECTION("PKB::checkCalls Test") {
+		CHECK(pkb.checkCalls("procedure_1", "procedure_3"));
+		CHECK(pkb.checkCalls("procedure_2", "procedure_3"));
+		CHECK(pkb.checkCalls("procedure_3", "procedure_4"));
+		CHECK(pkb.checkCalls("procedure_3", "procedure_5"));
+
+		CHECK_FALSE(pkb.checkCalls("procedure_1", "procedure_4"));
+		CHECK_FALSE(pkb.checkCalls("procedure_1", "procedure_5"));
+		CHECK_FALSE(pkb.checkCalls("procedure_2", "procedure_4"));
+		CHECK_FALSE(pkb.checkCalls("procedure_2", "procedure_5"));
+	}
+
+	SECTION("PKB::checkCallsStar Test") {
+		CHECK(pkb.checkCallsStar("procedure_1", "procedure_4"));
+		CHECK(pkb.checkCallsStar("procedure_1", "procedure_5"));
+		CHECK(pkb.checkCallsStar("procedure_2", "procedure_4"));
+		CHECK(pkb.checkCallsStar("procedure_2", "procedure_5"));
+
+		CHECK_FALSE(pkb.checkCallsStar("procedure_3", "procedure_1"));
+		CHECK_FALSE(pkb.checkCallsStar("procedure_3", "procedure_2"));
+		CHECK_FALSE(pkb.checkCallsStar("procedure_4", "procedure_1"));
+		CHECK_FALSE(pkb.checkCallsStar("procedure_4", "procedure_2"));
+		CHECK_FALSE(pkb.checkCallsStar("procedure_5", "procedure_1"));
+		CHECK_FALSE(pkb.checkCallsStar("procedure_5", "procedure_2"));
+	}
+
+	SECTION("PKB::getCaller Test") {
+		CHECK(pkb.getCaller("procedure_3") == ProcRefSet{"procedure_1", "procedure_2"});
+		CHECK(pkb.getCaller("procedure_4") == ProcRefSet{"procedure_3"});
+		CHECK(pkb.getCaller("procedure_5") == ProcRefSet{"procedure_3"});
+	}
+
+	SECTION("PKB::getCallerStar Test") {
+		CHECK(pkb.getCallerStar("procedure_3") == ProcRefSet{"procedure_1", "procedure_2"});
+		CHECK(pkb.getCallerStar("procedure_4") == ProcRefSet{"procedure_1", "procedure_2", "procedure_3"});
+		CHECK(pkb.getCallerStar("procedure_5") == ProcRefSet{"procedure_1", "procedure_2", "procedure_3"});
+	}
+
+	SECTION("PKB::getCallee Test") {
+		CHECK(pkb.getCallee("procedure_1") == ProcRefSet{"procedure_3"});
+		CHECK(pkb.getCallee("procedure_2") == ProcRefSet{"procedure_3"});
+		CHECK(pkb.getCallee("procedure_3") == ProcRefSet{"procedure_4", "procedure_5"});
+	}
+
+	SECTION("PKB::getCalleeStar Test") {
+		CHECK(pkb.getCalleeStar("procedure_1") == ProcRefSet{"procedure_3", "procedure_4", "procedure_5"});
+		CHECK(pkb.getCalleeStar("procedure_2") == ProcRefSet{"procedure_3", "procedure_4", "procedure_5"});
+		CHECK(pkb.getCalleeStar("procedure_3") == ProcRefSet{"procedure_4", "procedure_5"});
+	}
+
+	SECTION("PKB::getCalledProcedure Test") {
+		CHECK(pkb.getCalledProcedure(1) == "procedure_3");
+		CHECK(pkb.getCalledProcedure(2) == "procedure_3");
+		CHECK(pkb.getCalledProcedure(3) == "procedure_4");
+		CHECK(pkb.getCalledProcedure(4) == "procedure_5");
+	}
+}
+
 /* SIMPLE Code
  * 1. x = x + 1;
  * 2. if (x==5) then {

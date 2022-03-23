@@ -35,11 +35,10 @@ TEST_CASE("PKB::CallStatementStore::get Test") {
 	PKB::CallStatementStore store;
 	ProcRef p_1 = "main";
 
-	SECTION("Incorrect Statement Type") {
+	SECTION("By Statement Number") {
 		shared_ptr<StmtInfo> call = TestUtilities::createStmtInfo(1, StmtType::Call);
 		store.set(call, p_1);
-		shared_ptr<StmtInfo> print = TestUtilities::createStmtInfo(1, StmtType::Print);
-		REQUIRE_THROWS_AS(store.getProcedure(print), logic_error);
+		REQUIRE_EQUALS(store.getProcedure(1), p_1);
 	}
 
 	SECTION("Unset Statement") {
