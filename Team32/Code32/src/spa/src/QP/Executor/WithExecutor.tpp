@@ -3,6 +3,8 @@
 
 #include "QP/Executor/WithExecutor.h"
 
+#include <algorithm>
+
 namespace {
 template <typename TAttribute, typename TValues>
 struct HashInfo {
