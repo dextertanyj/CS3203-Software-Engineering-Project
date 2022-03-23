@@ -2,10 +2,14 @@
 
 #include "QP/QueryUtils.h"
 
-QP::Types::Name QP::Executor::AttributeExecutor::extractName(const Types::ReferenceArgument& argument) { return argument.getName(); };
+std::unordered_set<QP::Types::Name> QP::Executor::AttributeExecutor::extractName(const QP::StorageAdapter& /*store*/,
+                                                                                 const Types::ReferenceArgument& argument) {
+	return {argument.getName()};
+};
 
-QP::Types::Number QP::Executor::AttributeExecutor::extractNumber(const Types::ReferenceArgument& argument) {
-	return argument.getStatementIndex();
+std::unordered_set<QP::Types::Number> QP::Executor::AttributeExecutor::extractNumber(const QP::StorageAdapter& /*store*/,
+                                                                                     const Types::ReferenceArgument& argument) {
+	return {argument.getStatementIndex()};
 };
 
 std::unordered_set<QP::Types::Number> QP::Executor::AttributeExecutor::selectStatements(const QP::StorageAdapter& store,
@@ -42,12 +46,12 @@ T QP::Executor::AttributeExecutor::identity(const QP::StorageAdapter& /*store*/,
 	return value;
 }
 
-QP::Types::Name QP::Executor::AttributeExecutor::callToProcedure(const QP::StorageAdapter& store, const StmtRef& value) {
+QP::Types::Name QP::Executor::AttributeExecutor::callToProcedure(const QP::StorageAdapter& store, const Types::Number& value) {
 	return store.getCalledProcedure(value);
 }
 
 template <QP::Types::ClauseType T>
-QP::Types::Name QP::Executor::AttributeExecutor::statementToVariable(const QP::StorageAdapter& store, const StmtRef& value) {
+QP::Types::Name QP::Executor::AttributeExecutor::statementToVariable(const QP::StorageAdapter& store, const Types::Number& value) {
 	auto variable_set = store.getVariableByStatement<T>(value);
 	if (variable_set.empty()) {
 		throw QP::QueryException("Corresponding variable not found.");

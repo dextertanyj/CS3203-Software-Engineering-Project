@@ -17,8 +17,7 @@ class ParentDispatcher;
 template <QP::Types::ClauseType T>
 class CallsDispatcher;
 
-namespace Modifies {};
-namespace Uses {};
+namespace WithDispatcher {}
 }
 
 #endif  // SPA_SRC_QP_DISPATCHER_DISPATCHER_H
