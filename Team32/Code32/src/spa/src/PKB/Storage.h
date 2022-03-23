@@ -100,8 +100,7 @@ public:
 	StmtInfoPtrSet getStmtsWithPattern(const VarRef& name, const Common::ExpressionProcessor::Expression& expression,
 	                                   bool is_exact_match) override;
 	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& name) override;
-	vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
-	                                                                  bool is_exact_match) override;
+	StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) override;
 
 	// Call get methods
 	bool checkCalls(const ProcRef& caller, const ProcRef& callee) override;

@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_QUERYTYPES_H
-#define SPA_SRC_QP_QUERYTYPES_H
+#ifndef SPA_SRC_QP_TYPES_H
+#define SPA_SRC_QP_TYPES_H
 
 #include <functional>
 #include <memory>
@@ -51,7 +51,8 @@ enum class ClauseType {
 	PatternWhile,
 };
 
-enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression };
+enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression, Attribute };
+enum class AttributeType { Index, Name, Value };
 
 class ReferenceArgument;
 class ConnectedSynonyms;
@@ -61,6 +62,13 @@ typedef struct Declaration {
 	string symbol;      // NOLINT(misc-non-private-member-variables-in-classes)
 	bool operator==(const Declaration& other) const { return type == other.type && symbol == other.symbol; }
 } Declaration;
+
+typedef struct Attribute {
+	// We cast 0 rather than use a concrete enum value to prevent favouring a particular value if the enum is updated.
+	AttributeType attribute = static_cast<AttributeType>(0);  // NOLINT(misc-non-private-member-variables-in-classes)
+	Declaration synonym;                                      // NOLINT(misc-non-private-member-variables-in-classes)
+	bool operator==(const Attribute& other) const { return attribute == other.attribute && synonym == other.synonym; }
+} Attribute;
 
 typedef struct Clause {
 	shared_ptr<Relationship::Relation> relation;
@@ -88,4 +96,4 @@ typedef vector<string> ResultRow;
 typedef vector<string> ResultColumn;
 }
 
-#endif  // SPA_SRC_QP_QUERYTYPES_H
+#endif  // SPA_SRC_QP_TYPES_H

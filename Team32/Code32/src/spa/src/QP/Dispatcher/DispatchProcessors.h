@@ -3,8 +3,8 @@
 
 #include "QP/Dispatcher/Dispatcher.h"
 #include "QP/QP.h"
-#include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
+#include "QP/Types.h"
 
 namespace QP::Dispatcher::DispatchProcessors {
 template <typename T>

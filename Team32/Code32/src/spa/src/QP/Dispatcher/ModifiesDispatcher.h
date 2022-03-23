@@ -6,8 +6,8 @@
 
 #include "QP/Executor/ProcedureVariableExecutor.tpp"
 #include "QP/Executor/StatementVariableExecutor.tpp"
-#include "QP/QueryTypes.h"
 #include "QP/ReferenceArgument.h"
+#include "QP/Types.h"
 
 namespace QP::Dispatcher::ModifiesDispatcher {
 extern const QP::Types::ArgumentDispatcher dispatcher;

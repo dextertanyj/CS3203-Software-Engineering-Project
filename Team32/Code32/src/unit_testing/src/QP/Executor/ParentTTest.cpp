@@ -22,10 +22,10 @@ TEST_CASE("StatementExecutor<ClauseType::ParentT>::execute") {
 	ReferenceArgument stmt_no2 = ReferenceArgument(2);
 	ReferenceArgument stmt_no3 = ReferenceArgument(3);
 	ReferenceArgument stmt_no4 = ReferenceArgument(4);
-	ReferenceArgument stmt_synonym = ReferenceArgument({DesignEntity::Stmt, "s"});
-	ReferenceArgument assign_synonym = ReferenceArgument({DesignEntity::Assign, "a"});
-	ReferenceArgument while_synonym = ReferenceArgument({DesignEntity::While, "w"});
-	ReferenceArgument if_synonym = ReferenceArgument({DesignEntity::If, "if"});
+	ReferenceArgument stmt_synonym = ReferenceArgument(Declaration{DesignEntity::Stmt, "s"});
+	ReferenceArgument assign_synonym = ReferenceArgument(Declaration{DesignEntity::Assign, "a"});
+	ReferenceArgument while_synonym = ReferenceArgument(Declaration{DesignEntity::While, "w"});
+	ReferenceArgument if_synonym = ReferenceArgument(Declaration{DesignEntity::If, "if"});
 	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("Trivial: Index & Index") {

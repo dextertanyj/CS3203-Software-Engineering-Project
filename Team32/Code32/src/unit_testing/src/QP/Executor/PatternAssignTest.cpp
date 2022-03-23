@@ -36,12 +36,12 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	unordered_set<ConstVal> constants = {0, 1};
 	pkb.setConstant(constants);
 
-	ReferenceArgument syn_assign = ReferenceArgument({QP::Types::DesignEntity::Assign, "a"});
+	ReferenceArgument syn_assign = ReferenceArgument(Declaration{QP::Types::DesignEntity::Assign, "a"});
 
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
 	ReferenceArgument z = ReferenceArgument("z");
-	ReferenceArgument var = ReferenceArgument({QP::Types::DesignEntity::Variable, "var"});
+	ReferenceArgument var = ReferenceArgument(Declaration{QP::Types::DesignEntity::Variable, "var"});
 
 	vector<string> query_token1 = {"1"};
 	QP::QueryExpressionLexer lexer4 = QP::QueryExpressionLexer(query_token1);

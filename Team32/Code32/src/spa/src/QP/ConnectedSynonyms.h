@@ -2,7 +2,7 @@
 #define SPA_SRC_QP_CONNECTEDSYNONYMS_H
 
 #include "QP/QP.h"
-#include "QP/QueryTypes.h"
+#include "QP/Types.h"
 
 using QP::Types::DeclarationList;
 

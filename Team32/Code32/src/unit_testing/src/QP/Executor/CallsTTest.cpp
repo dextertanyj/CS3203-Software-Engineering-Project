@@ -23,8 +23,8 @@ TEST_CASE("QP::Executor::ProcedureExecutor<ClauseType::CallsT>::execute") {
 	ReferenceArgument proc1 = ReferenceArgument("proc1");
 	ReferenceArgument proc2 = ReferenceArgument("proc2");
 	ReferenceArgument proc3 = ReferenceArgument("proc3");
-	ReferenceArgument proc_synonym_1 = ReferenceArgument({DesignEntity::Procedure, "p1"});
-	ReferenceArgument proc_synonym_2 = ReferenceArgument({DesignEntity::Procedure, "p2"});
+	ReferenceArgument proc_synonym_1 = ReferenceArgument(Declaration{DesignEntity::Procedure, "p1"});
+	ReferenceArgument proc_synonym_2 = ReferenceArgument(Declaration{DesignEntity::Procedure, "p2"});
 	ReferenceArgument wildcard = ReferenceArgument();
 
 	SECTION("Trivial: Name & Name") {

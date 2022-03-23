@@ -55,14 +55,14 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) 
 	return result;
 }
 
-vector<pair<shared_ptr<StmtInfo>, VarRef>> PKB::AssignStore::getStmtsWithPatternRHS(
-	const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) {
-	vector<pair<shared_ptr<StmtInfo>, VarRef>> result;
+StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
+                                                              bool is_exact_match) {
+	StmtInfoPtrVarRefSet result;
 	for (auto& assignment : store) {
 		AssignRelation assign_relation = assignment.second;
 		if (compareExpressions(assign_relation, "", expression, is_exact_match)) {
 			pair<shared_ptr<StmtInfo>, VarRef> pair = make_pair(assignment.second.node, assignment.second.variable);
-			result.push_back(pair);
+			result.insert(pair);
 		}
 	}
 	return result;

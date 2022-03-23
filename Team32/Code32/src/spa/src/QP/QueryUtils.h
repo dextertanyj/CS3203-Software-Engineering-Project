@@ -6,7 +6,7 @@
 
 #include "Common/TypeDefs.h"
 #include "QP/QP.h"
-#include "QP/QueryTypes.h"
+#include "QP/Types.h"
 
 namespace QP::Utilities {
 static unordered_map<Types::DesignEntity, StmtType> design_ent_to_stmt_type = {

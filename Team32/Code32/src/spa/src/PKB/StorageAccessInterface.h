@@ -48,8 +48,7 @@ public:
 	virtual StmtInfoPtrSet getStmtsWithPattern(const VarRef& name, const Common::ExpressionProcessor::Expression& expression,
 	                                           bool is_exact_match) = 0;
 	virtual StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& name) = 0;
-	virtual vector<pair<shared_ptr<StmtInfo>, VarRef>> getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
-	                                                                          bool is_exact_match) = 0;
+	virtual StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) = 0;
 
 	// Calls get methods
 	virtual bool checkCalls(const ProcRef& caller, const ProcRef& callee) = 0;

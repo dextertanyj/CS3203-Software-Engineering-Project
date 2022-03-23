@@ -11,7 +11,7 @@
 #include "QP/Dispatcher/PatternWhileDispatcher.h"
 #include "QP/Dispatcher/UsesDispatcher.h"
 #include "QP/QP.h"
-#include "QP/QueryTypes.h"
+#include "QP/Types.h"
 
 struct QP::Dispatcher::DispatchMap {
 	Types::ArgumentDispatchMap dispatch_map = {
