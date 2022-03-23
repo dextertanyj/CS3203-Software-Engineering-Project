@@ -19,8 +19,8 @@ static void combineHash(std::size_t& seed, const T& value) {
 
 namespace std {
 template <typename T, typename S>
-struct hash<pair<T,S>> {
-	size_t operator()(const pair<T,S>& pair) const {
+struct hash<pair<T, S>> {
+	size_t operator()(const pair<T, S>& pair) const {
 		std::size_t seed = PAIR_SEED;
 		combineHash(seed, pair.first);
 		combineHash(seed, pair.second);
