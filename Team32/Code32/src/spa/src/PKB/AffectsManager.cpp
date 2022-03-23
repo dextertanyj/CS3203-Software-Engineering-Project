@@ -33,6 +33,14 @@ StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
 			continue;
 		}
 
+		if (node->getNodeType() == NodeType::Dummy) {
+			StmtInfoPtrSet real_nodes = control_flow_graph->collectNextOfDummy(node);
+			for (auto real_node : real_nodes) {
+				info.node_stack.push(control_flow_graph->stmt_to_normal_node_store.at(real_node->getIdentifier()));
+			}
+			continue;
+		}
+
 		shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(curr_node);
 		if (uses_store.check(stmt_node->getStmtInfo()->getIdentifier(), info.variable)) {
 			info.nodes.insert(stmt_node->getStmtInfo());
@@ -72,6 +80,14 @@ StmtInfoPtrSet PKB::AffectsManager::processAffected(shared_ptr<PKB::StatementNod
 		info.node_stack.pop();
 
 		if (info.visited_set.find(curr_node) != info.visited_set.end()) {
+			continue;
+		}
+
+		if (node->getNodeType() == NodeType::Dummy) {
+			StmtInfoPtrSet real_nodes = control_flow_graph->collectPreviousOfDummy(node);
+			for (auto real_node : real_nodes) {
+				info.node_stack.push(control_flow_graph->stmt_to_normal_node_store.at(real_node->getIdentifier()));
+			}
 			continue;
 		}
 

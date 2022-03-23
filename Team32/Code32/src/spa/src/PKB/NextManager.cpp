@@ -5,7 +5,8 @@ PKB::NextManager::NextManager(ControlFlowGraph& control_flow_graph) { this->cont
 void PKB::NextManager::setNext(StmtRef previous, StmtRef next) {
 	auto prev_node_iter = control_flow_graph->stmt_to_normal_node_store.find(previous);
 	auto next_node_iter = control_flow_graph->stmt_to_normal_node_store.find(next);
-	if (prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() || next_node_iter == control_flow_graph->stmt_to_normal_node_store.end()) {
+	if (prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() ||
+	    next_node_iter == control_flow_graph->stmt_to_normal_node_store.end()) {
 		throw invalid_argument("One of the provided references is not an existing node.");
 	}
 	if (previous == next) {
@@ -18,7 +19,8 @@ void PKB::NextManager::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_n
 	auto prev_node_iter = control_flow_graph->stmt_to_normal_node_store.find(prev);
 	auto then_next_node_iter = control_flow_graph->stmt_to_normal_node_store.find(then_next);
 	auto else_next_node_iter = control_flow_graph->stmt_to_normal_node_store.find(else_next);
-	if (prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() || then_next_node_iter == control_flow_graph->stmt_to_normal_node_store.end() ||
+	if (prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() ||
+	    then_next_node_iter == control_flow_graph->stmt_to_normal_node_store.end() ||
 	    else_next_node_iter == control_flow_graph->stmt_to_normal_node_store.end()) {
 		throw invalid_argument("One of the provided references is not an existing node.");
 	}
@@ -36,7 +38,8 @@ void PKB::NextManager::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef i
 	auto then_prev_node_iter = control_flow_graph->stmt_to_normal_node_store.find(then_prev);
 	auto else_prev_node_iter = control_flow_graph->stmt_to_normal_node_store.find(else_prev);
 	auto if_ctrl_node_iter = control_flow_graph->stmt_to_normal_node_store.find(if_stmt_ref);
-	if (then_prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() || else_prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() ||
+	if (then_prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() ||
+	    else_prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() ||
 	    if_ctrl_node_iter == control_flow_graph->stmt_to_normal_node_store.end()) {
 		throw invalid_argument("One of the provided references is not an existing node.");
 	}
@@ -53,7 +56,8 @@ void PKB::NextManager::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef i
 bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
 	auto prev_node_iter = control_flow_graph->stmt_to_normal_node_store.find(first);
 	auto next_node_iter = control_flow_graph->stmt_to_normal_node_store.find(second);
-	if (prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() || next_node_iter == control_flow_graph->stmt_to_normal_node_store.end()) {
+	if (prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() ||
+	    next_node_iter == control_flow_graph->stmt_to_normal_node_store.end()) {
 		throw invalid_argument("One of the provided references is not an existing node.");
 	}
 	StmtInfoPtrSet next_nodes_of_prev = this->getNext(first);
@@ -128,7 +132,7 @@ StmtInfoPtrSet PKB::NextManager::getPreviousStar(StmtRef node_ref) {
 }
 
 void PKB::NextManager::processBFSVisit(Types::BFSInfo& info, const shared_ptr<PKB::NodeInterface>& node,
-                                            StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&)) {
+                                       StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&)) {
 	if (node == info.start_node) {
 		shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
 		info.nodes.insert(stmt_node->getStmtInfo());

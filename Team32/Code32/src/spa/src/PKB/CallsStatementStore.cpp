@@ -28,7 +28,7 @@ ProcRef PKB::CallsStatementStore::getProcedure(const shared_ptr<StmtInfo>& state
 }
 
 void PKB::CallsStatementStore::populate(const PKB::Types::ProcedureStore& procedures,
-                                       PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>& call_store) const {
+                                        PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>& call_store) const {
 	for (const shared_ptr<ProcedureInfo>& procedure : procedures.getAll()) {
 		for (const shared_ptr<StmtInfo>& statement : procedure->getStatements()) {
 			if (statement->getType() != StmtType::Call) {

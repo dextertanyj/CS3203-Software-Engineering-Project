@@ -5,10 +5,12 @@
 
 #include "PKB/CFG/ControlFlowGraph.h"
 #include "PKB/CFG/StatementNode.h"
+#include "PKB/ModifiesSRelation.h"
 #include "PKB/NextManager.h"
 #include "PKB/PKB.h"
 #include "PKB/SVRelationStore.h"
 #include "PKB/Types.h"
+#include "PKB/UsesSRelation.h"
 
 class PKB::AffectsManager {
 public:
@@ -23,6 +25,8 @@ private:
 	SVRelationStore<PKB::UsesSRelation> uses_store;
 	SVRelationStore<PKB::ModifiesSRelation> modifies_store;
 	StmtInfoPtrSet processAffected(shared_ptr<PKB::StatementNode> node, VarRef variable);
+	void processDFS(Types::DFSInfo& info, const shared_ptr<NodeInterface>& node,
+	                StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
 };
 
 #endif  // SPA_AFFECTSMANAGER_H

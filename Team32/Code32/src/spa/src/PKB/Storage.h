@@ -9,6 +9,7 @@
 
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
+#include "PKB/AffectsManager.h"
 #include "PKB/AssignStore.h"
 #include "PKB/CFG/ControlFlowGraph.h"
 #include "PKB/CallsRelation.h"
@@ -17,6 +18,7 @@
 #include "PKB/InfoStore.h"
 #include "PKB/ModifiesPRelation.h"
 #include "PKB/ModifiesSRelation.h"
+#include "PKB/NextManager.h"
 #include "PKB/PKB.h"
 #include "PKB/PVRelationStore.tpp"
 #include "PKB/ParentRelation.h"
@@ -29,8 +31,6 @@
 #include "PKB/TransitiveRelationStore.tpp"
 #include "PKB/UsesPRelation.h"
 #include "PKB/UsesSRelation.h"
-#include "PKB/NextManager.h"
-#include "PKB/AffectsManager.h"
 
 using namespace std;
 
