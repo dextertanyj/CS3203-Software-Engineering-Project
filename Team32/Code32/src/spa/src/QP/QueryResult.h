@@ -22,7 +22,6 @@ public:
 	explicit QueryResult(bool result);
 	[[nodiscard]] bool getResult() const;
 	ResultTable getTable();
-	unordered_set<string> getSynonymsStored();
 	ResultColumn getSynonymResult(const string& synonym);
 	size_t getNumberOfRows();
 	void addColumn(const string& synonym, const ResultColumn& column);

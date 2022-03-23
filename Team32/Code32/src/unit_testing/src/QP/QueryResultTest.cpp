@@ -80,5 +80,4 @@ TEST_CASE("QP::QueryResult::filterBySelect Should filter result") {
 	result.filterBySelect(select_list);
 
 	REQUIRE(result.getNumberOfRows() == 4);
-	REQUIRE(result.getSynonymsStored().size() == 2);
 }
