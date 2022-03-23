@@ -260,7 +260,7 @@ public:
 	}
 
 	// With
-	[[nodiscard]] inline ProcRef getCalledProcedure(const StmtRef& stmt) const { return ""; };
+	[[nodiscard]] inline ProcRef getCalledProcedure(const StmtRef& stmt) const { return pkb.getCalledProcedure(stmt); };
 
 private:
 	PKB::StorageAccessInterface& pkb;
