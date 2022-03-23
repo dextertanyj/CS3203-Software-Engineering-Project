@@ -181,24 +181,23 @@ template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeIndexSynonym(const QP::StorageAdapter& storage,
                                                                         const Types::ReferenceArgument& lhs,
                                                                         const Types::ReferenceArgument& rhs) {
-	StmtInfoPtrSet statements = storage.getReverseStatements<T>(lhs.getStatementIndex());
-	vector<string> column;
+	QueryResult result = QueryResult({rhs.getSynonym().symbol});
 
+	StmtInfoPtrSet statements = storage.getReverseStatements<T>(lhs.getStatementIndex());
 	for (auto const& statement : statements) {
 		if (Utilities::checkStmtTypeMatch(statement, rhs.getSynonym().type)) {
-			column.push_back(to_string(statement->getIdentifier()));
+			result.addRow({to_string(statement->getIdentifier())});
 		}
 	}
-	QueryResult result = QueryResult();
-	result.addColumn(rhs.getSynonym().symbol, column);
+
 	return result;
 }
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeWildcardSynonym(const QP::StorageAdapter& storage,
                                                                            const Types::ReferenceArgument& rhs) {
+	QueryResult result = QueryResult({rhs.getSynonym().symbol});
 	StmtInfoPtrSet statements = storage.getStatements();
-	vector<string> column;
 	for (auto const& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, rhs.getSynonym().type)) {
 			continue;
@@ -206,11 +205,10 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeWildcardSynonym(const
 
 		StmtInfoPtrSet lhs_set = storage.getForwardStatements<T>(statement->getIdentifier());
 		if (!lhs_set.empty()) {
-			column.push_back(to_string(statement->getIdentifier()));
+			result.addRow({to_string(statement->getIdentifier())});
 		}
 	}
-	QueryResult result = QueryResult();
-	result.addColumn(rhs.getSynonym().symbol, column);
+
 	return result;
 }
 
@@ -218,24 +216,23 @@ template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeSynonymIndex(const QP::StorageAdapter& storage,
                                                                         const Types::ReferenceArgument& lhs,
                                                                         const Types::ReferenceArgument& rhs) {
+	QueryResult result = QueryResult({lhs.getSynonym().symbol});
 	StmtInfoPtrSet lhs_set = storage.getForwardStatements<T>(rhs.getStatementIndex());
 	vector<string> column;
 	for (auto const& lhs_statement : lhs_set) {
 		if (Utilities::checkStmtTypeMatch(lhs_statement, lhs.getSynonym().type)) {
-			column.push_back(to_string(lhs_statement->getIdentifier()));
+			result.addRow({to_string(lhs_statement->getIdentifier())});
 		}
 	}
 
-	QueryResult result = QueryResult();
-	result.addColumn(lhs.getSynonym().symbol, column);
 	return result;
 }
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementExecutor<T>::executeSynonymWildcard(const QP::StorageAdapter& storage,
                                                                            const Types::ReferenceArgument& lhs) {
+	QueryResult result = QueryResult({lhs.getSynonym().symbol});
 	StmtInfoPtrSet statements = storage.getStatements();
-	vector<string> column;
 	for (auto const& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, lhs.getSynonym().type)) {
 			continue;
@@ -243,20 +240,17 @@ QP::QueryResult QP::Executor::StatementExecutor<T>::executeSynonymWildcard(const
 
 		StmtInfoPtrSet rhs_set = storage.getReverseStatements<T>(statement->getIdentifier());
 		if (!rhs_set.empty()) {
-			column.push_back(to_string(statement->getIdentifier()));
+			result.addRow({to_string(statement->getIdentifier())});
 		}
 	}
-	QueryResult result = QueryResult();
-	result.addColumn(lhs.getSynonym().symbol, column);
 	return result;
 }
 
 template <QP::Types::ClauseType T>
 static QP::QueryResult executeStatementSynonymSynonym(const QP::StorageAdapter& storage, const QP::Types::ReferenceArgument& lhs,
                                                       const QP::Types::ReferenceArgument& rhs) {
+	QP::QueryResult result = QP::QueryResult({lhs.getSynonym().symbol, rhs.getSynonym().symbol});
 	StmtInfoPtrSet statements = storage.getStatements();
-	vector<string> lhs_column;
-	vector<string> rhs_column;
 	for (auto const& statement : statements) {
 		if (!QP::Utilities::checkStmtTypeMatch(statement, lhs.getSynonym().type)) {
 			continue;
@@ -267,13 +261,10 @@ static QP::QueryResult executeStatementSynonymSynonym(const QP::StorageAdapter& 
 			if (!QP::Utilities::checkStmtTypeMatch(rhs_statement, rhs.getSynonym().type)) {
 				continue;
 			}
-			lhs_column.push_back(to_string(statement->getIdentifier()));
-			rhs_column.push_back(to_string(rhs_statement->getIdentifier()));
+			result.addRow({to_string(statement->getIdentifier()), to_string(rhs_statement->getIdentifier())});
 		}
 	}
-	QP::QueryResult result = QP::QueryResult();
-	result.addColumn(lhs.getSynonym().symbol, lhs_column);
-	result.addColumn(rhs.getSynonym().symbol, rhs_column);
+
 	return result;
 }
 
@@ -294,8 +285,9 @@ inline QP::QueryResult QP::Executor::StatementExecutor<QP::Types::ClauseType::Ne
 	if (lhs.getSynonym().symbol != rhs.getSynonym().symbol) {
 		return executeStatementSynonymSynonym<QP::Types::ClauseType::NextT>(storage, lhs, rhs);
 	}
+
+	QueryResult result = QueryResult({lhs.getSynonym().symbol});
 	StmtInfoPtrSet statements = storage.getStatements();
-	vector<string> column;
 	for (auto const& statement : statements) {
 		if (!QP::Utilities::checkStmtTypeMatch(statement, lhs.getSynonym().type)) {
 			continue;
@@ -305,10 +297,9 @@ inline QP::QueryResult QP::Executor::StatementExecutor<QP::Types::ClauseType::Ne
 		if (others.find(statement) == others.end()) {
 			continue;
 		}
-		column.push_back(to_string(statement->getIdentifier()));
+		result.addRow({to_string(statement->getIdentifier())});
 	}
-	QP::QueryResult result = QP::QueryResult();
-	result.addColumn(lhs.getSynonym().symbol, column);
+
 	return result;
 }
 

@@ -52,23 +52,22 @@ template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeSynonymName(const QP::StorageAdapter& storage,
                                                                                const Types::ReferenceArgument& index,
                                                                                const Types::ReferenceArgument& variable) {
+	QueryResult result = QueryResult({index.getSynonym().symbol});
 	StmtInfoPtrSet index_set = storage.getStatementByVariable<T>(variable.getName());
 	vector<string> column;
 	for (auto const& res_index : index_set) {
 		if (Utilities::checkStmtTypeMatch(res_index, index.getSynonym().type)) {
-			column.push_back(to_string(res_index->getIdentifier()));
+			result.addRow({to_string(res_index->getIdentifier())});
 		}
 	}
-	QueryResult result = QueryResult();
-	result.addColumn(index.getSynonym().symbol, column);
 	return result;
 }
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeSynonymWildcard(const QP::StorageAdapter& storage,
                                                                                    const Types::ReferenceArgument& index) {
+	QueryResult result = QueryResult({index.getSynonym().symbol});
 	StmtInfoPtrSet index_set = storage.getStatements();
-	vector<string> column;
 	for (auto const& res_index : index_set) {
 		if (!Utilities::checkStmtTypeMatch(res_index, index.getSynonym().type)) {
 			continue;
@@ -76,11 +75,9 @@ QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeSynonymWildca
 
 		VarRefSet var_set = storage.getVariableByStatement<T>(res_index->getIdentifier());
 		if (!var_set.empty()) {
-			column.push_back(to_string(res_index->getIdentifier()));
+			result.addRow({to_string(res_index->getIdentifier())});
 		}
 	}
-	QueryResult result = QueryResult();
-	result.addColumn(index.getSynonym().symbol, column);
 	return result;
 }
 
@@ -88,24 +85,19 @@ template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeSynonymSynonym(const QP::StorageAdapter& storage,
                                                                                   const Types::ReferenceArgument& index,
                                                                                   const Types::ReferenceArgument& variable) {
+	QueryResult result = QueryResult({index.getSynonym().symbol, variable.getSynonym().symbol});
 	StmtInfoPtrSet index_set = storage.getStatements();
-	Types::DesignEntity design_variableity = index.getSynonym().type;
-	vector<string> index_column;
-	vector<string> var_column;
+	Types::DesignEntity design_entity = index.getSynonym().type;
 	for (auto const& res_index : index_set) {
-		if (!Utilities::checkStmtTypeMatch(res_index, design_variableity)) {
+		if (!Utilities::checkStmtTypeMatch(res_index, design_entity)) {
 			continue;
 		}
 
 		VarRefSet var_set = storage.getVariableByStatement<T>(res_index->getIdentifier());
 		for (auto const& var : var_set) {
-			index_column.push_back(to_string(res_index->getIdentifier()));
-			var_column.push_back(var);
+			result.addRow({to_string(res_index->getIdentifier()), var});
 		}
 	}
-	QueryResult result = QueryResult();
-	result.addColumn(index.getSynonym().symbol, index_column);
-	result.addColumn(variable.getSynonym().symbol, var_column);
 	return result;
 }
 
@@ -113,15 +105,13 @@ template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementVariableExecutor<T>::executeIndexSynonym(const QP::StorageAdapter& storage,
                                                                                 const Types::ReferenceArgument& index,
                                                                                 const Types::ReferenceArgument& variable) {
+	QueryResult result = QueryResult({variable.getSynonym().symbol});
 	VarRefSet var_set = storage.getVariableByStatement<T>(index.getStatementIndex());
-	vector<string> column;
 
 	for (auto const& var : var_set) {
-		column.push_back(var);
+		result.addRow({var});
 	}
 
-	QueryResult result = QueryResult();
-	result.addColumn(variable.getSynonym().symbol, column);
 	return result;
 }
 

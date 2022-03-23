@@ -30,22 +30,19 @@ template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::PatternContainerStatementExecutor<T>::executeName(const QP::StorageAdapter& storage,
                                                                                 const Types::ReferenceArgument& stmt,
                                                                                 const Types::ReferenceArgument& var) {
-	QueryResult result = QueryResult();
-	vector<string> column;
+	QueryResult result = QueryResult({stmt.getSynonym().symbol});
 	StmtInfoPtrSet stmt_set = storage.getControlStmt<T>(var.getName());
 	for (auto const& stmt_ref : stmt_set) {
-		column.push_back(to_string(stmt_ref->getIdentifier()));
+		result.addRow({to_string(stmt_ref->getIdentifier())});
 	}
 
-	result.addColumn(stmt.getSynonym().symbol, column);
 	return result;
 }
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::PatternContainerStatementExecutor<T>::executeWildcard(const QP::StorageAdapter& storage,
                                                                                     const Types::ReferenceArgument& stmt) {
-	QueryResult result = QueryResult();
-	vector<string> column;
+	QueryResult result = QueryResult({stmt.getSynonym().symbol});
 	StmtInfoPtrSet stmt_set = storage.getStatements();
 	for (auto const& stmt_ref : stmt_set) {
 		if (!Utilities::checkStmtTypeMatch(stmt_ref, stmt.getSynonym().type)) {
@@ -54,11 +51,10 @@ QP::QueryResult QP::Executor::PatternContainerStatementExecutor<T>::executeWildc
 
 		VarRefSet var_set = storage.getControlVar<T>(stmt_ref->getIdentifier());
 		if (!var_set.empty()) {
-			column.push_back(to_string(stmt_ref->getIdentifier()));
+			result.addRow({to_string(stmt_ref->getIdentifier())});
 		}
 	}
 
-	result.addColumn(stmt.getSynonym().symbol, column);
 	return result;
 }
 
@@ -66,19 +62,14 @@ template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::PatternContainerStatementExecutor<T>::executeSynonym(const QP::StorageAdapter& storage,
                                                                                    const Types::ReferenceArgument& stmt,
                                                                                    const Types::ReferenceArgument& var) {
-	QueryResult result = QueryResult();
-	vector<string> stmt_column;
-	vector<string> var_column;
+	QueryResult result = QueryResult({stmt.getSynonym().symbol, var.getSynonym().symbol});
 	VarRefSet var_set = storage.getVariables();
 	for (auto const& var_ref : var_set) {
 		StmtInfoPtrSet stmt_set = storage.getControlStmt<T>(var_ref);
 		for (auto const& stmt_ref : stmt_set) {
-			var_column.push_back(var_ref);
-			stmt_column.push_back(to_string(stmt_ref->getIdentifier()));
+			result.addRow({to_string(stmt_ref->getIdentifier()), var_ref});
 		}
 	}
-	result.addColumn(stmt.getSynonym().symbol, stmt_column);
-	result.addColumn(var.getSynonym().symbol, var_column);
 	return result;
 }
 
