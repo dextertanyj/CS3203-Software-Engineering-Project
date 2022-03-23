@@ -8,7 +8,7 @@ using namespace std;
 
 class PKB::NextManager {
 public:
-	explicit NextManager(PKB::ControlFlowGraph& control_flow_graph);
+	explicit NextManager(ControlFlowGraph& control_flow_graph);
 
 	void setNext(StmtRef previous, StmtRef next);
 	void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next);

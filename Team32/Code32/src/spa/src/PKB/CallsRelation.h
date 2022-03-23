@@ -10,7 +10,7 @@
 #include "PKB/TransitiveRelation.tpp"
 #include "PKB/TransitiveRelationStore.h"
 
-class PKB::CallRelation : public PKB::TransitiveRelation<ProcedureInfo> {
+class PKB::CallsRelation : public PKB::TransitiveRelation<ProcedureInfo> {
 public:
 	using TransitiveRelation<ProcedureInfo>::TransitiveRelation;
 	void insertForward(const shared_ptr<ProcedureInfo>& caller);
@@ -29,11 +29,11 @@ private:
 // Template specializations for Call relationship.
 
 template <>
-void PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation>::optimize();
+void PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>::optimize();
 
 template <>
 unordered_set<shared_ptr<PKB::ProcedureInfo>>
-PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation>::populateTransitive(
-	CallRelation& current, unordered_set<shared_ptr<ProcedureInfo>> previous);
+PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>::populateTransitive(
+	CallsRelation& current, unordered_set<shared_ptr<ProcedureInfo>> previous);
 
 #endif  // SPA_SRC_PKB_CALLRELATION_H

@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "Common/TypeDefs.h"
-#include "PKB/CallRelation.h"
+#include "PKB/CallsRelation.h"
 #include "PKB/FollowsRelation.h"
 #include "PKB/InfoStore.tpp"
 #include "PKB/ParentRelation.h"
@@ -17,7 +17,7 @@
 namespace PKB::Types {
 typedef InfoStore<ProcRef, vector<shared_ptr<StmtInfo>>, ProcedureInfo> ProcedureStore;
 typedef InfoStore<StmtRef, StmtType, StatementInfo> StatementStore;
-typedef TransitiveRelationStore<ProcRef, ProcedureInfo, CallRelation> CallStore;
+typedef TransitiveRelationStore<ProcRef, ProcedureInfo, CallsRelation> CallStore;
 typedef TransitiveRelationStore<StmtRef, StmtInfo, ParentRelation> ParentStore;
 typedef TransitiveRelationStore<StmtRef, StmtInfo, FollowsRelation> FollowsStore;
 

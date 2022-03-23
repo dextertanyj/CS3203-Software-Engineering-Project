@@ -256,6 +256,30 @@ StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) { return next_manager.g
 
 StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef node_ref) { return next_manager.getPreviousStar(node_ref); }
 
+bool PKB::Storage::checkAffects(StmtRef first, StmtRef second) {
+	return false;
+}
+
+bool PKB::Storage::checkAffectsStar(StmtRef first, StmtRef second) {
+	return false;
+}
+
+StmtInfoPtrSet PKB::Storage::getAffected(StmtRef second) {
+	return {};
+}
+
+StmtInfoPtrSet PKB::Storage::getAffects(StmtRef second) {
+	return {};
+}
+
+StmtInfoPtrSet PKB::Storage::getAffectedStar(StmtRef second) {
+	return {};
+}
+
+StmtInfoPtrSet PKB::Storage::getAffectsStar(StmtRef second) {
+	return {};
+}
+
 bool PKB::Storage::checkWhileControl(StmtRef index, VarRef name) { return while_control_store.check(index, name); }
 
 bool PKB::Storage::checkIfControl(StmtRef index, VarRef name) { return if_control_store.check(index, name); }

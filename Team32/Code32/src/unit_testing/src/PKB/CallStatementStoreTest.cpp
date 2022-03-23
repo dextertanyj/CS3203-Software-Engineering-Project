@@ -1,4 +1,4 @@
-#include "PKB/CallStatementStore.h"
+#include "PKB/CallsStatementStore.h"
 
 #include <memory>
 #include <unordered_set>
@@ -8,8 +8,8 @@
 
 typedef unordered_set<shared_ptr<PKB::ProcedureInfo>> ProcedureInfoPtrSet;
 
-TEST_CASE("PKB::CallStatementStore::set Test") {
-	PKB::CallStatementStore store;
+TEST_CASE("PKB::CallsStatementStore::set Test") {
+	PKB::CallsStatementStore store;
 	ProcRef p_1 = "main";
 	ProcRef p_2 = "method";
 
@@ -31,8 +31,8 @@ TEST_CASE("PKB::CallStatementStore::set Test") {
 	}
 }
 
-TEST_CASE("PKB::CallStatementStore::get Test") {
-	PKB::CallStatementStore store;
+TEST_CASE("PKB::CallsStatementStore::get Test") {
+	PKB::CallsStatementStore store;
 	ProcRef p_1 = "main";
 
 	SECTION("By Statement Number") {
@@ -47,11 +47,11 @@ TEST_CASE("PKB::CallStatementStore::get Test") {
 	}
 }
 
-TEST_CASE("PKB::CallStatementStore::populate Test") {
-	PKB::CallStatementStore store;
+TEST_CASE("PKB::CallsStatementStore::populate Test") {
+	PKB::CallsStatementStore store;
 	PKB::Types::StatementStore statements;
 	PKB::Types::ProcedureStore procedures;
-	PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation> call_store;
+	PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation> call_store;
 
 	SECTION("Single Call") {
 		StmtRef s_1 = 1, s_2 = 2, s_3 = 3;

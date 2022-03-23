@@ -13,7 +13,8 @@ public:
 	[[nodiscard]] shared_ptr<T> getSelf() const;
 	[[nodiscard]] unordered_set<shared_ptr<T>> getForwardTransitive() const;
 	[[nodiscard]] unordered_set<shared_ptr<T>> getReverseTransitive() const;
-	void appendForwardTransitive(const unordered_set<shared_ptr<T>>& new_forward);
+
+    virtual void appendForwardTransitive(const unordered_set<shared_ptr<T>>& new_forward);
 	void appendReverseTransitive(const unordered_set<shared_ptr<T>>& new_reverse);
 
 private:

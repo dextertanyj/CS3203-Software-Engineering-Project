@@ -66,6 +66,14 @@ public:
 	virtual StmtInfoPtrSet getPrevious(StmtRef second) = 0;
 	virtual StmtInfoPtrSet getPreviousStar(StmtRef node_ref) = 0;
 
+	// CFG Affects Methods
+	virtual bool checkAffects(StmtRef first, StmtRef second) = 0;
+	virtual bool checkAffectsStar(StmtRef first, StmtRef second) = 0;
+	virtual StmtInfoPtrSet getAffects(StmtRef first) = 0;
+	virtual StmtInfoPtrSet getAffectsStar(StmtRef first) = 0;
+	virtual StmtInfoPtrSet getAffected(StmtRef second) = 0;
+	virtual StmtInfoPtrSet getAffectedStar(StmtRef second) = 0;
+
 	// Control Variable get methods
 	virtual bool checkIfControl(StmtRef index, VarRef name) = 0;
 	virtual bool checkWhileControl(StmtRef index, VarRef name) = 0;

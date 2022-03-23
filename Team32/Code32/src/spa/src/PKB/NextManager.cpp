@@ -1,6 +1,6 @@
 #include "NextManager.h"
 
-PKB::NextManager::NextManager(PKB::ControlFlowGraph& control_flow_graph) { this->control_flow_graph = &control_flow_graph; }
+PKB::NextManager::NextManager(ControlFlowGraph& control_flow_graph) { this->control_flow_graph = &control_flow_graph; }
 
 void PKB::NextManager::setNext(StmtRef previous, StmtRef next) { control_flow_graph->setNext(previous, next); }
 

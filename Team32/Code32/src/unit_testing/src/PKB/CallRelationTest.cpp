@@ -1,4 +1,4 @@
-#include "PKB/CallRelation.h"
+#include "PKB/CallsRelation.h"
 
 #include <memory>
 #include <unordered_set>
@@ -8,7 +8,7 @@
 
 typedef unordered_set<shared_ptr<PKB::ProcedureInfo>> ProcedureInfoPtrSet;
 
-TEST_CASE("PKB::CallRelation Tests") {
+TEST_CASE("PKB::CallsRelation Tests") {
 	ProcRef p_1 = "procedure";
 	ProcRef p_2 = "main";
 	ProcRef p_3 = "hello";
@@ -17,7 +17,7 @@ TEST_CASE("PKB::CallRelation Tests") {
 	shared_ptr<PKB::ProcedureInfo> p_2_ptr = TestUtilities::createProcedureInfo(p_2);
 	shared_ptr<PKB::ProcedureInfo> p_3_ptr = TestUtilities::createProcedureInfo(p_3);
 	shared_ptr<PKB::ProcedureInfo> p_4_ptr = TestUtilities::createProcedureInfo(p_4);
-	PKB::CallRelation relation = PKB::CallRelation(p_1_ptr);
+	PKB::CallsRelation relation = PKB::CallsRelation(p_1_ptr);
 
 	SECTION("Self") { REQUIRE_EQUALS(relation.getSelf(), p_1_ptr); }
 
@@ -68,7 +68,7 @@ TEST_CASE("PKB::CallRelation Tests") {
 TEST_CASE("PKB::TransitiveRelationStore<...,...,Call...>::optimize Test") {
 	PKB::Types::StatementStore statements;
 	PKB::Types::ProcedureStore procedures;
-	PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation> store;
+	PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation> store;
 
 	SECTION("Chain Test") {
 		StmtRef s_1 = 1, s_2 = 2, s_3 = 3;

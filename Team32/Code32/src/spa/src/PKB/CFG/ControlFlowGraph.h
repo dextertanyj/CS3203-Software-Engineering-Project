@@ -27,6 +27,7 @@ protected:
 	void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref);
 
 	friend class NextManager;
+	friend class AffectsManager;
 
 private:
 	void populateGraphIndex();

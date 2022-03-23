@@ -1,43 +1,43 @@
-#include "PKB/CallRelation.h"
+#include "PKB/CallsRelation.h"
 
 #include <stdexcept>
 
-void PKB::CallRelation::insertForward(const shared_ptr<ProcedureInfo>& caller) {
+void PKB::CallsRelation::insertForward(const shared_ptr<ProcedureInfo>& caller) {
 	if (getSelf() == caller) {
 		throw invalid_argument("Recursive call detected.");
 	}
 	this->callers.insert(caller);
 }
 
-void PKB::CallRelation::insertReverse(const shared_ptr<ProcedureInfo>& callee) {
+void PKB::CallsRelation::insertReverse(const shared_ptr<ProcedureInfo>& callee) {
 	if (getSelf() == callee) {
 		throw invalid_argument("Recursive call detected.");
 	}
 	this->callees.insert(callee);
 }
 
-void PKB::CallRelation::appendForwardTransitive(const unordered_set<shared_ptr<ProcedureInfo>>& new_callers) {
+void PKB::CallsRelation::appendForwardTransitive(const unordered_set<shared_ptr<ProcedureInfo>>& new_callers) {
 	if (new_callers.find(getSelf()) != new_callers.end()) {
 		throw invalid_argument("Recursive call detected.");
 	}
 	TransitiveRelation<ProcedureInfo>::appendForwardTransitive(new_callers);
 }
 
-void PKB::CallRelation::appendReverseTransitive(const unordered_set<shared_ptr<ProcedureInfo>>& new_callees) {
+void PKB::CallsRelation::appendReverseTransitive(const unordered_set<shared_ptr<ProcedureInfo>>& new_callees) {
 	if (new_callees.find(getSelf()) != new_callees.end()) {
 		throw invalid_argument("Recursive call detected.");
 	}
 	TransitiveRelation<ProcedureInfo>::appendReverseTransitive(new_callees);
 }
 
-unordered_set<shared_ptr<PKB::ProcedureInfo>> PKB::CallRelation::getForward() const { return callers; }
+unordered_set<shared_ptr<PKB::ProcedureInfo>> PKB::CallsRelation::getForward() const { return callers; }
 
-unordered_set<shared_ptr<PKB::ProcedureInfo>> PKB::CallRelation::getReverse() const { return callees; }
+unordered_set<shared_ptr<PKB::ProcedureInfo>> PKB::CallsRelation::getReverse() const { return callees; }
 
 // Template specializations for Call relationship.
 
 template <>
-void PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation>::optimize() {
+void PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>::optimize() {
 	for (auto& item : map) {
 		if (item.second.getForward().empty()) {
 			populateTransitive(item.second, {});
@@ -47,8 +47,8 @@ void PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation
 
 template <>
 unordered_set<shared_ptr<PKB::ProcedureInfo>>
-PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation>::populateTransitive(
-	CallRelation& current, unordered_set<shared_ptr<ProcedureInfo>> previous) {
+PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>::populateTransitive(
+	CallsRelation& current, unordered_set<shared_ptr<ProcedureInfo>> previous) {
 	current.appendForwardTransitive(previous);
 	previous.insert(current.getSelf());
 	unordered_set<shared_ptr<ProcedureInfo>> result = current.getReverseTransitive();
