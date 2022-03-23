@@ -6,6 +6,7 @@
 #include "PKB/CFG/NodeInterface.h"
 #include "PKB/CFG/NonConditionalNode.h"
 #include "PKB/CFG/WhileNode.h"
+#include "PKB/NextManager.h"
 #include "catch.hpp"
 
 TEST_CASE("PKB::ControlFlowGraph::createNode Test") {
@@ -23,6 +24,7 @@ TEST_CASE("PKB::ControlFlowGraph::createNode Test") {
 
 TEST_CASE("PKB::ControlFlowGraph::setNext Test") {
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
 	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
@@ -35,15 +37,16 @@ TEST_CASE("PKB::ControlFlowGraph::setNext Test") {
 	cfg.createNode(read_stmt);
 	cfg.createNode(assign_stmt);
 
-	CHECK_THROWS(cfg.setNext(if_stmt->getIdentifier(), if_stmt->getIdentifier()));
+	CHECK_THROWS(next_manager.setNext(if_stmt->getIdentifier(), if_stmt->getIdentifier()));
 
-	CHECK_NOTHROW(cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier()));
-	CHECK_NOTHROW(cfg.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier()));
-	CHECK_NOTHROW(cfg.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier()));
+	CHECK_NOTHROW(next_manager.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier()));
+	CHECK_NOTHROW(next_manager.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier()));
+	CHECK_NOTHROW(next_manager.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier()));
 }
 
 TEST_CASE("PKB::ControlFlowGraph::setIfNext Test") {
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	shared_ptr<StmtInfo> if_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(2, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(3, StmtType::Read);
@@ -53,14 +56,15 @@ TEST_CASE("PKB::ControlFlowGraph::setIfNext Test") {
 	cfg.createNode(print_stmt);
 	cfg.createNode(read_stmt);
 
-	CHECK_THROWS(cfg.setIfNext(if_stmt_2->getIdentifier(), print_stmt->getIdentifier(), read_stmt->getIdentifier()));
-	CHECK_THROWS(cfg.setIfNext(if_stmt_1->getIdentifier(), read_stmt->getIdentifier(), print_stmt->getIdentifier()));
+	CHECK_THROWS(next_manager.setIfNext(if_stmt_2->getIdentifier(), print_stmt->getIdentifier(), read_stmt->getIdentifier()));
+	CHECK_THROWS(next_manager.setIfNext(if_stmt_1->getIdentifier(), read_stmt->getIdentifier(), print_stmt->getIdentifier()));
 
-	CHECK_NOTHROW(cfg.setIfNext(if_stmt_1->getIdentifier(), print_stmt->getIdentifier(), read_stmt->getIdentifier()));
+	CHECK_NOTHROW(next_manager.setIfNext(if_stmt_1->getIdentifier(), print_stmt->getIdentifier(), read_stmt->getIdentifier()));
 }
 
 TEST_CASE("PKB::ControlFlowGraph::setIfExit Test") {
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	shared_ptr<StmtInfo> if_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(2, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(3, StmtType::Read);
@@ -70,10 +74,10 @@ TEST_CASE("PKB::ControlFlowGraph::setIfExit Test") {
 	cfg.createNode(print_stmt);
 	cfg.createNode(read_stmt);
 
-	CHECK_THROWS(cfg.setIfExit(print_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt_2->getIdentifier()));
-	CHECK_THROWS(cfg.setIfExit(read_stmt->getIdentifier(), print_stmt->getIdentifier(), if_stmt_1->getIdentifier()));
+	CHECK_THROWS(next_manager.setIfExit(print_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt_2->getIdentifier()));
+	CHECK_THROWS(next_manager.setIfExit(read_stmt->getIdentifier(), print_stmt->getIdentifier(), if_stmt_1->getIdentifier()));
 
-	CHECK_NOTHROW(cfg.setIfExit(print_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt_1->getIdentifier()));
+	CHECK_NOTHROW(next_manager.setIfExit(print_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt_1->getIdentifier()));
 }
 
 TEST_CASE("PKB::ControlFlowGraph::getNextNodes Test") {
@@ -88,6 +92,7 @@ TEST_CASE("PKB::ControlFlowGraph::getNextNodes Test") {
 	 * 5. z = 5;
 	 * */
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
 	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
@@ -100,17 +105,17 @@ TEST_CASE("PKB::ControlFlowGraph::getNextNodes Test") {
 	cfg.createNode(read_stmt);
 	cfg.createNode(assign_stmt);
 
-	cfg.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
-	cfg.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
-	cfg.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
-	cfg.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
-	cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
+	next_manager.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
+	next_manager.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
+	next_manager.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
+	next_manager.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
+	next_manager.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
 
-	CHECK(cfg.getNextNodes(if_stmt->getIdentifier()) == unordered_set{while_stmt, read_stmt});
-	CHECK(cfg.getNextNodes(while_stmt->getIdentifier()) == unordered_set{assign_stmt, print_stmt});
-	CHECK(cfg.getNextNodes(print_stmt->getIdentifier()) == unordered_set{while_stmt});
-	CHECK(cfg.getNextNodes(read_stmt->getIdentifier()) == unordered_set{assign_stmt});
-	CHECK(cfg.getNextNodes(assign_stmt->getIdentifier()).empty());
+	CHECK(next_manager.getNext(if_stmt->getIdentifier()) == unordered_set{while_stmt, read_stmt});
+	CHECK(next_manager.getNext(while_stmt->getIdentifier()) == unordered_set{assign_stmt, print_stmt});
+	CHECK(next_manager.getNext(print_stmt->getIdentifier()) == unordered_set{while_stmt});
+	CHECK(next_manager.getNext(read_stmt->getIdentifier()) == unordered_set{assign_stmt});
+	CHECK(next_manager.getNext(assign_stmt->getIdentifier()).empty());
 }
 
 TEST_CASE("PKB::ControlFlowGraph::getPreviousNodes Test") {
@@ -125,6 +130,7 @@ TEST_CASE("PKB::ControlFlowGraph::getPreviousNodes Test") {
 	 * 5. z = 5;
 	 * */
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
 	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
@@ -137,17 +143,17 @@ TEST_CASE("PKB::ControlFlowGraph::getPreviousNodes Test") {
 	cfg.createNode(read_stmt);
 	cfg.createNode(assign_stmt);
 
-	cfg.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
-	cfg.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
-	cfg.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
-	cfg.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
-	cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
+	next_manager.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
+	next_manager.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
+	next_manager.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
+	next_manager.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
+	next_manager.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
 
-	CHECK(cfg.getPreviousNodes(if_stmt->getIdentifier()).empty());
-	CHECK(cfg.getPreviousNodes(while_stmt->getIdentifier()) == unordered_set{if_stmt, print_stmt});
-	CHECK(cfg.getPreviousNodes(print_stmt->getIdentifier()) == unordered_set{while_stmt});
-	CHECK(cfg.getPreviousNodes(read_stmt->getIdentifier()) == unordered_set{if_stmt});
-	CHECK(cfg.getPreviousNodes(assign_stmt->getIdentifier()) == unordered_set{while_stmt, read_stmt});
+	CHECK(next_manager.getPrevious(if_stmt->getIdentifier()).empty());
+	CHECK(next_manager.getPrevious(while_stmt->getIdentifier()) == unordered_set{if_stmt, print_stmt});
+	CHECK(next_manager.getPrevious(print_stmt->getIdentifier()) == unordered_set{while_stmt});
+	CHECK(next_manager.getPrevious(read_stmt->getIdentifier()) == unordered_set{if_stmt});
+	CHECK(next_manager.getPrevious(assign_stmt->getIdentifier()) == unordered_set{while_stmt, read_stmt});
 }
 
 TEST_CASE("PKB::ControlFlowGraph::checkNext Test") {
@@ -162,6 +168,7 @@ TEST_CASE("PKB::ControlFlowGraph::checkNext Test") {
 	 * 5. z = 5;
 	 * */
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
 	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
@@ -174,21 +181,21 @@ TEST_CASE("PKB::ControlFlowGraph::checkNext Test") {
 	cfg.createNode(read_stmt);
 	cfg.createNode(assign_stmt);
 
-	cfg.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
-	cfg.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
-	cfg.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
-	cfg.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
-	cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
+	next_manager.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
+	next_manager.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
+	next_manager.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
+	next_manager.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
+	next_manager.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
 
-	CHECK(cfg.checkNext(1, 2));
-	CHECK(cfg.checkNext(1, 4));
-	CHECK(cfg.checkNext(2, 3));
-	CHECK(cfg.checkNext(3, 2));
-	CHECK(cfg.checkNext(2, 5));
-	CHECK(cfg.checkNext(4, 5));
+	CHECK(next_manager.checkNext(1, 2));
+	CHECK(next_manager.checkNext(1, 4));
+	CHECK(next_manager.checkNext(2, 3));
+	CHECK(next_manager.checkNext(3, 2));
+	CHECK(next_manager.checkNext(2, 5));
+	CHECK(next_manager.checkNext(4, 5));
 }
 //
-//TEST_CASE("PKB::ControlFlowGraph Overall Complicated CFG Stress Test") {
+// TEST_CASE("PKB::ControlFlowGraph Overall Complicated CFG Stress Test") {
 //	/* SIMPLE Code 1: Many Nested Ifs.
 //	 * 1. if (x==0) then {
 //	 * 2.   if (y>0) then {
@@ -279,6 +286,7 @@ TEST_CASE("PKB::ControlFlowGraph::checkNextStar Test") {
 	 * 6. call Monk;
 	 * */
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
 	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
@@ -293,19 +301,19 @@ TEST_CASE("PKB::ControlFlowGraph::checkNextStar Test") {
 	cfg.createNode(assign_stmt);
 	cfg.createNode(call_stmt);
 
-	cfg.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
-	cfg.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
-	cfg.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
-	cfg.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
-	cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
-	cfg.setNext(assign_stmt->getIdentifier(), call_stmt->getIdentifier());
+	next_manager.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
+	next_manager.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
+	next_manager.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
+	next_manager.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
+	next_manager.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
+	next_manager.setNext(assign_stmt->getIdentifier(), call_stmt->getIdentifier());
 
-	CHECK(cfg.getNextStarNodes(1) == unordered_set{print_stmt, while_stmt, read_stmt, assign_stmt, call_stmt});
-	CHECK(cfg.getNextStarNodes(2) == unordered_set{while_stmt, print_stmt, assign_stmt, call_stmt});
-	CHECK(cfg.getNextStarNodes(3) == unordered_set{while_stmt, assign_stmt, call_stmt, print_stmt});
-	CHECK(cfg.getNextStarNodes(4) == unordered_set{assign_stmt, call_stmt});
-	CHECK(cfg.getNextStarNodes(5) == unordered_set{call_stmt});
-	CHECK(cfg.getNextStarNodes(6) == StmtInfoPtrSet{});
+	CHECK(next_manager.getNextStar(1) == unordered_set{print_stmt, while_stmt, read_stmt, assign_stmt, call_stmt});
+	CHECK(next_manager.getNextStar(2) == unordered_set{while_stmt, print_stmt, assign_stmt, call_stmt});
+	CHECK(next_manager.getNextStar(3) == unordered_set{while_stmt, assign_stmt, call_stmt, print_stmt});
+	CHECK(next_manager.getNextStar(4) == unordered_set{assign_stmt, call_stmt});
+	CHECK(next_manager.getNextStar(5) == unordered_set{call_stmt});
+	CHECK(next_manager.getNextStar(6) == StmtInfoPtrSet{});
 }
 
 TEST_CASE("PKB::ControlFlowGraph::getPreviousStar Test") {
@@ -321,6 +329,7 @@ TEST_CASE("PKB::ControlFlowGraph::getPreviousStar Test") {
 	 * 6. call Monk;
 	 * */
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
 	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
@@ -335,19 +344,19 @@ TEST_CASE("PKB::ControlFlowGraph::getPreviousStar Test") {
 	cfg.createNode(assign_stmt);
 	cfg.createNode(call_stmt);
 
-	cfg.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
-	cfg.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
-	cfg.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
-	cfg.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
-	cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
-	cfg.setNext(assign_stmt->getIdentifier(), call_stmt->getIdentifier());
+	next_manager.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
+	next_manager.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
+	next_manager.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
+	next_manager.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
+	next_manager.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
+	next_manager.setNext(assign_stmt->getIdentifier(), call_stmt->getIdentifier());
 
-	CHECK(cfg.getPreviousStarNodes(1) == StmtInfoPtrSet{});
-	CHECK(cfg.getPreviousStarNodes(2) == unordered_set{while_stmt, if_stmt, print_stmt});
-	CHECK(cfg.getPreviousStarNodes(3) == unordered_set{if_stmt, while_stmt, print_stmt});
-	CHECK(cfg.getPreviousStarNodes(4) == unordered_set{if_stmt});
-	CHECK(cfg.getPreviousStarNodes(5) == unordered_set{if_stmt, while_stmt, read_stmt, print_stmt});
-	CHECK(cfg.getPreviousStarNodes(6) == unordered_set{if_stmt, while_stmt, read_stmt, print_stmt, assign_stmt});
+	CHECK(next_manager.getPreviousStar(1) == StmtInfoPtrSet{});
+	CHECK(next_manager.getPreviousStar(2) == unordered_set{while_stmt, if_stmt, print_stmt});
+	CHECK(next_manager.getPreviousStar(3) == unordered_set{if_stmt, while_stmt, print_stmt});
+	CHECK(next_manager.getPreviousStar(4) == unordered_set{if_stmt});
+	CHECK(next_manager.getPreviousStar(5) == unordered_set{if_stmt, while_stmt, read_stmt, print_stmt});
+	CHECK(next_manager.getPreviousStar(6) == unordered_set{if_stmt, while_stmt, read_stmt, print_stmt, assign_stmt});
 }
 
 // TODO

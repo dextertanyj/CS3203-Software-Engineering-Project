@@ -115,14 +115,14 @@ void PKB::Storage::setWhileControl(StmtRef index, VarRef name) {
 
 void PKB::Storage::setNode(shared_ptr<StmtInfo> info) { this->control_flow_graph.createNode(move(info)); }
 
-void PKB::Storage::setNext(StmtRef previous, StmtRef next) { this->control_flow_graph.setNext(previous, next); }
+void PKB::Storage::setNext(StmtRef previous, StmtRef next) { next_manager.setNext(previous, next); }
 
 void PKB::Storage::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) {
-	this->control_flow_graph.setIfNext(prev, then_next, else_next);
+	next_manager.setIfNext(prev, then_next, else_next);
 }
 
 void PKB::Storage::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) {
-	this->control_flow_graph.setIfExit(then_prev, else_prev, if_stmt_ref);
+	next_manager.setIfExit(then_prev, else_prev, if_stmt_ref);
 }
 
 StmtInfoPtrSet PKB::Storage::getStatements() {
@@ -244,17 +244,17 @@ StmtInfoPtrVarRefSet PKB::Storage::getStmtsWithPatternRHS(const Common::Expressi
 	return assign_store.getStmtsWithPatternRHS(expression, is_exact_match);
 }
 
-bool PKB::Storage::checkNext(StmtRef first, StmtRef second) { return control_flow_graph.checkNext(first, second); }
+bool PKB::Storage::checkNext(StmtRef first, StmtRef second) { return next_manager.checkNext(first, second); }
 
-bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return control_flow_graph.checkNextStar(first, second); }
+bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return next_manager.checkNextStar(first, second); }
 
-StmtInfoPtrSet PKB::Storage::getNext(StmtRef first) { return control_flow_graph.getNextNodes(first); }
+StmtInfoPtrSet PKB::Storage::getNext(StmtRef first) { return next_manager.getNext(first); }
 
-StmtInfoPtrSet PKB::Storage::getNextStar(StmtRef node_ref) { return control_flow_graph.getNextStarNodes(node_ref); }
+StmtInfoPtrSet PKB::Storage::getNextStar(StmtRef node_ref) { return next_manager.getNextStar(node_ref); }
 
-StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) { return control_flow_graph.getPreviousNodes(second); }
+StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) { return next_manager.getPrevious(second); }
 
-StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef node_ref) { return control_flow_graph.getPreviousStarNodes(node_ref); }
+StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef node_ref) { return next_manager.getPreviousStar(node_ref); }
 
 bool PKB::Storage::checkWhileControl(StmtRef index, VarRef name) { return while_control_store.check(index, name); }
 

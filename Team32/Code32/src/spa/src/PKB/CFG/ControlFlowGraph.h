@@ -12,6 +12,10 @@
 class PKB::ControlFlowGraph {
 public:
 	void createNode(shared_ptr<StmtInfo> stmt_info);
+	void clear();
+	void optimize();
+
+protected:
 	bool checkNext(StmtRef prev, StmtRef next);
 	bool checkNextStar(StmtRef i, StmtRef i1);
 	StmtInfoPtrSet getNextNodes(StmtRef ref);
@@ -21,8 +25,8 @@ public:
 	void setNext(StmtRef prev, StmtRef next);
 	void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next);
 	void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref);
-	void clear();
-	void optimize();
+
+	friend class NextManager;
 
 private:
 	void populateGraphIndex();

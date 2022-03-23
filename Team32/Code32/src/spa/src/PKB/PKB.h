@@ -48,6 +48,7 @@ class DummyNode;
 class NonConditionalNode;
 class StatementNode;
 class ControlFlowGraph;
+class NextManager;
 
 typedef struct IfControlRelation {
 	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const shared_ptr<StmtInfo>& statement, const VarRef& /*var*/) {
