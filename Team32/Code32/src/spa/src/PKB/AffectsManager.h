@@ -6,7 +6,7 @@
 #include "PKB/ModifiesSRelation.h"
 #include "PKB/NextManager.h"
 #include "PKB/PKB.h"
-#include "PKB/SVRelationStore.h"
+#include "PKB/SVRelationStore.tpp"
 #include "PKB/Types.h"
 #include "PKB/UsesSRelation.h"
 
