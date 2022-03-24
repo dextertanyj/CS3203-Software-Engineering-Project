@@ -4,7 +4,7 @@
 #include <cassert>
 #include <unordered_set>
 
-QP::Types::ResultTable::ResultTable() {}
+QP::Types::ResultTable::ResultTable() = default;
 
 QP::Types::ResultTable::ResultTable(vector<string> synonyms_stored) : synonyms_stored(synonyms_stored) {
 	for (size_t i = 0; i < synonyms_stored.size(); i++) {
@@ -100,7 +100,7 @@ QP::Types::ResultTable QP::Types::ResultTable::joinTables(ResultTable table_one,
 	return intersectTables(larger_table, smaller_table);
 }
 
-unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> QP::Types::ResultTable::buildHashTable(vector<string> synonyms) {
+unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> QP::Types::ResultTable::buildHashTable(const vector<string>& synonyms) {
 	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> map;
 	size_t row_number = 0;
 	for (ResultRow const& row : table) {

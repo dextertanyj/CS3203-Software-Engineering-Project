@@ -35,7 +35,7 @@ private:
 	vector<string> synonyms_stored;
 	vector<ResultRow> table;
 
-	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> buildHashTable(vector<string> synonyms);
+	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> buildHashTable(const vector<string>& synonyms);
 	void removeRow(size_t row_number);
 	static ResultTable intersectTables(ResultTable larger_table, ResultTable smaller_table);
 	static ResultTable crossJoinTables(ResultTable table_one, ResultTable table_two);
