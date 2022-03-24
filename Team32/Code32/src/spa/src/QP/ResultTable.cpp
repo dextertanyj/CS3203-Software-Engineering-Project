@@ -67,13 +67,7 @@ QP::Types::ResultTable QP::Types::ResultTable::filterBySelect(const QP::Types::D
 }
 
 bool QP::Types::ResultTable::containsRow(const ResultRow& row) {
-	for (auto const& row_stored : table) {
-		if (row_stored == row) {
-			return true;
-		}
-	}
-
-	return false;
+	return any_of(table.begin(), table.end(), [row](auto const& row_stored) { return row_stored == row; });
 }
 
 void QP::Types::ResultTable::removeRow(size_t row_number) {
