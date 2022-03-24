@@ -1,6 +1,8 @@
 #include "NextManager.h"
 
-PKB::NextManager::NextManager(ControlFlowGraph& control_flow_graph) { this->control_flow_graph = &control_flow_graph; }
+PKB::NextManager::NextManager(ControlFlowGraph& control_flow_graph) {
+	this->control_flow_graph = make_shared<ControlFlowGraph>(control_flow_graph);
+}
 
 void PKB::NextManager::setNext(StmtRef previous, StmtRef next) {
 	auto prev_node_iter = control_flow_graph->stmt_to_normal_node_store.find(previous);
@@ -80,8 +82,8 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 	return info.nodes;
 }
 
-StmtInfoPtrSet PKB::NextManager::getNext(StmtRef first) {
-	shared_ptr<PKB::StatementNode> curr_node = control_flow_graph->getNode(first);
+StmtInfoPtrSet PKB::NextManager::getNext(StmtRef node_ref) {
+	shared_ptr<PKB::StatementNode> curr_node = control_flow_graph->getNode(node_ref);
 	StmtInfoPtrSet next_nodes;
 	for (const auto& node : curr_node->getNextNodes()) {
 		if (node->getNodeType() == NodeType::Dummy) {
@@ -100,8 +102,8 @@ bool PKB::NextManager::checkNextStar(StmtRef first, StmtRef second) {
 	return any_of(nexts.begin(), nexts.end(), [&second](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == second; });
 }
 
-StmtInfoPtrSet PKB::NextManager::getPrevious(StmtRef second) {
-	shared_ptr<PKB::StatementNode> curr_node = this->control_flow_graph->getNode(second);
+StmtInfoPtrSet PKB::NextManager::getPrevious(StmtRef node_ref) {
+	shared_ptr<PKB::StatementNode> curr_node = this->control_flow_graph->getNode(node_ref);
 	StmtInfoPtrSet prev_nodes;
 	for (const auto& node : curr_node->getPreviousNodes()) {
 		// If previous node is a dummy node, need to get the previous nodes of the dummy node.
@@ -141,7 +143,7 @@ void PKB::NextManager::processBFSVisit(Types::BFSInfo& info, const shared_ptr<PK
 		return;
 	}
 	if (node->getNodeType() == NodeType::Dummy) {
-		StmtInfoPtrSet real_nodes = (control_flow_graph->*collector)(node);
+		StmtInfoPtrSet real_nodes = (control_flow_graph.get()->*collector)(node);
 		info.nodes.insert(real_nodes.begin(), real_nodes.end());
 		for (auto real_node : real_nodes) {
 			info.node_queue.push(control_flow_graph->stmt_to_normal_node_store.at(real_node->getIdentifier()));

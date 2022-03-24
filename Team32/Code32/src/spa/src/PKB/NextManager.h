@@ -20,13 +20,13 @@ public:
 
 	bool checkNext(StmtRef first, StmtRef second);
 	bool checkNextStar(StmtRef first, StmtRef second);
-	StmtInfoPtrSet getNext(StmtRef first);
+	StmtInfoPtrSet getNext(StmtRef node_ref);
 	StmtInfoPtrSet getNextStar(StmtRef node_ref);
-	StmtInfoPtrSet getPrevious(StmtRef second);
+	StmtInfoPtrSet getPrevious(StmtRef node_ref);
 	StmtInfoPtrSet getPreviousStar(StmtRef node_ref);
 
 private:
-	ControlFlowGraph* control_flow_graph;
+	shared_ptr<ControlFlowGraph> control_flow_graph;
 	void processBFSVisit(Types::BFSInfo& info, const shared_ptr<NodeInterface>& node,
 	                     StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
 };
