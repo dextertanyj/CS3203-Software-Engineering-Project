@@ -30,7 +30,6 @@ typedef struct BFSInfo {
 } BFSInfo;
 
 typedef struct DFSInfo {
-	const shared_ptr<PKB::NodeInterface>& start_node;
 	VarRef variable;
 	stack<shared_ptr<PKB::NodeInterface>> node_stack;
 	unordered_set<shared_ptr<PKB::NodeInterface>> visited_set;
