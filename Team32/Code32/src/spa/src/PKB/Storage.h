@@ -151,9 +151,9 @@ private:
 	SetStore<VarRef> variable_store;
 	Types::StatementStore statement_store;
 	Types::ProcedureStore procedure_store;
-	CallsStatementStore call_statement_store;
-	TopologicalSort<ProcedureInfo> call_graph;
-	Types::CallStore call_store;
+	CallsStatementStore calls_statement_store;
+	TopologicalSort<ProcedureInfo> calls_graph;
+	Types::CallStore calls_store;
 	Types::ParentStore parent_store;
 	Types::FollowsStore follows_store;
 	SVRelationStore<UsesSRelation> uses_s_store;

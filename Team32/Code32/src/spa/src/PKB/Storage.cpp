@@ -31,7 +31,7 @@ void PKB::Storage::setProc(ProcRef procedure, StmtRef start, StmtRef end) {
 
 void PKB::Storage::setCall(StmtRef index, ProcRef name) {
 	shared_ptr<StmtInfo> info = statement_store.get(index);
-	call_statement_store.set(info, name);
+	calls_statement_store.set(info, name);
 }
 
 void PKB::Storage::setParent(StmtRef parent, StmtRef child) {
@@ -179,27 +179,27 @@ StmtInfoPtrSet PKB::Storage::getPrecedingStar(StmtRef index) { return follows_st
 
 StmtInfoPtrSet PKB::Storage::getFollowerStar(StmtRef index) { return follows_store.getReverseTransitive(index); }
 
-bool PKB::Storage::checkCalls(const ProcRef &caller, const ProcRef &callee) { return call_store.isRelated(caller, callee); }
+bool PKB::Storage::checkCalls(const ProcRef &caller, const ProcRef &callee) { return calls_store.isRelated(caller, callee); }
 
-bool PKB::Storage::checkCallsStar(const ProcRef &caller, const ProcRef &callee) { return call_store.isTransitivelyRelated(caller, callee); }
+bool PKB::Storage::checkCallsStar(const ProcRef &caller, const ProcRef &callee) { return calls_store.isTransitivelyRelated(caller, callee); }
 
 ProcRefSet PKB::Storage::getCallee(const ProcRef &caller) {
-	unordered_set<shared_ptr<ProcedureInfo>> callees = call_store.getReverse(caller);
+	unordered_set<shared_ptr<ProcedureInfo>> callees = calls_store.getReverse(caller);
 	return procedureInfoToProcRef(callees);
 }
 
 ProcRefSet PKB::Storage::getCaller(const ProcRef &callee) {
-	unordered_set<shared_ptr<ProcedureInfo>> callers = call_store.getForward(callee);
+	unordered_set<shared_ptr<ProcedureInfo>> callers = calls_store.getForward(callee);
 	return procedureInfoToProcRef(callers);
 }
 
 ProcRefSet PKB::Storage::getCalleeStar(const ProcRef &caller) {
-	unordered_set<shared_ptr<ProcedureInfo>> callees = call_store.getReverseTransitive(caller);
+	unordered_set<shared_ptr<ProcedureInfo>> callees = calls_store.getReverseTransitive(caller);
 	return procedureInfoToProcRef(callees);
 }
 
 ProcRefSet PKB::Storage::getCallerStar(const ProcRef &callee) {
-	unordered_set<shared_ptr<ProcedureInfo>> callers = call_store.getForwardTransitive(callee);
+	unordered_set<shared_ptr<ProcedureInfo>> callers = calls_store.getForwardTransitive(callee);
 	return procedureInfoToProcRef(callers);
 }
 
@@ -278,16 +278,16 @@ VarRefSet PKB::Storage::getIfControlVar(StmtRef index) { return if_control_store
 
 VarRefSet PKB::Storage::getWhileControlVar(StmtRef index) { return while_control_store.getByStmt(index); }
 
-ProcRef PKB::Storage::getCalledProcedure(StmtRef index) { return call_statement_store.getProcedure(index); };
+ProcRef PKB::Storage::getCalledProcedure(StmtRef index) { return calls_statement_store.getProcedure(index); };
 
 void PKB::Storage::populateComplexRelations() {
-	call_statement_store.populate(procedure_store, call_store);
-	call_store.optimize();
-	call_graph.sort(procedure_store, call_store);
+	calls_statement_store.populate(procedure_store, calls_store);
+	calls_store.optimize();
+	calls_graph.sort(procedure_store, calls_store);
 	parent_store.optimize();
 	follows_store.optimize();
-	ModifiesSRelation::optimize(parent_store, call_statement_store, procedure_store, call_graph, modifies_s_store);
-	UsesSRelation::optimize(parent_store, call_statement_store, procedure_store, call_graph, uses_s_store);
+	ModifiesSRelation::optimize(parent_store, calls_statement_store, procedure_store, calls_graph, modifies_s_store);
+	UsesSRelation::optimize(parent_store, calls_statement_store, procedure_store, calls_graph, uses_s_store);
 	ModifiesPRelation::optimize(procedure_store, modifies_p_store, modifies_s_store);
 	UsesPRelation::optimize(procedure_store, uses_p_store, uses_s_store);
 }
