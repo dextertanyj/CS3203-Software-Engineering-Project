@@ -39,7 +39,7 @@ QP::Types::Declaration QP::Types::ReferenceArgument::getSynonym() const {
 
 QP::Types::Attribute QP::Types::ReferenceArgument::getAttribute() const {
 	Attribute attribute;
-	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Synonym not stored."); },
+	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Attribute not stored."); },
 	              [&attribute](Attribute arg) { attribute = move(arg); }},
 	      value);
 	return attribute;
