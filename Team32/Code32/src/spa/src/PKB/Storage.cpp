@@ -254,17 +254,17 @@ StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) { return next_manager.g
 
 StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef node_ref) { return next_manager.getPreviousStar(node_ref); }
 
-bool PKB::Storage::checkAffects(StmtRef first, StmtRef second) { return false; }
+bool PKB::Storage::checkAffects(StmtRef first, StmtRef second) { return affects_manager.checkAffects(first, second); }
 
 bool PKB::Storage::checkAffectsStar(StmtRef first, StmtRef second) { return false; }
 
-StmtInfoPtrSet PKB::Storage::getAffected(StmtRef second) { return {}; }
+StmtInfoPtrSet PKB::Storage::getAffected(StmtRef node_ref) { return affects_manager.getAffected(node_ref); }
 
-StmtInfoPtrSet PKB::Storage::getAffects(StmtRef second) { return {}; }
+StmtInfoPtrSet PKB::Storage::getAffects(StmtRef node_ref) { return affects_manager.getAffects(node_ref); }
 
-StmtInfoPtrSet PKB::Storage::getAffectedStar(StmtRef second) { return {}; }
+StmtInfoPtrSet PKB::Storage::getAffectedStar(StmtRef node_ref) { return {}; }
 
-StmtInfoPtrSet PKB::Storage::getAffectsStar(StmtRef second) { return {}; }
+StmtInfoPtrSet PKB::Storage::getAffectsStar(StmtRef node_ref) { return {}; }
 
 bool PKB::Storage::checkWhileControl(StmtRef index, VarRef name) { return while_control_store.check(index, name); }
 

@@ -1,8 +1,6 @@
 #ifndef SPA_AFFECTSMANAGER_H
 #define SPA_AFFECTSMANAGER_H
 
-#include <stack>
-
 #include "PKB/CFG/ControlFlowGraph.h"
 #include "PKB/CFG/StatementNode.h"
 #include "PKB/ModifiesSRelation.h"
@@ -14,8 +12,8 @@
 
 class PKB::AffectsManager {
 public:
-	explicit AffectsManager(ControlFlowGraph& control_flow_graph, const SVRelationStore<PKB::ModifiesSRelation>& uses_store,
-	                        const SVRelationStore<PKB::UsesSRelation>& modifies_store);
+	explicit AffectsManager(ControlFlowGraph& control_flow_graph, const SVRelationStore<PKB::ModifiesSRelation>& modifies_store,
+	                        const SVRelationStore<PKB::UsesSRelation>& uses_store);
 	bool checkAffects(StmtRef first, StmtRef second);
 	StmtInfoPtrSet getAffects(StmtRef first);
 	StmtInfoPtrSet getAffected(StmtRef second);

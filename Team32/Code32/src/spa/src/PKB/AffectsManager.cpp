@@ -103,3 +103,5 @@ StmtInfoPtrSet PKB::AffectsManager::processAffected(shared_ptr<PKB::StatementNod
 	}
 	return info.nodes;
 }
+void PKB::AffectsManager::processDFS(Types::DFSInfo& info, const shared_ptr<NodeInterface>& node,
+                                     StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&)) {}
