@@ -54,7 +54,6 @@ TEST_CASE("PKB::AffectsManager::getAffects Test") {
 		REQUIRE(affects_manager.getAffects(2) == StmtInfoPtrSet{assign_stmt_4});
 		REQUIRE(affects_manager.getAffects(3) == StmtInfoPtrSet{assign_stmt_4});
 		REQUIRE(affects_manager.getAffects(4) == StmtInfoPtrSet{assign_stmt_5});
-		REQUIRE(affects_manager.getAffects(4).empty());
 	}
 
     SECTION("PKB::AffectsManager::getAffects If Branching Test") {
