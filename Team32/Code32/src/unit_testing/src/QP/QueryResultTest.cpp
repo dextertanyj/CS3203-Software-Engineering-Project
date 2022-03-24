@@ -20,9 +20,9 @@ TEST_CASE("QP::QueryResult::joinResult should set result to false") {
 	result_two.addRow({"2", "6"});
 	result_two.addRow({"3", "7"});
 
-	result_one.joinResult(result_two);
+	QP::QueryResult final_result = QP::QueryResult::joinResult(result_one, result_two);
 
-	REQUIRE(!result_one.getResult());
+	REQUIRE(!final_result.getResult());
 }
 
 TEST_CASE("QP::QueryResult::joinResult should set result to true") {
@@ -35,8 +35,19 @@ TEST_CASE("QP::QueryResult::joinResult should set result to true") {
 	result_two.addRow({"2", "6"});
 	result_two.addRow({"3", "7"});
 
-	result_one.joinResult(result_two);
+	QP::QueryResult final_result = QP::QueryResult::joinResult(result_one, result_two);
 
-	REQUIRE(result_one.getResult());
-	REQUIRE(result_one.getNumberOfRows() == 3);
+	REQUIRE(final_result.getResult());
+	REQUIRE(final_result.getNumberOfRows() == 3);
+}
+
+TEST_CASE("QP::QueryResult::joinResult one result is false") {
+	QP::QueryResult result_one = QP::QueryResult(vector<string>({"a"}));
+	QP::QueryResult result_two = QP::QueryResult();
+	result_one.addRow({"1"});
+	result_one.addRow({"2"});
+
+	QP::QueryResult final_result = QP::QueryResult::joinResult(result_one, result_two);
+
+	REQUIRE(!final_result.getResult());
 }

@@ -39,7 +39,7 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 			}
 
 			if (result.getResult()) {
-				result.joinResult(group_result);
+				result = QueryResult::joinResult(result, group_result);
 			} else {
 				result = group_result;
 			}
@@ -95,15 +95,17 @@ QP::QueryResult QP::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, 
 		result_list.push_back(result);
 	}
 
+	QueryResult final_result = result_list[0];
+
 	for (size_t i = 1; i < result_list.size(); i++) {
-		result_list[0].joinResult(result_list[i]);
+		final_result = QueryResult::joinResult(final_result, result_list[i]);
 	}
 
 	if (!select_list.empty()) {
-		result_list[0].filterBySelect(select_list);
+		final_result.filterBySelect(select_list);
 	}
 
-	return result_list[0];
+	return final_result;
 }
 
 QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) {

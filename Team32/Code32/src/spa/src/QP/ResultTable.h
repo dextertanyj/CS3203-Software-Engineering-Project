@@ -24,8 +24,9 @@ public:
 	unordered_map<string, size_t> getSynonymsStoredMap();
 	ResultColumn getColumn(const string& synonym);
 	ResultRow getRow(size_t row_number);
-	ResultRow getSubRow(const vector<string>& synonyms, size_t row_number);
+	ResultRow getRowWithOrder(const vector<string>& synonyms, size_t row_number);
 	void insertRow(const ResultRow& row);
+	void removeRow(size_t row_number);
 	ResultTable filterBySelect(const QP::Types::DeclarationList& select_list);
 	bool containsRow(const ResultRow& row);
 	static ResultTable joinTables(ResultTable table_one, ResultTable table_two);
@@ -34,11 +35,6 @@ private:
 	unordered_map<string, size_t> synonyms_to_index_map;
 	vector<string> synonyms_stored;
 	vector<ResultRow> table;
-
-	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> buildHashTable(const vector<string>& synonyms);
-	void removeRow(size_t row_number);
-	static ResultTable intersectTables(ResultTable larger_table, ResultTable smaller_table);
-	static ResultTable crossJoinTables(ResultTable table_one, ResultTable table_two);
 };
 
 #endif  // SPA_SRC_QP_RESULTTABLE_H

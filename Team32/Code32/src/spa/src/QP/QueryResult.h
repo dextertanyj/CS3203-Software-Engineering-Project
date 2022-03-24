@@ -18,14 +18,15 @@ public:
 	QueryResult();
 	explicit QueryResult(bool result);
 	explicit QueryResult(vector<string> synonyms);
+	explicit QueryResult(ResultTable table);
 	[[nodiscard]] bool getResult() const;
 	ResultTable getTable();
 	ResultColumn getSynonymResult(const string& synonym);
 	ResultRow getRowWithOrder(const vector<string>& synonyms, size_t row_number);
 	size_t getNumberOfRows();
 	void addRow(const ResultRow& row);
-	void joinResult(QueryResult& query_result);
 	void filterBySelect(const QP::Types::DeclarationList& select_list);
+	static QueryResult joinResult(QueryResult result_one, QueryResult result_two);
 
 private:
 	bool result;
