@@ -22,6 +22,7 @@ public:
 	[[nodiscard]] bool getResult() const;
 	ResultTable getTable();
 	ResultColumn getSynonymResult(const string& synonym);
+	ResultRow getRowWithOrder(const vector<string>& synonyms, size_t row_number);
 	size_t getNumberOfRows();
 	void addRow(const ResultRow& row);
 	void joinResult(QueryResult& query_result);

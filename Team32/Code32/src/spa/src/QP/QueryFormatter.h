@@ -2,6 +2,7 @@
 #define SPA_SRC_QP_QUERYFORMATTER_H
 
 #include <string>
+#include <vector>
 
 #include "QP/QP.h"
 #include "QP/QueryProperties.h"

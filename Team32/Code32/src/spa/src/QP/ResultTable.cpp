@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <unordered_set>
 
 QP::Types::ResultTable::ResultTable() {}
 
@@ -49,7 +50,7 @@ QP::Types::ResultTable QP::Types::ResultTable::filterBySelect(const QP::Types::D
 	for (auto const& declaration : select_list) {
 		synonyms.push_back(declaration.symbol);
 	}
-	
+
 	ResultTable filtered_table = ResultTable(synonyms);
 
 	unordered_set<ResultRow, Common::Hash::VectorHash> rows;
@@ -116,7 +117,7 @@ unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> QP::Types::Resul
 
 void QP::Types::ResultTable::removeRow(size_t row_number) { table.erase(table.begin() + row_number); }
 
-ResultRow QP::Types::ResultTable::getSubRow(vector<string> synonyms, size_t row_number) {
+ResultRow QP::Types::ResultTable::getSubRow(const vector<string>& synonyms, size_t row_number) {
 	ResultRow sub_row;
 	ResultRow row = table.at(row_number);
 	for (string const& synonym : synonyms) {

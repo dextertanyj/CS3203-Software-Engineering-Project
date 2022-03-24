@@ -1,6 +1,8 @@
 #include "QP/QueryFormatter.h"
 
+#include <algorithm>
 #include <string>
+#include <vector>
 
 #include "QP/Types.h"
 
@@ -34,15 +36,19 @@ vector<string> QP::QueryFormatter::formatNonBooleanResult(QueryProperties& query
 	size_t table_size = query_result.getNumberOfRows();
 	vector<string> result(table_size);
 	DeclarationList select_list = query_properties.getSelectList();
+	vector<string> synonyms(select_list.size());
+	transform(select_list.begin(), select_list.end(), synonyms.begin(), [](Declaration& declaration) { return declaration.symbol; });
 
 	for (size_t i = 0; i < table_size; i++) {
-		string row;
-		for (Declaration const& declaration : select_list) {
-			row.append(query_result.getSynonymResult(declaration.symbol)[i]);
-			row.append(TUPLE_SEPERATOR);
+		ResultRow row = query_result.getRowWithOrder(synonyms, i);
+		string row_string;
+
+		for (string const& value : row) {
+			row_string.append(value);
+			row_string.append(TUPLE_SEPERATOR);
 		}
-		row.pop_back();
-		result[i] = row;
+		row_string.pop_back();
+		result[i] = row_string;
 	}
 
 	return result;
