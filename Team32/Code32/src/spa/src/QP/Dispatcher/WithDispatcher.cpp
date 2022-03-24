@@ -72,7 +72,7 @@ const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Number,
 const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Number>> name_attribute_number_map = {
 	{DispatchAttributeKey{DesignEntity::Read, AttributeType::Variable},
      {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<QP::Types::ClauseType::ModifiesS>}},
-	{DispatchAttributeKey{DesignEntity::Call, AttributeType::Name},
+	{DispatchAttributeKey{DesignEntity::Call, AttributeType::Variable},
      {AttributeExecutor::selectStatements, AttributeExecutor::callToProcedure}},
 	{DispatchAttributeKey{DesignEntity::Print, AttributeType::Variable},
      {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<QP::Types::ClauseType::UsesS>}}};
