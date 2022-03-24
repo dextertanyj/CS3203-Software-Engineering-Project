@@ -1,8 +1,6 @@
 #include "NextManager.h"
 
-PKB::NextManager::NextManager(ControlFlowGraph& control_flow_graph) {
-	this->control_flow_graph = make_shared<ControlFlowGraph>(control_flow_graph);
-}
+PKB::NextManager::NextManager(ControlFlowGraph& control_flow_graph) { this->control_flow_graph = &control_flow_graph; }
 
 void PKB::NextManager::setNext(StmtRef previous, StmtRef next) {
 	auto prev_node_iter = control_flow_graph->stmt_to_normal_node_store.find(previous);
@@ -143,7 +141,7 @@ void PKB::NextManager::processBFSVisit(Types::BFSInfo& info, const shared_ptr<PK
 		return;
 	}
 	if (node->getNodeType() == NodeType::Dummy) {
-		StmtInfoPtrSet real_nodes = (control_flow_graph.get()->*collector)(node);
+		StmtInfoPtrSet real_nodes = (control_flow_graph->*collector)(node);
 		info.nodes.insert(real_nodes.begin(), real_nodes.end());
 		for (auto real_node : real_nodes) {
 			info.node_queue.push(control_flow_graph->stmt_to_normal_node_store.at(real_node->getIdentifier()));

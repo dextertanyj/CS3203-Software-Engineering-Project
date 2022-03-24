@@ -2,7 +2,7 @@
 
 PKB::AffectsManager::AffectsManager(ControlFlowGraph& control_flow_graph, const SVRelationStore<PKB::ModifiesSRelation>& modifies_store,
                                     const SVRelationStore<PKB::UsesSRelation>& uses_store) {
-	this->control_flow_graph = make_shared<ControlFlowGraph>(control_flow_graph);
+	this->control_flow_graph = &control_flow_graph;
 	this->uses_store = uses_store;
 	this->modifies_store = modifies_store;
 }
