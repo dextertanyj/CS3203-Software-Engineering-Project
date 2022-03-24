@@ -18,6 +18,10 @@ if (CMAKE_BUILD_TYPE MATCHES Coverage)
     set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
 endif()
 
+if (CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES Coverage)
+    add_compile_definitions(DEBUG)
+endif()
+
 if(NOT MSVC)
   set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Werror")
   set(CMAKE_CXX_FLAGS_COVERAGE "-g -Wall -Werror -fprofile-instr-generate -fcoverage-mapping")

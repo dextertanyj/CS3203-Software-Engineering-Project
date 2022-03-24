@@ -1,7 +1,5 @@
 #include "SP/Node/StatementListNode.h"
 
-#include <stdexcept>
-
 using namespace std;
 
 SP::Node::StatementListNode::StatementListNode() = default;
@@ -21,9 +19,13 @@ vector<StmtRef> SP::Node::StatementListNode::extract(PKB::StorageUpdateInterface
 	for (auto iter = stmt_list.begin(); iter < stmt_list.end(); ++iter) {
 		children.push_back(iter->get()->extract(pkb));
 	}
+
+#ifdef DEBUG
 	if (children.empty()) {
-		throw logic_error("Statement list is empty.");
+		throw InternalException("Statement list is empty.");
 	}
+#endif
+
 	StmtRef previous = children.at(0);
 	for (auto iter = ++children.begin(); iter < children.end(); ++iter) {
 		pkb.setFollows(previous, *iter);

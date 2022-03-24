@@ -15,7 +15,7 @@ regex SP::Lexer::validation_regex =  // NOLINT
 void SP::Lexer::initialize(string raw_source) {
 	this->source = move(raw_source);
 	if (regex_search(this->source, Lexer::validation_regex)) {
-		throw SP::TokenizationException("Illegal token encountered.");
+		throw TokenizationException("Illegal token encountered.");
 	}
 	this->iterator = sregex_iterator(this->source.begin(), this->source.end(), Lexer::tokenization_regex);
 }
@@ -51,12 +51,12 @@ string SP::Lexer::peekToken() {
 
 bool SP::Lexer::nextIf(const string& token) {
 	if (this->iterator == sregex_iterator()) {
-		throw SP::TokenizationException("Unexpected end of sequence.");
+		throw TokenizationException("Unexpected end of sequence.");
 	}
 	if (this->iterator->str() == token) {
 		return nextToken();
 	}
-	throw SP::TokenizationException("Unexpected token encountered: " + this->iterator->str() + ".");
+	throw TokenizationException("Unexpected token encountered: " + this->iterator->str() + ".");
 }
 
 bool SP::Lexer::nextIf(initializer_list<string> tokens) {

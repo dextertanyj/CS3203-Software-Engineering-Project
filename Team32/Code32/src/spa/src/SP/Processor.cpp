@@ -15,8 +15,11 @@ void SP::Processor::process(string source) {
 	try {
 		unique_ptr<Node::ProgramNode> ast = parser.parse(std::move(source));
 		extractor.extract(std::move(ast));
-	} catch (const exception& e) {
+	} catch (const TokenizationException& e) {
 		cout << e.what() << endl;
 		exit(1);
+	} catch (const ParseException& e) {
+		cout << e.what() << endl;
+		exit(2);
 	}
 }
