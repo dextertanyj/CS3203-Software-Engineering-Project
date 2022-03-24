@@ -62,7 +62,7 @@ bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
 	}
 	StmtInfoPtrSet next_nodes_of_prev = this->getNext(first);
 	return any_of(next_nodes_of_prev.begin(), next_nodes_of_prev.end(),
-	              [second](shared_ptr<StmtInfo> next_info) { return next_info->getIdentifier() == second; });
+	              [second](const shared_ptr<StmtInfo>& next_info) { return next_info->getIdentifier() == second; });
 }
 
 StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
@@ -143,7 +143,7 @@ void PKB::NextManager::processBFSVisit(Types::BFSInfo& info, const shared_ptr<PK
 	if (node->getNodeType() == NodeType::Dummy) {
 		StmtInfoPtrSet real_nodes = (control_flow_graph->*collector)(node);
 		info.nodes.insert(real_nodes.begin(), real_nodes.end());
-		for (auto real_node : real_nodes) {
+		for (const auto& real_node : real_nodes) {
 			info.node_queue.push(control_flow_graph->stmt_to_normal_node_store.at(real_node->getIdentifier()));
 		}
 	} else {

@@ -115,18 +115,18 @@ public:
 	// Next get methods
 	bool checkNext(StmtRef first, StmtRef second) override;
 	bool checkNextStar(StmtRef first, StmtRef second) override;
-	StmtInfoPtrSet getNext(StmtRef first) override;
+	StmtInfoPtrSet getNext(StmtRef node_ref) override;
 	StmtInfoPtrSet getNextStar(StmtRef node_ref) override;
-	StmtInfoPtrSet getPrevious(StmtRef second) override;
+	StmtInfoPtrSet getPrevious(StmtRef node_ref) override;
 	StmtInfoPtrSet getPreviousStar(StmtRef node_ref) override;
 
 	// Affects get methods
 	bool checkAffects(StmtRef first, StmtRef second) override;
 	bool checkAffectsStar(StmtRef first, StmtRef second) override;
-	StmtInfoPtrSet getAffects(StmtRef first) override;
-	StmtInfoPtrSet getAffectsStar(StmtRef first) override;
-	StmtInfoPtrSet getAffected(StmtRef second) override;
-	StmtInfoPtrSet getAffectedStar(StmtRef second) override;
+	StmtInfoPtrSet getAffects(StmtRef node_ref) override;
+	StmtInfoPtrSet getAffectsStar(StmtRef node_ref) override;
+	StmtInfoPtrSet getAffected(StmtRef node_ref) override;
+	StmtInfoPtrSet getAffectedStar(StmtRef node_ref) override;
 
 	// Control Variable get methods
 	bool checkIfControl(StmtRef index, VarRef name) override;

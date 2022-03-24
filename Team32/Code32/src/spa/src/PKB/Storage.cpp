@@ -246,11 +246,11 @@ bool PKB::Storage::checkNext(StmtRef first, StmtRef second) { return next_manage
 
 bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return next_manager.checkNextStar(first, second); }
 
-StmtInfoPtrSet PKB::Storage::getNext(StmtRef first) { return next_manager.getNext(first); }
+StmtInfoPtrSet PKB::Storage::getNext(StmtRef node_ref) { return next_manager.getNext(node_ref); }
 
 StmtInfoPtrSet PKB::Storage::getNextStar(StmtRef node_ref) { return next_manager.getNextStar(node_ref); }
 
-StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) { return next_manager.getPrevious(second); }
+StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef node_ref) { return next_manager.getPrevious(node_ref); }
 
 StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef node_ref) { return next_manager.getPreviousStar(node_ref); }
 
