@@ -18,8 +18,8 @@ if (CMAKE_BUILD_TYPE MATCHES Coverage)
     set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
 endif()
 
-if (CMAKE_BUILD_TYPE MATCHES Debug OR CMAKE_BUILD_TYPE MATCHES Coverage)
-    add_compile_definitions(DEBUG)
+if (CMAKE_BUILD_TYPE MATCHES Release)
+    add_compile_definitions(NDEBUG)
 endif()
 
 if(NOT MSVC)
