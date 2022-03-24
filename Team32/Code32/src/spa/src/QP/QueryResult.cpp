@@ -12,7 +12,9 @@ ResultTable QP::QueryResult::getTable() { return table; }
 
 ResultColumn QP::QueryResult::getSynonymResult(const string& synonym) { return table.getColumn(synonym); }
 
-ResultRow QP::QueryResult::getRowWithOrder(const vector<string>& synonyms, size_t row_number) { return table.getSubRow(synonyms, row_number); }
+ResultRow QP::QueryResult::getRowWithOrder(const vector<string>& synonyms, size_t row_number) {
+	return table.getSubRow(synonyms, row_number);
+}
 
 size_t QP::QueryResult::getNumberOfRows() { return table.getNumberOfRows(); }
 

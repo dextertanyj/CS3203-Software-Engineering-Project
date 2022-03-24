@@ -6,7 +6,6 @@
 
 #include "Common/TypeDefs.h"
 #include "QP/QP.h"
-#include "QP/Types.h"
 #include "QP/ResultTable.h"
 #include "QP/Types.h"
 
