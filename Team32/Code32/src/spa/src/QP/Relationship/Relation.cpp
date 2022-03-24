@@ -9,6 +9,9 @@ vector<string> QP::Relationship::Relation::getDeclarationSymbols() const {
 		if (arg.getType() == Types::ReferenceType::Synonym) {
 			symbols.push_back(arg.getSynonym().symbol);
 		}
+		if (arg.getType() == Types::ReferenceType::Attribute) {
+			symbols.push_back(arg.getAttribute().synonym.symbol);
+		}
 	}
 	return symbols;
 }

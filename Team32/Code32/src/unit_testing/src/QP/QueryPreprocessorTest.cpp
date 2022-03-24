@@ -17,7 +17,6 @@ TEST_CASE("QP::QueryPreprocessor::tokenizeQuery Invalid tokenizer input") {
 	QP::QueryPreprocessor qpp1;
 	REQUIRE_THROWS_AS(qpp1.parseQuery("!"), QP::QueryTokenizationException);
 	REQUIRE_THROWS_AS(qpp1.parseQuery("@"), QP::QueryTokenizationException);
-	REQUIRE_THROWS_AS(qpp1.parseQuery("#"), QP::QueryTokenizationException);
 	REQUIRE_THROWS_AS(qpp1.parseQuery("$"), QP::QueryTokenizationException);
 	REQUIRE_THROWS_AS(qpp1.parseQuery("^"), QP::QueryTokenizationException);
 	REQUIRE_THROWS_AS(qpp1.parseQuery("&"), QP::QueryTokenizationException);
@@ -884,14 +883,154 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid pattern") {
 	REQUIRE_THROWS_AS(qpp8.parseQuery(UnivDeclarations + "Select a1 pattern(s1, \"x)\")"), QP::QueryException);
 }
 
-TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that/pattern clauses") {
+TEST_CASE("QP::QueryPreprocessor::parseQuery valid with") {
 	shared_ptr<QP::Relationship::Relation> clause;
-	QP::QueryPreprocessor qpp12;
-	QP::QueryProperties qp12 = qpp12.parseQuery(UnivDeclarations + "Select a1 such that Follows(w1, a1) pattern a1(v1, _\"2-4\"_)");
-	clause = qp12.getClauseList()[0].relation;
+	QP::QueryPreprocessor qpp;
+	QP::QueryProperties qp = {{}, {}, {}};
+
+	SECTION("Trivial") {
+		qp = qpp.parseQuery(UnivDeclarations + "Select s1 with 2 = 1");
+		clause = qp.getClauseList()[0].relation;
+		REQUIRE(clause->getType() == ClauseType::With);
+		REQUIRE(clause->getDeclarationSymbols() == vector<string>());
+
+		qp = qpp.parseQuery(UnivDeclarations + "Select s1 with \"this\" = \"other\"");
+		clause = qp.getClauseList()[0].relation;
+		REQUIRE(clause->getType() == ClauseType::With);
+		REQUIRE(clause->getDeclarationSymbols() == vector<string>());
+	}
+
+	SECTION("Statement indexes") {
+		qp = qpp.parseQuery(UnivDeclarations + "Select s1 with s1.stmt# = 1");
+		clause = qp.getClauseList()[0].relation;
+		REQUIRE(clause->getType() == ClauseType::With);
+		REQUIRE(clause->getDeclarationSymbols() == vector<string>({"s1"}));
+
+		qp = qpp.parseQuery(UnivDeclarations + "Select s1 with 1 = s1.stmt#");
+		clause = qp.getClauseList()[0].relation;
+		REQUIRE(clause->getType() == ClauseType::With);
+		REQUIRE(clause->getDeclarationSymbols() == vector<string>({"s1"}));
+
+		qp = qpp.parseQuery(UnivDeclarations + "Select s1 with s1.stmt# = s2.stmt#");
+		clause = qp.getClauseList()[0].relation;
+		REQUIRE(clause->getType() == ClauseType::With);
+		REQUIRE(clause->getDeclarationSymbols() == vector<string>({"s1", "s2"}));
+	}
+
+	SECTION("Procedure name") {
+		qp = qpp.parseQuery(UnivDeclarations + "Select pc1 with pc1.procName = \"name\"");
+		clause = qp.getClauseList()[0].relation;
+		REQUIRE(clause->getType() == ClauseType::With);
+		REQUIRE(clause->getDeclarationSymbols() == vector<string>({"pc1"}));
+
+		qp = qpp.parseQuery(UnivDeclarations + "Select pc1 with \"name\" = pc1.procName");
+		clause = qp.getClauseList()[0].relation;
+		REQUIRE(clause->getType() == ClauseType::With);
+		REQUIRE(clause->getDeclarationSymbols() == vector<string>({"pc1"}));
+
+		qp = qpp.parseQuery(UnivDeclarations + "Select pc1 with c1.procName = pc2.procName");
+		clause = qp.getClauseList()[0].relation;
+		REQUIRE(clause->getType() == ClauseType::With);
+		REQUIRE(clause->getDeclarationSymbols() == vector<string>({"c1", "pc2"}));
+	}
+
+	SECTION("Variable name") {
+		qp = qpp.parseQuery(UnivDeclarations + "Select pc1 with r1.varName = \"name\"");
+		clause = qp.getClauseList()[0].relation;
+		REQUIRE(clause->getType() == ClauseType::With);
+		REQUIRE(clause->getDeclarationSymbols() == vector<string>({"r1"}));
+
+		qp = qpp.parseQuery(UnivDeclarations + "Select pc1 with \"name\" = p1.varName");
+		clause = qp.getClauseList()[0].relation;
+		REQUIRE(clause->getType() == ClauseType::With);
+		REQUIRE(clause->getDeclarationSymbols() == vector<string>({"p1"}));
+
+		qp = qpp.parseQuery(UnivDeclarations + "Select pc1 with v1.varName = v2.varName");
+		clause = qp.getClauseList()[0].relation;
+		REQUIRE(clause->getType() == ClauseType::With);
+		REQUIRE(clause->getDeclarationSymbols() == vector<string>({"v1", "v2"}));
+	}
+
+	SECTION("Value") {
+		qp = qpp.parseQuery(UnivDeclarations + "Select ct1 with ct1.value = 1");
+		clause = qp.getClauseList()[0].relation;
+		REQUIRE(clause->getType() == ClauseType::With);
+		REQUIRE(clause->getDeclarationSymbols() == vector<string>({"ct1"}));
+
+		qp = qpp.parseQuery(UnivDeclarations + "Select pc1 with 1 = ct1.value");
+		clause = qp.getClauseList()[0].relation;
+		REQUIRE(clause->getType() == ClauseType::With);
+		REQUIRE(clause->getDeclarationSymbols() == vector<string>({"ct1"}));
+
+		qp = qpp.parseQuery(UnivDeclarations + "Select pc1 with ct1.value = ct2.value");
+		clause = qp.getClauseList()[0].relation;
+		REQUIRE(clause->getType() == ClauseType::With);
+		REQUIRE(clause->getDeclarationSymbols() == vector<string>({"ct1", "ct2"}));
+	}
+}
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple with clauses") {
+	shared_ptr<QP::Relationship::Relation> clause;
+	QP::QueryPreprocessor qpp;
+	QP::QueryProperties qp = {{}, {}, {}};
+
+	qp = qpp.parseQuery(UnivDeclarations + "Select a1 with ct1.value = ct2.value and \"name\" = p1.varName");
+	clause = qp.getClauseList()[0].relation;
+	REQUIRE(clause->getType() == ClauseType::With);
+	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"ct1", "ct2"}));
+	clause = qp.getClauseList()[1].relation;
+	REQUIRE(clause->getType() == ClauseType::With);
+	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"p1"}));
+
+	qp = qpp.parseQuery(UnivDeclarations + "Select a1 with ct1.value = ct2.value with \"name\" = p1.varName");
+	clause = qp.getClauseList()[0].relation;
+	REQUIRE(clause->getType() == ClauseType::With);
+	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"ct1", "ct2"}));
+	clause = qp.getClauseList()[1].relation;
+	REQUIRE(clause->getType() == ClauseType::With);
+	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"p1"}));
+}
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery invalid with") {
+	QP::QueryPreprocessor qpp;
+
+	SECTION("Undeclared synonym") {
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with x.stmt# = 20"), QP::QueryException);
+	}
+
+	SECTION("Invalid attribute") {
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with s1.stmt = 20"), QP::QueryException);
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with ct1.val = 20"), QP::QueryException);
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with p1.varname = \"name\""), QP::QueryException);
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with r1.varname = \"name\""), QP::QueryException);
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with pc1.procname = \"name\""), QP::QueryException);
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with c1.procname = \"name\""), QP::QueryException);
+	}
+
+	SECTION("Type mismatch") {
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with 1 = \"name\""), QP::QueryException);
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with \"name\" = 1"), QP::QueryException);
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with c1.procName = 1"), QP::QueryException);
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with v1.varName = 1"), QP::QueryException);
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with p1.varName = 1"), QP::QueryException);
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with s1.stmt# = \"this\""), QP::QueryException);
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with ct1.value = \"this\""), QP::QueryException);
+	}
+}
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that/pattern/with clauses") {
+	shared_ptr<QP::Relationship::Relation> clause;
+	QP::QueryPreprocessor qpp;
+	QP::QueryProperties qp = {{}, {}, {}};
+
+	qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Follows(w1, a1) pattern a1(v1, _\"2-4\"_) with a1.stmt# = ct1.value");
+	clause = qp.getClauseList()[0].relation;
 	REQUIRE(clause->getType() == ClauseType::Follows);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"w1", "a1"}));
-	clause = qp12.getClauseList()[1].relation;
+	clause = qp.getClauseList()[1].relation;
 	REQUIRE(clause->getType() == ClauseType::PatternAssign);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1", "v1"}));
+	clause = qp.getClauseList()[2].relation;
+	REQUIRE(clause->getType() == ClauseType::With);
+	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1", "ct1"}));
 }
