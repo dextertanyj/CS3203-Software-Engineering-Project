@@ -152,7 +152,7 @@ void QP::QueryPreprocessor::parseClause(QP::Types::ClauseType type, vector<QP::T
 void QP::QueryPreprocessor::createClause(QP::Types::ClauseType type, vector<QP::Types::ReferenceArgument> arguments) {
 	QP::Types::ArgumentDispatcher argument_dispatcher = dispatcher.dispatch_map.at(type);
 	auto info = argument_dispatcher(arguments);
-	this->clause_list.push_back({make_unique<Relationship::Relation>(info.first, arguments, info.second)});
+	this->clause_list.push_back({make_unique<Relationship::Relation>(info.first, move(arguments), info.second)});
 }
 
 // Clause - Such that

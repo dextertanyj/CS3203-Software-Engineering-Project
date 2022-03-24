@@ -50,11 +50,11 @@ static unordered_map<ReferenceType, unordered_map<ReferenceType, WithExecutorFun
 
 template <typename TAttribute, typename TLeft, typename TRight>
 WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<ReferenceArgument>& arguments) {
-	static const unordered_map<ReferenceType, unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> map = getExecutorMap<TAttribute, TLeft, TRight>();
+	static const unordered_map<ReferenceType, unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> map =
+		getExecutorMap<TAttribute, TLeft, TRight>();
 	ReferenceType lhs = arguments.at(0).getType();
 	ReferenceType rhs = arguments.at(1).getType();
-	unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> inner_map =
-		map.at(lhs);
+	unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> inner_map = map.at(lhs);
 	auto executor = inner_map.at(rhs);
 	return executor;
 }
