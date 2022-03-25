@@ -25,17 +25,26 @@ void QP::QueryResult::addRow(const ResultRow& row) {
 	table.insertRow(row);
 }
 
-void QP::QueryResult::filterBySelect(const QP::Types::DeclarationList& select_list) { table = table.filterBySelect(select_list); }
+void QP::QueryResult::filterBySelect(const QP::Types::DeclarationList& select_list) { 
+	if (select_list.empty()) {
+		table = ResultTable();
+		return;
+	}
 
-QP::QueryResult QP::QueryResult::joinResult(QueryResult result_one, QueryResult result_two) {
-	if (!result_one.getResult() || !result_two.getResult()) {
+	table = table.filterBySelect(select_list);
+}
+
+QP::QueryResult QP::QueryResult::joinResults(vector<QueryResult> results) {
+	if (results.empty()) {
 		return {};
 	}
 
-	ResultTable table = ResultTable::joinTables(result_one.getTable(), result_two.getTable());
-
-	if (table.getNumberOfRows() == 0) {
-		return {};
+	ResultTable table = results[0].getTable();
+	for (size_t i = 1; i < results.size(); i++) {
+		table = ResultTable::joinTables(table, results[i].getTable());
+		if (table.getNumberOfRows() == 0) {
+			return {};
+		}
 	}
 
 	return QueryResult(table);

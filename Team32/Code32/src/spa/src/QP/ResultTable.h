@@ -36,7 +36,7 @@ private:
 	vector<string> synonyms_stored;
 	vector<ResultRow> table;
 
-	static ResultTable intersectTables(ResultTable superset_table, ResultTable subset_table);
+	static ResultTable intersectTables(ResultTable superset_table, const ResultTable& subset_table);
 	static ResultTable crossJoinTables(ResultTable table_one, ResultTable table_two);
 	static unordered_multimap<ResultRow, size_t> buildHashTable(ResultTable& table, const vector<string>& key_synonyms);
 };

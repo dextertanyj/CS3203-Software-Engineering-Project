@@ -17,7 +17,7 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	ConnectedSynonyms connected_synonyms = graph.getConnectedSynonyms(select_list);
 	vector<pair<Types::ClauseList, Types::DeclarationList>> clauses_in_group = splitClauses(query_properties, connected_synonyms);
 
-	QueryResult result = QueryResult();
+	vector<QueryResult> results;
 
 	// Execute clauses without synonyms first
 	size_t last_group = clauses_in_group.size() - 1;
@@ -37,20 +37,17 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 			if (!group_result.getResult()) {
 				return {};
 			}
-
-			if (result.getResult()) {
-				result = QueryResult::joinResult(result, group_result);
-			} else {
-				result = group_result;
-			}
+			results.push_back(group_result);
 		}
 	}
+
+	QueryResult final_result = QueryResult::joinResults(results);
 
 	if (select_list.empty()) {
 		return QueryResult(true);
 	}
 
-	return result;
+	return final_result;
 }
 
 QP::QueryResult QP::QueryEvaluator::executeGroupWithSelected(ClauseList& clauses, DeclarationList& select_list) {
@@ -95,15 +92,8 @@ QP::QueryResult QP::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, 
 		result_list.push_back(result);
 	}
 
-	QueryResult final_result = result_list[0];
-
-	for (size_t i = 1; i < result_list.size(); i++) {
-		final_result = QueryResult::joinResult(final_result, result_list[i]);
-	}
-
-	if (!select_list.empty()) {
-		final_result.filterBySelect(select_list);
-	}
+	QueryResult final_result = QueryResult::joinResults(result_list);
+	final_result.filterBySelect(select_list);
 
 	return final_result;
 }

@@ -101,7 +101,7 @@ unordered_multimap<ResultRow, size_t> QP::Types::ResultTable::buildHashTable(Res
 	return map;
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::intersectTables(ResultTable superset_table, ResultTable subset_table) {
+QP::Types::ResultTable QP::Types::ResultTable::intersectTables(ResultTable superset_table, const ResultTable& subset_table) {
 	vector<string> common_synonyms = subset_table.synonyms_stored;
 	vector<ResultRow> table = subset_table.table;
 	unordered_set<ResultRow> record_set(table.begin(), table.end());
@@ -160,7 +160,7 @@ QP::Types::ResultTable QP::Types::ResultTable::crossJoinTables(ResultTable table
 		for (auto it = range.first; it != range.second; it++) {
 			ResultRow row =
 				mergeRow(larger_table.table.at(i), smaller_table.table.at(it->second), new_synonyms, smaller_table.synonyms_to_index_map);
-			final_table.insertRow(move(row));
+			final_table.insertRow(row);
 		}
 	}
 
