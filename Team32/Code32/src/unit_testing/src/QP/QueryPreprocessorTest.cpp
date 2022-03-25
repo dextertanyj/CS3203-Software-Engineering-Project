@@ -109,19 +109,19 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid declarations") {
 TEST_CASE("QP::QueryPreprocessor::parseQuery Select single") {
 	QP::QueryPreprocessor qpp1;
 	QP::QueryProperties qp1 = qpp1.parseQuery("print a; if b; Select a");
-	REQUIRE(qp1.getSelectList()[0].type == QP::Types::DesignEntity::Print);
-	REQUIRE(qp1.getSelectList()[0].symbol == "a");
+	REQUIRE(qp1.getSelectList()[0].getSynonymType() == QP::Types::DesignEntity::Print);
+	REQUIRE(qp1.getSelectList()[0].getSynonymSymbol() == "a");
 
 	QP::QueryPreprocessor qpp2;
 	QP::QueryProperties qp2 = qpp2.parseQuery("print a; if b; Select b");
-	REQUIRE(qp2.getSelectList()[0].type == QP::Types::DesignEntity::If);
-	REQUIRE(qp2.getSelectList()[0].symbol == "b");
+	REQUIRE(qp2.getSelectList()[0].getSynonymType() == QP::Types::DesignEntity::If);
+	REQUIRE(qp2.getSelectList()[0].getSynonymSymbol() == "b");
 
 	// select BOOLEAN synonym
 	QP::QueryPreprocessor qpp3;
 	QP::QueryProperties qp3 = qpp3.parseQuery("if BOOLEAN; Select BOOLEAN");
-	REQUIRE(qp3.getSelectList()[0].type == QP::Types::DesignEntity::If);
-	REQUIRE(qp3.getSelectList()[0].symbol == "BOOLEAN");
+	REQUIRE(qp3.getSelectList()[0].getSynonymType() == QP::Types::DesignEntity::If);
+	REQUIRE(qp3.getSelectList()[0].getSynonymSymbol() == "BOOLEAN");
 
 	// undeclared synonym
 	QP::QueryPreprocessor qpp4;
@@ -137,33 +137,33 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Select single") {
 TEST_CASE("QP::QueryPreprocessor::parseQuery Select tuple") {
 	QP::QueryPreprocessor qpp1;
 	QP::QueryProperties qp1 = qpp1.parseQuery("print a; if b; Select <a>");
-	REQUIRE(qp1.getSelectList()[0].type == QP::Types::DesignEntity::Print);
-	REQUIRE(qp1.getSelectList()[0].symbol == "a");
+	REQUIRE(qp1.getSelectList()[0].getSynonymType() == QP::Types::DesignEntity::Print);
+	REQUIRE(qp1.getSelectList()[0].getSynonymSymbol() == "a");
 
 	QP::QueryPreprocessor qpp2;
 	QP::QueryProperties qp2 = qpp2.parseQuery("print a; if b; Select <a,b>");
-	REQUIRE(qp2.getSelectList()[0].type == QP::Types::DesignEntity::Print);
-	REQUIRE(qp2.getSelectList()[0].symbol == "a");
-	REQUIRE(qp2.getSelectList()[1].type == QP::Types::DesignEntity::If);
-	REQUIRE(qp2.getSelectList()[1].symbol == "b");
+	REQUIRE(qp2.getSelectList()[0].getSynonymType() == QP::Types::DesignEntity::Print);
+	REQUIRE(qp2.getSelectList()[0].getSynonymSymbol() == "a");
+	REQUIRE(qp2.getSelectList()[1].getSynonymType() == QP::Types::DesignEntity::If);
+	REQUIRE(qp2.getSelectList()[1].getSynonymSymbol() == "b");
 	// Same synonym
 	QP::QueryPreprocessor qpp3;
 	QP::QueryProperties qp3 = qpp3.parseQuery("print a; if b; Select <b,b>");
-	REQUIRE(qp3.getSelectList()[0].type == QP::Types::DesignEntity::If);
-	REQUIRE(qp3.getSelectList()[0].symbol == "b");
-	REQUIRE(qp3.getSelectList()[1].type == QP::Types::DesignEntity::If);
-	REQUIRE(qp3.getSelectList()[1].symbol == "b");
+	REQUIRE(qp3.getSelectList()[0].getSynonymType() == QP::Types::DesignEntity::If);
+	REQUIRE(qp3.getSelectList()[0].getSynonymSymbol() == "b");
+	REQUIRE(qp3.getSelectList()[1].getSynonymType() == QP::Types::DesignEntity::If);
+	REQUIRE(qp3.getSelectList()[1].getSynonymSymbol() == "b");
 	// many synonym
 	QP::QueryPreprocessor qpp4;
 	QP::QueryProperties qp4 = qpp4.parseQuery(UnivDeclarations + "Select <s1, s2, p1, p2, c1, c2, w1,w2,i1,i2,a1,a2>");
-	REQUIRE(qp4.getSelectList()[0].type == QP::Types::DesignEntity::Stmt);
-	REQUIRE(qp4.getSelectList()[0].symbol == "s1");
-	REQUIRE(qp4.getSelectList()[1].type == QP::Types::DesignEntity::Stmt);
-	REQUIRE(qp4.getSelectList()[1].symbol == "s2");
-	REQUIRE(qp4.getSelectList()[7].type == QP::Types::DesignEntity::While);
-	REQUIRE(qp4.getSelectList()[7].symbol == "w2");
-	REQUIRE(qp4.getSelectList()[11].type == QP::Types::DesignEntity::Assign);
-	REQUIRE(qp4.getSelectList()[11].symbol == "a2");
+	REQUIRE(qp4.getSelectList()[0].getSynonymType() == QP::Types::DesignEntity::Stmt);
+	REQUIRE(qp4.getSelectList()[0].getSynonymSymbol() == "s1");
+	REQUIRE(qp4.getSelectList()[1].getSynonymType() == QP::Types::DesignEntity::Stmt);
+	REQUIRE(qp4.getSelectList()[1].getSynonymSymbol() == "s2");
+	REQUIRE(qp4.getSelectList()[7].getSynonymType() == QP::Types::DesignEntity::While);
+	REQUIRE(qp4.getSelectList()[7].getSynonymSymbol() == "w2");
+	REQUIRE(qp4.getSelectList()[11].getSynonymType() == QP::Types::DesignEntity::Assign);
+	REQUIRE(qp4.getSelectList()[11].getSynonymSymbol() == "a2");
 
 	// empty tuple
 	QP::QueryPreprocessor qpp5;
@@ -187,6 +187,46 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Select BOOLEAN") {
 	// tuple
 	QP::QueryPreprocessor qpp3;
 	REQUIRE_THROWS_AS(qpp3.parseQuery("if i; Select <BOOLEAN>"), QP::QueryException);
+}
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery Select attribute") {
+	QP::QueryPreprocessor qpp;
+	QP::QueryProperties qp = {{}, {}, {}};
+
+	SECTION("Single attribute") {
+		qp = qpp.parseQuery(UnivDeclarations + "Select s1.stmt#");
+		REQUIRE(qp.getSelectList()[0].getType() == QP::Types::ReferenceType::Attribute);
+		REQUIRE(qp.getSelectList()[0].getAttributeType() == QP::Types::AttributeType::NumberIdentifier);
+		REQUIRE(qp.getSelectList()[0].getSynonymSymbol() == "s1");
+		REQUIRE(qp.getSelectList()[0].getSynonymType() == QP::Types::DesignEntity::Stmt);
+	}
+
+	SECTION("Attribute and synonym") {
+		qp = qpp.parseQuery(UnivDeclarations + "Select <s1, s1.stmt#>");
+		REQUIRE(qp.getSelectList()[0].getType() == QP::Types::ReferenceType::Synonym);
+		REQUIRE(qp.getSelectList()[0].getSynonymSymbol() == "s1");
+		REQUIRE(qp.getSelectList()[0].getSynonymType() == QP::Types::DesignEntity::Stmt);
+		REQUIRE(qp.getSelectList()[1].getType() == QP::Types::ReferenceType::Attribute);
+		REQUIRE(qp.getSelectList()[1].getAttributeType() == QP::Types::AttributeType::NumberIdentifier);
+		REQUIRE(qp.getSelectList()[1].getSynonymSymbol() == "s1");
+		REQUIRE(qp.getSelectList()[1].getSynonymType() == QP::Types::DesignEntity::Stmt);
+	}
+
+	SECTION("Multiple attributes") {
+		qp = qpp.parseQuery(UnivDeclarations + "Select <s1.stmt#, s2.stmt#, p1.varName>");
+		REQUIRE(qp.getSelectList()[0].getType() == QP::Types::ReferenceType::Attribute);
+		REQUIRE(qp.getSelectList()[0].getAttributeType() == QP::Types::AttributeType::NumberIdentifier);
+		REQUIRE(qp.getSelectList()[0].getSynonymSymbol() == "s1");
+		REQUIRE(qp.getSelectList()[0].getSynonymType() == QP::Types::DesignEntity::Stmt);
+		REQUIRE(qp.getSelectList()[1].getType() == QP::Types::ReferenceType::Attribute);
+		REQUIRE(qp.getSelectList()[1].getAttributeType() == QP::Types::AttributeType::NumberIdentifier);
+		REQUIRE(qp.getSelectList()[1].getSynonymSymbol() == "s2");
+		REQUIRE(qp.getSelectList()[1].getSynonymType() == QP::Types::DesignEntity::Stmt);
+		REQUIRE(qp.getSelectList()[2].getType() == QP::Types::ReferenceType::Attribute);
+		REQUIRE(qp.getSelectList()[2].getAttributeType() == QP::Types::AttributeType::VariableName);
+		REQUIRE(qp.getSelectList()[2].getSynonymSymbol() == "p1");
+		REQUIRE(qp.getSelectList()[2].getSynonymType() == QP::Types::DesignEntity::Print);
+	}
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Parent(*)") {

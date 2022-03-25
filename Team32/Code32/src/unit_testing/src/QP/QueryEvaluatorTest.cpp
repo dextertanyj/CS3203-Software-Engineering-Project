@@ -20,9 +20,9 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 	DeclarationList declarations = {
 		assign_declaration, var_declaration, stmt1_declaration, stmt2_declaration, if_declaration, proc_declaration,
 	};
-	DeclarationList select_list = {stmt1_declaration, proc_declaration};
-	DeclarationList select_a = {assign_declaration};
-	DeclarationList select_p = {proc_declaration};
+	SelectList select_list = {ReferenceArgument{stmt1_declaration}, ReferenceArgument{proc_declaration}};
+	SelectList select_a = {ReferenceArgument{assign_declaration}};
+	SelectList select_p = {ReferenceArgument{proc_declaration}};
 	ReferenceArgument s1 = ReferenceArgument(stmt1_declaration);
 	ReferenceArgument s2 = ReferenceArgument(stmt2_declaration);
 	ReferenceArgument a = ReferenceArgument(assign_declaration);
@@ -48,7 +48,7 @@ TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
 	ConnectedSynonyms connected_synonyms = {
 		3,
 		{{"s1", 0}, {"s2", 0}, {"a", 1}, {"v", 1}, {"i", 1}, {"p", 2}},
-		{{0, select_a}, {1, {}}, {2, select_p}},
+		{{0, {assign_declaration}}, {1, {}}, {2, {proc_declaration}}},
 	};
 
 	PKB::Storage pkb = PKB::Storage();
@@ -81,7 +81,8 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	unordered_set<ConstVal> constants = {1};
 	pkb.setConstant(constants);
 
-	QP::QueryEvaluator evaluator = QP::QueryEvaluator(pkb);
+	QP::StorageAdapter store(pkb);
+	QP::QueryEvaluator evaluator = QP::QueryEvaluator(store);
 
 	Declaration assign_declaration = {DesignEntity::Assign, "a"};
 	Declaration var_declaration = {DesignEntity::Variable, "v"};
@@ -108,7 +109,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 		Common::ExpressionProcessor::ExpressionParser{query_lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
 
 	SECTION("No clause, select assign statement") {
-		QP::QueryProperties properties = QP::QueryProperties(declarations, {assign_declaration}, {});
+		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{assign_declaration}}, {});
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
 		vector<string> expected_result = {"1", "3"};
@@ -118,7 +119,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("No clause, select variable") {
-		QP::QueryProperties properties = QP::QueryProperties(declarations, {var_declaration}, {});
+		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{var_declaration}}, {});
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
 		vector<string> expected_result = {"x"};
@@ -127,7 +128,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("No clause, select procedure") {
-		QP::QueryProperties properties = QP::QueryProperties(declarations, {proc_declaration}, {});
+		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{proc_declaration}}, {});
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
 		vector<string> expected_result = {"proc1", "proc2"};
@@ -140,7 +141,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 		ClauseList clauses = {{make_unique<QP::Relationship::Relation>(
 			ClauseType::ModifiesS, vector<ReferenceArgument>({assign_syn, var_syn}),
 			dispatcher.dispatch_map.at(ClauseType::UnknownModifies)({assign_syn, var_syn}).second)}};
-		QP::QueryProperties properties = QP::QueryProperties(declarations, {assign_declaration}, clauses);
+		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{assign_declaration}}, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
@@ -153,7 +154,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 		ClauseList clauses = {
 			{make_unique<QP::Relationship::Relation>(ClauseType::ModifiesS, vector<ReferenceArgument>({stmt_no1, var_syn}),
 		                                             dispatcher.dispatch_map.at(ClauseType::UnknownModifies)({stmt_no1, var_syn}).second)}};
-		QP::QueryProperties properties = QP::QueryProperties(declarations, {assign_declaration}, clauses);
+		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{assign_declaration}}, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
@@ -168,7 +169,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 			ClauseType::PatternAssign, vector<ReferenceArgument>({assign_syn, wildcard, ReferenceArgument(query_expression, false)}),
 			dispatcher.dispatch_map.at(ClauseType::PatternAssign)({assign_syn, wildcard, ReferenceArgument(query_expression, false)})
 				.second)}};
-		QP::QueryProperties properties = QP::QueryProperties(declarations, {var_declaration}, clauses);
+		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{var_declaration}}, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
@@ -182,7 +183,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 			ClauseType::PatternAssign, vector<ReferenceArgument>({assign_syn, var_syn, ReferenceArgument(query_expression, false)}),
 			dispatcher.dispatch_map.at(ClauseType::PatternAssign)({assign_syn, var_syn, ReferenceArgument(query_expression, false)})
 				.second)}};
-		QP::QueryProperties properties = QP::QueryProperties(declarations, {var_declaration}, clauses);
+		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{var_declaration}}, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
@@ -200,7 +201,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 				dispatcher.dispatch_map.at(ClauseType::PatternAssign)({assign_syn, var_syn, ReferenceArgument(query_expression, false)})
 					.second)},
 		};
-		QP::QueryProperties properties = QP::QueryProperties(declarations, {stmt1_declaration}, clauses);
+		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{stmt1_declaration}}, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
@@ -219,7 +220,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 				dispatcher.dispatch_map.at(ClauseType::PatternAssign)({assign_syn, var_syn, ReferenceArgument(query_expression, false)})
 					.second)},
 		};
-		QP::QueryProperties properties = QP::QueryProperties(declarations, {var_declaration}, clauses);
+		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{var_declaration}}, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
@@ -239,7 +240,7 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 				dispatcher.dispatch_map.at(ClauseType::PatternAssign)({assign_syn, var_syn, ReferenceArgument(query_expression, false)})
 					.second)},
 		};
-		QP::QueryProperties properties = QP::QueryProperties(declarations, {var_declaration}, clauses);
+		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{var_declaration}}, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
 
@@ -285,9 +286,9 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("Select tuple, no clause") {
-		DeclarationList select_list = {
-			{DesignEntity::Stmt, "s1"},
-			{DesignEntity::Assign, "a"},
+		SelectList select_list = {
+			ReferenceArgument{{DesignEntity::Stmt, "s1"}},
+			ReferenceArgument{{DesignEntity::Assign, "a"}},
 		};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, select_list, {});
 
@@ -304,9 +305,9 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("Select tuple, same group") {
-		DeclarationList select_list = {
-			{DesignEntity::Variable, "v"},
-			{DesignEntity::Assign, "a"},
+		SelectList select_list = {
+			ReferenceArgument{{DesignEntity::Variable, "v"}},
+			ReferenceArgument{{DesignEntity::Assign, "a"}},
 		};
 		ClauseList clauses = {
 			{make_unique<QP::Relationship::Relation>(
@@ -322,9 +323,9 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 	};
 
 	SECTION("Select tuple, different group") {
-		DeclarationList select_list = {
-			{DesignEntity::Stmt, "s1"},
-			{DesignEntity::Assign, "a"},
+		SelectList select_list = {
+			ReferenceArgument{{DesignEntity::Stmt, "s1"}},
+			ReferenceArgument{{DesignEntity::Assign, "a"}},
 		};
 		ClauseList clauses = {
 			{make_unique<QP::Relationship::Relation>(

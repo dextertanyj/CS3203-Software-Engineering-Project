@@ -71,8 +71,8 @@ vector<string> QP::QueryFormatter::formatNonBooleanResult(QueryProperties& query
 		ResultRow row = query_result.getRowWithOrder(synonyms, i);
 		string row_string;
 
-		for (size_t j = 0; i < select_list.size(); j++) {
-			string value = applyTransform(store, select_list.at(i), row.at(i));
+		for (size_t j = 0; j < select_list.size(); j++) {
+			string value = applyTransform(store, select_list.at(j), row.at(j));
 			row_string.append(value);
 			row_string.append(TUPLE_SEPERATOR);
 		}
