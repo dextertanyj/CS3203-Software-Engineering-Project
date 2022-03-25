@@ -15,6 +15,7 @@ public:
 	CallStatementStore();
 	void set(const shared_ptr<StmtInfo>& statement, ProcRef procedure);
 	[[nodiscard]] ProcRef getProcedure(const shared_ptr<StmtInfo>& statement) const;
+	[[nodiscard]] ProcRef getProcedure(StmtRef index) const;
 	void populate(const Types::ProcedureStore& procedures, TransitiveRelationStore<ProcRef, ProcedureInfo, CallRelation>& store) const;
 
 private:
