@@ -57,12 +57,16 @@ public:
 	 */
 	[[nodiscard]] Declaration getSynonym() const;
 
+	[[nodiscard]] string getSynonymSymbol() const;
+	[[nodiscard]] DesignEntity getSynonymType() const;
+
 	/**
 	 * Returns the synonym and attribute stored.
 	 * @throws ReferenceArgumentException if a synonym and attribute are not stored.
 	 * @return the synonym and attribute stored.
 	 */
 	[[nodiscard]] Attribute getAttribute() const;
+	[[nodiscard]] AttributeType getAttributeType() const;
 
 	/**
 	 * Returns the name stored.
