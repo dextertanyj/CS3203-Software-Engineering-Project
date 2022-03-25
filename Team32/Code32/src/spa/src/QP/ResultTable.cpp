@@ -186,5 +186,5 @@ QP::Types::ResultTable QP::Types::ResultTable::joinTables(ResultTable table_one,
 		}
 	}
 
-	return intersectTables(move(superset_table), move(subset_table));
+	return intersectTables(move(superset_table), subset_table);
 }
