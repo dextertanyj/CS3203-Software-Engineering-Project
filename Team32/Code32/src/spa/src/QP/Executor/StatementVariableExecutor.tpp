@@ -7,21 +7,21 @@
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementVariableExecutor::executeTrivialIndexName(const QP::StorageAdapter& storage,
-                                                                                    const Types::ReferenceArgument& index,
-                                                                                    const Types::ReferenceArgument& variable) {
+                                                                                 const Types::ReferenceArgument& index,
+                                                                                 const Types::ReferenceArgument& variable) {
 	return QueryResult(storage.checkStatementVariableRelation<T>(index.getStatementIndex(), variable.getName()));
 }
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementVariableExecutor::executeTrivialIndexWildcardOrSynonym(const QP::StorageAdapter& storage,
-                                                                                                 const Types::ReferenceArgument& index) {
+                                                                                              const Types::ReferenceArgument& index) {
 	return QueryResult(!storage.getVariableByStatement<T>(index.getStatementIndex()).empty());
 }
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementVariableExecutor::executeTrivialSynonymName(const QP::StorageAdapter& storage,
-                                                                                      const Types::ReferenceArgument& index,
-                                                                                      const Types::ReferenceArgument& variable) {
+                                                                                   const Types::ReferenceArgument& index,
+                                                                                   const Types::ReferenceArgument& variable) {
 	StmtInfoPtrSet index_set = storage.getStatementByVariable<T>(variable.getName());
 	for (auto const& res_index : index_set) {
 		if (Utilities::checkStmtTypeMatch(res_index, index.getSynonym().type)) {
@@ -33,7 +33,7 @@ QP::QueryResult QP::Executor::StatementVariableExecutor::executeTrivialSynonymNa
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementVariableExecutor::executeTrivialSynonymWildcardOrSynonym(const QP::StorageAdapter& storage,
-                                                                                                   const Types::ReferenceArgument& index) {
+                                                                                                const Types::ReferenceArgument& index) {
 	StmtInfoPtrSet index_set = storage.getStatements();
 	for (auto const& res_index : index_set) {
 		if (!Utilities::checkStmtTypeMatch(res_index, index.getSynonym().type)) {
@@ -50,8 +50,8 @@ QP::QueryResult QP::Executor::StatementVariableExecutor::executeTrivialSynonymWi
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementVariableExecutor::executeSynonymName(const QP::StorageAdapter& storage,
-                                                                               const Types::ReferenceArgument& index,
-                                                                               const Types::ReferenceArgument& variable) {
+                                                                            const Types::ReferenceArgument& index,
+                                                                            const Types::ReferenceArgument& variable) {
 	StmtInfoPtrSet index_set = storage.getStatementByVariable<T>(variable.getName());
 	vector<string> column;
 	for (auto const& res_index : index_set) {
@@ -66,7 +66,7 @@ QP::QueryResult QP::Executor::StatementVariableExecutor::executeSynonymName(cons
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementVariableExecutor::executeSynonymWildcard(const QP::StorageAdapter& storage,
-                                                                                   const Types::ReferenceArgument& index) {
+                                                                                const Types::ReferenceArgument& index) {
 	StmtInfoPtrSet index_set = storage.getStatements();
 	vector<string> column;
 	for (auto const& res_index : index_set) {
@@ -86,8 +86,8 @@ QP::QueryResult QP::Executor::StatementVariableExecutor::executeSynonymWildcard(
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementVariableExecutor::executeSynonymSynonym(const QP::StorageAdapter& storage,
-                                                                                  const Types::ReferenceArgument& index,
-                                                                                  const Types::ReferenceArgument& variable) {
+                                                                               const Types::ReferenceArgument& index,
+                                                                               const Types::ReferenceArgument& variable) {
 	StmtInfoPtrSet index_set = storage.getStatements();
 	Types::DesignEntity design_variableity = index.getSynonym().type;
 	vector<string> index_column;
@@ -111,8 +111,8 @@ QP::QueryResult QP::Executor::StatementVariableExecutor::executeSynonymSynonym(c
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::StatementVariableExecutor::executeIndexSynonym(const QP::StorageAdapter& storage,
-                                                                                const Types::ReferenceArgument& index,
-                                                                                const Types::ReferenceArgument& variable) {
+                                                                             const Types::ReferenceArgument& index,
+                                                                             const Types::ReferenceArgument& variable) {
 	VarRefSet var_set = storage.getVariableByStatement<T>(index.getStatementIndex());
 	vector<string> column;
 

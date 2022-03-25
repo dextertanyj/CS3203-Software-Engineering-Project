@@ -13,28 +13,28 @@ namespace QP::Executor::StatementVariableExecutor {
 
 template <QP::Types::ClauseType T>
 QP::QueryResult executeTrivialIndexName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
-	                                           const Types::ReferenceArgument& variable);
+                                        const Types::ReferenceArgument& variable);
 template <QP::Types::ClauseType T>
-QueryResult executeTrivialIndexWildcardOrSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index);
+QP::QueryResult executeTrivialIndexWildcardOrSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index);
 template <QP::Types::ClauseType T>
-QueryResult executeTrivialSynonymName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
-	                                             const Types::ReferenceArgument& variable);
+QP::QueryResult executeTrivialSynonymName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
+                                          const Types::ReferenceArgument& variable);
 template <QP::Types::ClauseType T>
-QueryResult executeTrivialSynonymWildcardOrSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index);
+QP::QueryResult executeTrivialSynonymWildcardOrSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index);
 
 // Executors
 
 template <QP::Types::ClauseType T>
-QueryResult executeSynonymName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
-	                                      const Types::ReferenceArgument& variable);
+QP::QueryResult executeSynonymName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
+                                   const Types::ReferenceArgument& variable);
 template <QP::Types::ClauseType T>
-QueryResult executeSynonymWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index);
+QP::QueryResult executeSynonymWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index);
 template <QP::Types::ClauseType T>
-QueryResult executeSynonymSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
-	                                         const Types::ReferenceArgument& variable);
+QP::QueryResult executeSynonymSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
+                                      const Types::ReferenceArgument& variable);
 template <QP::Types::ClauseType T>
-QueryResult executeIndexSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
-	                                       const Types::ReferenceArgument& variable);
+QP::QueryResult executeIndexSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
+                                    const Types::ReferenceArgument& variable);
 }
 
 #endif  // SPA_SRC_QP_EXECUTOR_STATEMENTVARIABLEEXECUTOR_H
