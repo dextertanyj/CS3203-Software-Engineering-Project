@@ -37,7 +37,8 @@ private:
 	vector<ResultRow> table;
 
 	static ResultTable intersectTables(ResultTable superset_table, const ResultTable& subset_table);
-	static ResultTable crossJoinTables(ResultTable table_one, ResultTable table_two);
+	static ResultTable hashJoinTables(ResultTable table_one, ResultTable table_two);
+	static ResultTable loopJoinTables(const ResultTable& table_one, const ResultTable& table_two);
 	static unordered_multimap<ResultRow, size_t> buildHashTable(ResultTable& table, const vector<string>& key_synonyms);
 };
 

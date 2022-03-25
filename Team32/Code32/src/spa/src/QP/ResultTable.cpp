@@ -128,7 +128,7 @@ static ResultRow mergeRow(ResultRow current_row, const ResultRow& other_row, con
 	return current_row;
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::crossJoinTables(ResultTable table_one, ResultTable table_two) {
+QP::Types::ResultTable QP::Types::ResultTable::hashJoinTables(ResultTable table_one, ResultTable table_two) {
 	ResultTable larger_table;
 	ResultTable smaller_table;
 	if (table_one.getNumberOfRows() >= table_two.getNumberOfRows()) {
@@ -167,6 +167,23 @@ QP::Types::ResultTable QP::Types::ResultTable::crossJoinTables(ResultTable table
 	return final_table;
 }
 
+QP::Types::ResultTable QP::Types::ResultTable::loopJoinTables(const ResultTable& table_one, const ResultTable& table_two) {
+	vector<string> final_synonyms;
+	final_synonyms.insert(final_synonyms.end(), table_one.synonyms_stored.begin(), table_one.synonyms_stored.end());
+	final_synonyms.insert(final_synonyms.end(), table_two.synonyms_stored.begin(), table_two.synonyms_stored.end());
+
+	ResultTable table = ResultTable(final_synonyms);
+	for (auto const& table_one_row : table_one.table) {
+		for (auto const& table_two_row : table_two.table) {
+			ResultRow row = table_one_row;
+			row.insert(row.end(), table_two_row.begin(), table_two_row.end());
+			table.insertRow(row);
+		}
+	}
+
+	return table;
+}
+
 QP::Types::ResultTable QP::Types::ResultTable::joinTables(ResultTable table_one, ResultTable table_two) {
 	ResultTable superset_table;
 	ResultTable subset_table;
@@ -180,11 +197,19 @@ QP::Types::ResultTable QP::Types::ResultTable::joinTables(ResultTable table_one,
 	}
 
 	unordered_map<string, size_t> superset_synonyms = superset_table.getSynonymsStoredMap();
-	for (auto const& synonym : subset_table.getSynonymsStored()) {
-		if (superset_synonyms.find(synonym) == superset_synonyms.end()) {
-			return crossJoinTables(move(superset_table), move(subset_table));
-		}
+	vector<string> subset_synonyms = subset_table.getSynonymsStored();
+
+	size_t number_of_match = count_if(subset_synonyms.begin(), subset_synonyms.end(), [superset_synonyms](auto const& synonym) {
+		return superset_synonyms.find(synonym) != superset_synonyms.end();
+	});
+
+	if (number_of_match == superset_synonyms.size()) {
+		return intersectTables(move(superset_table), subset_table);
 	}
 
-	return intersectTables(move(superset_table), subset_table);
+	if (number_of_match > 0) {
+		return hashJoinTables(move(superset_table), move(subset_table));
+	}
+
+	return loopJoinTables(superset_table, subset_table);
 }
