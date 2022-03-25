@@ -25,31 +25,6 @@ StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
         info.node_stack.push(neighbour);
     }
     processDFSVisit(info, false);
-//    while (!info.node_stack.empty()) {
-//        shared_ptr<PKB::NodeInterface> curr_node = info.node_stack.top();
-//        info.node_stack.pop();
-//        if (info.visited_set.find(curr_node) != info.visited_set.end()) {
-//            continue;
-//        }
-//        if (curr_node->getNodeType() == NodeType::Dummy) {
-//            StmtInfoPtrSet real_nodes = control_flow_graph->collectNextOfDummy(curr_node);
-//            for (const auto &real_node: real_nodes) {
-//                info.node_stack.push(control_flow_graph->stmt_to_normal_node_store.at(real_node->getIdentifier()));
-//            }
-//            continue;
-//        }
-//        info.visited_set.insert(curr_node);
-//        shared_ptr<PKB::StatementNode> curr_stmt_node = dynamic_pointer_cast<PKB::StatementNode>(curr_node);
-//        if (uses_store->check(curr_stmt_node->getNodeRef(), info.variable) &&
-//            curr_stmt_node->getStmtInfo()->getType() == StmtType::Assign) {
-//            info.nodes.insert(curr_stmt_node->getStmtInfo());
-//        }
-//        if (!modifies_store->check(curr_node->getNodeRef(), info.variable)) {
-//            for (const auto &neighbour: curr_node->getNextNodes()) {
-//                info.node_stack.push(neighbour);
-//            }
-//        }
-//    }
     return info.nodes;
 }
 
@@ -75,32 +50,6 @@ PKB::AffectsManager::getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode
         info.node_stack.push(neighbour);
     }
     processDFSVisit(info, true);
-//    while (!info.node_stack.empty()) {
-//        shared_ptr<PKB::NodeInterface> curr_node = info.node_stack.top();
-//        info.node_stack.pop();
-//        if (info.visited_set.find(curr_node) != info.visited_set.end()) {
-//            continue;
-//        }
-//        if (curr_node->getNodeType() == NodeType::Dummy) {
-//            StmtInfoPtrSet real_nodes = control_flow_graph->collectPreviousOfDummy(curr_node);
-//            for (const auto &real_node: real_nodes) {
-//                info.node_stack.push(control_flow_graph->stmt_to_normal_node_store.at(real_node->getIdentifier()));
-//            }
-//            continue;
-//        }
-//        info.visited_set.insert(curr_node);
-//        shared_ptr<PKB::StatementNode> curr_stmt_node = dynamic_pointer_cast<PKB::StatementNode>(curr_node);
-//
-//        if (modifies_store->check(curr_stmt_node->getNodeRef(), info.variable)) {
-//            if (curr_stmt_node->getStmtInfo()->getType() == StmtType::Assign) {
-//                info.nodes.insert(curr_stmt_node->getStmtInfo());
-//            }
-//        } else {
-//            for (const auto &neighbour: curr_node->getPreviousNodes()) {
-//                info.node_stack.push(neighbour);
-//            }
-//        }
-//    }
     return info.nodes;
 }
 
