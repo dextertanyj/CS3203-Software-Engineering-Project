@@ -15,6 +15,7 @@ struct ParseException : public runtime_error {
 struct TokenizationException : public runtime_error {
 	using runtime_error::runtime_error;
 };
+
 namespace Node {};
 class Processor;
 class Lexer;
