@@ -47,6 +47,15 @@ QP::QueryProperties QP::QueryPreprocessor::parseQuery() {
 	for (const auto& declaration_pair : existing_declarations) {
 		declarations.push_back(declaration_pair.second);
 	}
+	if (this->is_semantically_invalid) {
+		if (this->select_list.empty()) {
+			throw QuerySemanticException({"FALSE"}, "");
+		}
+		else {
+			throw QuerySemanticException({}, "");
+		}
+	}
+
 	return {declarations, this->select_list, this->clause_list};
 }
 
@@ -75,7 +84,7 @@ void QP::QueryPreprocessor::parseDeclarationGroup(const Types::DesignEntity& typ
 void QP::QueryPreprocessor::parseDeclaration(const Types::DesignEntity& type) {
 	string current_token = this->query_tokens.at(token_index);
 	if (existing_declarations.find(current_token) != existing_declarations.end()) {
-		throw QueryException("Duplicate synonym.");
+		this->is_semantically_invalid = true;
 	}
 	this->existing_declarations.insert({current_token, {type, current_token}});
 	++token_index;

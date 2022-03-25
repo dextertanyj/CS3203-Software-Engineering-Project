@@ -63,6 +63,7 @@ private:
 	Types::ClauseList clause_list;
 
 	QP::Dispatcher::DispatchMap dispatcher;
+	bool is_semantically_invalid;
 
 	static regex invalid_chars_regex;
 	static regex query_token_regex;

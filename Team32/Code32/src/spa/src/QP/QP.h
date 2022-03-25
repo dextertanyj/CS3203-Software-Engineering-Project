@@ -36,9 +36,10 @@ struct ReferenceArgumentException : public logic_error {
 	using logic_error::logic_error;
 };
 
-// struct QuerySyntaxException : public runtime_error {
-//     using runtime_error::runtime_error;
-// };
+struct QuerySemanticException : public runtime_error {
+	vector<string> result;
+	QuerySemanticException(vector<string> result, const string& message) : runtime_error(message), result(move(result)){};
+};
 }
 
 #endif  // SPA_SRC_QP_QP_H
