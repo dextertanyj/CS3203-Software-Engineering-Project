@@ -39,14 +39,14 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle> index_map = {
 	{ReferenceType::Name, pair{ClauseType::ModifiesS,
                                [](const vector<ReferenceArgument>& args) {
 								   return [procedure = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-									   return StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialIndexName(storage, procedure,
+									   return StatementVariableExecutor::executeTrivialIndexName<ClauseType::ModifiesS>(storage, procedure,
 		                                                                                                                variable);
 								   };
 							   }}},
 	{ReferenceType::Wildcard, pair{ClauseType::ModifiesS,
                                    [](const vector<ReferenceArgument>& args) {
 									   return [procedure = args.at(0)](const QP::StorageAdapter& storage) {
-										   return StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialIndexWildcardOrSynonym(
+										   return StatementVariableExecutor::executeTrivialIndexWildcardOrSynonym<ClauseType::ModifiesS>(
 											   storage, procedure);
 									   };
 								   }}},
@@ -54,11 +54,11 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle> index_map = {
      pair{ClauseType::ModifiesS,
           [](const vector<ReferenceArgument>& args) {
 			  return pair{[procedure = args.at(0)](const QP::StorageAdapter& storage) {
-							  return StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialIndexWildcardOrSynonym(storage,
+							  return StatementVariableExecutor::executeTrivialIndexWildcardOrSynonym<ClauseType::ModifiesS>(storage,
 		                                                                                                                    procedure);
 						  },
 	                      [procedure = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-							  return StatementVariableExecutor<ClauseType::ModifiesS>::executeIndexSynonym(storage, procedure, variable);
+							  return StatementVariableExecutor::executeIndexSynonym<ClauseType::ModifiesS>(storage, procedure, variable);
 						  }};
 		  }}},
 };
@@ -100,11 +100,11 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle> statement_map
 	{ReferenceType::Name, pair{ClauseType::ModifiesS,
                                [](const vector<ReferenceArgument>& args) {
 								   return pair{[statement = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-												   return StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialSynonymName(
+												   return StatementVariableExecutor::executeTrivialSynonymName<ClauseType::ModifiesS>(
 													   storage, statement, variable);
 											   },
 	                                           [statement = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-												   return StatementVariableExecutor<ClauseType::ModifiesS>::executeSynonymName(
+												   return StatementVariableExecutor::executeSynonymName<ClauseType::ModifiesS>(
 													   storage, statement, variable);
 											   }};
 							   }}},
@@ -112,22 +112,22 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle> statement_map
      pair{ClauseType::ModifiesS,
           [](const vector<ReferenceArgument>& args) {
 			  return pair{[statement = args.at(0)](const QP::StorageAdapter& storage) {
-							  return StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialSynonymWildcardOrSynonym(storage,
+							  return StatementVariableExecutor::executeTrivialSynonymWildcardOrSynonym<ClauseType::ModifiesS>(storage,
 		                                                                                                                      statement);
 						  },
 	                      [statement = args.at(0)](const QP::StorageAdapter& storage) {
-							  return StatementVariableExecutor<ClauseType::ModifiesS>::executeSynonymWildcard(storage, statement);
+							  return StatementVariableExecutor::executeSynonymWildcard<ClauseType::ModifiesS>(storage, statement);
 						  }};
 		  }}},
 	{DesignEntity::Variable,
      pair{ClauseType::ModifiesS,
           [](const vector<ReferenceArgument>& args) {
 			  return pair{[statement = args.at(0)](const QP::StorageAdapter& storage) {
-							  return StatementVariableExecutor<ClauseType::ModifiesS>::executeTrivialSynonymWildcardOrSynonym(storage,
+							  return StatementVariableExecutor::executeTrivialSynonymWildcardOrSynonym<ClauseType::ModifiesS>(storage,
 		                                                                                                                      statement);
 						  },
 	                      [statement = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-							  return StatementVariableExecutor<ClauseType::ModifiesS>::executeSynonymSynonym(storage, statement, variable);
+							  return StatementVariableExecutor::executeSynonymSynonym<ClauseType::ModifiesS>(storage, statement, variable);
 						  }};
 		  }}},
 };

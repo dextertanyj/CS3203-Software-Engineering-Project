@@ -10,8 +10,8 @@ class ProcedureVariableExecutor;
 template <QP::Types::ClauseType T>
 class StatementExecutor;
 
-template <QP::Types::ClauseType T>
-class StatementVariableExecutor;
+//template <QP::Types::ClauseType T>
+namespace StatementVariableExecutor {}
 
 template <QP::Types::ClauseType T>
 class ProcedureExecutor;
