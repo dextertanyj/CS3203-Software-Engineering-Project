@@ -28,10 +28,10 @@ TEST_CASE("QP::ReferenceArgument Test") {
 	}
 
 	SECTION("Attribute") {
-		QP::Types::ReferenceArgument arg = QP::Types::ReferenceArgument({QP::Types::AttributeType::Name, {QP::Types::DesignEntity::Read, "r"}});
+		QP::Types::ReferenceArgument arg = QP::Types::ReferenceArgument({QP::Types::AttributeType::NameIdentifier, {QP::Types::DesignEntity::Read, "r"}});
 		REQUIRE_EQUALS(arg.getType(), QP::Types::ReferenceType::Attribute);
 		REQUIRE_EQUALS(arg.getAttribute().synonym.type, QP::Types::DesignEntity::Read);
 		REQUIRE_EQUALS(arg.getAttribute().synonym.symbol, "r");
-		REQUIRE_EQUALS(arg.getAttribute().attribute, QP::Types::AttributeType::Name);
+		REQUIRE_EQUALS(arg.getAttribute().attribute, QP::Types::AttributeType::NameIdentifier);
 	}
 }

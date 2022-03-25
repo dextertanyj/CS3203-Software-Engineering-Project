@@ -50,19 +50,19 @@ struct QP::Dispatcher::DispatchMap {
 	};
 
 	unordered_map<pair<Types::DesignEntity, string>, Types::AttributeType> attribute_map = {
-		{{Types::DesignEntity::Stmt, "stmt#"}, Types::AttributeType::Index},
-		{{Types::DesignEntity::Read, "stmt#"}, Types::AttributeType::Index},
-		{{Types::DesignEntity::Print, "stmt#"}, Types::AttributeType::Index},
-		{{Types::DesignEntity::Call, "stmt#"}, Types::AttributeType::Index},
-		{{Types::DesignEntity::While, "stmt#"}, Types::AttributeType::Index},
-		{{Types::DesignEntity::If, "stmt#"}, Types::AttributeType::Index},
-		{{Types::DesignEntity::Assign, "stmt#"}, Types::AttributeType::Index},
-		{{Types::DesignEntity::Read, "varName"}, Types::AttributeType::Variable},
-		{{Types::DesignEntity::Print, "varName"}, Types::AttributeType::Variable},
-		{{Types::DesignEntity::Call, "procName"}, Types::AttributeType::Variable},
-		{{Types::DesignEntity::Procedure, "procName"}, Types::AttributeType::Name},
-		{{Types::DesignEntity::Variable, "varName"}, Types::AttributeType::Name},
-		{{Types::DesignEntity::Constant, "value"}, Types::AttributeType::Value}};
+		{{Types::DesignEntity::Stmt, "stmt#"}, Types::AttributeType::NumberIdentifier},
+		{{Types::DesignEntity::Read, "stmt#"}, Types::AttributeType::NumberIdentifier},
+		{{Types::DesignEntity::Print, "stmt#"}, Types::AttributeType::NumberIdentifier},
+		{{Types::DesignEntity::Call, "stmt#"}, Types::AttributeType::NumberIdentifier},
+		{{Types::DesignEntity::While, "stmt#"}, Types::AttributeType::NumberIdentifier},
+		{{Types::DesignEntity::If, "stmt#"}, Types::AttributeType::NumberIdentifier},
+		{{Types::DesignEntity::Assign, "stmt#"}, Types::AttributeType::NumberIdentifier},
+		{{Types::DesignEntity::Read, "varName"}, Types::AttributeType::VariableName},
+		{{Types::DesignEntity::Print, "varName"}, Types::AttributeType::VariableName},
+		{{Types::DesignEntity::Call, "procName"}, Types::AttributeType::ProcedureName},
+		{{Types::DesignEntity::Procedure, "procName"}, Types::AttributeType::NameIdentifier},
+		{{Types::DesignEntity::Variable, "varName"}, Types::AttributeType::NameIdentifier},
+		{{Types::DesignEntity::Constant, "value"}, Types::AttributeType::NumberIdentifier}};
 
 	unordered_map<string, Types::DesignEntity> design_entity_map = {
 		{"stmt", Types::DesignEntity::Stmt},         {"read", Types::DesignEntity::Read},
