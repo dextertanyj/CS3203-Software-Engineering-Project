@@ -1,4 +1,4 @@
-#include "QP/QueryFormatter.h"
+#include "QP/QueryPostProcessor.h"
 
 #include <algorithm>
 #include <string>
@@ -14,20 +14,15 @@ using namespace std;
 using QP::Types::Declaration;
 using QP::Types::DeclarationList;
 
-QP::QueryFormatter::QueryFormatter(const StorageAdapter& store) : store(store) {}
+QP::QueryPostProcessor::QueryPostProcessor(const StorageAdapter& store) : store(store) {}
 
-vector<string> QP::QueryFormatter::formatResult(QueryProperties& query_properties, QueryResult& query_result) const {
+vector<string> QP::QueryPostProcessor::processResult(QueryProperties& query_properties, QueryResult& query_result) const {
 	DeclarationList select_list = query_properties.getSelectSynonymList();
 	if (select_list.empty()) {
-		return formatBooleanResult(query_result);
+		return processBooleanResult(query_result);
 	}
 
-	return formatNonBooleanResult(query_properties, query_result);
-}
-
-vector<string> QP::QueryFormatter::formatBooleanResult(QueryResult& query_result) {
-	string result = query_result.getResult() ? TRUE : FALSE;
-	return {result};
+	return processStandardResult(query_properties, query_result);
 }
 
 template <QP::Types::ClauseType T>
@@ -55,7 +50,7 @@ static inline string applyTransform(const QP::StorageAdapter& store, const QP::T
 	return iter->second(store, result);
 }
 
-vector<string> QP::QueryFormatter::formatNonBooleanResult(QueryProperties& query_properties, QueryResult& query_result) const {
+vector<string> QP::QueryPostProcessor::processStandardResult(QueryProperties& query_properties, QueryResult& query_result) const {
 	if (!query_result.getResult()) {
 		return {};
 	}
@@ -81,4 +76,9 @@ vector<string> QP::QueryFormatter::formatNonBooleanResult(QueryProperties& query
 	}
 
 	return result;
+}
+
+vector<string> QP::QueryPostProcessor::processBooleanResult(QueryResult& query_result) {
+	string result = query_result.getResult() ? TRUE : FALSE;
+	return {result};
 }

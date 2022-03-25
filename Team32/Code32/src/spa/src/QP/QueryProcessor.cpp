@@ -11,7 +11,7 @@ vector<string> QP::QueryProcessor::processQuery(string query) {
 	try {
 		QueryProperties query_properties = pre_processor.parseQuery(std::move(query));
 		QueryResult result = evaluator.executeQuery(query_properties);
-		return post_processor.formatResult(query_properties, result);
+		return post_processor.processResult(query_properties, result);
 	} catch (const exception& e) {
 		return {};
 	}

@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "QP/QueryEvaluator.h"
-#include "QP/QueryFormatter.h"
+#include "QP/QueryPostProcessor.h"
 #include "QP/QueryPreprocessor.h"
 #include "QP/StorageAdapter.h"
 
@@ -21,7 +21,7 @@ private:
 	StorageAdapter store;
 	QueryPreprocessor pre_processor;
 	QueryEvaluator evaluator;
-	QueryFormatter post_processor;
+	QueryPostProcessor post_processor;
 };
 
 #endif  // SPA_SRC_QP_QUERYPROCESSOR_H
