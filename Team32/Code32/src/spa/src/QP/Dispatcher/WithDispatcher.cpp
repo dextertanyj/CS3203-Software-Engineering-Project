@@ -13,37 +13,48 @@ namespace {
 // Executor maps
 
 template <typename TAttribute, typename TLeft, typename TRight>
-const unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> attribute_executor_map = {
-	{ReferenceType::Name, pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>(
-							  QP::Executor::WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
-							  QP::Executor::WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
-	{ReferenceType::StatementIndex, pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>(
-										QP::Executor::WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
-										QP::Executor::WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
-	{ReferenceType::Attribute, pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>(
-								   QP::Executor::WithExecutor::executeTrivialAttributeAttribute<TAttribute, TLeft, TRight>,
-								   QP::Executor::WithExecutor::executeAttributeAttribute<TAttribute, TLeft, TRight>)}};
+static unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> getAttributeExecutorMap() {
+	static const unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> map = {
+		{ReferenceType::Name, pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>(
+								  QP::Executor::WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
+								  QP::Executor::WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
+		{ReferenceType::StatementIndex,
+	     pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>(
+			 QP::Executor::WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
+			 QP::Executor::WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
+		{ReferenceType::Attribute, pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>(
+									   QP::Executor::WithExecutor::executeTrivialAttributeAttribute<TAttribute, TLeft, TRight>,
+									   QP::Executor::WithExecutor::executeAttributeAttribute<TAttribute, TLeft, TRight>)}};
+	return map;
+}
 
 template <typename TAttribute, typename TLeft, typename TRight>
-const unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> constant_executor_map = {
-	{ReferenceType::Name, QP::Executor::WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
-	{ReferenceType::StatementIndex, QP::Executor::WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
-	{ReferenceType::Attribute, pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>(
-								   QP::Executor::WithExecutor::executeTrivialAttributeAttribute<TAttribute, TLeft, TRight>,
-								   QP::Executor::WithExecutor::executeAttributeAttribute<TAttribute, TLeft, TRight>)}};
+static unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> getConstantExecutorMap() {
+	static const unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> map = {
+		{ReferenceType::Name, QP::Executor::WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
+		{ReferenceType::StatementIndex, QP::Executor::WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
+		{ReferenceType::Attribute, pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>(
+									   QP::Executor::WithExecutor::executeTrivialAttributeAttribute<TAttribute, TLeft, TRight>,
+									   QP::Executor::WithExecutor::executeAttributeAttribute<TAttribute, TLeft, TRight>)}};
+	return map;
+}
 
 template <typename TAttribute, typename TLeft, typename TRight>
-const unordered_map<ReferenceType, unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> executor_map = {
-	{ReferenceType::Name, constant_executor_map<TAttribute, TLeft, TRight>},
-	{ReferenceType::StatementIndex, constant_executor_map<TAttribute, TLeft, TRight>},
-	{ReferenceType::Attribute, attribute_executor_map<TAttribute, TLeft, TRight>}};
+static unordered_map<ReferenceType, unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> getExecutorMap() {
+	static const unordered_map<ReferenceType, unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> map = {
+		{ReferenceType::Name, getConstantExecutorMap<TAttribute, TLeft, TRight>()},
+		{ReferenceType::StatementIndex, getConstantExecutorMap<TAttribute, TLeft, TRight>()},
+		{ReferenceType::Attribute, getAttributeExecutorMap<TAttribute, TLeft, TRight>()}};
+	return map;
+}
 
 template <typename TAttribute, typename TLeft, typename TRight>
 WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<ReferenceArgument>& arguments) {
+	static const unordered_map<ReferenceType, unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> map =
+		getExecutorMap<TAttribute, TLeft, TRight>();
 	ReferenceType lhs = arguments.at(0).getType();
 	ReferenceType rhs = arguments.at(1).getType();
-	unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> inner_map =
-		executor_map<TAttribute, TLeft, TRight>.at(lhs);
+	unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> inner_map = map.at(lhs);
 	auto executor = inner_map.at(rhs);
 	return executor;
 }
@@ -72,7 +83,7 @@ const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Number,
 const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Number>> name_attribute_number_map = {
 	{DispatchAttributeKey{DesignEntity::Read, AttributeType::Variable},
      {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<QP::Types::ClauseType::ModifiesS>}},
-	{DispatchAttributeKey{DesignEntity::Call, AttributeType::Name},
+	{DispatchAttributeKey{DesignEntity::Call, AttributeType::Variable},
      {AttributeExecutor::selectStatements, AttributeExecutor::callToProcedure}},
 	{DispatchAttributeKey{DesignEntity::Print, AttributeType::Variable},
      {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<QP::Types::ClauseType::UsesS>}}};

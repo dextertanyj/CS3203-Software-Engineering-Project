@@ -29,32 +29,39 @@ private:
 
 	// Parse constructs
 	void parseDeclarations();
-	void parseDeclarations(const Types::DesignEntity& type);
-	void parseSelect();
-	void parseClauses();
-
-	// Parsing Rules
+	void parseDeclarationGroup(const Types::DesignEntity& type);
 	void parseDeclaration(const Types::DesignEntity& type);
-	optional<Types::DesignEntity> parseDesignEntity();
+
+	void parseSelect();
 	void parseSelectList();
-	void parseClauseLoop(void (QueryPreprocessor::*parser)());
 	void parseSelectSynonym();
-	void parseSuchThatClause();
+
+	void parseClauses();
+	void parseClauseLoop(void (QueryPreprocessor::*parser)());
 	void parseClause(Types::ClauseType type);
 	void parseClause(Types::ClauseType type, vector<Types::ReferenceArgument> prefixes);
+	void createClause(Types::ClauseType type, vector<Types::ReferenceArgument> arguments);
+
+	void parseSuchThat();
+	void parseWith();
 	void parsePattern();
 	void parseAssignPattern(Types::ReferenceArgument synonym);
 
+	optional<Types::DesignEntity> parseDesignEntity();
+	Declaration parseClauseSynonym();
 	vector<Types::ReferenceArgument> parseArguments();
 	Types::ReferenceArgument parseReferenceArgument();
 	Common::ExpressionProcessor::Expression parseExpression();
+
 	void matchTokenOrThrow(const string& token);
+	void reset();
 
 	size_t token_index;
 	vector<string> query_tokens;
 	unordered_map<string, Types::Declaration> existing_declarations;
 	Types::DeclarationList select_list;
 	Types::ClauseList clause_list;
+
 	QP::Dispatcher::DispatchMap dispatcher;
 
 	static regex invalid_chars_regex;
