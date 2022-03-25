@@ -70,7 +70,6 @@ StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
 StmtInfoPtrSet
 PKB::AffectsManager::getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode> &node, VarRef variable) {
     Types::DFSInfo info = {std::move(variable), {}, {}, {}};
-    info.visited_set.insert(node);
     for (const auto &neighbour: node->getPreviousNodes()) {
         info.node_stack.push(neighbour);
     }
@@ -80,22 +79,24 @@ PKB::AffectsManager::getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode
         if (info.visited_set.find(curr_node) != info.visited_set.end()) {
             continue;
         }
-        if (node->getNodeType() == NodeType::Dummy) {
-            StmtInfoPtrSet real_nodes = control_flow_graph->collectPreviousOfDummy(node);
+        if (curr_node->getNodeType() == NodeType::Dummy) {
+            StmtInfoPtrSet real_nodes = control_flow_graph->collectPreviousOfDummy(curr_node);
             for (const auto &real_node: real_nodes) {
                 info.node_stack.push(control_flow_graph->stmt_to_normal_node_store.at(real_node->getIdentifier()));
             }
             continue;
         }
-        shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(curr_node);
-        if (modifies_store->check(stmt_node->getNodeRef(), info.variable)) {
-            info.nodes.insert(stmt_node->getStmtInfo());
-        } else {
+        info.visited_set.insert(curr_node);
+        shared_ptr<PKB::StatementNode> curr_stmt_node = dynamic_pointer_cast<PKB::StatementNode>(curr_node);
+        if (uses_store->check(curr_stmt_node->getNodeRef(), info.variable) &&
+            curr_stmt_node->getStmtInfo()->getType() == StmtType::Assign) {
+            info.nodes.insert(curr_stmt_node->getStmtInfo());
+        }
+        if (!modifies_store->check(curr_node->getNodeRef(), info.variable)) {
             for (const auto &neighbour: curr_node->getPreviousNodes()) {
                 info.node_stack.push(neighbour);
             }
         }
-        info.visited_set.insert(curr_node);
     }
     return info.nodes;
 }
