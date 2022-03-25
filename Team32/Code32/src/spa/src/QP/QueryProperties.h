@@ -1,8 +1,8 @@
 #ifndef SPA_SRC_QP_QUERYPROPERTIES_H
 #define SPA_SRC_QP_QUERYPROPERTIES_H
 
-#include "QP/Types.h"
 #include "QP/ReferenceArgument.h"
+#include "QP/Types.h"
 
 using namespace std;
 
