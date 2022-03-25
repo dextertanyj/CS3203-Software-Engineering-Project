@@ -19,8 +19,9 @@ TEST_CASE("QP::QueryResult::joinResult should set result to false") {
 	result_two.addRow({"2", "5"});
 	result_two.addRow({"2", "6"});
 	result_two.addRow({"3", "7"});
+	vector<QP::QueryResult> results = {result_one, result_two};
 
-	QP::QueryResult final_result = QP::QueryResult::joinResults({result_one, result_two});
+	QP::QueryResult final_result = QP::QueryResult::joinResults(results);
 
 	REQUIRE(!final_result.getResult());
 }
@@ -34,8 +35,9 @@ TEST_CASE("QP::QueryResult::joinResult should set result to true") {
 	result_two.addRow({"2", "5"});
 	result_two.addRow({"2", "6"});
 	result_two.addRow({"3", "7"});
+	vector<QP::QueryResult> results = {result_one, result_two};
 
-	QP::QueryResult final_result = QP::QueryResult::joinResults({result_one, result_two});
+	QP::QueryResult final_result = QP::QueryResult::joinResults(results);
 
 	REQUIRE(final_result.getResult());
 	REQUIRE(final_result.getNumberOfRows() == 3);
@@ -58,16 +60,17 @@ TEST_CASE("QP::QueryResult::joinResult multiple results, should return true") {
 	result_three.addRow({"s", "70", "7", "ddd"});
 	result_four.addRow({"x", "5"});
 	result_four.addRow({"y", "3"});
+	vector<QP::QueryResult> results = {result_one, result_two, result_three, result_four};
 
-	QP::QueryResult final_result = QP::QueryResult::joinResults({result_one, result_two, result_three, result_four});
+	QP::QueryResult final_result = QP::QueryResult::joinResults(results);
 
 	REQUIRE(final_result.getResult());
 	REQUIRE(final_result.getNumberOfRows() == 1);
-	REQUIRE(final_result.getTable().getRowWithOrder({ "a", "b", "c", "d", "e" }, 0) == vector<string>({"5", "5", "x", "50", "aaa"}));
+	REQUIRE(final_result.getTable().getRowWithOrder({"a", "b", "c", "d", "e"}, 0) == vector<string>({"5", "5", "x", "50", "aaa"}));
 }
 
 TEST_CASE("QP::QueryResult::joinResult multiple results, should return false") {
-		QP::QueryResult result_one = QP::QueryResult(vector<string>({"a"}));
+	QP::QueryResult result_one = QP::QueryResult(vector<string>({"a"}));
 	QP::QueryResult result_two = QP::QueryResult(vector<string>({"a", "b"}));
 	QP::QueryResult result_three = QP::QueryResult(vector<string>({"c", "d", "a", "e"}));
 	QP::QueryResult result_four = QP::QueryResult(vector<string>({"c", "b"}));
@@ -83,8 +86,9 @@ TEST_CASE("QP::QueryResult::joinResult multiple results, should return false") {
 	result_three.addRow({"s", "70", "7", "ddd"});
 	result_four.addRow({"x", "5"});
 	result_four.addRow({"y", "3"});
+	vector<QP::QueryResult> results = {result_one, result_two, result_three, result_four};
 
-	QP::QueryResult final_result = QP::QueryResult::joinResults({result_one, result_two, result_three, result_four});
+	QP::QueryResult final_result = QP::QueryResult::joinResults(results);
 
 	REQUIRE(!final_result.getResult());
 }

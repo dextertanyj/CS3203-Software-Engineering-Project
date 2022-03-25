@@ -26,7 +26,7 @@ public:
 	size_t getNumberOfRows();
 	void addRow(const ResultRow& row);
 	void filterBySelect(const QP::Types::DeclarationList& select_list);
-	static QueryResult joinResults(vector<QueryResult> result);
+	static QueryResult joinResults(vector<QueryResult>& result);
 
 private:
 	bool result;

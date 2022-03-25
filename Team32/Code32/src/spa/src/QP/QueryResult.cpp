@@ -25,7 +25,7 @@ void QP::QueryResult::addRow(const ResultRow& row) {
 	table.insertRow(row);
 }
 
-void QP::QueryResult::filterBySelect(const QP::Types::DeclarationList& select_list) { 
+void QP::QueryResult::filterBySelect(const QP::Types::DeclarationList& select_list) {
 	if (select_list.empty()) {
 		table = ResultTable();
 		return;
@@ -34,7 +34,7 @@ void QP::QueryResult::filterBySelect(const QP::Types::DeclarationList& select_li
 	table = table.filterBySelect(select_list);
 }
 
-QP::QueryResult QP::QueryResult::joinResults(vector<QueryResult> results) {
+QP::QueryResult QP::QueryResult::joinResults(vector<QueryResult>& results) {
 	if (results.empty()) {
 		return {};
 	}
