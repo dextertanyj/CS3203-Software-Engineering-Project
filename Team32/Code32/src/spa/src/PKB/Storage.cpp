@@ -181,7 +181,9 @@ StmtInfoPtrSet PKB::Storage::getFollowerStar(StmtRef index) { return follows_sto
 
 bool PKB::Storage::checkCalls(const ProcRef &caller, const ProcRef &callee) { return calls_store.isRelated(caller, callee); }
 
-bool PKB::Storage::checkCallsStar(const ProcRef &caller, const ProcRef &callee) { return calls_store.isTransitivelyRelated(caller, callee); }
+bool PKB::Storage::checkCallsStar(const ProcRef &caller, const ProcRef &callee) {
+	return calls_store.isTransitivelyRelated(caller, callee);
+}
 
 ProcRefSet PKB::Storage::getCallee(const ProcRef &caller) {
 	unordered_set<shared_ptr<ProcedureInfo>> callees = calls_store.getReverse(caller);
