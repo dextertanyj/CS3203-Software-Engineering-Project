@@ -199,11 +199,11 @@ QP::Types::ResultTable QP::Types::ResultTable::joinTables(ResultTable table_one,
 	unordered_map<string, size_t> superset_synonyms = superset_table.getSynonymsStoredMap();
 	vector<string> subset_synonyms = subset_table.getSynonymsStored();
 
-	size_t number_of_match = count_if(subset_synonyms.begin(), subset_synonyms.end(), [superset_synonyms](auto const& synonym) {
+	size_t number_of_match = count_if(subset_synonyms.begin(), subset_synonyms.end(), [&](auto const& synonym) {
 		return superset_synonyms.find(synonym) != superset_synonyms.end();
 	});
 
-	if (number_of_match == superset_synonyms.size()) {
+	if (number_of_match == subset_synonyms.size()) {
 		return intersectTables(move(superset_table), subset_table);
 	}
 
