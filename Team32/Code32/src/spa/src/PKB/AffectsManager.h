@@ -12,25 +12,25 @@
 
 class PKB::AffectsManager {
 public:
-    explicit AffectsManager(ControlFlowGraph &control_flow_graph,
-                            SVRelationStore<PKB::ModifiesSRelation> &modifies_store,
-                            SVRelationStore<PKB::UsesSRelation> &uses_store);
+	explicit AffectsManager(ControlFlowGraph &control_flow_graph, SVRelationStore<PKB::ModifiesSRelation> &modifies_store,
+	                        SVRelationStore<PKB::UsesSRelation> &uses_store);
 
-    bool checkAffects(StmtRef first, StmtRef second);
+	bool checkAffects(StmtRef first, StmtRef second);
 
-    StmtInfoPtrSet getAffects(StmtRef first);
+	StmtInfoPtrSet getAffects(StmtRef first);
 
-    StmtInfoPtrSet getAffected(StmtRef second);
+	StmtInfoPtrSet getAffected(StmtRef second);
 
 private:
-    ControlFlowGraph *control_flow_graph;
-    SVRelationStore<PKB::UsesSRelation> *uses_store;
-    SVRelationStore<PKB::ModifiesSRelation> *modifies_store;
+	ControlFlowGraph *control_flow_graph;
+	SVRelationStore<PKB::UsesSRelation> *uses_store;
+	SVRelationStore<PKB::ModifiesSRelation> *modifies_store;
 
-    StmtInfoPtrSet getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode> &node, VarRef variable);
+	StmtInfoPtrSet getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode> &node, VarRef variable);
 
-    void processDFS(Types::DFSInfo &info, const shared_ptr<NodeInterface> &node,
-                    StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface> &));
+	void processDFSVisit(Types::DFSInfo &info, bool is_forward_traversal);
+	void processNodeAffects(Types::DFSInfo &info, const shared_ptr<PKB::StatementNode> &curr_stmt_node);
+	void processNodeAffected(Types::DFSInfo &info, const shared_ptr<PKB::StatementNode> &curr_stmt_node);
 };
 
 #endif  // SPA_AFFECTSMANAGER_H

@@ -1,6 +1,6 @@
 #include "NextManager.h"
 
-PKB::NextManager::NextManager(ControlFlowGraph& control_flow_graph) { this->control_flow_graph = &control_flow_graph; }
+PKB::NextManager::NextManager(ControlFlowGraph &control_flow_graph) { this->control_flow_graph = &control_flow_graph; }
 
 void PKB::NextManager::setNext(StmtRef previous, StmtRef next) {
 	auto prev_node_iter = control_flow_graph->stmt_to_normal_node_store.find(previous);
@@ -62,7 +62,7 @@ bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
 	}
 	StmtInfoPtrSet next_nodes_of_prev = this->getNext(first);
 	return any_of(next_nodes_of_prev.begin(), next_nodes_of_prev.end(),
-	              [second](const shared_ptr<StmtInfo>& next_info) { return next_info->getIdentifier() == second; });
+	              [second](const shared_ptr<StmtInfo> &next_info) { return next_info->getIdentifier() == second; });
 }
 
 StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
@@ -72,7 +72,7 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 		shared_ptr<PKB::NodeInterface> curr_node = info.node_queue.front();
 		info.node_queue.pop();
 		unordered_set<shared_ptr<PKB::NodeInterface>> curr_next_nodes = curr_node->getNextNodes();
-		for (const auto& node : curr_next_nodes) {
+		for (const auto &node : curr_next_nodes) {
 			processBFSVisit(info, node, &ControlFlowGraph::collectNextOfDummy);
 		}
 		info.visited_set.insert(curr_node);
@@ -83,7 +83,7 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 StmtInfoPtrSet PKB::NextManager::getNext(StmtRef node_ref) {
 	shared_ptr<PKB::StatementNode> curr_node = control_flow_graph->getNode(node_ref);
 	StmtInfoPtrSet next_nodes;
-	for (const auto& node : curr_node->getNextNodes()) {
+	for (const auto &node : curr_node->getNextNodes()) {
 		if (node->getNodeType() == NodeType::Dummy) {
 			StmtInfoPtrSet next_of_dummy = control_flow_graph->collectNextOfDummy(node);
 			next_nodes.insert(next_of_dummy.begin(), next_of_dummy.end());
@@ -97,13 +97,13 @@ StmtInfoPtrSet PKB::NextManager::getNext(StmtRef node_ref) {
 
 bool PKB::NextManager::checkNextStar(StmtRef first, StmtRef second) {
 	StmtInfoPtrSet nexts = getNextStar(first);
-	return any_of(nexts.begin(), nexts.end(), [&second](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == second; });
+	return any_of(nexts.begin(), nexts.end(), [&second](const shared_ptr<StmtInfo> &info) { return info->getIdentifier() == second; });
 }
 
 StmtInfoPtrSet PKB::NextManager::getPrevious(StmtRef node_ref) {
 	shared_ptr<PKB::StatementNode> curr_node = this->control_flow_graph->getNode(node_ref);
 	StmtInfoPtrSet prev_nodes;
-	for (const auto& node : curr_node->getPreviousNodes()) {
+	for (const auto &node : curr_node->getPreviousNodes()) {
 		// If previous node is a dummy node, need to get the previous nodes of the dummy node.
 		if (node->getNodeType() == NodeType::Dummy) {
 			StmtInfoPtrSet prev_of_dummy = control_flow_graph->collectPreviousOfDummy(node);
@@ -123,7 +123,7 @@ StmtInfoPtrSet PKB::NextManager::getPreviousStar(StmtRef node_ref) {
 		shared_ptr<PKB::NodeInterface> curr_node = info.node_queue.front();
 		info.node_queue.pop();
 		unordered_set<shared_ptr<PKB::NodeInterface>> curr_prev_nodes = curr_node->getPreviousNodes();
-		for (const auto& node : curr_prev_nodes) {
+		for (const auto &node : curr_prev_nodes) {
 			processBFSVisit(info, node, &ControlFlowGraph::collectPreviousOfDummy);
 		}
 		info.visited_set.insert(curr_node);
@@ -131,8 +131,8 @@ StmtInfoPtrSet PKB::NextManager::getPreviousStar(StmtRef node_ref) {
 	return info.nodes;
 }
 
-void PKB::NextManager::processBFSVisit(Types::BFSInfo& info, const shared_ptr<PKB::NodeInterface>& node,
-                                       StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&)) {
+void PKB::NextManager::processBFSVisit(Types::BFSInfo &info, const shared_ptr<PKB::NodeInterface> &node,
+                                       StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface> &)) {
 	if (node == info.start_node) {
 		shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
 		info.nodes.insert(stmt_node->getStmtInfo());
@@ -143,7 +143,7 @@ void PKB::NextManager::processBFSVisit(Types::BFSInfo& info, const shared_ptr<PK
 	if (node->getNodeType() == NodeType::Dummy) {
 		StmtInfoPtrSet real_nodes = (control_flow_graph->*collector)(node);
 		info.nodes.insert(real_nodes.begin(), real_nodes.end());
-		for (const auto& real_node : real_nodes) {
+		for (const auto &real_node : real_nodes) {
 			info.node_queue.push(control_flow_graph->stmt_to_normal_node_store.at(real_node->getIdentifier()));
 		}
 	} else {
