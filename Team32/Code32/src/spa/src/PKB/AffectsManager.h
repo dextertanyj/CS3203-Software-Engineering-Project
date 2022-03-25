@@ -29,8 +29,9 @@ private:
 
     StmtInfoPtrSet getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode> &node, VarRef variable);
 
-    void processDFS(Types::DFSInfo &info, const shared_ptr<NodeInterface> &node,
-                    StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface> &));
+    void processDFSVisit(Types::DFSInfo &info, bool is_forward_traversal);
+    void processNodeAffects(Types::DFSInfo &info, const shared_ptr<PKB::StatementNode> &curr_stmt_node);
+    void processNodeAffected(Types::DFSInfo &info, const shared_ptr<PKB::StatementNode> &curr_stmt_node);
 };
 
 #endif  // SPA_AFFECTSMANAGER_H
