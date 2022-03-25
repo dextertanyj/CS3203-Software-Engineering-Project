@@ -50,7 +50,7 @@ QP::Types::ResultTable QP::Types::ResultTable::filterBySelect(const QP::Types::D
 
 	ResultTable filtered_table = ResultTable(synonyms);
 
-	unordered_set<ResultRow, Common::Hash::VectorHash> rows;
+	unordered_set<ResultRow> rows;
 	for (auto const& row : table) {
 		ResultRow sub_row(select_list.size());
 		for (int i = 0; i < select_list.size(); i++) {
@@ -84,9 +84,8 @@ ResultRow QP::Types::ResultTable::getRowWithOrder(const vector<string>& synonyms
 	return row_with_order;
 }
 
-unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> QP::Types::ResultTable::buildHashTable(ResultTable& table,
-                                                                                                       const vector<string>& key_synonyms) {
-	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> map;
+unordered_multimap<ResultRow, size_t> QP::Types::ResultTable::buildHashTable(ResultTable& table, const vector<string>& key_synonyms) {
+	unordered_multimap<ResultRow, size_t> map;
 	unordered_map<string, size_t> synonyms_to_index_map = table.getSynonymsStoredMap();
 	size_t row_number = 0;
 	for (ResultRow const& row : table.table) {
@@ -105,7 +104,7 @@ unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> QP::Types::Resul
 QP::Types::ResultTable QP::Types::ResultTable::intersectTables(ResultTable superset_table, ResultTable subset_table) {
 	vector<string> common_synonyms = subset_table.synonyms_stored;
 	vector<ResultRow> table = subset_table.table;
-	unordered_set<ResultRow, Common::Hash::VectorHash> record_set(table.begin(), table.end());
+	unordered_set<ResultRow> record_set(table.begin(), table.end());
 
 	size_t number_of_rows = superset_table.getNumberOfRows();
 	size_t pos = 0;
@@ -155,7 +154,7 @@ QP::Types::ResultTable QP::Types::ResultTable::crossJoinTables(ResultTable table
 	final_synonyms.insert(final_synonyms.end(), new_synonyms.begin(), new_synonyms.end());
 	ResultTable final_table = ResultTable(final_synonyms);
 
-	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> map = buildHashTable(smaller_table, common_synonyms);
+	unordered_multimap<ResultRow, size_t> map = buildHashTable(smaller_table, common_synonyms);
 	for (size_t i = 0; i < larger_table.getNumberOfRows(); i++) {
 		auto range = map.equal_range(larger_table.getRowWithOrder(common_synonyms, i));
 		for (auto it = range.first; it != range.second; it++) {
