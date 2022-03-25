@@ -88,11 +88,9 @@ PKB::AffectsManager::getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode
         }
         info.visited_set.insert(curr_node);
         shared_ptr<PKB::StatementNode> curr_stmt_node = dynamic_pointer_cast<PKB::StatementNode>(curr_node);
-        if (uses_store->check(curr_stmt_node->getNodeRef(), info.variable) &&
-            curr_stmt_node->getStmtInfo()->getType() == StmtType::Assign) {
+        if (modifies_store->check(curr_stmt_node->getNodeRef(), info.variable)) {
             info.nodes.insert(curr_stmt_node->getStmtInfo());
-        }
-        if (!modifies_store->check(curr_node->getNodeRef(), info.variable)) {
+        } else {
             for (const auto &neighbour: curr_node->getPreviousNodes()) {
                 info.node_stack.push(neighbour);
             }
