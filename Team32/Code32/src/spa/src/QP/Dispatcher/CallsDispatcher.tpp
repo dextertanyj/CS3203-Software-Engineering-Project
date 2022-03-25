@@ -28,22 +28,22 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 		{Types::ReferenceType::Name,
 	     [](const vector<Types::ReferenceArgument>& args) {
 			 return [caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
-				 return Executor::ProcedureExecutor<T>::executeTrivialNameName(pkb, caller, callee);
+				 return Executor::ProcedureExecutor::executeTrivialNameName<T>(pkb, caller, callee);
 			 };
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](const vector<Types::ReferenceArgument>& args) {
 			 return [caller = args.at(0)](const QP::StorageAdapter& pkb) {
-				 return Executor::ProcedureExecutor<T>::executeTrivialNameWildcardOrSynonym(pkb, caller);
+				 return Executor::ProcedureExecutor::executeTrivialNameWildcardOrSynonym<T>(pkb, caller);
 			 };
 		 }},
 		{Types::DesignEntity::Procedure,
 	     [](const vector<Types::ReferenceArgument>& args) {
 			 return pair{[caller = args.at(0)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor<T>::executeTrivialNameWildcardOrSynonym(pkb, caller);
+							 return Executor::ProcedureExecutor::executeTrivialNameWildcardOrSynonym<T>(pkb, caller);
 						 },
 		                 [caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor<T>::executeNameSynonym(pkb, caller, callee);
+							 return Executor::ProcedureExecutor::executeNameSynonym<T>(pkb, caller, callee);
 						 }};
 		 }},
 	};
@@ -56,22 +56,22 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 		{Types::ReferenceType::Name,
 	     [](const vector<Types::ReferenceArgument>& args) {
 			 return [callee = args.at(1)](const QP::StorageAdapter& pkb) {
-				 return Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymName(pkb, callee);
+				 return Executor::ProcedureExecutor::executeTrivialWildcardOrSynonymName<T>(pkb, callee);
 			 };
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](const vector<Types::ReferenceArgument>& /*args*/) {
 			 return [](const QP::StorageAdapter& pkb) {
-				 return Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymWildcardOrSynonym(pkb);
+				 return Executor::ProcedureExecutor::executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(pkb);
 			 };
 		 }},
 		{Types::DesignEntity::Procedure,
 	     [](const vector<Types::ReferenceArgument>& args) {
 			 return pair{[](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymWildcardOrSynonym(pkb);
+							 return Executor::ProcedureExecutor::executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(pkb);
 						 },
 		                 [callee = args.at(1)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor<T>::executeWildcardSynonym(pkb, callee);
+							 return Executor::ProcedureExecutor::executeWildcardSynonym<T>(pkb, callee);
 						 }};
 		 }},
 	};
@@ -84,28 +84,28 @@ unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP:
 		{Types::ReferenceType::Name,
 	     [](const vector<Types::ReferenceArgument>& args) {
 			 return pair{[callee = args.at(1)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymName(pkb, callee);
+							 return Executor::ProcedureExecutor::executeTrivialWildcardOrSynonymName<T>(pkb, callee);
 						 },
 		                 [caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor<T>::executeSynonymName(pkb, caller, callee);
+							 return Executor::ProcedureExecutor::executeSynonymName<T>(pkb, caller, callee);
 						 }};
 		 }},
 		{Types::ReferenceType::Wildcard,
 	     [](const vector<Types::ReferenceArgument>& args) {
 			 return pair{[](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor<T>::executeTrivialWildcardOrSynonymWildcardOrSynonym(pkb);
+							 return Executor::ProcedureExecutor::executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(pkb);
 						 },
 		                 [caller = args.at(0)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor<T>::executeSynonymWildcard(pkb, caller);
+							 return Executor::ProcedureExecutor::executeSynonymWildcard<T>(pkb, caller);
 						 }};
 		 }},
 		{Types::DesignEntity::Procedure,
 	     [](const vector<Types::ReferenceArgument>& args) {
 			 return pair{[caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor<T>::executeTrivialSynonymSynonym(pkb, caller, callee);
+							 return Executor::ProcedureExecutor::executeTrivialSynonymSynonym<T>(pkb, caller, callee);
 						 },
 		                 [caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor<T>::executeSynonymSynonym(pkb, caller, callee);
+							 return Executor::ProcedureExecutor::executeSynonymSynonym<T>(pkb, caller, callee);
 						 }};
 		 }},
 	};

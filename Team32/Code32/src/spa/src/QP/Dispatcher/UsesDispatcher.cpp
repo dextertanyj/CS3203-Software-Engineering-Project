@@ -11,14 +11,14 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle> name_map = {
 	{ReferenceType::Name, pair{ClauseType::UsesP,
                                [](vector<ReferenceArgument> args) {
 								   return [procedure = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-									   return ProcedureVariableExecutor<ClauseType::UsesP>::executeTrivialNameName(storage, procedure,
+									   return ProcedureVariableExecutor::executeTrivialNameName<ClauseType::UsesP>(storage, procedure,
 		                                                                                                           variable);
 								   };
 							   }}},
 	{ReferenceType::Wildcard, pair{ClauseType::UsesP,
                                    [](vector<ReferenceArgument> args) {
 									   return [procedure = args.at(0)](const QP::StorageAdapter& storage) {
-										   return ProcedureVariableExecutor<ClauseType::UsesP>::executeTrivialNameWildcardOrSynonym(
+										   return ProcedureVariableExecutor::executeTrivialNameWildcardOrSynonym<ClauseType::UsesP>(
 											   storage, procedure);
 									   };
 								   }}},
@@ -26,10 +26,10 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle> name_map = {
      pair{ClauseType::UsesP,
           [](vector<ReferenceArgument> args) {
 			  return pair{[procedure = args.at(0)](const QP::StorageAdapter& storage) {
-							  return ProcedureVariableExecutor<ClauseType::UsesP>::executeTrivialNameWildcardOrSynonym(storage, procedure);
+							  return ProcedureVariableExecutor::executeTrivialNameWildcardOrSynonym<ClauseType::UsesP>(storage, procedure);
 						  },
 	                      [procedure = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-							  return ProcedureVariableExecutor<ClauseType::UsesP>::executeNameSynonym(storage, procedure, variable);
+							  return ProcedureVariableExecutor::executeNameSynonym<ClauseType::UsesP>(storage, procedure, variable);
 						  }};
 		  }}},
 };
@@ -66,30 +66,30 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle> procedure_map
      pair{ClauseType::UsesP,
           [](vector<ReferenceArgument> args) {
 			  return pair{[variable = args.at(1)](const QP::StorageAdapter& storage) {
-							  return ProcedureVariableExecutor<ClauseType::UsesP>::executeTrivialSynonymName(storage, variable);
+							  return ProcedureVariableExecutor::executeTrivialSynonymName<ClauseType::UsesP>(storage, variable);
 						  },
 	                      [procedure = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-							  return ProcedureVariableExecutor<ClauseType::UsesP>::executeSynonymName(storage, procedure, variable);
+							  return ProcedureVariableExecutor::executeSynonymName<ClauseType::UsesP>(storage, procedure, variable);
 						  }};
 		  }}},
 	{ReferenceType::Wildcard,
      pair{ClauseType::UsesP,
           [](vector<ReferenceArgument> args) {
 			  return pair{[](const QP::StorageAdapter& storage) {
-							  return ProcedureVariableExecutor<ClauseType::UsesP>::executeTrivialSynonymWildcardOrSynonym(storage);
+							  return ProcedureVariableExecutor::executeTrivialSynonymWildcardOrSynonym<ClauseType::UsesP>(storage);
 						  },
 	                      [procedure = args.at(0)](const QP::StorageAdapter& storage) {
-							  return ProcedureVariableExecutor<ClauseType::UsesP>::executeSynonymWildcard(storage, procedure);
+							  return ProcedureVariableExecutor::executeSynonymWildcard<ClauseType::UsesP>(storage, procedure);
 						  }};
 		  }}},
 	{DesignEntity::Variable,
      pair{ClauseType::UsesP,
           [](vector<ReferenceArgument> args) {
 			  return pair{[](const QP::StorageAdapter& storage) {
-							  return ProcedureVariableExecutor<ClauseType::UsesP>::executeTrivialSynonymWildcardOrSynonym(storage);
+							  return ProcedureVariableExecutor::executeTrivialSynonymWildcardOrSynonym<ClauseType::UsesP>(storage);
 						  },
 	                      [procedure = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-							  return ProcedureVariableExecutor<ClauseType::UsesP>::executeSynonymSynonym(storage, procedure, variable);
+							  return ProcedureVariableExecutor::executeSynonymSynonym<ClauseType::UsesP>(storage, procedure, variable);
 						  }};
 		  }}},
 };

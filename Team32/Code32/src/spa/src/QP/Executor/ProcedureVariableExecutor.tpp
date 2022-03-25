@@ -4,26 +4,26 @@
 #include "QP/Executor/ProcedureVariableExecutor.h"
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeTrivialNameName(const QP::StorageAdapter &storage,
+QP::QueryResult QP::Executor::ProcedureVariableExecutor::executeTrivialNameName(const QP::StorageAdapter &storage,
                                                                                    const Types::ReferenceArgument &procedure,
                                                                                    const Types::ReferenceArgument &variable) {
 	return QueryResult(storage.checkProcedureVariableRelation<T>(procedure.getName(), variable.getName()));
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeTrivialNameWildcardOrSynonym(const QP::StorageAdapter &storage,
+QP::QueryResult QP::Executor::ProcedureVariableExecutor::executeTrivialNameWildcardOrSynonym(const QP::StorageAdapter &storage,
                                                                                                 const Types::ReferenceArgument &procedure) {
 	return QueryResult(!storage.getVariableByProcedure<T>(procedure.getName()).empty());
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeTrivialSynonymName(const QP::StorageAdapter &storage,
+QP::QueryResult QP::Executor::ProcedureVariableExecutor::executeTrivialSynonymName(const QP::StorageAdapter &storage,
                                                                                       const Types::ReferenceArgument &variable) {
 	return QueryResult(!storage.getProcedureByVariable<T>(variable.getName()).empty());
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeTrivialSynonymWildcardOrSynonym(const QP::StorageAdapter &storage) {
+QP::QueryResult QP::Executor::ProcedureVariableExecutor::executeTrivialSynonymWildcardOrSynonym(const QP::StorageAdapter &storage) {
 	unordered_set<ProcRef> proc_set = storage.getProcedures();
 	for (auto const &proc : proc_set) {
 		VarRefSet var_set = storage.getVariableByProcedure<T>(proc);
@@ -35,7 +35,7 @@ QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeTrivialSynony
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeNameSynonym(const QP::StorageAdapter &storage,
+QP::QueryResult QP::Executor::ProcedureVariableExecutor::executeNameSynonym(const QP::StorageAdapter &storage,
                                                                                const Types::ReferenceArgument &procedure,
                                                                                const Types::ReferenceArgument &variable) {
 	VarRefSet var_set = storage.getVariableByProcedure<T>(procedure.getName());
@@ -51,7 +51,7 @@ QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeNameSynonym(c
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeSynonymName(const QP::StorageAdapter &storage,
+QP::QueryResult QP::Executor::ProcedureVariableExecutor::executeSynonymName(const QP::StorageAdapter &storage,
                                                                                const Types::ReferenceArgument &procedure,
                                                                                const Types::ReferenceArgument &variable) {
 	ProcRefSet proc_set = storage.getProcedureByVariable<T>(variable.getName());
@@ -65,7 +65,7 @@ QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeSynonymName(c
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeSynonymWildcard(const QP::StorageAdapter &storage,
+QP::QueryResult QP::Executor::ProcedureVariableExecutor::executeSynonymWildcard(const QP::StorageAdapter &storage,
                                                                                    const Types::ReferenceArgument &procedure) {
 	unordered_set<ProcRef> proc_set = storage.getProcedures();
 	vector<string> column;
@@ -81,7 +81,7 @@ QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeSynonymWildca
 }
 
 template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::ProcedureVariableExecutor<T>::executeSynonymSynonym(const QP::StorageAdapter &storage,
+QP::QueryResult QP::Executor::ProcedureVariableExecutor::executeSynonymSynonym(const QP::StorageAdapter &storage,
                                                                                   const Types::ReferenceArgument &procedure,
                                                                                   const Types::ReferenceArgument &variable) {
 	unordered_set<ProcRef> proc_set = storage.getProcedures();
