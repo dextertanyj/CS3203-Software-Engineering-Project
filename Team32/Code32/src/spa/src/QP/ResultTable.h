@@ -35,6 +35,11 @@ private:
 	unordered_map<string, size_t> synonyms_to_index_map;
 	vector<string> synonyms_stored;
 	vector<ResultRow> table;
+
+	static ResultTable intersectTables(ResultTable superset_table, ResultTable subset_table);
+	static ResultTable crossJoinTables(ResultTable table_one, ResultTable table_two);
+	static unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> buildHashTable(ResultTable& table,
+	                                                                                      const vector<string>& key_synonyms);
 };
 
 #endif  // SPA_SRC_QP_RESULTTABLE_H

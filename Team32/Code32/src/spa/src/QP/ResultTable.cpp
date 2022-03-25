@@ -76,21 +76,23 @@ void QP::Types::ResultTable::removeRow(size_t row_number) {
 }
 
 ResultRow QP::Types::ResultTable::getRowWithOrder(const vector<string>& synonyms, size_t row_number) {
-	ResultRow sub_row;
+	ResultRow row_with_order;
 	ResultRow row = table.at(row_number);
 	for (string const& synonym : synonyms) {
-		sub_row.push_back(row.at(synonyms_to_index_map.at(synonym)));
+		row_with_order.push_back(row.at(synonyms_to_index_map.at(synonym)));
 	}
-	return sub_row;
+	return row_with_order;
 }
 
-static unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> buildHashTable(ResultTable& table, const vector<string>& synonyms) {
+unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> QP::Types::ResultTable::buildHashTable(ResultTable& table,
+                                                                                                       const vector<string>& key_synonyms) {
 	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> map;
 	unordered_map<string, size_t> synonyms_to_index_map = table.getSynonymsStoredMap();
 	size_t row_number = 0;
-	for (ResultRow const& row : table.getTable()) {
+	for (ResultRow const& row : table.table) {
 		ResultRow sub_row;
-		for (string const& synonym : synonyms) {
+		sub_row.reserve(key_synonyms.size());
+		for (string const& synonym : key_synonyms) {
 			sub_row.push_back(row.at(synonyms_to_index_map.at(synonym)));
 		}
 		map.insert({sub_row, row_number});
@@ -100,15 +102,15 @@ static unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> buildHash
 	return map;
 }
 
-static QP::Types::ResultTable intersectTables(ResultTable superset_table, ResultTable subset_table) {
-	vector<string> common_synonyms = subset_table.getSynonymsStored();
-	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> hashmap = buildHashTable(subset_table, common_synonyms);
+QP::Types::ResultTable QP::Types::ResultTable::intersectTables(ResultTable superset_table, ResultTable subset_table) {
+	vector<string> common_synonyms = subset_table.synonyms_stored;
+	vector<ResultRow> table = subset_table.table;
+	unordered_set<ResultRow, Common::Hash::VectorHash> record_set(table.begin(), table.end());
 
 	size_t number_of_rows = superset_table.getNumberOfRows();
 	size_t pos = 0;
 	for (size_t i = 0; i < number_of_rows; i++) {
-		auto range = hashmap.equal_range(superset_table.getRowWithOrder(common_synonyms, pos));
-		if (range.first == range.second) {
+		if (record_set.find(superset_table.getRowWithOrder(common_synonyms, pos)) == record_set.end()) {
 			superset_table.removeRow(pos);
 		} else {
 			pos++;
@@ -118,16 +120,16 @@ static QP::Types::ResultTable intersectTables(ResultTable superset_table, Result
 	return superset_table;
 }
 
-static ResultRow buildRow(ResultRow current_row, ResultRow new_row, const vector<string>& synonyms,
-                          const unordered_map<string, size_t>& map) {
-	for (string const& synonym : synonyms) {
-		size_t index = map.at(synonym);
-		current_row.push_back(new_row.at(index));
+static ResultRow mergeRow(ResultRow current_row, const ResultRow& other_row, const vector<string>& synonym_order,
+                          const unordered_map<string, size_t>& synonym_map) {
+	for (string const& synonym : synonym_order) {
+		size_t index = synonym_map.at(synonym);
+		current_row.push_back(other_row.at(index));
 	}
 	return current_row;
 }
 
-static QP::Types::ResultTable crossJoinTables(ResultTable table_one, ResultTable table_two) {
+QP::Types::ResultTable QP::Types::ResultTable::crossJoinTables(ResultTable table_one, ResultTable table_two) {
 	ResultTable larger_table;
 	ResultTable smaller_table;
 	if (table_one.getNumberOfRows() >= table_two.getNumberOfRows()) {
@@ -153,13 +155,13 @@ static QP::Types::ResultTable crossJoinTables(ResultTable table_one, ResultTable
 	final_synonyms.insert(final_synonyms.end(), new_synonyms.begin(), new_synonyms.end());
 	ResultTable final_table = ResultTable(final_synonyms);
 
-	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> hashmap = buildHashTable(smaller_table, common_synonyms);
+	unordered_multimap<ResultRow, size_t, Common::Hash::VectorHash> map = buildHashTable(smaller_table, common_synonyms);
 	for (size_t i = 0; i < larger_table.getNumberOfRows(); i++) {
-		auto range = hashmap.equal_range(larger_table.getRowWithOrder(common_synonyms, i));
+		auto range = map.equal_range(larger_table.getRowWithOrder(common_synonyms, i));
 		for (auto it = range.first; it != range.second; it++) {
 			ResultRow row =
-				buildRow(larger_table.getRow(i), smaller_table.getRow(it->second), new_synonyms, smaller_table.getSynonymsStoredMap());
-			final_table.insertRow(row);
+				mergeRow(larger_table.table.at(i), smaller_table.table.at(it->second), new_synonyms, smaller_table.synonyms_to_index_map);
+			final_table.insertRow(move(row));
 		}
 	}
 
@@ -181,9 +183,9 @@ QP::Types::ResultTable QP::Types::ResultTable::joinTables(ResultTable table_one,
 	unordered_map<string, size_t> superset_synonyms = superset_table.getSynonymsStoredMap();
 	for (auto const& synonym : subset_table.getSynonymsStored()) {
 		if (superset_synonyms.find(synonym) == superset_synonyms.end()) {
-			return crossJoinTables(superset_table, subset_table);
+			return crossJoinTables(move(superset_table), move(subset_table));
 		}
 	}
 
-	return intersectTables(superset_table, subset_table);
+	return intersectTables(move(superset_table), move(subset_table));
 }
