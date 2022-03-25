@@ -63,9 +63,9 @@ QP::Types::Attribute QP::Types::ReferenceArgument::getAttribute() const {
 
 QP::Types::AttributeType QP::Types::ReferenceArgument::getAttributeType() const {
 	AttributeType type;
-	visit(
-		Visitor{[](auto) { throw QP::ReferenceArgumentException("Attribute not stored."); }, [&](Attribute arg) { type = arg.attribute; }},
-		value);
+	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Attribute not stored."); },
+	              [&](const Attribute& arg) { type = arg.attribute; }},
+	      value);
 	return type;
 }
 

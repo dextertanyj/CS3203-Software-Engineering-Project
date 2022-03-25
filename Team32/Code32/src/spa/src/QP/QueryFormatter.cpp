@@ -25,7 +25,7 @@ vector<string> QP::QueryFormatter::formatResult(QueryProperties& query_propertie
 	return formatNonBooleanResult(query_properties, query_result);
 }
 
-vector<string> QP::QueryFormatter::formatBooleanResult(QueryResult& query_result) const {
+vector<string> QP::QueryFormatter::formatBooleanResult(QueryResult& query_result) {
 	string result = query_result.getResult() ? TRUE : FALSE;
 	return {result};
 }

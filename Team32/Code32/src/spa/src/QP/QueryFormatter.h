@@ -18,7 +18,7 @@ public:
 
 private:
 	const StorageAdapter& store;
-	vector<string> formatBooleanResult(QueryResult& query_result) const;
+	static vector<string> formatBooleanResult(QueryResult& query_result);
 	vector<string> formatNonBooleanResult(QueryProperties& query_properties, QueryResult& query_result) const;
 };
 
