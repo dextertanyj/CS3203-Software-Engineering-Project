@@ -10,7 +10,6 @@
 namespace QP::Executor::StatementVariableExecutor {
 
 // Trivial Executors
-
 template <QP::Types::ClauseType T>
 QP::QueryResult executeTrivialIndexName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
                                         const Types::ReferenceArgument& variable);
@@ -23,7 +22,6 @@ template <QP::Types::ClauseType T>
 QP::QueryResult executeTrivialSynonymWildcardOrSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index);
 
 // Executors
-
 template <QP::Types::ClauseType T>
 QP::QueryResult executeSynonymName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& index,
                                    const Types::ReferenceArgument& variable);

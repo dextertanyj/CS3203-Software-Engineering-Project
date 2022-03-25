@@ -7,19 +7,21 @@
 #include "QP/StorageAdapter.h"
 #include "QP/Types.h"
 
-template <QP::Types::ClauseType T>
-class QP::Executor::PatternContainerStatementExecutor {
-public:
-	// Trivial Executors
-	static QueryResult executeTrivialName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& var);
-	static QueryResult executeTrivialWildcardOrSynonym(const QP::StorageAdapter& storage);
+namespace QP::Executor::PatternContainerStatementExecutor {
 
-	// Executors
-	static QueryResult executeName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& stmt,
-	                               const Types::ReferenceArgument& var);
-	static QueryResult executeWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& stmt);
-	static QueryResult executeSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& stmt,
-	                                  const Types::ReferenceArgument& var);
+// Trivial Executors
+template <QP::Types::ClauseType T>
+QueryResult executeTrivialName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& var);
+template <QP::Types::ClauseType T>
+QueryResult executeTrivialWildcardOrSynonym(const QP::StorageAdapter& storage);
+
+// Executors
+template <QP::Types::ClauseType T>
+QueryResult executeName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& stmt, const Types::ReferenceArgument& var);
+template <QP::Types::ClauseType T>
+QueryResult executeWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& stmt);
+template <QP::Types::ClauseType T>
+QueryResult executeSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& stmt, const Types::ReferenceArgument& var);
 };
 
 #endif  // SPA_SRC_QP_EXECUTOR_PATTERNCONTAINERSTATEMENTEXECUTOR_H

@@ -8,6 +8,7 @@
 #include "QP/Types.h"
 
 namespace QP::Executor::ProcedureVariableExecutor {
+
 // Trivial Executors
 template <QP::Types::ClauseType T>
 QueryResult executeTrivialNameName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& procedure,

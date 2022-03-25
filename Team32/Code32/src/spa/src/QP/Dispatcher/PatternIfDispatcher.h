@@ -18,10 +18,10 @@ namespace {
 const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> name_map = {
 	{Types::ReferenceType::Wildcard, [](const vector<Types::ReferenceArgument>& args) {
 		 return pair{[variable = args.at(1)](const QP::StorageAdapter& storage) {
-						 return Executor::PatternContainerStatementExecutor<ClauseType::PatternIf>::executeTrivialName(storage, variable);
+						 return Executor::PatternContainerStatementExecutor::executeTrivialName<ClauseType::PatternIf>(storage, variable);
 					 },
 	                 [ifStmt = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-						 return Executor::PatternContainerStatementExecutor<ClauseType::PatternIf>::executeName(storage, ifStmt, variable);
+						 return Executor::PatternContainerStatementExecutor::executeName<ClauseType::PatternIf>(storage, ifStmt, variable);
 					 }};
 	 }}};
 
@@ -30,10 +30,10 @@ const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactor
      [](const vector<Types::ReferenceArgument>& args) {
 		 return pair{
 			 [](const QP::StorageAdapter& storage) {
-				 return Executor::PatternContainerStatementExecutor<ClauseType::PatternIf>::executeTrivialWildcardOrSynonym(storage);
+				 return Executor::PatternContainerStatementExecutor::executeTrivialWildcardOrSynonym<ClauseType::PatternIf>(storage);
 			 },
 			 [ifStmt = args.at(0)](const QP::StorageAdapter& storage) {
-				 return Executor::PatternContainerStatementExecutor<ClauseType::PatternIf>::executeWildcard(storage, ifStmt);
+				 return Executor::PatternContainerStatementExecutor::executeWildcard<ClauseType::PatternIf>(storage, ifStmt);
 			 }};
 	 }},
 };
@@ -43,10 +43,10 @@ const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactor
      [](const vector<Types::ReferenceArgument>& args) {
 		 return pair{
 			 [ifStmt = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-				 return Executor::PatternContainerStatementExecutor<ClauseType::PatternIf>::executeTrivialWildcardOrSynonym(storage);
+				 return Executor::PatternContainerStatementExecutor::executeTrivialWildcardOrSynonym<ClauseType::PatternIf>(storage);
 			 },
 			 [ifStmt = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-				 return Executor::PatternContainerStatementExecutor<ClauseType::PatternIf>::executeSynonym(storage, ifStmt, variable);
+				 return Executor::PatternContainerStatementExecutor::executeSynonym<ClauseType::PatternIf>(storage, ifStmt, variable);
 			 }};
 	 }},
 };

@@ -12,8 +12,7 @@ namespace StatementVariableExecutor {}
 
 namespace ProcedureExecutor {}
 
-template <QP::Types::ClauseType T>
-class PatternContainerStatementExecutor;
+namespace PatternContainerStatementExecutor {}
 
 namespace WithExecutor {}
 
