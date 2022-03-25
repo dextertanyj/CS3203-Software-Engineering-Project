@@ -1,7 +1,6 @@
 #ifndef SPA_SRC_QP_TYPES_H
 #define SPA_SRC_QP_TYPES_H
 
-#include <functional>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -9,6 +8,7 @@
 #include <variant>
 #include <vector>
 
+#include "Common/Hash.h"
 #include "PKB/PKB.h"
 #include "QP/QP.h"
 #include "QP/Relationship/Relationship.h"
@@ -64,6 +64,15 @@ typedef struct Declaration {
 	bool operator==(const Declaration& other) const { return type == other.type && symbol == other.symbol; }
 } Declaration;
 
+struct DeclarationHash {
+	std::size_t operator()(const Declaration& key) const {
+		std::size_t seed = 0;
+		combineHash(seed, key.symbol);
+		combineHash(seed, key.type);
+		return seed;
+	}
+};
+
 typedef struct Attribute {
 	// We cast 0 rather than use a concrete enum value to prevent favouring a particular value if the enum is updated.
 	AttributeType attribute = static_cast<AttributeType>(0);  // NOLINT(misc-non-private-member-variables-in-classes)
@@ -112,7 +121,9 @@ template <typename TAttribute, typename TLeft, typename TRight>
 using WithExecutorFunctionSet =
 	variant<WithExecutorFunction<TAttribute, TLeft, TRight>,
             pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>>;
+
 typedef vector<Declaration> DeclarationList;
+typedef vector<ReferenceArgument> SelectList;
 typedef vector<Clause> ClauseList;
 
 class ResultTable;
