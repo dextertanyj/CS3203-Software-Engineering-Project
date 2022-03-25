@@ -2,8 +2,8 @@
 
 #include <algorithm>
 #include <string>
-#include <vector>
 
+#include "QP/Executor/AttributeExecutor.h"
 #include "QP/Types.h"
 
 #define TUPLE_SEPERATOR " "
@@ -14,8 +14,10 @@ using namespace std;
 using QP::Types::Declaration;
 using QP::Types::DeclarationList;
 
-vector<string> QP::QueryFormatter::formatResult(QueryProperties& query_properties, QueryResult& query_result) {
-	DeclarationList select_list = query_properties.getSelectList();
+QP::QueryFormatter::QueryFormatter(const StorageAdapter& store) : store(store) {}
+
+vector<string> QP::QueryFormatter::formatResult(QueryProperties& query_properties, QueryResult& query_result) const {
+	DeclarationList select_list = query_properties.getSelectSynonymList();
 	if (select_list.empty()) {
 		return formatBooleanResult(query_result);
 	}
@@ -23,27 +25,54 @@ vector<string> QP::QueryFormatter::formatResult(QueryProperties& query_propertie
 	return formatNonBooleanResult(query_properties, query_result);
 }
 
-vector<string> QP::QueryFormatter::formatBooleanResult(QueryResult& query_result) {
+vector<string> QP::QueryFormatter::formatBooleanResult(QueryResult& query_result) const {
 	string result = query_result.getResult() ? TRUE : FALSE;
 	return {result};
 }
 
-vector<string> QP::QueryFormatter::formatNonBooleanResult(QueryProperties& query_properties, QueryResult& query_result) {
+template <QP::Types::ClauseType T>
+string statementToVariable(const QP::StorageAdapter& store, const string& value) {
+	return QP::Executor::AttributeExecutor::statementToVariable<T>(store, stoul(value));
+}
+
+string callToProcedure(const QP::StorageAdapter& store, const string& value) {
+	return QP::Executor::AttributeExecutor::callToProcedure(store, stoul(value));
+}
+
+const unordered_map<QP::Types::DispatchAttributeKey, function<string(const QP::StorageAdapter&, const string&)>> transform_map = {
+	{{QP::Types::DesignEntity::Read, QP::Types::AttributeType::VariableName}, statementToVariable<QP::Types::ClauseType::ModifiesS>},
+	{{QP::Types::DesignEntity::Call, QP::Types::AttributeType::ProcedureName}, callToProcedure},
+	{{QP::Types::DesignEntity::Print, QP::Types::AttributeType::VariableName}, statementToVariable<QP::Types::ClauseType::UsesS>}};
+
+static inline string applyTransform(const QP::StorageAdapter& store, const QP::Types::ReferenceArgument& argument, string result) {
+	if (argument.getType() == QP::Types::ReferenceType::Synonym) {
+		return result;
+	}
+	auto iter = transform_map.find({argument.getSynonymType(), argument.getAttributeType()});
+	if (iter == transform_map.end()) {
+		return result;
+	}
+	return iter->second(store, result);
+}
+
+vector<string> QP::QueryFormatter::formatNonBooleanResult(QueryProperties& query_properties, QueryResult& query_result) const {
 	if (!query_result.getResult()) {
 		return {};
 	}
 
 	size_t table_size = query_result.getNumberOfRows();
 	vector<string> result(table_size);
-	DeclarationList select_list = query_properties.getSelectList();
+	Types::SelectList select_list = query_properties.getSelectList();
 	vector<string> synonyms(select_list.size());
-	transform(select_list.begin(), select_list.end(), synonyms.begin(), [](Declaration& declaration) { return declaration.symbol; });
+	transform(select_list.begin(), select_list.end(), synonyms.begin(),
+	          [](const Types::ReferenceArgument& argument) { return argument.getSynonymSymbol(); });
 
 	for (size_t i = 0; i < table_size; i++) {
 		ResultRow row = query_result.getRowWithOrder(synonyms, i);
 		string row_string;
 
-		for (string const& value : row) {
+		for (size_t j = 0; i < select_list.size(); j++) {
+			string value = applyTransform(store, select_list.at(i), row.at(i));
 			row_string.append(value);
 			row_string.append(TUPLE_SEPERATOR);
 		}

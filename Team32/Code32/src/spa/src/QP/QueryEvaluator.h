@@ -20,12 +20,12 @@ using QP::Types::DeclarationList;
 
 class QP::QueryEvaluator {
 public:
-	explicit QueryEvaluator(PKB::StorageAccessInterface& pkb);
+	explicit QueryEvaluator(QP::StorageAdapter& store);
 	QueryResult executeQuery(QueryProperties& query_properties);
 	static vector<pair<ClauseList, DeclarationList>> splitClauses(QueryProperties& query_properties, ConnectedSynonyms& connected_synonyms);
 
 private:
-	QP::StorageAdapter store;
+	const QP::StorageAdapter& store;
 	QueryResult executeGroupWithSelected(ClauseList& clauses, DeclarationList& select_list);
 	QueryResult executeGroupWithoutSelected(ClauseList& clauses, DeclarationList& select_list);
 	QueryResult executeTrivialGroup(ClauseList& clauses);

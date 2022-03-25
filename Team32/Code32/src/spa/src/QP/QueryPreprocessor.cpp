@@ -96,20 +96,15 @@ void QP::QueryPreprocessor::parseSelect() {
 void QP::QueryPreprocessor::parseSelectList() {
 	if (query_tokens.at(token_index) == "<") {
 		matchTokenOrThrow("<");
-		parseSelectSynonym();
+		select_list.push_back(parseSelectArgument());
 		while (query_tokens.at(token_index) == ",") {
 			matchTokenOrThrow(",");
-			parseSelectSynonym();
+			select_list.push_back(parseSelectArgument());
 		}
 		matchTokenOrThrow(">");
 	} else {
-		parseSelectSynonym();
+		select_list.push_back(parseSelectArgument());
 	}
-}
-
-void QP::QueryPreprocessor::parseSelectSynonym() {
-	Declaration synonym = parseClauseSynonym();
-	select_list.push_back({synonym.type, synonym.symbol});
 }
 
 // Clause - General
@@ -284,6 +279,10 @@ QP::Types::ReferenceArgument QP::QueryPreprocessor::parseReferenceArgument() {
 		token_index += 2;
 		return Types::ReferenceArgument(this->query_tokens.at(token_index - 2));
 	}
+	return parseSelectArgument();
+}
+
+QP::Types::ReferenceArgument QP::QueryPreprocessor::parseSelectArgument() {
 	if (token_index + 1 < query_tokens.size() && this->query_tokens.at(token_index + 1) == ".") {
 		Declaration synonym = parseClauseSynonym();
 		matchTokenOrThrow(".");
@@ -297,7 +296,7 @@ QP::Types::ReferenceArgument QP::QueryPreprocessor::parseReferenceArgument() {
 	if (Common::Validator::validateName(this->query_tokens.at(token_index))) {
 		return Types::ReferenceArgument(parseClauseSynonym());
 	}
-	throw QP::QueryException("Unknown clause argument.");
+	throw QP::QueryException("Unknown argument.");
 }
 
 Common::ExpressionProcessor::Expression QP::QueryPreprocessor::parseExpression() {
