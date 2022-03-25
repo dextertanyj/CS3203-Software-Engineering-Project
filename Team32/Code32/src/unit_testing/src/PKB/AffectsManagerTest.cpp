@@ -197,7 +197,7 @@ TEST_CASE("PKB::AffectsManager::getAffects Test") {
 
         REQUIRE(affects_manager.getAffects(1) == StmtInfoPtrSet{assign_stmt_3, assign_stmt_5, assign_stmt_10});
         REQUIRE_THROWS(affects_manager.getAffects(2));
-        REQUIRE(affects_manager.getAffects(3) == StmtInfoPtrSet{assign_stmt_3, assign_stmt_5});
+        REQUIRE(affects_manager.getAffects(3) == StmtInfoPtrSet{assign_stmt_3, assign_stmt_5, assign_stmt_10});
         REQUIRE_THROWS(affects_manager.getAffects(4));
         REQUIRE(affects_manager.getAffects(5) == StmtInfoPtrSet{assign_stmt_6});
         REQUIRE(affects_manager.getAffects(6) == StmtInfoPtrSet{assign_stmt_5, assign_stmt_10});

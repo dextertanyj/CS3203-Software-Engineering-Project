@@ -20,7 +20,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
         throw invalid_argument("Affects statement must be an assign statement.");
     }
     VarRef variable = *(modifies_store->getByStmt(first).begin());
-    Types::DFSInfo info = {variable, {}, {}, {}};
+    Types::DFSInfo info = {std::move(variable), {}, {}, {}};
     for (const auto &neighbour: start_node->getNextNodes()) {
         info.node_stack.push(neighbour);
     }
@@ -60,7 +60,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
 
     VarRefSet variables = uses_store->getByStmt(second);
     StmtInfoPtrSet affected_set;
-    for (const auto &variable: variables) {
+    for (const string &variable: variables) {
         StmtInfoPtrSet affected = getAffectedByNodeAndVar(node, variable);
         affected_set.insert(affected.begin(), affected.end());
     }
@@ -77,11 +77,9 @@ PKB::AffectsManager::getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode
     while (!info.node_stack.empty()) {
         shared_ptr<PKB::NodeInterface> curr_node = info.node_stack.top();
         info.node_stack.pop();
-
         if (info.visited_set.find(curr_node) != info.visited_set.end()) {
             continue;
         }
-
         if (node->getNodeType() == NodeType::Dummy) {
             StmtInfoPtrSet real_nodes = control_flow_graph->collectPreviousOfDummy(node);
             for (const auto &real_node: real_nodes) {
@@ -89,7 +87,6 @@ PKB::AffectsManager::getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode
             }
             continue;
         }
-
         shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(curr_node);
         if (modifies_store->check(stmt_node->getNodeRef(), info.variable)) {
             info.nodes.insert(stmt_node->getStmtInfo());
