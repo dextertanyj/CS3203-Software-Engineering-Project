@@ -10,8 +10,8 @@
 class QP::Relationship::Relation {
 public:
 	Relation(Types::ClauseType type, vector<Types::ReferenceArgument> arguments, Types::ExecutorSet executor);
-	[[nodiscard]] QueryResult executeTrivial(QP::StorageAdapter& pkb) const;
-	[[nodiscard]] QueryResult execute(QP::StorageAdapter& pkb) const;
+	[[nodiscard]] QueryResult executeTrivial(const QP::StorageAdapter& pkb) const;
+	[[nodiscard]] QueryResult execute(const QP::StorageAdapter& pkb) const;
 	[[nodiscard]] vector<string> getDeclarationSymbols() const;
 	[[nodiscard]] Types::ClauseType getType() const;
 
