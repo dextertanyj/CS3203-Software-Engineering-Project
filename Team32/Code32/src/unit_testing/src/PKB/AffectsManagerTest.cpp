@@ -7,54 +7,54 @@
 #include "catch.hpp"
 
 TEST_CASE("PKB::AffectsManager::getAffects Test") {
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
-	PKB::NextManager next_manager = PKB::NextManager(cfg);
-	PKB::SVRelationStore<PKB::ModifiesSRelation> modifies_store;
-	PKB::SVRelationStore<PKB::UsesSRelation> uses_store;
-	PKB::AffectsManager affects_manager = PKB::AffectsManager(cfg, modifies_store, uses_store);
+    PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+    PKB::NextManager next_manager = PKB::NextManager(cfg);
+    PKB::SVRelationStore<PKB::ModifiesSRelation> modifies_store;
+    PKB::SVRelationStore<PKB::UsesSRelation> uses_store;
+    PKB::AffectsManager affects_manager = PKB::AffectsManager(cfg, modifies_store, uses_store);
 
-	SECTION("PKB::AffectsManager::getAffects Simple Consecutive Assign Statement Test") {
-		/* SIMPLE Code:
-		 * 1. x = 5;
-		 * 2. y = x;
-		 * 3. z = x;
-		 * 4. x = y + z;
-		 * 5. z = x;
-		 */
-		shared_ptr<StmtInfo> assign_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::Assign);
-		shared_ptr<StmtInfo> assign_stmt_2 = TestUtilities::createStmtInfo(2, StmtType::Assign);
-		shared_ptr<StmtInfo> assign_stmt_3 = TestUtilities::createStmtInfo(3, StmtType::Assign);
-		shared_ptr<StmtInfo> assign_stmt_4 = TestUtilities::createStmtInfo(4, StmtType::Assign);
-		shared_ptr<StmtInfo> assign_stmt_5 = TestUtilities::createStmtInfo(5, StmtType::Assign);
+    SECTION("PKB::AffectsManager::getAffects Simple Consecutive Assign Statement Test") {
+        /* SIMPLE Code:
+         * 1. x = 5;
+         * 2. y = x;
+         * 3. z = x;
+         * 4. x = y + z;
+         * 5. z = x;
+         */
+        shared_ptr<StmtInfo> assign_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::Assign);
+        shared_ptr<StmtInfo> assign_stmt_2 = TestUtilities::createStmtInfo(2, StmtType::Assign);
+        shared_ptr<StmtInfo> assign_stmt_3 = TestUtilities::createStmtInfo(3, StmtType::Assign);
+        shared_ptr<StmtInfo> assign_stmt_4 = TestUtilities::createStmtInfo(4, StmtType::Assign);
+        shared_ptr<StmtInfo> assign_stmt_5 = TestUtilities::createStmtInfo(5, StmtType::Assign);
 
-		CHECK_NOTHROW(cfg.createNode(assign_stmt_1));
-		CHECK_NOTHROW(cfg.createNode(assign_stmt_2));
-		CHECK_NOTHROW(cfg.createNode(assign_stmt_3));
-		CHECK_NOTHROW(cfg.createNode(assign_stmt_4));
-		CHECK_NOTHROW(cfg.createNode(assign_stmt_5));
+        CHECK_NOTHROW(cfg.createNode(assign_stmt_1));
+        CHECK_NOTHROW(cfg.createNode(assign_stmt_2));
+        CHECK_NOTHROW(cfg.createNode(assign_stmt_3));
+        CHECK_NOTHROW(cfg.createNode(assign_stmt_4));
+        CHECK_NOTHROW(cfg.createNode(assign_stmt_5));
 
-		CHECK_NOTHROW(modifies_store.set(assign_stmt_1, "x"));
-		CHECK_NOTHROW(modifies_store.set(assign_stmt_2, "y"));
-		CHECK_NOTHROW(modifies_store.set(assign_stmt_3, "z"));
-		CHECK_NOTHROW(modifies_store.set(assign_stmt_4, "x"));
-		CHECK_NOTHROW(modifies_store.set(assign_stmt_5, "z"));
+        CHECK_NOTHROW(modifies_store.set(assign_stmt_1, "x"));
+        CHECK_NOTHROW(modifies_store.set(assign_stmt_2, "y"));
+        CHECK_NOTHROW(modifies_store.set(assign_stmt_3, "z"));
+        CHECK_NOTHROW(modifies_store.set(assign_stmt_4, "x"));
+        CHECK_NOTHROW(modifies_store.set(assign_stmt_5, "z"));
 
-		CHECK_NOTHROW(uses_store.set(assign_stmt_2, "x"));
-		CHECK_NOTHROW(uses_store.set(assign_stmt_3, "x"));
-		CHECK_NOTHROW(uses_store.set(assign_stmt_4, "y"));
-		CHECK_NOTHROW(uses_store.set(assign_stmt_4, "z"));
-		CHECK_NOTHROW(uses_store.set(assign_stmt_5, "x"));
+        CHECK_NOTHROW(uses_store.set(assign_stmt_2, "x"));
+        CHECK_NOTHROW(uses_store.set(assign_stmt_3, "x"));
+        CHECK_NOTHROW(uses_store.set(assign_stmt_4, "y"));
+        CHECK_NOTHROW(uses_store.set(assign_stmt_4, "z"));
+        CHECK_NOTHROW(uses_store.set(assign_stmt_5, "x"));
 
-		CHECK_NOTHROW(next_manager.setNext(1, 2));
-		CHECK_NOTHROW(next_manager.setNext(2, 3));
-		CHECK_NOTHROW(next_manager.setNext(3, 4));
-		CHECK_NOTHROW(next_manager.setNext(4, 5));
+        CHECK_NOTHROW(next_manager.setNext(1, 2));
+        CHECK_NOTHROW(next_manager.setNext(2, 3));
+        CHECK_NOTHROW(next_manager.setNext(3, 4));
+        CHECK_NOTHROW(next_manager.setNext(4, 5));
 
-		REQUIRE(affects_manager.getAffects(1) == StmtInfoPtrSet{assign_stmt_2, assign_stmt_3});
-		REQUIRE(affects_manager.getAffects(2) == StmtInfoPtrSet{assign_stmt_4});
-		REQUIRE(affects_manager.getAffects(3) == StmtInfoPtrSet{assign_stmt_4});
-		REQUIRE(affects_manager.getAffects(4) == StmtInfoPtrSet{assign_stmt_5});
-	}
+        REQUIRE(affects_manager.getAffects(1) == StmtInfoPtrSet{assign_stmt_2, assign_stmt_3});
+        REQUIRE(affects_manager.getAffects(2) == StmtInfoPtrSet{assign_stmt_4});
+        REQUIRE(affects_manager.getAffects(3) == StmtInfoPtrSet{assign_stmt_4});
+        REQUIRE(affects_manager.getAffects(4) == StmtInfoPtrSet{assign_stmt_5});
+    }
 
     SECTION("PKB::AffectsManager::getAffects If Branching Test") {
         /* SIMPLE Code:
@@ -125,5 +125,85 @@ TEST_CASE("PKB::AffectsManager::getAffects Test") {
         REQUIRE(affects_manager.getAffects(7) == StmtInfoPtrSet{assign_stmt_8});
         REQUIRE(affects_manager.getAffects(8).empty());
         REQUIRE(affects_manager.getAffects(9).empty());
+    }
+
+    SECTION("PKB::AffectsManager::getAffects While Loop Test") {
+        /* SIMPLE Code:
+         * 1. x = 5;
+         * 2. while (a > 0) {
+         * 3.   x = x + 1;
+         *    }
+         * 4. while (y < 2);
+         * 5.   b = x - 1;
+         * 6.   x = b + 1;
+         * 7.   while (a == 1) {
+         * 8.     read x;
+         * 9.     x = x + 1;
+         *      }
+         *    }
+         * 10.z = x;
+         */
+        shared_ptr<StmtInfo> assign_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::Assign);
+        shared_ptr<StmtInfo> while_stmt_2 = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+        shared_ptr<StmtInfo> assign_stmt_3 = TestUtilities::createStmtInfo(3, StmtType::Assign);
+        shared_ptr<StmtInfo> while_stmt_4 = TestUtilities::createStmtInfo(4, StmtType::WhileStmt);
+        shared_ptr<StmtInfo> assign_stmt_5 = TestUtilities::createStmtInfo(5, StmtType::Assign);
+        shared_ptr<StmtInfo> assign_stmt_6 = TestUtilities::createStmtInfo(6, StmtType::Assign);
+        shared_ptr<StmtInfo> while_stmt_7 = TestUtilities::createStmtInfo(7, StmtType::WhileStmt);
+        shared_ptr<StmtInfo> read_stmt_8 = TestUtilities::createStmtInfo(8, StmtType::Read);
+        shared_ptr<StmtInfo> assign_stmt_9 = TestUtilities::createStmtInfo(9, StmtType::Assign);
+        shared_ptr<StmtInfo> assign_stmt_10 = TestUtilities::createStmtInfo(10, StmtType::Assign);
+
+        CHECK_NOTHROW(cfg.createNode(assign_stmt_1));
+        CHECK_NOTHROW(cfg.createNode(while_stmt_2));
+        CHECK_NOTHROW(cfg.createNode(assign_stmt_3));
+        CHECK_NOTHROW(cfg.createNode(while_stmt_4));
+        CHECK_NOTHROW(cfg.createNode(assign_stmt_5));
+        CHECK_NOTHROW(cfg.createNode(assign_stmt_6));
+        CHECK_NOTHROW(cfg.createNode(while_stmt_7));
+        CHECK_NOTHROW(cfg.createNode(read_stmt_8));
+        CHECK_NOTHROW(cfg.createNode(assign_stmt_9));
+        CHECK_NOTHROW(cfg.createNode(assign_stmt_10));
+
+        CHECK_NOTHROW(modifies_store.set(assign_stmt_1, "x"));
+        CHECK_NOTHROW(modifies_store.set(assign_stmt_3, "x"));
+        CHECK_NOTHROW(modifies_store.set(assign_stmt_5, "b"));
+        CHECK_NOTHROW(modifies_store.set(assign_stmt_6, "x"));
+        CHECK_NOTHROW(modifies_store.set(read_stmt_8, "x"));
+        CHECK_NOTHROW(modifies_store.set(assign_stmt_9, "x"));
+        CHECK_NOTHROW(modifies_store.set(assign_stmt_10, "z"));
+
+        CHECK_NOTHROW(uses_store.set(while_stmt_2, "a"));
+        CHECK_NOTHROW(uses_store.set(assign_stmt_3, "x"));
+        CHECK_NOTHROW(uses_store.set(while_stmt_4, "y"));
+        CHECK_NOTHROW(uses_store.set(assign_stmt_5, "x"));
+        CHECK_NOTHROW(uses_store.set(assign_stmt_6, "b"));
+        CHECK_NOTHROW(uses_store.set(while_stmt_7, "a"));
+        CHECK_NOTHROW(uses_store.set(assign_stmt_9, "x"));
+        CHECK_NOTHROW(uses_store.set(assign_stmt_10, "x"));
+
+        CHECK_NOTHROW(next_manager.setNext(1, 2));
+        CHECK_NOTHROW(next_manager.setNext(2, 3));
+        CHECK_NOTHROW(next_manager.setNext(3, 2));
+        CHECK_NOTHROW(next_manager.setNext(2, 4));
+        CHECK_NOTHROW(next_manager.setNext(4, 5));
+        CHECK_NOTHROW(next_manager.setNext(5, 6));
+        CHECK_NOTHROW(next_manager.setNext(6, 7));
+        CHECK_NOTHROW(next_manager.setNext(7, 8));
+        CHECK_NOTHROW(next_manager.setNext(7, 4));
+        CHECK_NOTHROW(next_manager.setNext(8, 9));
+        CHECK_NOTHROW(next_manager.setNext(9, 7));
+        CHECK_NOTHROW(next_manager.setNext(4, 10));
+
+        REQUIRE(affects_manager.getAffects(1) == StmtInfoPtrSet{assign_stmt_3, assign_stmt_5, assign_stmt_10});
+        REQUIRE_THROWS(affects_manager.getAffects(2));
+        REQUIRE(affects_manager.getAffects(3) == StmtInfoPtrSet{assign_stmt_3, assign_stmt_5});
+        REQUIRE_THROWS(affects_manager.getAffects(4));
+        REQUIRE(affects_manager.getAffects(5) == StmtInfoPtrSet{assign_stmt_6});
+        REQUIRE(affects_manager.getAffects(6) == StmtInfoPtrSet{assign_stmt_5, assign_stmt_10});
+        REQUIRE_THROWS(affects_manager.getAffects(7));
+        REQUIRE_THROWS(affects_manager.getAffects(8));
+        REQUIRE(affects_manager.getAffects(9) == StmtInfoPtrSet{assign_stmt_5, assign_stmt_10});
+        REQUIRE(affects_manager.getAffects(10).empty());
     }
 }
