@@ -22,9 +22,9 @@ public:
 	StmtInfoPtrSet getAffected(StmtRef second);
 
 private:
-	ControlFlowGraph *control_flow_graph;
-	SVRelationStore<PKB::UsesSRelation> *uses_store;
-	SVRelationStore<PKB::ModifiesSRelation> *modifies_store;
+	ControlFlowGraph &control_flow_graph;
+	SVRelationStore<PKB::UsesSRelation> &uses_store;
+	SVRelationStore<PKB::ModifiesSRelation> &modifies_store;
 
 	StmtInfoPtrSet getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode> &node, VarRef variable);
 

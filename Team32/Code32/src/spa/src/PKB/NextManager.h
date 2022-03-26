@@ -26,7 +26,7 @@ public:
 	StmtInfoPtrSet getPreviousStar(StmtRef node_ref);
 
 private:
-	ControlFlowGraph* control_flow_graph;
+	ControlFlowGraph& control_flow_graph;
 	void processBFSVisit(Types::BFSInfo& info, const shared_ptr<NodeInterface>& node,
 	                     StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
 };
