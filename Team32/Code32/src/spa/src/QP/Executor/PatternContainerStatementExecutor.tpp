@@ -8,7 +8,7 @@
 // Trivial Executors
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeTrivialName(const QP::StorageAdapter& storage,
-                                                                                       const QP::Types::ReferenceArgument& var) {
+                                                                                    const QP::Types::ReferenceArgument& var) {
 	return QP::QueryResult(!storage.getControlStmt<T>(var.getName()).empty());
 }
 
@@ -28,8 +28,8 @@ QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeTrivialW
 // Executors
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeName(const QP::StorageAdapter& storage,
-                                                                                const Types::ReferenceArgument& stmt,
-                                                                                const Types::ReferenceArgument& var) {
+                                                                             const Types::ReferenceArgument& stmt,
+                                                                             const Types::ReferenceArgument& var) {
 	QueryResult result = QueryResult({stmt.getSynonym().symbol});
 	StmtInfoPtrSet stmt_set = storage.getControlStmt<T>(var.getName());
 	for (auto const& stmt_ref : stmt_set) {
@@ -41,7 +41,7 @@ QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeName(con
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeWildcard(const QP::StorageAdapter& storage,
-                                                                                    const Types::ReferenceArgument& stmt) {
+                                                                                 const Types::ReferenceArgument& stmt) {
 	QueryResult result = QueryResult({stmt.getSynonym().symbol});
 	StmtInfoPtrSet stmt_set = storage.getStatements();
 	for (auto const& stmt_ref : stmt_set) {
@@ -60,8 +60,8 @@ QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeWildcard
 
 template <QP::Types::ClauseType T>
 QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeSynonym(const QP::StorageAdapter& storage,
-                                                                                   const Types::ReferenceArgument& stmt,
-                                                                                   const Types::ReferenceArgument& var) {
+                                                                                const Types::ReferenceArgument& stmt,
+                                                                                const Types::ReferenceArgument& var) {
 	QueryResult result = QueryResult({stmt.getSynonym().symbol, var.getSynonym().symbol});
 	VarRefSet var_set = storage.getVariables();
 	for (auto const& var_ref : var_set) {
