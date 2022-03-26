@@ -95,19 +95,12 @@ static QP::QueryResult hashJoin(const QP::StorageAdapter& store, HashInfo<TAttri
 	for (const auto& build : build_info.values) {
 		build_table.insert({build_info.mapper(store, build), build});
 	}
-	vector<string> build_column;
-	vector<string> probe_column;
+	QP::QueryResult result = QP::QueryResult({build_info.symbol, probe_info.symbol});
 	for (const auto& probe : probe_info.values) {
 		TAttribute attribute = probe_info.mapper(store, probe);
 		auto iter = build_table.equal_range(attribute);
-		for_each(iter.first, iter.second, [&](const auto& pair) {
-			build_column.push_back(safe_to_string(pair.second));
-			probe_column.push_back(safe_to_string(probe));
-		});
+		for_each(iter.first, iter.second, [&](const auto& pair) { result.addRow({safe_to_string(pair.second), safe_to_string(probe)}); });
 	}
-	QP::QueryResult result;
-	result.addColumn(build_info.symbol, build_column);
-	result.addColumn(probe_info.symbol, probe_column);
 	return result;
 }
 
@@ -134,14 +127,12 @@ QP::QueryResult QP::Executor::WithExecutor::executeAttributeConstant(const QP::S
                                                                      Types::WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	unordered_set<TLeft> left_values = lhs_executors.first(store, lhs);
 	TAttribute right_value = rhs_executors.second(store, (*rhs_executors.first(store, rhs).begin()));
-	vector<string> left_column;
+	QueryResult result = QueryResult({lhs.getAttribute().synonym.symbol});
 	for (const auto& left : left_values) {
 		if (lhs_executors.second(store, left) == right_value) {
-			left_column.push_back(safe_to_string(left));
+			result.addRow({safe_to_string(left)});
 		}
 	}
-	QueryResult result;
-	result.addColumn(lhs.getAttribute().synonym.symbol, left_column);
 	return result;
 }
 

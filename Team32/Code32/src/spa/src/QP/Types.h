@@ -115,8 +115,9 @@ using WithExecutorFunctionSet =
 typedef vector<Declaration> DeclarationList;
 typedef vector<Clause> ClauseList;
 
-typedef unordered_map<string, vector<string>> ResultTable;
-typedef unordered_map<string, string> ResultRow;
+class ResultTable;
+typedef vector<string> ResultRow;
+typedef vector<string> ResultColumn;
 }
 
 #endif  // SPA_SRC_QP_TYPES_H

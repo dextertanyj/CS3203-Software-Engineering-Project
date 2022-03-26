@@ -17,7 +17,7 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	ConnectedSynonyms connected_synonyms = graph.getConnectedSynonyms(select_list);
 	vector<pair<Types::ClauseList, Types::DeclarationList>> clauses_in_group = splitClauses(query_properties, connected_synonyms);
 
-	QueryResult result = QueryResult();
+	vector<QueryResult> results;
 
 	// Execute clauses without synonyms first
 	size_t last_group = clauses_in_group.size() - 1;
@@ -37,20 +37,17 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 			if (!group_result.getResult()) {
 				return {};
 			}
-
-			if (result.getResult()) {
-				result.joinResult(group_result);
-			} else {
-				result = group_result;
-			}
+			results.push_back(group_result);
 		}
 	}
+
+	QueryResult final_result = QueryResult::joinResults(results);
 
 	if (select_list.empty()) {
 		return QueryResult(true);
 	}
 
-	return result;
+	return final_result;
 }
 
 QP::QueryResult QP::QueryEvaluator::executeGroupWithSelected(ClauseList& clauses, DeclarationList& select_list) {
@@ -95,15 +92,10 @@ QP::QueryResult QP::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, 
 		result_list.push_back(result);
 	}
 
-	for (size_t i = 1; i < result_list.size(); i++) {
-		result_list[0].joinResult(result_list[i]);
-	}
+	QueryResult final_result = QueryResult::joinResults(result_list);
+	final_result.filterBySelect(select_list);
 
-	if (!select_list.empty()) {
-		result_list[0].filterBySelect(select_list);
-	}
-
-	return result_list[0];
+	return final_result;
 }
 
 QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) {
@@ -133,56 +125,46 @@ QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) 
 
 QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(const Declaration& declaration) {
 	StmtInfoPtrSet stmt_set = store.getStatements();
-	QueryResult result = QueryResult();
+	QueryResult result = QueryResult({declaration.symbol});
 
-	vector<string> result_string;
 	for (auto const& stmt : stmt_set) {
 		if (Utilities::checkStmtTypeMatch(stmt, declaration.type)) {
-			result_string.push_back(to_string(stmt->getIdentifier()));
+			result.addRow({to_string(stmt->getIdentifier())});
 		}
 	}
 
-	result.addColumn(declaration.symbol, result_string);
 	return result;
 }
 
 QP::QueryResult QP::QueryEvaluator::getConstants(const string& symbol) {
 	unordered_set<ConstVal> constants = store.getConstants();
-	QueryResult result = QueryResult();
+	QueryResult result = QueryResult({symbol});
 
-	vector<string> result_string;
-	result_string.reserve(constants.size());
 	for (auto const& constant : constants) {
-		result_string.push_back(to_string(constant));
+		result.addRow({to_string(constant)});
 	}
-
-	result.addColumn(symbol, result_string);
 	return result;
 }
 
 QP::QueryResult QP::QueryEvaluator::getVariables(const string& symbol) {
 	VarRefSet var_set = store.getVariables();
-	QueryResult result = QueryResult();
+	QueryResult result = QueryResult({symbol});
 
-	vector<string> result_string;
 	for (auto const& var : var_set) {
-		result_string.push_back(var);
+		result.addRow({var});
 	}
 
-	result.addColumn(symbol, result_string);
 	return result;
 }
 
 QP::QueryResult QP::QueryEvaluator::getProcedures(const string& symbol) {
 	ProcRefSet proc_set = store.getProcedures();
-	QueryResult result = QueryResult();
+	QueryResult result = QueryResult({symbol});
 
-	vector<string> result_string;
 	for (auto const& proc : proc_set) {
-		result_string.push_back(proc);
+		result.addRow({proc});
 	}
 
-	result.addColumn(symbol, result_string);
 	return result;
 }
 
