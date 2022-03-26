@@ -63,36 +63,36 @@ WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<Refe
 
 const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Number, Number>> number_attribute_map = {
 	{ReferenceType::StatementIndex, {AttributeExecutor::extractNumber, AttributeExecutor::identity<Number>}},
-	{DispatchAttributeKey{DesignEntity::Stmt, AttributeType::Index},
+	{DispatchAttributeKey{DesignEntity::Stmt, AttributeType::NumberIdentifier},
      {AttributeExecutor::selectStatements, AttributeExecutor::identity<Number>}},
-	{DispatchAttributeKey{DesignEntity::Assign, AttributeType::Index},
+	{DispatchAttributeKey{DesignEntity::Assign, AttributeType::NumberIdentifier},
      {AttributeExecutor::selectStatements, AttributeExecutor::identity<Number>}},
-	{DispatchAttributeKey{DesignEntity::Read, AttributeType::Index},
+	{DispatchAttributeKey{DesignEntity::Read, AttributeType::NumberIdentifier},
      {AttributeExecutor::selectStatements, AttributeExecutor::identity<Number>}},
-	{DispatchAttributeKey{DesignEntity::Print, AttributeType::Index},
+	{DispatchAttributeKey{DesignEntity::Print, AttributeType::NumberIdentifier},
      {AttributeExecutor::selectStatements, AttributeExecutor::identity<Number>}},
-	{DispatchAttributeKey{DesignEntity::Call, AttributeType::Index},
+	{DispatchAttributeKey{DesignEntity::Call, AttributeType::NumberIdentifier},
      {AttributeExecutor::selectStatements, AttributeExecutor::identity<Number>}},
-	{DispatchAttributeKey{DesignEntity::If, AttributeType::Index},
+	{DispatchAttributeKey{DesignEntity::If, AttributeType::NumberIdentifier},
      {AttributeExecutor::selectStatements, AttributeExecutor::identity<Number>}},
-	{DispatchAttributeKey{DesignEntity::While, AttributeType::Index},
+	{DispatchAttributeKey{DesignEntity::While, AttributeType::NumberIdentifier},
      {AttributeExecutor::selectStatements, AttributeExecutor::identity<Number>}},
-	{DispatchAttributeKey{DesignEntity::Constant, AttributeType::Value},
+	{DispatchAttributeKey{DesignEntity::Constant, AttributeType::NumberIdentifier},
      {AttributeExecutor::selectConstants, AttributeExecutor::identity<Number>}}};
 
 const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Number>> name_attribute_number_map = {
-	{DispatchAttributeKey{DesignEntity::Read, AttributeType::Variable},
+	{DispatchAttributeKey{DesignEntity::Read, AttributeType::VariableName},
      {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<QP::Types::ClauseType::ModifiesS>}},
-	{DispatchAttributeKey{DesignEntity::Call, AttributeType::Variable},
+	{DispatchAttributeKey{DesignEntity::Call, AttributeType::ProcedureName},
      {AttributeExecutor::selectStatements, AttributeExecutor::callToProcedure}},
-	{DispatchAttributeKey{DesignEntity::Print, AttributeType::Variable},
+	{DispatchAttributeKey{DesignEntity::Print, AttributeType::VariableName},
      {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<QP::Types::ClauseType::UsesS>}}};
 
 const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Name>> name_attribute_name_map = {
 	{ReferenceType::Name, {AttributeExecutor::extractName, AttributeExecutor::identity<Name>}},
-	{DispatchAttributeKey{DesignEntity::Variable, AttributeType::Name},
+	{DispatchAttributeKey{DesignEntity::Variable, AttributeType::NameIdentifier},
      {AttributeExecutor::selectVariables, AttributeExecutor::identity<Name>}},
-	{DispatchAttributeKey{DesignEntity::Procedure, AttributeType::Name},
+	{DispatchAttributeKey{DesignEntity::Procedure, AttributeType::NameIdentifier},
      {AttributeExecutor::selectProcedures, AttributeExecutor::identity<Name>}},
 };
 
@@ -144,27 +144,29 @@ ExecutorSet dispatchHandler(const vector<ReferenceArgument>& arguments) {
 
 const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>> number_handler_map = {
 	{ReferenceType::StatementIndex, dispatchHandler<Number, Number, Number>},
-	{AttributeType::Index, dispatchHandler<Number, Number, Number>},
-	{AttributeType::Value, dispatchHandler<Number, Number, Number>}};
+	{AttributeType::NumberIdentifier, dispatchHandler<Number, Number, Number>},
+	{AttributeType::NumberIdentifier, dispatchHandler<Number, Number, Number>}};
 
 const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>> name_handler_map = {
 	{ReferenceType::Name, dispatchHandler<Name, Name, Name>},
-	{AttributeType::Name, dispatchHandler<Name, Name, Name>},
-	{AttributeType::Variable, dispatchHandler<Name, Name, Number>}};
+	{AttributeType::NameIdentifier, dispatchHandler<Name, Name, Name>},
+	{AttributeType::VariableName, dispatchHandler<Name, Name, Number>},
+	{AttributeType::ProcedureName, dispatchHandler<Name, Name, Number>}};
 
 const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>> variable_handler_map = {
 	{ReferenceType::Name, dispatchHandler<Name, Number, Name>},
-	{AttributeType::Name, dispatchHandler<Name, Number, Name>},
-	{AttributeType::Variable, dispatchHandler<Name, Number, Number>}};
+	{AttributeType::NameIdentifier, dispatchHandler<Name, Number, Name>},
+	{AttributeType::VariableName, dispatchHandler<Name, Number, Number>},
+	{AttributeType::ProcedureName, dispatchHandler<Name, Number, Number>}};
 
 const unordered_map<WithClauseBasicDispatchKey,
                     unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>>>
 	handler_map = {{ReferenceType::StatementIndex, number_handler_map},
-                   {AttributeType::Index, number_handler_map},
-                   {AttributeType::Value, number_handler_map},
+                   {AttributeType::NumberIdentifier, number_handler_map},
                    {ReferenceType::Name, name_handler_map},
-                   {AttributeType::Name, name_handler_map},
-                   {AttributeType::Variable, variable_handler_map}};
+                   {AttributeType::NameIdentifier, name_handler_map},
+                   {AttributeType::ProcedureName, variable_handler_map},
+                   {AttributeType::VariableName, variable_handler_map}};
 }
 
 QP::Types::ExecutorSetBundle QP::Dispatcher::WithDispatcher::dispatcher(const vector<Types::ReferenceArgument>& arguments) {

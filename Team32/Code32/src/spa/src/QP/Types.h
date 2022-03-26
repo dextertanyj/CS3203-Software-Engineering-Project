@@ -53,7 +53,7 @@ enum class ClauseType {
 };
 
 enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression, Attribute };
-enum class AttributeType { Index, Name, Value, Variable };
+enum class AttributeType { NumberIdentifier, NameIdentifier, ProcedureName, VariableName };
 
 class ReferenceArgument;
 class ConnectedSynonyms;
