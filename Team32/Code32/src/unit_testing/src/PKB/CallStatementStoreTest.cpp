@@ -47,8 +47,13 @@ TEST_CASE("PKB::CallsStatementStore::get Test") {
 	}
 }
 
+<<<<<<< HEAD
 TEST_CASE("PKB::CallsStatementStore::populate Test") {
 	PKB::CallsStatementStore store;
+=======
+TEST_CASE("PKB::CallStatementStore::populateCallStore Test") {
+	PKB::CallStatementStore store;
+>>>>>>> Abstract logic in CallStatementStore
 	PKB::Types::StatementStore statements;
 	PKB::Types::ProcedureStore procedures;
 	PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation> call_store;
@@ -63,7 +68,7 @@ TEST_CASE("PKB::CallsStatementStore::populate Test") {
 		procedures.insert(p_2, {statements.get(s_3)});
 		store.set(statements.get(s_1), p_2);
 
-		store.populate(procedures, call_store);
+		store.populateCallStore(procedures, call_store);
 
 		REQUIRE_EQUALS(call_store.getReverse(p_1), ProcedureInfoPtrSet({procedures.get(p_2)}));
 		REQUIRE(call_store.getForward(p_1).empty());
@@ -84,7 +89,7 @@ TEST_CASE("PKB::CallsStatementStore::populate Test") {
 		store.set(statements.get(s_2), p_3);
 		store.set(statements.get(s_1), p_2);
 
-		store.populate(procedures, call_store);
+		store.populateCallStore(procedures, call_store);
 
 		REQUIRE_EQUALS(call_store.getReverse(p_1), ProcedureInfoPtrSet({procedures.get(p_2), procedures.get(p_3)}));
 		REQUIRE(call_store.getForward(p_1).empty());
@@ -106,7 +111,7 @@ TEST_CASE("PKB::CallsStatementStore::populate Test") {
 		store.set(statements.get(s_2), p_3);
 		store.set(statements.get(s_1), p_2);
 
-		store.populate(procedures, call_store);
+		store.populateCallStore(procedures, call_store);
 
 		REQUIRE_EQUALS(call_store.getReverse(p_1), ProcedureInfoPtrSet({procedures.get(p_2)}));
 		REQUIRE(call_store.getForward(p_1).empty());
@@ -127,7 +132,7 @@ TEST_CASE("PKB::CallsStatementStore::populate Test") {
 		procedures.insert(p_2, {statements.get(s_3)});
 		store.set(statements.get(s_1), p_2);
 
-		REQUIRE_THROWS_AS(store.populate(procedures, call_store), logic_error);
+		REQUIRE_THROWS_AS(store.populateCallStore(procedures, call_store), logic_error);
 	}
 
 	SECTION("Missing Procedure") {
@@ -137,6 +142,6 @@ TEST_CASE("PKB::CallsStatementStore::populate Test") {
 		procedures.insert(p_1, {statements.get(s_1)});
 		store.set(statements.get(s_1), p_2);
 
-		REQUIRE_THROWS_AS(store.populate(procedures, call_store), logic_error);
+		REQUIRE_THROWS_AS(store.populateCallStore(procedures, call_store), logic_error);
 	}
 }

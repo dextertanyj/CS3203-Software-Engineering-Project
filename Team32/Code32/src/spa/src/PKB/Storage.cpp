@@ -283,9 +283,15 @@ VarRefSet PKB::Storage::getWhileControlVar(StmtRef index) { return while_control
 ProcRef PKB::Storage::getCalledProcedure(StmtRef index) { return calls_statement_store.getProcedure(index); };
 
 void PKB::Storage::populateComplexRelations() {
+<<<<<<< HEAD
 	calls_statement_store.populate(procedure_store, calls_store);
 	calls_store.optimize();
 	calls_graph.sort(procedure_store, calls_store);
+=======
+	call_statement_store.populateCallStore(procedure_store, call_store);
+	call_store.optimize();
+	call_graph.sort(procedure_store, call_store);
+>>>>>>> Abstract logic in CallStatementStore
 	parent_store.optimize();
 	follows_store.optimize();
 	ModifiesSRelation::optimize(parent_store, calls_statement_store, procedure_store, calls_graph, modifies_s_store);
