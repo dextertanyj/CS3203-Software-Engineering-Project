@@ -129,11 +129,9 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		REQUIRE_EQUALS(pkb.set_uses_call_count, 0);
 		REQUIRE(pkb.set_uses_arguments.empty());
 		vector<tuple<StmtRef, VarRef, Common::ExpressionProcessor::Expression>> res_set = pkb.set_assign_arguments;
-		for (auto const& res : res_set) {
-			REQUIRE_EQUALS(std::get<0>(res), statement_number);
-			REQUIRE_EQUALS(std::get<1>(res), "A");
-			REQUIRE(SP::TestUtilities::createArithmeticExpression(vector<string>({"1"})).equals(std::get<2>(res)));
-		}
+		REQUIRE_EQUALS(pkb.set_assign_arguments,
+		               vector<tuple<StmtRef, VarRef, Common::ExpressionProcessor::Expression>>(
+						   {{statement_number, "A", SP::TestUtilities::createArithmeticExpression(vector<string>({"1"}))}}));
 	}
 
 	SECTION("Single variable assignment") {
@@ -150,12 +148,9 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		REQUIRE_EQUALS(pkb.set_uses_set_call_count, 1);
 		REQUIRE_EQUALS(pkb.set_uses_set_arguments,
 		               vector<tuple<StmtRef, unordered_set<VarRef>>>({{statement_number, unordered_set<VarRef>{"B"}}}));
-		vector<tuple<StmtRef, VarRef, Common::ExpressionProcessor::Expression>> res_set = pkb.set_assign_arguments;
-		for (auto const& res : res_set) {
-			REQUIRE_EQUALS(std::get<0>(res), statement_number);
-			REQUIRE_EQUALS(std::get<1>(res), "A");
-			REQUIRE(SP::TestUtilities::createArithmeticExpression(vector<string>({"B"})).equals(std::get<2>(res)));
-		}
+		REQUIRE_EQUALS(pkb.set_assign_arguments,
+		               vector<tuple<StmtRef, VarRef, Common::ExpressionProcessor::Expression>>(
+						   {{statement_number, "A", SP::TestUtilities::createArithmeticExpression(vector<string>({"B"}))}}));
 	}
 
 	SECTION("Multiple terminal assignment") {
@@ -174,12 +169,9 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		REQUIRE_EQUALS(pkb.set_uses_set_call_count, 1);
 		REQUIRE_EQUALS(pkb.set_uses_set_arguments,
 		               vector<tuple<StmtRef, unordered_set<VarRef>>>({{statement_number, unordered_set<VarRef>{"B", "C"}}}));
-		vector<tuple<StmtRef, VarRef, Common::ExpressionProcessor::Expression>> res_set = pkb.set_assign_arguments;
-		for (auto const& res : res_set) {
-			REQUIRE_EQUALS(std::get<0>(res), statement_number);
-			REQUIRE_EQUALS(std::get<1>(res), "A");
-			REQUIRE(SP::TestUtilities::createArithmeticExpression(vector<string>({"1", "+", "B", "*", "2", "/", "C"}))
-			            .equals(std::get<2>(res)));
-		}
+		REQUIRE_EQUALS(pkb.set_assign_arguments,
+		               vector<tuple<StmtRef, VarRef, Common::ExpressionProcessor::Expression>>(
+						   {{statement_number, "A",
+		                     SP::TestUtilities::createArithmeticExpression(vector<string>({"1", "+", "B", "*", "2", "/", "C"}))}}));
 	}
 }

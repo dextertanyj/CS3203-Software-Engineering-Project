@@ -4,6 +4,7 @@
 #include <regex>
 #include <utility>
 
+#include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/Validator.h"
 #include "QP/QueryExpressionLexer.h"
 #include "QP/Types.h"
@@ -308,7 +309,7 @@ Common::ExpressionProcessor::Expression QP::QueryPreprocessor::parseExpression()
 	}
 	QueryExpressionLexer lexer = QueryExpressionLexer(expression);
 	Common::ExpressionProcessor::Expression arithmetic_expression =
-		Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+		Common::ExpressionProcessor::ExpressionParser{lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
 	if (!lexer.readToken().empty()) {
 		throw QueryException("Invalid expression.");
 	}

@@ -1,6 +1,6 @@
 #include "QP/QueryEvaluator.h"
 
-#include "Common/ExpressionProcessor/Expression.h"
+#include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/TypeDefs.h"
 #include "QP/Dispatcher/DispatchMap.h"
 #include "QP/QueryExpressionLexer.h"
@@ -99,13 +99,13 @@ TEST_CASE("QP::QueryEvaluator::execute") {
 
 	vector<string> assign_token = {"x", "+", "1"};
 	QP::QueryExpressionLexer lexer = QP::QueryExpressionLexer(assign_token);
-	auto expression = Common::ExpressionProcessor::Expression::parse(lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+	auto expression = Common::ExpressionProcessor::ExpressionParser{lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(1, "x", expression);
 
 	vector<string> token = {"1"};
 	QP::QueryExpressionLexer query_lexer = QP::QueryExpressionLexer(token);
 	auto query_expression =
-		Common::ExpressionProcessor::Expression::parse(query_lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+		Common::ExpressionProcessor::ExpressionParser{query_lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
 
 	SECTION("No clause, select assign statement") {
 		QP::QueryProperties properties = QP::QueryProperties(declarations, {assign_declaration}, {});

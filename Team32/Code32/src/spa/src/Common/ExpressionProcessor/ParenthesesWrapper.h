@@ -4,13 +4,14 @@
 #include <memory>
 
 #include "Common/ExpressionProcessor/ExpressionNode.h"
+#include "Common/ExpressionProcessor/LogicalNode.h"
 
 using namespace std;
 
 class Common::ExpressionProcessor::ParenthesesWrapper {
 public:
-	explicit ParenthesesWrapper(shared_ptr<ExpressionNode> expression);
-	shared_ptr<ExpressionNode> getExpression();
+	explicit ParenthesesWrapper(ParenthesizedExpression expression);
+	[[nodiscard]] shared_ptr<ExpressionNode> getExpression() const;
 
 private:
 	shared_ptr<ExpressionNode> expression;

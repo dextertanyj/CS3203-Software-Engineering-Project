@@ -8,8 +8,6 @@
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/TypeDefs.h"
 
-using namespace std;
-
 class Common::ExpressionProcessor::ExpressionNode {
 public:
 	string traversal();
