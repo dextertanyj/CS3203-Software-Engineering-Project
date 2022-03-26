@@ -15,8 +15,8 @@ public:
 	using TransitiveRelation<ProcedureInfo>::TransitiveRelation;
 	void insertForward(const shared_ptr<ProcedureInfo>& caller);
 	void insertReverse(const shared_ptr<ProcedureInfo>& callee);
-	void appendForwardTransitive(const unordered_set<shared_ptr<ProcedureInfo>>& new_callers);
-	void appendReverseTransitive(const unordered_set<shared_ptr<ProcedureInfo>>& new_callees);
+	void appendForwardTransitive(const unordered_set<shared_ptr<ProcedureInfo>>& new_callers) override;
+	void appendReverseTransitive(const unordered_set<shared_ptr<ProcedureInfo>>& new_callees) override;
 
 	[[nodiscard]] unordered_set<shared_ptr<ProcedureInfo>> getForward() const;
 	[[nodiscard]] unordered_set<shared_ptr<ProcedureInfo>> getReverse() const;
