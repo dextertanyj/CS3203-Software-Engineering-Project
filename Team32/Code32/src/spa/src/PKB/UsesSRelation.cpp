@@ -51,10 +51,11 @@ void PKB::UsesSRelation::optimize(Types::ParentStore& parent_store, CallsStateme
 	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {
 		vector<shared_ptr<StmtInfo>> stmts_in_proc = proc_iterator->get()->getStatements();
 		// For any procedure, we must process the call statements first before propagating the conditional statements.
+		std::for_each(stmts_in_proc.begin(), stmts_in_proc.end(), [&call_store, &proc_store, &store](const shared_ptr<StmtInfo>& info) {
+			optimizeCall(info, call_store, proc_store, store);
+		});
 		std::for_each(stmts_in_proc.begin(), stmts_in_proc.end(),
-		              [&call_store, &proc_store, &store](shared_ptr<StmtInfo> info) { optimizeCall(info, call_store, proc_store, store); });
-		std::for_each(stmts_in_proc.begin(), stmts_in_proc.end(),
-		              [&parent_store, &store](shared_ptr<StmtInfo> info) { optimizeConditional(info, parent_store, store); });
+		              [&parent_store, &store](const shared_ptr<StmtInfo>& info) { optimizeConditional(info, parent_store, store); });
 	}
 }
 
@@ -81,7 +82,7 @@ void PKB::UsesSRelation::optimizeConditional(const shared_ptr<StmtInfo>& stateme
 	storeUsedVars(statement, children, store);
 }
 
-void PKB::UsesSRelation::storeUsedVars(shared_ptr<StmtInfo> stmt_key, StmtInfoPtrSet stmt_list,
+void PKB::UsesSRelation::storeUsedVars(const shared_ptr<StmtInfo>& stmt_key, const StmtInfoPtrSet& stmt_list,
                                        PKB::SVRelationStore<PKB::UsesSRelation>& store) {
 	VarRefSet variables;
 	for (const auto& stmt : stmt_list) {
@@ -92,6 +93,6 @@ void PKB::UsesSRelation::storeUsedVars(shared_ptr<StmtInfo> stmt_key, StmtInfoPt
 		}
 	}
 	if (!variables.empty()) {
-		store.set(stmt_key, variables);
+		store.set(std::move(stmt_key), variables);
 	}
 }

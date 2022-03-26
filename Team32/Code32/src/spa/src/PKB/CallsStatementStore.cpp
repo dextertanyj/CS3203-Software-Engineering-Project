@@ -39,7 +39,7 @@ void PKB::CallsStatementStore::populateCallStore(
 	const PKB::Types::ProcedureStore& procedures,
 	PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>& call_store) const {
 	for (const shared_ptr<ProcedureInfo>& procedure : procedures.getAll()) {
-		for (shared_ptr<StmtInfo> info : procedure->getStatements()) {
+		for (const shared_ptr<StmtInfo>& info : procedure->getStatements()) {
 			populate(info, procedures, procedure, call_store);
 		}
 	}

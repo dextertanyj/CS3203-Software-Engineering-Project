@@ -51,10 +51,11 @@ void PKB::ModifiesSRelation::optimize(Types::ParentStore& parent_store, CallsSta
 	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {
 		vector<shared_ptr<StmtInfo>> stmts_in_proc = proc_iterator->get()->getStatements();
 		// For any procedure, we must process the call statements first before propagating the conditional statements.
+		std::for_each(stmts_in_proc.begin(), stmts_in_proc.end(), [&call_store, &proc_store, &store](const shared_ptr<StmtInfo>& info) {
+			optimizeCall(info, call_store, proc_store, store);
+		});
 		std::for_each(stmts_in_proc.begin(), stmts_in_proc.end(),
-		              [&call_store, &proc_store, &store](shared_ptr<StmtInfo> info) { optimizeCall(info, call_store, proc_store, store); });
-		std::for_each(stmts_in_proc.begin(), stmts_in_proc.end(),
-		              [&parent_store, &store](shared_ptr<StmtInfo> info) { optimizeConditional(info, parent_store, store); });
+		              [&parent_store, &store](const shared_ptr<StmtInfo>& info) { optimizeConditional(info, parent_store, store); });
 	}
 }
 
@@ -81,10 +82,10 @@ void PKB::ModifiesSRelation::optimizeConditional(const shared_ptr<StmtInfo>& sta
 	storeModifiedVars(statement, children, store);
 }
 
-void PKB::ModifiesSRelation::storeModifiedVars(shared_ptr<StmtInfo> stmt_key, StmtInfoPtrSet stmt_infos,
+void PKB::ModifiesSRelation::storeModifiedVars(const shared_ptr<StmtInfo>& stmt_key, const StmtInfoPtrSet& stmt_list,
                                                PKB::SVRelationStore<PKB::ModifiesSRelation>& store) {
 	VarRefSet variables;
-	for (auto stmt : stmt_infos) {
+	for (const auto& stmt : stmt_list) {
 		auto iter = store.statement_key_map.find(stmt->getIdentifier());
 		// If child statement modifies a variable, then we must record it in the parent conditional statement.
 		if (iter != store.statement_key_map.end()) {
@@ -92,6 +93,6 @@ void PKB::ModifiesSRelation::storeModifiedVars(shared_ptr<StmtInfo> stmt_key, St
 		}
 	}
 	if (!variables.empty()) {
-		store.set(stmt_key, variables);
+		store.set(std::move(stmt_key), variables);
 	}
 }
