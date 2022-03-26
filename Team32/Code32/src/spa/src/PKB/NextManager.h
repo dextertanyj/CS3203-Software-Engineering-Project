@@ -13,7 +13,6 @@ using namespace std;
 class PKB::NextManager {
 public:
 	explicit NextManager(ControlFlowGraph& control_flow_graph);
-
 	void setNext(StmtRef previous, StmtRef next);
 	void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next);
 	void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref);

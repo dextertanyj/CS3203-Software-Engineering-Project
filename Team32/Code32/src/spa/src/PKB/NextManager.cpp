@@ -1,68 +1,66 @@
 #include "NextManager.h"
 
-PKB::NextManager::NextManager(ControlFlowGraph &control_flow_graph) { this->control_flow_graph = &control_flow_graph; }
+PKB::NextManager::NextManager(ControlFlowGraph &control_flow_graph) : control_flow_graph(&control_flow_graph) {}
 
 void PKB::NextManager::setNext(StmtRef previous, StmtRef next) {
-	auto prev_node_iter = control_flow_graph->stmt_to_normal_node_store.find(previous);
-	auto next_node_iter = control_flow_graph->stmt_to_normal_node_store.find(next);
-	if (prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() ||
-	    next_node_iter == control_flow_graph->stmt_to_normal_node_store.end()) {
-		throw invalid_argument("One of the provided references is not an existing node.");
-	}
 	if (previous == next) {
 		throw invalid_argument("Cannot set a node's direct next to itself.");
 	}
-	prev_node_iter->second->setConnection(next_node_iter->second);
+	try {
+		auto prev_node = control_flow_graph->getNode(previous);
+		auto next_node = control_flow_graph->getNode(next);
+		prev_node->setConnection(next_node);
+	} catch (invalid_argument e) {
+		throw invalid_argument("One of the provided references is not an existing node.");
+	}
 }
 
 void PKB::NextManager::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) {
-	auto prev_node_iter = control_flow_graph->stmt_to_normal_node_store.find(prev);
-	auto then_next_node_iter = control_flow_graph->stmt_to_normal_node_store.find(then_next);
-	auto else_next_node_iter = control_flow_graph->stmt_to_normal_node_store.find(else_next);
-	if (prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() ||
-	    then_next_node_iter == control_flow_graph->stmt_to_normal_node_store.end() ||
-	    else_next_node_iter == control_flow_graph->stmt_to_normal_node_store.end()) {
-		throw invalid_argument("One of the provided references is not an existing node.");
-	}
 	if (prev >= then_next || prev >= else_next || then_next >= else_next) {
 		throw invalid_argument("Ordering or value(s) of provided statement references is invalid.");
 	}
-	if (prev_node_iter->second->getNodeType() != NodeType::If) {
-		throw invalid_argument("First argument must refer to an if statement.");
+	try {
+		auto prev_node = control_flow_graph->getNode(prev);
+		auto then_next_node = control_flow_graph->getNode(then_next);
+		auto else_next_node = control_flow_graph->getNode(else_next);
+		if (prev_node->getNodeType() != NodeType::If) {
+			throw invalid_argument("First argument must refer to an if statement.");
+		}
+		shared_ptr<PKB::IfNode> if_ctrl_node = dynamic_pointer_cast<PKB::IfNode>(prev_node);
+		if_ctrl_node->insertIfNext(then_next_node, else_next_node);
+	} catch (invalid_argument e) {
+		throw e.what();
 	}
-	shared_ptr<PKB::IfNode> if_ctrl_node = dynamic_pointer_cast<PKB::IfNode>(prev_node_iter->second);
-	if_ctrl_node->insertIfNext(then_next_node_iter->second, else_next_node_iter->second);
 }
 
 void PKB::NextManager::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) {
-	auto then_prev_node_iter = control_flow_graph->stmt_to_normal_node_store.find(then_prev);
-	auto else_prev_node_iter = control_flow_graph->stmt_to_normal_node_store.find(else_prev);
-	auto if_ctrl_node_iter = control_flow_graph->stmt_to_normal_node_store.find(if_stmt_ref);
-	if (then_prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() ||
-	    else_prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() ||
-	    if_ctrl_node_iter == control_flow_graph->stmt_to_normal_node_store.end()) {
-		throw invalid_argument("One of the provided references is not an existing node.");
-	}
 	if (if_stmt_ref >= then_prev || if_stmt_ref >= else_prev || then_prev >= else_prev) {
 		throw invalid_argument("Ordering or value(s) of provided statement references is invalid.");
 	}
-	if (if_ctrl_node_iter->second->getNodeType() != NodeType::If) {
-		throw invalid_argument("Third argument must refer to an if control statement.");
+	try {
+		auto then_prev_node = control_flow_graph->getNode(then_prev);
+		auto else_prev_node = control_flow_graph->getNode(else_prev);
+		auto if_ctrl_node = control_flow_graph->getNode(if_stmt_ref);
+		if (if_ctrl_node->getNodeType() != NodeType::If) {
+			throw invalid_argument("Third argument must refer to an if control statement.");
+		}
+		shared_ptr<PKB::IfNode> if_node = dynamic_pointer_cast<PKB::IfNode>(if_ctrl_node);
+		if_node->insertIfExit(then_prev_node, else_prev_node);
+	} catch (invalid_argument e) {
+		throw e.what();
 	}
-	shared_ptr<PKB::IfNode> if_node = dynamic_pointer_cast<PKB::IfNode>(if_ctrl_node_iter->second);
-	if_node->insertIfExit(then_prev_node_iter->second, else_prev_node_iter->second);
 }
 
 bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
-	auto prev_node_iter = control_flow_graph->stmt_to_normal_node_store.find(first);
-	auto next_node_iter = control_flow_graph->stmt_to_normal_node_store.find(second);
-	if (prev_node_iter == control_flow_graph->stmt_to_normal_node_store.end() ||
-	    next_node_iter == control_flow_graph->stmt_to_normal_node_store.end()) {
+	try {
+		auto prev_node = control_flow_graph->getNode(first);
+		auto next_node = control_flow_graph->getNode(second);
+		StmtInfoPtrSet next_nodes_of_prev = this->getNext(first);
+		return any_of(next_nodes_of_prev.begin(), next_nodes_of_prev.end(),
+		              [second](const shared_ptr<StmtInfo> &next_info) { return next_info->getIdentifier() == second; });
+	} catch (invalid_argument) {
 		throw invalid_argument("One of the provided references is not an existing node.");
 	}
-	StmtInfoPtrSet next_nodes_of_prev = this->getNext(first);
-	return any_of(next_nodes_of_prev.begin(), next_nodes_of_prev.end(),
-	              [second](const shared_ptr<StmtInfo> &next_info) { return next_info->getIdentifier() == second; });
 }
 
 StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
@@ -144,7 +142,7 @@ void PKB::NextManager::processBFSVisit(Types::BFSInfo &info, const shared_ptr<PK
 		StmtInfoPtrSet real_nodes = (control_flow_graph->*collector)(node);
 		info.nodes.insert(real_nodes.begin(), real_nodes.end());
 		for (const auto &real_node : real_nodes) {
-			info.node_queue.push(control_flow_graph->stmt_to_normal_node_store.at(real_node->getIdentifier()));
+			info.node_queue.push(control_flow_graph->getNode(real_node->getIdentifier()));
 		}
 	} else {
 		shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
