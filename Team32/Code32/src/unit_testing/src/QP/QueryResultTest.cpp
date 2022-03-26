@@ -2,97 +2,104 @@
 
 #include "catch.hpp"
 
-TEST_CASE("QP::QueryResult::joinResult Should join tables with same synonym") {
-	QP::QueryResult result_one = QP::QueryResult();
-	QP::QueryResult result_two = QP::QueryResult();
-	result_one.addColumn("a", {"3", "1"});
-	result_two.addColumn("a", {"1", "2", "2", "3"});
-	result_two.addColumn("b", {"5", "5", "6", "7"});
+TEST_CASE("QP::QueryResult::addRow should set result to true") {
+	QP::QueryResult result = QP::QueryResult(vector<string>({"a"}));
 
-	result_two.joinResult(result_one);
+	result.addRow({"5"});
 
-	unordered_map<string, vector<string>> table = result_two.getTable();
-	REQUIRE(table.at("a") == vector<string>({"1", "3"}));
-	REQUIRE(table.at("b") == vector<string>({"5", "7"}));
+	REQUIRE(result.getResult());
 }
 
-TEST_CASE("QP::QueryResult::joinResult Should join tables with exact same synonyms") {
-	QP::QueryResult result_one = QP::QueryResult();
-	QP::QueryResult result_two = QP::QueryResult();
-	result_one.addColumn("a", {"3", "1"});
-	result_one.addColumn("b", {"7", "1"});
-	result_two.addColumn("a", {"1", "2", "2", "3"});
-	result_two.addColumn("b", {"5", "5", "6", "7"});
+TEST_CASE("QP::QueryResult::joinResult should set result to false") {
+	QP::QueryResult result_one = QP::QueryResult(vector<string>({"a"}));
+	QP::QueryResult result_two = QP::QueryResult(vector<string>({"a", "b"}));
+	result_one.addRow({"5"});
+	result_one.addRow({"6"});
+	result_two.addRow({"1", "5"});
+	result_two.addRow({"2", "5"});
+	result_two.addRow({"2", "6"});
+	result_two.addRow({"3", "7"});
+	vector<QP::QueryResult> results = {result_one, result_two};
 
-	result_two.joinResult(result_one);
+	QP::QueryResult final_result = QP::QueryResult::joinResults(results);
 
-	unordered_map<string, vector<string>> table = result_two.getTable();
-	REQUIRE(table.at("a") == vector<string>({"3"}));
-	REQUIRE(table.at("b") == vector<string>({"7"}));
+	REQUIRE(!final_result.getResult());
 }
 
-TEST_CASE("QP::QueryResult::joinResult Should join tables with different synonyms") {
-	QP::QueryResult result_one = QP::QueryResult();
-	QP::QueryResult result_two = QP::QueryResult();
-	result_one.addColumn("a", {"3", "1", "2", "4"});
-	result_one.addColumn("b", {"7", "1", "9", "3"});
-	result_two.addColumn("b", {"1", "2", "2", "3", "3", "1"});
-	result_two.addColumn("c", {"5", "5", "6", "7", "4", "9"});
+TEST_CASE("QP::QueryResult::joinResult should set result to true") {
+	QP::QueryResult result_one = QP::QueryResult(vector<string>({"a"}));
+	QP::QueryResult result_two = QP::QueryResult(vector<string>({"a", "b"}));
+	result_one.addRow({"1"});
+	result_one.addRow({"2"});
+	result_two.addRow({"1", "5"});
+	result_two.addRow({"2", "5"});
+	result_two.addRow({"2", "6"});
+	result_two.addRow({"3", "7"});
+	vector<QP::QueryResult> results = {result_one, result_two};
 
-	result_one.joinResult(result_two);
+	QP::QueryResult final_result = QP::QueryResult::joinResults(results);
 
-	unordered_map<string, vector<string>> table = result_one.getTable();
-	REQUIRE(table.at("a") == vector<string>({"1", "1", "4", "4"}));
-	REQUIRE(table.at("b") == vector<string>({"1", "1", "3", "3"}));
-	REQUIRE(table.at("c") == vector<string>({"5", "9", "7", "4"}));
+	REQUIRE(final_result.getResult());
+	REQUIRE(final_result.getNumberOfRows() == 3);
 }
 
-TEST_CASE("QP::QueryResult::joinResult Should join tables without any common synonym") {
-	QP::QueryResult result_one = QP::QueryResult();
-	QP::QueryResult result_two = QP::QueryResult();
-	result_one.addColumn("a", {"3", "1"});
-	result_one.addColumn("b", {"7", "1"});
-	result_two.addColumn("c", {"1", "2", "2"});
-	result_two.addColumn("d", {"5", "5", "6"});
-	result_two.addColumn("e", {"9", "8", "7"});
+TEST_CASE("QP::QueryResult::joinResult multiple results, should return true") {
+	QP::QueryResult result_one = QP::QueryResult(vector<string>({"a"}));
+	QP::QueryResult result_two = QP::QueryResult(vector<string>({"a", "b"}));
+	QP::QueryResult result_three = QP::QueryResult(vector<string>({"c", "d", "a", "e"}));
+	QP::QueryResult result_four = QP::QueryResult(vector<string>({"c", "b"}));
+	result_one.addRow({"5"});
+	result_one.addRow({"6"});
+	result_two.addRow({"1", "5"});
+	result_two.addRow({"5", "5"});
+	result_two.addRow({"2", "6"});
+	result_two.addRow({"6", "7"});
+	result_three.addRow({"x", "50", "5", "aaa"});
+	result_three.addRow({"y", "30", "1", "bbb"});
+	result_three.addRow({"w", "60", "6", "ccc"});
+	result_three.addRow({"s", "70", "7", "ddd"});
+	result_four.addRow({"x", "5"});
+	result_four.addRow({"y", "3"});
+	vector<QP::QueryResult> results = {result_one, result_two, result_three, result_four};
 
-	result_one.joinResult(result_two);
+	QP::QueryResult final_result = QP::QueryResult::joinResults(results);
 
-	unordered_map<string, vector<string>> table = result_one.getTable();
-	REQUIRE(table.at("a") == vector<string>({"3", "3", "3", "1", "1", "1"}));
-	REQUIRE(table.at("b") == vector<string>({"7", "7", "7", "1", "1", "1"}));
-	REQUIRE(table.at("c") == vector<string>({"1", "2", "2", "1", "2", "2"}));
-	REQUIRE(table.at("d") == vector<string>({"5", "5", "6", "5", "5", "6"}));
-	REQUIRE(table.at("e") == vector<string>({"9", "8", "7", "9", "8", "7"}));
+	REQUIRE(final_result.getResult());
+	REQUIRE(final_result.getNumberOfRows() == 1);
+	REQUIRE(final_result.getTable().getRowWithOrder({"a", "b", "c", "d", "e"}, 0) == vector<string>({"5", "5", "x", "50", "aaa"}));
 }
 
-TEST_CASE("QP::QueryResult::joinResult Should set result to false when all rows are removed") {
-	QP::QueryResult result_one = QP::QueryResult();
-	QP::QueryResult result_two = QP::QueryResult();
-	result_one.addColumn("a", {"3", "1"});
-	result_one.addColumn("b", {"7", "1"});
-	result_two.addColumn("b", {"9", "2", "2", "3"});
-	result_two.addColumn("c", {"5", "5", "6", "7"});
+TEST_CASE("QP::QueryResult::joinResult multiple results, should return false") {
+	QP::QueryResult result_one = QP::QueryResult(vector<string>({"a"}));
+	QP::QueryResult result_two = QP::QueryResult(vector<string>({"a", "b"}));
+	QP::QueryResult result_three = QP::QueryResult(vector<string>({"c", "d", "a", "e"}));
+	QP::QueryResult result_four = QP::QueryResult(vector<string>({"c", "b"}));
+	result_one.addRow({"5"});
+	result_one.addRow({"6"});
+	result_two.addRow({"1", "5"});
+	result_two.addRow({"5", "5"});
+	result_two.addRow({"2", "6"});
+	result_two.addRow({"6", "7"});
+	result_three.addRow({"x", "50", "9", "aaa"});
+	result_three.addRow({"y", "30", "1", "bbb"});
+	result_three.addRow({"w", "60", "6", "ccc"});
+	result_three.addRow({"s", "70", "7", "ddd"});
+	result_four.addRow({"x", "5"});
+	result_four.addRow({"y", "3"});
+	vector<QP::QueryResult> results = {result_one, result_two, result_three, result_four};
 
-	result_two.joinResult(result_one);
+	QP::QueryResult final_result = QP::QueryResult::joinResults(results);
 
-	REQUIRE(!result_two.getResult());
+	REQUIRE(!final_result.getResult());
 }
 
-TEST_CASE("QP::QueryResult::filterByDeclarations Should filter result") {
-	QP::Types::DeclarationList select_list = {
-		{QP::Types::DesignEntity::Stmt, "a"},
-		{QP::Types::DesignEntity::Stmt, "c"},
-	};
-	QP::QueryResult result = QP::QueryResult();
-	result.addColumn("a", {"1", "3", "5", "1", "7"});
-	result.addColumn("b", {"a", "b", "c", "d", "e"});
-	result.addColumn("c", {"2", "4", "6", "2", "8"});
+TEST_CASE("QP::QueryResult::filterBySelect empty select list should remove table") {
+	QP::QueryResult result = QP::QueryResult(vector<string>({"a"}));
+	result.addRow({"1"});
+	result.addRow({"2"});
 
-	result.filterBySelect(select_list);
+	result.filterBySelect({});
 
-	unordered_map<string, vector<string>> table = result.getTable();
-	REQUIRE(table.at("a") == vector<string>({"1", "3", "5", "7"}));
-	REQUIRE(table.at("c") == vector<string>({"2", "4", "6", "8"}));
-	REQUIRE(result.getSynonymsStored().size() == 2);
+	REQUIRE(result.getResult());
+	REQUIRE(result.getNumberOfRows() == 0);
 }

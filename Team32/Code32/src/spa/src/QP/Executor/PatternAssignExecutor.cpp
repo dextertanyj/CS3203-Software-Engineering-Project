@@ -36,29 +36,24 @@ QP::QueryResult QP::Executor::PatternAssignExecutor::executeTrivialSynonymOrWild
 QP::QueryResult QP::Executor::PatternAssignExecutor::executeNameWildcard(const QP::StorageAdapter& storage,
                                                                          const Types::ReferenceArgument& assign,
                                                                          const Types::ReferenceArgument& name) {
-	QP::QueryResult result = QP::QueryResult();
-	vector<string> statement_result;
+	QP::QueryResult result = QP::QueryResult({assign.getSynonym().symbol});
 	auto results = storage.getStmtsWithPatternLHS(name.getName());
-	statement_result.reserve(results.size());
 	for (auto const& entry : results) {
-		statement_result.push_back(to_string(entry->getIdentifier()));
+		result.addRow({to_string(entry->getIdentifier())});
 	}
-	result.addColumn(assign.getSynonym().symbol, statement_result);
 
 	return result;
 }
 
 QP::QueryResult QP::Executor::PatternAssignExecutor::executeWildcardWildcard(const QP::StorageAdapter& storage,
                                                                              const Types::ReferenceArgument& assign) {
-	QP::QueryResult result = QP::QueryResult();
-	vector<string> statement_result;
+	QP::QueryResult result = QP::QueryResult({assign.getSynonym().symbol});
 	auto results = storage.getStatements();
 	for (auto const& entry : results) {
 		if (QP::Utilities::checkStmtTypeMatch(entry, Types::DesignEntity::Assign)) {
-			statement_result.push_back(to_string(entry->getIdentifier()));
+			result.addRow({to_string(entry->getIdentifier())});
 		}
 	}
-	result.addColumn(assign.getSynonym().symbol, statement_result);
 
 	return result;
 }
@@ -66,18 +61,13 @@ QP::QueryResult QP::Executor::PatternAssignExecutor::executeWildcardWildcard(con
 QP::QueryResult QP::Executor::PatternAssignExecutor::executeSynonymWildcard(const QP::StorageAdapter& storage,
                                                                             const Types::ReferenceArgument& assign,
                                                                             const Types::ReferenceArgument& synonym) {
-	QP::QueryResult result = QP::QueryResult();
-	vector<string> statement_result;
-	vector<string> variable_result;
+	QP::QueryResult result = QP::QueryResult({assign.getSynonym().symbol, synonym.getSynonym().symbol});
 	for (auto const& var_ref : storage.getVariables()) {
 		auto statements = storage.getStmtsWithPatternLHS(var_ref);
 		for (auto const& statement : statements) {
-			statement_result.push_back(to_string(statement->getIdentifier()));
-			variable_result.push_back(var_ref);
+			result.addRow({to_string(statement->getIdentifier()), var_ref});
 		}
 	}
-	result.addColumn(assign.getSynonym().symbol, statement_result);
-	result.addColumn(synonym.getSynonym().symbol, variable_result);
 
 	return result;
 }
@@ -86,30 +76,25 @@ QP::QueryResult QP::Executor::PatternAssignExecutor::executeNameExpression(const
                                                                            const Types::ReferenceArgument& assign,
                                                                            const Types::ReferenceArgument& name,
                                                                            const Types::ReferenceArgument& expression) {
-	QP::QueryResult result = QP::QueryResult();
-	vector<string> statement_result;
+	QP::QueryResult result = QP::QueryResult({assign.getSynonym().symbol});
 	auto results = storage.getStmtsWithPattern(name.getName(), expression.getExpression(),
 	                                           expression.getType() == QP::Types::ReferenceType::ExactExpression);
-	statement_result.reserve(results.size());
 	for (auto const& entry : results) {
-		statement_result.push_back(to_string(entry->getIdentifier()));
+		result.addRow({to_string(entry->getIdentifier())});
 	}
-	result.addColumn(assign.getSynonym().symbol, statement_result);
 	return result;
 }
 
 QP::QueryResult QP::Executor::PatternAssignExecutor::executeWildcardExpression(const QP::StorageAdapter& storage,
                                                                                const Types::ReferenceArgument& assign,
                                                                                const Types::ReferenceArgument& expression) {
-	QP::QueryResult result = QP::QueryResult();
+	QP::QueryResult result = QP::QueryResult({assign.getSynonym().symbol});
 	vector<string> statement_result;
 	auto result_pairs =
 		storage.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == QP::Types::ReferenceType::ExactExpression);
-	statement_result.reserve(result_pairs.size());
 	for (auto const& pair : result_pairs) {
-		statement_result.push_back(to_string(pair.first->getIdentifier()));
+		result.addRow({to_string(pair.first->getIdentifier())});
 	}
-	result.addColumn(assign.getSynonym().symbol, statement_result);
 
 	return result;
 }
@@ -118,17 +103,12 @@ QP::QueryResult QP::Executor::PatternAssignExecutor::executeSynonymExpression(co
                                                                               const Types::ReferenceArgument& assign,
                                                                               const Types::ReferenceArgument& synonym,
                                                                               const Types::ReferenceArgument& expression) {
-	QP::QueryResult result = QP::QueryResult();
-	vector<string> statement_result;
-	vector<string> variable_result;
+	QP::QueryResult result = QP::QueryResult({assign.getSynonym().symbol, synonym.getSynonym().symbol});
 	auto result_pairs =
 		storage.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == QP::Types::ReferenceType::ExactExpression);
 	for (auto const& pair : result_pairs) {
-		statement_result.push_back(to_string(pair.first->getIdentifier()));
-		variable_result.push_back(pair.second);
+		result.addRow({to_string(pair.first->getIdentifier()), pair.second});
 	}
-	result.addColumn(assign.getSynonym().symbol, statement_result);
-	result.addColumn(synonym.getSynonym().symbol, variable_result);
 
 	return result;
 }

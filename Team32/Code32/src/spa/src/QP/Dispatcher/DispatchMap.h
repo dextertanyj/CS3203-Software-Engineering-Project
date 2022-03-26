@@ -10,6 +10,7 @@
 #include "QP/Dispatcher/PatternIfDispatcher.h"
 #include "QP/Dispatcher/PatternWhileDispatcher.h"
 #include "QP/Dispatcher/UsesDispatcher.h"
+#include "QP/Dispatcher/WithDispatcher.h"
 #include "QP/QP.h"
 #include "QP/Types.h"
 
@@ -27,7 +28,8 @@ struct QP::Dispatcher::DispatchMap {
 		{Types::ClauseType::PatternAssign, QP::Dispatcher::PatternAssignDispatcher::dispatcher},
 		{Types::ClauseType::PatternWhile, QP::Dispatcher::PatternWhileDispatcher::dispatcher},
 		{Types::ClauseType::PatternIf, QP::Dispatcher::PatternIfDispatcher::dispatcher},
-		{Types::ClauseType::UnknownUses, QP::Dispatcher::UsesDispatcher::dispatcher}};
+		{Types::ClauseType::UnknownUses, QP::Dispatcher::UsesDispatcher::dispatcher},
+		{Types::ClauseType::With, QP::Dispatcher::WithDispatcher::dispatcher}};
 
 	unordered_map<string, Types::ClauseType> clause_map = {
 		{"Calls", Types::ClauseType::Calls},
@@ -41,9 +43,33 @@ struct QP::Dispatcher::DispatchMap {
 		{"Parent*", Types::ClauseType::ParentT},
 		{"Uses", Types::ClauseType::UnknownUses},
 	};
+
 	unordered_map<Types::DesignEntity, Types::ClauseType> pattern_clause_map = {
 		{Types::DesignEntity::If, Types::ClauseType::PatternIf},
 		{Types::DesignEntity::While, Types::ClauseType::PatternWhile},
+	};
+
+	unordered_map<pair<Types::DesignEntity, string>, Types::AttributeType> attribute_map = {
+		{{Types::DesignEntity::Stmt, "stmt#"}, Types::AttributeType::NumberIdentifier},
+		{{Types::DesignEntity::Read, "stmt#"}, Types::AttributeType::NumberIdentifier},
+		{{Types::DesignEntity::Print, "stmt#"}, Types::AttributeType::NumberIdentifier},
+		{{Types::DesignEntity::Call, "stmt#"}, Types::AttributeType::NumberIdentifier},
+		{{Types::DesignEntity::While, "stmt#"}, Types::AttributeType::NumberIdentifier},
+		{{Types::DesignEntity::If, "stmt#"}, Types::AttributeType::NumberIdentifier},
+		{{Types::DesignEntity::Assign, "stmt#"}, Types::AttributeType::NumberIdentifier},
+		{{Types::DesignEntity::Read, "varName"}, Types::AttributeType::VariableName},
+		{{Types::DesignEntity::Print, "varName"}, Types::AttributeType::VariableName},
+		{{Types::DesignEntity::Call, "procName"}, Types::AttributeType::ProcedureName},
+		{{Types::DesignEntity::Procedure, "procName"}, Types::AttributeType::NameIdentifier},
+		{{Types::DesignEntity::Variable, "varName"}, Types::AttributeType::NameIdentifier},
+		{{Types::DesignEntity::Constant, "value"}, Types::AttributeType::NumberIdentifier}};
+
+	unordered_map<string, Types::DesignEntity> design_entity_map = {
+		{"stmt", Types::DesignEntity::Stmt},         {"read", Types::DesignEntity::Read},
+		{"print", Types::DesignEntity::Print},       {"call", Types::DesignEntity::Call},
+		{"while", Types::DesignEntity::While},       {"if", Types::DesignEntity::If},
+		{"assign", Types::DesignEntity::Assign},     {"variable", Types::DesignEntity::Variable},
+		{"constant", Types::DesignEntity::Constant}, {"procedure", Types::DesignEntity::Procedure},
 	};
 };
 

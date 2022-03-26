@@ -53,7 +53,7 @@ enum class ClauseType {
 };
 
 enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression, Attribute };
-enum class AttributeType { Index, Name, Value, Variable };
+enum class AttributeType { NumberIdentifier, NameIdentifier, ProcedureName, VariableName };
 
 class ReferenceArgument;
 class ConnectedSynonyms;
@@ -115,8 +115,9 @@ using WithExecutorFunctionSet =
 typedef vector<Declaration> DeclarationList;
 typedef vector<Clause> ClauseList;
 
-typedef unordered_map<string, vector<string>> ResultTable;
-typedef unordered_map<string, string> ResultRow;
+class ResultTable;
+typedef vector<string> ResultRow;
+typedef vector<string> ResultColumn;
 }
 
 #endif  // SPA_SRC_QP_TYPES_H

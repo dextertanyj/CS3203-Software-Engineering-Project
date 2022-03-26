@@ -10,8 +10,10 @@ TEST_CASE("QP::QueryFormatter::formatResult No results") {
 
 TEST_CASE("QP::QueryFormatter::formatResult List of statement number") {
 	QP::QueryProperties properties = QP::QueryProperties({}, {{QP::Types::DesignEntity::Stmt, "s"}}, {});
-	QP::QueryResult result = QP::QueryResult();
-	result.addColumn("s", {"1", "2", "3"});
+	QP::QueryResult result = QP::QueryResult(vector<string>{"s"});
+	result.addRow({"1"});
+	result.addRow({"2"});
+	result.addRow({"3"});
 
 	vector<string> result_string = QP::QueryFormatter::formatResult(properties, result);
 
@@ -35,12 +37,30 @@ TEST_CASE("QP::QueryFormatter::formatResult Tuple") {
 		{QP::Types::DesignEntity::Stmt, "s1"},
 	};
 	QP::QueryProperties properties = QP::QueryProperties({}, select_list, {});
-	QP::QueryResult result = QP::QueryResult();
-	result.addColumn("s", {"1", "2", "3"});
-	result.addColumn("s1", {"5", "6", "7"});
+	QP::QueryResult result = QP::QueryResult(vector<string>{"s", "s1"});
+	result.addRow({"1", "5"});
+	result.addRow({"2", "6"});
+	result.addRow({"3", "7"});
 
 	vector<string> result_string = QP::QueryFormatter::formatResult(properties, result);
 
 	sort(result_string.begin(), result_string.end());
 	REQUIRE(result_string == vector<string>({"1 5", "2 6", "3 7"}));
+}
+
+TEST_CASE("QP::QueryFormatter::formatResult Tuple repeated") {
+	QP::Types::DeclarationList select_list = {
+		{QP::Types::DesignEntity::Stmt, "s"},
+		{QP::Types::DesignEntity::Stmt, "s"},
+	};
+	QP::QueryProperties properties = QP::QueryProperties({}, select_list, {});
+	QP::QueryResult result = QP::QueryResult(vector<string>{"s", "s1"});
+	result.addRow({"1", "5"});
+	result.addRow({"2", "6"});
+	result.addRow({"3", "7"});
+
+	vector<string> result_string = QP::QueryFormatter::formatResult(properties, result);
+
+	sort(result_string.begin(), result_string.end());
+	REQUIRE(result_string == vector<string>({"1 1", "2 2", "3 3"}));
 }
