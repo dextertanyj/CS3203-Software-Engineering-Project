@@ -33,17 +33,7 @@ void PKB::TopologicalSort<TInfo>::sort(const TStore& truth_store,
 		}
 	}
 	while (!next.empty()) {
-		shared_ptr<TInfo> info = next.front();
-		next.pop();
-		order.push_back(info);
-		unordered_set<shared_ptr<TInfo>> outgoing = edges.at(info).second;
-		for (shared_ptr<TInfo> node : outgoing) {
-			edges.at(node).first.erase(info);
-			if (edges.at(node).first.empty()) {
-				next.push(node);
-			}
-		}
-		edges.erase(info);
+		executeKahn(next, edges);
 	}
 	if (!edges.empty()) {
 		throw invalid_argument("Recursive call detected.");
@@ -53,6 +43,23 @@ void PKB::TopologicalSort<TInfo>::sort(const TStore& truth_store,
 template <class TInfo>
 vector<shared_ptr<TInfo>> PKB::TopologicalSort<TInfo>::get() const {
 	return order;
+}
+
+template <class TInfo>
+void PKB::TopologicalSort<TInfo>::executeKahn(
+	queue<shared_ptr<TInfo>>& next,
+	unordered_map<shared_ptr<TInfo>, pair<unordered_set<shared_ptr<TInfo>>, unordered_set<shared_ptr<TInfo>>>>& edges) {
+	shared_ptr<TInfo> info = next.front();
+	next.pop();
+	order.push_back(info);
+	unordered_set<shared_ptr<TInfo>> outgoing = edges.at(info).second;
+	for (shared_ptr<TInfo> node : outgoing) {
+		edges.at(node).first.erase(info);
+		if (edges.at(node).first.empty()) {
+			next.push(node);
+		}
+	}
+	edges.erase(info);
 }
 
 #endif  // SPA_SRC_PKB_TOPOLOGICALSORT_TPP
