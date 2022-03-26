@@ -1,14 +1,14 @@
 #include "NextManager.h"
 
-PKB::NextManager::NextManager(ControlFlowGraph &control_flow_graph) : control_flow_graph(control_flow_graph) {}
+PKB::NextManager::NextManager(ControlFlowGraph &control_flow_graph) : control_flow_graph(&control_flow_graph) {}
 
 void PKB::NextManager::setNext(StmtRef previous, StmtRef next) {
 	if (previous == next) {
 		throw invalid_argument("Cannot set a node's direct next to itself.");
 	}
 	try {
-		auto prev_node = control_flow_graph.getNode(previous);
-		auto next_node = control_flow_graph.getNode(next);
+		auto prev_node = control_flow_graph->getNode(previous);
+		auto next_node = control_flow_graph->getNode(next);
 		prev_node->setConnection(next_node);
 	} catch (invalid_argument e) {
 		throw invalid_argument("One of the provided references is not an existing node.");
@@ -20,9 +20,9 @@ void PKB::NextManager::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_n
 		throw invalid_argument("Ordering or value(s) of provided statement references is invalid.");
 	}
 	try {
-		auto prev_node = control_flow_graph.getNode(prev);
-		auto then_next_node = control_flow_graph.getNode(then_next);
-		auto else_next_node = control_flow_graph.getNode(else_next);
+		auto prev_node = control_flow_graph->getNode(prev);
+		auto then_next_node = control_flow_graph->getNode(then_next);
+		auto else_next_node = control_flow_graph->getNode(else_next);
 		if (prev_node->getNodeType() != NodeType::If) {
 			throw invalid_argument("First argument must refer to an if statement.");
 		}
@@ -38,9 +38,9 @@ void PKB::NextManager::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef i
 		throw invalid_argument("Ordering or value(s) of provided statement references is invalid.");
 	}
 	try {
-		auto then_prev_node = control_flow_graph.getNode(then_prev);
-		auto else_prev_node = control_flow_graph.getNode(else_prev);
-		auto if_ctrl_node = control_flow_graph.getNode(if_stmt_ref);
+		auto then_prev_node = control_flow_graph->getNode(then_prev);
+		auto else_prev_node = control_flow_graph->getNode(else_prev);
+		auto if_ctrl_node = control_flow_graph->getNode(if_stmt_ref);
 		if (if_ctrl_node->getNodeType() != NodeType::If) {
 			throw invalid_argument("Third argument must refer to an if control statement.");
 		}
@@ -53,8 +53,8 @@ void PKB::NextManager::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef i
 
 bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
 	try {
-		auto prev_node = control_flow_graph.getNode(first);
-		auto next_node = control_flow_graph.getNode(second);
+		auto prev_node = control_flow_graph->getNode(first);
+		auto next_node = control_flow_graph->getNode(second);
 		StmtInfoPtrSet next_nodes_of_prev = this->getNext(first);
 		return any_of(next_nodes_of_prev.begin(), next_nodes_of_prev.end(),
 		              [second](const shared_ptr<StmtInfo> &next_info) { return next_info->getIdentifier() == second; });
@@ -64,7 +64,7 @@ bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
 }
 
 StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
-	Types::BFSInfo info = {control_flow_graph.getNode(node_ref), {}, {}, {}};
+	Types::BFSInfo info = {control_flow_graph->getNode(node_ref), {}, {}, {}};
 	info.node_queue.push(info.start_node);
 	while (!info.node_queue.empty()) {
 		shared_ptr<PKB::NodeInterface> curr_node = info.node_queue.front();
@@ -79,11 +79,11 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 }
 
 StmtInfoPtrSet PKB::NextManager::getNext(StmtRef node_ref) {
-	shared_ptr<PKB::StatementNode> curr_node = control_flow_graph.getNode(node_ref);
+	shared_ptr<PKB::StatementNode> curr_node = control_flow_graph->getNode(node_ref);
 	StmtInfoPtrSet next_nodes;
 	for (const auto &node : curr_node->getNextNodes()) {
 		if (node->getNodeType() == NodeType::Dummy) {
-			StmtInfoPtrSet next_of_dummy = control_flow_graph.collectNextOfDummy(node);
+			StmtInfoPtrSet next_of_dummy = control_flow_graph->collectNextOfDummy(node);
 			next_nodes.insert(next_of_dummy.begin(), next_of_dummy.end());
 		} else {
 			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
@@ -99,12 +99,12 @@ bool PKB::NextManager::checkNextStar(StmtRef first, StmtRef second) {
 }
 
 StmtInfoPtrSet PKB::NextManager::getPrevious(StmtRef node_ref) {
-	shared_ptr<PKB::StatementNode> curr_node = this->control_flow_graph.getNode(node_ref);
+	shared_ptr<PKB::StatementNode> curr_node = this->control_flow_graph->getNode(node_ref);
 	StmtInfoPtrSet prev_nodes;
 	for (const auto &node : curr_node->getPreviousNodes()) {
 		// If previous node is a dummy node, need to get the previous nodes of the dummy node.
 		if (node->getNodeType() == NodeType::Dummy) {
-			StmtInfoPtrSet prev_of_dummy = control_flow_graph.collectPreviousOfDummy(node);
+			StmtInfoPtrSet prev_of_dummy = control_flow_graph->collectPreviousOfDummy(node);
 			prev_nodes.insert(prev_of_dummy.begin(), prev_of_dummy.end());
 		} else {
 			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(node);
@@ -115,7 +115,7 @@ StmtInfoPtrSet PKB::NextManager::getPrevious(StmtRef node_ref) {
 }
 
 StmtInfoPtrSet PKB::NextManager::getPreviousStar(StmtRef node_ref) {
-	Types::BFSInfo info = {control_flow_graph.getNode(node_ref), {}, {}, {}};
+	Types::BFSInfo info = {control_flow_graph->getNode(node_ref), {}, {}, {}};
 	info.node_queue.push(info.start_node);
 	while (!info.node_queue.empty()) {
 		shared_ptr<PKB::NodeInterface> curr_node = info.node_queue.front();
@@ -139,10 +139,10 @@ void PKB::NextManager::processBFSVisit(Types::BFSInfo &info, const shared_ptr<PK
 		return;
 	}
 	if (node->getNodeType() == NodeType::Dummy) {
-		StmtInfoPtrSet real_nodes = (control_flow_graph.*collector)(node);
+		StmtInfoPtrSet real_nodes = (control_flow_graph->*collector)(node);
 		info.nodes.insert(real_nodes.begin(), real_nodes.end());
 		for (const auto &real_node : real_nodes) {
-			info.node_queue.push(control_flow_graph.getNode(real_node->getIdentifier()));
+			info.node_queue.push(control_flow_graph->getNode(real_node->getIdentifier()));
 		}
 	} else {
 		shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
