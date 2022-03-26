@@ -2,6 +2,7 @@
 #define SPA_SRC_PKB_TOPOLOGICALSORT_H
 
 #include <memory>
+#include <queue>
 #include <vector>
 
 #include "PKB/PKB.h"

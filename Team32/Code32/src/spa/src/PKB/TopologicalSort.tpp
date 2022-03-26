@@ -3,7 +3,6 @@
 
 #include "PKB/TopologicalSort.h"
 
-#include <queue>
 #include <stdexcept>
 #include <unordered_map>
 #include <unordered_set>
