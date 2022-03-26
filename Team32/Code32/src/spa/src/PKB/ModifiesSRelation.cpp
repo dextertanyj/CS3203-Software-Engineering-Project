@@ -93,6 +93,6 @@ void PKB::ModifiesSRelation::storeModifiedVars(const shared_ptr<StmtInfo>& stmt_
 		}
 	}
 	if (!variables.empty()) {
-		store.set(std::move(stmt_key), variables);
+		store.set(stmt_key, variables);
 	}
 }

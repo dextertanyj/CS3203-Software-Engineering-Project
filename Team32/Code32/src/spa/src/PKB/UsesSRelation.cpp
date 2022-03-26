@@ -93,6 +93,6 @@ void PKB::UsesSRelation::storeUsedVars(const shared_ptr<StmtInfo>& stmt_key, con
 		}
 	}
 	if (!variables.empty()) {
-		store.set(std::move(stmt_key), variables);
+		store.set(stmt_key, variables);
 	}
 }
