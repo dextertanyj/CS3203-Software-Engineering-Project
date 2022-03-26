@@ -19,10 +19,10 @@ const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactor
 	{Types::ReferenceType::Wildcard, [](const vector<Types::ReferenceArgument>& args) {
 		 return pair{
 			 [variable = args.at(1)](const QP::StorageAdapter& storage) {
-				 return Executor::PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeTrivialName(storage, variable);
+				 return Executor::PatternContainerStatementExecutor::executeTrivialName<ClauseType::PatternWhile>(storage, variable);
 			 },
 			 [whileStmt = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-				 return Executor::PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeName(storage, whileStmt, variable);
+				 return Executor::PatternContainerStatementExecutor::executeName<ClauseType::PatternWhile>(storage, whileStmt, variable);
 			 }};
 	 }}};
 
@@ -31,10 +31,10 @@ const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactor
      [](const vector<Types::ReferenceArgument>& args) {
 		 return pair{
 			 [](const QP::StorageAdapter& storage) {
-				 return Executor::PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeTrivialWildcardOrSynonym(storage);
+				 return Executor::PatternContainerStatementExecutor::executeTrivialWildcardOrSynonym<ClauseType::PatternWhile>(storage);
 			 },
 			 [whileStmt = args.at(0)](const QP::StorageAdapter& storage) {
-				 return Executor::PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeWildcard(storage, whileStmt);
+				 return Executor::PatternContainerStatementExecutor::executeWildcard<ClauseType::PatternWhile>(storage, whileStmt);
 			 }};
 	 }},
 };
@@ -44,10 +44,10 @@ const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactor
      [](const vector<Types::ReferenceArgument>& args) {
 		 return pair{
 			 [whileStmt = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-				 return Executor::PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeTrivialWildcardOrSynonym(storage);
+				 return Executor::PatternContainerStatementExecutor::executeTrivialWildcardOrSynonym<ClauseType::PatternWhile>(storage);
 			 },
 			 [whileStmt = args.at(0), variable = args.at(1)](const QP::StorageAdapter& storage) {
-				 return Executor::PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeSynonym(storage, whileStmt, variable);
+				 return Executor::PatternContainerStatementExecutor::executeSynonym<ClauseType::PatternWhile>(storage, whileStmt, variable);
 			 }};
 	 }},
 };

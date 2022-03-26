@@ -12,7 +12,6 @@
 namespace QP::Executor::WithExecutor {
 
 // Trivial Executors
-
 template <typename TAttribute, typename TLeft, typename TRight>
 QP::QueryResult executeTrivialAttributeAttribute(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
                                                  const Types::ReferenceArgument& rhs,
@@ -35,7 +34,6 @@ QP::QueryResult executeTrivialConstantConstant(const QP::StorageAdapter& storage
                                                Types::WithInternalExecutors<TAttribute, TRight> rhs_executors);
 
 // Executors
-
 template <typename TAttribute, typename TLeft, typename TRight>
 QP::QueryResult executeAttributeAttribute(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
                                           const Types::ReferenceArgument& rhs,

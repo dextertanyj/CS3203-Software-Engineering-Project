@@ -7,27 +7,34 @@
 #include "QP/StorageAdapter.h"
 #include "QP/Types.h"
 
-template <QP::Types::ClauseType T>
-class QP::Executor::ProcedureExecutor {
-public:
-	// Trivial Executors
-	static QueryResult executeTrivialNameName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-	                                          const Types::ReferenceArgument& rhs);
-	static QueryResult executeTrivialNameWildcardOrSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs);
-	static QueryResult executeTrivialWildcardOrSynonymName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& rhs);
-	static QueryResult executeTrivialWildcardOrSynonymWildcardOrSynonym(const QP::StorageAdapter& storage);
-	static QueryResult executeTrivialSynonymSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-	                                                const Types::ReferenceArgument& rhs);
+namespace QP::Executor::ProcedureExecutor {
 
-	// Executors
-	static QueryResult executeNameSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-	                                      const Types::ReferenceArgument& rhs);
-	static QueryResult executeWildcardSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& rhs);
-	static QueryResult executeSynonymName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-	                                      const Types::ReferenceArgument& rhs);
-	static QueryResult executeSynonymWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs);
-	static QueryResult executeSynonymSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-	                                         const Types::ReferenceArgument& rhs);
+// Trivial Executors
+template <QP::Types::ClauseType T>
+QueryResult executeTrivialNameName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
+                                   const Types::ReferenceArgument& rhs);
+template <QP::Types::ClauseType T>
+QueryResult executeTrivialNameWildcardOrSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs);
+template <QP::Types::ClauseType T>
+QueryResult executeTrivialWildcardOrSynonymName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& rhs);
+template <QP::Types::ClauseType T>
+QueryResult executeTrivialWildcardOrSynonymWildcardOrSynonym(const QP::StorageAdapter& storage);
+template <QP::Types::ClauseType T>
+QueryResult executeTrivialSynonymSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
+                                         const Types::ReferenceArgument& rhs);
+
+// Executors
+template <QP::Types::ClauseType T>
+QueryResult executeNameSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs, const Types::ReferenceArgument& rhs);
+template <QP::Types::ClauseType T>
+QueryResult executeWildcardSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& rhs);
+template <QP::Types::ClauseType T>
+QueryResult executeSynonymName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs, const Types::ReferenceArgument& rhs);
+template <QP::Types::ClauseType T>
+QueryResult executeSynonymWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs);
+template <QP::Types::ClauseType T>
+QueryResult executeSynonymSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
+                                  const Types::ReferenceArgument& rhs);
 };
 
 #endif  // SPA_SRC_QP_EXECUTOR_PROCEDUREEXECUTOR_H

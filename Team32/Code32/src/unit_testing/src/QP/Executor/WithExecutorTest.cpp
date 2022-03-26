@@ -1,6 +1,6 @@
 #include "QP/Executor/WithExecutor.tpp"
 
-#include "Common/ExpressionProcessor/Expression.h"
+#include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
 #include "QP/Executor/AttributeExecutor.h"
@@ -38,7 +38,7 @@ TEST_CASE("WithExecutor::execute") {
 	pkb.setIfControl(5, "y");
 	vector<string> assign_token1 = {"x", "+", "1"};
 	QP::QueryExpressionLexer lexer1 = QP::QueryExpressionLexer(assign_token1);
-	auto expression1 = Expression::parse(lexer1, ExpressionType::Arithmetic);
+	auto expression1 = ExpressionParser(lexer1, ExpressionType::Arithmetic).parse();
 	pkb.setAssign(6, "y", expression1);
 	pkb.setProc("mars", 5, 7);
 

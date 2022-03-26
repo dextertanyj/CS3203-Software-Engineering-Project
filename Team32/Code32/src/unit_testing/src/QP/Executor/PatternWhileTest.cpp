@@ -4,7 +4,7 @@
 #include "catch.hpp"
 
 using namespace QP::Types;
-using namespace QP::Executor;
+using namespace QP::Executor::PatternContainerStatementExecutor;
 
 TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternWhile>::execute") {
 	PKB::Storage pkb = PKB::Storage();
@@ -30,28 +30,28 @@ TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternWhile>::execute"
 	ReferenceArgument z = ReferenceArgument("z");
 
 	SECTION("Trivial: Name") {
-		QP::QueryResult result1 = PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeTrivialName(store, x);
-		QP::QueryResult result2 = PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeTrivialName(store, a);
+		QP::QueryResult result1 = executeTrivialName<ClauseType::PatternWhile>(store, x);
+		QP::QueryResult result2 = executeTrivialName<ClauseType::PatternWhile>(store, a);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Wildcard or Synonym") {
-		QP::QueryResult result1 = PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeTrivialWildcardOrSynonym(store);
+		QP::QueryResult result1 = executeTrivialWildcardOrSynonym<ClauseType::PatternWhile>(store);
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("Non-Trivial: Name") {
-		QP::QueryResult result1 = PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeName(store, syn_while, x);
-		QP::QueryResult result2 = PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeName(store, syn_while, a);
+		QP::QueryResult result1 = executeName<ClauseType::PatternWhile>(store, syn_while, x);
+		QP::QueryResult result2 = executeName<ClauseType::PatternWhile>(store, syn_while, a);
 
 		REQUIRE(result1.getSynonymResult("w") == vector<string>{"1"});
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Non-Trivial: Wildcard") {
-		QP::QueryResult result1 = PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeWildcard(store, syn_while);
+		QP::QueryResult result1 = executeWildcard<ClauseType::PatternWhile>(store, syn_while);
 
 		vector<string> expected_result = {"1", "2"};
 		vector<string> actual_result = result1.getSynonymResult("w");
@@ -60,7 +60,7 @@ TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternWhile>::execute"
 	}
 
 	SECTION("Non-Trivial: Synonym") {
-		QP::QueryResult result1 = PatternContainerStatementExecutor<ClauseType::PatternWhile>::executeSynonym(store, syn_while, syn_var);
+		QP::QueryResult result1 = executeSynonym<ClauseType::PatternWhile>(store, syn_while, syn_var);
 
 		vector<string> expected_result_w = {"1", "1", "2"};
 		vector<string> actual_result_w = result1.getSynonymResult("w");

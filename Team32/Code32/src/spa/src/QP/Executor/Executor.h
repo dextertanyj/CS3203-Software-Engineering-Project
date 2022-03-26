@@ -4,20 +4,15 @@
 #include "QP/Types.h"
 
 namespace QP::Executor {
-template <QP::Types::ClauseType T>
-class ProcedureVariableExecutor;
+namespace ProcedureVariableExecutor {}
 
-template <QP::Types::ClauseType T>
-class StatementExecutor;
+namespace StatementExecutor {}
 
-template <QP::Types::ClauseType T>
-class StatementVariableExecutor;
+namespace StatementVariableExecutor {}
 
-template <QP::Types::ClauseType T>
-class ProcedureExecutor;
+namespace ProcedureExecutor {}
 
-template <QP::Types::ClauseType T>
-class PatternContainerStatementExecutor;
+namespace PatternContainerStatementExecutor {}
 
 namespace WithExecutor {}
 
