@@ -50,8 +50,7 @@ QP::QueryProperties QP::QueryPreprocessor::parseQuery() {
 	if (this->is_semantically_invalid) {
 		if (this->select_list.empty()) {
 			throw QuerySemanticException({"FALSE"}, "");
-		}
-		else {
+		} else {
 			throw QuerySemanticException({}, "");
 		}
 	}
@@ -156,8 +155,20 @@ void QP::QueryPreprocessor::parseClause(QP::Types::ClauseType type, vector<QP::T
 
 void QP::QueryPreprocessor::createClause(QP::Types::ClauseType type, vector<QP::Types::ReferenceArgument> arguments) {
 	QP::Types::ArgumentDispatcher argument_dispatcher = dispatcher.dispatch_map.at(type);
-	auto info = argument_dispatcher(arguments);
-	this->clause_list.push_back({make_unique<Relationship::Relation>(info.first, move(arguments), info.second)});
+	try {
+		auto info = argument_dispatcher(arguments);
+		this->clause_list.push_back({make_unique<Relationship::Relation>(info.first, move(arguments), info.second)});
+	} catch (const QueryException& e) {
+		if (((type == QP::Types::ClauseType::UnknownModifies || type == QP::Types::ClauseType::UnknownUses) &&
+		     arguments[0].getType() == QP::Types::ReferenceType::Wildcard) ||
+		    (type != QP::Types::ClauseType::PatternIf && type != QP::Types::ClauseType::PatternWhile &&
+		     arguments[0].getType() == QP::Types::ReferenceType::Synonym)) {
+			this->is_semantically_invalid = true;
+		} else {
+			throw QueryException("Uncaught");
+			//throw e;
+		}
+	}
 }
 
 // Clause - Such that
@@ -226,9 +237,20 @@ void QP::QueryPreprocessor::parseAssignPattern(Types::ReferenceArgument synonym)
 
 	vector<Types::ReferenceArgument> arguments = {move(synonym), move(variable), move(expression_argument)};
 
-	auto info = argument_dispatcher(arguments);
+	try {
+		auto info = argument_dispatcher(arguments);
+		this->clause_list.push_back({ make_unique<Relationship::Relation>(info.first, arguments, info.second) });
+	}
+	catch (const QueryException& e) {
+		if (variable.getType() == QP::Types::ReferenceType::Synonym) {
+			this->is_semantically_invalid = true;
+		}
+		else {
+			throw e;
+		}
+	}
 
-	this->clause_list.push_back({make_unique<Relationship::Relation>(info.first, arguments, info.second)});
+
 }
 
 // Atomic entities
@@ -285,7 +307,8 @@ QP::Types::ReferenceArgument QP::QueryPreprocessor::parseReferenceArgument() {
 		if (!Common::Validator::validateName(this->query_tokens.at(++token_index))) {
 			throw QP::QueryException("Unknown clause argument.");
 		}
-		token_index += 2;
+		token_index++;
+		matchTokenOrThrow("\"");
 		return Types::ReferenceArgument(this->query_tokens.at(token_index - 2));
 	}
 	return parseSelectArgument();
@@ -295,11 +318,16 @@ QP::Types::ReferenceArgument QP::QueryPreprocessor::parseSelectArgument() {
 	if (token_index + 1 < query_tokens.size() && this->query_tokens.at(token_index + 1) == ".") {
 		Declaration synonym = parseClauseSynonym();
 		matchTokenOrThrow(".");
-		auto iter = dispatcher.attribute_map.find({synonym.type, query_tokens.at(token_index)});
-		if (iter == dispatcher.attribute_map.end()) {
+		if (!dispatcher.attribute_string_set.count(query_tokens.at(token_index))) {
 			throw QP::QueryException("Invalid attribute type.");
 		}
+
+		auto iter = dispatcher.attribute_map.find({synonym.type, query_tokens.at(token_index)});
 		token_index++;
+		if (iter == dispatcher.attribute_map.end()) {
+			this->is_semantically_invalid = true;
+			return Types::ReferenceArgument(Types::Attribute{Types::AttributeType::Unknown, synonym});
+		}
 		return Types::ReferenceArgument(Types::Attribute{iter->second, synonym});
 	}
 	if (Common::Validator::validateName(this->query_tokens.at(token_index))) {
@@ -328,10 +356,11 @@ Common::ExpressionProcessor::Expression QP::QueryPreprocessor::parseExpression()
 
 QP::Types::Declaration QP::QueryPreprocessor::parseClauseSynonym() {
 	auto synonym_search_result = existing_declarations.find(query_tokens.at(token_index));
-	if (synonym_search_result == existing_declarations.end()) {
-		throw QP::QueryException("Undeclared synonym detected.");
-	}
 	token_index++;
+	if (synonym_search_result == existing_declarations.end()) {
+		this->is_semantically_invalid = true;
+		return {Types::DesignEntity::Undeclared, query_tokens.at(token_index - 1)};
+	}
 	return synonym_search_result->second;
 }
 
@@ -347,6 +376,7 @@ void QP::QueryPreprocessor::matchTokenOrThrow(const string& token) {
 
 void QP::QueryPreprocessor::reset() {
 	token_index = 0;
+	is_semantically_invalid = false;
 	query_tokens.clear();
 	existing_declarations.clear();
 	select_list.clear();

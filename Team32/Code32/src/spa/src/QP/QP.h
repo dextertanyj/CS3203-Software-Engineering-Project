@@ -2,6 +2,8 @@
 #define SPA_SRC_QP_QP_H
 
 #include <stdexcept>
+#include <vector>
+#include <string>
 
 using namespace std;
 

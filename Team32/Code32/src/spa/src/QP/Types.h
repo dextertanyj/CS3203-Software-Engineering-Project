@@ -27,6 +27,7 @@ enum class DesignEntity {
 	Variable,
 	Constant,
 	Procedure,
+	Undeclared
 };
 
 enum class ClauseType {
@@ -53,7 +54,7 @@ enum class ClauseType {
 };
 
 enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression, Attribute };
-enum class AttributeType { NumberIdentifier, NameIdentifier, ProcedureName, VariableName };
+enum class AttributeType { NumberIdentifier, NameIdentifier, ProcedureName, VariableName, Unknown };
 
 class ReferenceArgument;
 class ConnectedSynonyms;

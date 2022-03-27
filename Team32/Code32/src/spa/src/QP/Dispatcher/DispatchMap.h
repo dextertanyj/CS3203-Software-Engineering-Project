@@ -49,6 +49,8 @@ struct QP::Dispatcher::DispatchMap {
 		{Types::DesignEntity::While, Types::ClauseType::PatternWhile},
 	};
 
+	unordered_set<string> attribute_string_set = {"stmt#", "varName", "procName", "value"};
+
 	unordered_map<pair<Types::DesignEntity, string>, Types::AttributeType> attribute_map = {
 		{{Types::DesignEntity::Stmt, "stmt#"}, Types::AttributeType::NumberIdentifier},
 		{{Types::DesignEntity::Read, "stmt#"}, Types::AttributeType::NumberIdentifier},

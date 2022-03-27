@@ -101,9 +101,9 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid declarations") {
 
 	// Duplicated synonym
 	QP::QueryPreprocessor qpp6;
-	REQUIRE_THROWS_AS(qpp6.parseQuery("while a, a; Select a"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp6.parseQuery("while a, a; Select a"), QP::QuerySemanticException);
 	QP::QueryPreprocessor qpp7;
-	REQUIRE_THROWS_AS(qpp7.parseQuery("read a; print b; procedure a; Select a"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp7.parseQuery("read a; print b; procedure a; Select a"), QP::QuerySemanticException);
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery Select single") {
@@ -125,7 +125,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Select single") {
 
 	// undeclared synonym
 	QP::QueryPreprocessor qpp4;
-	REQUIRE_THROWS_AS(qpp4.parseQuery("print a; if b; Select unknownSynonym"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp4.parseQuery("print a; if b; Select unknownSynonym"), QP::QuerySemanticException);
 	// more than 1 synonym
 	QP::QueryPreprocessor qpp5;
 	REQUIRE_THROWS_AS(qpp5.parseQuery("print a; if b; Select a,b"), QP::QueryException);
@@ -173,7 +173,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Select tuple") {
 	REQUIRE_THROWS_AS(qpp6.parseQuery("print a; if b; Select a,b"), QP::QueryException);
 	// undeclared synonym
 	QP::QueryPreprocessor qpp7;
-	REQUIRE_THROWS_AS(qpp7.parseQuery("print a; if b; Select <a,b,undeclaredSynonym>"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp7.parseQuery("print a; if b; Select <a,b,undeclaredSynonym>"), QP::QuerySemanticException);
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery Select BOOLEAN") {
@@ -183,10 +183,10 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Select BOOLEAN") {
 
 	// lower case
 	QP::QueryPreprocessor qpp2;
-	REQUIRE_THROWS_AS(qpp2.parseQuery("if i; Select boolean"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp2.parseQuery("if i; Select boolean"), QP::QuerySemanticException);
 	// tuple
 	QP::QueryPreprocessor qpp3;
-	REQUIRE_THROWS_AS(qpp3.parseQuery("if i; Select <BOOLEAN>"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp3.parseQuery("if i; Select <BOOLEAN>"), QP::QuerySemanticException);
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery Select attribute") {
@@ -235,9 +235,9 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Parent(*)") {
 	REQUIRE_THROWS_AS(qpp1.parseQuery(UnivDeclarations + "Select s1 such that Parent *(s1, s2)"), QP::QueryException);
 	// non-statement synonyms
 	QP::QueryPreprocessor qpp2;
-	REQUIRE_THROWS_AS(qpp2.parseQuery(UnivDeclarations + "Select v1 such that Parent(v1, s2)"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp2.parseQuery(UnivDeclarations + "Select v1 such that Parent(v1, s2)"), QP::QuerySemanticException);
 	QP::QueryPreprocessor qpp3;
-	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select s1 such that Parent(pc1, s2)"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select s1 such that Parent(pc1, s2)"), QP::QuerySemanticException);
 	// misspelt word
 	QP::QueryPreprocessor qpp4;
 	REQUIRE_THROWS_AS(qpp4.parseQuery(UnivDeclarations + "Select s1 such that Parents(s1, s2)"), QP::QueryException);
@@ -343,7 +343,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Follows(*)") {
 	REQUIRE_THROWS_AS(qpp2.parseQuery(UnivDeclarations + "Select s1 such that Follows *(s1, s2)"), QP::QueryException);
 	// non-statement synonyms
 	QP::QueryPreprocessor qpp3;
-	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select s1 such that Follows(pc1, s2)"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select s1 such that Follows(pc1, s2)"), QP::QuerySemanticException);
 	// misspelt word
 	QP::QueryPreprocessor qpp4;
 	REQUIRE_THROWS_AS(qpp4.parseQuery(UnivDeclarations + "Select s1 such that Follow(s1, s2)"), QP::QueryException);
@@ -452,7 +452,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Next(*)") {
 	REQUIRE_THROWS_AS(qpp2.parseQuery(UnivDeclarations + "Select s1 such that Next *(s1, s2)"), QP::QueryException);
 	// non-statement synonyms
 	QP::QueryPreprocessor qpp3;
-	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select s1 such that Next(pc1, s2)"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select s1 such that Next(pc1, s2)"), QP::QuerySemanticException);
 	// misspelt word
 	QP::QueryPreprocessor qpp4;
 	REQUIRE_THROWS_AS(qpp4.parseQuery(UnivDeclarations + "Select s1 such that Nexts(s1, s2)"), QP::QueryException);
@@ -562,18 +562,18 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that UsesS/P") {
 	// unexpected wildcard
 	QP::QueryPreprocessor qpp1;
-	REQUIRE_THROWS_AS(qpp1.parseQuery(UnivDeclarations + "Select v1 such that Uses(_, v1)"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp1.parseQuery(UnivDeclarations + "Select v1 such that Uses(_, v1)"), QP::QuerySemanticException);
 	// unexpected integer
 	QP::QueryPreprocessor qpp2;
 	REQUIRE_THROWS_AS(qpp2.parseQuery(UnivDeclarations + "Select pc1 such that Uses(pc1, 1)"), QP::QueryException);
 	// invalid synonym
 	QP::QueryPreprocessor qpp3;
-	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select s1 such that Uses(1, s1)"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select s1 such that Uses(1, s1)"), QP::QuerySemanticException);
 	QP::QueryPreprocessor qpp4;
-	REQUIRE_THROWS_AS(qpp4.parseQuery(UnivDeclarations + "Select r1 such that Uses(r1, _)"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp4.parseQuery(UnivDeclarations + "Select r1 such that Uses(r1, _)"), QP::QuerySemanticException);
 	// undeclared synonym
 	QP::QueryPreprocessor qpp5;
-	REQUIRE_THROWS_AS(qpp5.parseQuery(UnivDeclarations + "Select s1 such that Uses(s1, UNK)"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp5.parseQuery(UnivDeclarations + "Select s1 such that Uses(s1, UNK)"), QP::QuerySemanticException);
 	// misspelled keyword
 	QP::QueryPreprocessor qpp6;
 	REQUIRE_THROWS_AS(qpp6.parseQuery(UnivDeclarations + "Select s1 such that use(s1, a1)"), QP::QueryException);
@@ -677,7 +677,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that ModifiesS/P") {
 TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that ModifiesS/P") {
 	// unexpected wildcard
 	QP::QueryPreprocessor qpp1;
-	REQUIRE_THROWS_AS(qpp1.parseQuery(UnivDeclarations + "Select v1 such that Modifies(_, v1)"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp1.parseQuery(UnivDeclarations + "Select v1 such that Modifies(_, v1)"), QP::QuerySemanticException);
 	// unexpected integer
 	QP::QueryPreprocessor qpp2;
 	REQUIRE_THROWS_AS(qpp2.parseQuery(UnivDeclarations + "Select pc1 such that Modifies(pc1, 1)"), QP::QueryException);
@@ -685,12 +685,12 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that ModifiesS/P") {
 	QP::QueryPreprocessor qpp3;
 	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select s1 such that Modifies(1, 0s)"), QP::QueryException);
 	QP::QueryPreprocessor qpp4;
-	REQUIRE_THROWS_AS(qpp4.parseQuery(UnivDeclarations + "Select s1 such that Modifies(1, s1)"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp4.parseQuery(UnivDeclarations + "Select s1 such that Modifies(1, s1)"), QP::QuerySemanticException);
 	QP::QueryPreprocessor qpp5;
-	REQUIRE_THROWS_AS(qpp5.parseQuery(UnivDeclarations + "Select p1 such that Modifies(p1, v1)"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp5.parseQuery(UnivDeclarations + "Select p1 such that Modifies(p1, v1)"), QP::QuerySemanticException);
 	// undeclared synonym
 	QP::QueryPreprocessor qpp6;
-	REQUIRE_THROWS_AS(qpp6.parseQuery(UnivDeclarations + "Select s1 such that Modifies(s1, UNK)"), QP::QueryException);
+	REQUIRE_THROWS_AS(qpp6.parseQuery(UnivDeclarations + "Select s1 such that Modifies(s1, UNK)"), QP::QuerySemanticException);
 	// misspelled keyword
 	QP::QueryPreprocessor qpp7;
 	REQUIRE_THROWS_AS(qpp7.parseQuery(UnivDeclarations + "Select s1 such that modifies(s1, a1)"), QP::QueryException);
@@ -1073,4 +1073,29 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that/pattern/with cla
 	clause = qp.getClauseList()[2].relation;
 	REQUIRE(clause->getType() == ClauseType::With);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1", "ct1"}));
+}
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery Semantic exceptions") {
+	shared_ptr<QP::Relationship::Relation> clause;
+	QP::QueryPreprocessor qpp;
+	QP::QueryProperties qp = { {}, {}, {} };
+
+	SECTION("Undeclared synonym") {
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select unknownSynonym"), QP::QuerySemanticException);
+		//REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Follows(unknownSynonym, s1)"), QP::QuerySemanticException);
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern a1(unknownSynonym, _)"), QP::QuerySemanticException);
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with unknownSynonym.procName = r1.varName"), QP::QuerySemanticException);
+	}
+
+	SECTION("Duplicate synonym declaration") {
+		REQUIRE_THROWS_AS(qpp.parseQuery("stmt s1; assign s1; Select s1"), QP::QuerySemanticException);
+		REQUIRE_THROWS_AS(qpp.parseQuery("stmt s1; stmt s1; Select s1"), QP::QuerySemanticException);
+		REQUIRE_THROWS_AS(qpp.parseQuery("stmt s1, s1; Select s1"), QP::QuerySemanticException);
+	}
+
+	SECTION("Duplicate synonym declaration") {
+		REQUIRE_THROWS_AS(qpp.parseQuery("stmt s1; assign s1; Select s1"), QP::QuerySemanticException);
+		REQUIRE_THROWS_AS(qpp.parseQuery("stmt s1; stmt s1; Select s1"), QP::QuerySemanticException);
+		REQUIRE_THROWS_AS(qpp.parseQuery("stmt s1, s1; Select s1"), QP::QuerySemanticException);
+	}
 }
