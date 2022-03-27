@@ -20,7 +20,6 @@ TEST_CASE("StatementExecutor<ClauseType::NextT>:execute") {
 	pkb.setNext(4, 3);
 	pkb.setNext(3, 5);
 	pkb.populateComplexRelations();
-	pkb.graphOptimize();
 
 	ReferenceArgument stmt_no1 = ReferenceArgument(1);
 	ReferenceArgument stmt_no2 = ReferenceArgument(2);
