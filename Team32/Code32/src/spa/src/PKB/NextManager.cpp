@@ -115,7 +115,8 @@ StmtInfoPtrSet PKB::NextManager::handleWhileNode(const shared_ptr<NodeInterface>
 		} else if (second_yy->getNodeType() == NodeType::Dummy) {
 			queue.push(dynamic_pointer_cast<StatementNode>(first_yy));
 		} else {
-			if (dynamic_pointer_cast<StatementNode>(first_yy)->getNodeRef() < dynamic_pointer_cast<StatementNode>(second_yy)->getNodeRef()) {
+			if (dynamic_pointer_cast<StatementNode>(first_yy)->getNodeRef() <
+			    dynamic_pointer_cast<StatementNode>(second_yy)->getNodeRef()) {
 				queue.push(dynamic_pointer_cast<StatementNode>(first_yy));
 			} else {
 				queue.push(dynamic_pointer_cast<StatementNode>(second_yy));
@@ -179,25 +180,25 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 			assert(next.size() > 0);
 			if (next.size() > 1) {
 				shared_ptr<StmtInfo> true_next;
-			shared_ptr<NodeInterface> first = *(next.begin());
-			shared_ptr<NodeInterface> second = *(++next.begin());
-			if (first->getNodeType() == NodeType::Dummy) {
-				auto true_next_set = control_flow_graph->collectNextOfDummy(first);
-				assert(true_next_set.size() == 1);
-				true_next = *(true_next_set.begin());
-			} else if (second->getNodeType() == NodeType::Dummy) {
-				auto true_next_set = control_flow_graph->collectNextOfDummy(second);
-				assert(true_next_set.size() == 1);
-				true_next = *(true_next_set.begin());
-			} else {
-				shared_ptr<StatementNode> first_statement = dynamic_pointer_cast<StatementNode>(first);
-				shared_ptr<StatementNode> second_statement = dynamic_pointer_cast<StatementNode>(second);
-				true_next = first_statement->getNodeRef() > second_statement->getNodeRef() ? first_statement->getStmtInfo()
-				                                                                           : second_statement->getStmtInfo();
-			}
-			auto xxxx = next_cache.find(true_next->getIdentifier())->second;
-			combined.merge(xxxx);
-			combined.insert(true_next);
+				shared_ptr<NodeInterface> first = *(next.begin());
+				shared_ptr<NodeInterface> second = *(++next.begin());
+				if (first->getNodeType() == NodeType::Dummy) {
+					auto true_next_set = control_flow_graph->collectNextOfDummy(first);
+					assert(true_next_set.size() == 1);
+					true_next = *(true_next_set.begin());
+				} else if (second->getNodeType() == NodeType::Dummy) {
+					auto true_next_set = control_flow_graph->collectNextOfDummy(second);
+					assert(true_next_set.size() == 1);
+					true_next = *(true_next_set.begin());
+				} else {
+					shared_ptr<StatementNode> first_statement = dynamic_pointer_cast<StatementNode>(first);
+					shared_ptr<StatementNode> second_statement = dynamic_pointer_cast<StatementNode>(second);
+					true_next = first_statement->getNodeRef() > second_statement->getNodeRef() ? first_statement->getStmtInfo()
+					                                                                           : second_statement->getStmtInfo();
+				}
+				auto xxxx = next_cache.find(true_next->getIdentifier())->second;
+				combined.merge(xxxx);
+				combined.insert(true_next);
 			}
 			for (const auto &internal_node : loop_nodes) {
 				next_cache.insert({internal_node->getIdentifier(), combined});

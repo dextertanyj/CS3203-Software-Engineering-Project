@@ -24,7 +24,6 @@ typedef TransitiveRelationStore<StmtRef, StmtInfo, FollowsRelation> FollowsStore
 
 struct DPBFSInfo {
 	StmtRef target;
-
 };
 
 typedef struct BFSInfo {

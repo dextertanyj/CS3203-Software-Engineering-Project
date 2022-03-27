@@ -294,9 +294,7 @@ void PKB::Storage::populateComplexRelations() {
 	UsesPRelation::optimize(procedure_store, uses_p_store, uses_s_store);
 }
 
-void PKB::Storage::graphOptimize() {
-	control_flow_graph.optimize();
-}
+void PKB::Storage::graphOptimize() { control_flow_graph.optimize(); }
 
 void PKB::Storage::clear() {
 	parent_store.clear();
