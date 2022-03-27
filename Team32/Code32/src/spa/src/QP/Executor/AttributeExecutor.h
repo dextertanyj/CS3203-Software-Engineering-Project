@@ -20,20 +20,12 @@ std::unordered_set<Types::Name> selectVariables(const QP::StorageAdapter& store,
 
 // Attribute mappers
 template <typename T>
-T identity(const QP::StorageAdapter& /*store*/, const T& value) {
-	return value;
-}
+T identity(const QP::StorageAdapter& /*store*/, const T& value);
 
 Types::Name callToProcedure(const QP::StorageAdapter& store, const Types::Number& value);
 
 template <QP::Types::ClauseType T>
-Types::Name statementToVariable(const QP::StorageAdapter& store, const Types::Number& value) {
-	auto variable_set = store.getVariableByStatement<T>(value);
-	if (variable_set.empty()) {
-		throw QP::QueryException("Corresponding variable not found.");
-	}
-	return *variable_set.begin();
-}
+Types::Name statementToVariable(const QP::StorageAdapter& store, const Types::Number& value);
 }
 
 #endif  // SPA_SRC_QP_EXECUTOR_ATTRIBUTEEXECUTOR_H

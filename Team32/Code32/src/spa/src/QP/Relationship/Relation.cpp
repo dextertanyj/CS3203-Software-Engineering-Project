@@ -18,7 +18,7 @@ vector<string> QP::Relationship::Relation::getDeclarationSymbols() const {
 
 QP::Types::ClauseType QP::Relationship::Relation::getType() const { return type; }
 
-QP::QueryResult QP::Relationship::Relation::executeTrivial(QP::StorageAdapter& pkb) const {
+QP::QueryResult QP::Relationship::Relation::executeTrivial(const QP::StorageAdapter& pkb) const {
 	QueryResult result;
 	visit(Visitor{[&](const Types::Executor& exec) { result = exec(pkb); },
 	              [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.first(pkb); }},
@@ -26,7 +26,7 @@ QP::QueryResult QP::Relationship::Relation::executeTrivial(QP::StorageAdapter& p
 	return result;
 }
 
-QP::QueryResult QP::Relationship::Relation::execute(QP::StorageAdapter& pkb) const {
+QP::QueryResult QP::Relationship::Relation::execute(const QP::StorageAdapter& pkb) const {
 	QueryResult result;
 	visit(Visitor{[&](const Types::Executor&) { throw QP::QueryException("Invalid executor."); },
 	              [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.second(pkb); }},

@@ -34,7 +34,6 @@ private:
 
 	void parseSelect();
 	void parseSelectList();
-	void parseSelectSynonym();
 
 	void parseClauses();
 	void parseClauseLoop(void (QueryPreprocessor::*parser)());
@@ -51,6 +50,7 @@ private:
 	Declaration parseClauseSynonym();
 	vector<Types::ReferenceArgument> parseArguments();
 	Types::ReferenceArgument parseReferenceArgument();
+	Types::ReferenceArgument parseSelectArgument();
 	Common::ExpressionProcessor::Expression parseExpression();
 
 	void matchTokenOrThrow(const string& token);
@@ -59,7 +59,7 @@ private:
 	size_t token_index;
 	vector<string> query_tokens;
 	unordered_map<string, Types::Declaration> existing_declarations;
-	Types::DeclarationList select_list;
+	Types::SelectList select_list;
 	Types::ClauseList clause_list;
 
 	QP::Dispatcher::DispatchMap dispatcher;

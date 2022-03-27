@@ -9,7 +9,7 @@ namespace QP {
 namespace Relationship {};
 class QueryEvaluator;
 class QueryExpressionLexer;
-class QueryFormatter;
+class QueryPostProcessor;
 class QueryGraph;
 class QueryPreprocessor;
 class QueryProcessor;

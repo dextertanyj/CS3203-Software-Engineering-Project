@@ -17,53 +17,75 @@ QP::Types::ReferenceArgument::ReferenceArgument(Common::ExpressionProcessor::Exp
 
 QP::Types::ReferenceType QP::Types::ReferenceArgument::getType() const {
 	QP::Types::ReferenceType type = QP::Types::ReferenceType::Wildcard;
-	visit(Visitor{[&type](const StmtRef& /*unused*/) { type = QP::Types::ReferenceType::StatementIndex; },
-	              [&type](const QP::Types::Declaration& /*unused*/) { type = QP::Types::ReferenceType::Synonym; },
-	              [&type](const string& /*unused*/) { type = QP::Types::ReferenceType::Name; },
-	              [&type](const pair<Common::ExpressionProcessor::Expression, bool>& arg) {
+	visit(Visitor{[&](const StmtRef& /*unused*/) { type = QP::Types::ReferenceType::StatementIndex; },
+	              [&](const QP::Types::Declaration& /*unused*/) { type = QP::Types::ReferenceType::Synonym; },
+	              [&](const string& /*unused*/) { type = QP::Types::ReferenceType::Name; },
+	              [&](const pair<Common::ExpressionProcessor::Expression, bool>& arg) {
 					  type = arg.second ? QP::Types::ReferenceType::ExactExpression : QP::Types::ReferenceType::SubExpression;
 				  },
-	              [&type](const Attribute& /*unused*/) { type = QP::Types::ReferenceType::Attribute; },
-	              [&type](const monostate& /*unused*/) { type = QP::Types::ReferenceType::Wildcard; }},
+	              [&](const Attribute& /*unused*/) { type = QP::Types::ReferenceType::Attribute; },
+	              [&](const monostate& /*unused*/) { type = QP::Types::ReferenceType::Wildcard; }},
 	      value);
 	return type;
 }
 
 QP::Types::Declaration QP::Types::ReferenceArgument::getSynonym() const {
 	Declaration synonym;
-	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Synonym not stored."); },
-	              [&synonym](Declaration arg) { synonym = move(arg); }},
+	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Synonym not stored."); }, [&](Declaration arg) { synonym = move(arg); },
+	              [&](Attribute arg) { synonym = move(arg.synonym); }},
 	      value);
 	return synonym;
 }
 
+string QP::Types::ReferenceArgument::getSynonymSymbol() const {
+	string symbol;
+	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Synonym not stored."); },
+	              [&](const Declaration& arg) { symbol = arg.symbol; }, [&](const Attribute& arg) { symbol = arg.synonym.symbol; }},
+	      value);
+	return symbol;
+}
+
+QP::Types::DesignEntity QP::Types::ReferenceArgument::getSynonymType() const {
+	DesignEntity type;
+	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Synonym not stored."); },
+	              [&](const Declaration& arg) { type = arg.type; }, [&](const Attribute& arg) { type = arg.synonym.type; }},
+	      value);
+	return type;
+}
+
 QP::Types::Attribute QP::Types::ReferenceArgument::getAttribute() const {
 	Attribute attribute;
-	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Attribute not stored."); },
-	              [&attribute](Attribute arg) { attribute = move(arg); }},
-	      value);
+	visit(
+		Visitor{[](auto) { throw QP::ReferenceArgumentException("Attribute not stored."); }, [&](Attribute arg) { attribute = move(arg); }},
+		value);
 	return attribute;
+}
+
+QP::Types::AttributeType QP::Types::ReferenceArgument::getAttributeType() const {
+	AttributeType type;
+	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Attribute not stored."); },
+	              [&](const Attribute& arg) { type = arg.attribute; }},
+	      value);
+	return type;
 }
 
 string QP::Types::ReferenceArgument::getName() const {
 	string name;
-	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Name not stored."); }, [&name](string arg) { name = move(arg); }},
-	      value);
+	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Name not stored."); }, [&](string arg) { name = move(arg); }}, value);
 	return name;
 }
 
 StmtRef QP::Types::ReferenceArgument::getStatementIndex() const {
 	StmtRef index = 0;
-	visit(
-		Visitor{[](auto) { throw QP::ReferenceArgumentException("Statement index not stored."); }, [&index](StmtRef arg) { index = arg; }},
-		value);
+	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Statement index not stored."); }, [&](StmtRef arg) { index = arg; }},
+	      value);
 	return index;
 }
 
 Common::ExpressionProcessor::Expression QP::Types::ReferenceArgument::getExpression() const {
 	Common::ExpressionProcessor::Expression expr = Common::ExpressionProcessor::Expression(nullptr, {}, {});
 	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Expression not stored."); },
-	              [&expr](pair<Common::ExpressionProcessor::Expression, bool> arg) { expr = move(arg.first); }},
+	              [&](pair<Common::ExpressionProcessor::Expression, bool> arg) { expr = move(arg.first); }},
 	      value);
 	return expr;
 }

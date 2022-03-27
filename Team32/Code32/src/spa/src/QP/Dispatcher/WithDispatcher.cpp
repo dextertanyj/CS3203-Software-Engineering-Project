@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "QP/Executor/AttributeExecutor.h"
+#include "QP/Executor/AttributeExecutor.tpp"
 #include "QP/Executor/WithExecutor.tpp"
 
 using namespace QP::Types;
