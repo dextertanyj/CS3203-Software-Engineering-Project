@@ -31,7 +31,7 @@ void PKB::Storage::setProc(ProcRef procedure, StmtRef start, StmtRef end) {
 
 void PKB::Storage::setCall(StmtRef index, ProcRef name) {
 	shared_ptr<StmtInfo> info = statement_store.get(index);
-	call_statement_store.set(info, name);
+	calls_statement_store.set(info, name);
 }
 
 void PKB::Storage::setParent(StmtRef parent, StmtRef child) {
@@ -115,14 +115,12 @@ void PKB::Storage::setWhileControl(StmtRef index, VarRef name) {
 
 void PKB::Storage::setNode(shared_ptr<StmtInfo> info) { this->control_flow_graph.createNode(move(info)); }
 
-void PKB::Storage::setNext(StmtRef previous, StmtRef next) { this->control_flow_graph.setNext(previous, next); }
+void PKB::Storage::setNext(StmtRef previous, StmtRef next) { next_manager.setNext(previous, next); }
 
-void PKB::Storage::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) {
-	this->control_flow_graph.setIfNext(prev, then_next, else_next);
-}
+void PKB::Storage::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) { next_manager.setIfNext(prev, then_next, else_next); }
 
 void PKB::Storage::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) {
-	this->control_flow_graph.setIfExit(then_prev, else_prev, if_stmt_ref);
+	next_manager.setIfExit(then_prev, else_prev, if_stmt_ref);
 }
 
 StmtInfoPtrSet PKB::Storage::getStatements() {
@@ -181,27 +179,29 @@ StmtInfoPtrSet PKB::Storage::getPrecedingStar(StmtRef index) { return follows_st
 
 StmtInfoPtrSet PKB::Storage::getFollowerStar(StmtRef index) { return follows_store.getReverseTransitive(index); }
 
-bool PKB::Storage::checkCalls(const ProcRef &caller, const ProcRef &callee) { return call_store.isRelated(caller, callee); }
+bool PKB::Storage::checkCalls(const ProcRef &caller, const ProcRef &callee) { return calls_store.isRelated(caller, callee); }
 
-bool PKB::Storage::checkCallsStar(const ProcRef &caller, const ProcRef &callee) { return call_store.isTransitivelyRelated(caller, callee); }
+bool PKB::Storage::checkCallsStar(const ProcRef &caller, const ProcRef &callee) {
+	return calls_store.isTransitivelyRelated(caller, callee);
+}
 
 ProcRefSet PKB::Storage::getCallee(const ProcRef &caller) {
-	unordered_set<shared_ptr<ProcedureInfo>> callees = call_store.getReverse(caller);
+	unordered_set<shared_ptr<ProcedureInfo>> callees = calls_store.getReverse(caller);
 	return procedureInfoToProcRef(callees);
 }
 
 ProcRefSet PKB::Storage::getCaller(const ProcRef &callee) {
-	unordered_set<shared_ptr<ProcedureInfo>> callers = call_store.getForward(callee);
+	unordered_set<shared_ptr<ProcedureInfo>> callers = calls_store.getForward(callee);
 	return procedureInfoToProcRef(callers);
 }
 
 ProcRefSet PKB::Storage::getCalleeStar(const ProcRef &caller) {
-	unordered_set<shared_ptr<ProcedureInfo>> callees = call_store.getReverseTransitive(caller);
+	unordered_set<shared_ptr<ProcedureInfo>> callees = calls_store.getReverseTransitive(caller);
 	return procedureInfoToProcRef(callees);
 }
 
 ProcRefSet PKB::Storage::getCallerStar(const ProcRef &callee) {
-	unordered_set<shared_ptr<ProcedureInfo>> callers = call_store.getForwardTransitive(callee);
+	unordered_set<shared_ptr<ProcedureInfo>> callers = calls_store.getForwardTransitive(callee);
 	return procedureInfoToProcRef(callers);
 }
 
@@ -244,17 +244,29 @@ StmtInfoPtrVarRefSet PKB::Storage::getStmtsWithPatternRHS(const Common::Expressi
 	return assign_store.getStmtsWithPatternRHS(expression, is_exact_match);
 }
 
-bool PKB::Storage::checkNext(StmtRef first, StmtRef second) { return control_flow_graph.checkNext(first, second); }
+bool PKB::Storage::checkNext(StmtRef first, StmtRef second) { return next_manager.checkNext(first, second); }
 
-bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return control_flow_graph.checkNextStar(first, second); }
+bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return next_manager.checkNextStar(first, second); }
 
-StmtInfoPtrSet PKB::Storage::getNext(StmtRef first) { return control_flow_graph.getNextNodes(first); }
+StmtInfoPtrSet PKB::Storage::getNext(StmtRef node_ref) { return next_manager.getNext(node_ref); }
 
-StmtInfoPtrSet PKB::Storage::getNextStar(StmtRef node_ref) { return control_flow_graph.getNextStarNodes(node_ref); }
+StmtInfoPtrSet PKB::Storage::getNextStar(StmtRef node_ref) { return next_manager.getNextStar(node_ref); }
 
-StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef second) { return control_flow_graph.getPreviousNodes(second); }
+StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef node_ref) { return next_manager.getPrevious(node_ref); }
 
-StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef node_ref) { return control_flow_graph.getPreviousStarNodes(node_ref); }
+StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef node_ref) { return next_manager.getPreviousStar(node_ref); }
+
+bool PKB::Storage::checkAffects(StmtRef first, StmtRef second) { return affects_manager.checkAffects(first, second); }
+
+bool PKB::Storage::checkAffectsStar(StmtRef first, StmtRef second) { return affects_manager.checkAffectsStar(first, second); }
+
+StmtInfoPtrSet PKB::Storage::getAffected(StmtRef node_ref) { return affects_manager.getAffected(node_ref); }
+
+StmtInfoPtrSet PKB::Storage::getAffects(StmtRef node_ref) { return affects_manager.getAffects(node_ref); }
+
+StmtInfoPtrSet PKB::Storage::getAffectedStar(StmtRef node_ref) { return affects_manager.getAffectedStar(node_ref); }
+
+StmtInfoPtrSet PKB::Storage::getAffectsStar(StmtRef node_ref) { return affects_manager.getAffectsStar(node_ref); }
 
 bool PKB::Storage::checkWhileControl(StmtRef index, VarRef name) { return while_control_store.check(index, name); }
 
@@ -268,16 +280,16 @@ VarRefSet PKB::Storage::getIfControlVar(StmtRef index) { return if_control_store
 
 VarRefSet PKB::Storage::getWhileControlVar(StmtRef index) { return while_control_store.getByStmt(index); }
 
-ProcRef PKB::Storage::getCalledProcedure(StmtRef index) { return call_statement_store.getProcedure(index); };
+ProcRef PKB::Storage::getCalledProcedure(StmtRef index) { return calls_statement_store.getProcedure(index); };
 
 void PKB::Storage::populateComplexRelations() {
-	call_statement_store.populate(procedure_store, call_store);
-	call_store.optimize();
-	call_graph.sort(procedure_store, call_store);
+	calls_statement_store.populate(procedure_store, calls_store);
+	calls_store.optimize();
+	calls_graph.sort(procedure_store, calls_store);
 	parent_store.optimize();
 	follows_store.optimize();
-	ModifiesSRelation::optimize(parent_store, call_statement_store, procedure_store, call_graph, modifies_s_store);
-	UsesSRelation::optimize(parent_store, call_statement_store, procedure_store, call_graph, uses_s_store);
+	ModifiesSRelation::optimize(parent_store, calls_statement_store, procedure_store, calls_graph, modifies_s_store);
+	UsesSRelation::optimize(parent_store, calls_statement_store, procedure_store, calls_graph, uses_s_store);
 	ModifiesPRelation::optimize(procedure_store, modifies_p_store, modifies_s_store);
 	UsesPRelation::optimize(procedure_store, uses_p_store, uses_s_store);
 }

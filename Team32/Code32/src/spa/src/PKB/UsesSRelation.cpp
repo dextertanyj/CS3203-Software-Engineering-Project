@@ -44,7 +44,7 @@ bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const s
 	                [variable](const VarRef& existing_var) { return existing_var == variable; }));
 }
 
-void PKB::UsesSRelation::optimize(Types::ParentStore& parent_store, CallStatementStore& call_store, Types::ProcedureStore& proc_store,
+void PKB::UsesSRelation::optimize(Types::ParentStore& parent_store, CallsStatementStore& call_store, Types::ProcedureStore& proc_store,
                                   TopologicalSort<ProcedureInfo>& topo_order, SVRelationStore<UsesSRelation>& store) {
 	// Start optimization from the lowest level in the DAG.
 	vector<shared_ptr<ProcedureInfo>> order = topo_order.get();
@@ -64,9 +64,9 @@ void PKB::UsesSRelation::optimize(Types::ParentStore& parent_store, CallStatemen
 	}
 }
 
-void PKB::UsesSRelation::optimizeCall(const shared_ptr<StmtInfo>& statement, CallStatementStore& call_store,
+void PKB::UsesSRelation::optimizeCall(const shared_ptr<StmtInfo>& statement, CallsStatementStore& call_store,
                                       Types::ProcedureStore& proc_store, SVRelationStore<UsesSRelation>& store) {
-	// Need to access CallStatementStore to get the statements used in the called procedure.
+	// Need to access CallsStatementStore to get the statements used in the called procedure.
 	VarRefSet variables;
 	ProcRef called_proc = call_store.getProcedure(statement);
 	shared_ptr<ProcedureInfo> proc_info = proc_store.get(called_proc);

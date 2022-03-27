@@ -20,7 +20,7 @@ template <typename T>
 class SetStore;
 template <typename TIdent, class TInfo, class TRelation>
 class TransitiveRelationStore;
-class CallStatementStore;
+class CallsStatementStore;
 template <class T>
 class SVRelationStore;
 template <class T>
@@ -33,8 +33,8 @@ class TransitiveRelation;
 class OrderedStatementTransitiveRelation;
 
 class AssignStore;
-class CallStatementStore;
-class CallRelation;
+class CallsStatementStore;
+class CallsRelation;
 class FollowsRelation;
 class ModifiesSRelation;
 class ModifiesPRelation;
@@ -48,6 +48,8 @@ class DummyNode;
 class NonConditionalNode;
 class StatementNode;
 class ControlFlowGraph;
+class NextManager;
+class AffectsManager;
 
 typedef struct IfControlRelation {
 	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const shared_ptr<StmtInfo>& statement, const VarRef& /*var*/) {

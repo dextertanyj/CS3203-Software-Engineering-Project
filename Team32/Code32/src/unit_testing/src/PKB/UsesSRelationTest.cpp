@@ -62,10 +62,10 @@ TEST_CASE("PKB::UsesSRelation") {
 		 */
 		// Initialise necessary stores for optimize.
 		PKB::Types::ProcedureStore procedure_store = PKB::Types::ProcedureStore();
-		PKB::CallStatementStore call_statement_store = PKB::CallStatementStore();
+		PKB::CallsStatementStore call_statement_store = PKB::CallsStatementStore();
 		PKB::TopologicalSort<PKB::ProcedureInfo> call_graph = PKB::TopologicalSort<PKB::ProcedureInfo>();
-		PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation> transitive_rel_store =
-			PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallRelation>();
+		PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation> transitive_rel_store =
+			PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>();
 
 		ProcRef main_proc = "main";
 		ProcRef sub_proc_1 = "sub_1";

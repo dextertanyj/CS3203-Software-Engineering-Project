@@ -9,14 +9,16 @@
 
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
+#include "PKB/AffectsManager.h"
 #include "PKB/AssignStore.h"
 #include "PKB/CFG/ControlFlowGraph.h"
-#include "PKB/CallRelation.h"
-#include "PKB/CallStatementStore.h"
+#include "PKB/CallsRelation.h"
+#include "PKB/CallsStatementStore.h"
 #include "PKB/FollowsRelation.h"
 #include "PKB/InfoStore.h"
 #include "PKB/ModifiesPRelation.h"
 #include "PKB/ModifiesSRelation.h"
+#include "PKB/NextManager.h"
 #include "PKB/PKB.h"
 #include "PKB/PVRelationStore.tpp"
 #include "PKB/ParentRelation.h"
@@ -110,13 +112,21 @@ public:
 	ProcRefSet getCaller(const ProcRef& callee) override;
 	ProcRefSet getCallerStar(const ProcRef& callee) override;
 
-	// CFG Node get methods
+	// Next get methods
 	bool checkNext(StmtRef first, StmtRef second) override;
 	bool checkNextStar(StmtRef first, StmtRef second) override;
-	StmtInfoPtrSet getNext(StmtRef first) override;
+	StmtInfoPtrSet getNext(StmtRef node_ref) override;
 	StmtInfoPtrSet getNextStar(StmtRef node_ref) override;
-	StmtInfoPtrSet getPrevious(StmtRef second) override;
+	StmtInfoPtrSet getPrevious(StmtRef node_ref) override;
 	StmtInfoPtrSet getPreviousStar(StmtRef node_ref) override;
+
+	// Affects get methods
+	bool checkAffects(StmtRef first, StmtRef second) override;
+	bool checkAffectsStar(StmtRef first, StmtRef second) override;
+	StmtInfoPtrSet getAffects(StmtRef node_ref) override;
+	StmtInfoPtrSet getAffectsStar(StmtRef node_ref) override;
+	StmtInfoPtrSet getAffected(StmtRef node_ref) override;
+	StmtInfoPtrSet getAffectedStar(StmtRef node_ref) override;
 
 	// Control Variable get methods
 	bool checkIfControl(StmtRef index, VarRef name) override;
@@ -141,9 +151,9 @@ private:
 	SetStore<VarRef> variable_store;
 	Types::StatementStore statement_store;
 	Types::ProcedureStore procedure_store;
-	CallStatementStore call_statement_store;
-	TopologicalSort<ProcedureInfo> call_graph;
-	Types::CallStore call_store;
+	CallsStatementStore calls_statement_store;
+	TopologicalSort<ProcedureInfo> calls_graph;
+	Types::CallStore calls_store;
 	Types::ParentStore parent_store;
 	Types::FollowsStore follows_store;
 	SVRelationStore<UsesSRelation> uses_s_store;
@@ -154,6 +164,8 @@ private:
 	SVRelationStore<IfControlRelation> if_control_store;
 	SVRelationStore<WhileControlRelation> while_control_store;
 	ControlFlowGraph control_flow_graph;
+	NextManager next_manager = NextManager(control_flow_graph);
+	AffectsManager affects_manager = AffectsManager(control_flow_graph, modifies_s_store, uses_s_store);
 
 	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
 	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set);
