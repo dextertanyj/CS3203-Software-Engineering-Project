@@ -15,8 +15,11 @@ public:
 	explicit AffectsManager(ControlFlowGraph &control_flow_graph, SVRelationStore<PKB::ModifiesSRelation> &modifies_store,
 	                        SVRelationStore<PKB::UsesSRelation> &uses_store);
 	bool checkAffects(StmtRef first, StmtRef second);
+	bool checkAffectsStar(StmtRef first, StmtRef second);
 	StmtInfoPtrSet getAffects(StmtRef first);
 	StmtInfoPtrSet getAffected(StmtRef second);
+	StmtInfoPtrSet getAffectsStar(StmtRef first);
+	StmtInfoPtrSet getAffectedStar(StmtRef second);
 
 private:
 	ControlFlowGraph *control_flow_graph;

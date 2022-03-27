@@ -10,8 +10,8 @@ void PKB::NextManager::setNext(StmtRef previous, StmtRef next) {
 		auto prev_node = control_flow_graph->getNode(previous);
 		auto next_node = control_flow_graph->getNode(next);
 		prev_node->setConnection(next_node);
-	} catch (invalid_argument e) {
-		throw invalid_argument("One of the provided references is not an existing node.");
+	} catch (const invalid_argument &e) {
+		throw e;
 	}
 }
 
@@ -28,8 +28,8 @@ void PKB::NextManager::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_n
 		}
 		shared_ptr<PKB::IfNode> if_ctrl_node = dynamic_pointer_cast<PKB::IfNode>(prev_node);
 		if_ctrl_node->insertIfNext(then_next_node, else_next_node);
-	} catch (invalid_argument e) {
-		throw e.what();
+	} catch (const invalid_argument &e) {
+		throw e;
 	}
 }
 
@@ -46,8 +46,8 @@ void PKB::NextManager::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef i
 		}
 		shared_ptr<PKB::IfNode> if_node = dynamic_pointer_cast<PKB::IfNode>(if_ctrl_node);
 		if_node->insertIfExit(then_prev_node, else_prev_node);
-	} catch (invalid_argument e) {
-		throw e.what();
+	} catch (const invalid_argument &e) {
+		throw e;
 	}
 }
 
@@ -58,8 +58,8 @@ bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
 		StmtInfoPtrSet next_nodes_of_prev = this->getNext(first);
 		return any_of(next_nodes_of_prev.begin(), next_nodes_of_prev.end(),
 		              [second](const shared_ptr<StmtInfo> &next_info) { return next_info->getIdentifier() == second; });
-	} catch (invalid_argument) {
-		throw invalid_argument("One of the provided references is not an existing node.");
+	} catch (const invalid_argument &e) {
+		throw e;
 	}
 }
 

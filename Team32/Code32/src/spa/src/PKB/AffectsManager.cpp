@@ -1,4 +1,4 @@
-#include "AffectsManager.h"
+#include "PKB/AffectsManager.h"
 
 PKB::AffectsManager::AffectsManager(ControlFlowGraph &control_flow_graph, SVRelationStore<PKB::ModifiesSRelation> &modifies_store,
                                     SVRelationStore<PKB::UsesSRelation> &uses_store)
@@ -7,7 +7,7 @@ PKB::AffectsManager::AffectsManager(ControlFlowGraph &control_flow_graph, SVRela
 bool PKB::AffectsManager::checkAffects(StmtRef first, StmtRef second) {
 	StmtInfoPtrSet affected_nodes = getAffects(first);
 	return any_of(affected_nodes.begin(), affected_nodes.end(),
-	              [second](const shared_ptr<StmtInfo> &info) { return info->getIdentifier() == second; });
+	              [&](const shared_ptr<StmtInfo> &info) { return info->getIdentifier() == second; });
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
@@ -93,3 +93,9 @@ void PKB::AffectsManager::processNodeAffected(PKB::Types::DFSInfo &info, const s
 		}
 	}
 }
+
+bool PKB::AffectsManager::checkAffectsStar(StmtRef first, StmtRef second) { return false; }
+
+StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef first) { return {}; }
+
+StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef second) { return {}; }
