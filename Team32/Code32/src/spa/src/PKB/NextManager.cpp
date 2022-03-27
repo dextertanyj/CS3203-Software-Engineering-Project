@@ -156,9 +156,7 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 	}
 	size_t graph_index = control_flow_graph->getNode(node_ref)->getGraphIndex();
 	priority_queue<shared_ptr<StatementNode>, std::vector<shared_ptr<StatementNode>>, NextComparator> priority_queue;
-	if (next_cache_metadata.find(graph_index) != next_cache_metadata.end()) {
-		priority_queue.push(control_flow_graph->getNode(next_cache_metadata.find(graph_index)->second));
-	} else if (control_flow_graph->getEnd(graph_index)->getNodeType() == NodeType::Dummy) {
+	if (control_flow_graph->getEnd(graph_index)->getNodeType() == NodeType::Dummy) {
 		for (const auto &node : control_flow_graph->collectPreviousOfDummy(control_flow_graph->getEnd(graph_index))) {
 			priority_queue.push(control_flow_graph->getNode(node->getIdentifier()));
 		}
@@ -167,12 +165,21 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 		priority_queue.push(end);
 	}
 	while (!priority_queue.empty()) {
-		shared_ptr<NodeInterface> node = priority_queue.top();
+		shared_ptr<StatementNode> current_node = priority_queue.top();
 		priority_queue.pop();
-		if (node->getNodeType() == NodeType::Dummy) {
-			handleDummyNodeSearch(priority_queue, node, &ControlFlowGraph::collectPreviousOfDummy);
+		if (next_cache.find(current_node->getNodeRef()) != next_cache.end()) {
+			for (const auto &previous : current_node->getPreviousNodes()) {
+				if (previous->getNodeType() == NodeType::Dummy) {
+					auto yyy = control_flow_graph->collectPreviousOfDummy(previous);
+					for (const auto &yss : yyy) {
+						priority_queue.push(control_flow_graph->getNode(yss->getIdentifier()));
+					}
+				} else {
+					priority_queue.push(dynamic_pointer_cast<StatementNode>(previous));
+				}
+			}
+			continue;
 		}
-		shared_ptr<StatementNode> current_node = dynamic_pointer_cast<StatementNode>(node);
 		if (current_node->getNodeType() == NodeType::While) {
 			auto loop_nodes = handleWhileNode(current_node);
 			auto next = current_node->getNextNodes();
@@ -231,7 +238,7 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 			continue;
 		}
 		StmtInfoPtrSet next_star;
-		unordered_set<shared_ptr<NodeInterface>> next_set = node->getNextNodes();
+		unordered_set<shared_ptr<NodeInterface>> next_set = current_node->getNextNodes();
 		while (!next_set.empty()) {
 			shared_ptr<NodeInterface> next = *(next_set.begin());
 			next_set.erase(next);
@@ -246,7 +253,10 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 			next_star.insert(cached_set.begin(), cached_set.end());
 		}
 		next_cache.insert({current_node->getNodeRef(), next_star});
-		for (const auto &previous : node->getPreviousNodes()) {
+		if (current_node->getNodeRef() == node_ref) {
+			break;
+		}
+		for (const auto &previous : current_node->getPreviousNodes()) {
 			if (previous->getNodeType() == NodeType::Dummy) {
 				auto yyy = control_flow_graph->collectPreviousOfDummy(previous);
 				for (const auto &yss : yyy) {

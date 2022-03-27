@@ -35,8 +35,6 @@ private:
 	void handleDummyNodeSearch(T& queue, const shared_ptr<NodeInterface>& node,
 	                           StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
 
-	unordered_map<size_t, StmtRef> next_cache_metadata;
-	unordered_map<size_t, StmtRef> previous_cache_metadata;
 	unordered_map<StmtRef, StmtInfoPtrSet> next_cache;
 	unordered_map<StmtRef, StmtInfoPtrSet> previous_cache;
 };
