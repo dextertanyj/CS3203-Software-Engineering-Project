@@ -23,9 +23,9 @@ if (CMAKE_BUILD_TYPE MATCHES Release)
 endif()
 
 if(NOT MSVC)
-  set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Werror")
-  set(CMAKE_CXX_FLAGS_COVERAGE "-g -Wall -Werror -fprofile-instr-generate -fcoverage-mapping")
-  set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+  set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Werror -fPIE")
+  set(CMAKE_CXX_FLAGS_COVERAGE "-g -Wall -Werror -fprofile-instr-generate -fcoverage-mapping -fPIE")
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -fPIE")
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
