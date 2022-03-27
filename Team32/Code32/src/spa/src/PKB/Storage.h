@@ -140,6 +140,7 @@ public:
 	ProcRef getCalledProcedure(StmtRef index) override;
 
 	// Others
+	void graphOptimize();
 	void populateComplexRelations() override;
 	void clear();
 

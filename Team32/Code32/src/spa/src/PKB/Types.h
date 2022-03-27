@@ -22,6 +22,11 @@ typedef TransitiveRelationStore<ProcRef, ProcedureInfo, CallsRelation> CallStore
 typedef TransitiveRelationStore<StmtRef, StmtInfo, ParentRelation> ParentStore;
 typedef TransitiveRelationStore<StmtRef, StmtInfo, FollowsRelation> FollowsStore;
 
+struct DPBFSInfo {
+	StmtRef target;
+
+};
+
 typedef struct BFSInfo {
 	const shared_ptr<PKB::NodeInterface>& start_node;
 	queue<shared_ptr<PKB::NodeInterface>> node_queue;

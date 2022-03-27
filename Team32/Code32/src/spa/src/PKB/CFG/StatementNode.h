@@ -12,8 +12,10 @@ public:
 	void setConnection(shared_ptr<NodeInterface> next) override;
 
 	shared_ptr<StmtInfo> getStmtInfo() { return this->stmt_info; };
-	StmtRef getNodeRef() override;
+	StmtRef getNodeRef() const override;
 	~StatementNode() override = default;
+
+	bool operator<(const StatementNode& other) const;
 
 private:
 	shared_ptr<StmtInfo> stmt_info;

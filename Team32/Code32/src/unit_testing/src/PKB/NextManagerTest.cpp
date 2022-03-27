@@ -292,6 +292,7 @@ TEST_CASE("PKB::NextManager::checkNextStar Test") {
 	next_manager.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
 	next_manager.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
 	next_manager.setNext(assign_stmt->getIdentifier(), call_stmt->getIdentifier());
+	cfg.optimize();
 
 	CHECK(next_manager.getNextStar(1) == unordered_set{print_stmt, while_stmt, read_stmt, assign_stmt, call_stmt});
 	CHECK(next_manager.getNextStar(2) == unordered_set{while_stmt, print_stmt, assign_stmt, call_stmt});
@@ -335,6 +336,7 @@ TEST_CASE("PKB::NextManager::getPreviousStar Test") {
 	next_manager.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
 	next_manager.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
 	next_manager.setNext(assign_stmt->getIdentifier(), call_stmt->getIdentifier());
+	cfg.optimize();
 
 	CHECK(next_manager.getPreviousStar(1) == StmtInfoPtrSet{});
 	CHECK(next_manager.getPreviousStar(2) == unordered_set{while_stmt, if_stmt, print_stmt});

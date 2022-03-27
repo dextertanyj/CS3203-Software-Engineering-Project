@@ -24,10 +24,21 @@ public:
 	StmtInfoPtrSet getPrevious(StmtRef node_ref);
 	StmtInfoPtrSet getPreviousStar(StmtRef node_ref);
 
+	void resetCache();
+
 private:
 	ControlFlowGraph* control_flow_graph;
 	void processBFSVisit(Types::BFSInfo& info, const shared_ptr<NodeInterface>& node,
 	                     StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
+	StmtInfoPtrSet handleWhileNode(const shared_ptr<NodeInterface>& node);
+	template <class T>
+	void handleDummyNodeSearch(T& queue, const shared_ptr<NodeInterface>& node,
+	                           StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
+
+	unordered_map<size_t, StmtRef> next_cache_metadata;
+	unordered_map<size_t, StmtRef> previous_cache_metadata;
+	unordered_map<StmtRef, StmtInfoPtrSet> next_cache;
+	unordered_map<StmtRef, StmtInfoPtrSet> previous_cache;
 };
 
 #endif  // SPA_NEXTMANAGER_H

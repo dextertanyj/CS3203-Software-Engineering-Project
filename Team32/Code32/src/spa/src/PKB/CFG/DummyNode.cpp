@@ -2,7 +2,7 @@
 
 PKB::DummyNode::DummyNode(StmtRef ref) : PKB::NodeInterface(NodeType::Dummy), if_control_stmt_ref(ref) {}
 
-size_t PKB::DummyNode::getNodeRef() { return this->if_control_stmt_ref; }
+size_t PKB::DummyNode::getNodeRef() const { return this->if_control_stmt_ref; }
 
 void PKB::DummyNode::setConnection(shared_ptr<PKB::NodeInterface> next) {
 	setNext(next);
