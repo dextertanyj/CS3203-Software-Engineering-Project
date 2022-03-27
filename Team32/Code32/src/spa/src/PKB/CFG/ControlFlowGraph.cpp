@@ -1,5 +1,7 @@
 #include "PKB/CFG/ControlFlowGraph.h"
 
+#include <cassert>
+
 #include "PKB/CFG/DummyNode.h"
 #include "PKB/CFG/IfNode.h"
 #include "PKB/CFG/NonConditionalNode.h"
