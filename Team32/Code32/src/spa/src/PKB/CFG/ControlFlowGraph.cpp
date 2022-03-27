@@ -90,7 +90,7 @@ void PKB::ControlFlowGraph::processGraphNode(shared_ptr<NodeInterface> node, siz
                                              unordered_set<shared_ptr<NodeInterface>>& visited) {
 	node->setGraphIndex(graph_index);
 	visited.insert(node);
-	if (node->getNextNodes().empty() || (node->getNodeType() == NodeType::While && node->getPreviousNodes().size() == 1)) {
+	if (node->getNextNodes().empty() || (node->getNodeType() == NodeType::While && node->getNextNodes().size() == 1)) {
 		end_map.insert({graph_index, node});
 		if (node->getNextNodes().empty()) {
 			return;
