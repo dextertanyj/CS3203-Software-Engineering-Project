@@ -168,37 +168,39 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 		shared_ptr<StatementNode> current_node = priority_queue.top();
 		priority_queue.pop();
 		if (next_cache.find(current_node->getNodeRef()) != next_cache.end()) {
+			if (current_node->getNodeType() == NodeType::While) {
+				auto previousxx = current_node->getPreviousNodes();
+				unordered_set<shared_ptr<StatementNode>> first_previous_set;
+				if ((previousxx.begin())->get()->getNodeType() == NodeType::Dummy) {
+					auto previouses = control_flow_graph->collectPreviousOfDummy(*(previousxx.begin()));
+					for (const auto &yyy : previouses) {
+						first_previous_set.insert(control_flow_graph->getNode(yyy->getIdentifier()));
+					}
+				} else {
+					first_previous_set.insert(dynamic_pointer_cast<StatementNode>(*previousxx.begin()));
+				}
+				unordered_set<shared_ptr<StatementNode>> second_previous_set;
+				if (previousxx.size() == 2 && (++previousxx.begin())->get()->getNodeType() == NodeType::Dummy) {
+					auto previouses = control_flow_graph->collectPreviousOfDummy(*(++previousxx.begin()));
+					for (const auto &yyy : previouses) {
+						second_previous_set.insert(control_flow_graph->getNode(yyy->getIdentifier()));
+					}
+				} else if (previousxx.size() == 2) {
+					second_previous_set.insert(dynamic_pointer_cast<StatementNode>(*(++previousxx.begin())));
+				}
+				if (any_of(first_previous_set.begin(), first_previous_set.end(),
+				           [&](const auto &xxx) { return xxx->getNodeRef() < current_node->getNodeRef(); })) {
+					for_each(first_previous_set.begin(), first_previous_set.end(), [&](const auto &zzz) { priority_queue.push(zzz); });
+				} else {
+					for_each(second_previous_set.begin(), second_previous_set.end(), [&](const auto &zzz) { priority_queue.push(zzz); });
+				}
+				continue;
+			}
 			for (const auto &previous : current_node->getPreviousNodes()) {
 				if (previous->getNodeType() == NodeType::Dummy) {
 					auto yyy = control_flow_graph->collectPreviousOfDummy(previous);
 					for (const auto &yss : yyy) {
 						priority_queue.push(control_flow_graph->getNode(yss->getIdentifier()));
-					}
-				} else if (previous->getNodeType() == NodeType::While) {
-					auto previousxx = previous->getPreviousNodes();
-					unordered_set<shared_ptr<StatementNode>> first_previous_set;
-					if ((previousxx.begin())->get()->getNodeType() == NodeType::Dummy) {
-						auto previouses = control_flow_graph->collectPreviousOfDummy(*(previousxx.begin()));
-						for (const auto &yyy : previouses) {
-							first_previous_set.insert(control_flow_graph->getNode(yyy->getIdentifier()));
-						}
-					} else {
-						first_previous_set.insert(dynamic_pointer_cast<StatementNode>(*previousxx.begin()));
-					}
-					unordered_set<shared_ptr<StatementNode>> second_previous_set;
-					if (previousxx.size() == 2 && (++previousxx.begin())->get()->getNodeType() == NodeType::Dummy) {
-						auto previouses = control_flow_graph->collectPreviousOfDummy(*(++previousxx.begin()));
-						for (const auto &yyy : previouses) {
-							second_previous_set.insert(control_flow_graph->getNode(yyy->getIdentifier()));
-						}
-					} else if (previousxx.size() == 2) {
-						second_previous_set.insert(dynamic_pointer_cast<StatementNode>(*(++previousxx.begin())));
-					}
-					if (any_of(first_previous_set.begin(), first_previous_set.end(),
-					           [&](const auto &xxx) { return xxx->getNodeRef() < current_node->getNodeRef(); })) {
-						for_each(first_previous_set.begin(), first_previous_set.end(), [&](const auto &zzz) { priority_queue.push(zzz); });
-					} else {
-						for_each(second_previous_set.begin(), second_previous_set.end(), [&](const auto &zzz) { priority_queue.push(zzz); });
 					}
 				} else {
 					priority_queue.push(dynamic_pointer_cast<StatementNode>(previous));
@@ -217,21 +219,27 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 				shared_ptr<NodeInterface> second = *(++next.begin());
 				if (first->getNodeType() == NodeType::Dummy) {
 					auto true_next_set = control_flow_graph->collectNextOfDummy(first);
-					assert(true_next_set.size() == 1);
-					true_next = *(true_next_set.begin());
+					assert(true_next_set.size() < 2);
+					if (true_next_set.size() == 1) {
+						true_next = *(true_next_set.begin());
+					}
 				} else if (second->getNodeType() == NodeType::Dummy) {
 					auto true_next_set = control_flow_graph->collectNextOfDummy(second);
-					assert(true_next_set.size() == 1);
-					true_next = *(true_next_set.begin());
+					assert(true_next_set.size() < 2);
+					if (true_next_set.size() == 1) {
+						true_next = *(true_next_set.begin());
+					}
 				} else {
 					shared_ptr<StatementNode> first_statement = dynamic_pointer_cast<StatementNode>(first);
 					shared_ptr<StatementNode> second_statement = dynamic_pointer_cast<StatementNode>(second);
 					true_next = first_statement->getNodeRef() > second_statement->getNodeRef() ? first_statement->getStmtInfo()
 					                                                                           : second_statement->getStmtInfo();
 				}
-				auto xxxx = next_cache.find(true_next->getIdentifier())->second;
-				combined.merge(xxxx);
-				combined.insert(true_next);
+				if (true_next != nullptr) {
+					auto xxxx = next_cache.find(true_next->getIdentifier())->second;
+					combined.merge(xxxx);
+					combined.insert(true_next);
+				}
 			}
 			for (const auto &internal_node : loop_nodes) {
 				next_cache.insert({internal_node->getIdentifier(), combined});
