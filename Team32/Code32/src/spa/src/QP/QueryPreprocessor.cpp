@@ -375,7 +375,7 @@ void QP::QueryPreprocessor::reset() {
 void QP::QueryPreprocessor::validateSyntax(QP::Types::ClauseType type, vector<QP::Types::ReferenceArgument> arguments) {
 	auto expected_ref_types = dispatcher.syntax_map.at(type);
 	for (int i = 0; i < arguments.size(); i++) {
-		if (expected_ref_types[i].count(arguments[i].getType())) {
+		if (!expected_ref_types[i].count(arguments[i].getType())) {
 			throw QueryException("Invalid reference argument type");
 		}
 	}

@@ -44,14 +44,14 @@ struct QP::Dispatcher::DispatchMap {
 		{"Uses", Types::ClauseType::UnknownUses},
 	};
 
-	unordered_set<ReferenceType> stmt_ref_set = { ReferenceType::StatementIndex, ReferenceType::Wildcard, ReferenceType::Synonym };
-	unordered_set<ReferenceType> ent_ref_set = { ReferenceType::Name, ReferenceType::Wildcard, ReferenceType::Synonym };
-	unordered_set<ReferenceType> stmt_ent_ref_set = { ReferenceType::Name, ReferenceType::StatementIndex, ReferenceType::Wildcard, ReferenceType::Synonym };
-	unordered_set<ReferenceType> expr_ref_set = { ReferenceType::ExactExpression, ReferenceType::SubExpression, ReferenceType::Wildcard };
-	unordered_set<ReferenceType> wildcard_set = {ReferenceType::Wildcard };
-	unordered_set<ReferenceType> attribute_set = { ReferenceType::Attribute, ReferenceType::Name, ReferenceType::StatementIndex };
+	unordered_set<Types::ReferenceType> stmt_ref_set = { Types::ReferenceType::StatementIndex, Types::ReferenceType::Wildcard, Types::ReferenceType::Synonym };
+	unordered_set<Types::ReferenceType> ent_ref_set = { Types::ReferenceType::Name, Types::ReferenceType::Wildcard, Types::ReferenceType::Synonym };
+	unordered_set<Types::ReferenceType> stmt_ent_ref_set = { Types::ReferenceType::Name, Types::ReferenceType::StatementIndex, Types::ReferenceType::Wildcard, Types::ReferenceType::Synonym };
+	unordered_set<Types::ReferenceType> expr_ref_set = { Types::ReferenceType::ExactExpression, Types::ReferenceType::SubExpression, Types::ReferenceType::Wildcard };
+	unordered_set<Types::ReferenceType> wildcard_set = {Types::ReferenceType::Wildcard };
+	unordered_set<Types::ReferenceType> attribute_set = { Types::ReferenceType::Attribute, Types::ReferenceType::Name, Types::ReferenceType::StatementIndex };
 
-	unordered_map<Types::ClauseType, vector<unordered_set<ReferenceType>>> syntax_map = {
+	unordered_map<Types::ClauseType, vector<unordered_set<Types::ReferenceType>>> syntax_map = {
 		{Types::ClauseType::Calls, {ent_ref_set, ent_ref_set}},
 		{Types::ClauseType::CallsT, {ent_ref_set, ent_ref_set}},
 		{Types::ClauseType::Follows, {stmt_ref_set, stmt_ref_set}},
