@@ -77,7 +77,8 @@ StmtInfoPtrSet PKB::ControlFlowGraph::collectPreviousOfDummy(const shared_ptr<PK
 void PKB::ControlFlowGraph::optimize() {
 	size_t graph_index = 0;
 	for (const auto& node : statement_node_map) {
-		if (node.second->getPreviousNodes().empty() || (node.second->getNodeType() == NodeType::While && node.second->getPreviousNodes().size() == 1)) {
+		if (node.second->getPreviousNodes().empty() ||
+		    (node.second->getNodeType() == NodeType::While && node.second->getPreviousNodes().size() == 1)) {
 			start_map.insert({graph_index, node.second});
 			unordered_set<shared_ptr<NodeInterface>> visited;
 			processGraphNode(node.second, graph_index, visited);
