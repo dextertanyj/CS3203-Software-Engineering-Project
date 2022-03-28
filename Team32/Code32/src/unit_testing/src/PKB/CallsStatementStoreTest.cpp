@@ -47,13 +47,8 @@ TEST_CASE("PKB::CallsStatementStore::get Test") {
 	}
 }
 
-<<<<<<< HEAD
 TEST_CASE("PKB::CallsStatementStore::populate Test") {
 	PKB::CallsStatementStore store;
-=======
-TEST_CASE("PKB::CallStatementStore::populateCallStore Test") {
-	PKB::CallStatementStore store;
->>>>>>> Abstract logic in CallStatementStore
 	PKB::Types::StatementStore statements;
 	PKB::Types::ProcedureStore procedures;
 	PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation> call_store;
