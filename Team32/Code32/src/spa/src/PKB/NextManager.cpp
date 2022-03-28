@@ -170,7 +170,7 @@ priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementN
 }
 
 template <class Comparator>
-void PKB::NextManager::constructQueueIteration(const shared_ptr<StatementNode>& node, QueueConstructionInformation<Comparator>& info) {
+void PKB::NextManager::constructQueueIteration(const shared_ptr<StatementNode> &node, QueueConstructionInformation<Comparator> &info) {
 	if (node->getNodeType() == NodeType::While) {
 		auto inner_nodes = processLoopEntry(node).first;
 		if (info.origin->getNodeRef() > node->getNodeRef() && any_of(inner_nodes.begin(), inner_nodes.end(), [&](const auto &inner) {
@@ -181,14 +181,14 @@ void PKB::NextManager::constructQueueIteration(const shared_ptr<StatementNode>& 
 			info.queue = std::queue<shared_ptr<StatementNode>>();
 		}
 		auto external = (this->*info.traversal_information.loop_continuation_handler)(node).second;
-		for (const auto& external_node : external) {
+		for (const auto &external_node : external) {
 			info.priority_queue.push(external_node);
 			info.queue.push(external_node);
 		}
 		return;
 	}
 	auto current_set = (*node.*info.traversal_information.gatherer)();
-	for (const auto& neighbour : current_set) {
+	for (const auto &neighbour : current_set) {
 		if (neighbour->getNodeType() == NodeType::Dummy) {
 			handleDummyNodeSearch(info.queue, neighbour, info.traversal_information.collector);
 			handleDummyNodeSearch(info.priority_queue, neighbour, info.traversal_information.collector);
@@ -253,7 +253,8 @@ StmtInfoPtrSet PKB::NextManager::traverseLoop(const shared_ptr<NodeInterface> &n
 	return set;
 }
 
-void PKB::NextManager::handleTraverseLoopNode(queue<shared_ptr<NodeInterface>>& queue, StmtInfoPtrSet& set, const shared_ptr<NodeInterface>& node) {
+void PKB::NextManager::handleTraverseLoopNode(queue<shared_ptr<NodeInterface>> &queue, StmtInfoPtrSet &set,
+                                              const shared_ptr<NodeInterface> &node) {
 	if (node->getNodeType() == NodeType::Dummy) {
 		handleDummyNodeSearch(queue, node, &ControlFlowGraph::collectNextOfDummy);
 		return;
@@ -303,20 +304,19 @@ PKB::NextManager::LoopNodePair PKB::NextManager::processLoopEntryExit(
 	return {first_set, second_set};
 }
 
-PKB::NextManager::LoopNodePair PKB::NextManager::processLoopEntry(
-	const shared_ptr<PKB::StatementNode> &node) {
+PKB::NextManager::LoopNodePair PKB::NextManager::processLoopEntry(const shared_ptr<PKB::StatementNode> &node) {
 	return processLoopEntryExit<std::greater<StmtRef>>(node, &NodeInterface::getPreviousNodes, &ControlFlowGraph::collectPreviousOfDummy);
 }
 
-PKB::NextManager::LoopNodePair PKB::NextManager::processLoopExit(
-	const shared_ptr<PKB::StatementNode> &node) {
+PKB::NextManager::LoopNodePair PKB::NextManager::processLoopExit(const shared_ptr<PKB::StatementNode> &node) {
 	auto result = processLoopEntryExit<std::less<StmtRef>>(node, &NodeInterface::getNextNodes, &ControlFlowGraph::collectNextOfDummy);
 	assert(result.first.size() == 1);
 	assert(result.second.size() < 2);
 	return result;
 }
 
-unordered_set<shared_ptr<PKB::StatementNode>> PKB::NextManager::checkLoopNeighbour(const shared_ptr<NodeInterface>& node, StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&)) {
+unordered_set<shared_ptr<PKB::StatementNode>> PKB::NextManager::checkLoopNeighbour(
+	const shared_ptr<NodeInterface> &node, StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface> &)) {
 	unordered_set<shared_ptr<StatementNode>> set;
 	if (node->getNodeType() == PKB::NodeType::Dummy) {
 		handleDummyNodeSearch(set, node, collector);
@@ -331,7 +331,7 @@ template <class T>
 void PKB::NextManager::handleDummyNodeSearch(T &queue, const shared_ptr<NodeInterface> &dummy_node,
                                              StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface> &)) {
 	auto nodes = (control_flow_graph->*collector)(dummy_node);
-	for (const auto& info : nodes) {
+	for (const auto &info : nodes) {
 		shared_ptr<StatementNode> node = control_flow_graph->getNode(info->getIdentifier());
 		queue.emplace(node);
 	}
