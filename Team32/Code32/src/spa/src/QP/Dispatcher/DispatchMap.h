@@ -44,6 +44,30 @@ struct QP::Dispatcher::DispatchMap {
 		{"Uses", Types::ClauseType::UnknownUses},
 	};
 
+	unordered_set<ReferenceType> stmt_ref_set = { ReferenceType::StatementIndex, ReferenceType::Wildcard, ReferenceType::Synonym };
+	unordered_set<ReferenceType> ent_ref_set = { ReferenceType::Name, ReferenceType::Wildcard, ReferenceType::Synonym };
+	unordered_set<ReferenceType> stmt_ent_ref_set = { ReferenceType::Name, ReferenceType::StatementIndex, ReferenceType::Wildcard, ReferenceType::Synonym };
+	unordered_set<ReferenceType> expr_ref_set = { ReferenceType::ExactExpression, ReferenceType::SubExpression, ReferenceType::Wildcard };
+	unordered_set<ReferenceType> wildcard_set = {ReferenceType::Wildcard };
+	unordered_set<ReferenceType> attribute_set = { ReferenceType::Attribute, ReferenceType::Name, ReferenceType::StatementIndex };
+
+	unordered_map<Types::ClauseType, vector<unordered_set<ReferenceType>>> syntax_map = {
+		{Types::ClauseType::Calls, {ent_ref_set, ent_ref_set}},
+		{Types::ClauseType::CallsT, {ent_ref_set, ent_ref_set}},
+		{Types::ClauseType::Follows, {stmt_ref_set, stmt_ref_set}},
+		{Types::ClauseType::FollowsT, {stmt_ref_set, stmt_ref_set}},
+		{Types::ClauseType::UnknownModifies, {stmt_ent_ref_set, ent_ref_set}},
+		{Types::ClauseType::Next, {stmt_ref_set, stmt_ref_set}},
+		{Types::ClauseType::NextT, {stmt_ref_set, stmt_ref_set}},
+		{Types::ClauseType::Parent, {stmt_ref_set, stmt_ref_set}},
+		{Types::ClauseType::ParentT, {stmt_ref_set, stmt_ref_set}},
+		{Types::ClauseType::PatternAssign, {ent_ref_set, ent_ref_set}},
+		{Types::ClauseType::PatternWhile, {wildcard_set, wildcard_set}},
+		{Types::ClauseType::PatternIf, {wildcard_set, wildcard_set, wildcard_set}},
+		{Types::ClauseType::UnknownUses, {stmt_ent_ref_set, ent_ref_set}},
+		{Types::ClauseType::With, {attribute_set, attribute_set}}
+	};
+
 	unordered_map<Types::DesignEntity, Types::ClauseType> pattern_clause_map = {
 		{Types::DesignEntity::If, Types::ClauseType::PatternIf},
 		{Types::DesignEntity::While, Types::ClauseType::PatternWhile},

@@ -55,6 +55,8 @@ private:
 
 	void matchTokenOrThrow(const string& token);
 	void reset();
+	void validateSyntax(QP::Types::ClauseType type, vector<QP::Types::ReferenceArgument> arguments);
+
 
 	size_t token_index;
 	vector<string> query_tokens;

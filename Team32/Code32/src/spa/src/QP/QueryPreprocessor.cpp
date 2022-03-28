@@ -154,20 +154,14 @@ void QP::QueryPreprocessor::parseClause(QP::Types::ClauseType type, vector<QP::T
 }
 
 void QP::QueryPreprocessor::createClause(QP::Types::ClauseType type, vector<QP::Types::ReferenceArgument> arguments) {
+	validateSyntax(type, arguments);
+
 	QP::Types::ArgumentDispatcher argument_dispatcher = dispatcher.dispatch_map.at(type);
 	try {
 		auto info = argument_dispatcher(arguments);
 		this->clause_list.push_back({make_unique<Relationship::Relation>(info.first, move(arguments), info.second)});
 	} catch (const QueryException& e) {
-		if (((type == QP::Types::ClauseType::UnknownModifies || type == QP::Types::ClauseType::UnknownUses) &&
-		     arguments[0].getType() == QP::Types::ReferenceType::Wildcard) ||
-		    (type != QP::Types::ClauseType::PatternIf && type != QP::Types::ClauseType::PatternWhile &&
-		     arguments[0].getType() == QP::Types::ReferenceType::Synonym)) {
-			this->is_semantically_invalid = true;
-		} else {
-			throw QueryException("Uncaught");
-			//throw e;
-		}
+		this->is_semantically_invalid = true;
 	}
 }
 
@@ -242,12 +236,7 @@ void QP::QueryPreprocessor::parseAssignPattern(Types::ReferenceArgument synonym)
 		this->clause_list.push_back({ make_unique<Relationship::Relation>(info.first, arguments, info.second) });
 	}
 	catch (const QueryException& e) {
-		if (variable.getType() == QP::Types::ReferenceType::Synonym) {
-			this->is_semantically_invalid = true;
-		}
-		else {
-			throw e;
-		}
+		this->is_semantically_invalid = true;
 	}
 
 
@@ -381,4 +370,13 @@ void QP::QueryPreprocessor::reset() {
 	existing_declarations.clear();
 	select_list.clear();
 	clause_list.clear();
+}
+
+void QP::QueryPreprocessor::validateSyntax(QP::Types::ClauseType type, vector<QP::Types::ReferenceArgument> arguments) {
+	auto expected_ref_types = dispatcher.syntax_map.at(type);
+	for (int i = 0; i < arguments.size(); i++) {
+		if (expected_ref_types[i].count(arguments[i].getType())) {
+			throw QueryException("Invalid reference argument type");
+		}
+	}
 }
