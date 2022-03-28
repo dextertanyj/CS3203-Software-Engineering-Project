@@ -16,6 +16,7 @@ public:
 	~StatementNode() override = default;
 
 	bool operator<(const StatementNode& other) const;
+	bool operator>(const StatementNode& other) const;
 
 private:
 	shared_ptr<StmtInfo> stmt_info;

@@ -27,13 +27,34 @@ public:
 	void resetCache();
 
 private:
+	struct TraversalInformation {
+		unordered_map<StmtRef, StmtInfoPtrSet> *cache;
+		unordered_set<shared_ptr<PKB::NodeInterface>> (PKB::NodeInterface::*gatherer)() const;
+		pair<unordered_set<shared_ptr<PKB::StatementNode>>, unordered_set<shared_ptr<PKB::StatementNode>>> (PKB::NextManager::*loop_continuation_handler)(const shared_ptr<PKB::StatementNode>&);
+		StmtInfoPtrSet (PKB::ControlFlowGraph::*collector)(const shared_ptr<PKB::NodeInterface>&);
+	};
+
 	ControlFlowGraph* control_flow_graph;
 	void processBFSVisit(Types::BFSInfo& info, const shared_ptr<NodeInterface>& node,
 	                     StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
-	StmtInfoPtrSet handleWhileNode(const shared_ptr<NodeInterface>& node);
+	StmtInfoPtrSet traverseLoop(const shared_ptr<NodeInterface>& node);
+
+	template <class Comparator>
+	priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementNode>>, Comparator> constructQueue(const shared_ptr<StatementNode>& node,
+	                                                                                                                  TraversalInformation& info);
+	void processQueue(const shared_ptr<StatementNode>& node, TraversalInformation& info);
+
+	void processLoopNode(const shared_ptr<PKB::StatementNode>& node, TraversalInformation& info);
+
+	template <typename Comparator>
+	pair<unordered_set<shared_ptr<PKB::StatementNode>>, unordered_set<shared_ptr<PKB::StatementNode>>> processLoopEntryExit(const shared_ptr<PKB::StatementNode>& node,
+	                                                                                                                        unordered_set<shared_ptr<PKB::NodeInterface>> (NodeInterface::*gatherer)() const,
+	                                                                                                                        StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface> &));
+	pair<unordered_set<shared_ptr<PKB::StatementNode>>, unordered_set<shared_ptr<PKB::StatementNode>>> processLoopExit(const shared_ptr<PKB::StatementNode>& node);
+	pair<unordered_set<shared_ptr<PKB::StatementNode>>, unordered_set<shared_ptr<PKB::StatementNode>>> processLoopEntry(const shared_ptr<PKB::StatementNode>& node);
+
 	template <class T>
-	void handleDummyNodeSearch(T& queue, const shared_ptr<NodeInterface>& node,
-	                           StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
+	void handleDummyNodeSearch(T& queue, const shared_ptr<NodeInterface>& node, StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
 
 	unordered_map<StmtRef, StmtInfoPtrSet> next_cache;
 	unordered_map<StmtRef, StmtInfoPtrSet> previous_cache;

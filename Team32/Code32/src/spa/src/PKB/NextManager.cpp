@@ -87,219 +87,25 @@ StmtInfoPtrSet PKB::NextManager::getNext(StmtRef node_ref) {
 	return next_nodes;
 }
 
-template <class T>
-void PKB::NextManager::handleDummyNodeSearch(T &queue, const shared_ptr<NodeInterface> &dummy_node,
-                                             StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface> &)) {
-	auto nodes = (control_flow_graph->*collector)(dummy_node);
-	for (const auto &info : nodes) {
-		shared_ptr<StatementNode> node = control_flow_graph->getNode(info->getIdentifier());
-		queue.push(node);
-	}
-}
-
-StmtInfoPtrSet PKB::NextManager::handleWhileNode(const shared_ptr<NodeInterface> &node) {
-	assert(node->getNodeType() == NodeType::While);
-	shared_ptr<StatementNode> while_node = dynamic_pointer_cast<StatementNode>(node);
-	StmtInfoPtrSet set;
-	queue<shared_ptr<NodeInterface>> queue;
-	set.insert(while_node->getStmtInfo());
-	auto yyy = while_node->getNextNodes();
-	assert(yyy.size() > 0);
-	if (yyy.size() == 1) {
-		queue.push(dynamic_pointer_cast<StatementNode>(*yyy.begin()));
-	} else {
-		auto first_yy = *(yyy.begin());
-		auto second_yy = *(++yyy.begin());
-		if (first_yy->getNodeType() == NodeType::Dummy) {
-			queue.push(dynamic_pointer_cast<StatementNode>(second_yy));
-		} else if (second_yy->getNodeType() == NodeType::Dummy) {
-			queue.push(dynamic_pointer_cast<StatementNode>(first_yy));
-		} else {
-			if (dynamic_pointer_cast<StatementNode>(first_yy)->getNodeRef() <
-			    dynamic_pointer_cast<StatementNode>(second_yy)->getNodeRef()) {
-				queue.push(dynamic_pointer_cast<StatementNode>(first_yy));
-			} else {
-				queue.push(dynamic_pointer_cast<StatementNode>(second_yy));
-			}
-		}
-	}
-	while (!queue.empty()) {
-		shared_ptr<NodeInterface> current = queue.front();
-		queue.pop();
-		if (current->getNodeType() == NodeType::Dummy) {
-			handleDummyNodeSearch(queue, current, &ControlFlowGraph::collectNextOfDummy);
-			continue;
-		}
-		shared_ptr<StatementNode> current_statement = dynamic_pointer_cast<StatementNode>(current);
-		set.insert(current_statement->getStmtInfo());
-		auto next_set = current_statement->getNextNodes();
-		for_each(next_set.begin(), next_set.end(), [&](const shared_ptr<NodeInterface> &next) {
-			if (next->getNodeType() != NodeType::Dummy) {
-				auto xxx = dynamic_pointer_cast<StatementNode>(next);
-				if (set.find(xxx->getStmtInfo()) != set.end()) {
-					return;
-				}
-			}
-			queue.push(next);
-		});
-	}
-	return set;
-}
-
 struct NextComparator {
 	bool operator()(const shared_ptr<PKB::StatementNode> &lhs, const shared_ptr<PKB::StatementNode> &rhs) { return *lhs < *rhs; }
+};
+
+struct PreviousComparator {
+	bool operator()(const shared_ptr<PKB::StatementNode> &lhs, const shared_ptr<PKB::StatementNode> &rhs) { return *lhs > *rhs; }
 };
 
 StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 	if (next_cache.find(node_ref) != next_cache.end()) {
 		return next_cache.find(node_ref)->second;
 	}
-	size_t graph_index = control_flow_graph->getNode(node_ref)->getGraphIndex();
-	priority_queue<shared_ptr<StatementNode>, std::vector<shared_ptr<StatementNode>>, NextComparator> priority_queue;
-	if (control_flow_graph->getEnd(graph_index)->getNodeType() == NodeType::Dummy) {
-		for (const auto &node : control_flow_graph->collectPreviousOfDummy(control_flow_graph->getEnd(graph_index))) {
-			priority_queue.push(control_flow_graph->getNode(node->getIdentifier()));
-		}
-	} else {
-		shared_ptr<StatementNode> end = dynamic_pointer_cast<StatementNode>(control_flow_graph->getEnd(graph_index));
-		priority_queue.push(end);
-	}
-	while (!priority_queue.empty()) {
-		shared_ptr<StatementNode> current_node = priority_queue.top();
-		priority_queue.pop();
-		if (next_cache.find(current_node->getNodeRef()) != next_cache.end()) {
-			if (current_node->getNodeType() == NodeType::While) {
-				auto previousxx = current_node->getPreviousNodes();
-				unordered_set<shared_ptr<StatementNode>> first_previous_set;
-				if ((previousxx.begin())->get()->getNodeType() == NodeType::Dummy) {
-					auto previouses = control_flow_graph->collectPreviousOfDummy(*(previousxx.begin()));
-					for (const auto &yyy : previouses) {
-						first_previous_set.insert(control_flow_graph->getNode(yyy->getIdentifier()));
-					}
-				} else {
-					first_previous_set.insert(dynamic_pointer_cast<StatementNode>(*previousxx.begin()));
-				}
-				unordered_set<shared_ptr<StatementNode>> second_previous_set;
-				if (previousxx.size() == 2 && (++previousxx.begin())->get()->getNodeType() == NodeType::Dummy) {
-					auto previouses = control_flow_graph->collectPreviousOfDummy(*(++previousxx.begin()));
-					for (const auto &yyy : previouses) {
-						second_previous_set.insert(control_flow_graph->getNode(yyy->getIdentifier()));
-					}
-				} else if (previousxx.size() == 2) {
-					second_previous_set.insert(dynamic_pointer_cast<StatementNode>(*(++previousxx.begin())));
-				}
-				if (any_of(first_previous_set.begin(), first_previous_set.end(),
-				           [&](const auto &xxx) { return xxx->getNodeRef() < current_node->getNodeRef(); })) {
-					for_each(first_previous_set.begin(), first_previous_set.end(), [&](const auto &zzz) { priority_queue.push(zzz); });
-				} else {
-					for_each(second_previous_set.begin(), second_previous_set.end(), [&](const auto &zzz) { priority_queue.push(zzz); });
-				}
-				continue;
-			}
-			for (const auto &previous : current_node->getPreviousNodes()) {
-				if (previous->getNodeType() == NodeType::Dummy) {
-					auto yyy = control_flow_graph->collectPreviousOfDummy(previous);
-					for (const auto &yss : yyy) {
-						priority_queue.push(control_flow_graph->getNode(yss->getIdentifier()));
-					}
-				} else {
-					priority_queue.push(dynamic_pointer_cast<StatementNode>(previous));
-				}
-			}
-			continue;
-		}
-		if (current_node->getNodeType() == NodeType::While) {
-			auto loop_nodes = handleWhileNode(current_node);
-			auto next = current_node->getNextNodes();
-			auto combined = loop_nodes;
-			assert(next.size() > 0);
-			if (next.size() > 1) {
-				shared_ptr<StmtInfo> true_next;
-				shared_ptr<NodeInterface> first = *(next.begin());
-				shared_ptr<NodeInterface> second = *(++next.begin());
-				if (first->getNodeType() == NodeType::Dummy) {
-					auto true_next_set = control_flow_graph->collectNextOfDummy(first);
-					assert(true_next_set.size() < 2);
-					if (true_next_set.size() == 1) {
-						true_next = *(true_next_set.begin());
-					}
-				} else if (second->getNodeType() == NodeType::Dummy) {
-					auto true_next_set = control_flow_graph->collectNextOfDummy(second);
-					assert(true_next_set.size() < 2);
-					if (true_next_set.size() == 1) {
-						true_next = *(true_next_set.begin());
-					}
-				} else {
-					shared_ptr<StatementNode> first_statement = dynamic_pointer_cast<StatementNode>(first);
-					shared_ptr<StatementNode> second_statement = dynamic_pointer_cast<StatementNode>(second);
-					true_next = first_statement->getNodeRef() > second_statement->getNodeRef() ? first_statement->getStmtInfo()
-					                                                                           : second_statement->getStmtInfo();
-				}
-				if (true_next != nullptr) {
-					auto xxxx = next_cache.find(true_next->getIdentifier())->second;
-					combined.merge(xxxx);
-					combined.insert(true_next);
-				}
-			}
-			for (const auto &internal_node : loop_nodes) {
-				next_cache.insert({internal_node->getIdentifier(), combined});
-			}
-			auto previous = current_node->getPreviousNodes();
-			unordered_set<shared_ptr<StatementNode>> first_previous_set;
-			if ((previous.begin())->get()->getNodeType() == NodeType::Dummy) {
-				auto previouses = control_flow_graph->collectPreviousOfDummy(*(previous.begin()));
-				for (const auto &yyy : previouses) {
-					first_previous_set.insert(control_flow_graph->getNode(yyy->getIdentifier()));
-				}
-			} else {
-				first_previous_set.insert(dynamic_pointer_cast<StatementNode>(*previous.begin()));
-			}
-			unordered_set<shared_ptr<StatementNode>> second_previous_set;
-			if (previous.size() == 2 && (++previous.begin())->get()->getNodeType() == NodeType::Dummy) {
-				auto previouses = control_flow_graph->collectPreviousOfDummy(*(++previous.begin()));
-				for (const auto &yyy : previouses) {
-					second_previous_set.insert(control_flow_graph->getNode(yyy->getIdentifier()));
-				}
-			} else if (previous.size() == 2) {
-				second_previous_set.insert(dynamic_pointer_cast<StatementNode>(*(++previous.begin())));
-			}
-			if (any_of(first_previous_set.begin(), first_previous_set.end(),
-			           [&](const auto &xxx) { return xxx->getNodeRef() < current_node->getNodeRef(); })) {
-				for_each(first_previous_set.begin(), first_previous_set.end(), [&](const auto &zzz) { priority_queue.push(zzz); });
-			} else {
-				for_each(second_previous_set.begin(), second_previous_set.end(), [&](const auto &zzz) { priority_queue.push(zzz); });
-			}
-			continue;
-		}
-		StmtInfoPtrSet next_star;
-		unordered_set<shared_ptr<NodeInterface>> next_set = current_node->getNextNodes();
-		while (!next_set.empty()) {
-			shared_ptr<NodeInterface> next = *(next_set.begin());
-			next_set.erase(next);
-			if (next->getNodeType() == NodeType::Dummy) {
-				auto x = control_flow_graph->collectNextOfDummy(next);
-				for_each(x.begin(), x.end(), [&](const auto &yy) { next_set.insert(control_flow_graph->getNode(yy->getIdentifier())); });
-				continue;
-			}
-			shared_ptr<StatementNode> statement = dynamic_pointer_cast<StatementNode>(next);
-			next_star.insert(statement->getStmtInfo());
-			auto cached_set = next_cache.find(statement->getNodeRef())->second;
-			next_star.insert(cached_set.begin(), cached_set.end());
-		}
-		next_cache.insert({current_node->getNodeRef(), next_star});
-		if (current_node->getNodeRef() == node_ref) {
-			break;
-		}
-		for (const auto &previous : current_node->getPreviousNodes()) {
-			if (previous->getNodeType() == NodeType::Dummy) {
-				auto yyy = control_flow_graph->collectPreviousOfDummy(previous);
-				for (const auto &yss : yyy) {
-					priority_queue.push(control_flow_graph->getNode(yss->getIdentifier()));
-				}
-			} else {
-				priority_queue.push(dynamic_pointer_cast<StatementNode>(previous));
-			}
-		}
+	shared_ptr<StatementNode> target = control_flow_graph->getNode(node_ref);
+	TraversalInformation info = {&next_cache, &NodeInterface::getNextNodes, &NextManager::processLoopExit, &ControlFlowGraph::collectNextOfDummy};
+	priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementNode>>, NextComparator> queue = constructQueue<NextComparator>(target, info);
+	while (!queue.empty()) {
+		shared_ptr<StatementNode> current_node = queue.top();
+		queue.pop();
+		processQueue(current_node, info);
 	}
 	return next_cache.find(node_ref)->second;
 }
@@ -321,43 +127,185 @@ StmtInfoPtrSet PKB::NextManager::getPrevious(StmtRef node_ref) {
 }
 
 StmtInfoPtrSet PKB::NextManager::getPreviousStar(StmtRef node_ref) {
-	Types::BFSInfo info = {control_flow_graph->getNode(node_ref), {}, {}, {}};
-	info.node_queue.push(info.start_node);
-	while (!info.node_queue.empty()) {
-		shared_ptr<PKB::NodeInterface> curr_node = info.node_queue.front();
-		info.node_queue.pop();
-		unordered_set<shared_ptr<PKB::NodeInterface>> curr_prev_nodes = curr_node->getPreviousNodes();
-		for (const auto &node : curr_prev_nodes) {
-			processBFSVisit(info, node, &ControlFlowGraph::collectPreviousOfDummy);
-		}
-		info.visited_set.insert(curr_node);
+	if (previous_cache.find(node_ref) != previous_cache.end()) {
+		return previous_cache.find(node_ref)->second;
 	}
-	return info.nodes;
-}
-
-void PKB::NextManager::processBFSVisit(Types::BFSInfo &info, const shared_ptr<PKB::NodeInterface> &node,
-                                       StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface> &)) {
-	if (node == info.start_node) {
-		shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
-		info.nodes.insert(stmt_node->getStmtInfo());
+	shared_ptr<StatementNode> target = control_flow_graph->getNode(node_ref);
+	TraversalInformation info = {&previous_cache, &NodeInterface::getPreviousNodes, &NextManager::processLoopEntry, &ControlFlowGraph::collectPreviousOfDummy};
+	priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementNode>>, PreviousComparator> queue = constructQueue<PreviousComparator>(target, info);
+	while (!queue.empty()) {
+		shared_ptr<StatementNode> current_node = queue.top();
+		queue.pop();
+		processQueue(current_node, info);
 	}
-	if (info.visited_set.find(node) != info.visited_set.end()) {
-		return;
-	}
-	if (node->getNodeType() == NodeType::Dummy) {
-		StmtInfoPtrSet real_nodes = (control_flow_graph->*collector)(node);
-		info.nodes.insert(real_nodes.begin(), real_nodes.end());
-		for (const auto &real_node : real_nodes) {
-			info.node_queue.push(control_flow_graph->getNode(real_node->getIdentifier()));
-		}
-	} else {
-		shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
-		info.nodes.insert(stmt_node->getStmtInfo());
-		info.node_queue.push(node);
-	}
+	return previous_cache.find(node_ref)->second;
 }
 
 void PKB::NextManager::resetCache() {
 	next_cache.clear();
 	previous_cache.clear();
+}
+
+template <class Comparator>
+priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementNode>>, Comparator> PKB::NextManager::constructQueue(const shared_ptr<StatementNode>& node,
+                                                                                                                                    TraversalInformation& info) {
+	priority_queue<shared_ptr<StatementNode>, vector<shared_ptr<StatementNode>>, Comparator> p_queue;
+	queue<shared_ptr<StatementNode>> queue;
+	queue.push(node);
+	p_queue.push(node);
+	while(!queue.empty()) {
+		shared_ptr<StatementNode> current_node = queue.front();
+		queue.pop();
+		if (current_node->getNodeType() == NodeType::While) {
+			auto inner_nodes = processLoopEntry(current_node).first;
+			if (node->getNodeRef() > current_node->getNodeRef() && any_of(inner_nodes.begin(), inner_nodes.end(), [&](const auto& inner) {return inner->getNodeRef() >= node->getNodeRef();})) {
+				p_queue = std::priority_queue<shared_ptr<StatementNode>, vector<shared_ptr<StatementNode>>, Comparator>();
+				p_queue.push(current_node);
+				queue = std::queue<shared_ptr<StatementNode>>();
+			}
+			auto external = (this->*info.loop_continuation_handler)(current_node).second;
+			for (const auto& external_node : external) {
+				p_queue.push(external_node);
+				queue.push(external_node);
+			}
+			continue;
+		}
+		auto current_set = (*current_node.*info.gatherer)();
+		for (const auto& neighbour : current_set) {
+			if (neighbour->getNodeType() == NodeType::Dummy) {
+				handleDummyNodeSearch(queue, neighbour, info.collector);
+				handleDummyNodeSearch(p_queue, neighbour, info.collector);
+				continue;
+			}
+			shared_ptr<StatementNode> neighbour_statement = dynamic_pointer_cast<StatementNode>(neighbour);
+			p_queue.push(neighbour_statement);
+			queue.push(neighbour_statement);
+		}
+	}
+	return p_queue;
+}
+
+void PKB::NextManager::processQueue(const shared_ptr<StatementNode>& node, TraversalInformation& info) {
+	if (node->getNodeType() == NodeType::While) {
+		processLoopNode(node, info);
+		return;
+	}
+	StmtInfoPtrSet star;
+	unordered_set<shared_ptr<NodeInterface>> set = (*node.*info.gatherer)();
+	while (!set.empty()) {
+		shared_ptr<NodeInterface> current = *(set.begin());
+		set.erase(current);
+		if (current->getNodeType() == NodeType::Dummy) {
+			handleDummyNodeSearch(set, current, info.collector);
+			continue;
+		}
+		shared_ptr<StatementNode> statement = dynamic_pointer_cast<StatementNode>(current);
+		star.insert(statement->getStmtInfo());
+		auto cached_set = info.cache->find(statement->getNodeRef())->second;
+		star.insert(cached_set.begin(), cached_set.end());
+	}
+	info.cache->insert({node->getNodeRef(), star});
+}
+
+void PKB::NextManager::processLoopNode(const shared_ptr<StatementNode>& node, TraversalInformation& info) {
+	auto loop_nodes = traverseLoop(node);
+	auto combined = loop_nodes;
+	unordered_set<shared_ptr<StatementNode>> subsequent_nodes = ((this->*info.loop_continuation_handler)(node)).second;
+	if (!subsequent_nodes.empty()) {
+		for (const auto& subsequent : subsequent_nodes) {
+			auto subsequent_next_star = info.cache->find(subsequent->getNodeRef())->second;
+			combined.merge(subsequent_next_star);
+			combined.insert(subsequent->getStmtInfo());
+		}
+	}
+	for (const auto &internal_node : loop_nodes) {
+		info.cache->insert({internal_node->getIdentifier(), combined});
+	}
+}
+
+StmtInfoPtrSet PKB::NextManager::traverseLoop(const shared_ptr<NodeInterface> &node) {
+	assert(node->getNodeType() == NodeType::While);
+	shared_ptr<StatementNode> loop_node = dynamic_pointer_cast<StatementNode>(node);
+	StmtInfoPtrSet set;
+	queue<shared_ptr<NodeInterface>> queue;
+	set.insert(loop_node->getStmtInfo());
+	queue.push(*processLoopExit(loop_node).first.begin());
+	while (!queue.empty()) {
+		shared_ptr<NodeInterface> current = queue.front();
+		queue.pop();
+		if (current->getNodeType() == NodeType::Dummy) {
+			handleDummyNodeSearch(queue, current, &ControlFlowGraph::collectNextOfDummy);
+			continue;
+		}
+		shared_ptr<StatementNode> current_statement = dynamic_pointer_cast<StatementNode>(current);
+		set.insert(current_statement->getStmtInfo());
+		auto next_set = current_statement->getNextNodes();
+		for (const auto& next: next_set) {
+			if (next->getNodeType() != NodeType::Dummy) {
+				auto xxx = dynamic_pointer_cast<StatementNode>(next);
+				if (set.find(xxx->getStmtInfo()) != set.end()) {
+					continue;
+				}
+			}
+			queue.push(next);
+		}
+	}
+	return set;
+}
+
+template <class T>
+void PKB::NextManager::handleDummyNodeSearch(T &queue, const shared_ptr<NodeInterface> &dummy_node,
+                                             StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface> &)) {
+	auto nodes = (control_flow_graph->*collector)(dummy_node);
+	for (const auto& info : nodes) {
+		shared_ptr<StatementNode> node = control_flow_graph->getNode(info->getIdentifier());
+		queue.emplace(node);
+	}
+}
+
+template <typename Comparator>
+pair<unordered_set<shared_ptr<PKB::StatementNode>>, unordered_set<shared_ptr<PKB::StatementNode>>> PKB::NextManager::processLoopEntryExit(
+	const shared_ptr<PKB::StatementNode>& node,
+	unordered_set<shared_ptr<PKB::NodeInterface>> (NodeInterface::*gatherer)() const,
+	StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface> &)) {
+	assert(node->getNodeType() == PKB::NodeType::While);
+	unordered_set<shared_ptr<PKB::NodeInterface>> node_set = (*node.*gatherer)();
+	assert(!node_set.empty());
+	if (node_set.size() == 1) {
+		assert(dynamic_pointer_cast<PKB::StatementNode>(*node_set.begin()) != nullptr);
+		return {{dynamic_pointer_cast<PKB::StatementNode>(*node_set.begin())}, {}};
+	}
+	auto first_node = *(node_set.begin());
+	unordered_set<shared_ptr<PKB::StatementNode>> first_set;
+	if (first_node->getNodeType() == PKB::NodeType::Dummy) {
+		handleDummyNodeSearch(first_set, first_node, collector);
+	} else {
+		assert(dynamic_pointer_cast<PKB::StatementNode>(first_node) != nullptr);
+		first_set.insert(dynamic_pointer_cast<StatementNode>(first_node));
+	}
+	auto second_node = *(++node_set.begin());
+	unordered_set<shared_ptr<PKB::StatementNode>> second_set;
+	if (second_node->getNodeType() == PKB::NodeType::Dummy) {
+		handleDummyNodeSearch(second_set, second_node, collector);
+	} else {
+		assert(dynamic_pointer_cast<PKB::StatementNode>(second_node) != nullptr);
+		second_set.insert(dynamic_pointer_cast<StatementNode>(second_node));
+	}
+	if (first_set.empty() || (!second_set.empty() && Comparator{}(second_set.begin()->get()->getNodeRef(), first_set.begin()->get()->getNodeRef()))) {
+		return {second_set, first_set};
+	}
+	return {first_set, second_set};
+}
+
+pair<unordered_set<shared_ptr<PKB::StatementNode>>, unordered_set<shared_ptr<PKB::StatementNode>>> PKB::NextManager::processLoopExit(
+	const shared_ptr<PKB::StatementNode>& node) {
+	auto result = processLoopEntryExit<std::less<StmtRef>>(node, &NodeInterface::getNextNodes, &ControlFlowGraph::collectNextOfDummy);
+	assert(result.first.size() == 1);
+	assert(result.second.size() < 2);
+	return result;
+}
+
+pair<unordered_set<shared_ptr<PKB::StatementNode>>, unordered_set<shared_ptr<PKB::StatementNode>>> PKB::NextManager::processLoopEntry(
+	const shared_ptr<PKB::StatementNode> &node) {
+	return processLoopEntryExit<std::greater<StmtRef>>(node, &NodeInterface::getPreviousNodes, &ControlFlowGraph::collectPreviousOfDummy);
 }

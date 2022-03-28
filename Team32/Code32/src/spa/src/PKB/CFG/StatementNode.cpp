@@ -12,3 +12,5 @@ void PKB::StatementNode::setConnection(shared_ptr<NodeInterface> next) {
 StmtRef PKB::StatementNode::getNodeRef() const { return stmt_info->getIdentifier(); }
 
 bool PKB::StatementNode::operator<(const PKB::StatementNode& other) const { return this->getNodeRef() < other.getNodeRef(); }
+
+bool PKB::StatementNode::operator>(const PKB::StatementNode& other) const { return this->getNodeRef() > other.getNodeRef(); }
