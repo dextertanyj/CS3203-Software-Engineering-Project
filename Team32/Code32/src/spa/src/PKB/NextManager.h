@@ -58,13 +58,13 @@ private:
 	// Loop entry-exit utilities
 	template <typename Comparator>
 	LoopNodePair processLoopEntryExit(
-		const shared_ptr<StatementNode>& node, unordered_set<shared_ptr<NodeInterface>> (NodeInterface::*gatherer)() const,
+		const shared_ptr<StatementNode>& loop_node, unordered_set<shared_ptr<NodeInterface>> (NodeInterface::*gatherer)() const,
 		StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
 	LoopNodePair processLoopEntry(
 		const shared_ptr<StatementNode>& node);
 	LoopNodePair processLoopExit(
 		const shared_ptr<StatementNode>& node);
-	unordered_set<shared_ptr<StatementNode>> checkLoopNeighbour(shared_ptr<NodeInterface> node,
+	unordered_set<shared_ptr<StatementNode>> checkLoopNeighbour(const shared_ptr<NodeInterface>& node,
 	                                                            StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
 
 	template <class T>

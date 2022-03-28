@@ -161,6 +161,9 @@ priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementN
 	while (!queue.empty()) {
 		shared_ptr<StatementNode> node = queue.front();
 		queue.pop();
+		if (info.cache.find(node->getNodeRef()) != info.cache.end()) {
+			continue;
+		}
 		constructQueueIteration(node, construction_info);
 	}
 	return priority_queue;
@@ -178,14 +181,14 @@ void PKB::NextManager::constructQueueIteration(const shared_ptr<StatementNode>& 
 			info.queue = std::queue<shared_ptr<StatementNode>>();
 		}
 		auto external = (this->*info.traversal_information.loop_continuation_handler)(node).second;
-		for (const auto &external_node : external) {
+		for (const auto& external_node : external) {
 			info.priority_queue.push(external_node);
 			info.queue.push(external_node);
 		}
 		return;
 	}
 	auto current_set = (*node.*info.traversal_information.gatherer)();
-	for (const auto &neighbour : current_set) {
+	for (const auto& neighbour : current_set) {
 		if (neighbour->getNodeType() == NodeType::Dummy) {
 			handleDummyNodeSearch(info.queue, neighbour, info.traversal_information.collector);
 			handleDummyNodeSearch(info.priority_queue, neighbour, info.traversal_information.collector);
@@ -273,14 +276,21 @@ void PKB::NextManager::handleTraverseLoopNode(queue<shared_ptr<NodeInterface>>& 
 
 template <typename Comparator>
 PKB::NextManager::LoopNodePair PKB::NextManager::processLoopEntryExit(
-	const shared_ptr<PKB::StatementNode> &node, unordered_set<shared_ptr<PKB::NodeInterface>> (NodeInterface::*gatherer)() const,
+	const shared_ptr<PKB::StatementNode> &loop_node, unordered_set<shared_ptr<PKB::NodeInterface>> (NodeInterface::*gatherer)() const,
 	StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface> &)) {
-	assert(node->getNodeType() == PKB::NodeType::While);
-	unordered_set<shared_ptr<PKB::NodeInterface>> node_set = (*node.*gatherer)();
+	assert(loop_node->getNodeType() == PKB::NodeType::While);
+	unordered_set<shared_ptr<PKB::NodeInterface>> node_set = (*loop_node.*gatherer)();
 	assert(!node_set.empty());
 	if (node_set.size() == 1) {
-		assert(dynamic_pointer_cast<PKB::StatementNode>(*node_set.begin()) != nullptr);
-		return {{dynamic_pointer_cast<PKB::StatementNode>(*node_set.begin())}, {}};
+		unordered_set<shared_ptr<StatementNode>> result;
+		shared_ptr<NodeInterface> node = *node_set.begin();
+		if (node->getNodeType() == NodeType::Dummy) {
+			handleDummyNodeSearch(result, node, collector);
+			return {result, {}};
+		}
+		assert(dynamic_pointer_cast<StatementNode>(node) != nullptr);
+		result.insert(dynamic_pointer_cast<StatementNode>(node));
+		return {result, {}};
 	}
 	auto first_node = *(node_set.begin());
 	unordered_set<shared_ptr<PKB::StatementNode>> first_set = checkLoopNeighbour(first_node, collector);
@@ -306,7 +316,7 @@ PKB::NextManager::LoopNodePair PKB::NextManager::processLoopExit(
 	return result;
 }
 
-unordered_set<shared_ptr<PKB::StatementNode>> PKB::NextManager::checkLoopNeighbour(shared_ptr<NodeInterface> node, StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&)) {
+unordered_set<shared_ptr<PKB::StatementNode>> PKB::NextManager::checkLoopNeighbour(const shared_ptr<NodeInterface>& node, StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&)) {
 	unordered_set<shared_ptr<StatementNode>> set;
 	if (node->getNodeType() == PKB::NodeType::Dummy) {
 		handleDummyNodeSearch(set, node, collector);
