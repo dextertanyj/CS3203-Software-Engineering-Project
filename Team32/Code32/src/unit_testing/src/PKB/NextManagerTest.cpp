@@ -4,7 +4,6 @@
 #include "TestUtilities.h"
 #include "catch.hpp"
 
-
 TEST_CASE("PKB::NextManager::setNext Test") {
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
@@ -344,4 +343,131 @@ TEST_CASE("PKB::NextManager::getPreviousStar Test") {
 	CHECK(next_manager.getPreviousStar(4) == unordered_set{if_stmt});
 	CHECK(next_manager.getPreviousStar(5) == unordered_set{if_stmt, while_stmt, read_stmt, print_stmt});
 	CHECK(next_manager.getPreviousStar(6) == unordered_set{if_stmt, while_stmt, read_stmt, print_stmt, assign_stmt});
+}
+
+TEST_CASE("PKB::NextManager Nested Container Test") {
+	/*
+	 * 1. if (...) then {
+	 * 2.   while (...) {
+	 * 3.     while (...) {
+	 * 4.       read ...;
+	 * 5.       print ...;
+	 *        }
+	 *      }
+	 *    } else {
+	 * 6.   while (...) {
+	 * 7.     if (...) then {
+	 * 8.       while (...) {
+	 * 9.         read ...;
+	 * 10.        print ...;
+	 *          }
+	 *        } else {
+	 * 11.      if (...) then {
+	 * 12.        read ...;
+	 *          } else {
+	 * 13.        print ...;
+	 *          }
+	 *        }
+	 *      }
+	 *    }
+	 */
+	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::NextManager next_manager = PKB::NextManager(cfg);
+
+	shared_ptr<StmtInfo> stmt_1 = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
+	shared_ptr<StmtInfo> stmt_2 = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> stmt_3 = TestUtilities::createStmtInfo(3, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> stmt_4 = TestUtilities::createStmtInfo(4, StmtType::Read);
+	shared_ptr<StmtInfo> stmt_5 = TestUtilities::createStmtInfo(5, StmtType::Print);
+	shared_ptr<StmtInfo> stmt_6 = TestUtilities::createStmtInfo(6, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> stmt_7 = TestUtilities::createStmtInfo(7, StmtType::IfStmt);
+	shared_ptr<StmtInfo> stmt_8 = TestUtilities::createStmtInfo(8, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> stmt_9 = TestUtilities::createStmtInfo(9, StmtType::Read);
+	shared_ptr<StmtInfo> stmt_10 = TestUtilities::createStmtInfo(10, StmtType::Print);
+	shared_ptr<StmtInfo> stmt_11 = TestUtilities::createStmtInfo(11, StmtType::IfStmt);
+	shared_ptr<StmtInfo> stmt_12 = TestUtilities::createStmtInfo(12, StmtType::Read);
+	shared_ptr<StmtInfo> stmt_13 = TestUtilities::createStmtInfo(13, StmtType::Print);
+
+	cfg.createNode(stmt_1);
+	cfg.createNode(stmt_2);
+	cfg.createNode(stmt_3);
+	cfg.createNode(stmt_4);
+	cfg.createNode(stmt_5);
+	cfg.createNode(stmt_6);
+	cfg.createNode(stmt_7);
+	cfg.createNode(stmt_8);
+	cfg.createNode(stmt_9);
+	cfg.createNode(stmt_10);
+	cfg.createNode(stmt_11);
+	cfg.createNode(stmt_12);
+	cfg.createNode(stmt_13);
+
+	next_manager.setIfNext(1, 2, 6);
+	next_manager.setIfExit(2, 6, 1);
+	next_manager.setNext(2, 3);
+	next_manager.setNext(3, 4);
+	next_manager.setNext(4, 5);
+	next_manager.setNext(5, 3);
+	next_manager.setNext(3, 2);
+	next_manager.setNext(6, 7);
+	next_manager.setNext(7, 6);
+	next_manager.setIfNext(7, 8, 11);
+	next_manager.setIfExit(8, 11, 7);
+	next_manager.setNext(8, 9);
+	next_manager.setNext(9, 10);
+	next_manager.setNext(10, 8);
+	next_manager.setIfNext(11, 12, 13);
+	next_manager.setIfExit(12, 13, 11);
+
+	cfg.optimize();
+
+	auto next_top_loop = unordered_set{stmt_2, stmt_3, stmt_4, stmt_5};
+	auto next_bottom_loop = unordered_set{stmt_6, stmt_7, stmt_8, stmt_9, stmt_10, stmt_11, stmt_12, stmt_13};
+
+	auto previous_top_loop = unordered_set{stmt_1, stmt_2, stmt_3, stmt_4, stmt_5};
+	auto previous_bottom_loop = unordered_set{stmt_1, stmt_6, stmt_7, stmt_8, stmt_9, stmt_10, stmt_11, stmt_12, stmt_13};
+
+	SECTION("Next Star Independent") {
+		SECTION("1") { CHECK(next_manager.getNextStar(1) == unordered_set{stmt_2, stmt_3, stmt_4, stmt_5, stmt_6, stmt_7, stmt_8, stmt_9, stmt_10, stmt_11, stmt_12, stmt_13}); }
+		SECTION("2") { CHECK(next_manager.getNextStar(2) == next_top_loop); }
+		SECTION("3") { CHECK(next_manager.getNextStar(3) == next_top_loop); }
+		SECTION("4") { CHECK(next_manager.getNextStar(4) == next_top_loop); }
+		SECTION("5") { CHECK(next_manager.getNextStar(5) == next_top_loop); }
+		SECTION("6") { CHECK(next_manager.getNextStar(6) == next_bottom_loop); }
+		SECTION("7") { CHECK(next_manager.getNextStar(7) == next_bottom_loop); }
+		SECTION("8") { CHECK(next_manager.getNextStar(8) == next_bottom_loop); }
+		SECTION("9") { CHECK(next_manager.getNextStar(9) == next_bottom_loop); }
+		SECTION("10") { CHECK(next_manager.getNextStar(10) == next_bottom_loop); }
+		SECTION("11") { CHECK(next_manager.getNextStar(11) == next_bottom_loop); }
+		SECTION("12") { CHECK(next_manager.getNextStar(12) == next_bottom_loop); }
+		SECTION("13") { CHECK(next_manager.getNextStar(13) == next_bottom_loop); }
+	}
+
+	SECTION("Previous Star Independent") {
+		SECTION("1") { CHECK(next_manager.getPreviousStar(1) == unordered_set<shared_ptr<StmtInfo>>{}); }
+		SECTION("2") { CHECK(next_manager.getPreviousStar(2) == previous_top_loop); }
+		SECTION("3") { CHECK(next_manager.getPreviousStar(3) == previous_top_loop); }
+		SECTION("4") { CHECK(next_manager.getPreviousStar(4) == previous_top_loop); }
+		SECTION("5") { CHECK(next_manager.getPreviousStar(5) == previous_top_loop); }
+		SECTION("6") { CHECK(next_manager.getPreviousStar(6) == previous_bottom_loop); }
+		SECTION("7") { CHECK(next_manager.getPreviousStar(7) == previous_bottom_loop); }
+		SECTION("8") { CHECK(next_manager.getPreviousStar(8) == previous_bottom_loop); }
+		SECTION("9") { CHECK(next_manager.getPreviousStar(9) == previous_bottom_loop); }
+		SECTION("10") { CHECK(next_manager.getPreviousStar(10) == previous_bottom_loop); }
+		SECTION("11") { CHECK(next_manager.getPreviousStar(11) == previous_bottom_loop); }
+		SECTION("12") { CHECK(next_manager.getPreviousStar(12) == previous_bottom_loop); }
+		SECTION("13") { CHECK(next_manager.getPreviousStar(13) == previous_bottom_loop); }
+	}
+
+	SECTION("Next Star Cache Test") {
+		CHECK(next_manager.getNextStar(8) == next_bottom_loop);
+		CHECK(next_manager.getNextStar(3) == next_top_loop);
+		CHECK(next_manager.getNextStar(1) == unordered_set{stmt_2, stmt_3, stmt_4, stmt_5, stmt_6, stmt_7, stmt_8, stmt_9, stmt_10, stmt_11, stmt_12, stmt_13});
+	}
+
+	SECTION("Previous Star Cache Test") {
+		CHECK(next_manager.getPreviousStar(1) == unordered_set<shared_ptr<StmtInfo>>{});
+		CHECK(next_manager.getPreviousStar(4) == previous_top_loop);
+		CHECK(next_manager.getPreviousStar(8) == previous_bottom_loop);
+	}
 }

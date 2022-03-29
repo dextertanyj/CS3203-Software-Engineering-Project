@@ -45,6 +45,8 @@ private:
 		TraversalInformation& traversal_information;
 	};
 
+	bool checkNextStarOptimized(const shared_ptr<StatementNode>& first_node, const shared_ptr<StatementNode>& second_node);
+
 	template <class Comparator>
 	priority_queue<shared_ptr<StatementNode>, vector<shared_ptr<StatementNode>>, Comparator> constructQueue(
 		const shared_ptr<StatementNode>& origin, TraversalInformation& info);

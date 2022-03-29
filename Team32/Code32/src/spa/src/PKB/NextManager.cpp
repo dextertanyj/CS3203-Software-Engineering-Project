@@ -4,6 +4,14 @@
 #include <cassert>
 #include <queue>
 
+struct LessComparator {
+	bool operator()(const shared_ptr<PKB::StatementNode> &lhs, const shared_ptr<PKB::StatementNode> &rhs) const { return *lhs < *rhs; }
+};
+
+struct GreaterComparator {
+	bool operator()(const shared_ptr<PKB::StatementNode> &lhs, const shared_ptr<PKB::StatementNode> &rhs) const { return *lhs > *rhs; }
+};
+
 PKB::NextManager::NextManager(ControlFlowGraph &control_flow_graph) : control_flow_graph(&control_flow_graph) {}
 
 void PKB::NextManager::setNext(StmtRef previous, StmtRef next) {
@@ -68,8 +76,21 @@ bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
 }
 
 bool PKB::NextManager::checkNextStar(StmtRef first, StmtRef second) {
-	StmtInfoPtrSet nexts = getNextStar(first);
-	return any_of(nexts.begin(), nexts.end(), [&second](const shared_ptr<StmtInfo> &info) { return info->getIdentifier() == second; });
+	if (next_cache.find(first) != next_cache.end()) {
+		StmtInfoPtrSet next_set = next_cache.at(first);
+		return any_of(next_set.begin(), next_set.end(), [&](const shared_ptr<StmtInfo> &info) { return info->getIdentifier() == second; });
+	}
+	if (previous_cache.find(second) != previous_cache.end()) {
+		StmtInfoPtrSet previous_set = previous_cache.at(second);
+		return any_of(previous_set.begin(), previous_set.end(),
+		              [&](const shared_ptr<StmtInfo> &info) { return info->getIdentifier() == first; });
+	}
+	auto first_node = control_flow_graph->getNode(first);
+	auto second_node = control_flow_graph->getNode(second);
+	if (first_node->getGraphIndex() != second_node->getGraphIndex()) {
+		return false;
+	}
+	return checkNextStarOptimized(first_node, second_node);
 }
 
 StmtInfoPtrSet PKB::NextManager::getNext(StmtRef node_ref) {
@@ -87,14 +108,6 @@ StmtInfoPtrSet PKB::NextManager::getNext(StmtRef node_ref) {
 	return next_nodes;
 }
 
-struct NextComparator {
-	bool operator()(const shared_ptr<PKB::StatementNode> &lhs, const shared_ptr<PKB::StatementNode> &rhs) { return *lhs < *rhs; }
-};
-
-struct PreviousComparator {
-	bool operator()(const shared_ptr<PKB::StatementNode> &lhs, const shared_ptr<PKB::StatementNode> &rhs) { return *lhs > *rhs; }
-};
-
 StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 	if (next_cache.find(node_ref) != next_cache.end()) {
 		return next_cache.find(node_ref)->second;
@@ -102,8 +115,8 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 	shared_ptr<StatementNode> target = control_flow_graph->getNode(node_ref);
 	TraversalInformation info = {next_cache, &NodeInterface::getNextNodes, &NextManager::processLoopExit,
 	                             &ControlFlowGraph::collectNextOfDummy};
-	priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementNode>>, NextComparator> queue =
-		constructQueue<NextComparator>(target, info);
+	priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementNode>>, LessComparator> queue =
+		constructQueue<LessComparator>(target, info);
 	while (!queue.empty()) {
 		shared_ptr<StatementNode> current_node = queue.top();
 		queue.pop();
@@ -135,8 +148,8 @@ StmtInfoPtrSet PKB::NextManager::getPreviousStar(StmtRef node_ref) {
 	shared_ptr<StatementNode> target = control_flow_graph->getNode(node_ref);
 	TraversalInformation info = {previous_cache, &NodeInterface::getPreviousNodes, &NextManager::processLoopEntry,
 	                             &ControlFlowGraph::collectPreviousOfDummy};
-	priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementNode>>, PreviousComparator> queue =
-		constructQueue<PreviousComparator>(target, info);
+	priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementNode>>, GreaterComparator> queue =
+		constructQueue<GreaterComparator>(target, info);
 	while (!queue.empty()) {
 		shared_ptr<StatementNode> current_node = queue.top();
 		queue.pop();
@@ -148,6 +161,32 @@ StmtInfoPtrSet PKB::NextManager::getPreviousStar(StmtRef node_ref) {
 void PKB::NextManager::resetCache() {
 	next_cache.clear();
 	previous_cache.clear();
+}
+
+bool PKB::NextManager::checkNextStarOptimized(const shared_ptr<StatementNode> &first_node, const shared_ptr<StatementNode> &second_node) {
+	StmtRef first = first_node->getNodeRef();
+	StmtRef second = second_node->getNodeRef();
+	auto start = control_flow_graph->getStart(first_node->getGraphIndex());
+	auto end = control_flow_graph->getEnd(first_node->getGraphIndex());
+	shared_ptr<StatementNode> true_start = dynamic_pointer_cast<StatementNode>(start);
+	shared_ptr<StatementNode> true_end;
+	if (end->getNodeType() == NodeType::Dummy) {
+		set<shared_ptr<StatementNode>, LessComparator> set;
+		handleDummyNodeSearch(set, end, &ControlFlowGraph::collectPreviousOfDummy);
+		assert(!set.empty());
+		true_end = *set.rbegin();
+	} else {
+		true_end = dynamic_pointer_cast<StatementNode>(start);
+	}
+	size_t distance_to_end = true_end->getNodeRef() - first_node->getNodeRef();
+	size_t distance_to_start = second_node->getNodeRef() - true_start->getNodeRef();
+	if (distance_to_end < distance_to_start) {
+		StmtInfoPtrSet next_set = getNextStar(first);
+		return any_of(next_set.begin(), next_set.end(), [&](const shared_ptr<StmtInfo> &info) { return info->getIdentifier() == second; });
+	}
+	StmtInfoPtrSet previous_set = getPreviousStar(second);
+	return any_of(previous_set.begin(), previous_set.end(),
+	              [&](const shared_ptr<StmtInfo> &info) { return info->getIdentifier() == first; });
 }
 
 template <class Comparator>
