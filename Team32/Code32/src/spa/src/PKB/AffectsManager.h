@@ -20,8 +20,8 @@ public:
 	bool checkAffectsStar(StmtRef first, StmtRef second);
 	StmtInfoPtrSet getAffects(StmtRef first);
 	StmtInfoPtrSet getAffected(StmtRef second);
-	StmtInfoPtrSet getAffectsStar(StmtRef node_ref);
-	StmtInfoPtrSet getAffectedStar(StmtRef node_ref);
+	StmtInfoPtrSet getAffectsStar(StmtRef node_ref, StmtRefSet &visited_star_set);
+	StmtInfoPtrSet getAffectedStar(StmtRef node_ref, StmtRefSet &visited_star_set);
 
 private:
 	ControlFlowGraph *control_flow_graph;
