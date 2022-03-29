@@ -44,28 +44,38 @@ struct QP::Dispatcher::DispatchMap {
 		{"Uses", Types::ClauseType::UnknownUses},
 	};
 
-	unordered_set<Types::ReferenceType> stmt_ref_set = { Types::ReferenceType::StatementIndex, Types::ReferenceType::Wildcard, Types::ReferenceType::Synonym };
-	unordered_set<Types::ReferenceType> ent_ref_set = { Types::ReferenceType::Name, Types::ReferenceType::Wildcard, Types::ReferenceType::Synonym };
-	unordered_set<Types::ReferenceType> stmt_ent_ref_set = { Types::ReferenceType::Name, Types::ReferenceType::StatementIndex, Types::ReferenceType::Wildcard, Types::ReferenceType::Synonym };
-	unordered_set<Types::ReferenceType> expr_ref_set = { Types::ReferenceType::ExactExpression, Types::ReferenceType::SubExpression, Types::ReferenceType::Wildcard };
-	unordered_set<Types::ReferenceType> wildcard_set = {Types::ReferenceType::Wildcard };
-	unordered_set<Types::ReferenceType> attribute_set = { Types::ReferenceType::Attribute, Types::ReferenceType::Name, Types::ReferenceType::StatementIndex };
+	unordered_set<Types::ReferenceType> name_wildcard = {Types::ReferenceType::Name, Types::ReferenceType::Wildcard};
+	unordered_set<Types::ReferenceType> statement = {Types::ReferenceType::StatementIndex, Types::ReferenceType::Wildcard,
+	                                                    Types::ReferenceType::Synonym};
+	unordered_set<Types::ReferenceType> entity = {Types::ReferenceType::Name, Types::ReferenceType::Wildcard,
+	                                                   Types::ReferenceType::Synonym};
+	unordered_set<Types::ReferenceType> statement_entity = {Types::ReferenceType::Name, Types::ReferenceType::StatementIndex,
+	                                                        Types::ReferenceType::Wildcard, Types::ReferenceType::Synonym};
+	unordered_set<Types::ReferenceType> expression = {Types::ReferenceType::ExactExpression, Types::ReferenceType::SubExpression,
+	                                                    Types::ReferenceType::Wildcard};
+	unordered_set<Types::ReferenceType> wildcard = {Types::ReferenceType::Wildcard};
+	unordered_set<Types::ReferenceType> attribute = {Types::ReferenceType::Attribute, Types::ReferenceType::Name,
+	                                                     Types::ReferenceType::StatementIndex};
 
 	unordered_map<Types::ClauseType, vector<unordered_set<Types::ReferenceType>>> syntax_map = {
-		{Types::ClauseType::Calls, {ent_ref_set, ent_ref_set}},
-		{Types::ClauseType::CallsT, {ent_ref_set, ent_ref_set}},
-		{Types::ClauseType::Follows, {stmt_ref_set, stmt_ref_set}},
-		{Types::ClauseType::FollowsT, {stmt_ref_set, stmt_ref_set}},
-		{Types::ClauseType::UnknownModifies, {stmt_ent_ref_set, ent_ref_set}},
-		{Types::ClauseType::Next, {stmt_ref_set, stmt_ref_set}},
-		{Types::ClauseType::NextT, {stmt_ref_set, stmt_ref_set}},
-		{Types::ClauseType::Parent, {stmt_ref_set, stmt_ref_set}},
-		{Types::ClauseType::ParentT, {stmt_ref_set, stmt_ref_set}},
-		{Types::ClauseType::PatternAssign, {ent_ref_set, ent_ref_set}},
-		{Types::ClauseType::PatternWhile, {wildcard_set, wildcard_set}},
-		{Types::ClauseType::PatternIf, {wildcard_set, wildcard_set, wildcard_set}},
-		{Types::ClauseType::UnknownUses, {stmt_ent_ref_set, ent_ref_set}},
-		{Types::ClauseType::With, {attribute_set, attribute_set}}
+		{Types::ClauseType::Calls, {entity, entity}},
+		{Types::ClauseType::CallsT, {entity, entity}},
+		{Types::ClauseType::Follows, {statement, statement}},
+		{Types::ClauseType::FollowsT, {statement, statement}},
+		{Types::ClauseType::UnknownModifies, {statement_entity, entity}},
+		{Types::ClauseType::Next, {statement, statement}},
+		{Types::ClauseType::NextT, {statement, statement}},
+		{Types::ClauseType::Parent, {statement, statement}},
+		{Types::ClauseType::ParentT, {statement, statement}},
+		{Types::ClauseType::PatternAssign, {statement, entity, expression}},
+		{Types::ClauseType::PatternWhile, {statement, entity, wildcard}},
+		{Types::ClauseType::PatternIf, {statement, entity, wildcard, wildcard}},
+		{Types::ClauseType::UnknownUses, {statement_entity, entity}},
+		{Types::ClauseType::With, {attribute, attribute}}};
+
+	unordered_map<size_t, vector<unordered_set<Types::ReferenceType>>> pattern_syntax_map = {
+		{2, {entity, name_wildcard}},
+		{3, {entity, wildcard, wildcard}},
 	};
 
 	unordered_map<Types::DesignEntity, Types::ClauseType> pattern_clause_map = {

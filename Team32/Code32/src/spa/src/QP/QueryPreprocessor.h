@@ -48,14 +48,19 @@ private:
 
 	optional<Types::DesignEntity> parseDesignEntity();
 	Declaration parseClauseSynonym();
-	vector<Types::ReferenceArgument> parseArguments();
+	vector<Types::ReferenceArgument> parseArgumentList(Types::ReferenceArgument (QueryPreprocessor::*parser)());
+	Types::ReferenceArgument parsePatternArgument();
 	Types::ReferenceArgument parseReferenceArgument();
-	Types::ReferenceArgument parseSelectArgument();
-	Common::ExpressionProcessor::Expression parseExpression();
+	Types::ReferenceArgument parseArgument(optional<Types::ReferenceArgument> (QueryPreprocessor::*parser)());
+	optional<Types::ReferenceArgument> tryParseReferenceArgument();
+	optional<Types::ReferenceArgument> tryParseSelectArgument();
+	optional<Types::ReferenceArgument> tryParseExpressionArgument();
 
 	void matchTokenOrThrow(const string& token);
 	void reset();
 	void validateSyntax(QP::Types::ClauseType type, vector<QP::Types::ReferenceArgument> arguments);
+	void validateUnknownPatternSyntax();
+	void logSemanticException(const string&& message);
 
 
 	size_t token_index;
@@ -65,7 +70,7 @@ private:
 	Types::ClauseList clause_list;
 
 	QP::Dispatcher::DispatchMap dispatcher;
-	bool is_semantically_invalid;
+	optional<string> semantic_exception_message;
 
 	static regex invalid_chars_regex;
 	static regex query_token_regex;
