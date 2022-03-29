@@ -31,7 +31,7 @@ Select Boolean such that Uses(p, "x") and Parent(6, 9) such that Modifies("mars"
 7 - Boolean invalid clause negative
 stmt s; variable v;
 Select BOOLEAN such that Calls(s, "mars") and Parent(6, 9) such that Modifies("mars", v)
-
+FALSE
 5000
 8 - Boolean Same Name Synonym
 stmt BOOLEAN;
