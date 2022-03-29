@@ -686,15 +686,14 @@ TEST_CASE("PKB::AffectsManager::getAffectsStar Test") {
 	CHECK_NOTHROW(next_manager.setNext(2, 3));
 	CHECK_NOTHROW(next_manager.setNext(3, 2));
 	CHECK_NOTHROW(next_manager.setNext(2, 4));
-	CHECK_NOTHROW(next_manager.setNext(4, 5));
+	CHECK_NOTHROW(next_manager.setIfNext(4, 5, 10));
 	CHECK_NOTHROW(next_manager.setNext(5, 6));
 	CHECK_NOTHROW(next_manager.setNext(6, 7));
 	CHECK_NOTHROW(next_manager.setNext(7, 8));
 	CHECK_NOTHROW(next_manager.setNext(8, 9));
 	CHECK_NOTHROW(next_manager.setNext(9, 7));
-	CHECK_NOTHROW(next_manager.setNext(4, 10));
-	CHECK_NOTHROW(next_manager.setNext(10, 11));
-	CHECK_NOTHROW(next_manager.setNext(7, 11));
+	CHECK_NOTHROW(next_manager.setIfExit(7, 10, 4));
+	CHECK_NOTHROW(next_manager.setNext(4, 11));
 
 	StmtRefSet visited_star_set = {};
 	REQUIRE(affects_manager.getAffectsStar(1, visited_star_set) ==
@@ -792,15 +791,14 @@ TEST_CASE("PKB::AffectsManager::getAffectedStar Test") {
 	CHECK_NOTHROW(next_manager.setNext(2, 3));
 	CHECK_NOTHROW(next_manager.setNext(3, 2));
 	CHECK_NOTHROW(next_manager.setNext(2, 4));
-	CHECK_NOTHROW(next_manager.setNext(4, 5));
+	CHECK_NOTHROW(next_manager.setIfNext(4, 5, 10));
 	CHECK_NOTHROW(next_manager.setNext(5, 6));
 	CHECK_NOTHROW(next_manager.setNext(6, 7));
 	CHECK_NOTHROW(next_manager.setNext(7, 8));
 	CHECK_NOTHROW(next_manager.setNext(8, 9));
 	CHECK_NOTHROW(next_manager.setNext(9, 7));
-	CHECK_NOTHROW(next_manager.setNext(4, 10));
-	CHECK_NOTHROW(next_manager.setNext(10, 11));
-	CHECK_NOTHROW(next_manager.setNext(7, 11));
+	CHECK_NOTHROW(next_manager.setIfExit(7, 10, 4));
+	CHECK_NOTHROW(next_manager.setNext(4, 11));
 
 	StmtRefSet visited_star_set = {};
 	REQUIRE(affects_manager.getAffectedStar(1, visited_star_set).empty());
