@@ -116,7 +116,7 @@ bool PKB::AffectsManager::checkAffectsStar(StmtRef first, StmtRef second) {
 	              [&](const shared_ptr<StmtInfo> &info) { return info->getIdentifier() == second; });
 }
 
-StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref, StmtRefSet &visited_star_set) {
+StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref, StmtRefSet visited_star_set) {
 	// Check affects* cache here for early termination.
 	if (affects_star_cache.find(node_ref) != affects_star_cache.end()) {
 		return affects_star_cache.at(node_ref);
@@ -136,7 +136,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref, StmtRefSet 
 	return result;
 }
 
-StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref, StmtRefSet &visited_star_set) {
+StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref, StmtRefSet visited_star_set) {
 	// Check affected* cache here for early termination.
 	if (affected_by_star_cache.find(node_ref) != affected_by_star_cache.end()) {
 		return affected_by_star_cache.at(node_ref);

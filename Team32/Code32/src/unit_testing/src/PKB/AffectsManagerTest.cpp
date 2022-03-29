@@ -593,14 +593,14 @@ TEST_CASE("PKB::AffectsManager::checkAffectsStar Test") {
 	CHECK_NOTHROW(next_manager.setNext(2, 3));
 	CHECK_NOTHROW(next_manager.setNext(3, 2));
 	CHECK_NOTHROW(next_manager.setNext(2, 4));
-	CHECK_NOTHROW(next_manager.setIfNext(4, 5, 10));
+	CHECK_NOTHROW(next_manager.setNext(4, 5));
 	CHECK_NOTHROW(next_manager.setNext(5, 6));
 	CHECK_NOTHROW(next_manager.setNext(6, 7));
 	CHECK_NOTHROW(next_manager.setNext(7, 8));
+	CHECK_NOTHROW(next_manager.setNext(7, 4));
 	CHECK_NOTHROW(next_manager.setNext(8, 9));
 	CHECK_NOTHROW(next_manager.setNext(9, 7));
-	CHECK_NOTHROW(next_manager.setIfExit(7, 10, 4));
-	CHECK_NOTHROW(next_manager.setNext(4, 11));
+	CHECK_NOTHROW(next_manager.setNext(4, 10));
 
 	REQUIRE(affects_manager.checkAffectsStar(1, 6));
 	REQUIRE(affects_manager.checkAffectsStar(3, 6));
