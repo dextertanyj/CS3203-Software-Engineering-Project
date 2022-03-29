@@ -696,19 +696,30 @@ TEST_CASE("PKB::AffectsManager::getAffectsStar Test") {
 	CHECK_NOTHROW(next_manager.setNext(10, 11));
 	CHECK_NOTHROW(next_manager.setNext(7, 11));
 
-	REQUIRE(affects_manager.getAffectsStar(1, {}) ==
+	StmtRefSet visited_star_set = {};
+	REQUIRE(affects_manager.getAffectsStar(1, visited_star_set) ==
 	        StmtInfoPtrSet{assign_stmt_3, assign_stmt_5, assign_stmt_6, assign_stmt_10, assign_stmt_11});
-	REQUIRE_THROWS(affects_manager.getAffectsStar(2, {}));
-	REQUIRE(affects_manager.getAffectsStar(3, {}) ==
+	visited_star_set = {};
+	REQUIRE_THROWS(affects_manager.getAffectsStar(2, visited_star_set));
+	visited_star_set = {};
+	REQUIRE(affects_manager.getAffectsStar(3, visited_star_set) ==
 	        StmtInfoPtrSet{assign_stmt_3, assign_stmt_5, assign_stmt_6, assign_stmt_10, assign_stmt_11});
-	REQUIRE_THROWS(affects_manager.getAffectsStar(4, {}));
-	REQUIRE(affects_manager.getAffectsStar(5, {}) == StmtInfoPtrSet{assign_stmt_6, assign_stmt_11});
-	REQUIRE(affects_manager.getAffectsStar(6, {}) == StmtInfoPtrSet{assign_stmt_11});
-	REQUIRE_THROWS(affects_manager.getAffectsStar(7, {}));
-	REQUIRE_THROWS(affects_manager.getAffectsStar(8, {}));
-	REQUIRE(affects_manager.getAffectsStar(9, {}) == StmtInfoPtrSet{assign_stmt_11});
-	REQUIRE(affects_manager.getAffectsStar(10, {}) == StmtInfoPtrSet{assign_stmt_11});
-	REQUIRE(affects_manager.getAffectsStar(11, {}).empty());
+	visited_star_set = {};
+	REQUIRE_THROWS(affects_manager.getAffectsStar(4, visited_star_set));
+	visited_star_set = {};
+	REQUIRE(affects_manager.getAffectsStar(5, visited_star_set) == StmtInfoPtrSet{assign_stmt_6, assign_stmt_11});
+	visited_star_set = {};
+	REQUIRE(affects_manager.getAffectsStar(6, visited_star_set) == StmtInfoPtrSet{assign_stmt_11});
+	visited_star_set = {};
+	REQUIRE_THROWS(affects_manager.getAffectsStar(7, visited_star_set));
+	visited_star_set = {};
+	REQUIRE_THROWS(affects_manager.getAffectsStar(8, visited_star_set));
+	visited_star_set = {};
+	REQUIRE(affects_manager.getAffectsStar(9, visited_star_set) == StmtInfoPtrSet{assign_stmt_11});
+	visited_star_set = {};
+	REQUIRE(affects_manager.getAffectsStar(10, visited_star_set) == StmtInfoPtrSet{assign_stmt_11});
+	visited_star_set = {};
+	REQUIRE(affects_manager.getAffectsStar(11, visited_star_set).empty());
 }
 
 TEST_CASE("PKB::AffectsManager::getAffectedStar Test") {
@@ -791,16 +802,27 @@ TEST_CASE("PKB::AffectsManager::getAffectedStar Test") {
 	CHECK_NOTHROW(next_manager.setNext(10, 11));
 	CHECK_NOTHROW(next_manager.setNext(7, 11));
 
-	REQUIRE(affects_manager.getAffectedStar(1, {}).empty());
-	REQUIRE_THROWS(affects_manager.getAffectedStar(2, {}));
-	REQUIRE(affects_manager.getAffectsStar(3, {}) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3});
-	REQUIRE_THROWS(affects_manager.getAffectedStar(4, {}));
-	REQUIRE(affects_manager.getAffectsStar(5, {}) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3});
-	REQUIRE(affects_manager.getAffectsStar(6, {}) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3, assign_stmt_5});
-	REQUIRE_THROWS(affects_manager.getAffectedStar(7, {}));
-	REQUIRE_THROWS(affects_manager.getAffectedStar(8, {}));
-	REQUIRE(affects_manager.getAffectsStar(9, {}).empty());
-	REQUIRE(affects_manager.getAffectsStar(10, {}) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3});
-	REQUIRE(affects_manager.getAffectsStar(11, {}) ==
+	StmtRefSet visited_star_set = {};
+	REQUIRE(affects_manager.getAffectedStar(1, visited_star_set).empty());
+	visited_star_set = {};
+	REQUIRE_THROWS(affects_manager.getAffectedStar(2, visited_star_set));
+	visited_star_set = {};
+	REQUIRE(affects_manager.getAffectsStar(3, visited_star_set) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3});
+	visited_star_set = {};
+	REQUIRE_THROWS(affects_manager.getAffectedStar(4, visited_star_set));
+	visited_star_set = {};
+	REQUIRE(affects_manager.getAffectsStar(5, visited_star_set) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3});
+	visited_star_set = {};
+	REQUIRE(affects_manager.getAffectsStar(6, visited_star_set) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3, assign_stmt_5});
+	visited_star_set = {};
+	REQUIRE_THROWS(affects_manager.getAffectedStar(7, visited_star_set));
+	visited_star_set = {};
+	REQUIRE_THROWS(affects_manager.getAffectedStar(8, visited_star_set));
+	visited_star_set = {};
+	REQUIRE(affects_manager.getAffectsStar(9, visited_star_set).empty());
+	visited_star_set = {};
+	REQUIRE(affects_manager.getAffectsStar(10, visited_star_set) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3});
+	visited_star_set = {};
+	REQUIRE(affects_manager.getAffectsStar(11, visited_star_set) ==
 	        StmtInfoPtrSet{assign_stmt_1, assign_stmt_3, assign_stmt_5, assign_stmt_6, assign_stmt_9, assign_stmt_10});
 }
