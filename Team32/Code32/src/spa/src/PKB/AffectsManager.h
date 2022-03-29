@@ -1,6 +1,8 @@
 #ifndef SPA_AFFECTSMANAGER_H
 #define SPA_AFFECTSMANAGER_H
 
+#include <unordered_map>
+
 #include "PKB/CFG/ControlFlowGraph.h"
 #include "PKB/CFG/StatementNode.h"
 #include "PKB/ModifiesSRelation.h"
@@ -25,6 +27,8 @@ private:
 	ControlFlowGraph *control_flow_graph;
 	SVRelationStore<PKB::UsesSRelation> *uses_store;
 	SVRelationStore<PKB::ModifiesSRelation> *modifies_store;
+	unordered_map<StmtRef, StmtInfoPtrSet> affects_cache;
+	unordered_map<StmtRef, StmtInfoPtrSet> affected_by_cache;
 	StmtInfoPtrSet getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode> &node, VarRef variable);
 	void processDFSVisit(Types::DFSInfo &info, StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface> &),
 	                     void (AffectsManager::*processor)(Types::DFSInfo &, const shared_ptr<PKB::StatementNode> &));

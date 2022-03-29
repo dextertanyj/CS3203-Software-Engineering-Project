@@ -11,10 +11,16 @@ bool PKB::AffectsManager::checkAffects(StmtRef first, StmtRef second) {
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
+	// Check if statement already exists in cache
+	if (affects_cache.find(first) != affects_cache.end()) {
+		return affects_cache.at(first);
+	}
+
 	shared_ptr<PKB::StatementNode> start_node = this->control_flow_graph->getNode(first);
 	if (start_node->getStmtInfo()->getType() != StmtType::Assign) {
 		throw invalid_argument("Affects statement must be an assign statement.");
 	}
+
 	VarRef variable = *(modifies_store->getByStmt(first).begin());
 	Types::DFSInfo info = {std::move(variable), {}, {}, {}};
 	for (const auto &neighbour : start_node->getNextNodes()) {
@@ -23,10 +29,17 @@ StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
 	while (!info.node_stack.empty()) {
 		processDFSVisit(info, &ControlFlowGraph::collectNextOfDummy, &AffectsManager::processNodeAffects);
 	}
+
+	affects_cache.insert({first, info.nodes});
 	return info.nodes;
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
+	// Check if statement already exists in cache
+	if (affected_by_cache.find(second) != affected_by_cache.end()) {
+		return affected_by_cache.at(second);
+	}
+
 	shared_ptr<PKB::StatementNode> node = this->control_flow_graph->getNode(second);
 	if (node->getStmtInfo()->getType() != StmtType::Assign) {
 		throw invalid_argument("Affects statement must be an assign statement.");
@@ -37,6 +50,8 @@ StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
 		StmtInfoPtrSet affected = getAffectedByNodeAndVar(node, variable);
 		affected_set.insert(affected.begin(), affected.end());
 	}
+
+	affected_by_cache.insert({second, affected_set});
 	return affected_set;
 }
 
