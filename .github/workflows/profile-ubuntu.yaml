@@ -26,7 +26,7 @@ jobs:
       - name: Build project
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE --parallel 4 --target spa unit_testing integration_testing profiler
+        run: cmake --build . --config $BUILD_TYPE --parallel 2 --target spa unit_testing integration_testing profiler
 
       - name: Run unit tests
         working-directory: ${{runner.workspace}}/build
