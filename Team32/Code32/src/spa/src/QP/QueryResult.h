@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <set>
 
 #include "Common/TypeDefs.h"
 #include "QP/QP.h"
@@ -27,10 +28,14 @@ public:
 	void addRow(const ResultRow& row);
 	void filterBySelect(const QP::Types::DeclarationList& select_list);
 	static QueryResult joinResults(vector<QueryResult>& result);
+	static QueryResult joinIntraGroupResults(vector<QueryResult>& result);
 
 private:
 	bool result;
 	ResultTable table;
+	static bool compareLength(QueryResult result1, QueryResult result2);
+	static unordered_map<string, vector<size_t>> getSynonymIndexMap(vector<QueryResult>& results);
+
 };
 
 #endif  // SPA_SRC_QP_QUERYRESULT_H
