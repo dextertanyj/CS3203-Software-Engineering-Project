@@ -16,18 +16,7 @@
 using namespace std;
 
 namespace QP::Types {
-enum class DesignEntity {
-	Stmt,
-	Read,
-	Print,
-	Call,
-	While,
-	If,
-	Assign,
-	Variable,
-	Constant,
-	Procedure
-};
+enum class DesignEntity { Stmt, Read, Print, Call, While, If, Assign, Variable, Constant, Procedure };
 
 enum class ClauseType {
 	Affects,

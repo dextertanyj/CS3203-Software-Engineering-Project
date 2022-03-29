@@ -1,8 +1,9 @@
 #ifndef SPA_SRC_QP_DISPATCHER_DISPATCHPROCESSORS_TPP
 #define SPA_SRC_QP_DISPATCHER_DISPATCHPROCESSORS_TPP
 
-#include <cassert>
 #include "QP/Dispatcher/DispatchProcessors.h"
+
+#include <cassert>
 
 template <typename T>
 QP::Types::ExecutorSetFactory processArgumentRecurse(T map, const vector<QP::Types::ReferenceArgument>& args) {

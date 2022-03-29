@@ -277,7 +277,7 @@ optional<QP::Types::ReferenceArgument> QP::QueryPreprocessor::tryParseReferenceA
 		token_index++;
 		return Types::ReferenceArgument(stoul(this->query_tokens.at(token_index - 1)));
 	}
-	if (this->query_tokens.at(token_index) == "\"" && Common::Validator::validateName(this->query_tokens.at(token_index + 1)) ) {
+	if (this->query_tokens.at(token_index) == "\"" && Common::Validator::validateName(this->query_tokens.at(token_index + 1))) {
 		token_index += 2;
 		match("\"");
 		return Types::ReferenceArgument(this->query_tokens.at(token_index - 2));
@@ -301,7 +301,6 @@ QP::Types::ReferenceArgument QP::QueryPreprocessor::parseAttribute() {
 	auto token_iter = dispatcher.attribute_token_map.find(query_tokens.at(token_index));
 	if (token_iter == dispatcher.attribute_token_map.end()) {
 		throw QP::QuerySyntaxException("Invalid attribute type.");
-
 	}
 	auto iter = dispatcher.attribute_map.find({synonym.type, token_iter->second});
 	token_index++;

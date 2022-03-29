@@ -49,16 +49,16 @@ struct QP::Dispatcher::DispatchMap {
 
 	unordered_set<Types::ReferenceType> name_wildcard = {Types::ReferenceType::Name, Types::ReferenceType::Wildcard};
 	unordered_set<Types::ReferenceType> statement = {Types::ReferenceType::StatementIndex, Types::ReferenceType::Wildcard,
-	                                                    Types::ReferenceType::Synonym};
+	                                                 Types::ReferenceType::Synonym};
 	unordered_set<Types::ReferenceType> entity = {Types::ReferenceType::Name, Types::ReferenceType::Wildcard,
-	                                                   Types::ReferenceType::Synonym};
+	                                              Types::ReferenceType::Synonym};
 	unordered_set<Types::ReferenceType> statement_entity = {Types::ReferenceType::Name, Types::ReferenceType::StatementIndex,
 	                                                        Types::ReferenceType::Wildcard, Types::ReferenceType::Synonym};
 	unordered_set<Types::ReferenceType> expression = {Types::ReferenceType::ExactExpression, Types::ReferenceType::SubExpression,
-	                                                    Types::ReferenceType::Wildcard};
+	                                                  Types::ReferenceType::Wildcard};
 	unordered_set<Types::ReferenceType> wildcard = {Types::ReferenceType::Wildcard};
 	unordered_set<Types::ReferenceType> attribute = {Types::ReferenceType::Attribute, Types::ReferenceType::Name,
-	                                                     Types::ReferenceType::StatementIndex};
+	                                                 Types::ReferenceType::StatementIndex};
 
 	unordered_map<Types::ClauseType, vector<unordered_set<Types::ReferenceType>>> syntax_map = {
 		{Types::ClauseType::Calls, {entity, entity}},
@@ -86,12 +86,10 @@ struct QP::Dispatcher::DispatchMap {
 		{Types::DesignEntity::While, Types::ClauseType::PatternWhile},
 	};
 
-	unordered_map<string, Types::AttributeToken> attribute_token_map = {
-		{"stmt#", Types::AttributeToken::StatementIndex},
-		{"varName", Types::AttributeToken::VariableName},
-		{"procName", Types::AttributeToken::ProcedureName},
-		{"value", Types::AttributeToken::Value}
-	};
+	unordered_map<string, Types::AttributeToken> attribute_token_map = {{"stmt#", Types::AttributeToken::StatementIndex},
+	                                                                    {"varName", Types::AttributeToken::VariableName},
+	                                                                    {"procName", Types::AttributeToken::ProcedureName},
+	                                                                    {"value", Types::AttributeToken::Value}};
 
 	unordered_map<pair<Types::DesignEntity, Types::AttributeToken>, Types::AttributeType> attribute_map = {
 		{{Types::DesignEntity::Stmt, Types::AttributeToken::StatementIndex}, Types::AttributeType::NumberIdentifier},
