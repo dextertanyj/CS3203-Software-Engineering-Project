@@ -1,5 +1,7 @@
 #include "QP/Relationship/Relation.h"
 
+#include "QP/QueryUtils.h"
+
 QP::Relationship::Relation::Relation(Types::ClauseType type, vector<Types::ReferenceArgument> arguments, Types::ExecutorSet executor)
 	: type(type), arguments(move(arguments)), executor(move(executor)) {}
 
@@ -32,4 +34,9 @@ QP::QueryResult QP::Relationship::Relation::execute(const QP::StorageAdapter& pk
 	              [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.second(pkb); }},
 	      executor);
 	return result;
+}
+
+size_t QP::Relationship::Relation::getCost() const {
+	size_t number_of_declarations = getDeclarationSymbols().size();
+	return QP::Utilities::cost_map[type] * number_of_declarations;
 }

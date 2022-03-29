@@ -10,10 +10,12 @@
 #include "QP/Relationship/Relation.h"
 
 using namespace std;
+using QP::Types::Clause;
 using QP::Types::ClauseList;
 using QP::Types::ConnectedSynonyms;
 using QP::Types::DeclarationList;
 using QP::Types::Node;
+using QP::Types::Edge;
 
 class QP::QueryGraph {
 public:
@@ -21,11 +23,14 @@ public:
 	void setEdges(const ClauseList& clause_list);
 	unordered_map<string, Node> getNodes();
 	ConnectedSynonyms getConnectedSynonyms(const DeclarationList& select_list);
+	ClauseList sortGroup(size_t group_number);
 
 private:
 	unordered_map<string, Node> nodes;
-	void setEdge(const shared_ptr<Relationship::Relation>& relation);
-	void addEdge(const pair<string, string>& symbols);
+	ConnectedSynonyms connected_synonyms;
+	void setEdge(const Clause& clause);
+	void addEdge(const pair<string, string>& symbols, const Clause& clause);
+	string getCheapestNodeInGroup(size_t group_number);
 };
 
 #endif  // SPA_SRC_QP_QUERYGRAPH_H

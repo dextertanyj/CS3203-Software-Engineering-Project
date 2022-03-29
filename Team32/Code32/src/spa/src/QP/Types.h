@@ -84,9 +84,17 @@ typedef struct Clause {
 	shared_ptr<Relationship::Relation> relation;
 } Clause;
 
+typedef struct Edge {
+	string node_one_symbol;
+	string node_two_symbol;
+	Clause clause;
+	size_t weight;
+} Edge;
+
 typedef struct Node {
 	string declaration_symbol;
-	vector<string> adjacent_symbols;
+	unordered_set<string> adjacent_symbols;
+	vector<Edge> connectingEdges;
 } Node;
 
 // Types for attribute selection
