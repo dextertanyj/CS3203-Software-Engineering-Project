@@ -117,40 +117,40 @@ bool PKB::AffectsManager::checkAffectsStar(StmtRef first, StmtRef second) {
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref, StmtRefSet visited_star_set) {
+	visited_star_set.insert(node_ref);
 	// Check affects* cache here for early termination.
 	if (affects_star_cache.find(node_ref) != affects_star_cache.end()) {
 		return affects_star_cache.at(node_ref);
 	}
-	visited_star_set.insert(node_ref);
 	StmtInfoPtrSet affects_set = getAffects(node_ref);
 	StmtInfoPtrSet result;
 	for (auto node : affects_set) {
+		result.insert(node);
 		if (visited_star_set.find(node->getIdentifier()) == visited_star_set.end()) {
 			StmtInfoPtrSet child_affects_set = getAffectsStar(node->getIdentifier(), visited_star_set);
 			result.insert(child_affects_set.begin(), child_affects_set.end());
 		}
 	}
-	result.insert(affects_set.begin(), affects_set.end());
 	// Store into affects* cache.
 	affects_star_cache.insert({node_ref, result});
 	return result;
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref, StmtRefSet visited_star_set) {
+	visited_star_set.insert(node_ref);
 	// Check affected* cache here for early termination.
 	if (affected_by_star_cache.find(node_ref) != affected_by_star_cache.end()) {
 		return affected_by_star_cache.at(node_ref);
 	}
-	visited_star_set.insert(node_ref);
 	StmtInfoPtrSet affected_set = getAffected(node_ref);
 	StmtInfoPtrSet result;
 	for (auto node : affected_set) {
+		result.insert(node);
 		if (visited_star_set.find(node->getIdentifier()) == visited_star_set.end()) {
 			StmtInfoPtrSet parent_affected_set = getAffectedStar(node->getIdentifier(), visited_star_set);
 			result.insert(parent_affected_set.begin(), parent_affected_set.end());
 		}
 	}
-	result.insert(affected_set.begin(), affected_set.end());
 	// Store into affected* cache.
 	affected_by_star_cache.insert({node_ref, result});
 	return result;
