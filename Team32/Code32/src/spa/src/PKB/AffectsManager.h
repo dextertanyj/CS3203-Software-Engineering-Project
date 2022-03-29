@@ -30,7 +30,7 @@ private:
 	unordered_map<StmtRef, StmtInfoPtrSet> affects_cache;
 	unordered_map<StmtRef, StmtInfoPtrSet> affected_by_cache;
 	unordered_map<StmtRef, StmtInfoPtrSet> affects_star_cache;
-	unordered_map<StmtRef, StmtInfoPtrSet> affected_star_cache;
+	unordered_map<StmtRef, StmtInfoPtrSet> affected_by_star_cache;
 	StmtInfoPtrSet getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode> &node, VarRef variable);
 	void processDFSVisit(Types::DFSInfo &info, StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface> &),
 	                     void (AffectsManager::*processor)(Types::DFSInfo &, const shared_ptr<PKB::StatementNode> &));

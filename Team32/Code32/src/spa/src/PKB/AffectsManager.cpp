@@ -120,7 +120,6 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
 	if (this->affects_star_cache.find(node_ref) != this->affects_star_cache.end()) {
 		return affects_star_cache.find(node_ref)->second;
 	}
-	// TODO: Check affects cache here for getAffects(first).
 	StmtInfoPtrSet affects_set = getAffects(node_ref);
 	StmtInfoPtrSet result;
 	for (auto node : affects_set) {
@@ -128,17 +127,16 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
 		result.insert(child_affects_set.begin(), child_affects_set.end());
 	}
 	result.insert(affects_set.begin(), affects_set.end());
-	// Store into affects* cache here.
+	// Store into affects* cache.
 	this->affects_star_cache.insert({node_ref, result});
 	return result;
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
 	// Check affected* cache here for early termination.
-	if (this->affected_star_cache.find(node_ref) != this->affected_star_cache.end()) {
-		return affected_star_cache.find(node_ref)->second;
+	if (this->affected_by_star_cache.find(node_ref) != this->affected_by_star_cache.end()) {
+		return affected_by_star_cache.find(node_ref)->second;
 	}
-	// TODO: Check affected cache here for getAffects(first).
 	StmtInfoPtrSet affected_set = getAffectedStar(node_ref);
 	StmtInfoPtrSet result;
 	for (auto node : affected_set) {
@@ -146,7 +144,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
 		result.insert(parent_affected_set.begin(), parent_affected_set.end());
 	}
 	result.insert(affected_set.begin(), affected_set.end());
-	// Store into affects* cache here.
-	this->affected_star_cache.insert({node_ref, result});
+	// Store into affected* cache.
+	this->affected_by_star_cache.insert({node_ref, result});
 	return result;
 }
