@@ -5,111 +5,135 @@
 
 #include "QP/Dispatcher/DispatchProcessors.tpp"
 #include "QP/Executor/ProcedureExecutor.tpp"
+#include "QP/StorageAdapter.h"
 
-template <QP::Types::ClauseType T>
-QP::Types::ArgumentDispatcher QP::Dispatcher::CallsDispatcher<T>::dispatcher =
-	[](const vector<Types::ReferenceArgument>& args) { return argumentDispatcher(T, args); };
+using namespace QP::Dispatcher;
+using namespace QP::Types;
+using namespace QP::Executor;
 
-template <QP::Types::ClauseType T>
-QP::Types::ExecutorSetBundle QP::Dispatcher::CallsDispatcher<T>::argumentDispatcher(Types::ClauseType type,
-                                                                                    const vector<Types::ReferenceArgument>& args) {
-	return DispatchProcessors::processArgument(type, argument_dispatch_map, args);
+template <ClauseType T>
+static ExecutorSet executorFactoryNameName(const vector<ReferenceArgument>& args) {
+	return [caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
+		return ProcedureExecutor::executeTrivialNameName<T>(pkb, caller, callee);
+	};
+}
+
+template <ClauseType T>
+static ExecutorSet executorFactoryNameWildcard(const vector<ReferenceArgument>& args) {
+	return [caller = args.at(0)](const QP::StorageAdapter& pkb) {
+		return ProcedureExecutor::executeTrivialNameWildcardOrSynonym<T>(pkb, caller);
+	};
+}
+
+template <ClauseType T>
+static ExecutorSet executorFactoryNameSynonym(const vector<ReferenceArgument>& args) {
+	Executor trivial_executor = [caller = args.at(0)](const QP::StorageAdapter& pkb) {
+		return ProcedureExecutor::executeTrivialNameWildcardOrSynonym<T>(pkb, caller);
+	};
+	Executor executor = [caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
+		return ProcedureExecutor::executeNameSynonym<T>(pkb, caller, callee);
+	};
+	return pair{trivial_executor, executor};
+}
+
+template <ClauseType T>
+static ExecutorSet executorFactoryWildcardName(const vector<ReferenceArgument>& args) {
+	return [callee = args.at(1)](const QP::StorageAdapter& pkb) {
+		return ProcedureExecutor::executeTrivialWildcardOrSynonymName<T>(pkb, callee);
+	};
+}
+
+template <ClauseType T>
+static ExecutorSet executorFactoryWildcardWildcard(const vector<ReferenceArgument>& /*args*/) {
+	return [](const QP::StorageAdapter& pkb) { return ProcedureExecutor::executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(pkb); };
+}
+
+template <ClauseType T>
+static ExecutorSet executorFactoryWildcardSynonym(const vector<ReferenceArgument>& args) {
+	Executor trivial_executor = [](const QP::StorageAdapter& pkb) {
+		return ProcedureExecutor::executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(pkb);
+	};
+	Executor executor = [caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
+		return ProcedureExecutor::executeWildcardSynonym<T>(pkb, callee);
+	};
+	return pair{trivial_executor, executor};
+}
+
+template <ClauseType T>
+static ExecutorSet executorFactorySynonymName(const vector<ReferenceArgument>& args) {
+	Executor trivial_executor = [callee = args.at(1)](const QP::StorageAdapter& pkb) {
+		return ProcedureExecutor::executeTrivialWildcardOrSynonymName<T>(pkb, callee);
+	};
+	Executor executor = [caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
+		return ProcedureExecutor::executeSynonymName<T>(pkb, caller, callee);
+	};
+	return pair{trivial_executor, executor};
+}
+
+template <ClauseType T>
+static ExecutorSet executorFactorySynonymWildcard(const vector<ReferenceArgument>& args) {
+	Executor trivial_executor = [](const QP::StorageAdapter& pkb) {
+		return ProcedureExecutor::executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(pkb);
+	};
+	Executor executor = [caller = args.at(0)](const QP::StorageAdapter& pkb) {
+		return ProcedureExecutor::executeSynonymWildcard<T>(pkb, caller);
+	};
+	return pair{trivial_executor, executor};
+}
+
+template <ClauseType T>
+static ExecutorSet executorFactorySynonymSynonym(const vector<ReferenceArgument>& args) {
+	Executor trivial_executor = [caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
+		return ProcedureExecutor::executeTrivialSynonymSynonym<T>(pkb, caller, callee);
+	};
+	Executor executor = [caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
+		return ProcedureExecutor::executeSynonymSynonym<T>(pkb, caller, callee);
+	};
+	return pair{trivial_executor, executor};
+}
+
+template <ClauseType T>
+static unordered_map<ArgumentDispatchKey, ExecutorSetFactory> getNameMap() {
+	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
+		{ReferenceType::Name, executorFactoryNameName<T>},
+		{ReferenceType::Wildcard, executorFactoryNameWildcard<T>},
+		{DesignEntity::Procedure, executorFactoryNameSynonym<T>},
+	};
+	return map;
+}
+
+template <ClauseType T>
+static unordered_map<ArgumentDispatchKey, ExecutorSetFactory> getWildcardMap() {
+	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
+		{ReferenceType::Name, executorFactoryWildcardName<T>},
+		{ReferenceType::Wildcard, executorFactoryWildcardWildcard<T>},
+		{DesignEntity::Procedure, executorFactoryWildcardSynonym<T>},
+	};
+	return map;
+}
+
+template <ClauseType T>
+static unordered_map<ArgumentDispatchKey, ExecutorSetFactory> getSynonymMap() {
+	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
+		{ReferenceType::Name, executorFactorySynonymName<T>},
+		{ReferenceType::Wildcard, executorFactorySynonymWildcard<T>},
+		{DesignEntity::Procedure, executorFactorySynonymSynonym<T>},
+	};
+	return map;
+}
+
+template <ClauseType T>
+static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>> argument_dispatch_map = {
+	{ReferenceType::Name, getNameMap<T>()}, {ReferenceType::Wildcard, getWildcardMap<T>()}, {DesignEntity::Procedure, getSynonymMap<T>()}};
+
+template <ClauseType T>
+static ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ReferenceArgument>& args) {
+	return DispatchProcessors::processArgument(type, argument_dispatch_map<T>, args);
 };
 
-template <QP::Types::ClauseType T>
-const unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>
-	QP::Dispatcher::CallsDispatcher<T>::argument_dispatch_map = {{Types::ReferenceType::Name, getNameMap()},
-                                                                 {Types::ReferenceType::Wildcard, getWildcardMap()},
-                                                                 {Types::DesignEntity::Procedure, getSynonymMap()}};
-
-template <QP::Types::ClauseType T>
-unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::CallsDispatcher<T>::getNameMap() {
-	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
-		{Types::ReferenceType::Name,
-	     [](const vector<Types::ReferenceArgument>& args) {
-			 return [caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
-				 return Executor::ProcedureExecutor::executeTrivialNameName<T>(pkb, caller, callee);
-			 };
-		 }},
-		{Types::ReferenceType::Wildcard,
-	     [](const vector<Types::ReferenceArgument>& args) {
-			 return [caller = args.at(0)](const QP::StorageAdapter& pkb) {
-				 return Executor::ProcedureExecutor::executeTrivialNameWildcardOrSynonym<T>(pkb, caller);
-			 };
-		 }},
-		{Types::DesignEntity::Procedure,
-	     [](const vector<Types::ReferenceArgument>& args) {
-			 return pair{[caller = args.at(0)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor::executeTrivialNameWildcardOrSynonym<T>(pkb, caller);
-						 },
-		                 [caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor::executeNameSynonym<T>(pkb, caller, callee);
-						 }};
-		 }},
-	};
-	return map;
-}
-
-template <QP::Types::ClauseType T>
-unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::CallsDispatcher<T>::getWildcardMap() {
-	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
-		{Types::ReferenceType::Name,
-	     [](const vector<Types::ReferenceArgument>& args) {
-			 return [callee = args.at(1)](const QP::StorageAdapter& pkb) {
-				 return Executor::ProcedureExecutor::executeTrivialWildcardOrSynonymName<T>(pkb, callee);
-			 };
-		 }},
-		{Types::ReferenceType::Wildcard,
-	     [](const vector<Types::ReferenceArgument>& /*args*/) {
-			 return [](const QP::StorageAdapter& pkb) {
-				 return Executor::ProcedureExecutor::executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(pkb);
-			 };
-		 }},
-		{Types::DesignEntity::Procedure,
-	     [](const vector<Types::ReferenceArgument>& args) {
-			 return pair{[](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor::executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(pkb);
-						 },
-		                 [callee = args.at(1)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor::executeWildcardSynonym<T>(pkb, callee);
-						 }};
-		 }},
-	};
-	return map;
-}
-
-template <QP::Types::ClauseType T>
-unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::CallsDispatcher<T>::getSynonymMap() {
-	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
-		{Types::ReferenceType::Name,
-	     [](const vector<Types::ReferenceArgument>& args) {
-			 return pair{[callee = args.at(1)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor::executeTrivialWildcardOrSynonymName<T>(pkb, callee);
-						 },
-		                 [caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor::executeSynonymName<T>(pkb, caller, callee);
-						 }};
-		 }},
-		{Types::ReferenceType::Wildcard,
-	     [](const vector<Types::ReferenceArgument>& args) {
-			 return pair{[](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor::executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(pkb);
-						 },
-		                 [caller = args.at(0)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor::executeSynonymWildcard<T>(pkb, caller);
-						 }};
-		 }},
-		{Types::DesignEntity::Procedure,
-	     [](const vector<Types::ReferenceArgument>& args) {
-			 return pair{[caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor::executeTrivialSynonymSynonym<T>(pkb, caller, callee);
-						 },
-		                 [caller = args.at(0), callee = args.at(1)](const QP::StorageAdapter& pkb) {
-							 return Executor::ProcedureExecutor::executeSynonymSynonym<T>(pkb, caller, callee);
-						 }};
-		 }},
-	};
-	return map;
+template <ClauseType T>
+ExecutorSetBundle CallsDispatcher::dispatcher(const vector<ReferenceArgument>& args) {
+	return argumentDispatcher<T>(T, args);
 }
 
 #endif  // SPA_SRC_QP_DISPATCHER_CALLSDISPATCHER_TPP

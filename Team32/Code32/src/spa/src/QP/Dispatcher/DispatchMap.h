@@ -19,8 +19,8 @@
 
 struct QP::Dispatcher::DispatchMap {
 	Types::ArgumentDispatchMap dispatch_map = {
-		{Types::ClauseType::Calls, QP::Dispatcher::CallsDispatcher<Types::ClauseType::Calls>::dispatcher},
-		{Types::ClauseType::CallsT, QP::Dispatcher::CallsDispatcher<Types::ClauseType::CallsT>::dispatcher},
+		{Types::ClauseType::Calls, QP::Dispatcher::CallsDispatcher::dispatcher<Types::ClauseType::Calls>},
+		{Types::ClauseType::CallsT, QP::Dispatcher::CallsDispatcher::dispatcher<Types::ClauseType::CallsT>},
 		{Types::ClauseType::Follows, QP::Dispatcher::FollowsNextDispatcher<Types::ClauseType::Follows>::dispatcher},
 		{Types::ClauseType::FollowsT, QP::Dispatcher::FollowsNextDispatcher<Types::ClauseType::FollowsT>::dispatcher},
 		{Types::ClauseType::UnknownModifies, QP::Dispatcher::ModifiesDispatcher::dispatcher},

@@ -14,8 +14,7 @@ class FollowsNextDispatcher;
 template <QP::Types::ClauseType T>
 class ParentDispatcher;
 
-template <QP::Types::ClauseType T>
-class CallsDispatcher;
+namespace CallsDispatcher {}
 
 namespace WithDispatcher {}
 }
