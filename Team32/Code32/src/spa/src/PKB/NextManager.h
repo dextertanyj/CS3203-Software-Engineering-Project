@@ -51,6 +51,10 @@ private:
 	template <class Comparator>
 	void constructQueueIteration(const shared_ptr<StatementNode>& node, QueueConstructionInformation<Comparator>& info);
 	void processQueue(const shared_ptr<StatementNode>& node, TraversalInformation& info);
+
+	// Loop node optimizations
+	template <class Comparator>
+	void constructQueueLoopNode(const shared_ptr<StatementNode>& node, QueueConstructionInformation<Comparator>& info);
 	void processLoopNode(const shared_ptr<StatementNode>& node, TraversalInformation& info);
 	StmtInfoPtrSet traverseLoop(const shared_ptr<NodeInterface>& node);
 	void handleTraverseLoopNode(queue<shared_ptr<NodeInterface>>& queue, StmtInfoPtrSet& set, const shared_ptr<NodeInterface>& node);

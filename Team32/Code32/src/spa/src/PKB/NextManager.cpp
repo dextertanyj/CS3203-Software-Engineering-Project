@@ -153,6 +153,7 @@ void PKB::NextManager::resetCache() {
 template <class Comparator>
 priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementNode>>, Comparator> PKB::NextManager::constructQueue(
 	const shared_ptr<StatementNode> &origin, TraversalInformation &info) {
+	// Perform a DFS on the CFG to construct the list of nodes that require computation for the final result.
 	priority_queue<shared_ptr<StatementNode>, vector<shared_ptr<StatementNode>>, Comparator> priority_queue;
 	queue<shared_ptr<StatementNode>> queue;
 	QueueConstructionInformation<Comparator> construction_info = {origin, priority_queue, queue, info};
@@ -161,6 +162,7 @@ priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementN
 	while (!queue.empty()) {
 		shared_ptr<StatementNode> node = queue.front();
 		queue.pop();
+		// If a cached entry is found, all subsequent nodes of the branch can be ignored since the cache is available for use.
 		if (info.cache.find(node->getNodeRef()) != info.cache.end()) {
 			continue;
 		}
@@ -171,20 +173,10 @@ priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementN
 
 template <class Comparator>
 void PKB::NextManager::constructQueueIteration(const shared_ptr<StatementNode> &node, QueueConstructionInformation<Comparator> &info) {
+	// Loop nodes are a special case as internal nodes do not have to be computed explicitly since there is special handling during
+	// processing.
 	if (node->getNodeType() == NodeType::While) {
-		auto inner_nodes = processLoopEntry(node).first;
-		if (info.origin->getNodeRef() > node->getNodeRef() && any_of(inner_nodes.begin(), inner_nodes.end(), [&](const auto &inner) {
-				return inner->getNodeRef() >= info.origin->getNodeRef();
-			})) {
-			info.priority_queue = std::priority_queue<shared_ptr<StatementNode>, vector<shared_ptr<StatementNode>>, Comparator>();
-			info.priority_queue.push(node);
-			info.queue = std::queue<shared_ptr<StatementNode>>();
-		}
-		auto external = (this->*info.traversal_information.loop_continuation_handler)(node).second;
-		for (const auto &external_node : external) {
-			info.priority_queue.push(external_node);
-			info.queue.push(external_node);
-		}
+		constructQueueLoopNode(node, info);
 		return;
 	}
 	auto current_set = (*node.*info.traversal_information.gatherer)();
@@ -222,7 +214,29 @@ void PKB::NextManager::processQueue(const shared_ptr<StatementNode> &node, Trave
 	info.cache.insert({node->getNodeRef(), star});
 }
 
+template <class Comparator>
+void PKB::NextManager::constructQueueLoopNode(const shared_ptr<StatementNode> &node, QueueConstructionInformation<Comparator> &info) {
+	auto outer_nodes = processLoopExit(node).second;
+	// If the origin is an internal node, then all nodes in the priority queue and queue are internal nodes.
+	// The existing nodes in the priority queue and nodes to be searched can be cleared and only the loop node must be added into the
+	// priority queue.
+	if (info.origin->getNodeRef() > node->getNodeRef() &&
+	    (outer_nodes.empty() || all_of(outer_nodes.begin(), outer_nodes.end(),
+	                                   [&](const auto &outer) { return outer->getNodeRef() > info.origin->getNodeRef(); }))) {
+		info.priority_queue = std::priority_queue<shared_ptr<StatementNode>, vector<shared_ptr<StatementNode>>, Comparator>();
+		info.priority_queue.push(node);
+		info.queue = std::queue<shared_ptr<StatementNode>>();
+	}
+	// External nodes of the loop node are set to continue the DFS traversal.
+	auto external = (this->*info.traversal_information.loop_continuation_handler)(node).second;
+	for (const auto &external_node : external) {
+		info.priority_queue.push(external_node);
+		info.queue.push(external_node);
+	}
+}
+
 void PKB::NextManager::processLoopNode(const shared_ptr<StatementNode> &node, TraversalInformation &info) {
+	// All internal nodes of a loop node are next and previous star of each other.
 	auto loop_nodes = traverseLoop(node);
 	auto combined = loop_nodes;
 	unordered_set<shared_ptr<StatementNode>> subsequent_nodes = ((this->*info.loop_continuation_handler)(node)).second;
@@ -239,6 +253,7 @@ void PKB::NextManager::processLoopNode(const shared_ptr<StatementNode> &node, Tr
 }
 
 StmtInfoPtrSet PKB::NextManager::traverseLoop(const shared_ptr<NodeInterface> &node) {
+	// Perform a DFS traversal on the loop node to collect all its internal nodes.
 	assert(node->getNodeType() == NodeType::While);
 	shared_ptr<StatementNode> loop_node = dynamic_pointer_cast<StatementNode>(node);
 	StmtInfoPtrSet set;
@@ -282,6 +297,7 @@ PKB::NextManager::LoopNodePair PKB::NextManager::processLoopEntryExit(
 	assert(loop_node->getNodeType() == PKB::NodeType::While);
 	unordered_set<shared_ptr<PKB::NodeInterface>> node_set = (*loop_node.*gatherer)();
 	assert(!node_set.empty());
+	// Internal nodes always exist.
 	if (node_set.size() == 1) {
 		unordered_set<shared_ptr<StatementNode>> result;
 		shared_ptr<NodeInterface> node = *node_set.begin();
@@ -297,8 +313,26 @@ PKB::NextManager::LoopNodePair PKB::NextManager::processLoopEntryExit(
 	unordered_set<shared_ptr<PKB::StatementNode>> first_set = checkLoopNeighbour(first_node, collector);
 	auto second_node = *(++node_set.begin());
 	unordered_set<shared_ptr<PKB::StatementNode>> second_set = checkLoopNeighbour(second_node, collector);
-	if (first_set.empty() ||
-	    (!second_set.empty() && Comparator{}(second_set.begin()->get()->getNodeRef(), first_set.begin()->get()->getNodeRef()))) {
+	// Sets can possibly be empty as the exit node may be a terminal dummy node.
+	if (first_set.empty()) {
+		return {second_set, first_set};
+	}
+	if (second_set.empty()) {
+		return {first_set, second_set};
+	}
+
+	// Special handling for immediately nested loops.
+	// Internal next node may have a statement index greater than the external next node, but will always be +1 of the loop node.
+	if (any_of(first_set.begin(), first_set.end(),
+	           [&](const auto &first) { return first->getNodeRef() == (loop_node->getNodeRef() + 1); })) {
+		return {first_set, second_set};
+	}
+	if (any_of(second_set.begin(), second_set.end(),
+	           [&](const auto &second) { return second->getNodeRef() == (loop_node->getNodeRef() + 1); })) {
+		return {second_set, first_set};
+	}
+
+	if (Comparator{}(second_set.begin()->get()->getNodeRef(), first_set.begin()->get()->getNodeRef())) {
 		return {second_set, first_set};
 	}
 	return {first_set, second_set};
