@@ -1,6 +1,7 @@
 #ifndef SPA_SRC_QP_DISPATCHER_DISPATCHPROCESSORS_TPP
 #define SPA_SRC_QP_DISPATCHER_DISPATCHPROCESSORS_TPP
 
+#include <cassert>
 #include "QP/Dispatcher/DispatchProcessors.h"
 
 template <typename T>

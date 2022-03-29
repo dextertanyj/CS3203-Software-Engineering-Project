@@ -49,19 +49,19 @@ private:
 	optional<Types::DesignEntity> parseDesignEntity();
 	Declaration parseClauseSynonym();
 	vector<Types::ReferenceArgument> parseArgumentList(Types::ReferenceArgument (QueryPreprocessor::*parser)());
-	Types::ReferenceArgument parsePatternArgument();
+	Types::ReferenceArgument parseAnyArgument();
 	Types::ReferenceArgument parseReferenceArgument();
 	Types::ReferenceArgument parseArgument(optional<Types::ReferenceArgument> (QueryPreprocessor::*parser)());
 	optional<Types::ReferenceArgument> tryParseReferenceArgument();
 	optional<Types::ReferenceArgument> tryParseSelectArgument();
 	optional<Types::ReferenceArgument> tryParseExpressionArgument();
+	Types::ReferenceArgument parseAttribute();
 
-	void matchTokenOrThrow(const string& token);
+	bool match(const string& token);
 	void reset();
 	void validateSyntax(QP::Types::ClauseType type, vector<QP::Types::ReferenceArgument> arguments);
 	void validateUnknownPatternSyntax();
 	void logSemanticException(const string&& message);
-
 
 	size_t token_index;
 	vector<string> query_tokens;

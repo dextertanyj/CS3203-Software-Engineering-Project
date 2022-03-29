@@ -71,12 +71,10 @@ void QP::QueryPreprocessor::parseDeclarationGroup(const Types::DesignEntity& typ
 	if (!Common::Validator::validateName(this->query_tokens.at(token_index))) {
 		throw QuerySyntaxException("Unexpected token found in declaration.");
 	}
-	parseDeclaration(type);
-	while (this->query_tokens.at(token_index) != ";") {
-		matchTokenOrThrow(",");
+	do {
 		parseDeclaration(type);
-	}
-	matchTokenOrThrow(";");
+	} while (this->query_tokens.at(token_index) != ";" && match(","));
+	match(";");
 }
 
 void QP::QueryPreprocessor::parseDeclaration(const Types::DesignEntity& type) {
@@ -91,7 +89,7 @@ void QP::QueryPreprocessor::parseDeclaration(const Types::DesignEntity& type) {
 // Select
 
 void QP::QueryPreprocessor::parseSelect() {
-	matchTokenOrThrow("Select");
+	match("Select");
 	string current_token = query_tokens.at(token_index);
 	if (current_token == "BOOLEAN" && existing_declarations.find("BOOLEAN") == existing_declarations.end()) {
 		token_index++;
@@ -102,13 +100,11 @@ void QP::QueryPreprocessor::parseSelect() {
 
 void QP::QueryPreprocessor::parseSelectList() {
 	if (query_tokens.at(token_index) == "<") {
-		matchTokenOrThrow("<");
-		select_list.push_back(parseArgument(&QueryPreprocessor::tryParseSelectArgument));
-		while (query_tokens.at(token_index) == ",") {
-			matchTokenOrThrow(",");
+		match("<");
+		do {
 			select_list.push_back(parseArgument(&QueryPreprocessor::tryParseSelectArgument));
-		}
-		matchTokenOrThrow(">");
+		} while (query_tokens.at(token_index) == "," && match(","));
+		match(">");
 	} else {
 		select_list.push_back(parseArgument(&QueryPreprocessor::tryParseSelectArgument));
 	}
@@ -119,7 +115,7 @@ void QP::QueryPreprocessor::parseSelectList() {
 void QP::QueryPreprocessor::parseClauses() {
 	if (this->query_tokens.at(token_index) == "such") {
 		++token_index;
-		matchTokenOrThrow("that");
+		match("that");
 		parseClauseLoop(&QueryPreprocessor::parseSuchThat);
 		return;
 	}
@@ -137,11 +133,9 @@ void QP::QueryPreprocessor::parseClauses() {
 }
 
 void QP::QueryPreprocessor::parseClauseLoop(void (QueryPreprocessor::*parser)()) {
-	(this->*parser)();
-	while (token_index < this->query_tokens.size() && this->query_tokens.at(token_index) == "and") {
-		token_index++;
+	do {
 		(this->*parser)();
-	}
+	} while (token_index < this->query_tokens.size() && this->query_tokens.at(token_index) == "and" && match("and"));
 }
 
 void QP::QueryPreprocessor::parseClause(QP::Types::ClauseType type) { parseClause(type, {}); }
@@ -181,7 +175,7 @@ void QP::QueryPreprocessor::parseSuchThat() {
 void QP::QueryPreprocessor::parseWith() {
 	vector<Types::ReferenceArgument> arguments;
 	arguments.push_back(parseReferenceArgument());
-	matchTokenOrThrow("=");
+	match("=");
 	arguments.push_back(parseReferenceArgument());
 	createClause(Types::ClauseType::With, move(arguments));
 }
@@ -206,16 +200,16 @@ void QP::QueryPreprocessor::parsePattern() {
 }
 
 void QP::QueryPreprocessor::parseAssignPattern(Types::ReferenceArgument synonym) {
-	matchTokenOrThrow("(");
+	match("(");
 	Types::ReferenceArgument variable = parseReferenceArgument();
-	matchTokenOrThrow(",");
+	match(",");
 	Types::ReferenceArgument expression_argument;
 	if (this->query_tokens.at(token_index) == "\"" || this->query_tokens.at(token_index + 1) == "\"") {
 		expression_argument = parseArgument(&QueryPreprocessor::tryParseExpressionArgument);
 	} else {
-		matchTokenOrThrow("_");
+		match("_");
 	}
-	matchTokenOrThrow(")");
+	match(")");
 	vector<Types::ReferenceArgument> arguments = {move(synonym), move(variable), move(expression_argument)};
 	createClause(Types::ClauseType::PatternAssign, arguments);
 }
@@ -233,15 +227,15 @@ optional<QP::Types::DesignEntity> QP::QueryPreprocessor::parseDesignEntity() {
 
 vector<QP::Types::ReferenceArgument> QP::QueryPreprocessor::parseArgumentList(Types::ReferenceArgument (QueryPreprocessor::*parser)()) {
 	vector<QP::Types::ReferenceArgument> arguments;
-	matchTokenOrThrow("(");
+	match("(");
 	do {
 		arguments.push_back((this->*parser)());
 	} while (this->query_tokens.at(token_index) == "," && ((token_index++) != 0));
-	matchTokenOrThrow(")");
+	match(")");
 	return arguments;
 }
 
-QP::Types::ReferenceArgument QP::QueryPreprocessor::parsePatternArgument() {
+QP::Types::ReferenceArgument QP::QueryPreprocessor::parseAnyArgument() {
 	auto result = tryParseReferenceArgument();
 	if (!result.has_value()) {
 		result = tryParseSelectArgument();
@@ -250,7 +244,7 @@ QP::Types::ReferenceArgument QP::QueryPreprocessor::parsePatternArgument() {
 		result = tryParseExpressionArgument();
 	}
 	if (!result.has_value()) {
-		throw QuerySyntaxException("");
+		throw QuerySyntaxException("Unexpected argument.");
 	}
 	return result.value();
 }
@@ -261,7 +255,7 @@ QP::Types::ReferenceArgument QP::QueryPreprocessor::parseReferenceArgument() {
 		result = tryParseSelectArgument();
 	}
 	if (!result.has_value()) {
-		throw QuerySyntaxException("");
+		throw QuerySyntaxException("Unexpected argument.");
 	}
 	return result.value();
 }
@@ -269,7 +263,7 @@ QP::Types::ReferenceArgument QP::QueryPreprocessor::parseReferenceArgument() {
 QP::Types::ReferenceArgument QP::QueryPreprocessor::parseArgument(optional<Types::ReferenceArgument> (QueryPreprocessor::*parser)()) {
 	auto result = (this->*parser)();
 	if (!result.has_value()) {
-		throw QuerySyntaxException("");
+		throw QuerySyntaxException("Unexpected argument.");
 	}
 	return result.value();
 }
@@ -285,7 +279,7 @@ optional<QP::Types::ReferenceArgument> QP::QueryPreprocessor::tryParseReferenceA
 	}
 	if (this->query_tokens.at(token_index) == "\"" && Common::Validator::validateName(this->query_tokens.at(token_index + 1)) ) {
 		token_index += 2;
-		matchTokenOrThrow("\"");
+		match("\"");
 		return Types::ReferenceArgument(this->query_tokens.at(token_index - 2));
 	}
 	return {};
@@ -293,24 +287,29 @@ optional<QP::Types::ReferenceArgument> QP::QueryPreprocessor::tryParseReferenceA
 
 optional<QP::Types::ReferenceArgument> QP::QueryPreprocessor::tryParseSelectArgument() {
 	if (token_index + 1 < query_tokens.size() && this->query_tokens.at(token_index + 1) == ".") {
-		Declaration synonym = parseClauseSynonym();
-		matchTokenOrThrow(".");
-		if (!dispatcher.attribute_string_set.count(query_tokens.at(token_index))) {
-			throw QP::QueryException("Invalid attribute type.");
-		}
-
-		auto iter = dispatcher.attribute_map.find({synonym.type, query_tokens.at(token_index)});
-		token_index++;
-		if (iter == dispatcher.attribute_map.end()) {
-			logSemanticException("Unknown synonym attribute combination.");
-			return Types::ReferenceArgument(Types::Attribute{});
-		}
-		return Types::ReferenceArgument(Types::Attribute{iter->second, synonym});
+		return parseAttribute();
 	}
 	if (Common::Validator::validateName(this->query_tokens.at(token_index))) {
 		return Types::ReferenceArgument(parseClauseSynonym());
 	}
 	return {};
+}
+
+QP::Types::ReferenceArgument QP::QueryPreprocessor::parseAttribute() {
+	Declaration synonym = parseClauseSynonym();
+	match(".");
+	auto token_iter = dispatcher.attribute_token_map.find(query_tokens.at(token_index));
+	if (token_iter == dispatcher.attribute_token_map.end()) {
+		throw QP::QuerySyntaxException("Invalid attribute type.");
+
+	}
+	auto iter = dispatcher.attribute_map.find({synonym.type, token_iter->second});
+	token_index++;
+	if (iter == dispatcher.attribute_map.end()) {
+		logSemanticException("Unknown synonym attribute combination.");
+		return Types::ReferenceArgument(Types::Attribute{});
+	}
+	return Types::ReferenceArgument(Types::Attribute{iter->second, synonym});
 }
 
 optional<QP::Types::ReferenceArgument> QP::QueryPreprocessor::tryParseExpressionArgument() {
@@ -319,15 +318,15 @@ optional<QP::Types::ReferenceArgument> QP::QueryPreprocessor::tryParseExpression
 		is_contains = true;
 		token_index++;
 	}
-	matchTokenOrThrow("\"");
+	match("\"");
 	vector<string> expression_tokens;
 	while (this->query_tokens.at(token_index) != "\"") {
 		expression_tokens.push_back(this->query_tokens.at(token_index));
 		token_index++;
 	}
-	matchTokenOrThrow("\"");
+	match("\"");
 	if (is_contains) {
-		matchTokenOrThrow("_");
+		match("_");
 	}
 	QueryExpressionLexer lexer = QueryExpressionLexer(expression_tokens);
 	Common::ExpressionProcessor::Expression expression =
@@ -350,12 +349,12 @@ QP::Types::Declaration QP::QueryPreprocessor::parseClauseSynonym() {
 
 // Others
 
-void QP::QueryPreprocessor::matchTokenOrThrow(const string& token) {
-	if (this->query_tokens.at(token_index) == token) {
-		token_index++;  // Skip token
-	} else {
-		throw QuerySyntaxException("Missing token: " + token + " VS " + this->query_tokens.at(token_index) + ".");
+bool QP::QueryPreprocessor::match(const string& token) {
+	if (this->query_tokens.at(token_index) != token) {
+		throw QuerySyntaxException("Expected: " + token + ". Received: " + this->query_tokens.at(token_index) + ".");
 	}
+	token_index++;
+	return true;
 }
 
 void QP::QueryPreprocessor::reset() {
@@ -369,6 +368,9 @@ void QP::QueryPreprocessor::reset() {
 
 void QP::QueryPreprocessor::validateSyntax(QP::Types::ClauseType type, vector<QP::Types::ReferenceArgument> arguments) {
 	auto expected_types = dispatcher.syntax_map.at(type);
+	if (expected_types.size() != arguments.size()) {
+		throw QuerySyntaxException("Invalid number of arguments.");
+	}
 	for (int i = 0; i < arguments.size(); i++) {
 		auto expected = expected_types.at(i);
 		if (expected.find(arguments.at(i).getType()) == expected.end()) {
@@ -378,7 +380,7 @@ void QP::QueryPreprocessor::validateSyntax(QP::Types::ClauseType type, vector<QP
 }
 
 void QP::QueryPreprocessor::validateUnknownPatternSyntax() {
-	vector<QP::Types::ReferenceArgument> arguments = parseArgumentList(&QueryPreprocessor::parsePatternArgument);
+	vector<QP::Types::ReferenceArgument> arguments = parseArgumentList(&QueryPreprocessor::parseAnyArgument);
 	auto iter = dispatcher.pattern_syntax_map.find(arguments.size());
 	if (iter == dispatcher.pattern_syntax_map.end()) {
 		throw QuerySyntaxException("Invalid number of arguments.");
@@ -393,7 +395,7 @@ void QP::QueryPreprocessor::validateUnknownPatternSyntax() {
 }
 
 void QP::QueryPreprocessor::logSemanticException(const string&& message) {
-	if (semantic_exception_message->empty()) {
+	if (!semantic_exception_message.has_value()) {
 		semantic_exception_message = message;
 	}
 }
