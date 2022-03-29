@@ -8,34 +8,34 @@
 using namespace QP::Types;
 using namespace QP::Executor;
 
-namespace {
+template <typename TAttribute, typename TLeft, typename TRight>
+using FunctionPair = pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>;
 
 // Executor maps
 
 template <typename TAttribute, typename TLeft, typename TRight>
 static unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> getAttributeExecutorMap() {
 	static const unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> map = {
-		{ReferenceType::Name, pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>(
-								  QP::Executor::WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
-								  QP::Executor::WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
+		{ReferenceType::Name,
+	     FunctionPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
+	                                             WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
 		{ReferenceType::StatementIndex,
-	     pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>(
-			 QP::Executor::WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
-			 QP::Executor::WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
-		{ReferenceType::Attribute, pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>(
-									   QP::Executor::WithExecutor::executeTrivialAttributeAttribute<TAttribute, TLeft, TRight>,
-									   QP::Executor::WithExecutor::executeAttributeAttribute<TAttribute, TLeft, TRight>)}};
+	     FunctionPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
+	                                             WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
+		{ReferenceType::Attribute,
+	     FunctionPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeAttribute<TAttribute, TLeft, TRight>,
+	                                             WithExecutor::executeAttributeAttribute<TAttribute, TLeft, TRight>)}};
 	return map;
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
 static unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> getConstantExecutorMap() {
 	static const unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> map = {
-		{ReferenceType::Name, QP::Executor::WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
-		{ReferenceType::StatementIndex, QP::Executor::WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
-		{ReferenceType::Attribute, pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>(
-									   QP::Executor::WithExecutor::executeTrivialAttributeAttribute<TAttribute, TLeft, TRight>,
-									   QP::Executor::WithExecutor::executeAttributeAttribute<TAttribute, TLeft, TRight>)}};
+		{ReferenceType::Name, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
+		{ReferenceType::StatementIndex, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
+		{ReferenceType::Attribute,
+	     FunctionPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeAttribute<TAttribute, TLeft, TRight>,
+	                                             WithExecutor::executeAttributeAttribute<TAttribute, TLeft, TRight>)}};
 	return map;
 }
 
@@ -139,8 +139,7 @@ ExecutorSet dispatchHandler(const vector<ReferenceArgument>& arguments) {
 			  [=, lhs = arguments.at(0), rhs = arguments.at(1), &result](const WithExecutorFunction<TAttribute, TLeft, TRight>& executor) {
 				  result = [=](const QP::StorageAdapter& store) { return executor(store, lhs, rhs, lhs_executors, rhs_executors); };
 			  },
-			  [=, lhs = arguments.at(0), rhs = arguments.at(1), &result](
-				  const pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>& executors) {
+			  [=, lhs = arguments.at(0), rhs = arguments.at(1), &result](const FunctionPair<TAttribute, TLeft, TRight>& executors) {
 				  result = pair{
 					  [=](const QP::StorageAdapter& store) { return executors.first(store, lhs, rhs, lhs_executors, rhs_executors); },
 					  [=](const QP::StorageAdapter& store) { return executors.second(store, lhs, rhs, lhs_executors, rhs_executors); }};
@@ -177,7 +176,6 @@ const unordered_map<WithClauseBasicDispatchKey,
                    {AttributeType::NameIdentifier, name_handler_map},
                    {AttributeType::ProcedureName, variable_handler_map},
                    {AttributeType::VariableName, variable_handler_map}};
-}
 
 QP::Types::ExecutorSetBundle QP::Dispatcher::WithDispatcher::dispatcher(const vector<Types::ReferenceArgument>& arguments) {
 	assert(arguments.size() == 2);
