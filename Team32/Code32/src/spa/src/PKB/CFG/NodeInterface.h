@@ -19,7 +19,7 @@ public:
 	[[nodiscard]] size_t getGraphIndex() const;
 	[[nodiscard]] NodeType getNodeType() const;
 
-	virtual size_t getNodeRef() = 0;
+	virtual size_t getNodeRef() const = 0;
 	virtual ~NodeInterface() = default;
 
 protected:

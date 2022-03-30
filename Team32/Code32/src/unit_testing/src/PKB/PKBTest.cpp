@@ -816,6 +816,7 @@ TEST_CASE("PKB::Next Methods Test") {
 	pkb.setIfExit(5, 9, 4);
 	pkb.setIfExit(7, 8, 6);
 	pkb.setIfExit(12, 13, 10);
+	pkb.populateComplexRelations();
 	shared_ptr<StmtInfo> s_1 = stmt_info_map.at(1);
 	shared_ptr<StmtInfo> s_2 = stmt_info_map.at(2);
 	shared_ptr<StmtInfo> s_3 = stmt_info_map.at(3);

@@ -1,5 +1,7 @@
 #include "PKB/CFG/ControlFlowGraph.h"
 
+#include <cassert>
+
 #include "PKB/CFG/DummyNode.h"
 #include "PKB/CFG/IfNode.h"
 #include "PKB/CFG/NonConditionalNode.h"
@@ -7,29 +9,39 @@
 #include "PKB/CFG/WhileNode.h"
 
 void PKB::ControlFlowGraph::createNode(shared_ptr<StmtInfo> stmt_info) {
-	if (stmt_to_normal_node_store.find(stmt_info->getIdentifier()) != stmt_to_normal_node_store.end()) {
+	if (statement_node_map.find(stmt_info->getIdentifier()) != statement_node_map.end()) {
 		throw invalid_argument("Node has already been created.");
 	}
 	// Check node type and create respective node.
 	if (stmt_info->getType() == StmtType::IfStmt) {
 		shared_ptr<PKB::IfNode> to_insert = make_shared<PKB::IfNode>(stmt_info);
-		this->stmt_to_normal_node_store.insert({stmt_info->getIdentifier(), to_insert});
+		this->statement_node_map.insert({stmt_info->getIdentifier(), to_insert});
 
 	} else if (stmt_info->getType() == StmtType::WhileStmt) {
 		shared_ptr<PKB::WhileNode> to_insert = make_shared<PKB::WhileNode>(stmt_info);
-		this->stmt_to_normal_node_store.insert({stmt_info->getIdentifier(), to_insert});
+		this->statement_node_map.insert({stmt_info->getIdentifier(), to_insert});
 	} else {
 		shared_ptr<PKB::NonConditionalNode> to_insert = make_shared<PKB::NonConditionalNode>(stmt_info);
-		this->stmt_to_normal_node_store.insert({stmt_info->getIdentifier(), to_insert});
+		this->statement_node_map.insert({stmt_info->getIdentifier(), to_insert});
 	}
 }
 
 shared_ptr<PKB::StatementNode> PKB::ControlFlowGraph::getNode(StmtRef ref) {
-	auto iter = stmt_to_normal_node_store.find(ref);
-	if (iter == stmt_to_normal_node_store.end()) {
+	auto iter = statement_node_map.find(ref);
+	if (iter == statement_node_map.end()) {
 		throw invalid_argument("This node does not exist in the store.");
 	}
-	return this->stmt_to_normal_node_store.find(ref)->second;
+	return this->statement_node_map.find(ref)->second;
+}
+
+shared_ptr<PKB::NodeInterface> PKB::ControlFlowGraph::getStart(size_t graph_index) {
+	assert(start_map.find(graph_index) != start_map.end());
+	return start_map.find(graph_index)->second;
+}
+
+shared_ptr<PKB::NodeInterface> PKB::ControlFlowGraph::getEnd(size_t graph_index) {
+	assert(end_map.find(graph_index) != end_map.end());
+	return end_map.find(graph_index)->second;
 }
 
 StmtInfoPtrSet PKB::ControlFlowGraph::collectNextOfDummy(const shared_ptr<PKB::NodeInterface>& dummy_node) {
@@ -62,8 +74,39 @@ StmtInfoPtrSet PKB::ControlFlowGraph::collectPreviousOfDummy(const shared_ptr<PK
 	return collection;
 }
 
-void PKB::ControlFlowGraph::clear() { this->stmt_to_normal_node_store.clear(); }
+void PKB::ControlFlowGraph::optimize() {
+	size_t graph_index = 0;
+	for (const auto& node : statement_node_map) {
+		if (node.second->getPreviousNodes().empty() ||
+		    (node.second->getNodeType() == NodeType::While && node.second->getPreviousNodes().size() == 1)) {
+			start_map.insert({graph_index, node.second});
+			unordered_set<shared_ptr<NodeInterface>> visited;
+			processGraphNode(node.second, graph_index, visited);
+			graph_index++;
+		}
+	}
+}
 
-void PKB::ControlFlowGraph::optimize() {}
+void PKB::ControlFlowGraph::processGraphNode(shared_ptr<NodeInterface> node, size_t graph_index,
+                                             unordered_set<shared_ptr<NodeInterface>>& visited) {
+	node->setGraphIndex(graph_index);
+	visited.insert(node);
+	if (node->getNextNodes().empty() || (node->getNodeType() == NodeType::While && node->getNextNodes().size() == 1)) {
+		end_map.insert({graph_index, node});
+		if (node->getNextNodes().empty()) {
+			return;
+		}
+	}
+	for (const auto& next : node->getNextNodes()) {
+		if (visited.find(next) != visited.end()) {
+			continue;
+		}
+		processGraphNode(next, graph_index, visited);
+	}
+}
 
-void PKB::ControlFlowGraph::populateGraphIndex() {}
+void PKB::ControlFlowGraph::clear() {
+	statement_node_map.clear();
+	start_map.clear();
+	end_map.clear();
+}

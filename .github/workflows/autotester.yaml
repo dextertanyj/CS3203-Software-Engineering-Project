@@ -24,7 +24,7 @@ jobs:
       - name: Build project
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE --parallel 8
+        run: cmake --build . --config $BUILD_TYPE --parallel 3 --target spa autotester
 
       - name: Run autotester
         working-directory: ${{runner.workspace}}/build

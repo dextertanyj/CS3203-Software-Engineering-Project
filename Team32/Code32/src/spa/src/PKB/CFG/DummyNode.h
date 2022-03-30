@@ -11,7 +11,7 @@ public:
 	void setNext(shared_ptr<PKB::NodeInterface> next) override;
 	void setPrevious(shared_ptr<PKB::NodeInterface> prev) override;
 
-	StmtRef getNodeRef() override;
+	StmtRef getNodeRef() const override;
 	~DummyNode() override = default;
 
 private:
