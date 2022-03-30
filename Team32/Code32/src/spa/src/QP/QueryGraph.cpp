@@ -26,14 +26,17 @@ unordered_map<string, Node> QP::QueryGraph::getNodes() { return nodes; }
 
 void QP::QueryGraph::setEdge(const Clause& clause) {
 	vector<string> declarations = clause.relation->getDeclarationSymbols();
-	if (declarations.size() == 1) {
-		addEdge({declarations[0], DUMMY_NODE_SYMBOL}, clause);
+	if (declarations.size() == 0) {
+		return;
 	}
 
-	if (declarations.size() == 2) {
-		addEdge({declarations[0], declarations[1]}, clause);
-		addEdge({declarations[1], declarations[0]}, clause);
+	if (declarations.size() == 1 || declarations[0] == declarations[1]) {
+		addEdge({declarations[0], DUMMY_NODE_SYMBOL}, clause);
+		return;
 	}
+
+	addEdge({declarations[0], declarations[1]}, clause);
+	addEdge({declarations[1], declarations[0]}, clause);
 }
 
 void QP::QueryGraph::addEdge(const pair<string, string>& symbols, const Clause& clause) {
