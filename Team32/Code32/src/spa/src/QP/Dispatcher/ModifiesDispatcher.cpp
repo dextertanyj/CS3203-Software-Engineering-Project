@@ -1,12 +1,14 @@
 #include "QP/Dispatcher/ModifiesDispatcher.h"
 
+#include <unordered_map>
+
 #include "QP/Dispatcher/DispatchProcessors.tpp"
 #include "QP/Dispatcher/VariableDispatcher.tpp"
 
 using namespace QP::Dispatcher;
 using namespace QP::Types;
 
-const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>> argument_dispatch_map = {
+static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>> argument_dispatch_map = {
 	{ReferenceType::Name, VariableDispatcher::getNameMap<ClauseType::ModifiesP>()},
 	{ReferenceType::StatementIndex, VariableDispatcher::getIndexMap<ClauseType::ModifiesS>()},
 	{DesignEntity::Procedure, VariableDispatcher::getProcedureMap<ClauseType::ModifiesP>()},

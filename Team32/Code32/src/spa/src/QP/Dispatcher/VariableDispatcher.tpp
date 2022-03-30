@@ -1,7 +1,9 @@
 #ifndef SPA_SRC_QP_DISPATCHER_VARIABLEDISPATCHER_TPP
 #define SPA_SRC_QP_DISPATCHER_VARIABLEDISPATCHER_TPP
 
-#include "VariableDispatcher.h"
+#include "QP/Dispatcher/VariableDispatcher.h"
+
+#include <unordered_map>
 
 #include "QP/Executor/ProcedureVariableExecutor.tpp"
 #include "QP/Executor/StatementVariableExecutor.tpp"

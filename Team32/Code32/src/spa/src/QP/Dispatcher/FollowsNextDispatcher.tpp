@@ -3,8 +3,6 @@
 
 #include "QP/Dispatcher/FollowsNextDispatcher.h"
 
-#include <unordered_map>
-
 #include "QP/Dispatcher/DispatchProcessors.tpp"
 #include "QP/Dispatcher/StatementDispatcher.tpp"
 

@@ -1,6 +1,9 @@
 #ifndef SPA_SRC_QP_DISPATCHER_CALLSDISPATCHER_H
 #define SPA_SRC_QP_DISPATCHER_CALLSDISPATCHER_H
 
+#include <unordered_map>
+#include <vector>
+
 #include "QP/Dispatcher/Dispatcher.h"
 #include "QP/ReferenceArgument.h"
 #include "QP/Types.h"

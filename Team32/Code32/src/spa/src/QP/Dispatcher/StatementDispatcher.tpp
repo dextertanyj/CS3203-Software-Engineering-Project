@@ -1,7 +1,7 @@
 #ifndef SPA_SRC_QP_DISPATCHER_STATEMENTDISPATCHER_TPP
 #define SPA_SRC_QP_DISPATCHER_STATEMENTDISPATCHER_TPP
 
-#include "StatementDispatcher.h"
+#include "QP/Dispatcher/StatementDispatcher.h"
 
 #include "QP/Executor/StatementExecutor.tpp"
 

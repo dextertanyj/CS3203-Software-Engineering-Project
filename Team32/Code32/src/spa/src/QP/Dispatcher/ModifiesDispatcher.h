@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "QP/Dispatcher/Dispatcher.h"
 #include "QP/ReferenceArgument.h"
 #include "QP/Types.h"
 

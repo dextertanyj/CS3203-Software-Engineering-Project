@@ -1,6 +1,7 @@
 #ifndef SPA_SRC_QP_DISPATCHER_PARENTDISPATCHER_H
 #define SPA_SRC_QP_DISPATCHER_PARENTDISPATCHER_H
 
+#include <unordered_map>
 #include <vector>
 
 #include "QP/Dispatcher/Dispatcher.h"
