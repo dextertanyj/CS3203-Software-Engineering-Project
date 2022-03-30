@@ -444,7 +444,7 @@ TEST_CASE("PKB::AffectsManager::checkAffects Test") {
 	 * 2. while (a > 0) {
 	 * 3.   x = x + 1;
 	 *    }
-	 * 4. while (y < 2);
+	 * 4. while (y < 2) {
 	 * 5.   b = x - 1;
 	 * 6.   x = b + 1;
 	 * 7.   while (a == 1) {
@@ -540,7 +540,7 @@ TEST_CASE("PKB::AffectsManager::checkAffectsStar Test") {
 	 * 2. while (a > 0) {
 	 * 3.   x = x + 1;
 	 *    }
-	 * 4. while (y < 2);
+	 * 4. while (y < 2) {
 	 * 5.   b = x - 1;
 	 * 6.   x = b + 1;
 	 * 7.   while (a == 1) {
@@ -605,6 +605,7 @@ TEST_CASE("PKB::AffectsManager::checkAffectsStar Test") {
 	CHECK(affects_manager.checkAffectsStar(1, 6));
 	CHECK(affects_manager.checkAffectsStar(3, 6));
 	CHECK(affects_manager.checkAffectsStar(5, 10));
+	CHECK(affects_manager.checkAffectsStar(5, 5));
 	CHECK(affects_manager.checkAffectsStar(6, 6));
 	CHECK(affects_manager.checkAffectsStar(9, 6));
 	CHECK_THROWS(affects_manager.checkAffectsStar(2, 3));
@@ -614,6 +615,68 @@ TEST_CASE("PKB::AffectsManager::checkAffectsStar Test") {
 	CHECK_FALSE(affects_manager.checkAffectsStar(1, 9));
 	CHECK_FALSE(affects_manager.checkAffectsStar(6, 9));
 	CHECK_FALSE(affects_manager.checkAffectsStar(9, 9));
+}
+
+TEST_CASE("PKB::AffectsManager::checkAffectsStar While Nested Test") {
+	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::NextManager next_manager = PKB::NextManager(cfg);
+	PKB::SVRelationStore<PKB::ModifiesSRelation> modifies_store;
+	PKB::SVRelationStore<PKB::UsesSRelation> uses_store;
+	PKB::AffectsManager affects_manager = PKB::AffectsManager(cfg, modifies_store, uses_store);
+	/* SIMPLE code:
+	 * 1. while (a < 1) {
+	 * 2. 	x = x + 1;
+	 * 3.	while (x < 5) {
+	 * 4.   	b = x + y;
+	 * 5. 		y = b + 1;
+	 * 6. 		x = b + 1;
+	 *  	}
+	 *   }
+	 */
+	shared_ptr<StmtInfo> while_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> assign_stmt_2 = TestUtilities::createStmtInfo(2, StmtType::Assign);
+	shared_ptr<StmtInfo> while_stmt_3 = TestUtilities::createStmtInfo(3, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> assign_stmt_4 = TestUtilities::createStmtInfo(4, StmtType::Assign);
+	shared_ptr<StmtInfo> assign_stmt_5 = TestUtilities::createStmtInfo(5, StmtType::Assign);
+	shared_ptr<StmtInfo> assign_stmt_6 = TestUtilities::createStmtInfo(6, StmtType::Assign);
+
+	CHECK_NOTHROW(cfg.createNode(while_stmt_1));
+	CHECK_NOTHROW(cfg.createNode(assign_stmt_2));
+	CHECK_NOTHROW(cfg.createNode(while_stmt_3));
+	CHECK_NOTHROW(cfg.createNode(assign_stmt_4));
+	CHECK_NOTHROW(cfg.createNode(assign_stmt_5));
+	CHECK_NOTHROW(cfg.createNode(assign_stmt_6));
+
+	CHECK_NOTHROW(modifies_store.set(assign_stmt_2, "x"));
+	CHECK_NOTHROW(modifies_store.set(assign_stmt_4, "b"));
+	CHECK_NOTHROW(modifies_store.set(assign_stmt_5, "y"));
+	CHECK_NOTHROW(modifies_store.set(assign_stmt_6, "x"));
+
+	CHECK_NOTHROW(uses_store.set(assign_stmt_2, "x"));
+	CHECK_NOTHROW(uses_store.set(assign_stmt_4, VarRefSet{"x", "y"}));
+	CHECK_NOTHROW(uses_store.set(assign_stmt_5, "b"));
+	CHECK_NOTHROW(uses_store.set(assign_stmt_6, "b"));
+
+	CHECK_NOTHROW(next_manager.setNext(1, 2));
+	CHECK_NOTHROW(next_manager.setNext(2, 3));
+	CHECK_NOTHROW(next_manager.setNext(3, 1));
+	CHECK_NOTHROW(next_manager.setNext(3, 4));
+	CHECK_NOTHROW(next_manager.setNext(4, 5));
+	CHECK_NOTHROW(next_manager.setNext(5, 6));
+	CHECK_NOTHROW(next_manager.setNext(6, 3));
+
+	CHECK(affects_manager.checkAffectsStar(6, 2));
+	CHECK(affects_manager.checkAffectsStar(6, 4));
+	CHECK(affects_manager.checkAffectsStar(6, 5));
+	CHECK(affects_manager.checkAffectsStar(6, 6));
+	CHECK(affects_manager.checkAffectsStar(2, 2));
+	CHECK(affects_manager.checkAffectsStar(2, 4));
+	CHECK(affects_manager.checkAffectsStar(2, 5));
+	CHECK(affects_manager.checkAffectsStar(2, 6));
+	CHECK(affects_manager.checkAffectsStar(4, 5));
+	CHECK(affects_manager.checkAffectsStar(4, 6));
+	CHECK(affects_manager.checkAffectsStar(4, 4));
+	CHECK(affects_manager.checkAffectsStar(4, 2));
 }
 
 TEST_CASE("PKB::AffectsManager::getAffectsStar Test") {
@@ -708,6 +771,77 @@ TEST_CASE("PKB::AffectsManager::getAffectsStar Test") {
 	CHECK(affects_manager.getAffectsStar(9, {}) == StmtInfoPtrSet{assign_stmt_11});
 	CHECK(affects_manager.getAffectsStar(10, {}) == StmtInfoPtrSet{assign_stmt_11});
 	CHECK(affects_manager.getAffectsStar(11, {}).empty());
+}
+
+TEST_CASE("PKB::AffectsManager::getAffectsStar Nested While Test") {
+	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::NextManager next_manager = PKB::NextManager(cfg);
+	PKB::SVRelationStore<PKB::ModifiesSRelation> modifies_store;
+	PKB::SVRelationStore<PKB::UsesSRelation> uses_store;
+	PKB::AffectsManager affects_manager = PKB::AffectsManager(cfg, modifies_store, uses_store);
+	/* SIMPLE code:
+	 * 1. while (a < 0) {
+	 * 2. 	while (b < 0) {
+	 * 3. 		while (c < 0) {
+	 * 4. 			x = b + 1;
+	 * 5. 			b = x + 1;
+	 * 			}
+	 * 	6.		y = b + x;
+	 * 	7.		x = x + 1;
+	 * 		 }
+	 * 	8.	 x = b + x;
+	 * 	   }
+	 */
+	shared_ptr<StmtInfo> while_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> while_stmt_2 = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> while_stmt_3 = TestUtilities::createStmtInfo(3, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> assign_stmt_4 = TestUtilities::createStmtInfo(4, StmtType::Assign);
+	shared_ptr<StmtInfo> assign_stmt_5 = TestUtilities::createStmtInfo(5, StmtType::Assign);
+	shared_ptr<StmtInfo> assign_stmt_6 = TestUtilities::createStmtInfo(6, StmtType::Assign);
+	shared_ptr<StmtInfo> assign_stmt_7 = TestUtilities::createStmtInfo(7, StmtType::Assign);
+	shared_ptr<StmtInfo> assign_stmt_8 = TestUtilities::createStmtInfo(8, StmtType::Assign);
+
+	CHECK_NOTHROW(cfg.createNode(while_stmt_1));
+	CHECK_NOTHROW(cfg.createNode(while_stmt_2));
+	CHECK_NOTHROW(cfg.createNode(while_stmt_3));
+	CHECK_NOTHROW(cfg.createNode(assign_stmt_4));
+	CHECK_NOTHROW(cfg.createNode(assign_stmt_5));
+	CHECK_NOTHROW(cfg.createNode(assign_stmt_6));
+	CHECK_NOTHROW(cfg.createNode(assign_stmt_7));
+	CHECK_NOTHROW(cfg.createNode(assign_stmt_8));
+
+	CHECK_NOTHROW(modifies_store.set(assign_stmt_4, "x"));
+	CHECK_NOTHROW(modifies_store.set(assign_stmt_5, "b"));
+	CHECK_NOTHROW(modifies_store.set(assign_stmt_6, "y"));
+	CHECK_NOTHROW(modifies_store.set(assign_stmt_7, "x"));
+	CHECK_NOTHROW(modifies_store.set(assign_stmt_8, "x"));
+
+	CHECK_NOTHROW(uses_store.set(assign_stmt_4, "b"));
+	CHECK_NOTHROW(uses_store.set(assign_stmt_5, "x"));
+	CHECK_NOTHROW(uses_store.set(assign_stmt_6, VarRefSet{"b", "x"}));
+	CHECK_NOTHROW(uses_store.set(assign_stmt_7, "x"));
+	CHECK_NOTHROW(uses_store.set(assign_stmt_8, VarRefSet{"b", "x"}));
+
+	CHECK_NOTHROW(next_manager.setNext(1, 2));
+	CHECK_NOTHROW(next_manager.setNext(2, 3));
+	CHECK_NOTHROW(next_manager.setNext(3, 4));
+	CHECK_NOTHROW(next_manager.setNext(4, 5));
+	CHECK_NOTHROW(next_manager.setNext(5, 3));
+	CHECK_NOTHROW(next_manager.setNext(3, 6));
+	CHECK_NOTHROW(next_manager.setNext(6, 7));
+	CHECK_NOTHROW(next_manager.setNext(7, 2));
+	CHECK_NOTHROW(next_manager.setNext(2, 8));
+	CHECK_NOTHROW(next_manager.setNext(8, 1));
+
+	CHECK(affects_manager.getAffectsStar(4, {}) ==
+	      StmtInfoPtrSet{assign_stmt_4, assign_stmt_5, assign_stmt_6, assign_stmt_7, assign_stmt_8});
+	CHECK(affects_manager.getAffectsStar(5, {}) ==
+	      StmtInfoPtrSet{assign_stmt_4, assign_stmt_5, assign_stmt_6, assign_stmt_7, assign_stmt_8});
+	CHECK(affects_manager.getAffectsStar(6, {}).empty());
+	CHECK(affects_manager.getAffectsStar(7, {}) ==
+	      StmtInfoPtrSet{assign_stmt_6, assign_stmt_7, assign_stmt_8});
+	CHECK(affects_manager.getAffectsStar(8, {}) ==
+	      StmtInfoPtrSet{assign_stmt_6, assign_stmt_7, assign_stmt_8});
 }
 
 TEST_CASE("PKB::AffectsManager::getAffectedStar Test") {
