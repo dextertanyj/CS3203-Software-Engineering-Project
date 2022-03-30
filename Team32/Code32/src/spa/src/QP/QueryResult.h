@@ -37,8 +37,10 @@ private:
 	ResultTable table;
 	static bool compareLength(QueryResult result1, QueryResult result2);
 	static unordered_map<string, vector<size_t>> getSynonymIndexMap(vector<QueryResult>& results);
+	static void findNeighbours(QueryResult result1, unordered_map<string, vector<size_t>>& synonym_to_index_map,
+	                           priority_queue<size_t, vector<size_t>, greater<>>& queue, unordered_set<size_t>& completed);
 	static void addNeighboursToQueue(const vector<size_t>& indexes, priority_queue<size_t, vector<size_t>, greater<>>& queue,
-	                                 set<size_t>& completed);
+	                                 unordered_set<size_t>& completed);
 };
 
 #endif  // SPA_SRC_QP_QUERYRESULT_H
