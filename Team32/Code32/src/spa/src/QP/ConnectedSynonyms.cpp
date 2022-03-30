@@ -12,7 +12,7 @@ size_t QP::Types::ConnectedSynonyms::getNumberOfGroups() const { return number_o
 
 void QP::Types::ConnectedSynonyms::setNumberOfGroups(size_t number_of_groups) { this->number_of_groups = number_of_groups; }
 
-void QP::Types::ConnectedSynonyms::insertGroup(size_t group_number, vector<string> synonyms) {
+void QP::Types::ConnectedSynonyms::insertGroup(size_t group_number, const vector<string>& synonyms) {
 	group_to_synonyms.insert({group_number, synonyms});
 }
 

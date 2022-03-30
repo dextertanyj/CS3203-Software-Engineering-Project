@@ -28,9 +28,9 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 		ClauseList group_clauses = graph.sortGroup(i);
 		DeclarationList group_select_list = connected_synonyms.getGroupSelectedSynonyms(i);
 
-		bool hasResult = executeGroup(group_clauses, group_select_list, results);
+		bool has_result = executeGroup(group_clauses, group_select_list, results);
 
-		if (!hasResult) {
+		if (!has_result) {
 			return {};
 		}
 	}

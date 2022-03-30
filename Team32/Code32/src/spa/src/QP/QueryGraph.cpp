@@ -26,7 +26,7 @@ unordered_map<string, Node> QP::QueryGraph::getNodes() { return nodes; }
 
 void QP::QueryGraph::setEdge(const Clause& clause) {
 	vector<string> declarations = clause.relation->getDeclarationSymbols();
-	if (declarations.size() == 0) {
+	if (declarations.empty()) {
 		return;
 	}
 
@@ -43,7 +43,7 @@ void QP::QueryGraph::addEdge(const pair<string, string>& symbols, const Clause& 
 	Node& node = this->nodes.at(symbols.first);
 	node.adjacent_symbols.insert(symbols.second);
 	size_t edge_weight = clause.relation->getCost();
-	node.connectingEdges.push_back({symbols.first, symbols.second, clause, edge_weight});
+	node.connecting_edges.push_back({symbols.first, symbols.second, clause, edge_weight});
 
 	if (edge_weight < node.weight) {
 		node.weight = edge_weight;
@@ -121,17 +121,17 @@ ClauseList QP::QueryGraph::sortGroup(size_t group_number) {
 	unordered_set<string> visited_nodes;
 	Node& cheapest_node = nodes[getCheapestNodeInGroup(group_number)];
 	visited_nodes.insert(cheapest_node.declaration_symbol);
-	for (auto const& edge : cheapest_node.connectingEdges) {
+	for (auto const& edge : cheapest_node.connecting_edges) {
 		pq.push(edge);
 	}
 
 	while (!pq.empty()) {
 		Edge edge = pq.top();
 		pq.pop();
-		if (edge.node_from_symbol != DUMMY_NODE_SYMBOL && visited_nodes.find(edge.node_from_symbol) == visited_nodes.end()) {
+		if (!edge.node_from_symbol.empty() && visited_nodes.find(edge.node_from_symbol) == visited_nodes.end()) {
 			insertEdgesToQueue(visited_nodes, edge.node_from_symbol, pq);
 		}
-		if (edge.node_to_symbol != DUMMY_NODE_SYMBOL && visited_nodes.find(edge.node_to_symbol) == visited_nodes.end()) {
+		if (!edge.node_to_symbol.empty() && visited_nodes.find(edge.node_to_symbol) == visited_nodes.end()) {
 			insertEdgesToQueue(visited_nodes, edge.node_to_symbol, pq);
 		}
 
@@ -141,11 +141,11 @@ ClauseList QP::QueryGraph::sortGroup(size_t group_number) {
 	return clauses;
 }
 
-void QP::QueryGraph::insertEdgesToQueue(unordered_set<string>& visited_nodes, string node_symbol,
+void QP::QueryGraph::insertEdgesToQueue(unordered_set<string>& visited_nodes, const string& node_symbol,
                                         priority_queue<Edge, vector<Edge>, QP::Types::EdgeComp>& pq) {
 	visited_nodes.insert(node_symbol);
 	Node& node = nodes[node_symbol];
-	for (auto const& new_edge : node.connectingEdges) {
+	for (auto const& new_edge : node.connecting_edges) {
 		if (visited_nodes.find(new_edge.node_to_symbol) == visited_nodes.end()) {
 			pq.push(new_edge);
 		}

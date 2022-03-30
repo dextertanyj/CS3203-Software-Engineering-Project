@@ -14,7 +14,6 @@
 
 using namespace std;
 using QP::Types::ClauseList;
-using QP::Types::ConnectedSynonyms;
 using QP::Types::Declaration;
 using QP::Types::DeclarationList;
 

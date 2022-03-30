@@ -17,7 +17,7 @@ public:
 	[[nodiscard]] vector<string> getGroupSynonyms(size_t group_number) const;
 
 	void setNumberOfGroups(size_t number_of_groups);
-	void insertGroup(size_t group_number, vector<string> synonyms);
+	void insertGroup(size_t group_number, const vector<string>& synonyms);
 	void insertSelectedDeclarations(size_t group_number, const DeclarationList& select_list);
 
 private:

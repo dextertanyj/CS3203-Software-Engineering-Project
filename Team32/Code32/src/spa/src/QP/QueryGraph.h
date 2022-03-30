@@ -32,7 +32,7 @@ private:
 	void setEdge(const Clause& clause);
 	void addEdge(const pair<string, string>& symbols, const Clause& clause);
 	string getCheapestNodeInGroup(size_t group_number);
-	void insertEdgesToQueue(unordered_set<string>& visited_nodes, string node_symbol,
+	void insertEdgesToQueue(unordered_set<string>& visited_nodes, const string& node_symbol,
 	                        priority_queue<Edge, vector<Edge>, QP::Types::EdgeComp>& pq);
 	static void addNodesToQueue(unordered_set<string>& symbols, queue<string>& queue, unordered_set<string>& unvisited_nodes);
 };

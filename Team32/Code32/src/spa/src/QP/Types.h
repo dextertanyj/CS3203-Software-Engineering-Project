@@ -98,7 +98,7 @@ struct EdgeComp {
 typedef struct Node {
 	string declaration_symbol;
 	unordered_set<string> adjacent_symbols;
-	vector<Edge> connectingEdges;
+	vector<Edge> connecting_edges;
 	size_t weight;
 } Node;
 
