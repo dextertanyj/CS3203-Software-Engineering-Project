@@ -126,7 +126,10 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref, StmtRefSet 
 	StmtInfoPtrSet result;
 	for (auto node : affects_set) {
 		result.insert(node);
-		if (visited_star_set.find(node->getIdentifier()) == visited_star_set.end()) {
+		if (visited_star_set.find(node->getIdentifier()) != visited_star_set.end()) {
+			StmtInfoPtrSet affects_cycle_set = getAllAffectsInCycle(node->getIdentifier());
+			result.insert(affects_cycle_set.begin(), affects_cycle_set.end());
+		} else {
 			StmtInfoPtrSet child_affects_set = getAffectsStar(node->getIdentifier(), visited_star_set);
 			result.insert(child_affects_set.begin(), child_affects_set.end());
 		}
@@ -153,5 +156,23 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref, StmtRefSet
 	}
 	// Store into affected* cache.
 	affected_by_star_cache.insert({node_ref, result});
+	return result;
+}
+StmtInfoPtrSet PKB::AffectsManager::getAllAffectsInCycle(StmtRef start_ref) {
+	StmtInfoPtrSet result;
+	int current_size = 0;
+	shared_ptr<PKB::StatementNode> start_node = control_flow_graph->getNode(start_ref);
+	queue<shared_ptr<PKB::StatementNode>> exploration_queue;
+	exploration_queue.push(start_node);
+	do {
+		current_size = result.size();
+		shared_ptr<PKB::StatementNode> curr_node = exploration_queue.front();
+		exploration_queue.pop();
+		StmtInfoPtrSet affects_of_curr = getAffects(curr_node->getNodeRef());
+		for (const auto &stmt : affects_of_curr) {
+			result.insert(stmt);
+			exploration_queue.push(dynamic_pointer_cast<PKB::StatementNode>(stmt));
+		}
+	} while (result.size() > current_size);
 	return result;
 }
