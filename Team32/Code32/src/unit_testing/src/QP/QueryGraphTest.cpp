@@ -76,14 +76,19 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 	ConnectedSynonyms synonyms = graph.getConnectedSynonyms(select_list);
 
 	size_t number_of_groups = synonyms.getNumberOfGroups();
-	
+
 	vector<string> group_with_a = {"a", "b", "c"};
 	vector<string> group_with_d = {"d", "e"};
 	vector<string> group_with_f = {"f"};
+	vector<string> group_one = synonyms.getGroupSynonyms(0);
+	vector<string> group_two = synonyms.getGroupSynonyms(1);
+	vector<string> group_three = synonyms.getGroupSynonyms(2);
+	sort(group_one.begin(), group_one.end());
+	sort(group_two.begin(), group_two.end());
 	REQUIRE(number_of_groups == 3);
-	REQUIRE((synonyms.getGroupSynonyms(0) == group_with_a || synonyms.getGroupSynonyms(1) == group_with_a || synonyms.getGroupSynonyms(2) == group_with_a));
-	REQUIRE((synonyms.getGroupSynonyms(0) == group_with_d || synonyms.getGroupSynonyms(1) == group_with_d || synonyms.getGroupSynonyms(2) == group_with_d));
-	REQUIRE((synonyms.getGroupSynonyms(0) == group_with_f || synonyms.getGroupSynonyms(1) == group_with_f || synonyms.getGroupSynonyms(2) == group_with_f));
+	REQUIRE((group_one == group_with_a || group_two == group_with_a || group_three == group_with_a));
+	REQUIRE((group_one == group_with_d || group_two == group_with_d || group_three == group_with_d));
+	REQUIRE((group_one == group_with_f || group_two == group_with_f || group_three == group_with_f));
 }
 
 TEST_CASE("QP::QueryGraph::sortGroup Should sort clauses in group") {
