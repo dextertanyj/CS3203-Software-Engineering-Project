@@ -1,67 +1,21 @@
 #include "QP/Dispatcher/WithDispatcher.h"
 
-#include <utility>
+#include <unordered_map>
 
 #include "QP/Executor/AttributeExecutor.tpp"
 #include "QP/Executor/WithExecutor.tpp"
 
-using namespace QP::Types;
 using namespace QP::Executor;
+using namespace QP::Types;
 
-template <typename TAttribute, typename TLeft, typename TRight>
-using FunctionPair = pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>;
+/*
+ * Selection and attribute transformation maps
+ *
+ * These maps select the correct synonym selection function and attribute mapping function to obtain the respective synonym-attribute
+ * combination.
+ */
 
-// Executor maps
-
-template <typename TAttribute, typename TLeft, typename TRight>
-static unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> getAttributeExecutorMap() {
-	static const unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> map = {
-		{ReferenceType::Name,
-	     FunctionPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
-	                                             WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
-		{ReferenceType::StatementIndex,
-	     FunctionPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
-	                                             WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
-		{ReferenceType::Attribute,
-	     FunctionPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeAttribute<TAttribute, TLeft, TRight>,
-	                                             WithExecutor::executeAttributeAttribute<TAttribute, TLeft, TRight>)}};
-	return map;
-}
-
-template <typename TAttribute, typename TLeft, typename TRight>
-static unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> getConstantExecutorMap() {
-	static const unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> map = {
-		{ReferenceType::Name, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
-		{ReferenceType::StatementIndex, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
-		{ReferenceType::Attribute,
-	     FunctionPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeAttribute<TAttribute, TLeft, TRight>,
-	                                             WithExecutor::executeAttributeAttribute<TAttribute, TLeft, TRight>)}};
-	return map;
-}
-
-template <typename TAttribute, typename TLeft, typename TRight>
-static unordered_map<ReferenceType, unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> getExecutorMap() {
-	static const unordered_map<ReferenceType, unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> map = {
-		{ReferenceType::Name, getConstantExecutorMap<TAttribute, TLeft, TRight>()},
-		{ReferenceType::StatementIndex, getConstantExecutorMap<TAttribute, TLeft, TRight>()},
-		{ReferenceType::Attribute, getAttributeExecutorMap<TAttribute, TLeft, TRight>()}};
-	return map;
-}
-
-template <typename TAttribute, typename TLeft, typename TRight>
-WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<ReferenceArgument>& arguments) {
-	static const unordered_map<ReferenceType, unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> map =
-		getExecutorMap<TAttribute, TLeft, TRight>();
-	ReferenceType lhs = arguments.at(0).getType();
-	ReferenceType rhs = arguments.at(1).getType();
-	auto inner_map = map.at(lhs);
-	auto executor = inner_map.at(rhs);
-	return executor;
-}
-
-// Attribute selection maps
-
-const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Number, Number>> number_attribute_map = {
+static const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Number, Number>> number_attribute_map = {
 	{ReferenceType::StatementIndex, {AttributeExecutor::extractNumber, AttributeExecutor::identity<Number>}},
 	{DispatchAttributeKey{DesignEntity::Stmt, AttributeType::NumberIdentifier},
      {AttributeExecutor::selectStatements, AttributeExecutor::identity<Number>}},
@@ -80,7 +34,7 @@ const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Number,
 	{DispatchAttributeKey{DesignEntity::Constant, AttributeType::NumberIdentifier},
      {AttributeExecutor::selectConstants, AttributeExecutor::identity<Number>}}};
 
-const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Number>> name_attribute_number_map = {
+static const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Number>> name_attribute_number_map = {
 	{DispatchAttributeKey{DesignEntity::Read, AttributeType::VariableName},
      {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<QP::Types::ClauseType::ModifiesS>}},
 	{DispatchAttributeKey{DesignEntity::Call, AttributeType::ProcedureName},
@@ -88,7 +42,7 @@ const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, N
 	{DispatchAttributeKey{DesignEntity::Print, AttributeType::VariableName},
      {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<QP::Types::ClauseType::UsesS>}}};
 
-const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Name>> name_attribute_name_map = {
+static const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Name>> name_attribute_name_map = {
 	{ReferenceType::Name, {AttributeExecutor::extractName, AttributeExecutor::identity<Name>}},
 	{DispatchAttributeKey{DesignEntity::Variable, AttributeType::NameIdentifier},
      {AttributeExecutor::selectVariables, AttributeExecutor::identity<Name>}},
@@ -97,24 +51,94 @@ const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, N
 };
 
 template <typename TAttribute, typename T>
-unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<TAttribute, T>> getAttributeMap() = delete;
+const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<TAttribute, T>>& getAttributeMap() = delete;
 template <>
-inline unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Number, Number>> getAttributeMap() {
+inline const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Number, Number>>& getAttributeMap() {
 	return number_attribute_map;
 }
 template <>
-inline unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Number>> getAttributeMap() {
+inline const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Number>>& getAttributeMap() {
 	return name_attribute_number_map;
 }
 template <>
-inline unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Name>> getAttributeMap() {
+inline const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Name>>& getAttributeMap() {
 	return name_attribute_name_map;
 }
 
+/*
+ * Executor maps
+ *
+ * These maps select the executor to use based on the attribute type, left synonym type and right synonym type.
+ */
+
+template <typename T>
+using ReferenceMap = unordered_map<ReferenceType, T>;
+
+template <typename TAttribute, typename TLeft, typename TRight>
+using ExecutorPair = pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>;
+
+template <typename TAttribute, typename TLeft, typename TRight>
+static const ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>& getAttributeExecutorMap() {
+	static const ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>> map = {
+		{ReferenceType::Name,
+	     ExecutorPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
+	                                             WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
+		{ReferenceType::StatementIndex,
+	     ExecutorPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
+	                                             WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
+		{ReferenceType::Attribute,
+	     ExecutorPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeAttribute<TAttribute, TLeft, TRight>,
+	                                             WithExecutor::executeAttributeAttribute<TAttribute, TLeft, TRight>)}};
+	return map;
+}
+
+template <typename TAttribute, typename TLeft, typename TRight>
+static const ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>& getConstantExecutorMap() {
+	static const ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>> map = {
+		{ReferenceType::Name, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
+		{ReferenceType::StatementIndex, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
+		{ReferenceType::Attribute,
+	     ExecutorPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeAttribute<TAttribute, TLeft, TRight>,
+	                                             WithExecutor::executeAttributeAttribute<TAttribute, TLeft, TRight>)}};
+	return map;
+}
+
+template <typename TAttribute, typename TLeft, typename TRight>
+static const ReferenceMap<ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>>& getExecutorMap() {
+	static const ReferenceMap<ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> map = {
+		{ReferenceType::Name, getConstantExecutorMap<TAttribute, TLeft, TRight>()},
+		{ReferenceType::StatementIndex, getConstantExecutorMap<TAttribute, TLeft, TRight>()},
+		{ReferenceType::Attribute, getAttributeExecutorMap<TAttribute, TLeft, TRight>()}};
+	return map;
+}
+
+template <typename TAttribute, typename TLeft, typename TRight>
+WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<ReferenceArgument>& arguments) {
+	static const ReferenceMap<ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> map =
+		getExecutorMap<TAttribute, TLeft, TRight>();
+	ReferenceType lhs = arguments.at(0).getType();
+	ReferenceType rhs = arguments.at(1).getType();
+	unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> inner_map = map.at(lhs);
+	auto executor = inner_map.at(rhs);
+	return executor;
+}
+
+/**
+ * Selects the corresponding executor set for the given arguments.
+ *
+ * Retrieves the selection and attribute mapping functions for the left and right arguments.
+ * Combines them together using the appropriate set of trivial and non-trivial executors.
+ *
+ * @tparam TAttribute the type (Name | Number) of the attribute being compared.
+ * @tparam TLeft the type of the left argument.
+ * @tparam TRight the type of the right argument.
+ * @param arguments the left and right arguments being compared.
+ * @return the corresponding executor set.
+ */
 template <typename TAttribute, typename TLeft, typename TRight>
 ExecutorSet dispatchHandler(const vector<ReferenceArgument>& arguments) {
-	static auto left_attribute_map = getAttributeMap<TAttribute, TLeft>();
-	static auto right_attribute_map = getAttributeMap<TAttribute, TRight>();
+	static const auto left_attribute_map = getAttributeMap<TAttribute, TLeft>();
+	static const auto right_attribute_map = getAttributeMap<TAttribute, TRight>();
 	WithClauseArgumentDispatchKey lhs_key = arguments.at(0).getType();
 	if (arguments.at(0).getType() == ReferenceType::Attribute) {
 		lhs_key = pair{arguments.at(0).getAttribute().synonym.type, arguments.at(0).getAttribute().attribute};
@@ -134,22 +158,28 @@ ExecutorSet dispatchHandler(const vector<ReferenceArgument>& arguments) {
 	auto lhs_executors = lhs_executors_iter->second;
 	auto rhs_executors = rhs_executors_iter->second;
 	auto executor = getExecutor<TAttribute, TLeft, TRight>(arguments);
+
+	// Curries the corresponding left- and right-hand side executors together with the comparison executor.
 	ExecutorSet result;
-	visit(Visitor{
-			  [=, lhs = arguments.at(0), rhs = arguments.at(1), &result](const WithExecutorFunction<TAttribute, TLeft, TRight>& executor) {
-				  result = [=](const QP::StorageAdapter& store) { return executor(store, lhs, rhs, lhs_executors, rhs_executors); };
-			  },
-			  [=, lhs = arguments.at(0), rhs = arguments.at(1), &result](const FunctionPair<TAttribute, TLeft, TRight>& executors) {
-				  result = pair{
-					  [=](const QP::StorageAdapter& store) { return executors.first(store, lhs, rhs, lhs_executors, rhs_executors); },
-					  [=](const QP::StorageAdapter& store) { return executors.second(store, lhs, rhs, lhs_executors, rhs_executors); }};
-			  },
-		  },
-	      executor);
+	auto trivial_executor_visitor = [=, lhs = arguments.at(0), rhs = arguments.at(1),
+	                                 &result](const WithExecutorFunction<TAttribute, TLeft, TRight>& executor) {
+		result = [=](const QP::StorageAdapter& store) { return executor(store, lhs, rhs, lhs_executors, rhs_executors); };
+	};
+	auto executor_visitor = [=, lhs = arguments.at(0), rhs = arguments.at(1),
+	                         &result](const ExecutorPair<TAttribute, TLeft, TRight>& executors) {
+		result = pair{[=](const QP::StorageAdapter& store) { return executors.first(store, lhs, rhs, lhs_executors, rhs_executors); },
+		              [=](const QP::StorageAdapter& store) { return executors.second(store, lhs, rhs, lhs_executors, rhs_executors); }};
+	};
+	visit(Visitor{trivial_executor_visitor, executor_visitor}, executor);
+
 	return result;
 }
 
-// Dispatch handler maps
+/*
+ * Dispatch handler maps
+ *
+ * These maps select the appropriate dispatch handler to use based on the attribute type, left synonym type and right synonym type.
+ */
 
 const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>> number_handler_map = {
 	{ReferenceType::StatementIndex, dispatchHandler<Number, Number, Number>},
