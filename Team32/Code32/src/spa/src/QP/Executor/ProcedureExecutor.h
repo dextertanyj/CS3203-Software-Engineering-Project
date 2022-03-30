@@ -9,32 +9,51 @@
 
 namespace QP::Executor::ProcedureExecutor {
 
+using namespace QP::Types;
+
 // Trivial Executors
-template <QP::Types::ClauseType T>
-QueryResult executeTrivialNameName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-                                   const Types::ReferenceArgument& rhs);
-template <QP::Types::ClauseType T>
-QueryResult executeTrivialNameWildcardOrSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs);
-template <QP::Types::ClauseType T>
-QueryResult executeTrivialWildcardOrSynonymName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& rhs);
-template <QP::Types::ClauseType T>
-QueryResult executeTrivialWildcardOrSynonymWildcardOrSynonym(const QP::StorageAdapter& storage);
-template <QP::Types::ClauseType T>
-QueryResult executeTrivialSynonymSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-                                         const Types::ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeTrivialNameName(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeTrivialNameWildcardOrSynonym(const StorageAdapter& storage, const ReferenceArgument& lhs);
+template <ClauseType T>
+QueryResult executeTrivialWildcardOrSynonymName(const StorageAdapter& storage, const ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeTrivialWildcardOrSynonymWildcardOrSynonym(const StorageAdapter& storage);
+template <ClauseType T>
+QueryResult executeTrivialSynonymSynonym(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
 
 // Executors
-template <QP::Types::ClauseType T>
-QueryResult executeNameSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs, const Types::ReferenceArgument& rhs);
-template <QP::Types::ClauseType T>
-QueryResult executeWildcardSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& rhs);
-template <QP::Types::ClauseType T>
-QueryResult executeSynonymName(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs, const Types::ReferenceArgument& rhs);
-template <QP::Types::ClauseType T>
-QueryResult executeSynonymWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs);
-template <QP::Types::ClauseType T>
-QueryResult executeSynonymSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-                                  const Types::ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeNameSynonym(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeWildcardSynonym(const StorageAdapter& storage, const ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeSynonymName(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeSynonymWildcard(const StorageAdapter& storage, const ReferenceArgument& lhs);
+template <ClauseType T>
+QueryResult executeSynonymSynonym(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+
+// Executor Set Factories
+template <ClauseType T>
+ExecutorSet executorFactoryNameName(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactoryNameWildcard(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactoryNameSynonym(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactoryWildcardName(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactoryWildcardWildcard(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactoryWildcardSynonym(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactorySynonymName(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactorySynonymWildcard(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactorySynonymSynonym(const vector<ReferenceArgument>& args);
 };
 
 #endif  // SPA_SRC_QP_EXECUTOR_PROCEDUREEXECUTOR_H

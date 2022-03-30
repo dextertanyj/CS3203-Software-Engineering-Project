@@ -1,25 +1,34 @@
 #ifndef SPA_SRC_QP_DISPATCHER_PARENTDISPATCHER_H
 #define SPA_SRC_QP_DISPATCHER_PARENTDISPATCHER_H
 
-#include <unordered_map>
 #include <vector>
 
 #include "QP/Dispatcher/Dispatcher.h"
 #include "QP/ReferenceArgument.h"
 #include "QP/Types.h"
 
-template <QP::Types::ClauseType T>
-class QP::Dispatcher::ParentDispatcher {
-public:
-	static Types::ArgumentDispatcher dispatcher;
+namespace QP::Dispatcher::ParentDispatcher {
 
-private:
-	static Types::ExecutorSetBundle argumentDispatcher(Types::ClauseType type, const vector<Types::ReferenceArgument>& args);
-	static const unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>>
-		argument_dispatch_map;
-	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getIndexMap();
-	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getWildcardMap();
-	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getSynonymMap();
-};
+using namespace QP::Types;
+
+template <ClauseType T>
+ExecutorSetBundle dispatcher(const vector<ReferenceArgument>& arguments);
+
+template <ClauseType T>
+ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ReferenceArgument>& args);
+
+template <ClauseType T>
+unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>> getArgumentDispatchMap();
+
+template <ClauseType T>
+unordered_map<ArgumentDispatchKey, ExecutorSetFactory> getIndexMap();
+
+template <ClauseType T>
+unordered_map<ArgumentDispatchKey, ExecutorSetFactory> getWildcardMap();
+
+template <ClauseType T>
+unordered_map<ArgumentDispatchKey, ExecutorSetFactory> getSynonymMap();
+
+}
 
 #endif  // SPA_SRC_QP_DISPATCHER_PARENTDISPATCHER_H

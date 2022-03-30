@@ -5,16 +5,10 @@
 
 namespace QP::Dispatcher {
 struct DispatchMap;
-
-namespace DispatchProcessors {};
-
-namespace FollowsNextDispatcher {};
-
-template <QP::Types::ClauseType T>
-class ParentDispatcher;
-
+namespace DispatchProcessors {}
+namespace FollowsNextDispatcher {}
+namespace ParentDispatcher {}
 namespace CallsDispatcher {}
-
 namespace WithDispatcher {}
 }
 
