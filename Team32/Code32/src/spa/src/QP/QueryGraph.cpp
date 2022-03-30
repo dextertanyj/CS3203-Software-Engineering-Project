@@ -56,6 +56,7 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 	DeclarationList selected_declarations;
 	unordered_set<string> unvisited_nodes;
 	unordered_map<string, Declaration> selected_nodes;
+	vector<string> synonyms;
 	size_t group_number = 0;
 
 	for (auto& node : nodes) {
@@ -71,7 +72,8 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 
 	while (!queue.empty()) {
 		string symbol = queue.front();
-		connected_synonyms.insertSynonym(symbol, group_number);
+		synonyms.push_back(symbol);
+		
 		if (selected_nodes.find(symbol) != selected_nodes.end()) {
 			selected_declarations.push_back(selected_nodes[symbol]);
 			selected_nodes.erase(symbol);
@@ -79,7 +81,7 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 		unvisited_nodes.erase(symbol);
 		queue.pop();
 
-		Types::Node node = this->nodes.at(symbol);
+		Node& node = this->nodes.at(symbol);
 		for (const string& adjacent_symbol : node.adjacent_symbols) {
 			if (unvisited_nodes.find(adjacent_symbol) != unvisited_nodes.end()) {
 				queue.push(adjacent_symbol);
@@ -88,6 +90,8 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 
 		if (queue.empty()) {
 			connected_synonyms.insertSelectedDeclarations(group_number, selected_declarations);
+			connected_synonyms.insertGroup(group_number, synonyms);
+			synonyms.clear();
 			selected_declarations.clear();
 			group_number++;
 
@@ -108,7 +112,7 @@ ClauseList QP::QueryGraph::sortGroup(size_t group_number) {
 	priority_queue<Edge, vector<Edge>, QP::Types::EdgeComp> pq;
 
 	unordered_set<string> visited_nodes;
-	Node cheapest_node = nodes[getCheapestNodeInGroup(group_number)];
+	Node& cheapest_node = nodes[getCheapestNodeInGroup(group_number)];
 	visited_nodes.insert(cheapest_node.declaration_symbol);
 	for (auto const& edge : cheapest_node.connectingEdges) {
 		pq.push(edge);
@@ -145,12 +149,8 @@ string QP::QueryGraph::getCheapestNodeInGroup(size_t group_number) {
 	string node_symbol;
 	size_t cheapest_value = SIZE_MAX;
 
-	for (auto const& pair : nodes) {
-		const Node& node = pair.second;
-		if (connected_synonyms.getGroupNumber(node.declaration_symbol) != group_number) {
-			continue;
-		}
-
+	for (auto const& symbol : connected_synonyms.getGroupSynonyms(group_number)) {
+		Node& node = nodes[symbol];
 		if (cheapest_value > node.weight) {
 			node_symbol = node.declaration_symbol;
 			cheapest_value = node.weight;

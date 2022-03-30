@@ -14,7 +14,7 @@ using namespace QP::Executor::StatementExecutor;
 
 template <QP::Types::ClauseType T>
 QP::Types::ArgumentDispatcher QP::Dispatcher::ParentDispatcher<T>::dispatcher =
-	[](const vector<Types::ReferenceArgument>& args) { return argumentDispatcher(T, move(args)); };
+	[](const vector<Types::ReferenceArgument>& args) { return argumentDispatcher(T, args); };
 
 template <QP::Types::ClauseType T>
 QP::Types::ExecutorSetBundle QP::Dispatcher::ParentDispatcher<T>::argumentDispatcher(Types::ClauseType type,

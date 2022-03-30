@@ -22,7 +22,7 @@ class QP::QueryEvaluator {
 public:
 	explicit QueryEvaluator(QP::StorageAdapter& store);
 	QueryResult executeQuery(QueryProperties& query_properties);
-	static vector<pair<ClauseList, DeclarationList>> splitClauses(QueryProperties& query_properties, ConnectedSynonyms& connected_synonyms);
+	static ClauseList getClausesWithoutSynonyms(QueryProperties& query_properties);
 
 private:
 	const QP::StorageAdapter& store;

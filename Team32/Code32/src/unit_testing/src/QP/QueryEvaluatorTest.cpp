@@ -9,60 +9,45 @@
 
 using namespace QP::Types;
 
-TEST_CASE("QP::QueryEvaluator::splitClauses Should split clauses into groups") {
+TEST_CASE("QP::QueryEvaluator::splitClauses Should get clauses without synonyms") {
 	QP::Dispatcher::DispatchMap dispatcher;
 	Declaration assign_declaration = {DesignEntity::Assign, "a"};
 	Declaration var_declaration = {DesignEntity::Variable, "v"};
 	Declaration stmt1_declaration = {DesignEntity::Stmt, "s1"};
-	Declaration stmt2_declaration = {DesignEntity::Stmt, "s2"};
 	Declaration if_declaration = {DesignEntity::If, "i"};
 	Declaration proc_declaration = {DesignEntity::Procedure, "p"};
 	DeclarationList declarations = {
-		assign_declaration, var_declaration, stmt1_declaration, stmt2_declaration, if_declaration, proc_declaration,
+		assign_declaration, var_declaration, stmt1_declaration, if_declaration, proc_declaration,
 	};
 	SelectList select_list = {ReferenceArgument{stmt1_declaration}, ReferenceArgument{proc_declaration}};
 	SelectList select_a = {ReferenceArgument{assign_declaration}};
-	SelectList select_p = {ReferenceArgument{proc_declaration}};
 	ReferenceArgument s1 = ReferenceArgument(stmt1_declaration);
-	ReferenceArgument s2 = ReferenceArgument(stmt2_declaration);
 	ReferenceArgument a = ReferenceArgument(assign_declaration);
 	ReferenceArgument i = ReferenceArgument(if_declaration);
 	ReferenceArgument v = ReferenceArgument(var_declaration);
-	ReferenceArgument p = ReferenceArgument(proc_declaration);
 	ReferenceArgument stmt_no1 = ReferenceArgument(1);
 	ReferenceArgument stmt_no2 = ReferenceArgument(2);
 	ReferenceArgument wildcard = ReferenceArgument();
 	ClauseList clauses = {
-		{make_unique<QP::Relationship::Relation>(ClauseType::Parent, vector<ReferenceArgument>({s1, s2}),
-	                                             dispatcher.dispatch_map.at(ClauseType::Parent)({s1, s2}).second)},
+		{make_unique<QP::Relationship::Relation>(ClauseType::Parent, vector<ReferenceArgument>({s1, stmt_no1}),
+	                                             dispatcher.dispatch_map.at(ClauseType::Parent)({s1, stmt_no1}).second)},
 		{make_unique<QP::Relationship::Relation>(ClauseType::Follows, vector<ReferenceArgument>({a, i}),
 	                                             dispatcher.dispatch_map.at(ClauseType::Follows)({a, i}).second)},
-		{make_unique<QP::Relationship::Relation>(ClauseType::Parent, vector<ReferenceArgument>({stmt_no1, stmt_no2}),
+		{make_unique<QP::Relationship::Relation>(ClauseType::ParentT, vector<ReferenceArgument>({stmt_no1, stmt_no2}),
 	                                             dispatcher.dispatch_map.at(ClauseType::Parent)({stmt_no1, stmt_no2}).second)},
 		{make_unique<QP::Relationship::Relation>(ClauseType::ModifiesS, vector<ReferenceArgument>({a, v}),
 	                                             dispatcher.dispatch_map.at(ClauseType::UnknownModifies)({a, v}).second)},
-		{make_unique<QP::Relationship::Relation>(ClauseType::Calls, vector<ReferenceArgument>({p, wildcard}),
-	                                             dispatcher.dispatch_map.at(ClauseType::Calls)({p, wildcard}).second)},
+		{make_unique<QP::Relationship::Relation>(ClauseType::Calls, vector<ReferenceArgument>({wildcard, wildcard}),
+	                                             dispatcher.dispatch_map.at(ClauseType::Calls)({wildcard, wildcard}).second)},
 	};
 	QP::QueryProperties properties = QP::QueryProperties(declarations, select_list, clauses);
-	ConnectedSynonyms connected_synonyms = {
-		3,
-		{{"s1", 0}, {"s2", 0}, {"a", 1}, {"v", 1}, {"i", 1}, {"p", 2}},
-		{{0, {assign_declaration}}, {1, {}}, {2, {proc_declaration}}},
-	};
 
 	PKB::Storage pkb = PKB::Storage();
-	vector<pair<ClauseList, DeclarationList>> clauses_in_group = QP::QueryEvaluator::splitClauses(properties, connected_synonyms);
+	ClauseList clauses_without_synonyms = QP::QueryEvaluator::getClausesWithoutSynonyms(properties);
 
-	REQUIRE(clauses_in_group.size() == 4);
-	REQUIRE(clauses_in_group[0].first.size() == 1);
-	REQUIRE(clauses_in_group[1].first.size() == 2);
-	REQUIRE(clauses_in_group[2].first.size() == 1);
-	REQUIRE(clauses_in_group[3].first.size() == 1);
-	REQUIRE(clauses_in_group[0].second.size() == 1);
-	REQUIRE(clauses_in_group[1].second.empty());
-	REQUIRE(clauses_in_group[2].second.size() == 1);
-	REQUIRE(clauses_in_group[3].second.empty());
+	REQUIRE(clauses_without_synonyms.size() == 2);
+	REQUIRE(clauses_without_synonyms[0].relation->getType() == ClauseType::ParentT);
+	REQUIRE(clauses_without_synonyms[1].relation->getType() == ClauseType::Calls);
 };
 
 TEST_CASE("QP::QueryEvaluator::execute") {

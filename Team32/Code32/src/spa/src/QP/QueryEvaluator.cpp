@@ -15,22 +15,18 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	QueryGraph graph = buildGraph(query_properties);
 	DeclarationList select_list = query_properties.getSelectSynonymList();
 	ConnectedSynonyms connected_synonyms = graph.getConnectedSynonyms(select_list);
-	vector<pair<Types::ClauseList, Types::DeclarationList>> clauses_in_group = splitClauses(query_properties, connected_synonyms);
+	size_t number_of_groups = connected_synonyms.getNumberOfGroups();
 
 	vector<QueryResult> results;
 
-	// Execute clauses without synonyms first
-	size_t last_group = clauses_in_group.size() - 1;
-	if (!executeTrivialGroup(clauses_in_group[last_group].first).getResult()) {
+	ClauseList clauses_without_synonyms = getClausesWithoutSynonyms(query_properties);
+	if (!executeTrivialGroup(clauses_without_synonyms).getResult()) {
 		return {};
 	}
 
-	for (size_t i = 0; i < last_group; i++) {
-		ClauseList group_clauses = clauses_in_group[i].first;
-		DeclarationList group_select_list = clauses_in_group[i].second;
-		if (!group_clauses.empty()) {
-			group_clauses = graph.sortGroup(i);
-		}
+	for (size_t i = 0; i < number_of_groups; i++) {
+		ClauseList group_clauses = graph.sortGroup(i);
+		DeclarationList group_select_list = connected_synonyms.getGroupSelectedSynonyms(i);
 
 		if (group_select_list.empty()) {
 			if (!executeGroupWithoutSelected(group_clauses, group_select_list).getResult()) {
@@ -89,6 +85,14 @@ QP::QueryResult QP::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, 
 	vector<QueryResult> result_list;
 
 	for (const Clause& clause : clauses) {
+		Types::ClauseType type = clause.relation->getType();
+
+		if (!result_list.empty() && (type == Types::ClauseType::Affects || type == Types::ClauseType::AffectsT ||
+		                             type == Types::ClauseType::Next || type == Types::ClauseType::NextT)) {
+			result_list = {QueryResult::joinResults(result_list)};
+			// TODO: Pass result to executor
+		}
+
 		QueryResult result = clause.relation->execute(store);
 		if (!result.getResult()) {
 			return {};
@@ -179,25 +183,13 @@ QP::QueryGraph QP::QueryEvaluator::buildGraph(QueryProperties& query_properties)
 	return graph;
 }
 
-vector<pair<ClauseList, DeclarationList>> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties,
-                                                                           ConnectedSynonyms& connected_synonyms) {
-	size_t number_of_groups = connected_synonyms.getNumberOfGroups();
-
-	vector<pair<ClauseList, DeclarationList>> result(number_of_groups + 1);
+ClauseList QP::QueryEvaluator::getClausesWithoutSynonyms(QueryProperties& query_properties) {
+	ClauseList clauses;
 	for (const Clause& clause : query_properties.getClauseList()) {
-		vector<string> declarations = clause.relation->getDeclarationSymbols();
-		if (declarations.empty()) {
-			result[number_of_groups].first.push_back(clause);
-		} else {
-			size_t group_number = connected_synonyms.getGroupNumber(declarations[0]);
-			result[group_number].first.push_back(clause);
+		if (clause.relation->getDeclarationSymbols().empty()) {
+			clauses.push_back(clause);
 		}
 	}
 
-	result[number_of_groups].second = {};
-	for (size_t i = 0; i < number_of_groups; i++) {
-		result[i].second = connected_synonyms.getGroupSynonyms(i);
-	}
-
-	return result;
+	return clauses;
 }
