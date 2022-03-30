@@ -85,16 +85,21 @@ typedef struct Clause {
 } Clause;
 
 typedef struct Edge {
-	string node_one_symbol;
-	string node_two_symbol;
+	string node_from_symbol;
+	string node_to_symbol;
 	Clause clause;
 	size_t weight;
 } Edge;
+
+struct EdgeComp {
+	auto operator()(Edge& edge_one, Edge& edge_two) const -> bool { return edge_one.weight > edge_two.weight; };
+};
 
 typedef struct Node {
 	string declaration_symbol;
 	unordered_set<string> adjacent_symbols;
 	vector<Edge> connectingEdges;
+	size_t weight;
 } Node;
 
 // Types for attribute selection

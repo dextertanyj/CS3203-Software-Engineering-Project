@@ -28,6 +28,10 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	for (size_t i = 0; i < last_group; i++) {
 		ClauseList group_clauses = clauses_in_group[i].first;
 		DeclarationList group_select_list = clauses_in_group[i].second;
+		if (!group_clauses.empty()) {
+			group_clauses = graph.sortGroup(i);
+		}
+
 		if (group_select_list.empty()) {
 			if (!executeGroupWithoutSelected(group_clauses, group_select_list).getResult()) {
 				return {};

@@ -11,7 +11,7 @@ using QP::Types::Declaration;
 
 QP::QueryGraph::QueryGraph(const DeclarationList& declarations) {
 	for (const Declaration& declaration : declarations) {
-		Node node = {declaration.symbol, {}, {}};
+		Node node = {declaration.symbol, {}, {}, SIZE_MAX};
 		nodes.insert({declaration.symbol, node});
 	}
 }
@@ -39,7 +39,12 @@ void QP::QueryGraph::setEdge(const Clause& clause) {
 void QP::QueryGraph::addEdge(const pair<string, string>& symbols, const Clause& clause) {
 	Node& node = this->nodes.at(symbols.first);
 	node.adjacent_symbols.insert(symbols.second);
-	node.connectingEdges.push_back({symbols.first, symbols.second, clause, clause.relation->getCost()});
+	size_t edge_weight = clause.relation->getCost();
+	node.connectingEdges.push_back({symbols.first, symbols.second, clause, edge_weight});
+
+	if (edge_weight < node.weight) {
+		node.weight = edge_weight;
+	}
 }
 
 ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& select_list) {
@@ -100,8 +105,7 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 ClauseList QP::QueryGraph::sortGroup(size_t group_number) {
 	ClauseList clauses;
 
-	auto comp = [](Edge& edge_one, Edge& edge_two) -> bool { return edge_one.weight > edge_two.weight; };
-	priority_queue<Edge, vector<Edge>, decltype(comp)> pq(comp);
+	priority_queue<Edge, vector<Edge>, QP::Types::EdgeComp> pq;
 
 	unordered_set<string> visited_nodes;
 	Node cheapest_node = nodes[getCheapestNodeInGroup(group_number)];
@@ -113,29 +117,28 @@ ClauseList QP::QueryGraph::sortGroup(size_t group_number) {
 	while (!pq.empty()) {
 		Edge edge = pq.top();
 		pq.pop();
-		if (edge.node_one_symbol != DUMMY_NODE_SYMBOL && visited_nodes.find(edge.node_one_symbol) == visited_nodes.end()) {
-			visited_nodes.insert(edge.node_one_symbol);
-			Node& node_one = nodes[edge.node_one_symbol];
-			for (auto const& new_edge : node_one.connectingEdges) {
-				if (visited_nodes.find(new_edge.node_two_symbol) == visited_nodes.end()) {
-					pq.push(new_edge);
-				}
-			}
+		if (edge.node_from_symbol != DUMMY_NODE_SYMBOL && visited_nodes.find(edge.node_from_symbol) == visited_nodes.end()) {
+			insertEdgesToQueue(visited_nodes, edge.node_from_symbol, pq);
 		}
-		if (edge.node_two_symbol != DUMMY_NODE_SYMBOL && visited_nodes.find(edge.node_two_symbol) == visited_nodes.end()) {
-			visited_nodes.insert(edge.node_two_symbol);
-			Node& node_two = nodes[edge.node_two_symbol];
-			for (auto const& new_edge : node_two.connectingEdges) {
-				if (visited_nodes.find(new_edge.node_two_symbol) == visited_nodes.end()) {
-					pq.push(new_edge);
-				}
-			}
+		if (edge.node_to_symbol != DUMMY_NODE_SYMBOL && visited_nodes.find(edge.node_to_symbol) == visited_nodes.end()) {
+			insertEdgesToQueue(visited_nodes, edge.node_to_symbol, pq);
 		}
 
 		clauses.push_back(edge.clause);
 	}
 
 	return clauses;
+}
+
+void QP::QueryGraph::insertEdgesToQueue(unordered_set<string>& visited_nodes, string node_symbol,
+                                        priority_queue<Edge, vector<Edge>, QP::Types::EdgeComp>& pq) {
+	visited_nodes.insert(node_symbol);
+	Node& node = nodes[node_symbol];
+	for (auto const& new_edge : node.connectingEdges) {
+		if (visited_nodes.find(new_edge.node_to_symbol) == visited_nodes.end()) {
+			pq.push(new_edge);
+		}
+	}
 }
 
 string QP::QueryGraph::getCheapestNodeInGroup(size_t group_number) {
@@ -148,12 +151,9 @@ string QP::QueryGraph::getCheapestNodeInGroup(size_t group_number) {
 			continue;
 		}
 
-		vector<Edge> edges = node.connectingEdges;
-		for (auto const& edge : edges) {
-			if (edge.weight < cheapest_value) {
-				node_symbol = node.declaration_symbol;
-				break;
-			}
+		if (cheapest_value > node.weight) {
+			node_symbol = node.declaration_symbol;
+			cheapest_value = node.weight;
 		}
 	}
 

@@ -112,7 +112,7 @@ TEST_CASE("QP::QueryGraph::sortGroup Should sort clauses in group") {
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
 		{make_unique<QP::Relationship::Relation>(ClauseType::Next, vector<ReferenceArgument>({stmt_no1, a}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
-		{make_unique<QP::Relationship::Relation>(ClauseType::Follows, vector<ReferenceArgument>({s1, s}),
+		{make_unique<QP::Relationship::Relation>(ClauseType::AffectsT, vector<ReferenceArgument>({s1, s}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
 		{make_unique<QP::Relationship::Relation>(ClauseType::NextT, vector<ReferenceArgument>({s1, s}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
@@ -129,6 +129,6 @@ TEST_CASE("QP::QueryGraph::sortGroup Should sort clauses in group") {
 	REQUIRE(sorted_clauses[1].relation->getType() == ClauseType::UsesS);
 	REQUIRE(sorted_clauses[2].relation->getType() == ClauseType::Next);
 	REQUIRE(sorted_clauses[3].relation->getType() == ClauseType::Affects);
-	REQUIRE(sorted_clauses[4].relation->getType() == ClauseType::Follows);
-	REQUIRE(sorted_clauses[5].relation->getType() == ClauseType::NextT);
+	REQUIRE(sorted_clauses[4].relation->getType() == ClauseType::NextT);
+	REQUIRE(sorted_clauses[5].relation->getType() == ClauseType::AffectsT);
 }

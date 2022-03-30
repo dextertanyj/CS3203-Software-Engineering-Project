@@ -2,6 +2,7 @@
 #define SPA_SRC_QP_QUERYGRAPH_H
 
 #include <memory>
+#include <queue>
 #include <string>
 #include <unordered_map>
 
@@ -14,8 +15,8 @@ using QP::Types::Clause;
 using QP::Types::ClauseList;
 using QP::Types::ConnectedSynonyms;
 using QP::Types::DeclarationList;
-using QP::Types::Node;
 using QP::Types::Edge;
+using QP::Types::Node;
 
 class QP::QueryGraph {
 public:
@@ -31,6 +32,8 @@ private:
 	void setEdge(const Clause& clause);
 	void addEdge(const pair<string, string>& symbols, const Clause& clause);
 	string getCheapestNodeInGroup(size_t group_number);
+	void insertEdgesToQueue(unordered_set<string>& visited_nodes, string node_symbol,
+	                        priority_queue<Edge, vector<Edge>, QP::Types::EdgeComp>& pq);
 };
 
 #endif  // SPA_SRC_QP_QUERYGRAPH_H
