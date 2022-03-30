@@ -26,6 +26,7 @@ public:
 
 private:
 	const QP::StorageAdapter& store;
+	bool executeGroup(ClauseList& clauses, DeclarationList& select_list, vector<QueryResult>& results);
 	QueryResult executeGroupWithSelected(ClauseList& clauses, DeclarationList& select_list);
 	QueryResult executeGroupWithoutSelected(ClauseList& clauses, DeclarationList& select_list);
 	QueryResult executeTrivialGroup(ClauseList& clauses);

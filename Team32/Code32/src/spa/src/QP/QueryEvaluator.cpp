@@ -28,16 +28,10 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 		ClauseList group_clauses = graph.sortGroup(i);
 		DeclarationList group_select_list = connected_synonyms.getGroupSelectedSynonyms(i);
 
-		if (group_select_list.empty()) {
-			if (!executeGroupWithoutSelected(group_clauses, group_select_list).getResult()) {
-				return {};
-			}
-		} else {
-			QueryResult group_result = executeGroupWithSelected(group_clauses, group_select_list);
-			if (!group_result.getResult()) {
-				return {};
-			}
-			results.push_back(group_result);
+		bool hasResult = executeGroup(group_clauses, group_select_list, results);
+
+		if (!hasResult) {
+			return {};
 		}
 	}
 
@@ -48,6 +42,20 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	}
 
 	return final_result;
+}
+
+bool QP::QueryEvaluator::executeGroup(ClauseList& clauses, DeclarationList& select_list, vector<QueryResult>& results) {
+	if (select_list.empty()) {
+		return executeGroupWithoutSelected(clauses, select_list).getResult();
+	}
+
+	QueryResult group_result = executeGroupWithSelected(clauses, select_list);
+	if (group_result.getResult()) {
+		results.push_back(group_result);
+		return true;
+	}
+
+	return false;
 }
 
 QP::QueryResult QP::QueryEvaluator::executeGroupWithSelected(ClauseList& clauses, DeclarationList& select_list) {

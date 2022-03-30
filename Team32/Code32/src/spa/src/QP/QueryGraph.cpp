@@ -73,7 +73,7 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 	while (!queue.empty()) {
 		string symbol = queue.front();
 		synonyms.push_back(symbol);
-		
+
 		if (selected_nodes.find(symbol) != selected_nodes.end()) {
 			selected_declarations.push_back(selected_nodes[symbol]);
 			selected_nodes.erase(symbol);
@@ -82,11 +82,7 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 		queue.pop();
 
 		Node& node = this->nodes.at(symbol);
-		for (const string& adjacent_symbol : node.adjacent_symbols) {
-			if (unvisited_nodes.find(adjacent_symbol) != unvisited_nodes.end()) {
-				queue.push(adjacent_symbol);
-			}
-		}
+		addNodesToQueue(node.adjacent_symbols, queue, unvisited_nodes);
 
 		if (queue.empty()) {
 			connected_synonyms.insertSelectedDeclarations(group_number, selected_declarations);
@@ -94,16 +90,24 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 			synonyms.clear();
 			selected_declarations.clear();
 			group_number++;
+		}
 
-			if (!unvisited_nodes.empty()) {
-				queue.push(*unvisited_nodes.begin());
-			}
+		if (queue.empty() && !unvisited_nodes.empty()) {
+			queue.push(*unvisited_nodes.begin());
 		}
 	}
 
 	connected_synonyms.setNumberOfGroups(group_number);
 	this->connected_synonyms = connected_synonyms;
 	return connected_synonyms;
+}
+
+void QP::QueryGraph::addNodesToQueue(unordered_set<string>& symbols, queue<string>& queue, unordered_set<string>& unvisited_nodes) {
+	for (const string& adjacent_symbol : symbols) {
+		if (unvisited_nodes.find(adjacent_symbol) != unvisited_nodes.end()) {
+			queue.push(adjacent_symbol);
+		}
+	}
 }
 
 ClauseList QP::QueryGraph::sortGroup(size_t group_number) {

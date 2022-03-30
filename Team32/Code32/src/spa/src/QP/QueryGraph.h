@@ -34,6 +34,7 @@ private:
 	string getCheapestNodeInGroup(size_t group_number);
 	void insertEdgesToQueue(unordered_set<string>& visited_nodes, string node_symbol,
 	                        priority_queue<Edge, vector<Edge>, QP::Types::EdgeComp>& pq);
+	static void addNodesToQueue(unordered_set<string>& symbols, queue<string>& queue, unordered_set<string>& unvisited_nodes);
 };
 
 #endif  // SPA_SRC_QP_QUERYGRAPH_H
