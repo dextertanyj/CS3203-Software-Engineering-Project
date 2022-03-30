@@ -1,9 +1,10 @@
 #ifndef SPA_SRC_QP_QUERYRESULT_H
 #define SPA_SRC_QP_QUERYRESULT_H
 
+#include <queue>
+#include <set>
 #include <string>
 #include <vector>
-#include <set>
 
 #include "Common/TypeDefs.h"
 #include "QP/QP.h"
@@ -25,6 +26,7 @@ public:
 	ResultColumn getSynonymResult(const string& synonym);
 	ResultRow getRowWithOrder(const vector<string>& synonyms, size_t row_number);
 	size_t getNumberOfRows();
+	vector<string> getSynonymsStored();
 	void addRow(const ResultRow& row);
 	void filterBySelect(const QP::Types::DeclarationList& select_list);
 	static QueryResult joinResults(vector<QueryResult>& result);
@@ -35,7 +37,8 @@ private:
 	ResultTable table;
 	static bool compareLength(QueryResult result1, QueryResult result2);
 	static unordered_map<string, vector<size_t>> getSynonymIndexMap(vector<QueryResult>& results);
-
+	static void addNeighboursToQueue(const vector<size_t>& indexes, priority_queue<size_t, vector<size_t>, greater<>>& queue,
+	                                 set<size_t>& completed);
 };
 
 #endif  // SPA_SRC_QP_QUERYRESULT_H
