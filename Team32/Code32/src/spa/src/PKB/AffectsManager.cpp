@@ -36,8 +36,8 @@ StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
 
 StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
 	// Check if statement already exists in cache
-	if (affected_by_cache.find(second) != affected_by_cache.end()) {
-		return affected_by_cache.at(second);
+	if (affected_cache.find(second) != affected_cache.end()) {
+		return affected_cache.at(second);
 	}
 
 	shared_ptr<PKB::StatementNode> node = this->control_flow_graph->getNode(second);
@@ -51,7 +51,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
 		affected_set.insert(affected.begin(), affected.end());
 	}
 
-	affected_by_cache.insert({second, affected_set});
+	affected_cache.insert({second, affected_set});
 	return affected_set;
 }
 
@@ -141,22 +141,27 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
 	return result;
 }
 
-StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref, StmtRefSet visited_star_set) {
-	visited_star_set.insert(node_ref);
-	// Check affected* cache here for early termination.
-	if (affected_by_star_cache.find(node_ref) != affected_by_star_cache.end()) {
-		return affected_by_star_cache.at(node_ref);
-	}
-	StmtInfoPtrSet affected_set = getAffected(node_ref);
+StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
 	StmtInfoPtrSet result;
-	for (auto node : affected_set) {
-		result.insert(node);
-		if (visited_star_set.find(node->getIdentifier()) == visited_star_set.end()) {
-			StmtInfoPtrSet parent_affected_set = getAffectedStar(node->getIdentifier(), visited_star_set);
-			result.insert(parent_affected_set.begin(), parent_affected_set.end());
+	// Check affected* cache here for early termination.
+	if (affected_star_cache.find(node_ref) != affected_star_cache.end()) {
+		return affected_star_cache.at(node_ref);
+	}
+	StmtRefSet visited = {};
+	queue<StmtRef> bfs_queue;
+	bfs_queue.push(node_ref);
+	while (!bfs_queue.empty()) {
+		StmtRef current = bfs_queue.front();
+		bfs_queue.pop();
+		visited.insert(current);
+		for (auto stmt : getAffected(current)) {
+			result.insert(stmt);
+			if (visited.find(stmt->getIdentifier()) == visited.end()) {
+				bfs_queue.push(stmt->getIdentifier());
+			}
 		}
 	}
 	// Store into affected* cache.
-	affected_by_star_cache.insert({node_ref, result});
+	affected_star_cache.insert({node_ref, result});
 	return result;
 }

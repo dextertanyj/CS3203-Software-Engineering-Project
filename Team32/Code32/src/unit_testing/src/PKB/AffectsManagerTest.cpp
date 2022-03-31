@@ -917,16 +917,16 @@ TEST_CASE("PKB::AffectsManager::getAffectedStar Test") {
 	CHECK_NOTHROW(next_manager.setIfExit(7, 10, 4));
 	CHECK_NOTHROW(next_manager.setNext(4, 11));
 
-	CHECK(affects_manager.getAffectedStar(1, {}).empty());
-	CHECK_THROWS(affects_manager.getAffectedStar(2, {}));
-	CHECK(affects_manager.getAffectedStar(3, {}) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3});
-	CHECK_THROWS(affects_manager.getAffectedStar(4, {}));
-	CHECK(affects_manager.getAffectedStar(5, {}) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3});
-	CHECK(affects_manager.getAffectedStar(6, {}) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3, assign_stmt_5});
-	CHECK_THROWS(affects_manager.getAffectedStar(7, {}));
-	CHECK_THROWS(affects_manager.getAffectedStar(8, {}));
-	CHECK(affects_manager.getAffectedStar(9, {}).empty());
-	CHECK(affects_manager.getAffectedStar(10, {}) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3});
-	CHECK(affects_manager.getAffectedStar(11, {}) ==
+	CHECK(affects_manager.getAffectedStar(1).empty());
+	CHECK_THROWS(affects_manager.getAffectedStar(2));
+	CHECK(affects_manager.getAffectedStar(3) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3});
+	CHECK_THROWS(affects_manager.getAffectedStar(4));
+	CHECK(affects_manager.getAffectedStar(5) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3});
+	CHECK(affects_manager.getAffectedStar(6) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3, assign_stmt_5});
+	CHECK_THROWS(affects_manager.getAffectedStar(7));
+	CHECK_THROWS(affects_manager.getAffectedStar(8));
+	CHECK(affects_manager.getAffectedStar(9).empty());
+	CHECK(affects_manager.getAffectedStar(10) == StmtInfoPtrSet{assign_stmt_1, assign_stmt_3});
+	CHECK(affects_manager.getAffectedStar(11) ==
 	      StmtInfoPtrSet{assign_stmt_1, assign_stmt_3, assign_stmt_5, assign_stmt_6, assign_stmt_9, assign_stmt_10});
 }
