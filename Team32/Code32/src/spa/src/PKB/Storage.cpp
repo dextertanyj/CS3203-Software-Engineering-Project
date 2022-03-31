@@ -269,10 +269,7 @@ StmtInfoPtrSet PKB::Storage::getAffectedStar(StmtRef node_ref) {
 	return affects_manager.getAffectedStar(node_ref, visited_star_set);
 }
 
-StmtInfoPtrSet PKB::Storage::getAffectsStar(StmtRef node_ref) {
-	StmtRefSet visited_star_set = {};
-	return affects_manager.getAffectsStar(node_ref, visited_star_set);
-}
+StmtInfoPtrSet PKB::Storage::getAffectsStar(StmtRef node_ref) { return affects_manager.getAffectsStar(node_ref); }
 
 bool PKB::Storage::checkWhileControl(StmtRef index, VarRef name) { return while_control_store.check(index, name); }
 

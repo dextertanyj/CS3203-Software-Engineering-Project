@@ -110,7 +110,6 @@ void PKB::AffectsManager::processNodeAffected(PKB::Types::DFSInfo &info, const s
 }
 
 bool PKB::AffectsManager::checkAffectsStar(StmtRef first, StmtRef second) {
-	StmtRefSet visited_set = {};
 	StmtInfoPtrSet affected_nodes = getAffectsStar(first);
 	return any_of(affected_nodes.begin(), affected_nodes.end(),
 	              [&](const shared_ptr<StmtInfo> &info) { return info->getIdentifier() == second; });
@@ -159,23 +158,5 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref, StmtRefSet
 	}
 	// Store into affected* cache.
 	affected_by_star_cache.insert({node_ref, result});
-	return result;
-}
-StmtInfoPtrSet PKB::AffectsManager::getAllAffectsInCycle(StmtRef start_ref) {
-	StmtInfoPtrSet result;
-	int current_size = 0;
-	shared_ptr<PKB::StatementNode> start_node = control_flow_graph->getNode(start_ref);
-	queue<shared_ptr<PKB::StatementNode>> exploration_queue;
-	exploration_queue.push(start_node);
-	do {
-		current_size = result.size();
-		shared_ptr<PKB::StatementNode> curr_node = exploration_queue.front();
-		exploration_queue.pop();
-		StmtInfoPtrSet affects_of_curr = getAffects(curr_node->getNodeRef());
-		for (const auto &stmt : affects_of_curr) {
-			result.insert(stmt);
-			exploration_queue.push(dynamic_pointer_cast<PKB::StatementNode>(stmt));
-		}
-	} while (result.size() > current_size);
 	return result;
 }
