@@ -173,3 +173,10 @@ void PKB::AffectsManager::evaluateAffectStarBFSNode(const shared_ptr<StmtInfo> &
 		info.bfs_queue.push(stmt->getIdentifier());
 	}
 }
+
+void PKB::AffectsManager::resetCache() {
+	affects_cache.clear();
+	affects_star_cache.clear();
+	affected_cache.clear();
+	affected_star_cache.clear();
+}

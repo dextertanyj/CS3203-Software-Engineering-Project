@@ -22,6 +22,7 @@ public:
 	StmtInfoPtrSet getAffected(StmtRef second);
 	StmtInfoPtrSet getAffectsStar(StmtRef node_ref);
 	StmtInfoPtrSet getAffectedStar(StmtRef node_ref);
+	void resetCache();
 
 private:
 	ControlFlowGraph *control_flow_graph;

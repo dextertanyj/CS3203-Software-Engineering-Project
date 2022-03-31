@@ -140,6 +140,8 @@ public:
 	ProcRef getCalledProcedure(StmtRef index) override;
 
 	// Others
+	void resetNextCache() override;
+	void resetAffectsCache() override;
 	void populateComplexRelations() override;
 	void clear();
 

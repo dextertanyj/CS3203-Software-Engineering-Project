@@ -25,6 +25,8 @@ public:
 	virtual void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) = 0;
 	virtual void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) = 0;
 	virtual void populateComplexRelations() = 0;
+	virtual void resetNextCache() = 0;
+	virtual void resetAffectsCache() = 0;
 
 	virtual ~StorageUpdateInterface() = default;
 };
