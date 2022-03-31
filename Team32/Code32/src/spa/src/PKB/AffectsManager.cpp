@@ -124,7 +124,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
 	bfs_queue.push(node_ref);
 	Types::AffectStarBFSInfo info = {bfs_queue, {}, {}};
 	while (!info.bfs_queue.empty()) {
-		processAffectStarBFS(info, &AffectsManager::getAffects);
+		processAffectStarBFS(info, &AffectsManager::getAffects, affects_star_cache);
 	}
 	// Store into affects* cache.
 	affects_star_cache.insert({node_ref, info.result});
@@ -132,7 +132,6 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
-	StmtInfoPtrSet result;
 	// Check affected* cache here for early termination.
 	if (affected_star_cache.find(node_ref) != affected_star_cache.end()) {
 		return affected_star_cache.at(node_ref);
@@ -140,20 +139,27 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
 	queue<StmtRef> bfs_queue;
 	bfs_queue.push(node_ref);
 	Types::AffectStarBFSInfo info = {bfs_queue, {}, {}};
-	while (!bfs_queue.empty()) {
-		processAffectStarBFS(info, &AffectsManager::getAffected);
+	while (!info.bfs_queue.empty()) {
+		processAffectStarBFS(info, &AffectsManager::getAffected, affected_star_cache);
 	}
 	// Store into affected* cache.
 	affected_star_cache.insert({node_ref, info.result});
 	return info.result;
 }
 
-void PKB::AffectsManager::processAffectStarBFS(PKB::Types::AffectStarBFSInfo &info, StmtInfoPtrSet (AffectsManager::*collector)(StmtRef)) {
+void PKB::AffectsManager::processAffectStarBFS(PKB::Types::AffectStarBFSInfo &info, StmtInfoPtrSet (AffectsManager::*collector)(StmtRef),
+                                               unordered_map<StmtRef, StmtInfoPtrSet> &cache) {
 	StmtRef current = info.bfs_queue.front();
 	info.bfs_queue.pop();
 	info.visited_set.insert(current);
 	for (auto stmt : (this->*collector)(current)) {
 		info.result.insert(stmt);
+		if (cache.find(stmt->getIdentifier()) != cache.end()) {
+			info.visited_set.insert(stmt->getIdentifier());
+			StmtInfoPtrSet affects_star_set_of_stmt = cache.at(stmt->getIdentifier());
+			info.result.insert(affects_star_set_of_stmt.begin(), affects_star_set_of_stmt.end());
+			info.visited_set.insert(affects_star_set_of_stmt.begin(), affects_star_set_of_stmt.end());
+		}
 		if (info.visited_set.find(stmt->getIdentifier()) == info.visited_set.end()) {
 			info.bfs_queue.push(stmt->getIdentifier());
 		}
