@@ -93,14 +93,6 @@ QP::QueryResult QP::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, 
 	vector<QueryResult> result_list;
 
 	for (const Clause& clause : clauses) {
-		Types::ClauseType type = clause.relation->getType();
-
-		if (!result_list.empty() && (type == Types::ClauseType::Affects || type == Types::ClauseType::AffectsT ||
-		                             type == Types::ClauseType::Next || type == Types::ClauseType::NextT)) {
-			result_list = {QueryResult::joinResults(result_list)};
-			// TODO: Pass result to executor
-		}
-
 		QueryResult result = clause.relation->execute(store);
 		if (!result.getResult()) {
 			return {};

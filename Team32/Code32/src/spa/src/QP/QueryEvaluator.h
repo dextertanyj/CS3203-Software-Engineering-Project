@@ -21,7 +21,6 @@ class QP::QueryEvaluator {
 public:
 	explicit QueryEvaluator(QP::StorageAdapter& store);
 	QueryResult executeQuery(QueryProperties& query_properties);
-	static ClauseList getClausesWithoutSynonyms(QueryProperties& query_properties);
 
 private:
 	const QP::StorageAdapter& store;
@@ -36,6 +35,7 @@ private:
 	QueryResult getVariables(const string& symbol);
 	QueryResult getProcedures(const string& symbol);
 	static QueryGraph buildGraph(QueryProperties& query_properties);
+	static ClauseList getClausesWithoutSynonyms(QueryProperties& query_properties);
 };
 
 #endif  // SPA_SRC_QP_QUERYEVALUATOR_H
