@@ -7,13 +7,12 @@
 #include "SP/Node/StatementNode.h"
 #include "SP/Node/VariableNode.h"
 
-using namespace std;
-
 class SP::Node::ReadNode : public StatementNode {
 public:
 	ReadNode(StmtRef stmt_no, unique_ptr<VariableNode> variable);
-	StmtRef extract(PKB::StorageUpdateInterface& pkb) override;
-	bool equals(const shared_ptr<StatementNode>& object) override;
+	StmtRef extract(PKB::StorageUpdateInterface& pkb) const override;
+	[[nodiscard]] bool equals(const shared_ptr<StatementNode>& object) const override;
+
 	static unique_ptr<ReadNode> parseReadStatement(Lexer& lex, StmtRef& statement_count);
 
 private:

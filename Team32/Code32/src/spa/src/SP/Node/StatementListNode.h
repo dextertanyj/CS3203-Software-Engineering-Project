@@ -13,12 +13,13 @@ using namespace std;
 
 class SP::Node::StatementListNode {
 public:
-	StatementListNode();
+	StatementListNode() = default;
 	void addStatementNode(unique_ptr<StatementNode> statement);
+	vector<StmtRef> extract(PKB::StorageUpdateInterface& pkb) const;
+	[[nodiscard]] bool equals(const shared_ptr<StatementListNode>& object) const;
+	[[nodiscard]] vector<shared_ptr<StatementNode>> getStatementList() const;
+
 	static unique_ptr<StatementListNode> parseStatementList(Lexer& lex, StmtRef& statement_count);
-	vector<StmtRef> extract(PKB::StorageUpdateInterface& pkb);
-	bool equals(const shared_ptr<StatementListNode>& object);
-	vector<shared_ptr<StatementNode>> getStatementList();
 
 private:
 	vector<shared_ptr<StatementNode>> stmt_list;

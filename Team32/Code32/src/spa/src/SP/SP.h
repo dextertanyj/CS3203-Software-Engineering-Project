@@ -6,21 +6,21 @@
 
 #include "Common/TypeDefs.h"
 
-using namespace std;
-
 namespace SP {
 struct ParseException : public runtime_error {
 	using runtime_error::runtime_error;
 };
+
 struct TokenizationException : public runtime_error {
 	using runtime_error::runtime_error;
 };
 
-namespace Node {};
 class Processor;
 class Lexer;
 class Parser;
 class DesignExtractor;
+
+namespace Node {}
 }
 
 #endif  // SPA_SRC_SP_SP_H

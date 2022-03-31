@@ -12,8 +12,9 @@
 class SP::Node::CallNode : public StatementNode {
 public:
 	CallNode(StmtRef stmt_no, ProcRef procedure);
-	StmtRef extract(PKB::StorageUpdateInterface& pkb) override;
-	bool equals(const shared_ptr<StatementNode>& object) override;
+	StmtRef extract(PKB::StorageUpdateInterface& pkb) const override;
+	[[nodiscard]] bool equals(const shared_ptr<StatementNode>& object) const override;
+
 	static unique_ptr<CallNode> parseCallStatement(Lexer& lex, StmtRef& statement_count);
 
 private:

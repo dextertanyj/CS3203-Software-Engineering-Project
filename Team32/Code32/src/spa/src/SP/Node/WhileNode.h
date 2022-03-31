@@ -10,14 +10,13 @@
 #include "SP/Node/StatementListNode.h"
 #include "SP/Node/StatementNode.h"
 
-using namespace std;
-
 class SP::Node::WhileNode : public StatementNode {
 public:
 	WhileNode(StmtRef stmt_no, unique_ptr<ExpressionNode> cond_expr, unique_ptr<StatementListNode> stmt_list);
+	StmtRef extract(PKB::StorageUpdateInterface& pkb) const override;
+	[[nodiscard]] bool equals(const shared_ptr<StatementNode>& object) const override;
+
 	static unique_ptr<WhileNode> parseWhileStatement(Lexer& lex, StmtRef& statement_count);
-	StmtRef extract(PKB::StorageUpdateInterface& pkb) override;
-	bool equals(const shared_ptr<StatementNode>& object) override;
 
 private:
 	shared_ptr<ExpressionNode> cond_expr;

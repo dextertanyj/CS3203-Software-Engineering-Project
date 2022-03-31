@@ -7,12 +7,10 @@
 #include "SP/Node/ProgramNode.h"
 #include "SP/SP.h"
 
-using namespace std;
-
 class SP::DesignExtractor {
 public:
 	explicit DesignExtractor(PKB::StorageUpdateInterface& pkb);
-	void extract(unique_ptr<Node::ProgramNode> ast);
+	void extract(const unique_ptr<Node::ProgramNode>& ast);
 
 private:
 	PKB::StorageUpdateInterface& pkb;

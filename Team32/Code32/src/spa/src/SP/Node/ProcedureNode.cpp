@@ -2,10 +2,18 @@
 
 #include "Common/Validator.h"
 
-using namespace std;
+SP::Node::ProcedureNode::ProcedureNode(ProcRef name, unique_ptr<StatementListNode> statements, StmtRef start, StmtRef end)
+	: name(move(name)), start(start), end(end), statements(move(statements)) {}
 
-SP::Node::ProcedureNode::ProcedureNode(string name, unique_ptr<StatementListNode> stmt_list, StmtRef start, StmtRef end)
-	: name(move(name)), start(start), end(end), stmt_list(move(stmt_list)) {}
+void SP::Node::ProcedureNode::extract(PKB::StorageUpdateInterface& pkb) const {
+	statements->extract(pkb);
+	pkb.setProc(name, start, end);
+}
+
+bool SP::Node::ProcedureNode::equals(const shared_ptr<ProcedureNode>& object) const {
+	return this->name == object->name && this->statements->equals(object->statements) && this->start == object->start &&
+	       this->end == object->end;
+}
 
 unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parseProcedure(Lexer& lex, StmtRef& statement_count) {
 	lex.nextIf("procedure");
@@ -19,14 +27,4 @@ unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parseProcedure(Lexe
 	StmtRef end = statement_count - 1;
 	lex.nextIf("}");
 	return make_unique<ProcedureNode>(name, std::move(statement_list), start, end);
-}
-
-void SP::Node::ProcedureNode::extract(PKB::StorageUpdateInterface& pkb) {
-	stmt_list->extract(pkb);
-	pkb.setProc(name, start, end);
-}
-
-bool SP::Node::ProcedureNode::equals(const shared_ptr<ProcedureNode>& object) {
-	return this->name == object->name && this->stmt_list->equals(object->stmt_list) && this->start == object->start &&
-	       this->end == object->end;
 }

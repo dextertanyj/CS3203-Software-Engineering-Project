@@ -1,11 +1,6 @@
-#include "Lexer.h"
+#include "SP/Lexer.h"
 
-#include <regex>
-#include <string>
-
-#include "SP.h"
-
-using namespace std;
+#include "SP/SP.h"
 
 regex SP::Lexer::tokenization_regex =  // NOLINT
 	regex(R"(([a-zA-Z][0-9a-zA-Z]*|[0-9]+|\{|\}|\(|\)|;|!={0,1}|={1,2}|&&|\|\||>={0,1}|<={0,1}|\+|-|\*|\/|%))");
@@ -14,23 +9,10 @@ regex SP::Lexer::validation_regex =  // NOLINT
 
 void SP::Lexer::initialize(string raw_source) {
 	this->source = move(raw_source);
-	if (regex_search(this->source, Lexer::validation_regex)) {
+	if (regex_search(this->source, validation_regex)) {
 		throw TokenizationException("Illegal token encountered.");
 	}
-	this->iterator = sregex_iterator(this->source.begin(), this->source.end(), Lexer::tokenization_regex);
-}
-
-bool SP::Lexer::nextToken() {
-	if (this->iterator != sregex_iterator()) {
-		this->iterator++;
-	}
-	while (this->iterator != sregex_iterator()) {
-		if (!this->iterator->str().empty()) {
-			return true;
-		}
-		this->iterator++;
-	}
-	return false;
+	this->iterator = sregex_iterator(this->source.begin(), this->source.end(), tokenization_regex);
 }
 
 string SP::Lexer::readToken() {
@@ -49,6 +31,19 @@ string SP::Lexer::peekToken() {
 	return this->iterator->str();
 }
 
+bool SP::Lexer::nextToken() {
+	if (this->iterator != sregex_iterator()) {
+		this->iterator++;
+	}
+	while (this->iterator != sregex_iterator()) {
+		if (!this->iterator->str().empty()) {
+			return true;
+		}
+		this->iterator++;
+	}
+	return false;
+}
+
 bool SP::Lexer::nextIf(const string& token) {
 	if (this->iterator == sregex_iterator()) {
 		throw TokenizationException("Unexpected end of sequence.");
@@ -59,7 +54,7 @@ bool SP::Lexer::nextIf(const string& token) {
 	throw TokenizationException("Unexpected token encountered: " + this->iterator->str() + ".");
 }
 
-bool SP::Lexer::nextIf(initializer_list<string> tokens) {
+bool SP::Lexer::nextIf(const initializer_list<string>& tokens) {
 	bool last;
 	for (const string& token : tokens) {
 		last = nextIf(token);

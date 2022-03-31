@@ -4,26 +4,25 @@
 #include <regex>
 #include <string>
 
-#include "Common/ExpressionProcessor//LexerInterface.h"
+#include "Common/ExpressionProcessor/LexerInterface.h"
 #include "SP/SP.h"
-
-using namespace std;
 
 class SP::Lexer : public Common::ExpressionProcessor::LexerInterface {
 public:
+	Lexer() = default;
 	void initialize(string);
-	bool nextToken();
 	string readToken() override;
 	string peekToken() override;
+	bool nextToken();
 	bool nextIf(const string& token);
-	bool nextIf(initializer_list<string> tokens);
+	bool nextIf(const initializer_list<string>& tokens);
 
 private:
-	static regex validation_regex;
-	static regex tokenization_regex;
-
 	string source;
 	sregex_iterator iterator;
+
+	static regex validation_regex;
+	static regex tokenization_regex;
 };
 
 #endif  // SPA_SRC_SP_LEXER_H

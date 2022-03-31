@@ -4,14 +4,14 @@
 
 SP::Node::CallNode::CallNode(StmtRef stmt_no, ProcRef procedure) : StatementNode(stmt_no), procedure(move(procedure)) {}
 
-StmtRef SP::Node::CallNode::extract(PKB::StorageUpdateInterface& pkb) {
+StmtRef SP::Node::CallNode::extract(PKB::StorageUpdateInterface& pkb) const {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Call);
 	pkb.setCall(stmt_ref, procedure);
 	return stmt_ref;
 }
 
-bool SP::Node::CallNode::equals(const shared_ptr<StatementNode>& object) {
+bool SP::Node::CallNode::equals(const shared_ptr<StatementNode>& object) const {
 	shared_ptr<CallNode> other = dynamic_pointer_cast<CallNode>(object);
 	if (other == nullptr) {
 		return false;

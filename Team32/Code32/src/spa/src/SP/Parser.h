@@ -1,6 +1,8 @@
 #ifndef SPA_SRC_SP_PARSER_H
 #define SPA_SRC_SP_PARSER_H
 
+#define STARTING_STATEMENT_NUMBER 1
+
 #include <memory>
 #include <string>
 
@@ -8,16 +10,14 @@
 #include "SP/Node/ProgramNode.h"
 #include "SP/SP.h"
 
-using namespace std;
-
 class SP::Parser {
 public:
-	explicit Parser(SP::Lexer lex);
+	Parser() = default;
 	unique_ptr<Node::ProgramNode> parse(string source);
 
 private:
 	SP::Lexer lex;
-	StmtRef statement_count;
+	StmtRef statement_count = STARTING_STATEMENT_NUMBER;
 };
 
 #endif

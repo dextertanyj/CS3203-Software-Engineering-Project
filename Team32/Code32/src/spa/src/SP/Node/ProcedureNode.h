@@ -13,16 +13,17 @@ using namespace std;
 
 class SP::Node::ProcedureNode {
 public:
-	ProcedureNode(string name, unique_ptr<StatementListNode> stmt_list, StmtRef start, StmtRef end);
+	ProcedureNode(ProcRef name, unique_ptr<StatementListNode> statements, StmtRef start, StmtRef end);
+	void extract(PKB::StorageUpdateInterface& pkb) const;
+	[[nodiscard]]bool equals(const shared_ptr<ProcedureNode>& object) const;
+
 	static unique_ptr<ProcedureNode> parseProcedure(Lexer& lex, StmtRef& statement_count);
-	void extract(PKB::StorageUpdateInterface& pkb);
-	bool equals(const shared_ptr<ProcedureNode>& object);
 
 private:
 	ProcRef name;
 	StmtRef start;
 	StmtRef end;
-	shared_ptr<StatementListNode> stmt_list;
+	shared_ptr<StatementListNode> statements;
 };
 
 #endif  // SPA_SRC_SP_NODE_PROCEDURENODE_H
