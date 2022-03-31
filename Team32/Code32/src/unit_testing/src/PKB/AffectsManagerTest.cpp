@@ -758,19 +758,17 @@ TEST_CASE("PKB::AffectsManager::getAffectsStar Test") {
 	CHECK_NOTHROW(next_manager.setIfExit(7, 10, 4));
 	CHECK_NOTHROW(next_manager.setNext(4, 11));
 
-	CHECK(affects_manager.getAffectsStar(1, {}) ==
-	      StmtInfoPtrSet{assign_stmt_3, assign_stmt_5, assign_stmt_6, assign_stmt_10, assign_stmt_11});
-	CHECK_THROWS(affects_manager.getAffectsStar(2, {}));
-	CHECK(affects_manager.getAffectsStar(3, {}) ==
-	      StmtInfoPtrSet{assign_stmt_3, assign_stmt_5, assign_stmt_6, assign_stmt_10, assign_stmt_11});
-	CHECK_THROWS(affects_manager.getAffectsStar(4, {}));
-	CHECK(affects_manager.getAffectsStar(5, {}) == StmtInfoPtrSet{assign_stmt_6, assign_stmt_11});
-	CHECK(affects_manager.getAffectsStar(6, {}) == StmtInfoPtrSet{assign_stmt_11});
-	CHECK_THROWS(affects_manager.getAffectsStar(7, {}));
-	CHECK_THROWS(affects_manager.getAffectsStar(8, {}));
-	CHECK(affects_manager.getAffectsStar(9, {}) == StmtInfoPtrSet{assign_stmt_11});
-	CHECK(affects_manager.getAffectsStar(10, {}) == StmtInfoPtrSet{assign_stmt_11});
-	CHECK(affects_manager.getAffectsStar(11, {}).empty());
+	CHECK(affects_manager.getAffectsStar(1) == StmtInfoPtrSet{assign_stmt_3, assign_stmt_5, assign_stmt_6, assign_stmt_10, assign_stmt_11});
+	CHECK_THROWS(affects_manager.getAffectsStar(2));
+	CHECK(affects_manager.getAffectsStar(3) == StmtInfoPtrSet{assign_stmt_3, assign_stmt_5, assign_stmt_6, assign_stmt_10, assign_stmt_11});
+	CHECK_THROWS(affects_manager.getAffectsStar(4));
+	CHECK(affects_manager.getAffectsStar(5) == StmtInfoPtrSet{assign_stmt_6, assign_stmt_11});
+	CHECK(affects_manager.getAffectsStar(6) == StmtInfoPtrSet{assign_stmt_11});
+	CHECK_THROWS(affects_manager.getAffectsStar(7));
+	CHECK_THROWS(affects_manager.getAffectsStar(8));
+	CHECK(affects_manager.getAffectsStar(9) == StmtInfoPtrSet{assign_stmt_11});
+	CHECK(affects_manager.getAffectsStar(10) == StmtInfoPtrSet{assign_stmt_11});
+	CHECK(affects_manager.getAffectsStar(11).empty());
 }
 
 TEST_CASE("PKB::AffectsManager::getAffectsStar Nested While Test") {
@@ -833,15 +831,11 @@ TEST_CASE("PKB::AffectsManager::getAffectsStar Nested While Test") {
 	CHECK_NOTHROW(next_manager.setNext(2, 8));
 	CHECK_NOTHROW(next_manager.setNext(8, 1));
 
-	CHECK(affects_manager.getAffectsStar(4, {}) ==
-	      StmtInfoPtrSet{assign_stmt_4, assign_stmt_5, assign_stmt_6, assign_stmt_7, assign_stmt_8});
-	CHECK(affects_manager.getAffectsStar(5, {}) ==
-	      StmtInfoPtrSet{assign_stmt_4, assign_stmt_5, assign_stmt_6, assign_stmt_7, assign_stmt_8});
-	CHECK(affects_manager.getAffectsStar(6, {}).empty());
-	CHECK(affects_manager.getAffectsStar(7, {}) ==
-	      StmtInfoPtrSet{assign_stmt_6, assign_stmt_7, assign_stmt_8});
-	CHECK(affects_manager.getAffectsStar(8, {}) ==
-	      StmtInfoPtrSet{assign_stmt_6, assign_stmt_7, assign_stmt_8});
+	CHECK(affects_manager.getAffectsStar(4) == StmtInfoPtrSet{assign_stmt_4, assign_stmt_5, assign_stmt_6, assign_stmt_7, assign_stmt_8});
+	CHECK(affects_manager.getAffectsStar(5) == StmtInfoPtrSet{assign_stmt_4, assign_stmt_5, assign_stmt_6, assign_stmt_7, assign_stmt_8});
+	CHECK(affects_manager.getAffectsStar(6).empty());
+	CHECK(affects_manager.getAffectsStar(7) == StmtInfoPtrSet{assign_stmt_6, assign_stmt_7, assign_stmt_8});
+	CHECK(affects_manager.getAffectsStar(8) == StmtInfoPtrSet{assign_stmt_6, assign_stmt_7, assign_stmt_8});
 }
 
 TEST_CASE("PKB::AffectsManager::getAffectedStar Test") {

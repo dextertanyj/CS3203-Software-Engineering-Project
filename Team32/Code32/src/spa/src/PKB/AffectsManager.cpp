@@ -111,27 +111,30 @@ void PKB::AffectsManager::processNodeAffected(PKB::Types::DFSInfo &info, const s
 
 bool PKB::AffectsManager::checkAffectsStar(StmtRef first, StmtRef second) {
 	StmtRefSet visited_set = {};
-	StmtInfoPtrSet affected_nodes = getAffectsStar(first, visited_set);
+	StmtInfoPtrSet affected_nodes = getAffectsStar(first);
 	return any_of(affected_nodes.begin(), affected_nodes.end(),
 	              [&](const shared_ptr<StmtInfo> &info) { return info->getIdentifier() == second; });
 }
 
-StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref, StmtRefSet visited_star_set) {
-	visited_star_set.insert(node_ref);
+StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
+	StmtInfoPtrSet result;
 	// Check affects* cache here for early termination.
 	if (affects_star_cache.find(node_ref) != affects_star_cache.end()) {
 		return affects_star_cache.at(node_ref);
 	}
-	StmtInfoPtrSet affects_set = getAffects(node_ref);
-	StmtInfoPtrSet result;
-	for (auto node : affects_set) {
-		result.insert(node);
-		if (visited_star_set.find(node->getIdentifier()) != visited_star_set.end()) {
-			StmtInfoPtrSet affects_cycle_set = getAllAffectsInCycle(node->getIdentifier());
-			result.insert(affects_cycle_set.begin(), affects_cycle_set.end());
-		} else {
-			StmtInfoPtrSet child_affects_set = getAffectsStar(node->getIdentifier(), visited_star_set);
-			result.insert(child_affects_set.begin(), child_affects_set.end());
+	StmtRefSet visited = {};
+	queue<StmtRef> bfs_queue;
+	bfs_queue.push(node_ref);
+	while (!bfs_queue.empty()) {
+		StmtRef current = bfs_queue.front();
+		bfs_queue.pop();
+		visited.insert(current);
+		StmtInfoPtrSet affects_set = getAffects(current);
+		for (auto stmt : affects_set) {
+			result.insert(stmt);
+			if (visited.find(stmt->getIdentifier()) == visited.end()) {
+				bfs_queue.push(stmt->getIdentifier());
+			}
 		}
 	}
 	// Store into affects* cache.

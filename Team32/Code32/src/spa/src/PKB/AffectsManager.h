@@ -20,7 +20,7 @@ public:
 	bool checkAffectsStar(StmtRef first, StmtRef second);
 	StmtInfoPtrSet getAffects(StmtRef first);
 	StmtInfoPtrSet getAffected(StmtRef second);
-	StmtInfoPtrSet getAffectsStar(StmtRef node_ref, StmtRefSet visited_star_set);
+	StmtInfoPtrSet getAffectsStar(StmtRef node_ref);
 	StmtInfoPtrSet getAffectedStar(StmtRef node_ref, StmtRefSet visited_star_set);
 
 private:
@@ -36,21 +36,21 @@ private:
 	                     void (AffectsManager::*processor)(Types::DFSInfo &, const shared_ptr<PKB::StatementNode> &));
 	void processNodeAffects(Types::DFSInfo &info, const shared_ptr<PKB::StatementNode> &curr_stmt_node);
 	void processNodeAffected(Types::DFSInfo &info, const shared_ptr<PKB::StatementNode> &curr_stmt_node);
-//	struct VisitGraph {
-//		unordered_map<StmtRef, StmtRefSet> adj_list;
-//	};
+	//	struct VisitGraph {
+	//		unordered_map<StmtRef, StmtRefSet> adj_list;
+	//	};
 	StmtInfoPtrSet getAllAffectsInCycle(StmtRef start_ref);
 
-//	StmtRefSet getCycle(StmtRef ref) {
-//		VisitGraph vg;
-//		StmtRefSet result;
-//		stack<StmtRef> sc;
-//		sc.push(ref);
-//
-//		return result;
-//	}
-//
-//	StmtRefSet helper(stac)
+	//	StmtRefSet getCycle(StmtRef ref) {
+	//		VisitGraph vg;
+	//		StmtRefSet result;
+	//		stack<StmtRef> sc;
+	//		sc.push(ref);
+	//
+	//		return result;
+	//	}
+	//
+	//	StmtRefSet helper(stac)
 };
 
 #endif  // SPA_AFFECTSMANAGER_H
