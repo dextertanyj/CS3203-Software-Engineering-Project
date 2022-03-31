@@ -89,6 +89,8 @@ public:
 	 */
 	[[nodiscard]] Common::ExpressionProcessor::Expression getExpression() const;
 
+	[[nodiscard]] bool operator==(const ReferenceArgument& other) const;
+
 private:
 	variant<monostate, Declaration, Attribute, string, StmtRef, pair<Common::ExpressionProcessor::Expression, bool>> value;
 };

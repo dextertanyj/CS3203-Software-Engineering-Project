@@ -89,3 +89,27 @@ Common::ExpressionProcessor::Expression QP::Types::ReferenceArgument::getExpress
 	      value);
 	return expr;
 }
+
+bool QP::Types::ReferenceArgument::operator==(const ReferenceArgument& other) const {
+	ReferenceType type = getType();
+
+	if (type != other.getType()) {
+		return false;
+	}
+
+	switch (type) {
+		case ReferenceType::StatementIndex:
+			return getStatementIndex() == other.getStatementIndex();
+		case ReferenceType::Synonym:
+			return getSynonymSymbol() == other.getSynonymSymbol();
+		case ReferenceType::Wildcard:
+			return true;
+		case ReferenceType::Name:
+			return getName() == other.getName();
+		case ReferenceType::ExactExpression:
+		case ReferenceType::SubExpression:
+			return getExpression() == other.getExpression();
+		case ReferenceType::Attribute:
+			return getAttribute() == other.getAttribute();
+	}
+}

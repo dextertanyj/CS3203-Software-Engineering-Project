@@ -13,8 +13,10 @@ public:
 	[[nodiscard]] QueryResult executeTrivial(const StorageAdapter& pkb) const;
 	[[nodiscard]] QueryResult execute(const StorageAdapter& pkb, vector<QueryResult>& results) const;
 	[[nodiscard]] vector<string> getDeclarationSymbols() const;
+	[[nodiscard]] vector<Types::ReferenceArgument> getArguments() const;
 	[[nodiscard]] Types::ClauseType getType() const;
 	[[nodiscard]] size_t getCost() const;
+	[[nodiscard]] bool operator==(const Relation& other) const;
 
 private:
 	Types::ClauseType type;
