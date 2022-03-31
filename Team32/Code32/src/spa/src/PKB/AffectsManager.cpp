@@ -153,17 +153,23 @@ void PKB::AffectsManager::processAffectStarBFS(PKB::Types::AffectStarBFSInfo &in
 	info.bfs_queue.pop();
 	info.visited_set.insert(current);
 	for (auto stmt : (this->*collector)(current)) {
-		info.result.insert(stmt);
-		if (cache.find(stmt->getIdentifier()) != cache.end()) {
-			info.visited_set.insert(stmt->getIdentifier());
-			StmtInfoPtrSet affects_star_set_of_stmt = cache.at(stmt->getIdentifier());
-			for (auto stmt_info : affects_star_set_of_stmt) {
-				info.result.insert(stmt_info);
-				info.visited_set.insert(stmt_info->getIdentifier());
-			}
+		evaluateAffectStarBFSNode(stmt, info, cache);
+	}
+}
+void PKB::AffectsManager::evaluateAffectStarBFSNode(const shared_ptr<StmtInfo> &stmt, Types::AffectsStarBFSInfo &info,
+                                                    unordered_map<StmtRef, StmtInfoPtrSet> &cache) {
+	info.result.insert(stmt);
+	// Check for affects*/affected* result for earlier termination.
+	if (cache.find(stmt->getIdentifier()) != cache.end()) {
+		info.visited_set.insert(stmt->getIdentifier());
+		StmtInfoPtrSet affects_star_set_of_stmt = cache.at(stmt->getIdentifier());
+		for (auto stmt_info : affects_star_set_of_stmt) {
+			info.result.insert(stmt_info);
+			info.visited_set.insert(stmt_info->getIdentifier());
 		}
-		if (info.visited_set.find(stmt->getIdentifier()) == info.visited_set.end()) {
-			info.bfs_queue.push(stmt->getIdentifier());
-		}
+	}
+	// Otherwise, continue BFS onto affected/affected_by nodes.
+	if (info.visited_set.find(stmt->getIdentifier()) == info.visited_set.end()) {
+		info.bfs_queue.push(stmt->getIdentifier());
 	}
 }
