@@ -1,21 +1,15 @@
 #ifndef SPA_SRC_QP_QUERYPREPROCESSOR_H
 #define SPA_SRC_QP_QUERYPREPROCESSOR_H
 
-#include <functional>
-#include <memory>
 #include <optional>
 #include <regex>
-#include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "Common/ExpressionProcessor/Expression.h"
 #include "QP/Dispatcher/DispatchMap.h"
-#include "QP/QueryEvaluator.h"
-#include "QP/QueryExpressionLexer.h"
 #include "QP/QueryProperties.h"
-#include "QP/QueryResult.h"
+#include "QP/Types.h"
 
 class QP::QueryPreprocessor {
 public:
@@ -47,7 +41,7 @@ private:
 	void parseAssignPattern(Types::ReferenceArgument synonym);
 
 	optional<Types::DesignEntity> parseDesignEntity();
-	Declaration parseClauseSynonym();
+	Types::Declaration parseClauseSynonym();
 	vector<Types::ReferenceArgument> parseArgumentList(Types::ReferenceArgument (QueryPreprocessor::*parser)());
 	Types::ReferenceArgument parseAnyArgument();
 	Types::ReferenceArgument parseReferenceArgument();
@@ -59,7 +53,7 @@ private:
 
 	bool match(const string& token);
 	void reset();
-	void validateSyntax(QP::Types::ClauseType type, vector<QP::Types::ReferenceArgument> arguments);
+	void validateSyntax(Types::ClauseType type, vector<Types::ReferenceArgument> arguments);
 	void validateUnknownPatternSyntax();
 	void logSemanticException(const string&& message);
 
@@ -69,7 +63,7 @@ private:
 	Types::SelectList select_list;
 	Types::ClauseList clause_list;
 
-	QP::Dispatcher::DispatchMap dispatcher;
+	Dispatcher::DispatchMap dispatcher;
 	optional<string> semantic_exception_message;
 
 	static regex invalid_chars_regex;

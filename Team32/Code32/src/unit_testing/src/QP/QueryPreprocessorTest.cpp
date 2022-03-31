@@ -4,6 +4,7 @@
 
 #include "catch.hpp"
 #include "catch_tools.h"
+#include "QP/Relationship/Relation.h"
 
 using namespace QP::Types;
 
@@ -1083,7 +1084,8 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Semantic exceptions") {
 		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select unknownSynonym"), QP::QuerySemanticException);
 		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Follows(unknownSynonym, s1)"), QP::QuerySemanticException);
 		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern a1(unknownSynonym, _)"), QP::QuerySemanticException);
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with unknownSynonym.procName = r1.varName"), QP::QuerySemanticException);
+		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with unknownSynonym.procName = r1.varName"),
+		                  QP::QuerySemanticException);
 	}
 
 	SECTION("Duplicate synonym declaration") {
