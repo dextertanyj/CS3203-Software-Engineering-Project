@@ -7,7 +7,6 @@
 #define SINK_NODE_SYMBOL ""
 
 using QP::Types::Clause;
-using QP::Types::ConnectedSynonyms;
 using QP::Types::Declaration;
 
 QP::QueryGraph::QueryGraph(const DeclarationList& declarations, const ClauseList& clauses, const DeclarationList& select_list) {
@@ -19,7 +18,7 @@ QP::QueryGraph::QueryGraph(const DeclarationList& declarations, const ClauseList
 	optimize(select_list);
 }
 
-unordered_map<string, Node> QP::QueryGraph::getNodes() const { return nodes; }
+unordered_map<string, QP::QueryGraph::Node> QP::QueryGraph::getNodes() const { return nodes; }
 
 size_t QP::QueryGraph::getNumberOfGroups() const { return connected_synonyms.getNumberOfGroups(); }
 
@@ -32,7 +31,7 @@ DeclarationList QP::QueryGraph::getGroupSelectedSynonyms(size_t group_number) co
 ClauseList QP::QueryGraph::getGroupClauses(size_t group_number) const {
 	ClauseList clauses;
 
-	priority_queue<Edge, vector<Edge>, EdgeComp> priority_queue;
+	priority_queue<Edge, vector<Edge>, EdgeComparator> priority_queue;
 
 	unordered_set<string> visited_nodes;
 	const Node& cheapest_node = nodes.at(getCheapestNodeInGroup(group_number));
@@ -142,6 +141,7 @@ void QP::QueryGraph::optimize(const DeclarationList& select_list) {
 			unvisited_nodes.erase(start);
 		}
 	}
+	connected_synonyms.sort();
 }
 
 void QP::QueryGraph::addNodeToQueue(const Node& node, queue<string>& queue, unordered_set<string>& unvisited_nodes,
@@ -158,7 +158,7 @@ void QP::QueryGraph::addNodeToQueue(const Node& node, queue<string>& queue, unor
 }
 
 void QP::QueryGraph::insertEdgesToQueue(unordered_set<string>& visited_nodes, const string& node_symbol,
-                                        priority_queue<Edge, vector<Edge>, EdgeComp>& pq) const {
+                                        priority_queue<Edge, vector<Edge>, EdgeComparator>& pq) const {
 	visited_nodes.insert(node_symbol);
 	const Node& node = nodes.at(node_symbol);
 	for (auto const& new_edge : node.outgoing_edges) {
@@ -171,10 +171,14 @@ void QP::QueryGraph::insertEdgesToQueue(unordered_set<string>& visited_nodes, co
 string QP::QueryGraph::getCheapestNodeInGroup(size_t group_number) const {
 	assert(connected_synonyms.getNumberOfGroups() != 0);
 
-	string node_symbol;
-	size_t cheapest_value = SIZE_MAX;
+	auto group_synonyms = connected_synonyms.getGroupSynonyms(group_number);
 
-	for (auto const& symbol : connected_synonyms.getGroupSynonyms(group_number)) {
+	assert(!group_synonyms.empty());
+
+	string node_symbol = *group_synonyms.begin();
+	size_t cheapest_value = nodes.at(node_symbol).weight;
+
+	for (const auto& symbol : group_synonyms) {
 		const Node& node = nodes.at(symbol);
 		if (cheapest_value > node.weight) {
 			node_symbol = node.declaration_symbol;

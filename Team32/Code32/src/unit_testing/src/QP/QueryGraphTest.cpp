@@ -1,6 +1,6 @@
 #include "QP/QueryGraph.h"
 
-#include "QP/ConnectedSynonyms.h"
+#include "QP/ClauseGroups.h"
 #include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Relation.h"
 #include "catch.hpp"
@@ -10,7 +10,7 @@ using namespace QP::Types;
 TEST_CASE("QP::QueryGraph::QueryGraph Should initialize nodes") {
 	DeclarationList list = {{DesignEntity::Stmt, "s"}, {DesignEntity::Variable, "v"}};
 	QP::QueryGraph graph = QP::QueryGraph(list, {}, {});
-	unordered_map<string, Node> nodes = graph.getNodes();
+	unordered_map<string, QP::QueryGraph::Node> nodes = graph.getNodes();
 	REQUIRE(nodes.size() == 2);
 }
 
@@ -31,7 +31,7 @@ TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
 
 	QP::QueryGraph graph = QP::QueryGraph(list, clause_list, {});
 
-	unordered_map<string, Node> nodes = graph.getNodes();
+	unordered_map<string, QP::QueryGraph::Node> nodes = graph.getNodes();
 	REQUIRE(nodes.at("s").adjacent_symbols.size() == 1);
 	REQUIRE(nodes.at("a").adjacent_symbols.size() == 2);
 	REQUIRE(nodes.at("v").adjacent_symbols.size() == 1);
@@ -82,9 +82,9 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 	sort(group_one.begin(), group_one.end());
 	sort(group_two.begin(), group_two.end());
 	REQUIRE(number_of_groups == 3);
-	REQUIRE((group_one == group_with_a || group_two == group_with_a || group_three == group_with_a));
-	REQUIRE((group_one == group_with_d || group_two == group_with_d || group_three == group_with_d));
-	REQUIRE((group_one == group_with_f || group_two == group_with_f || group_three == group_with_f));
+	REQUIRE(group_one == group_with_f);
+	REQUIRE(group_two == group_with_d);
+	REQUIRE(group_three == group_with_a);
 }
 
 TEST_CASE("QP::QueryGraph::getGroupClauses Should sort clauses in group") {

@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "QP/ConnectedSynonyms.h"
+#include "QP/ClauseGroups.h"
 #include "QP/QueryUtils.h"
 
 using QP::Types::Clause;

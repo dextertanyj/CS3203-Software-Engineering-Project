@@ -8,9 +8,9 @@
 
 using QP::Types::DeclarationList;
 
-class QP::Types::ConnectedSynonyms {
+class QP::Types::ClauseGroups {
 public:
-	ConnectedSynonyms() = default;
+	ClauseGroups() = default;
 
 	[[nodiscard]] size_t getNumberOfGroups() const;
 	[[nodiscard]] DeclarationList getGroupSelectedSynonyms(size_t group_number) const;
@@ -21,9 +21,9 @@ public:
 
 private:
 	struct GroupInformation {
-		unsigned long long group_cost;      // NOLINT
-		vector<string> synonyms;            // NOLINT
-		DeclarationList selected_synonyms;  // NOLINT
+		unsigned long long group_cost;      // NOLINT(misc-non-private-member-variables-in-classes)
+		vector<string> synonyms;            // NOLINT(misc-non-private-member-variables-in-classes)
+		DeclarationList selected_synonyms;  // NOLINT(misc-non-private-member-variables-in-classes)
 		GroupInformation(unsigned long long group_cost, vector<string> synonyms, DeclarationList selected_synonyms)
 			: group_cost(group_cost), synonyms(move(synonyms)), selected_synonyms(move(selected_synonyms)) {}
 	};
