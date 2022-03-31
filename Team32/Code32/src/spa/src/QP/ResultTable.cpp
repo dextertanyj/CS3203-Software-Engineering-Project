@@ -14,13 +14,13 @@ QP::Types::ResultTable::ResultTable(vector<string> synonyms_stored) : synonyms_s
 	}
 }
 
-size_t QP::Types::ResultTable::getNumberOfRows() { return table.size(); }
+size_t QP::Types::ResultTable::getNumberOfRows() const { return table.size(); }
 
 size_t QP::Types::ResultTable::getNumberOfColumns() { return synonyms_stored.size(); }
 
 vector<ResultRow> QP::Types::ResultTable::getTable() { return table; }
 
-vector<string> QP::Types::ResultTable::getSynonymsStored() { return synonyms_stored; }
+vector<string> QP::Types::ResultTable::getSynonymsStored() const { return synonyms_stored; }
 
 unordered_map<string, size_t> QP::Types::ResultTable::getSynonymsStoredMap() { return synonyms_to_index_map; }
 

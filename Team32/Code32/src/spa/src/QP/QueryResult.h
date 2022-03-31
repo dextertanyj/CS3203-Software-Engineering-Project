@@ -25,8 +25,8 @@ public:
 	ResultTable getTable();
 	ResultColumn getSynonymResult(const string& synonym);
 	ResultRow getRowWithOrder(const vector<string>& synonyms, size_t row_number);
-	size_t getNumberOfRows();
-	vector<string> getSynonymsStored();
+	size_t getNumberOfRows() const;
+	vector<string> getSynonymsStored() const;
 	void addRow(const ResultRow& row);
 	void filterBySelect(const QP::Types::DeclarationList& select_list);
 	static QueryResult joinResults(vector<QueryResult>& result);
@@ -35,9 +35,9 @@ public:
 private:
 	bool result;
 	ResultTable table;
-	static bool compareLength(QueryResult result1, QueryResult result2);
-	static unordered_map<string, vector<size_t>> getSynonymIndexMap(vector<QueryResult>& results);
-	static void findNeighbours(QueryResult result1, unordered_map<string, vector<size_t>>& synonym_to_index_map,
+	static bool compareLength(const QueryResult& lhs, const QueryResult& rhs);
+	static unordered_map<string, vector<size_t>> getSynonymIndexMap(const vector<QueryResult>& results);
+	static void findNeighbours(const QueryResult& current, unordered_map<string, vector<size_t>>& synonym_to_index_map,
 	                           priority_queue<size_t, vector<size_t>, greater<>>& queue, unordered_set<size_t>& completed);
 	static void addNeighboursToQueue(const vector<size_t>& indexes, priority_queue<size_t, vector<size_t>, greater<>>& queue,
 	                                 unordered_set<size_t>& completed);

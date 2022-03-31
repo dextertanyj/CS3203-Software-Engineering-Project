@@ -17,10 +17,10 @@ class QP::Types::ResultTable {
 public:
 	ResultTable();
 	explicit ResultTable(vector<string> synonyms_stored);
-	size_t getNumberOfRows();
+	size_t getNumberOfRows() const;
 	size_t getNumberOfColumns();
 	vector<ResultRow> getTable();
-	vector<string> getSynonymsStored();
+	vector<string> getSynonymsStored() const;
 	unordered_map<string, size_t> getSynonymsStoredMap();
 	ResultColumn getColumn(const string& synonym);
 	ResultRow getRow(size_t row_number);
