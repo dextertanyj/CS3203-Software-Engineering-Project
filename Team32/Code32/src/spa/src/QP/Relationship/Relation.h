@@ -14,6 +14,7 @@ public:
 	[[nodiscard]] QueryResult execute(const QP::StorageAdapter& pkb) const;
 	[[nodiscard]] vector<string> getDeclarationSymbols() const;
 	[[nodiscard]] Types::ClauseType getType() const;
+	[[nodiscard]] size_t getCost() const;
 
 private:
 	Types::ClauseType type;

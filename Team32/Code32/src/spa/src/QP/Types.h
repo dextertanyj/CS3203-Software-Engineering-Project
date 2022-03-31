@@ -74,11 +74,6 @@ typedef struct Clause {
 	shared_ptr<Relationship::Relation> relation;
 } Clause;
 
-typedef struct Node {
-	string declaration_symbol;
-	vector<string> adjacent_symbols;
-} Node;
-
 // Types for attribute selection
 typedef std::string Name;
 typedef unsigned long long Number;
