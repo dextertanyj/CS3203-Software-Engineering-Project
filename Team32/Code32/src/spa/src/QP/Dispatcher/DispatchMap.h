@@ -1,6 +1,7 @@
 #ifndef SPA_SRC_QP_DISPATCHER_DISPATCHMAP_H
 #define SPA_SRC_QP_DISPATCHER_DISPATCHMAP_H
 
+#include "QP/Dispatcher/AffectsDispatcher.tpp"
 #include "QP/Dispatcher/CallsDispatcher.tpp"
 #include "QP/Dispatcher/Dispatcher.h"
 #include "QP/Dispatcher/FollowsNextDispatcher.tpp"
@@ -19,6 +20,8 @@
 
 struct QP::Dispatcher::DispatchMap {
 	Types::ArgumentDispatchMap dispatch_map = {
+		{Types::ClauseType::Affects, QP::Dispatcher::AffectsDispatcher::dispatcher<Types::ClauseType::Affects>},
+		{Types::ClauseType::AffectsT, QP::Dispatcher::AffectsDispatcher::dispatcher<Types::ClauseType::AffectsT>},
 		{Types::ClauseType::Calls, QP::Dispatcher::CallsDispatcher::dispatcher<Types::ClauseType::Calls>},
 		{Types::ClauseType::CallsT, QP::Dispatcher::CallsDispatcher::dispatcher<Types::ClauseType::CallsT>},
 		{Types::ClauseType::Follows, QP::Dispatcher::FollowsNextDispatcher::dispatcher<Types::ClauseType::Follows>},
@@ -32,9 +35,12 @@ struct QP::Dispatcher::DispatchMap {
 		{Types::ClauseType::PatternWhile, QP::Dispatcher::PatternWhileDispatcher::dispatcher},
 		{Types::ClauseType::PatternIf, QP::Dispatcher::PatternIfDispatcher::dispatcher},
 		{Types::ClauseType::UnknownUses, QP::Dispatcher::UsesDispatcher::dispatcher},
-		{Types::ClauseType::With, QP::Dispatcher::WithDispatcher::dispatcher}};
+		{Types::ClauseType::With, QP::Dispatcher::WithDispatcher::dispatcher},
+	};
 
 	unordered_map<string, Types::ClauseType> clause_map = {
+		{"Affects", Types::ClauseType::Affects},
+		{"Affects*", Types::ClauseType::AffectsT},
 		{"Calls", Types::ClauseType::Calls},
 		{"Calls*", Types::ClauseType::CallsT},
 		{"Follows", Types::ClauseType::Follows},
