@@ -11,14 +11,13 @@ bool PKB::AffectsManager::checkAffects(StmtRef first, StmtRef second) {
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
-	// Check if statement already exists in cache
 	if (affects_cache.find(first) != affects_cache.end()) {
 		return affects_cache.at(first);
 	}
 
 	shared_ptr<PKB::StatementNode> start_node = this->control_flow_graph->getNode(first);
 	if (start_node->getStmtInfo()->getType() != StmtType::Assign) {
-		throw invalid_argument("Affects statement must be an assign statement.");
+		return {};
 	}
 
 	VarRef variable = *(modifies_store->getByStmt(first).begin());
@@ -35,14 +34,13 @@ StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
-	// Check if statement already exists in cache
 	if (affected_cache.find(second) != affected_cache.end()) {
 		return affected_cache.at(second);
 	}
 
 	shared_ptr<PKB::StatementNode> node = this->control_flow_graph->getNode(second);
 	if (node->getStmtInfo()->getType() != StmtType::Assign) {
-		throw invalid_argument("Affects statement must be an assign statement.");
+		return {};
 	}
 	VarRefSet variables = uses_store->getByStmt(second);
 	StmtInfoPtrSet affected_set;
@@ -116,7 +114,6 @@ bool PKB::AffectsManager::checkAffectsStar(StmtRef first, StmtRef second) {
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
-	// Check affects* cache here for early termination.
 	if (affects_star_cache.find(node_ref) != affects_star_cache.end()) {
 		return affects_star_cache.at(node_ref);
 	}
@@ -126,13 +123,11 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
 	while (!info.bfs_queue.empty()) {
 		processAffectStarBFS(info, &AffectsManager::getAffects, affects_star_cache);
 	}
-	// Store into affects* cache.
 	affects_star_cache.insert({node_ref, info.result});
 	return info.result;
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
-	// Check affected* cache here for early termination.
 	if (affected_star_cache.find(node_ref) != affected_star_cache.end()) {
 		return affected_star_cache.at(node_ref);
 	}
@@ -142,7 +137,6 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
 	while (!info.bfs_queue.empty()) {
 		processAffectStarBFS(info, &AffectsManager::getAffected, affected_star_cache);
 	}
-	// Store into affected* cache.
 	affected_star_cache.insert({node_ref, info.result});
 	return info.result;
 }
@@ -159,7 +153,6 @@ void PKB::AffectsManager::processAffectStarBFS(PKB::Types::AffectStarBFSInfo &in
 void PKB::AffectsManager::evaluateAffectStarBFSNode(const shared_ptr<StmtInfo> &stmt, Types::AffectsStarBFSInfo &info,
                                                     unordered_map<StmtRef, StmtInfoPtrSet> &cache) {
 	info.result.insert(stmt);
-	// Check for affects*/affected* result for earlier termination.
 	if (cache.find(stmt->getIdentifier()) != cache.end()) {
 		info.visited_set.insert(stmt->getIdentifier());
 		StmtInfoPtrSet affects_star_set_of_stmt = cache.at(stmt->getIdentifier());
@@ -167,8 +160,8 @@ void PKB::AffectsManager::evaluateAffectStarBFSNode(const shared_ptr<StmtInfo> &
 			info.result.insert(stmt_info);
 			info.visited_set.insert(stmt_info->getIdentifier());
 		}
+		return;
 	}
-	// Otherwise, continue BFS onto affected/affected_by nodes.
 	if (info.visited_set.find(stmt->getIdentifier()) == info.visited_set.end()) {
 		info.bfs_queue.push(stmt->getIdentifier());
 	}
