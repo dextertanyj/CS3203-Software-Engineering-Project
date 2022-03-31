@@ -51,51 +51,48 @@ void PKB::ModifiesSRelation::optimize(Types::ParentStore& parent_store, CallsSta
 	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {
 		vector<shared_ptr<StmtInfo>> stmts_in_proc = proc_iterator->get()->getStatements();
 		// For any procedure, we must process the call statements first before propagating the conditional statements.
-		for (const auto& statement : stmts_in_proc) {
-			if (statement->getType() == StmtType::Call) {
-				optimizeCall(statement, call_store, proc_store, store);
-			}
-		}
-		for (const auto& statement : stmts_in_proc) {
-			if (statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::WhileStmt) {
-				optimizeConditional(statement, parent_store, store);
-			}
-		}
+		std::for_each(stmts_in_proc.begin(), stmts_in_proc.end(), [&call_store, &proc_store, &store](const shared_ptr<StmtInfo>& info) {
+			optimizeCall(info, call_store, proc_store, store);
+		});
+		std::for_each(stmts_in_proc.begin(), stmts_in_proc.end(),
+		              [&parent_store, &store](const shared_ptr<StmtInfo>& info) { optimizeConditional(info, parent_store, store); });
 	}
 }
 
 void PKB::ModifiesSRelation::optimizeCall(const shared_ptr<StmtInfo>& statement, CallsStatementStore& call_store,
                                           Types::ProcedureStore& proc_store, SVRelationStore<ModifiesSRelation>& store) {
-	// Need to access CallsStatementStore to get the statements modified in the called procedure.
-	VarRefSet variables;
+	// Need to access CallStatementStore to get the statements modified in the called procedure.
+	if (statement->getType() != StmtType::Call) {
+		return;
+	}
 	ProcRef called_proc = call_store.getProcedure(statement);
 	shared_ptr<ProcedureInfo> proc_info = proc_store.get(called_proc);
 	vector<shared_ptr<StmtInfo>> stmts_in_called_proc = proc_info->getStatements();
-	for (const auto& stmt_in_called_proc : stmts_in_called_proc) {
-		auto iter = store.statement_key_map.find(stmt_in_called_proc->getIdentifier());
-		// If statement modifies a variable, then we must record it in the calling statement.
-		if (iter != store.statement_key_map.end()) {
-			variables.insert(iter->second.begin(), iter->second.end());
-		}
-	}
-	if (!variables.empty()) {
-		store.set(statement, variables);
-	}
+	StmtInfoPtrSet stmts_set_in_proc(stmts_in_called_proc.begin(), stmts_in_called_proc.end());
+	storeModifiedVars(statement, stmts_set_in_proc, store);
 }
 
 void PKB::ModifiesSRelation::optimizeConditional(const shared_ptr<StmtInfo>& statement, Types::ParentStore& parent_store,
                                                  SVRelationStore<ModifiesSRelation>& store) {
+	if (statement->getType() != StmtType::IfStmt && statement->getType() != StmtType::WhileStmt) {
+		return;
+	}
 	// For conditional statements, need to look at the child* statements for modify statements.
-	VarRefSet variables;
 	auto children = parent_store.getReverseTransitive(statement->getIdentifier());
-	for (const auto& child : children) {
-		auto iter = store.statement_key_map.find(child->getIdentifier());
+	storeModifiedVars(statement, children, store);
+}
+
+void PKB::ModifiesSRelation::storeModifiedVars(const shared_ptr<StmtInfo>& stmt_key, const StmtInfoPtrSet& stmt_list,
+                                               PKB::SVRelationStore<PKB::ModifiesSRelation>& store) {
+	VarRefSet variables;
+	for (const auto& stmt : stmt_list) {
+		auto iter = store.statement_key_map.find(stmt->getIdentifier());
 		// If child statement modifies a variable, then we must record it in the parent conditional statement.
 		if (iter != store.statement_key_map.end()) {
 			variables.insert(iter->second.begin(), iter->second.end());
 		}
 	}
 	if (!variables.empty()) {
-		store.set(statement, variables);
+		store.set(stmt_key, variables);
 	}
 }
