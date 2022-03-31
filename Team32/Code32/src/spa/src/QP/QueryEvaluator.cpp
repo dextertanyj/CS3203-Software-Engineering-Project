@@ -6,16 +6,16 @@
 #include "QP/QueryUtils.h"
 
 using QP::Types::Clause;
-using QP::Types::ConnectedSynonyms;
 using QP::Types::DesignEntity;
 
 QP::QueryEvaluator::QueryEvaluator(QP::StorageAdapter& store) : store(store) {}
 
 QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properties) {
-	QueryGraph graph = buildGraph(query_properties);
-	DeclarationList select_list = query_properties.getSelectSynonymList();
-	ConnectedSynonyms connected_synonyms = graph.getConnectedSynonyms(select_list);
-	size_t number_of_groups = connected_synonyms.getNumberOfGroups();
+	auto declarations = query_properties.getDeclarationList();
+	auto clauses = query_properties.getClauseList();
+	auto select_list = query_properties.getSelectSynonymList();
+	QueryGraph graph = QueryGraph(declarations, clauses, select_list);
+	size_t number_of_groups = graph.getNumberOfGroups();
 
 	vector<QueryResult> results;
 
@@ -25,8 +25,8 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	}
 
 	for (size_t i = 0; i < number_of_groups; i++) {
-		ClauseList group_clauses = graph.sortGroup(i);
-		DeclarationList group_select_list = connected_synonyms.getGroupSelectedSynonyms(i);
+		ClauseList group_clauses = graph.getGroupClauses(i);
+		DeclarationList group_select_list = graph.getGroupSelectedSynonyms(i);
 
 		bool has_result = executeGroup(group_clauses, group_select_list, results);
 
@@ -174,13 +174,6 @@ QP::QueryResult QP::QueryEvaluator::getProcedures(const string& symbol) {
 	}
 
 	return result;
-}
-
-QP::QueryGraph QP::QueryEvaluator::buildGraph(QueryProperties& query_properties) {
-	QueryGraph graph = QueryGraph(query_properties.getDeclarationList());
-	graph.setEdges(query_properties.getClauseList());
-
-	return graph;
 }
 
 ClauseList QP::QueryEvaluator::getClausesWithoutSynonyms(QueryProperties& query_properties) {

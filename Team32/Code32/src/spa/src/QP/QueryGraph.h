@@ -36,20 +36,25 @@ typedef struct Node {
 
 class QP::QueryGraph {
 public:
-	explicit QueryGraph(const DeclarationList& declarations);
-	void setEdges(const ClauseList& clause_list);
-	unordered_map<string, Node> getNodes();
-	ConnectedSynonyms getConnectedSynonyms(const DeclarationList& select_list);
-	ClauseList sortGroup(size_t group_number);
+	explicit QueryGraph(const DeclarationList& declarations, const ClauseList& clauses, const DeclarationList& select_list);
+	[[nodiscard]] size_t getNumberOfGroups() const;
+	[[nodiscard]] vector<string> getGroupSynonyms(size_t group_number) const;
+	[[nodiscard]] DeclarationList getGroupSelectedSynonyms(size_t group_number) const;
+	[[nodiscard]] ClauseList getGroupClauses(size_t group_number) const;
+	[[nodiscard]] unordered_map<string, Node> getNodes() const;
 
 private:
 	unordered_map<string, Node> nodes;
 	ConnectedSynonyms connected_synonyms;
+
+	void setEdges(const ClauseList& clause_list);
 	void setEdge(const Clause& clause);
 	void addEdge(const pair<string, string>& symbols, const Clause& clause);
-	string getCheapestNodeInGroup(size_t group_number);
+	void optimize(const DeclarationList& select_list);
+
 	void insertEdgesToQueue(unordered_set<string>& visited_nodes, const string& node_symbol,
-	                        priority_queue<Edge, vector<Edge>, EdgeComp>& pq);
+	                        priority_queue<Edge, vector<Edge>, EdgeComp>& pq) const;
+	string getCheapestNodeInGroup(size_t group_number) const;
 	static void addNodeToQueue(const Node& node, queue<string>& queue, unordered_set<string>& unvisited_nodes,
 	                            unsigned long long& cost);
 };

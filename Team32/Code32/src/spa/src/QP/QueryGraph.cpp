@@ -10,11 +10,51 @@ using QP::Types::Clause;
 using QP::Types::ConnectedSynonyms;
 using QP::Types::Declaration;
 
-QP::QueryGraph::QueryGraph(const DeclarationList& declarations) {
+QP::QueryGraph::QueryGraph(const DeclarationList& declarations, const ClauseList& clauses, const DeclarationList& select_list) {
 	for (const Declaration& declaration : declarations) {
 		Node node = {declaration.symbol, {}, {}, SIZE_MAX};
 		nodes.insert({declaration.symbol, node});
 	}
+	setEdges(clauses);
+	optimize(select_list);
+}
+
+unordered_map<string, Node> QP::QueryGraph::getNodes() const { return nodes; }
+
+size_t QP::QueryGraph::getNumberOfGroups() const { return connected_synonyms.getNumberOfGroups(); }
+
+vector<string> QP::QueryGraph::getGroupSynonyms(size_t group_number) const { return connected_synonyms.getGroupSynonyms(group_number); }
+
+DeclarationList QP::QueryGraph::getGroupSelectedSynonyms(size_t group_number) const {
+	return connected_synonyms.getGroupSelectedSynonyms(group_number);
+}
+
+ClauseList QP::QueryGraph::getGroupClauses(size_t group_number) const {
+	ClauseList clauses;
+
+	priority_queue<Edge, vector<Edge>, EdgeComp> priority_queue;
+
+	unordered_set<string> visited_nodes;
+	const Node& cheapest_node = nodes.at(getCheapestNodeInGroup(group_number));
+	visited_nodes.insert(cheapest_node.declaration_symbol);
+	for (auto const& edge : cheapest_node.outgoing_edges) {
+		priority_queue.push(edge);
+	}
+
+	while (!priority_queue.empty()) {
+		Edge edge = priority_queue.top();
+		priority_queue.pop();
+		if (!edge.node_from_symbol.empty() && visited_nodes.find(edge.node_from_symbol) == visited_nodes.end()) {
+			insertEdgesToQueue(visited_nodes, edge.node_from_symbol, priority_queue);
+		}
+		if (!edge.node_to_symbol.empty() && visited_nodes.find(edge.node_to_symbol) == visited_nodes.end()) {
+			insertEdgesToQueue(visited_nodes, edge.node_to_symbol, priority_queue);
+		}
+
+		clauses.push_back(edge.clause);
+	}
+
+	return clauses;
 }
 
 void QP::QueryGraph::setEdges(const ClauseList& clause_list) {
@@ -22,8 +62,6 @@ void QP::QueryGraph::setEdges(const ClauseList& clause_list) {
 		setEdge(clause);
 	}
 }
-
-unordered_map<string, Node> QP::QueryGraph::getNodes() { return nodes; }
 
 void QP::QueryGraph::setEdge(const Clause& clause) {
 	vector<string> declarations = clause.relation->getDeclarationSymbols();
@@ -52,13 +90,9 @@ void QP::QueryGraph::addEdge(const pair<string, string>& symbols, const Clause& 
 	}
 }
 
-ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& select_list) {
+void QP::QueryGraph::optimize(const DeclarationList& select_list) {
 	if (nodes.empty()) {
-		return {};
-	}
-
-	if (connected_synonyms.getNumberOfGroups() != 0) {
-		return connected_synonyms;
+		return;
 	}
 
 	unordered_set<string> unvisited_nodes;
@@ -108,12 +142,10 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 			unvisited_nodes.erase(start);
 		}
 	}
-
-	return connected_synonyms;
 }
 
 void QP::QueryGraph::addNodeToQueue(const Node& node, queue<string>& queue, unordered_set<string>& unvisited_nodes,
-                                     unsigned long long& cost) {
+                                    unsigned long long& cost) {
 	for (const string& adjacent_symbol : node.adjacent_symbols) {
 		if (unvisited_nodes.find(adjacent_symbol) != unvisited_nodes.end()) {
 			queue.push(adjacent_symbol);
@@ -124,38 +156,10 @@ void QP::QueryGraph::addNodeToQueue(const Node& node, queue<string>& queue, unor
 	}
 }
 
-ClauseList QP::QueryGraph::sortGroup(size_t group_number) {
-	ClauseList clauses;
-
-	priority_queue<Edge, vector<Edge>, EdgeComp> pq;
-
-	unordered_set<string> visited_nodes;
-	Node& cheapest_node = nodes[getCheapestNodeInGroup(group_number)];
-	visited_nodes.insert(cheapest_node.declaration_symbol);
-	for (auto const& edge : cheapest_node.outgoing_edges) {
-		pq.push(edge);
-	}
-
-	while (!pq.empty()) {
-		Edge edge = pq.top();
-		pq.pop();
-		if (!edge.node_from_symbol.empty() && visited_nodes.find(edge.node_from_symbol) == visited_nodes.end()) {
-			insertEdgesToQueue(visited_nodes, edge.node_from_symbol, pq);
-		}
-		if (!edge.node_to_symbol.empty() && visited_nodes.find(edge.node_to_symbol) == visited_nodes.end()) {
-			insertEdgesToQueue(visited_nodes, edge.node_to_symbol, pq);
-		}
-
-		clauses.push_back(edge.clause);
-	}
-
-	return clauses;
-}
-
 void QP::QueryGraph::insertEdgesToQueue(unordered_set<string>& visited_nodes, const string& node_symbol,
-                                        priority_queue<Edge, vector<Edge>, EdgeComp>& pq) {
+                                        priority_queue<Edge, vector<Edge>, EdgeComp>& pq) const {
 	visited_nodes.insert(node_symbol);
-	Node& node = nodes.at(node_symbol);
+	const Node& node = nodes.at(node_symbol);
 	for (auto const& new_edge : node.outgoing_edges) {
 		if (visited_nodes.find(new_edge.node_to_symbol) == visited_nodes.end()) {
 			pq.push(new_edge);
@@ -163,14 +167,14 @@ void QP::QueryGraph::insertEdgesToQueue(unordered_set<string>& visited_nodes, co
 	}
 }
 
-string QP::QueryGraph::getCheapestNodeInGroup(size_t group_number) {
+string QP::QueryGraph::getCheapestNodeInGroup(size_t group_number) const {
 	assert(connected_synonyms.getNumberOfGroups() != 0);
 
 	string node_symbol;
 	size_t cheapest_value = SIZE_MAX;
 
 	for (auto const& symbol : connected_synonyms.getGroupSynonyms(group_number)) {
-		Node& node = nodes.at(symbol);
+		const Node& node = nodes.at(symbol);
 		if (cheapest_value > node.weight) {
 			node_symbol = node.declaration_symbol;
 			cheapest_value = node.weight;

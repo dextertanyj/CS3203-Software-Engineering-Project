@@ -34,7 +34,6 @@ private:
 	QueryResult getConstants(const string& symbol);
 	QueryResult getVariables(const string& symbol);
 	QueryResult getProcedures(const string& symbol);
-	static QueryGraph buildGraph(QueryProperties& query_properties);
 	static ClauseList getClausesWithoutSynonyms(QueryProperties& query_properties);
 };
 
