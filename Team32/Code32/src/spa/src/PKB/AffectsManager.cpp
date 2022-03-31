@@ -157,8 +157,10 @@ void PKB::AffectsManager::processAffectStarBFS(PKB::Types::AffectStarBFSInfo &in
 		if (cache.find(stmt->getIdentifier()) != cache.end()) {
 			info.visited_set.insert(stmt->getIdentifier());
 			StmtInfoPtrSet affects_star_set_of_stmt = cache.at(stmt->getIdentifier());
-			info.result.insert(affects_star_set_of_stmt.begin(), affects_star_set_of_stmt.end());
-			info.visited_set.insert(affects_star_set_of_stmt.begin(), affects_star_set_of_stmt.end());
+			for (auto stmt_info : affects_star_set_of_stmt) {
+				info.result.insert(stmt_info);
+				info.visited_set.insert(stmt_info->getIdentifier());
+			}
 		}
 		if (info.visited_set.find(stmt->getIdentifier()) == info.visited_set.end()) {
 			info.bfs_queue.push(stmt->getIdentifier());
