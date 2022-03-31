@@ -85,6 +85,9 @@ public:
 	// Attribute get methods
 	virtual ProcRef getCalledProcedure(StmtRef index) = 0;
 
+	// CFG methods
+	virtual void resetCFGCache() = 0;
+
 	virtual ~StorageAccessInterface() = default;
 };
 
