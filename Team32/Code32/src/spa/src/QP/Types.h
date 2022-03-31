@@ -84,24 +84,6 @@ typedef struct Clause {
 	shared_ptr<Relationship::Relation> relation;
 } Clause;
 
-typedef struct Edge {
-	string node_from_symbol;
-	string node_to_symbol;
-	Clause clause;
-	size_t weight;
-} Edge;
-
-struct EdgeComp {
-	auto operator()(Edge& edge_one, Edge& edge_two) const -> bool { return edge_one.weight > edge_two.weight; };
-};
-
-typedef struct Node {
-	string declaration_symbol;
-	unordered_set<string> adjacent_symbols;
-	vector<Edge> outgoing_edges;
-	size_t weight;
-} Node;
-
 // Types for attribute selection
 typedef std::string Name;
 typedef unsigned long long Number;

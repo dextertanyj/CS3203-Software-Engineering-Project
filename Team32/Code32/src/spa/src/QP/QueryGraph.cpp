@@ -102,7 +102,6 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 		}
 	}
 
-	connected_synonyms.setNumberOfGroups(group_number);
 	this->connected_synonyms = connected_synonyms;
 	return connected_synonyms;
 }
@@ -118,7 +117,7 @@ void QP::QueryGraph::addNodesToQueue(unordered_set<string>& symbols, queue<strin
 ClauseList QP::QueryGraph::sortGroup(size_t group_number) {
 	ClauseList clauses;
 
-	priority_queue<Edge, vector<Edge>, QP::Types::EdgeComp> pq;
+	priority_queue<Edge, vector<Edge>, EdgeComp> pq;
 
 	unordered_set<string> visited_nodes;
 	Node& cheapest_node = nodes[getCheapestNodeInGroup(group_number)];
@@ -144,7 +143,7 @@ ClauseList QP::QueryGraph::sortGroup(size_t group_number) {
 }
 
 void QP::QueryGraph::insertEdgesToQueue(unordered_set<string>& visited_nodes, const string& node_symbol,
-                                        priority_queue<Edge, vector<Edge>, QP::Types::EdgeComp>& pq) {
+                                        priority_queue<Edge, vector<Edge>, EdgeComp>& pq) {
 	visited_nodes.insert(node_symbol);
 	Node& node = nodes.at(node_symbol);
 	for (auto const& new_edge : node.outgoing_edges) {
