@@ -54,7 +54,7 @@ WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<Refe
 		getExecutorMap<TAttribute, TLeft, TRight>();
 	ReferenceType lhs = arguments.at(0).getType();
 	ReferenceType rhs = arguments.at(1).getType();
-	unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> inner_map = map.at(lhs);
+	auto inner_map = map.at(lhs);
 	auto executor = inner_map.at(rhs);
 	return executor;
 }
@@ -113,16 +113,26 @@ inline unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, 
 
 template <typename TAttribute, typename TLeft, typename TRight>
 ExecutorSet dispatchHandler(const vector<ReferenceArgument>& arguments) {
+	static auto left_attribute_map = getAttributeMap<TAttribute, TLeft>();
+	static auto right_attribute_map = getAttributeMap<TAttribute, TRight>();
 	WithClauseArgumentDispatchKey lhs_key = arguments.at(0).getType();
 	if (arguments.at(0).getType() == ReferenceType::Attribute) {
 		lhs_key = pair{arguments.at(0).getAttribute().synonym.type, arguments.at(0).getAttribute().attribute};
 	}
-	auto lhs_executors = getAttributeMap<TAttribute, TLeft>().at(lhs_key);
 	WithClauseArgumentDispatchKey rhs_key = arguments.at(1).getType();
 	if (arguments.at(1).getType() == ReferenceType::Attribute) {
 		rhs_key = pair{arguments.at(1).getAttribute().synonym.type, arguments.at(1).getAttribute().attribute};
 	}
-	auto rhs_executors = getAttributeMap<TAttribute, TRight>().at(rhs_key);
+	auto lhs_executors_iter = left_attribute_map.find(lhs_key);
+	if (lhs_executors_iter == left_attribute_map.end()) {
+		throw QP::QueryDispatchException("Incorrect argument type.");
+	}
+	auto rhs_executors_iter = right_attribute_map.find(rhs_key);
+	if (rhs_executors_iter == right_attribute_map.end()) {
+		throw QP::QueryDispatchException("Incorrect argument type.");
+	}
+	auto lhs_executors = lhs_executors_iter->second;
+	auto rhs_executors = rhs_executors_iter->second;
 	auto executor = getExecutor<TAttribute, TLeft, TRight>(arguments);
 	ExecutorSet result;
 	visit(Visitor{
@@ -170,9 +180,7 @@ const unordered_map<WithClauseBasicDispatchKey,
 }
 
 QP::Types::ExecutorSetBundle QP::Dispatcher::WithDispatcher::dispatcher(const vector<Types::ReferenceArgument>& arguments) {
-	if (arguments.size() != 2) {
-		throw QP::QueryException("Incorrect number of arguments.");
-	}
+	assert(arguments.size() == 2);
 	WithClauseBasicDispatchKey lhs = arguments.at(0).getType();
 	if (arguments.at(0).getType() == ReferenceType::Attribute) {
 		lhs = arguments.at(0).getAttribute().attribute;
@@ -181,5 +189,14 @@ QP::Types::ExecutorSetBundle QP::Dispatcher::WithDispatcher::dispatcher(const ve
 	if (arguments.at(1).getType() == ReferenceType::Attribute) {
 		rhs = arguments.at(1).getAttribute().attribute;
 	}
-	return {ClauseType::With, handler_map.at(lhs).at(rhs)(arguments)};
+	auto handler_iter = handler_map.find(lhs);
+	if (handler_iter == handler_map.end()) {
+		throw QP::QueryDispatchException("Incorrect argument type.");
+	}
+	auto inner_map = handler_iter->second;
+	auto inner_handler_iter = inner_map.find(rhs);
+	if (inner_handler_iter == inner_map.end()) {
+		throw QP::QueryDispatchException("Incorrect argument type.");
+	}
+	return {ClauseType::With, inner_handler_iter->second(arguments)};
 }

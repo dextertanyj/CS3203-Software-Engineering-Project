@@ -16,18 +16,7 @@
 using namespace std;
 
 namespace QP::Types {
-enum class DesignEntity {
-	Stmt,
-	Read,
-	Print,
-	Call,
-	While,
-	If,
-	Assign,
-	Variable,
-	Constant,
-	Procedure,
-};
+enum class DesignEntity { Stmt, Read, Print, Call, While, If, Assign, Variable, Constant, Procedure };
 
 enum class ClauseType {
 	Affects,
@@ -53,6 +42,7 @@ enum class ClauseType {
 };
 
 enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression, Attribute };
+enum class AttributeToken { StatementIndex, ProcedureName, VariableName, Value };
 enum class AttributeType { NumberIdentifier, NameIdentifier, ProcedureName, VariableName };
 
 class ReferenceArgument;

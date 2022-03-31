@@ -2,6 +2,8 @@
 #define SPA_SRC_QP_QP_H
 
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -24,6 +26,14 @@ namespace Executor {};
 
 namespace DispatchProcessors {};
 
+struct QueryDispatchException : public runtime_error {
+	using runtime_error::runtime_error;
+};
+
+struct QuerySyntaxException : public runtime_error {
+	using runtime_error::runtime_error;
+};
+
 struct QueryException : public runtime_error {
 	using runtime_error::runtime_error;
 };
@@ -36,9 +46,11 @@ struct ReferenceArgumentException : public logic_error {
 	using logic_error::logic_error;
 };
 
-// struct QuerySyntaxException : public runtime_error {
-//     using runtime_error::runtime_error;
-// };
+struct QuerySemanticException : public runtime_error {
+	vector<string> result;
+	QuerySemanticException(const string& message) : runtime_error(message){};
+	QuerySemanticException(vector<string> result, const string& message) : runtime_error(message), result(move(result)){};
+};
 }
 
 #endif  // SPA_SRC_QP_QP_H

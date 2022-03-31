@@ -1,21 +1,15 @@
 #ifndef SPA_SRC_QP_QUERYPREPROCESSOR_H
 #define SPA_SRC_QP_QUERYPREPROCESSOR_H
 
-#include <functional>
-#include <memory>
 #include <optional>
 #include <regex>
-#include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "Common/ExpressionProcessor/Expression.h"
 #include "QP/Dispatcher/DispatchMap.h"
-#include "QP/QueryEvaluator.h"
-#include "QP/QueryExpressionLexer.h"
 #include "QP/QueryProperties.h"
-#include "QP/QueryResult.h"
+#include "QP/Types.h"
 
 class QP::QueryPreprocessor {
 public:
@@ -47,14 +41,21 @@ private:
 	void parseAssignPattern(Types::ReferenceArgument synonym);
 
 	optional<Types::DesignEntity> parseDesignEntity();
-	Declaration parseClauseSynonym();
-	vector<Types::ReferenceArgument> parseArguments();
+	Types::Declaration parseClauseSynonym();
+	vector<Types::ReferenceArgument> parseArgumentList(Types::ReferenceArgument (QueryPreprocessor::*parser)());
+	Types::ReferenceArgument parseAnyArgument();
 	Types::ReferenceArgument parseReferenceArgument();
-	Types::ReferenceArgument parseSelectArgument();
-	Common::ExpressionProcessor::Expression parseExpression();
+	Types::ReferenceArgument parseArgument(optional<Types::ReferenceArgument> (QueryPreprocessor::*parser)());
+	optional<Types::ReferenceArgument> tryParseReferenceArgument();
+	optional<Types::ReferenceArgument> tryParseSelectArgument();
+	optional<Types::ReferenceArgument> tryParseExpressionArgument();
+	Types::ReferenceArgument parseAttribute();
 
-	void matchTokenOrThrow(const string& token);
+	bool match(const string& token);
 	void reset();
+	void validateSyntax(Types::ClauseType type, vector<Types::ReferenceArgument> arguments);
+	void validateUnknownPatternSyntax();
+	void logSemanticException(const string&& message);
 
 	size_t token_index;
 	vector<string> query_tokens;
@@ -62,7 +63,8 @@ private:
 	Types::SelectList select_list;
 	Types::ClauseList clause_list;
 
-	QP::Dispatcher::DispatchMap dispatcher;
+	Dispatcher::DispatchMap dispatcher;
+	optional<string> semantic_exception_message;
 
 	static regex invalid_chars_regex;
 	static regex query_token_regex;
