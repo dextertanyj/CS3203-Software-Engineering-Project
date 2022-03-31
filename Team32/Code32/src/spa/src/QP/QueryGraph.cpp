@@ -57,12 +57,15 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 		return {};
 	}
 
-	ConnectedSynonyms connected_synonyms = ConnectedSynonyms();
-	DeclarationList selected_declarations;
+	if (connected_synonyms.getNumberOfGroups() != 0) {
+		return connected_synonyms;
+	}
+
 	unordered_set<string> unvisited_nodes;
 	unordered_map<string, Declaration> selected_nodes;
-	vector<string> synonyms;
-	size_t group_number = 0;
+	unsigned long long current_cost = 0;
+	vector<string> current_synonyms;
+	DeclarationList current_selected;
 
 	for (auto& node : nodes) {
 		unvisited_nodes.insert(node.first);
@@ -73,44 +76,51 @@ ConnectedSynonyms QP::QueryGraph::getConnectedSynonyms(const DeclarationList& se
 	}
 
 	queue<string> queue;
-	queue.push(*unvisited_nodes.begin());
+	auto start = *unvisited_nodes.begin();
+	queue.push(start);
+	unvisited_nodes.erase(start);
 
 	while (!queue.empty()) {
 		string symbol = queue.front();
-		synonyms.push_back(symbol);
-
-		if (selected_nodes.find(symbol) != selected_nodes.end()) {
-			selected_declarations.push_back(selected_nodes[symbol]);
-			selected_nodes.erase(symbol);
-		}
-		unvisited_nodes.erase(symbol);
 		queue.pop();
 
-		Node& node = this->nodes.at(symbol);
-		addNodesToQueue(node.adjacent_symbols, queue, unvisited_nodes);
+		current_synonyms.push_back(symbol);
+
+		if (selected_nodes.find(symbol) != selected_nodes.end()) {
+			current_selected.push_back(selected_nodes[symbol]);
+			// We can safely erase the symbol from selected nodes since each symbol appears in only one connected component.
+			selected_nodes.erase(symbol);
+		}
+
+		Node node = this->nodes.at(symbol);
+		addNodeToQueue(node, queue, unvisited_nodes, current_cost);
 
 		if (queue.empty()) {
-			connected_synonyms.insertSelectedDeclarations(group_number, selected_declarations);
-			connected_synonyms.insertGroup(group_number, synonyms);
-			synonyms.clear();
-			selected_declarations.clear();
-			group_number++;
+			connected_synonyms.insertGroup(current_cost, current_synonyms, current_selected);
+			current_cost = 0;
+			current_synonyms.clear();
+			current_selected.clear();
 		}
 
 		if (queue.empty() && !unvisited_nodes.empty()) {
-			queue.push(*unvisited_nodes.begin());
+			start = *unvisited_nodes.begin();
+			queue.push(start);
+			unvisited_nodes.erase(start);
 		}
 	}
 
-	this->connected_synonyms = connected_synonyms;
 	return connected_synonyms;
 }
 
-void QP::QueryGraph::addNodesToQueue(unordered_set<string>& symbols, queue<string>& queue, unordered_set<string>& unvisited_nodes) {
-	for (const string& adjacent_symbol : symbols) {
+void QP::QueryGraph::addNodeToQueue(const Node& node, queue<string>& queue, unordered_set<string>& unvisited_nodes,
+                                     unsigned long long& cost) {
+	for (const string& adjacent_symbol : node.adjacent_symbols) {
 		if (unvisited_nodes.find(adjacent_symbol) != unvisited_nodes.end()) {
 			queue.push(adjacent_symbol);
 		}
+	}
+	for (const auto& edge : node.outgoing_edges) {
+		cost += edge.weight;
 	}
 }
 
