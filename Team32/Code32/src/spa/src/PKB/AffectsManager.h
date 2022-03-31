@@ -38,8 +38,8 @@ private:
 	void processNodeAffected(Types::DFSInfo &info, const shared_ptr<PKB::StatementNode> &curr_stmt_node);
 	void processAffectStarBFS(Types::AffectStarBFSInfo &info, StmtInfoPtrSet (AffectsManager::*collector)(StmtRef),
 	                          unordered_map<StmtRef, StmtInfoPtrSet> &cache);
-	void evaluateAffectStarBFSNode(const shared_ptr<StmtInfo> &stmt, Types::AffectsStarBFSInfo &info,
-	                               unordered_map<StmtRef, StmtInfoPtrSet> &cache);
+	static void evaluateAffectStarBFSNode(const shared_ptr<StmtInfo> &stmt, Types::AffectsStarBFSInfo &info,
+	                                      unordered_map<StmtRef, StmtInfoPtrSet> &cache);
 };
 
 #endif  // SPA_AFFECTSMANAGER_H

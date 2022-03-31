@@ -152,7 +152,7 @@ void PKB::AffectsManager::processAffectStarBFS(PKB::Types::AffectStarBFSInfo &in
 	StmtRef current = info.bfs_queue.front();
 	info.bfs_queue.pop();
 	info.visited_set.insert(current);
-	for (auto stmt : (this->*collector)(current)) {
+	for (const auto &stmt : (this->*collector)(current)) {
 		evaluateAffectStarBFSNode(stmt, info, cache);
 	}
 }
@@ -163,7 +163,7 @@ void PKB::AffectsManager::evaluateAffectStarBFSNode(const shared_ptr<StmtInfo> &
 	if (cache.find(stmt->getIdentifier()) != cache.end()) {
 		info.visited_set.insert(stmt->getIdentifier());
 		StmtInfoPtrSet affects_star_set_of_stmt = cache.at(stmt->getIdentifier());
-		for (auto stmt_info : affects_star_set_of_stmt) {
+		for (const auto &stmt_info : affects_star_set_of_stmt) {
 			info.result.insert(stmt_info);
 			info.visited_set.insert(stmt_info->getIdentifier());
 		}
