@@ -149,6 +149,7 @@ void QP::QueryGraph::addNodeToQueue(const Node& node, queue<string>& queue, unor
 	for (const string& adjacent_symbol : node.adjacent_symbols) {
 		if (unvisited_nodes.find(adjacent_symbol) != unvisited_nodes.end()) {
 			queue.push(adjacent_symbol);
+			unvisited_nodes.erase(adjacent_symbol);
 		}
 	}
 	for (const auto& edge : node.outgoing_edges) {
