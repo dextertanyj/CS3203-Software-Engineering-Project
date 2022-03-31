@@ -116,29 +116,19 @@ bool PKB::AffectsManager::checkAffectsStar(StmtRef first, StmtRef second) {
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
-	StmtInfoPtrSet result;
 	// Check affects* cache here for early termination.
 	if (affects_star_cache.find(node_ref) != affects_star_cache.end()) {
 		return affects_star_cache.at(node_ref);
 	}
-	StmtRefSet visited = {};
 	queue<StmtRef> bfs_queue;
 	bfs_queue.push(node_ref);
-	while (!bfs_queue.empty()) {
-		StmtRef current = bfs_queue.front();
-		bfs_queue.pop();
-		visited.insert(current);
-		StmtInfoPtrSet affects_set = getAffects(current);
-		for (auto stmt : affects_set) {
-			result.insert(stmt);
-			if (visited.find(stmt->getIdentifier()) == visited.end()) {
-				bfs_queue.push(stmt->getIdentifier());
-			}
-		}
+	Types::AffectStarBFSInfo info = {bfs_queue, {}, {}};
+	while (!info.bfs_queue.empty()) {
+		processAffectStarBFS(info, &AffectsManager::getAffects);
 	}
 	// Store into affects* cache.
-	affects_star_cache.insert({node_ref, result});
-	return result;
+	affects_star_cache.insert({node_ref, info.result});
+	return info.result;
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
@@ -147,21 +137,25 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
 	if (affected_star_cache.find(node_ref) != affected_star_cache.end()) {
 		return affected_star_cache.at(node_ref);
 	}
-	StmtRefSet visited = {};
 	queue<StmtRef> bfs_queue;
 	bfs_queue.push(node_ref);
+	Types::AffectStarBFSInfo info = {bfs_queue, {}, {}};
 	while (!bfs_queue.empty()) {
-		StmtRef current = bfs_queue.front();
-		bfs_queue.pop();
-		visited.insert(current);
-		for (auto stmt : getAffected(current)) {
-			result.insert(stmt);
-			if (visited.find(stmt->getIdentifier()) == visited.end()) {
-				bfs_queue.push(stmt->getIdentifier());
-			}
-		}
+		processAffectStarBFS(info, &AffectsManager::getAffected);
 	}
 	// Store into affected* cache.
-	affected_star_cache.insert({node_ref, result});
-	return result;
+	affected_star_cache.insert({node_ref, info.result});
+	return info.result;
+}
+
+void PKB::AffectsManager::processAffectStarBFS(PKB::Types::AffectStarBFSInfo &info, StmtInfoPtrSet (AffectsManager::*collector)(StmtRef)) {
+	StmtRef current = info.bfs_queue.front();
+	info.bfs_queue.pop();
+	info.visited_set.insert(current);
+	for (auto stmt : (this->*collector)(current)) {
+		info.result.insert(stmt);
+		if (info.visited_set.find(stmt->getIdentifier()) == info.visited_set.end()) {
+			info.bfs_queue.push(stmt->getIdentifier());
+		}
+	}
 }
