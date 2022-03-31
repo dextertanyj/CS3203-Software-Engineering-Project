@@ -12,11 +12,11 @@ QP::QueryResult::QueryResult(ResultTable result_table) : result(true), table(mov
 
 bool QP::QueryResult::getResult() const { return result; }
 
-ResultTable QP::QueryResult::getTable() { return table; }
+ResultTable QP::QueryResult::getTable() const { return table; }
 
-ResultColumn QP::QueryResult::getSynonymResult(const string& synonym) { return table.getColumn(synonym); }
+ResultColumn QP::QueryResult::getSynonymResult(const string& synonym) const { return table.getColumn(synonym); }
 
-ResultRow QP::QueryResult::getRowWithOrder(const vector<string>& synonyms, size_t row_number) {
+ResultRow QP::QueryResult::getRowWithOrder(const vector<string>& synonyms, size_t row_number) const {
 	return table.getRowWithOrder(synonyms, row_number);
 }
 

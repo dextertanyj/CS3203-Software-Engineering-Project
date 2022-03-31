@@ -22,11 +22,11 @@ public:
 	explicit QueryResult(vector<string> synonyms);
 	explicit QueryResult(ResultTable table);
 	[[nodiscard]] bool getResult() const;
-	ResultTable getTable();
-	ResultColumn getSynonymResult(const string& synonym);
-	ResultRow getRowWithOrder(const vector<string>& synonyms, size_t row_number);
-	size_t getNumberOfRows() const;
-	vector<string> getSynonymsStored() const;
+	[[nodiscard]] ResultTable getTable() const;
+	[[nodiscard]] ResultColumn getSynonymResult(const string& synonym) const;
+	[[nodiscard]] ResultRow getRowWithOrder(const vector<string>& synonyms, size_t row_number) const;
+	[[nodiscard]] size_t getNumberOfRows() const;
+	[[nodiscard]] vector<string> getSynonymsStored() const;
 	void addRow(const ResultRow& row);
 	void filterBySelect(const QP::Types::DeclarationList& select_list);
 	static QueryResult joinResults(vector<QueryResult>& result);
