@@ -13,7 +13,7 @@ public:
 	[[nodiscard]] VarRefSet getVariables() const { return pkb.getVariables(); };
 	[[nodiscard]] unordered_set<ConstVal> getConstants() const { return pkb.getConstants(); };
 	[[nodiscard]] unordered_set<ProcRef> getProcedures() const { return pkb.getProcedures(); };
-	void resetCache() { /*TODO: Connect to implementation.*/ };
+	void resetCache(){/*TODO: Connect to implementation.*/};
 
 	// Follows, Parent, Next, Affects
 	template <Types::ClauseType T>

@@ -12,8 +12,7 @@ using inner_map = unordered_map<ArgumentDispatchKey, ExecutorSetFactory>;
 using outer_map = unordered_map<ArgumentDispatchKey, inner_map>;
 
 static const outer_map map = {
-	{ReferenceType::Name,
-     {{ReferenceType::Wildcard, PatternContainerStatementExecutor::executorFactoryName<ClauseType::PatternWhile>}}},
+	{ReferenceType::Name, {{ReferenceType::Wildcard, PatternContainerStatementExecutor::executorFactoryName<ClauseType::PatternWhile>}}},
 	{ReferenceType::Wildcard,
      {{ReferenceType::Wildcard, PatternContainerStatementExecutor::executorFactoryWildcard<ClauseType::PatternWhile>}}},
 	{DesignEntity::Variable,

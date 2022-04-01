@@ -4,8 +4,8 @@
 
 #include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/Validator.h"
-#include "QP/Relationship/Relation.h"
 #include "QP/QueryExpressionLexer.h"
+#include "QP/Relationship/Relation.h"
 #include "QP/Types.h"
 
 using namespace QP::Types;

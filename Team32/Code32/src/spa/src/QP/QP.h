@@ -47,7 +47,7 @@ struct ReferenceArgumentException : public logic_error {
 };
 
 struct QuerySemanticException : public runtime_error {
-	vector<string> result; // NOLINT(misc-non-private-member-variables-in-classes)
+	vector<string> result;  // NOLINT(misc-non-private-member-variables-in-classes)
 	explicit QuerySemanticException(const string& message) : runtime_error(message){};
 	QuerySemanticException(vector<string> result, const string& message) : runtime_error(message), result(move(result)){};
 };
