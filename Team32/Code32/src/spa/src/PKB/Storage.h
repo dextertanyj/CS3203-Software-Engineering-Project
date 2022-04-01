@@ -140,6 +140,7 @@ public:
 	ProcRef getCalledProcedure(StmtRef index) override;
 
 	// Others
+	void resetCFGCache() override;
 	void populateComplexRelations() override;
 	void clear();
 
