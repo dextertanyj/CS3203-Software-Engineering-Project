@@ -1,22 +1,20 @@
 #ifndef SPA_SRC_QP_DISPATCHER_DISPATCHER_H
 #define SPA_SRC_QP_DISPATCHER_DISPATCHER_H
 
-#include "QP/Types.h"
-
 namespace QP::Dispatcher {
-struct DispatchMap;
-
-namespace DispatchProcessors {};
-
-template <QP::Types::ClauseType T>
-class FollowsNextDispatcher;
-
-template <QP::Types::ClauseType T>
-class ParentDispatcher;
-
-template <QP::Types::ClauseType T>
-class CallsDispatcher;
-
+namespace DispatchMap {}
+namespace DispatchProcessors {}
+namespace AffectsDispatcher {}
+namespace CallsDispatcher {}
+namespace FollowsNextDispatcher {}
+namespace ModifiesDispatcher {}
+namespace ParentDispatcher {}
+namespace PatternAssignDispatcher {}
+namespace PatternIfDispatcher {}
+namespace PatternWhileDispatcher {}
+namespace StatementDispatcher {}
+namespace UsesDispatcher {}
+namespace VariableDispatcher {}
 namespace WithDispatcher {}
 }
 

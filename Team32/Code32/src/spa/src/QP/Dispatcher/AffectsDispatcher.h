@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_DISPATCHER_CALLSDISPATCHER_H
-#define SPA_SRC_QP_DISPATCHER_CALLSDISPATCHER_H
+#ifndef SPA_SRC_QP_DISPATCHER_AFFECTSDISPATCHER_H
+#define SPA_SRC_QP_DISPATCHER_AFFECTSDISPATCHER_H
 
 #include <unordered_map>
 #include <vector>
@@ -8,7 +8,7 @@
 #include "QP/ReferenceArgument.h"
 #include "QP/Types.h"
 
-namespace QP::Dispatcher::CallsDispatcher {
+namespace QP::Dispatcher::AffectsDispatcher {
 
 using namespace QP::Types;
 
@@ -19,11 +19,11 @@ ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ReferenceArgu
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>>& getArgumentDispatchMap();
 template <ClauseType T>
-const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getNameMap();
+const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getIndexMap();
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getWildcardMap();
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getSynonymMap();
 }
 
-#endif  // SPA_SRC_QP_DISPATCHER_CALLSDISPATCHER_H
+#endif  // SPA_SRC_QP_DISPATCHER_AFFECTSDISPATCHER_H

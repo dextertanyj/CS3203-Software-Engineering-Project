@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "QP/Dispatcher/DispatchMap.h"
 #include "QP/QueryProperties.h"
 #include "QP/Types.h"
 
@@ -63,7 +62,6 @@ private:
 	Types::SelectList select_list;
 	Types::ClauseList clause_list;
 
-	Dispatcher::DispatchMap dispatcher;
 	optional<string> semantic_exception_message;
 
 	static regex invalid_chars_regex;

@@ -5,15 +5,16 @@
 
 #include "QP/QueryUtils.h"
 
+namespace QP::Executor::PatternContainerStatementExecutor {
+
 // Trivial Executors
-template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeTrivialName(const QP::StorageAdapter& storage,
-                                                                                    const QP::Types::ReferenceArgument& var) {
-	return QP::QueryResult(!storage.getControlStmt<T>(var.getName()).empty());
+template <ClauseType T>
+QueryResult executeTrivialName(const StorageAdapter& storage, const ReferenceArgument& var) {
+	return QueryResult(!storage.getControlStmt<T>(var.getName()).empty());
 }
 
-template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeTrivialWildcardOrSynonym(const QP::StorageAdapter& storage) {
+template <ClauseType T>
+QueryResult executeTrivialWildcardOrSynonym(const StorageAdapter& storage) {
 	VarRefSet var_set = storage.getVariables();
 	for (auto const& var : var_set) {
 		StmtInfoPtrSet stmt_set = storage.getControlStmt<T>(var);
@@ -26,10 +27,8 @@ QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeTrivialW
 }
 
 // Executors
-template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeName(const QP::StorageAdapter& storage,
-                                                                             const Types::ReferenceArgument& stmt,
-                                                                             const Types::ReferenceArgument& var) {
+template <ClauseType T>
+QueryResult executeName(const StorageAdapter& storage, const ReferenceArgument& stmt, const ReferenceArgument& var) {
 	QueryResult result = QueryResult({stmt.getSynonym().symbol});
 	StmtInfoPtrSet stmt_set = storage.getControlStmt<T>(var.getName());
 	for (auto const& stmt_ref : stmt_set) {
@@ -39,9 +38,8 @@ QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeName(con
 	return result;
 }
 
-template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeWildcard(const QP::StorageAdapter& storage,
-                                                                                 const Types::ReferenceArgument& stmt) {
+template <ClauseType T>
+QueryResult executeWildcard(const StorageAdapter& storage, const ReferenceArgument& stmt) {
 	QueryResult result = QueryResult({stmt.getSynonym().symbol});
 	StmtInfoPtrSet stmt_set = storage.getStatements();
 	for (auto const& stmt_ref : stmt_set) {
@@ -58,10 +56,8 @@ QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeWildcard
 	return result;
 }
 
-template <QP::Types::ClauseType T>
-QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeSynonym(const QP::StorageAdapter& storage,
-                                                                                const Types::ReferenceArgument& stmt,
-                                                                                const Types::ReferenceArgument& var) {
+template <ClauseType T>
+QueryResult executeSynonym(const StorageAdapter& storage, const ReferenceArgument& stmt, const ReferenceArgument& var) {
 	QueryResult result = QueryResult({stmt.getSynonym().symbol, var.getSynonym().symbol});
 	VarRefSet var_set = storage.getVariables();
 	for (auto const& var_ref : var_set) {
@@ -71,6 +67,37 @@ QP::QueryResult QP::Executor::PatternContainerStatementExecutor::executeSynonym(
 		}
 	}
 	return result;
+}
+
+// Executor Set Factories
+
+template <ClauseType T>
+ExecutorSet executorFactoryName(const vector<ReferenceArgument>& args) {
+	Types::Executor trivial_executor = [variable = args.at(1)](const StorageAdapter& storage) {
+		return executeTrivialName<T>(storage, variable);
+	};
+	Types::Executor executor = [statement = args.at(0), variable = args.at(1)](const StorageAdapter& storage) {
+		return executeName<T>(storage, statement, variable);
+	};
+	return pair{trivial_executor, executor};
+}
+
+template <ClauseType T>
+ExecutorSet executorFactoryWildcard(const vector<ReferenceArgument>& args) {
+	Types::Executor trivial_executor = [](const StorageAdapter& storage) { return executeTrivialWildcardOrSynonym<T>(storage); };
+	Types::Executor executor = [statement = args.at(0)](const StorageAdapter& storage) { return executeWildcard<T>(storage, statement); };
+	return pair{trivial_executor, executor};
+}
+
+template <ClauseType T>
+ExecutorSet executorFactorySynonym(const vector<ReferenceArgument>& args) {
+	Types::Executor trivial_executor = [](const StorageAdapter& storage) { return executeTrivialWildcardOrSynonym<T>(storage); };
+	Types::Executor executor = [statement = args.at(0), variable = args.at(1)](const StorageAdapter& storage) {
+		return executeSynonym<T>(storage, statement, variable);
+	};
+	return pair{trivial_executor, executor};
+}
+
 }
 
 #endif  // SPA_SRC_QP_EXECUTOR_PATTERNCONTAINERSTATEMENTEXECUTOR_TPP

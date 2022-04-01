@@ -13,8 +13,9 @@ public:
 	[[nodiscard]] VarRefSet getVariables() const { return pkb.getVariables(); };
 	[[nodiscard]] unordered_set<ConstVal> getConstants() const { return pkb.getConstants(); };
 	[[nodiscard]] unordered_set<ProcRef> getProcedures() const { return pkb.getProcedures(); };
+	void resetCache(){/*TODO: Connect to implementation.*/};
 
-	// Follows & Parent
+	// Follows, Parent, Next, Affects
 	template <Types::ClauseType T>
 	[[nodiscard]] inline bool checkStatementRelation(StmtRef lhs, StmtRef rhs) const = delete;
 	template <>
@@ -40,6 +41,14 @@ public:
 	template <>
 	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::NextT>(StmtRef lhs, StmtRef rhs) const {
 		return pkb.checkNextStar(lhs, rhs);
+	};
+	template <>
+	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::Affects>(StmtRef lhs, StmtRef rhs) const {
+		return pkb.checkAffects(lhs, rhs);
+	};
+	template <>
+	[[nodiscard]] inline bool checkStatementRelation<Types::ClauseType::AffectsT>(StmtRef lhs, StmtRef rhs) const {
+		return pkb.checkAffectsStar(lhs, rhs);
 	};
 
 	template <Types::ClauseType T>
@@ -76,6 +85,14 @@ public:
 	[[nodiscard]] inline StmtInfoPtrSet getForwardStatements<Types::ClauseType::NextT>(StmtRef index) const {
 		return pkb.getPreviousStar(index);
 	};
+	template <>
+	[[nodiscard]] inline StmtInfoPtrSet getForwardStatements<Types::ClauseType::Affects>(StmtRef index) const {
+		return pkb.getAffected(index);
+	};
+	template <>
+	[[nodiscard]] inline StmtInfoPtrSet getForwardStatements<Types::ClauseType::AffectsT>(StmtRef index) const {
+		return pkb.getAffectedStar(index);
+	};
 
 	template <Types::ClauseType T>
 	[[nodiscard]] inline StmtInfoPtrSet getReverseStatements(StmtRef index) const = delete;
@@ -106,6 +123,14 @@ public:
 	template <>
 	[[nodiscard]] inline StmtInfoPtrSet getReverseStatements<Types::ClauseType::NextT>(StmtRef index) const {
 		return pkb.getNextStar(index);
+	};
+	template <>
+	[[nodiscard]] inline StmtInfoPtrSet getReverseStatements<Types::ClauseType::Affects>(StmtRef index) const {
+		return pkb.getAffects(index);
+	};
+	template <>
+	[[nodiscard]] inline StmtInfoPtrSet getReverseStatements<Types::ClauseType::AffectsT>(StmtRef index) const {
+		return pkb.getAffectsStar(index);
 	};
 
 	// Calls

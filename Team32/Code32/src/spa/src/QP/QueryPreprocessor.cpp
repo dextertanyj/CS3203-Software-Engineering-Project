@@ -4,11 +4,13 @@
 
 #include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/Validator.h"
-#include "QP/Relationship/Relation.h"
+#include "QP/Dispatcher/DispatchMap.h"
 #include "QP/QueryExpressionLexer.h"
+#include "QP/Relationship/Relation.h"
 #include "QP/Types.h"
 
 using namespace QP::Types;
+using namespace QP::Dispatcher;
 
 regex QP::QueryPreprocessor::invalid_chars_regex = regex(R"([^a-zA-Z0-9\s,"_\(\);\+\-\*\/%<>#\.=])");
 regex QP::QueryPreprocessor::query_token_regex =
@@ -150,7 +152,7 @@ void QP::QueryPreprocessor::parseClause(ClauseType type, vector<ReferenceArgumen
 void QP::QueryPreprocessor::createClause(ClauseType type, vector<ReferenceArgument> arguments) {
 	validateSyntax(type, arguments);
 
-	ArgumentDispatcher argument_dispatcher = dispatcher.dispatch_map.at(type);
+	ArgumentDispatcher argument_dispatcher = DispatchMap::dispatch_map.at(type);
 	try {
 		auto info = argument_dispatcher(arguments);
 		this->clause_list.push_back({make_unique<Relationship::Relation>(info.first, move(arguments), info.second)});
@@ -162,8 +164,8 @@ void QP::QueryPreprocessor::createClause(ClauseType type, vector<ReferenceArgume
 // Clause - Such that
 
 void QP::QueryPreprocessor::parseSuchThat() {
-	auto clause_type_iter = dispatcher.clause_map.find(this->query_tokens.at(token_index));
-	if (clause_type_iter == dispatcher.clause_map.end()) {
+	auto clause_type_iter = DispatchMap::clause_map.find(this->query_tokens.at(token_index));
+	if (clause_type_iter == DispatchMap::clause_map.end()) {
 		throw QuerySyntaxException("Unknown relation type.");
 	}
 	token_index++;
@@ -190,8 +192,8 @@ void QP::QueryPreprocessor::parsePattern() {
 	if (synonym.type == DesignEntity::Assign) {
 		parseAssignPattern(synonym_argument);
 	} else {
-		auto iter = dispatcher.pattern_clause_map.find(synonym.type);
-		if (iter == dispatcher.pattern_clause_map.end()) {
+		auto iter = DispatchMap::pattern_clause_map.find(synonym.type);
+		if (iter == DispatchMap::pattern_clause_map.end()) {
 			logSemanticException("Invalid pattern synonym type.");
 			validateUnknownPatternSyntax();
 			return;
@@ -218,8 +220,8 @@ void QP::QueryPreprocessor::parseAssignPattern(ReferenceArgument synonym) {
 // Atomic entities
 
 optional<DesignEntity> QP::QueryPreprocessor::parseDesignEntity() {
-	auto iter = dispatcher.design_entity_map.find(query_tokens.at(token_index));
-	if (iter == dispatcher.design_entity_map.end()) {
+	auto iter = DispatchMap::design_entity_map.find(query_tokens.at(token_index));
+	if (iter == DispatchMap::design_entity_map.end()) {
 		return {};
 	}
 	++token_index;
@@ -299,13 +301,13 @@ optional<ReferenceArgument> QP::QueryPreprocessor::tryParseSelectArgument() {
 ReferenceArgument QP::QueryPreprocessor::parseAttribute() {
 	Declaration synonym = parseClauseSynonym();
 	match(".");
-	auto token_iter = dispatcher.attribute_token_map.find(query_tokens.at(token_index));
-	if (token_iter == dispatcher.attribute_token_map.end()) {
+	auto token_iter = DispatchMap::attribute_token_map.find(query_tokens.at(token_index));
+	if (token_iter == DispatchMap::attribute_token_map.end()) {
 		throw QP::QuerySyntaxException("Invalid attribute type.");
 	}
-	auto iter = dispatcher.attribute_map.find({synonym.type, token_iter->second});
+	auto iter = DispatchMap::attribute_map.find({synonym.type, token_iter->second});
 	token_index++;
-	if (iter == dispatcher.attribute_map.end()) {
+	if (iter == DispatchMap::attribute_map.end()) {
 		logSemanticException("Unknown synonym attribute combination.");
 		return ReferenceArgument(Attribute{});
 	}
@@ -367,7 +369,7 @@ void QP::QueryPreprocessor::reset() {
 }
 
 void QP::QueryPreprocessor::validateSyntax(ClauseType type, vector<ReferenceArgument> arguments) {
-	auto expected_types = dispatcher.syntax_map.at(type);
+	auto expected_types = DispatchMap::syntax_map.at(type);
 	if (expected_types.size() != arguments.size()) {
 		throw QuerySyntaxException("Invalid number of arguments.");
 	}
@@ -381,8 +383,8 @@ void QP::QueryPreprocessor::validateSyntax(ClauseType type, vector<ReferenceArgu
 
 void QP::QueryPreprocessor::validateUnknownPatternSyntax() {
 	vector<ReferenceArgument> arguments = parseArgumentList(&QueryPreprocessor::parseAnyArgument);
-	auto iter = dispatcher.pattern_syntax_map.find(arguments.size());
-	if (iter == dispatcher.pattern_syntax_map.end()) {
+	auto iter = DispatchMap::pattern_syntax_map.find(arguments.size());
+	if (iter == DispatchMap::pattern_syntax_map.end()) {
 		throw QuerySyntaxException("Invalid number of arguments.");
 	}
 	auto expected_types = iter->second;
