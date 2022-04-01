@@ -1,6 +1,6 @@
 #include "QP/QueryGraph.h"
 
-#include "QP/ConnectedSynonyms.h"
+#include "QP/ClauseGroups.h"
 #include "QP/ReferenceArgument.h"
 #include "QP/Relationship/Relation.h"
 #include "catch.hpp"
@@ -9,8 +9,8 @@ using namespace QP::Types;
 
 TEST_CASE("QP::QueryGraph::QueryGraph Should initialize nodes") {
 	DeclarationList list = {{DesignEntity::Stmt, "s"}, {DesignEntity::Variable, "v"}};
-	QP::QueryGraph graph = QP::QueryGraph(list);
-	unordered_map<string, Node> nodes = graph.getNodes();
+	QP::QueryGraph graph = QP::QueryGraph(list, {}, {});
+	unordered_map<string, QP::QueryGraph::Node> nodes = graph.getNodes();
 	REQUIRE(nodes.size() == 2);
 }
 
@@ -29,10 +29,9 @@ TEST_CASE("QP::QueryGraph::setEdges Should set edges") {
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
 	};
 
-	QP::QueryGraph graph = QP::QueryGraph(list);
-	graph.setEdges(clause_list);
+	QP::QueryGraph graph = QP::QueryGraph(list, clause_list, {});
 
-	unordered_map<string, Node> nodes = graph.getNodes();
+	unordered_map<string, QP::QueryGraph::Node> nodes = graph.getNodes();
 	REQUIRE(nodes.at("s").adjacent_symbols.size() == 1);
 	REQUIRE(nodes.at("a").adjacent_symbols.size() == 2);
 	REQUIRE(nodes.at("v").adjacent_symbols.size() == 1);
@@ -70,28 +69,26 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 		{make_unique<QP::Relationship::Relation>(ClauseType::UsesS, vector<ReferenceArgument>({d, wildcard}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
 	};
-	QP::QueryGraph graph = QP::QueryGraph(declaration_list);
-	graph.setEdges(clause_list);
+	QP::QueryGraph graph = QP::QueryGraph(declaration_list, clause_list, select_list);
 
-	ConnectedSynonyms synonyms = graph.getConnectedSynonyms(select_list);
-
-	size_t number_of_groups = synonyms.getNumberOfGroups();
+	size_t number_of_groups = graph.getNumberOfGroups();
 
 	vector<string> group_with_a = {"a", "b", "c"};
 	vector<string> group_with_d = {"d", "e"};
 	vector<string> group_with_f = {"f"};
-	vector<string> group_one = synonyms.getGroupSynonyms(0);
-	vector<string> group_two = synonyms.getGroupSynonyms(1);
-	vector<string> group_three = synonyms.getGroupSynonyms(2);
+	vector<string> group_one = graph.getGroupSynonyms(0);
+	vector<string> group_two = graph.getGroupSynonyms(1);
+	vector<string> group_three = graph.getGroupSynonyms(2);
 	sort(group_one.begin(), group_one.end());
 	sort(group_two.begin(), group_two.end());
+	sort(group_three.begin(), group_three.end());
 	REQUIRE(number_of_groups == 3);
-	REQUIRE((group_one == group_with_a || group_two == group_with_a || group_three == group_with_a));
-	REQUIRE((group_one == group_with_d || group_two == group_with_d || group_three == group_with_d));
-	REQUIRE((group_one == group_with_f || group_two == group_with_f || group_three == group_with_f));
+	REQUIRE(group_one == group_with_f);
+	REQUIRE(group_two == group_with_d);
+	REQUIRE(group_three == group_with_a);
 }
 
-TEST_CASE("QP::QueryGraph::sortGroup Should sort clauses in group") {
+TEST_CASE("QP::QueryGraph::getGroupClauses Should sort clauses in group") {
 	Declaration declaration_s = {DesignEntity::Stmt, "s"};
 	Declaration declaration_v = {DesignEntity::Variable, "v"};
 	Declaration declaration_a = {DesignEntity::Assign, "a"};
@@ -120,11 +117,9 @@ TEST_CASE("QP::QueryGraph::sortGroup Should sort clauses in group") {
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
 	};
 
-	QP::QueryGraph graph = QP::QueryGraph(list);
-	graph.setEdges(clause_list);
-	graph.getConnectedSynonyms({});
+	QP::QueryGraph graph = QP::QueryGraph(list, clause_list, {});
 
-	ClauseList sorted_clauses = graph.sortGroup(0);
+	ClauseList sorted_clauses = graph.getGroupClauses(0);
 
 	REQUIRE(sorted_clauses.size() == 7);
 	REQUIRE(sorted_clauses[0].relation->getType() == ClauseType::Parent);

@@ -46,7 +46,7 @@ enum class AttributeToken { StatementIndex, ProcedureName, VariableName, Value }
 enum class AttributeType { NumberIdentifier, NameIdentifier, ProcedureName, VariableName };
 
 class ReferenceArgument;
-class ConnectedSynonyms;
+class ClauseGroups;
 
 typedef struct Declaration {
 	DesignEntity type;  // NOLINT(misc-non-private-member-variables-in-classes)
