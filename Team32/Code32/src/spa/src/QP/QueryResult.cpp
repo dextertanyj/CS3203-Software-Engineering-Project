@@ -12,6 +12,11 @@ QP::QueryResult::QueryResult(ResultTable result_table) : result(true), table(mov
 
 bool QP::QueryResult::getResult() const { return result; }
 
+bool QP::QueryResult::containsSynonym(const string& synonym) const {
+	auto synonyms = table.getSynonymsStoredMap();
+	return synonyms.find(synonym) != synonyms.end();
+}
+
 ResultTable QP::QueryResult::getTable() const { return table; }
 
 ResultColumn QP::QueryResult::getSynonymResult(const string& synonym) const { return table.getColumn(synonym); }

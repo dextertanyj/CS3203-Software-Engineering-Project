@@ -126,9 +126,9 @@ TEST_CASE("StatementExecutor<ClauseType::NextT>:execute") {
 	}
 
 	SECTION("Synonym & Synonym") {
-		QP::QueryResult result1 = executeSynonymSynonym<ClauseType::NextT>(store, stmt_synonym, print_synonym);
-		QP::QueryResult result2 = executeSynonymSynonym<ClauseType::NextT>(store, while_synonym, while_synonym);
-		QP::QueryResult result3 = executeSynonymSynonym<ClauseType::NextT>(store, print_synonym, assign_synonym);
+		QP::QueryResult result1 = executeSynonymSynonymOptimized<ClauseType::NextT>(store, {}, stmt_synonym, print_synonym);
+		QP::QueryResult result2 = executeSynonymSynonymOptimized<ClauseType::NextT>(store, {}, while_synonym, while_synonym);
+		QP::QueryResult result3 = executeSynonymSynonymOptimized<ClauseType::NextT>(store, {}, print_synonym, assign_synonym);
 
 		vector<string> expected_stmt_result = {"1", "1", "2", "3", "4"};
 		vector<string> expected_print_result = {"2", "4", "4", "4", "4"};

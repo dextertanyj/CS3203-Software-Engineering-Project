@@ -1,5 +1,7 @@
 #include "QP/Relationship/Relation.h"
 
+#include <cassert>
+
 #include "QP/QueryUtils.h"
 
 QP::Relationship::Relation::Relation(Types::ClauseType type, vector<Types::ReferenceArgument> arguments, Types::ExecutorSet executor)
@@ -23,16 +25,23 @@ QP::Types::ClauseType QP::Relationship::Relation::getType() const { return type;
 QP::QueryResult QP::Relationship::Relation::executeTrivial(const QP::StorageAdapter& pkb) const {
 	QueryResult result;
 	visit(Visitor{[&](const Types::Executor& exec) { result = exec(pkb); },
-	              [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.first(pkb); }},
+	              [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.first(pkb); },
+	              [&](const pair<Types::Executor, Types::OptimizedExecutor>& execs) { result = execs.first(pkb); }},
 	      executor);
 	return result;
 }
 
-QP::QueryResult QP::Relationship::Relation::execute(const QP::StorageAdapter& pkb) const {
+QP::QueryResult QP::Relationship::Relation::execute(const QP::StorageAdapter& pkb, vector<QueryResult>& existing_results) const {
 	QueryResult result;
-	visit(Visitor{[&](const Types::Executor&) { throw QP::QueryException("Invalid executor."); },
-	              [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.second(pkb); }},
-	      executor);
+	auto invalid_visitor = [&](const Types::Executor&) { assert(false); };
+	auto standard_visitor = [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.second(pkb); };
+	auto optimized_visitor = [&](const pair<Types::Executor, Types::OptimizedExecutor>& execs) {
+		QueryResult intermediate_result = QueryResult::joinIntraGroupResults(existing_results);
+		existing_results.clear();
+		existing_results.push_back(intermediate_result);
+		result = execs.second(pkb, intermediate_result);
+	};
+	visit(Visitor{invalid_visitor, standard_visitor, optimized_visitor}, executor);
 	return result;
 }
 

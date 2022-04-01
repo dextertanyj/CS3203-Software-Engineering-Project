@@ -22,6 +22,7 @@ public:
 	explicit QueryResult(vector<string> synonyms);
 	explicit QueryResult(ResultTable table);
 	[[nodiscard]] bool getResult() const;
+	[[nodiscard]] bool containsSynonym(const string& synonym) const;
 	[[nodiscard]] ResultTable getTable() const;
 	[[nodiscard]] ResultColumn getSynonymResult(const string& synonym) const;
 	[[nodiscard]] ResultRow getRowWithOrder(const vector<string>& synonyms, size_t row_number) const;

@@ -43,8 +43,18 @@ QueryResult executeSynonymWildcard(const StorageAdapter& storage, const Referenc
 template <ClauseType T>
 QueryResult executeSynonymSynonym(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
 
-// Executor Set Factories
+// Optimized Executors
+template <ClauseType T>
+QueryResult executeWildcardSynonymOptimized(const StorageAdapter& storage, const QueryResult& existing_result,
+                                            const ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeSynonymWildcardOptimized(const StorageAdapter& storage, const QueryResult& existing_result,
+                                            const ReferenceArgument& lhs);
+template <ClauseType T>
+QueryResult executeSynonymSynonymOptimized(const StorageAdapter& storage, const QueryResult& existing_result, const ReferenceArgument& lhs,
+                                           const ReferenceArgument& rhs);
 
+// Executor Set Factories
 template <ClauseType T>
 ExecutorSet executorFactoryIndexIndex(const vector<ReferenceArgument>& args);
 template <ClauseType T>
@@ -63,7 +73,12 @@ template <ClauseType T>
 ExecutorSet executorFactorySynonymWildcard(const vector<ReferenceArgument>& args);
 template <ClauseType T>
 ExecutorSet executorFactorySynonymSynonym(const vector<ReferenceArgument>& args);
-
+template <ClauseType T>
+ExecutorSet executorFactoryWildcardSynonymOptimized(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactorySynonymWildcardOptimized(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactorySynonymSynonymOptimized(const vector<ReferenceArgument>& args);
 };
 
 #endif  // SPA_SRC_QP_EXECUTOR_STATEMENTEXECUTOR_H

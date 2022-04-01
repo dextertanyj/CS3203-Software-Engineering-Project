@@ -84,7 +84,8 @@ using AttributeMapper = std::function<TAttribute(const QP::StorageAdapter&, cons
 
 // Types for such-that and pattern clause execution
 typedef function<QP::QueryResult(const QP::StorageAdapter&)> Executor;
-typedef variant<Executor, pair<Executor, Executor>> ExecutorSet;
+typedef function<QP::QueryResult(const QP::StorageAdapter&, const QP::QueryResult&)> OptimizedExecutor;
+typedef variant<Executor, pair<Executor, Executor>, pair<Executor, OptimizedExecutor>> ExecutorSet;
 typedef function<ExecutorSet(const vector<ReferenceArgument>&)> ExecutorSetFactory;
 typedef pair<ClauseType, ExecutorSetFactory> ExecutorSetFactoryBundle;
 typedef variant<ReferenceType, DesignEntity> ArgumentDispatchKey;
