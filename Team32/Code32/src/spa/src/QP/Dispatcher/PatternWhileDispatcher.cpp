@@ -8,16 +8,16 @@
 using namespace QP::Executor;
 using namespace QP::Types;
 
-using inner_map = unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>;
-using outer_map = unordered_map<QP::Types::ArgumentDispatchKey, inner_map>;
+using inner_map = unordered_map<ArgumentDispatchKey, ExecutorSetFactory>;
+using outer_map = unordered_map<ArgumentDispatchKey, inner_map>;
 
 static const outer_map map = {
 	{ReferenceType::Name,
-     {{ReferenceType::Wildcard, PatternContainerStatementExecutor::executorFactoryName<QP::Types::ClauseType::PatternWhile>}}},
+     {{ReferenceType::Wildcard, PatternContainerStatementExecutor::executorFactoryName<ClauseType::PatternWhile>}}},
 	{ReferenceType::Wildcard,
-     {{ReferenceType::Wildcard, PatternContainerStatementExecutor::executorFactoryWildcard<QP::Types::ClauseType::PatternWhile>}}},
+     {{ReferenceType::Wildcard, PatternContainerStatementExecutor::executorFactoryWildcard<ClauseType::PatternWhile>}}},
 	{DesignEntity::Variable,
-     {{ReferenceType::Wildcard, PatternContainerStatementExecutor::executorFactorySynonym<QP::Types::ClauseType::PatternWhile>}}}};
+     {{ReferenceType::Wildcard, PatternContainerStatementExecutor::executorFactorySynonym<ClauseType::PatternWhile>}}}};
 
 static const unordered_map<QP::Types::ArgumentDispatchKey, outer_map> argument_dispatch_map = {{DesignEntity::While, map}};
 
