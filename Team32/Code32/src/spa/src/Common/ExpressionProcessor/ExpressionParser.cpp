@@ -42,7 +42,7 @@ ParenthesizedExpression ExpressionParser::construct(Acceptor acceptor, Parenthes
 
 	// Binary logical operators are a special case since they must be fully parenthesized
 	if (OperatorAcceptor::acceptBinaryLogical(lookahead)) {
-		return parseBinaryLogical(move(lhs));
+		return parseBinaryLogical(lhs);
 	}
 
 	while (acceptor(lookahead) && getPrecedence(Converter::convertMathematical(lookahead)) >= precedence) {

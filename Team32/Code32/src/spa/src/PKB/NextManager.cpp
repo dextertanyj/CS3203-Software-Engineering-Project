@@ -98,7 +98,7 @@ StmtInfoPtrSet PKB::NextManager::getNext(StmtRef node_ref) {
 	StmtInfoPtrSet next_nodes;
 	for (const auto& node : curr_node->getNextNodes()) {
 		if (node->getNodeType() == NodeType::Dummy) {
-			StmtInfoPtrSet next_of_dummy = control_flow_graph->collectNextOfDummy(node);
+			StmtInfoPtrSet next_of_dummy = PKB::ControlFlowGraph::collectNextOfDummy(node);
 			next_nodes.insert(next_of_dummy.begin(), next_of_dummy.end());
 		} else {
 			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
@@ -131,7 +131,7 @@ StmtInfoPtrSet PKB::NextManager::getPrevious(StmtRef node_ref) {
 	for (const auto& node : curr_node->getPreviousNodes()) {
 		// If previous node is a dummy node, need to get the previous nodes of the dummy node.
 		if (node->getNodeType() == NodeType::Dummy) {
-			StmtInfoPtrSet prev_of_dummy = control_flow_graph->collectPreviousOfDummy(node);
+			StmtInfoPtrSet prev_of_dummy = PKB::ControlFlowGraph::collectPreviousOfDummy(node);
 			prev_nodes.insert(prev_of_dummy.begin(), prev_of_dummy.end());
 		} else {
 			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(node);
