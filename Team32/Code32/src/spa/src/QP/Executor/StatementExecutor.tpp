@@ -337,9 +337,8 @@ inline QueryResult executeSynonymSynonym<ClauseType::AffectsT>(const StorageAdap
 // Optimized Executors
 
 static inline vector<StmtRef> buildCandidates(const vector<string>& existing_results) {
-	vector<StmtRef> candidates;
-	std::transform(existing_results.begin(), existing_results.end(), candidates.begin(),
-	               [](const auto& result) { return (stoull(result)); });
+	vector<StmtRef> candidates(existing_results.size());
+	transform(existing_results.begin(), existing_results.end(), candidates.begin(), [](const auto& result) { return (stoull(result)); });
 	sort(candidates.begin(), candidates.end(), greater<StmtRef>{});
 	return candidates;
 }
@@ -369,7 +368,7 @@ template <ClauseType T>
 QueryResult executeSynonymWildcardOptimized(const StorageAdapter& storage, const QueryResult& existing_result,
                                             const ReferenceArgument& lhs) {
 	if (!existing_result.containsSynonym(lhs.getSynonymSymbol())) {
-		return executeWildcardSynonym<T>(storage, lhs);
+		return executeSynonymWildcard<T>(storage, lhs);
 	}
 
 	auto existing_results = existing_result.getSynonymResult(lhs.getSynonymSymbol());
@@ -387,12 +386,34 @@ QueryResult executeSynonymWildcardOptimized(const StorageAdapter& storage, const
 }
 
 template <ClauseType T>
+static QueryResult executeSameSynonymSynonymOptimized(const StorageAdapter& storage, const QueryResult& existing_result,
+                                                      const ReferenceArgument& synonym) {
+	auto existing_results = existing_result.getSynonymResult(synonym.getSynonymSymbol());
+	QueryResult result = QueryResult({synonym.getSynonymSymbol()});
+	auto candidates = buildCandidates(existing_results);
+
+	for (auto const& candidate : candidates) {
+		StmtInfoPtrSet other_set = storage.getReverseStatements<T>(candidate);
+		auto satisfied = any_of(other_set.begin(), other_set.end(), [&](const auto& info) { return info->getIdentifier() == candidate; });
+		if (satisfied) {
+			result.addRow({to_string(candidate)});
+		}
+	}
+
+	return result;
+}
+
+template <ClauseType T>
 QueryResult executeSynonymSynonymOptimized(const StorageAdapter& storage, const QueryResult& existing_result, const ReferenceArgument& lhs,
                                            const ReferenceArgument& rhs) {
 	bool has_left = existing_result.containsSynonym(lhs.getSynonymSymbol());
 	bool has_right = existing_result.containsSynonym(rhs.getSynonymSymbol());
 	if (!has_left && !has_right) {
 		return executeSynonymSynonym<T>(storage, lhs, rhs);
+	}
+
+	if (lhs.getSynonymSymbol() == rhs.getSynonymSymbol()) {
+		return executeSameSynonymSynonymOptimized<T>(storage, existing_result, lhs);
 	}
 
 	vector<string> existing_results;
