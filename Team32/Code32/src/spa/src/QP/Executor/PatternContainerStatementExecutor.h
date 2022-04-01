@@ -13,17 +13,17 @@ using namespace QP::Types;
 
 // Trivial Executors
 template <ClauseType T>
-QueryResult executeTrivialName(const StorageAdapter& storage, const ReferenceArgument& var);
+QueryResult executeTrivialName(const StorageAdapter& store, const ReferenceArgument& var);
 template <ClauseType T>
-QueryResult executeTrivialWildcardOrSynonym(const StorageAdapter& storage);
+QueryResult executeTrivialWildcardOrSynonym(const StorageAdapter& store);
 
 // Executors
 template <ClauseType T>
-QueryResult executeName(const StorageAdapter& storage, const ReferenceArgument& stmt, const ReferenceArgument& var);
+QueryResult executeName(const StorageAdapter& store, const ReferenceArgument& stmt, const ReferenceArgument& var);
 template <ClauseType T>
-QueryResult executeWildcard(const StorageAdapter& storage, const ReferenceArgument& stmt);
+QueryResult executeWildcard(const StorageAdapter& store, const ReferenceArgument& stmt);
 template <ClauseType T>
-QueryResult executeSynonym(const StorageAdapter& storage, const ReferenceArgument& stmt, const ReferenceArgument& var);
+QueryResult executeSynonym(const StorageAdapter& store, const ReferenceArgument& stmt, const ReferenceArgument& var);
 
 // Executor Set Factories
 template <ClauseType T>

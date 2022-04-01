@@ -13,7 +13,7 @@ namespace QP::Dispatcher::AffectsDispatcher {
 using namespace QP::Types;
 
 template <ClauseType T>
-ExecutorSetBundle dispatcher(const vector<ReferenceArgument>& arguments);
+ExecutorSetBundle dispatcher(const vector<ReferenceArgument>& args);
 template <ClauseType T>
 ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ReferenceArgument>& args);
 template <ClauseType T>

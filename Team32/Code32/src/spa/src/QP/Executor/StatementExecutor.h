@@ -13,45 +13,43 @@ using namespace QP::Types;
 
 // Trivial Executors
 template <ClauseType T>
-QueryResult executeTrivialIndexIndex(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+QueryResult executeTrivialIndexIndex(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
 template <ClauseType T>
-QueryResult executeTrivialIndexWildcard(const StorageAdapter& storage, const ReferenceArgument& lhs);
+QueryResult executeTrivialIndexWildcard(const StorageAdapter& store, const ReferenceArgument& lhs);
 template <ClauseType T>
-QueryResult executeTrivialIndexSynonym(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+QueryResult executeTrivialIndexSynonym(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
 template <ClauseType T>
-QueryResult executeTrivialWildcardIndex(const StorageAdapter& storage, const ReferenceArgument& rhs);
+QueryResult executeTrivialWildcardIndex(const StorageAdapter& store, const ReferenceArgument& rhs);
 template <ClauseType T>
-QueryResult executeTrivialWildcardWildcard(const StorageAdapter& storage);
+QueryResult executeTrivialWildcardWildcard(const StorageAdapter& store);
 template <ClauseType T>
-QueryResult executeTrivialWildcardSynonym(const StorageAdapter& storage, const ReferenceArgument& rhs);
+QueryResult executeTrivialWildcardSynonym(const StorageAdapter& store, const ReferenceArgument& rhs);
 template <ClauseType T>
-QueryResult executeTrivialSynonymIndex(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+QueryResult executeTrivialSynonymIndex(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
 template <ClauseType T>
-QueryResult executeTrivialSynonymWildcard(const StorageAdapter& storage, const ReferenceArgument& lhs);
+QueryResult executeTrivialSynonymWildcard(const StorageAdapter& store, const ReferenceArgument& lhs);
 template <ClauseType T>
-QueryResult executeTrivialSynonymSynonym(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+QueryResult executeTrivialSynonymSynonym(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
 
 // Executors
 template <ClauseType T>
-QueryResult executeIndexSynonym(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+QueryResult executeIndexSynonym(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
 template <ClauseType T>
-QueryResult executeWildcardSynonym(const StorageAdapter& storage, const ReferenceArgument& rhs);
+QueryResult executeWildcardSynonym(const StorageAdapter& store, const ReferenceArgument& rhs);
 template <ClauseType T>
-QueryResult executeSynonymIndex(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+QueryResult executeSynonymIndex(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
 template <ClauseType T>
-QueryResult executeSynonymWildcard(const StorageAdapter& storage, const ReferenceArgument& lhs);
+QueryResult executeSynonymWildcard(const StorageAdapter& store, const ReferenceArgument& lhs);
 template <ClauseType T>
-QueryResult executeSynonymSynonym(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+QueryResult executeSynonymSynonym(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
 
 // Optimized Executors
 template <ClauseType T>
-QueryResult executeWildcardSynonymOptimized(const StorageAdapter& storage, const QueryResult& existing_result,
-                                            const ReferenceArgument& rhs);
+QueryResult executeWildcardSynonymOptimized(const StorageAdapter& store, const QueryResult& existing_result, const ReferenceArgument& rhs);
 template <ClauseType T>
-QueryResult executeSynonymWildcardOptimized(const StorageAdapter& storage, const QueryResult& existing_result,
-                                            const ReferenceArgument& lhs);
+QueryResult executeSynonymWildcardOptimized(const StorageAdapter& store, const QueryResult& existing_result, const ReferenceArgument& lhs);
 template <ClauseType T>
-QueryResult executeSynonymSynonymOptimized(const StorageAdapter& storage, const QueryResult& existing_result, const ReferenceArgument& lhs,
+QueryResult executeSynonymSynonymOptimized(const StorageAdapter& store, const QueryResult& existing_result, const ReferenceArgument& lhs,
                                            const ReferenceArgument& rhs);
 
 // Executor Set Factories

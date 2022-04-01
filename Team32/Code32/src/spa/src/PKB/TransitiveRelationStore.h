@@ -16,10 +16,10 @@ public:
 	[[nodiscard]] bool isRelated(TIdent front, TIdent back) const;
 	[[nodiscard]] bool isTransitivelyRelated(TIdent front, TIdent back) const;
 
-	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getForward(TIdent name) const;
-	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getReverse(TIdent name) const;
-	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getForwardTransitive(TIdent name) const;
-	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getReverseTransitive(TIdent name) const;
+	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getForward(TIdent ident) const;
+	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getReverse(TIdent ident) const;
+	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getForwardTransitive(TIdent ident) const;
+	[[nodiscard]] unordered_set<shared_ptr<TInfo>> getReverseTransitive(TIdent ident) const;
 
 	void optimize();
 	void clear();

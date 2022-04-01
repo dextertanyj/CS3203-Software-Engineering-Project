@@ -5,12 +5,12 @@
 namespace QP::Executor::PatternAssignExecutor {
 
 // Trivial Executors
-QueryResult executeTrivialNameWildcard(const StorageAdapter& storage, const ReferenceArgument& name) {
-	return QueryResult(!storage.getStmtsWithPatternLHS(name.getName()).empty());
+QueryResult executeTrivialNameWildcard(const StorageAdapter& store, const ReferenceArgument& name) {
+	return QueryResult(!store.getStmtsWithPatternLHS(name.getName()).empty());
 }
 
-QueryResult executeTrivialSynonymOrWildcardWildcard(const StorageAdapter& storage) {
-	auto statements = storage.getStatements();
+QueryResult executeTrivialSynonymOrWildcardWildcard(const StorageAdapter& store) {
+	auto statements = store.getStatements();
 	for (auto const& statement : statements) {
 		if (Utilities::checkStmtTypeMatch(statement, DesignEntity::Assign)) {
 			return QueryResult(true);
@@ -19,21 +19,20 @@ QueryResult executeTrivialSynonymOrWildcardWildcard(const StorageAdapter& storag
 	return {};
 }
 
-QueryResult executeTrivialNameExpression(const StorageAdapter& storage, const ReferenceArgument& name,
-                                         const ReferenceArgument& expression) {
+QueryResult executeTrivialNameExpression(const StorageAdapter& store, const ReferenceArgument& name, const ReferenceArgument& expression) {
 	return QueryResult(
-		storage.patternExists(name.getName(), expression.getExpression(), expression.getType() == ReferenceType::ExactExpression));
+		store.patternExists(name.getName(), expression.getExpression(), expression.getType() == ReferenceType::ExactExpression));
 }
 
-QueryResult executeTrivialSynonymOrWildcardExpression(const StorageAdapter& storage, const ReferenceArgument& expression) {
+QueryResult executeTrivialSynonymOrWildcardExpression(const StorageAdapter& store, const ReferenceArgument& expression) {
 	return QueryResult(
-		!storage.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ReferenceType::ExactExpression).empty());
+		!store.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ReferenceType::ExactExpression).empty());
 }
 
 // Executors
-QueryResult executeNameWildcard(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& name) {
+QueryResult executeNameWildcard(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& name) {
 	QueryResult result = QueryResult({assign.getSynonym().symbol});
-	auto results = storage.getStmtsWithPatternLHS(name.getName());
+	auto results = store.getStmtsWithPatternLHS(name.getName());
 	for (auto const& entry : results) {
 		result.addRow({to_string(entry->getIdentifier())});
 	}
@@ -41,9 +40,9 @@ QueryResult executeNameWildcard(const StorageAdapter& storage, const ReferenceAr
 	return result;
 }
 
-QueryResult executeWildcardWildcard(const StorageAdapter& storage, const ReferenceArgument& assign) {
+QueryResult executeWildcardWildcard(const StorageAdapter& store, const ReferenceArgument& assign) {
 	QueryResult result = QueryResult({assign.getSynonym().symbol});
-	auto results = storage.getStatements();
+	auto results = store.getStatements();
 	for (auto const& entry : results) {
 		if (Utilities::checkStmtTypeMatch(entry, DesignEntity::Assign)) {
 			result.addRow({to_string(entry->getIdentifier())});
@@ -53,10 +52,10 @@ QueryResult executeWildcardWildcard(const StorageAdapter& storage, const Referen
 	return result;
 }
 
-QueryResult executeSynonymWildcard(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& synonym) {
+QueryResult executeSynonymWildcard(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& synonym) {
 	QueryResult result = QueryResult({assign.getSynonym().symbol, synonym.getSynonym().symbol});
-	for (auto const& var_ref : storage.getVariables()) {
-		auto statements = storage.getStmtsWithPatternLHS(var_ref);
+	for (auto const& var_ref : store.getVariables()) {
+		auto statements = store.getStmtsWithPatternLHS(var_ref);
 		for (auto const& statement : statements) {
 			result.addRow({to_string(statement->getIdentifier()), var_ref});
 		}
@@ -65,21 +64,21 @@ QueryResult executeSynonymWildcard(const StorageAdapter& storage, const Referenc
 	return result;
 }
 
-QueryResult executeNameExpression(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& name,
+QueryResult executeNameExpression(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& name,
                                   const ReferenceArgument& expression) {
 	QueryResult result = QueryResult({assign.getSynonym().symbol});
 	auto results =
-		storage.getStmtsWithPattern(name.getName(), expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
+		store.getStmtsWithPattern(name.getName(), expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
 	for (auto const& entry : results) {
 		result.addRow({to_string(entry->getIdentifier())});
 	}
 	return result;
 }
 
-QueryResult executeWildcardExpression(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& expression) {
+QueryResult executeWildcardExpression(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& expression) {
 	QueryResult result = QueryResult({assign.getSynonym().symbol});
 	vector<string> statement_result;
-	auto result_pairs = storage.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
+	auto result_pairs = store.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
 	for (auto const& pair : result_pairs) {
 		result.addRow({to_string(pair.first->getIdentifier())});
 	}
@@ -87,10 +86,10 @@ QueryResult executeWildcardExpression(const StorageAdapter& storage, const Refer
 	return result;
 }
 
-QueryResult executeSynonymExpression(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& synonym,
+QueryResult executeSynonymExpression(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& synonym,
                                      const ReferenceArgument& expression) {
 	QueryResult result = QueryResult({assign.getSynonym().symbol, synonym.getSynonym().symbol});
-	auto result_pairs = storage.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
+	auto result_pairs = store.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
 	for (auto const& pair : result_pairs) {
 		result.addRow({to_string(pair.first->getIdentifier()), pair.second});
 	}
@@ -99,55 +98,55 @@ QueryResult executeSynonymExpression(const StorageAdapter& storage, const Refere
 }
 
 ExecutorSet executorFactoryNameWildcard(const vector<ReferenceArgument>& args) {
-	Types::Executor trivial_executor = [variable = args.at(1)](const StorageAdapter& storage) {
-		return executeTrivialNameWildcard(storage, variable);
+	Types::Executor trivial_executor = [variable = args.at(1)](const StorageAdapter& store) {
+		return executeTrivialNameWildcard(store, variable);
 	};
-	Types::Executor executor = [assign = args.at(0), variable = args.at(1)](const StorageAdapter& storage) {
-		return executeNameWildcard(storage, assign, variable);
+	Types::Executor executor = [assign = args.at(0), variable = args.at(1)](const StorageAdapter& store) {
+		return executeNameWildcard(store, assign, variable);
 	};
 	return pair{trivial_executor, executor};
 }
 
 ExecutorSet executorFactoryNameExpression(const vector<ReferenceArgument>& args) {
-	Types::Executor trivial_executor = [variable = args.at(1), expression = args.at(2)](const StorageAdapter& storage) {
-		return executeTrivialNameExpression(storage, variable, expression);
+	Types::Executor trivial_executor = [variable = args.at(1), expression = args.at(2)](const StorageAdapter& store) {
+		return executeTrivialNameExpression(store, variable, expression);
 	};
-	Types::Executor executor = [assign = args.at(0), variable = args.at(1), expression = args.at(2)](const StorageAdapter& storage) {
-		return executeNameExpression(storage, assign, variable, expression);
+	Types::Executor executor = [assign = args.at(0), variable = args.at(1), expression = args.at(2)](const StorageAdapter& store) {
+		return executeNameExpression(store, assign, variable, expression);
 	};
 	return pair{trivial_executor, executor};
 }
 
 ExecutorSet executorFactoryWildcardWildcard(const vector<ReferenceArgument>& args) {
-	Types::Executor trivial_executor = [](const StorageAdapter& storage) { return executeTrivialSynonymOrWildcardWildcard(storage); };
-	Types::Executor executor = [assign = args.at(0)](const StorageAdapter& storage) { return executeWildcardWildcard(storage, assign); };
+	Types::Executor trivial_executor = [](const StorageAdapter& store) { return executeTrivialSynonymOrWildcardWildcard(store); };
+	Types::Executor executor = [assign = args.at(0)](const StorageAdapter& store) { return executeWildcardWildcard(store, assign); };
 	return pair{trivial_executor, executor};
 }
 
 ExecutorSet executorFactoryWildcardExpression(const vector<ReferenceArgument>& args) {
-	Types::Executor trivial_executor = [expression = args.at(2)](const StorageAdapter& storage) {
-		return executeTrivialSynonymOrWildcardExpression(storage, expression);
+	Types::Executor trivial_executor = [expression = args.at(2)](const StorageAdapter& store) {
+		return executeTrivialSynonymOrWildcardExpression(store, expression);
 	};
-	Types::Executor executor = [assign = args.at(0), expression = args.at(2)](const StorageAdapter& storage) {
-		return executeWildcardExpression(storage, assign, expression);
+	Types::Executor executor = [assign = args.at(0), expression = args.at(2)](const StorageAdapter& store) {
+		return executeWildcardExpression(store, assign, expression);
 	};
 	return pair{trivial_executor, executor};
 }
 
 ExecutorSet executorFactorySynonymWildcard(const vector<ReferenceArgument>& args) {
-	Types::Executor trivial_executor = [](const StorageAdapter& storage) { return executeTrivialSynonymOrWildcardWildcard(storage); };
-	Types::Executor executor = [assign = args.at(0), variable = args.at(1)](const StorageAdapter& storage) {
-		return executeSynonymWildcard(storage, assign, variable);
+	Types::Executor trivial_executor = [](const StorageAdapter& store) { return executeTrivialSynonymOrWildcardWildcard(store); };
+	Types::Executor executor = [assign = args.at(0), variable = args.at(1)](const StorageAdapter& store) {
+		return executeSynonymWildcard(store, assign, variable);
 	};
 	return pair{trivial_executor, executor};
 }
 
 ExecutorSet executorFactorySynonymExpression(const vector<ReferenceArgument>& args) {
-	Types::Executor trivial_executor = [expression = args.at(2)](const StorageAdapter& storage) {
-		return executeTrivialSynonymOrWildcardExpression(storage, expression);
+	Types::Executor trivial_executor = [expression = args.at(2)](const StorageAdapter& store) {
+		return executeTrivialSynonymOrWildcardExpression(store, expression);
 	};
-	Types::Executor executor = [assign = args.at(0), variable = args.at(1), expression = args.at(2)](const StorageAdapter& storage) {
-		return executeSynonymExpression(storage, assign, variable, expression);
+	Types::Executor executor = [assign = args.at(0), variable = args.at(1), expression = args.at(2)](const StorageAdapter& store) {
+		return executeSynonymExpression(store, assign, variable, expression);
 	};
 	return pair{trivial_executor, executor};
 }

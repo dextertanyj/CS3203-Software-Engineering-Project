@@ -16,11 +16,11 @@ void PKB::IfNode::setConnection(shared_ptr<PKB::NodeInterface> next) {
 
 void PKB::IfNode::setNext(const shared_ptr<PKB::NodeInterface>& next) { insertNext(next); }
 
-void PKB::IfNode::setPrevious(const shared_ptr<PKB::NodeInterface>& prev) {
+void PKB::IfNode::setPrevious(const shared_ptr<PKB::NodeInterface>& previous) {
 	if (!getPreviousNodes().empty()) {
 		throw logic_error("Non-dummy node cannot have more than 1 previous node.");
 	}
-	insertPrevious(prev);
+	insertPrevious(previous);
 }
 
 void PKB::IfNode::insertIfNext(const shared_ptr<PKB::StatementNode>& first, const shared_ptr<PKB::StatementNode>& second) {
