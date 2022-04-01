@@ -87,7 +87,7 @@ void PKB::ControlFlowGraph::optimize() {
 	}
 }
 
-void PKB::ControlFlowGraph::processGraphNode(shared_ptr<NodeInterface> node, size_t graph_index,
+void PKB::ControlFlowGraph::processGraphNode(const shared_ptr<NodeInterface>& node, size_t graph_index,
                                              unordered_set<shared_ptr<NodeInterface>>& visited) {
 	node->setGraphIndex(graph_index);
 	visited.insert(node);

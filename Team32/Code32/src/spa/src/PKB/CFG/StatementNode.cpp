@@ -2,7 +2,7 @@
 
 #include <utility>
 
-PKB::StatementNode::StatementNode(NodeType type, shared_ptr<StmtInfo> info) : NodeInterface(type), stmt_info(info) {}
+PKB::StatementNode::StatementNode(NodeType type, shared_ptr<StmtInfo> info) : NodeInterface(type), stmt_info(std::move(info)) {}
 
 void PKB::StatementNode::setConnection(shared_ptr<NodeInterface> next) {
 	setNext(next);

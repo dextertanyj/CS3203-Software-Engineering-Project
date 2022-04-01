@@ -34,7 +34,7 @@ private:
 		unordered_map<StmtRef, StmtInfoPtrSet>& cache;
 		unordered_set<shared_ptr<NodeInterface>> (NodeInterface::*gatherer)() const;
 		LoopNodePair (NextManager::*loop_continuation_handler)(const shared_ptr<StatementNode>&);
-		StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&);
+		StmtInfoPtrSet (*collector)(const shared_ptr<NodeInterface>&);
 	};
 
 	template <class Comparator>
@@ -65,15 +65,15 @@ private:
 	template <typename Comparator>
 	LoopNodePair processLoopEntryExit(const shared_ptr<StatementNode>& loop_node,
 	                                  unordered_set<shared_ptr<NodeInterface>> (NodeInterface::*gatherer)() const,
-	                                  StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
+	                                  StmtInfoPtrSet (*collector)(const shared_ptr<NodeInterface>&));
 	LoopNodePair processLoopEntry(const shared_ptr<StatementNode>& node);
 	LoopNodePair processLoopExit(const shared_ptr<StatementNode>& node);
-	unordered_set<shared_ptr<StatementNode>> checkLoopNeighbour(
-		const shared_ptr<NodeInterface>& node, StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
+	unordered_set<shared_ptr<StatementNode>> checkLoopNeighbour(const shared_ptr<NodeInterface>& node,
+	                                                            StmtInfoPtrSet (*collector)(const shared_ptr<NodeInterface>&));
 
 	template <class T>
 	void handleDummyNodeSearch(T& queue, const shared_ptr<NodeInterface>& node,
-	                           StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&));
+	                           StmtInfoPtrSet (*collector)(const shared_ptr<NodeInterface>&));
 
 	// Members
 	ControlFlowGraph* control_flow_graph;

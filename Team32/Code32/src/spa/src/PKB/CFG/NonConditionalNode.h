@@ -6,8 +6,8 @@
 
 class PKB::NonConditionalNode : public PKB::StatementNode {
 public:
-	explicit NonConditionalNode(shared_ptr<StmtInfo> info);
-	void setPrevious(shared_ptr<NodeInterface> prev) override;
-	void setNext(shared_ptr<NodeInterface> next) override;
+	explicit NonConditionalNode(const shared_ptr<StmtInfo>& info);
+	void setPrevious(const shared_ptr<NodeInterface>& prev) override;
+	void setNext(const shared_ptr<NodeInterface>& next) override;
 };
 #endif  // SPA_SRC_PKB_CFG_NONCONDITIONALNODE_H

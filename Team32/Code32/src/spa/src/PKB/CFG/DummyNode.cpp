@@ -9,14 +9,14 @@ void PKB::DummyNode::setConnection(shared_ptr<PKB::NodeInterface> next) {
 	next->setPrevious(shared_from_this());
 }
 
-void PKB::DummyNode::setNext(shared_ptr<PKB::NodeInterface> next) {
+void PKB::DummyNode::setNext(const shared_ptr<PKB::NodeInterface>& next) {
 	if (!getNextNodes().empty()) {
 		throw logic_error("Dummy node cannot have more than 1 next statement.");
 	}
 	insertNext(next);
 }
 
-void PKB::DummyNode::setPrevious(shared_ptr<PKB::NodeInterface> previous) {
+void PKB::DummyNode::setPrevious(const shared_ptr<PKB::NodeInterface>& previous) {
 	if (getPreviousNodes().size() > 1) {
 		throw logic_error("Dummy node cannot have more than 1 next statement.");
 	}
