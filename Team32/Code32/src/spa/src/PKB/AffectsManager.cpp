@@ -133,7 +133,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
 	}
 	queue<StmtRef> bfs_queue;
 	bfs_queue.push(node_ref);
-	Types::AffectStarBFSInfo info = {bfs_queue, {}, {}};
+	Types::AffectStarBFSInfo info = {bfs_queue, {node_ref}, {}};
 	while (!info.bfs_queue.empty()) {
 		processAffectStarBFS(info, &AffectsManager::getAffected, affected_star_cache);
 	}
@@ -145,7 +145,6 @@ void PKB::AffectsManager::processAffectStarBFS(PKB::Types::AffectStarBFSInfo &in
                                                unordered_map<StmtRef, StmtInfoPtrSet> &cache) {
 	StmtRef current = info.bfs_queue.front();
 	info.bfs_queue.pop();
-	info.visited_set.insert(current);
 	for (const auto &stmt : (this->*collector)(current)) {
 		evaluateAffectStarBFSNode(stmt, info, cache);
 	}
@@ -157,12 +156,13 @@ void PKB::AffectsManager::evaluateAffectStarBFSNode(const shared_ptr<StmtInfo> &
 		info.visited_set.insert(stmt->getIdentifier());
 		StmtInfoPtrSet affects_star_set_of_stmt = cache.at(stmt->getIdentifier());
 		for (const auto &stmt_info : affects_star_set_of_stmt) {
-			info.result.insert(stmt_info);
 			info.visited_set.insert(stmt_info->getIdentifier());
+			info.result.insert(stmt_info);
 		}
 		return;
 	}
 	if (info.visited_set.find(stmt->getIdentifier()) == info.visited_set.end()) {
+		info.visited_set.insert(stmt->getIdentifier());
 		info.bfs_queue.push(stmt->getIdentifier());
 	}
 }
