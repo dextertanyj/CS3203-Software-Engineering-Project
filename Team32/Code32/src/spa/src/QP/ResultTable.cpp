@@ -128,7 +128,7 @@ static ResultRow mergeRow(ResultRow current_row, const ResultRow& other_row, con
 	return current_row;
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::hashJoinTables(ResultTable table_one, ResultTable table_two) {
+QP::Types::ResultTable QP::Types::ResultTable::hashJoinTables(const ResultTable& table_one, const ResultTable& table_two) {
 	ResultTable larger_table;
 	ResultTable smaller_table;
 	if (table_one.getNumberOfRows() >= table_two.getNumberOfRows()) {
@@ -184,7 +184,7 @@ QP::Types::ResultTable QP::Types::ResultTable::loopJoinTables(const ResultTable&
 	return table;
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::joinTables(ResultTable table_one, ResultTable table_two) {
+QP::Types::ResultTable QP::Types::ResultTable::joinTables(const ResultTable& table_one, const ResultTable& table_two) {
 	ResultTable superset_table;
 	ResultTable subset_table;
 
@@ -207,7 +207,7 @@ QP::Types::ResultTable QP::Types::ResultTable::joinTables(ResultTable table_one,
 	}
 
 	if (number_of_match > 0) {
-		return hashJoinTables(move(superset_table), move(subset_table));
+		return hashJoinTables(superset_table, subset_table);
 	}
 
 	return loopJoinTables(superset_table, subset_table);

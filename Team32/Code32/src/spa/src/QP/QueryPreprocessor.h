@@ -52,7 +52,6 @@ private:
 
 	bool match(const string& token);
 	void reset();
-	void validateSyntax(Types::ClauseType type, vector<Types::ReferenceArgument> arguments);
 	void validateUnknownPatternSyntax();
 	void logSemanticException(const string&& message);
 
@@ -66,6 +65,8 @@ private:
 
 	static regex invalid_chars_regex;
 	static regex query_token_regex;
+
+	static void validateSyntax(Types::ClauseType type, vector<Types::ReferenceArgument> arguments);
 };
 
 #endif  // SPA_SRC_QP_QUERYPREPROCESSOR_H

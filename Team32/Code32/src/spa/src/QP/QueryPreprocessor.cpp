@@ -368,19 +368,6 @@ void QP::QueryPreprocessor::reset() {
 	clause_list.clear();
 }
 
-void QP::QueryPreprocessor::validateSyntax(ClauseType type, vector<ReferenceArgument> arguments) {
-	auto expected_types = DispatchMap::syntax_map.at(type);
-	if (expected_types.size() != arguments.size()) {
-		throw QuerySyntaxException("Invalid number of arguments.");
-	}
-	for (int i = 0; i < arguments.size(); i++) {
-		auto expected = expected_types.at(i);
-		if (expected.find(arguments.at(i).getType()) == expected.end()) {
-			throw QuerySyntaxException("Invalid argument type.");
-		}
-	}
-}
-
 void QP::QueryPreprocessor::validateUnknownPatternSyntax() {
 	vector<ReferenceArgument> arguments = parseArgumentList(&QueryPreprocessor::parseAnyArgument);
 	auto iter = DispatchMap::pattern_syntax_map.find(arguments.size());
@@ -399,5 +386,18 @@ void QP::QueryPreprocessor::validateUnknownPatternSyntax() {
 void QP::QueryPreprocessor::logSemanticException(const string&& message) {
 	if (!semantic_exception_message.has_value()) {
 		semantic_exception_message = message;
+	}
+}
+
+void QP::QueryPreprocessor::validateSyntax(ClauseType type, vector<ReferenceArgument> arguments) {
+	auto expected_types = DispatchMap::syntax_map.at(type);
+	if (expected_types.size() != arguments.size()) {
+		throw QuerySyntaxException("Invalid number of arguments.");
+	}
+	for (int i = 0; i < arguments.size(); i++) {
+		auto expected = expected_types.at(i);
+		if (expected.find(arguments.at(i).getType()) == expected.end()) {
+			throw QuerySyntaxException("Invalid argument type.");
+		}
 	}
 }

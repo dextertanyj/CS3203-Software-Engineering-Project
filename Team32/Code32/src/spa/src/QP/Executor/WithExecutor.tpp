@@ -14,12 +14,12 @@ struct HashInfo {
 };
 
 template <typename T>
-inline std::string safe_to_string(T value) {
+inline std::string safeToString(T value) {
 	return std::to_string(value);
 }
 
 template <>
-inline std::string safe_to_string(std::string value) {
+inline std::string safeToString(std::string value) {
 	return value;
 }
 }
@@ -99,7 +99,7 @@ static QP::QueryResult hashJoin(const QP::StorageAdapter& store, HashInfo<TAttri
 	for (const auto& probe : probe_info.values) {
 		TAttribute attribute = probe_info.mapper(store, probe);
 		auto iter = build_table.equal_range(attribute);
-		for_each(iter.first, iter.second, [&](const auto& pair) { result.addRow({safe_to_string(pair.second), safe_to_string(probe)}); });
+		for_each(iter.first, iter.second, [&](const auto& pair) { result.addRow({safeToString(pair.second), safeToString(probe)}); });
 	}
 	return result;
 }
@@ -130,7 +130,7 @@ QP::QueryResult QP::Executor::WithExecutor::executeAttributeConstant(const QP::S
 	QueryResult result = QueryResult({lhs.getAttribute().synonym.symbol});
 	for (const auto& left : left_values) {
 		if (lhs_executors.second(store, left) == right_value) {
-			result.addRow({safe_to_string(left)});
+			result.addRow({safeToString(left)});
 		}
 	}
 	return result;
