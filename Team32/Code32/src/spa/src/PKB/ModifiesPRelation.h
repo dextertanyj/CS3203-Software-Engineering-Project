@@ -8,7 +8,8 @@
 
 class PKB::ModifiesPRelation {
 public:
-	static void optimize(const Types::ProcedureStore&, PVRelationStore<ModifiesPRelation>&, SVRelationStore<ModifiesSRelation>&);
+    static void
+    optimize(const Types::ProcedureStore &, PVRelationStore<ModifiesPRelation> &, SVRelationStore<ModifiesSRelation> &);
 };
 
 #endif  // SPA_SRC_PKB_MODIFIESPRELATION_H

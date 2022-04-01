@@ -8,18 +8,22 @@
 
 class PKB::StatementNode : public PKB::NodeInterface, public enable_shared_from_this<StatementNode> {
 public:
-	StatementNode(NodeType type, shared_ptr<StmtInfo> info);
-	void setConnection(shared_ptr<NodeInterface> next) override;
+    StatementNode(NodeType type, shared_ptr<StmtInfo> info);
 
-	shared_ptr<StmtInfo> getStmtInfo() { return this->stmt_info; };
-	StmtRef getNodeRef() const override;
-	~StatementNode() override = default;
+    void setConnection(shared_ptr<NodeInterface> next) override;
 
-	bool operator<(const StatementNode& other) const;
-	bool operator>(const StatementNode& other) const;
+    shared_ptr<StmtInfo> getStmtInfo() { return this->stmt_info; };
+
+    StmtRef getNodeRef() const override;
+
+    ~StatementNode() override = default;
+
+    bool operator<(const StatementNode &other) const;
+
+    bool operator>(const StatementNode &other) const;
 
 private:
-	shared_ptr<StmtInfo> stmt_info;
+    shared_ptr<StmtInfo> stmt_info;
 };
 
 #endif  // SPA_SRC_PKB_CFG_STATEMENTNODE_H

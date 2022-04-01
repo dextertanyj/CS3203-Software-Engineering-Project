@@ -12,18 +12,19 @@
 
 class PKB::CallsStatementStore {
 public:
-	CallsStatementStore();
+    CallsStatementStore();
 
-	void set(const shared_ptr<StmtInfo> &statement, ProcRef procedure);
+    void set(const shared_ptr<StmtInfo> &statement, ProcRef procedure);
 
-	[[nodiscard]] ProcRef getProcedure(const shared_ptr<StmtInfo> &statement) const;
+    [[nodiscard]] ProcRef getProcedure(const shared_ptr<StmtInfo> &statement) const;
 
-	[[nodiscard]] ProcRef getProcedure(StmtRef index) const;
+    [[nodiscard]] ProcRef getProcedure(StmtRef index) const;
 
-	void populate(const Types::ProcedureStore &procedures, TransitiveRelationStore<ProcRef, ProcedureInfo, CallsRelation> &store) const;
+    void populate(const Types::ProcedureStore &procedures,
+                  TransitiveRelationStore <ProcRef, ProcedureInfo, CallsRelation> &store) const;
 
 private:
-	unordered_map<StmtRef, ProcRef> map;
+    unordered_map<StmtRef, ProcRef> map;
 };
 
 #endif  // SPA_SRC_PKB_CALLSSTATEMENTSTORE_H
