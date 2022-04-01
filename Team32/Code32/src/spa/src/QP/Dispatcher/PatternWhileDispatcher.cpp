@@ -1,11 +1,25 @@
 #include "QP/Dispatcher/PatternWhileDispatcher.h"
 
-#include <utility>
+#include <unordered_map>
 
 #include "QP/Dispatcher/DispatchProcessors.tpp"
+#include "QP/Executor/PatternContainerStatementExecutor.tpp"
 
-const QP::Types::ArgumentDispatcher QP::Dispatcher::PatternWhileDispatcher::dispatcher =
-	[](const vector<QP::Types::ReferenceArgument>& args) {
-		return QP::Dispatcher::DispatchProcessors::processArgument(QP::Types::ClauseType::PatternWhile,
-	                                                               QP::Dispatcher::PatternWhileDispatcher::argument_dispatch_map, args);
-	};
+using namespace QP::Executor;
+using namespace QP::Types;
+
+using inner_map = unordered_map<ArgumentDispatchKey, ExecutorSetFactory>;
+using outer_map = unordered_map<ArgumentDispatchKey, inner_map>;
+
+static const outer_map map = {
+	{ReferenceType::Name, {{ReferenceType::Wildcard, PatternContainerStatementExecutor::executorFactoryName<ClauseType::PatternWhile>}}},
+	{ReferenceType::Wildcard,
+     {{ReferenceType::Wildcard, PatternContainerStatementExecutor::executorFactoryWildcard<ClauseType::PatternWhile>}}},
+	{DesignEntity::Variable,
+     {{ReferenceType::Wildcard, PatternContainerStatementExecutor::executorFactorySynonym<ClauseType::PatternWhile>}}}};
+
+static const unordered_map<QP::Types::ArgumentDispatchKey, outer_map> argument_dispatch_map = {{DesignEntity::While, map}};
+
+ExecutorSetBundle QP::Dispatcher::PatternWhileDispatcher::dispatcher(const vector<ReferenceArgument>& args) {
+	return DispatchProcessors::processArgument(ClauseType::PatternWhile, argument_dispatch_map, args);
+}

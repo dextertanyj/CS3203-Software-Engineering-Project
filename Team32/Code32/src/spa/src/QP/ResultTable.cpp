@@ -14,17 +14,17 @@ QP::Types::ResultTable::ResultTable(vector<string> synonyms_stored) : synonyms_s
 	}
 }
 
-size_t QP::Types::ResultTable::getNumberOfRows() { return table.size(); }
+size_t QP::Types::ResultTable::getNumberOfRows() const { return table.size(); }
 
-size_t QP::Types::ResultTable::getNumberOfColumns() { return synonyms_stored.size(); }
+size_t QP::Types::ResultTable::getNumberOfColumns() const { return synonyms_stored.size(); }
 
-vector<ResultRow> QP::Types::ResultTable::getTable() { return table; }
+vector<ResultRow> QP::Types::ResultTable::getTable() const { return table; }
 
-vector<string> QP::Types::ResultTable::getSynonymsStored() { return synonyms_stored; }
+vector<string> QP::Types::ResultTable::getSynonymsStored() const { return synonyms_stored; }
 
-unordered_map<string, size_t> QP::Types::ResultTable::getSynonymsStoredMap() { return synonyms_to_index_map; }
+unordered_map<string, size_t> QP::Types::ResultTable::getSynonymsStoredMap() const { return synonyms_to_index_map; }
 
-ResultColumn QP::Types::ResultTable::getColumn(const string& synonym) {
+ResultColumn QP::Types::ResultTable::getColumn(const string& synonym) const {
 	assert(synonyms_to_index_map.find(synonym) != synonyms_to_index_map.end());
 
 	size_t col_pos = synonyms_to_index_map.at(synonym);
@@ -36,7 +36,7 @@ ResultColumn QP::Types::ResultTable::getColumn(const string& synonym) {
 	return column;
 }
 
-ResultRow QP::Types::ResultTable::getRow(size_t row_number) { return table.at(row_number); }
+ResultRow QP::Types::ResultTable::getRow(size_t row_number) const { return table.at(row_number); }
 
 void QP::Types::ResultTable::insertRow(const ResultRow& row) {
 	assert(row.size() == getNumberOfColumns());
@@ -75,7 +75,7 @@ void QP::Types::ResultTable::removeRow(size_t row_number) {
 	table.erase(table.begin() + static_cast<vector<string>::difference_type>(row_number));
 }
 
-ResultRow QP::Types::ResultTable::getRowWithOrder(const vector<string>& synonyms, size_t row_number) {
+ResultRow QP::Types::ResultTable::getRowWithOrder(const vector<string>& synonyms, size_t row_number) const {
 	ResultRow row_with_order;
 	ResultRow row = table.at(row_number);
 	for (string const& synonym : synonyms) {

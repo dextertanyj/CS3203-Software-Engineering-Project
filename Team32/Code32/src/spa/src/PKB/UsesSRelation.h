@@ -20,6 +20,7 @@ private:
 	                         SVRelationStore<UsesSRelation>& store);
 	static void optimizeConditional(const shared_ptr<StmtInfo>& statement, Types::ParentStore& parent_store,
 	                                SVRelationStore<UsesSRelation>& store);
+	static void storeUsedVars(const shared_ptr<StmtInfo>& stmt_key, const StmtInfoPtrSet& stmt_list, SVRelationStore<UsesSRelation>& store);
 };
 
 #endif  // SPA_SRC_PKB_USESSRELATION_H

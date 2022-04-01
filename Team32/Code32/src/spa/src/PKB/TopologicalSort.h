@@ -2,6 +2,7 @@
 #define SPA_SRC_PKB_TOPOLOGICALSORT_H
 
 #include <memory>
+#include <queue>
 #include <vector>
 
 #include "PKB/PKB.h"
@@ -18,6 +19,8 @@ public:
 	[[nodiscard]] vector<shared_ptr<TInfo>> get() const;
 
 private:
+	void executeKahn(queue<shared_ptr<TInfo>>& next,
+	                 unordered_map<shared_ptr<TInfo>, pair<unordered_set<shared_ptr<TInfo>>, unordered_set<shared_ptr<TInfo>>>>& edges);
 	vector<shared_ptr<TInfo>> order;
 };
 

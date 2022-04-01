@@ -2,42 +2,36 @@
 
 #include <utility>
 
-#include "QP/ConnectedSynonyms.h"
+#include "QP/ClauseGroups.h"
 #include "QP/QueryUtils.h"
 
 using QP::Types::Clause;
-using QP::Types::ConnectedSynonyms;
 using QP::Types::DesignEntity;
 
 QP::QueryEvaluator::QueryEvaluator(QP::StorageAdapter& store) : store(store) {}
 
 QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properties) {
-	QueryGraph graph = buildGraph(query_properties);
-	DeclarationList select_list = query_properties.getSelectSynonymList();
-	ConnectedSynonyms connected_synonyms = graph.getConnectedSynonyms(select_list);
-	vector<pair<Types::ClauseList, Types::DeclarationList>> clauses_in_group = splitClauses(query_properties, connected_synonyms);
+	auto declarations = query_properties.getDeclarationList();
+	auto clauses = query_properties.getClauseList();
+	auto select_list = query_properties.getSelectSynonymList();
+	QueryGraph graph = QueryGraph(declarations, clauses, select_list);
+	size_t number_of_groups = graph.getNumberOfGroups();
 
 	vector<QueryResult> results;
 
-	// Execute clauses without synonyms first
-	size_t last_group = clauses_in_group.size() - 1;
-	if (!executeTrivialGroup(clauses_in_group[last_group].first).getResult()) {
+	ClauseList clauses_without_synonyms = getClausesWithoutSynonyms(query_properties);
+	if (!executeTrivialGroup(clauses_without_synonyms).getResult()) {
 		return {};
 	}
 
-	for (size_t i = 0; i < last_group; i++) {
-		ClauseList group_clauses = clauses_in_group[i].first;
-		DeclarationList group_select_list = clauses_in_group[i].second;
-		if (group_select_list.empty()) {
-			if (!executeGroupWithoutSelected(group_clauses, group_select_list).getResult()) {
-				return {};
-			}
-		} else {
-			QueryResult group_result = executeGroupWithSelected(group_clauses, group_select_list);
-			if (!group_result.getResult()) {
-				return {};
-			}
-			results.push_back(group_result);
+	for (size_t i = 0; i < number_of_groups; i++) {
+		ClauseList group_clauses = graph.getGroupClauses(i);
+		DeclarationList group_select_list = graph.getGroupSelectedSynonyms(i);
+
+		bool has_result = executeGroup(group_clauses, group_select_list, results);
+
+		if (!has_result) {
+			return {};
 		}
 	}
 
@@ -48,6 +42,20 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	}
 
 	return final_result;
+}
+
+bool QP::QueryEvaluator::executeGroup(ClauseList& clauses, DeclarationList& select_list, vector<QueryResult>& results) {
+	if (select_list.empty()) {
+		return executeGroupWithoutSelected(clauses, select_list).getResult();
+	}
+
+	QueryResult group_result = executeGroupWithSelected(clauses, select_list);
+	if (group_result.getResult()) {
+		results.push_back(group_result);
+		return true;
+	}
+
+	return false;
 }
 
 QP::QueryResult QP::QueryEvaluator::executeGroupWithSelected(ClauseList& clauses, DeclarationList& select_list) {
@@ -168,32 +176,13 @@ QP::QueryResult QP::QueryEvaluator::getProcedures(const string& symbol) {
 	return result;
 }
 
-QP::QueryGraph QP::QueryEvaluator::buildGraph(QueryProperties& query_properties) {
-	QueryGraph graph = QueryGraph(query_properties.getDeclarationList());
-	graph.setEdges(query_properties.getClauseList());
-
-	return graph;
-}
-
-vector<pair<ClauseList, DeclarationList>> QP::QueryEvaluator::splitClauses(QueryProperties& query_properties,
-                                                                           ConnectedSynonyms& connected_synonyms) {
-	size_t number_of_groups = connected_synonyms.getNumberOfGroups();
-
-	vector<pair<ClauseList, DeclarationList>> result(number_of_groups + 1);
+ClauseList QP::QueryEvaluator::getClausesWithoutSynonyms(QueryProperties& query_properties) {
+	ClauseList clauses;
 	for (const Clause& clause : query_properties.getClauseList()) {
-		vector<string> declarations = clause.relation->getDeclarationSymbols();
-		if (declarations.empty()) {
-			result[number_of_groups].first.push_back(clause);
-		} else {
-			size_t group_number = connected_synonyms.getGroupNumber(declarations[0]);
-			result[group_number].first.push_back(clause);
+		if (clause.relation->getDeclarationSymbols().empty()) {
+			clauses.push_back(clause);
 		}
 	}
 
-	result[number_of_groups].second = {};
-	for (size_t i = 0; i < number_of_groups; i++) {
-		result[i].second = connected_synonyms.getGroupSynonyms(i);
-	}
-
-	return result;
+	return clauses;
 }

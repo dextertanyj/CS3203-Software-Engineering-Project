@@ -14,7 +14,6 @@
 
 using namespace std;
 using QP::Types::ClauseList;
-using QP::Types::ConnectedSynonyms;
 using QP::Types::Declaration;
 using QP::Types::DeclarationList;
 
@@ -22,10 +21,10 @@ class QP::QueryEvaluator {
 public:
 	explicit QueryEvaluator(QP::StorageAdapter& store);
 	QueryResult executeQuery(QueryProperties& query_properties);
-	static vector<pair<ClauseList, DeclarationList>> splitClauses(QueryProperties& query_properties, ConnectedSynonyms& connected_synonyms);
 
 private:
 	const QP::StorageAdapter& store;
+	bool executeGroup(ClauseList& clauses, DeclarationList& select_list, vector<QueryResult>& results);
 	QueryResult executeGroupWithSelected(ClauseList& clauses, DeclarationList& select_list);
 	QueryResult executeGroupWithoutSelected(ClauseList& clauses, DeclarationList& select_list);
 	QueryResult executeTrivialGroup(ClauseList& clauses);
@@ -35,7 +34,7 @@ private:
 	QueryResult getConstants(const string& symbol);
 	QueryResult getVariables(const string& symbol);
 	QueryResult getProcedures(const string& symbol);
-	static QueryGraph buildGraph(QueryProperties& query_properties);
+	static ClauseList getClausesWithoutSynonyms(QueryProperties& query_properties);
 };
 
 #endif  // SPA_SRC_QP_QUERYEVALUATOR_H

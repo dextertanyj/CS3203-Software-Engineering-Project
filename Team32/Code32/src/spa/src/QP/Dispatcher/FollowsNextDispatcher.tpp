@@ -3,109 +3,39 @@
 
 #include "QP/Dispatcher/FollowsNextDispatcher.h"
 
-#include <unordered_map>
-#include <utility>
-
 #include "QP/Dispatcher/DispatchProcessors.tpp"
-#include "QP/Dispatcher/StatementDispatcher.h"
-#include "QP/Executor/StatementExecutor.tpp"
+#include "QP/Dispatcher/StatementDispatcher.tpp"
 
-using namespace QP::Executor::StatementExecutor;
+namespace QP::Dispatcher::FollowsNextDispatcher {
 
-template <QP::Types::ClauseType T>
-QP::Types::ArgumentDispatcher QP::Dispatcher::FollowsNextDispatcher<T>::dispatcher =
-	[](const vector<Types::ReferenceArgument>& args) { return argumentDispatcher(T, args); };
+using namespace QP::Executor;
 
-template <QP::Types::ClauseType T>
-QP::Types::ExecutorSetBundle QP::Dispatcher::FollowsNextDispatcher<T>::argumentDispatcher(Types::ClauseType type,
-                                                                                          const vector<Types::ReferenceArgument>& args) {
-	return DispatchProcessors::processArgument(type, FollowsNextDispatcher<T>::argument_dispatch_map, args);
-};
+template <ClauseType T>
+ExecutorSetBundle dispatcher(const vector<ReferenceArgument>& args) {
+	return argumentDispatcher<T>(T, args);
+}
 
-template <QP::Types::ClauseType T>
-const unordered_map<QP::Types::ArgumentDispatchKey, unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory>>
-	QP::Dispatcher::FollowsNextDispatcher<T>::argument_dispatch_map = {{Types::ReferenceType::StatementIndex, getIndexMap()},
-                                                                       {Types::ReferenceType::Wildcard, getWildcardMap()},
-                                                                       {Types::DesignEntity::Stmt, getSynonymMap()},
-                                                                       {Types::DesignEntity::Call, getSynonymMap()},
-                                                                       {Types::DesignEntity::Assign, getSynonymMap()},
-                                                                       {Types::DesignEntity::Print, getSynonymMap()},
-                                                                       {Types::DesignEntity::Read, getSynonymMap()},
-                                                                       {Types::DesignEntity::While, getSynonymMap()},
-                                                                       {Types::DesignEntity::If, getSynonymMap()}};
+template <ClauseType T>
+ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ReferenceArgument>& args) {
+	static const auto map = getArgumentDispatchMap<T>();
+	return DispatchProcessors::processArgument(type, map, args);
+}
 
-template <QP::Types::ClauseType T>
-unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::FollowsNextDispatcher<T>::getIndexMap() {
-	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
-		{Types::ReferenceType::StatementIndex,
-	     [](const vector<Types::ReferenceArgument>& args) {
-			 return [lhs = args.at(0), rhs = args.at(1)](const QP::StorageAdapter& storage) {
-				 return executeTrivialIndexIndex<T>(storage, lhs, rhs);
-			 };
-		 }},
-		{Types::ReferenceType::Wildcard,
-	     [](const vector<Types::ReferenceArgument>& args) {
-			 return [lhs = args.at(0)](const QP::StorageAdapter& storage) { return executeTrivialIndexWildcard<T>(storage, lhs); };
-		 }},
-		{Types::DesignEntity::Stmt, lambdaIndexSynonym<T>()},
-		{Types::DesignEntity::Call, lambdaIndexSynonym<T>()},
-		{Types::DesignEntity::Assign, lambdaIndexSynonym<T>()},
-		{Types::DesignEntity::Print, lambdaIndexSynonym<T>()},
-		{Types::DesignEntity::Read, lambdaIndexSynonym<T>()},
-		{Types::DesignEntity::While, lambdaIndexSynonym<T>()},
-		{Types::DesignEntity::If, lambdaIndexSynonym<T>()},
-	};
+template <ClauseType T>
+const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>>& getArgumentDispatchMap() {
+	static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>> map = {
+		{ReferenceType::StatementIndex, StatementDispatcher::getIndexMap<T>()},
+		{ReferenceType::Wildcard, StatementDispatcher::getWildcardMap<T>()},
+		{DesignEntity::Stmt, StatementDispatcher::getSynonymMap<T>()},
+		{DesignEntity::Call, StatementDispatcher::getSynonymMap<T>()},
+		{DesignEntity::Assign, StatementDispatcher::getSynonymMap<T>()},
+		{DesignEntity::Print, StatementDispatcher::getSynonymMap<T>()},
+		{DesignEntity::Read, StatementDispatcher::getSynonymMap<T>()},
+		{DesignEntity::While, StatementDispatcher::getSynonymMap<T>()},
+		{DesignEntity::If, StatementDispatcher::getSynonymMap<T>()}};
 	return map;
 }
 
-template <QP::Types::ClauseType T>
-unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::FollowsNextDispatcher<T>::getWildcardMap() {
-	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
-		{Types::ReferenceType::StatementIndex,
-	     [](const vector<Types::ReferenceArgument>& args) {
-			 return [rhs = args.at(1)](const QP::StorageAdapter& storage) { return executeTrivialWildcardIndex<T>(storage, rhs); };
-		 }},
-		{Types::ReferenceType::Wildcard,
-	     [](const vector<Types::ReferenceArgument>& /*args*/) {
-			 return [](const QP::StorageAdapter& storage) { return executeTrivialWildcardWildcard<T>(storage); };
-		 }},
-		{Types::DesignEntity::Stmt, lambdaWildcardSynonym<T>()},
-		{Types::DesignEntity::Call, lambdaWildcardSynonym<T>()},
-		{Types::DesignEntity::Assign, lambdaWildcardSynonym<T>()},
-		{Types::DesignEntity::Print, lambdaWildcardSynonym<T>()},
-		{Types::DesignEntity::Read, lambdaWildcardSynonym<T>()},
-		{Types::DesignEntity::While, lambdaWildcardSynonym<T>()},
-		{Types::DesignEntity::If, lambdaWildcardSynonym<T>()},
-	};
-	return map;
-}
-
-template <QP::Types::ClauseType T>
-unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> QP::Dispatcher::FollowsNextDispatcher<T>::getSynonymMap() {
-	static const unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map = {
-		{Types::ReferenceType::StatementIndex,
-	     [](vector<QP::Types::ReferenceArgument> args) {
-			 return pair{[lhs = args.at(0), rhs = args.at(1)](const QP::StorageAdapter& storage) {
-							 return executeTrivialSynonymIndex<T>(storage, lhs, rhs);
-						 },
-		                 [lhs = args.at(0), rhs = args.at(1)](const QP::StorageAdapter& storage) {
-							 return executeSynonymIndex<T>(storage, lhs, rhs);
-						 }};
-		 }},
-		{Types::ReferenceType::Wildcard,
-	     [](vector<QP::Types::ReferenceArgument> args) {
-			 return pair{[lhs = args.at(0)](const QP::StorageAdapter& storage) { return executeTrivialSynonymWildcard<T>(storage, lhs); },
-		                 [lhs = args.at(0)](const QP::StorageAdapter& storage) { return executeSynonymWildcard<T>(storage, lhs); }};
-		 }},
-		{Types::DesignEntity::Stmt, lambdaSynonymSynonym<T>()},
-		{Types::DesignEntity::Call, lambdaSynonymSynonym<T>()},
-		{Types::DesignEntity::Assign, lambdaSynonymSynonym<T>()},
-		{Types::DesignEntity::Print, lambdaSynonymSynonym<T>()},
-		{Types::DesignEntity::Read, lambdaSynonymSynonym<T>()},
-		{Types::DesignEntity::While, lambdaSynonymSynonym<T>()},
-		{Types::DesignEntity::If, lambdaSynonymSynonym<T>()},
-	};
-	return map;
 }
 
 #endif  // SPA_SRC_QP_DISPATCHER_FOLLOWSNEXTDISPATCHER_TPP

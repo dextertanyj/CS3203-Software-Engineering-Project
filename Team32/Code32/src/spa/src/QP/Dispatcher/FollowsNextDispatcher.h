@@ -8,18 +8,16 @@
 #include "QP/ReferenceArgument.h"
 #include "QP/Types.h"
 
-template <QP::Types::ClauseType T>
-class QP::Dispatcher::FollowsNextDispatcher {
-public:
-	static Types::ArgumentDispatcher dispatcher;
+namespace QP::Dispatcher::FollowsNextDispatcher {
 
-private:
-	static Types::ExecutorSetBundle argumentDispatcher(Types::ClauseType type, const vector<Types::ReferenceArgument>& args);
-	static const unordered_map<Types::ArgumentDispatchKey, unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory>>
-		argument_dispatch_map;
-	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getIndexMap();
-	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getWildcardMap();
-	static unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> getSynonymMap();
-};
+using namespace QP::Types;
+
+template <QP::Types::ClauseType T>
+ExecutorSetBundle dispatcher(const vector<ReferenceArgument>& arguments);
+template <ClauseType T>
+ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ReferenceArgument>& args);
+template <ClauseType T>
+const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>>& getArgumentDispatchMap();
+}
 
 #endif  // SPA_SRC_QP_DISPATCHER_FOLLOWSNEXTDISPATCHER_H

@@ -17,14 +17,14 @@ class QP::Types::ResultTable {
 public:
 	ResultTable();
 	explicit ResultTable(vector<string> synonyms_stored);
-	size_t getNumberOfRows();
-	size_t getNumberOfColumns();
-	vector<ResultRow> getTable();
-	vector<string> getSynonymsStored();
-	unordered_map<string, size_t> getSynonymsStoredMap();
-	ResultColumn getColumn(const string& synonym);
-	ResultRow getRow(size_t row_number);
-	ResultRow getRowWithOrder(const vector<string>& synonyms, size_t row_number);
+	[[nodiscard]] size_t getNumberOfRows() const;
+	[[nodiscard]] size_t getNumberOfColumns() const;
+	[[nodiscard]] vector<ResultRow> getTable() const;
+	[[nodiscard]] vector<string> getSynonymsStored() const;
+	[[nodiscard]] unordered_map<string, size_t> getSynonymsStoredMap() const;
+	[[nodiscard]] ResultColumn getColumn(const string& synonym) const;
+	[[nodiscard]] ResultRow getRow(size_t row_number) const;
+	[[nodiscard]] ResultRow getRowWithOrder(const vector<string>& synonyms, size_t row_number) const;
 	void insertRow(const ResultRow& row);
 	void removeRow(size_t row_number);
 	ResultTable filterBySelect(const QP::Types::DeclarationList& select_list);

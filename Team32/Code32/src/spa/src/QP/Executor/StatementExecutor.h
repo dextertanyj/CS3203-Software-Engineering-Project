@@ -9,44 +9,61 @@
 
 namespace QP::Executor::StatementExecutor {
 
+using namespace QP::Types;
+
 // Trivial Executors
-template <QP::Types::ClauseType T>
-QP::QueryResult executeTrivialIndexIndex(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-                                         const Types::ReferenceArgument& rhs);
-template <QP::Types::ClauseType T>
-QP::QueryResult executeTrivialIndexWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs);
-template <QP::Types::ClauseType T>
-QP::QueryResult executeTrivialIndexSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-                                           const Types::ReferenceArgument& rhs);
-template <QP::Types::ClauseType T>
-QP::QueryResult executeTrivialWildcardIndex(const QP::StorageAdapter& storage, const Types::ReferenceArgument& rhs);
-template <QP::Types::ClauseType T>
-QP::QueryResult executeTrivialWildcardWildcard(const QP::StorageAdapter& storage);
-template <QP::Types::ClauseType T>
-QP::QueryResult executeTrivialWildcardSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& rhs);
-template <QP::Types::ClauseType T>
-QP::QueryResult executeTrivialSynonymIndex(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-                                           const Types::ReferenceArgument& rhs);
-template <QP::Types::ClauseType T>
-QP::QueryResult executeTrivialSynonymWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs);
-template <QP::Types::ClauseType T>
-QP::QueryResult executeTrivialSynonymSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-                                             const Types::ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeTrivialIndexIndex(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeTrivialIndexWildcard(const StorageAdapter& storage, const ReferenceArgument& lhs);
+template <ClauseType T>
+QueryResult executeTrivialIndexSynonym(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeTrivialWildcardIndex(const StorageAdapter& storage, const ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeTrivialWildcardWildcard(const StorageAdapter& storage);
+template <ClauseType T>
+QueryResult executeTrivialWildcardSynonym(const StorageAdapter& storage, const ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeTrivialSynonymIndex(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeTrivialSynonymWildcard(const StorageAdapter& storage, const ReferenceArgument& lhs);
+template <ClauseType T>
+QueryResult executeTrivialSynonymSynonym(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
 
 // Executors
-template <QP::Types::ClauseType T>
-QP::QueryResult executeIndexSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-                                    const Types::ReferenceArgument& rhs);
-template <QP::Types::ClauseType T>
-QP::QueryResult executeWildcardSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& rhs);
-template <QP::Types::ClauseType T>
-QP::QueryResult executeSynonymIndex(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-                                    const Types::ReferenceArgument& rhs);
-template <QP::Types::ClauseType T>
-QP::QueryResult executeSynonymWildcard(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs);
-template <QP::Types::ClauseType T>
-QP::QueryResult executeSynonymSynonym(const QP::StorageAdapter& storage, const Types::ReferenceArgument& lhs,
-                                      const Types::ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeIndexSynonym(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeWildcardSynonym(const StorageAdapter& storage, const ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeSynonymIndex(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+template <ClauseType T>
+QueryResult executeSynonymWildcard(const StorageAdapter& storage, const ReferenceArgument& lhs);
+template <ClauseType T>
+QueryResult executeSynonymSynonym(const StorageAdapter& storage, const ReferenceArgument& lhs, const ReferenceArgument& rhs);
+
+// Executor Set Factories
+
+template <ClauseType T>
+ExecutorSet executorFactoryIndexIndex(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactoryIndexWildcard(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactoryIndexSynonym(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactoryWildcardIndex(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactoryWildcardWildcard(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactoryWildcardSynonym(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactorySynonymIndex(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactorySynonymWildcard(const vector<ReferenceArgument>& args);
+template <ClauseType T>
+ExecutorSet executorFactorySynonymSynonym(const vector<ReferenceArgument>& args);
+
 };
 
 #endif  // SPA_SRC_QP_EXECUTOR_STATEMENTEXECUTOR_H

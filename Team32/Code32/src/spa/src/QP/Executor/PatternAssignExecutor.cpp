@@ -2,41 +2,37 @@
 
 #include "QP/QueryUtils.h"
 
+namespace QP::Executor::PatternAssignExecutor {
+
 // Trivial Executors
-QP::QueryResult QP::Executor::PatternAssignExecutor::executeTrivialNameWildcard(const QP::StorageAdapter& storage,
-                                                                                const Types::ReferenceArgument& name) {
-	return QP::QueryResult(!storage.getStmtsWithPatternLHS(name.getName()).empty());
+QueryResult executeTrivialNameWildcard(const StorageAdapter& storage, const ReferenceArgument& name) {
+	return QueryResult(!storage.getStmtsWithPatternLHS(name.getName()).empty());
 }
 
-QP::QueryResult QP::Executor::PatternAssignExecutor::executeTrivialSynonymOrWildcardWildcard(const QP::StorageAdapter& storage) {
+QueryResult executeTrivialSynonymOrWildcardWildcard(const StorageAdapter& storage) {
 	auto statements = storage.getStatements();
 	for (auto const& statement : statements) {
-		if (QP::Utilities::checkStmtTypeMatch(statement, Types::DesignEntity::Assign)) {
-			return QP::QueryResult(true);
+		if (Utilities::checkStmtTypeMatch(statement, DesignEntity::Assign)) {
+			return QueryResult(true);
 		}
 	}
 	return {};
 }
 
-QP::QueryResult QP::Executor::PatternAssignExecutor::executeTrivialNameExpression(const QP::StorageAdapter& storage,
-                                                                                  const Types::ReferenceArgument& name,
-                                                                                  const Types::ReferenceArgument& expression) {
-	return QP::QueryResult(storage.patternExists(name.getName(), expression.getExpression(),
-	                                             expression.getType() == QP::Types::ReferenceType::ExactExpression));
+QueryResult executeTrivialNameExpression(const StorageAdapter& storage, const ReferenceArgument& name,
+                                         const ReferenceArgument& expression) {
+	return QueryResult(
+		storage.patternExists(name.getName(), expression.getExpression(), expression.getType() == ReferenceType::ExactExpression));
 }
 
-QP::QueryResult QP::Executor::PatternAssignExecutor::executeTrivialSynonymOrWildcardExpression(const QP::StorageAdapter& storage,
-                                                                                               const Types::ReferenceArgument& expression) {
-	return QP::QueryResult(
-		!storage.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == QP::Types::ReferenceType::ExactExpression)
-			 .empty());
+QueryResult executeTrivialSynonymOrWildcardExpression(const StorageAdapter& storage, const ReferenceArgument& expression) {
+	return QueryResult(
+		!storage.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ReferenceType::ExactExpression).empty());
 }
 
 // Executors
-QP::QueryResult QP::Executor::PatternAssignExecutor::executeNameWildcard(const QP::StorageAdapter& storage,
-                                                                         const Types::ReferenceArgument& assign,
-                                                                         const Types::ReferenceArgument& name) {
-	QP::QueryResult result = QP::QueryResult({assign.getSynonym().symbol});
+QueryResult executeNameWildcard(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& name) {
+	QueryResult result = QueryResult({assign.getSynonym().symbol});
 	auto results = storage.getStmtsWithPatternLHS(name.getName());
 	for (auto const& entry : results) {
 		result.addRow({to_string(entry->getIdentifier())});
@@ -45,12 +41,11 @@ QP::QueryResult QP::Executor::PatternAssignExecutor::executeNameWildcard(const Q
 	return result;
 }
 
-QP::QueryResult QP::Executor::PatternAssignExecutor::executeWildcardWildcard(const QP::StorageAdapter& storage,
-                                                                             const Types::ReferenceArgument& assign) {
-	QP::QueryResult result = QP::QueryResult({assign.getSynonym().symbol});
+QueryResult executeWildcardWildcard(const StorageAdapter& storage, const ReferenceArgument& assign) {
+	QueryResult result = QueryResult({assign.getSynonym().symbol});
 	auto results = storage.getStatements();
 	for (auto const& entry : results) {
-		if (QP::Utilities::checkStmtTypeMatch(entry, Types::DesignEntity::Assign)) {
+		if (Utilities::checkStmtTypeMatch(entry, DesignEntity::Assign)) {
 			result.addRow({to_string(entry->getIdentifier())});
 		}
 	}
@@ -58,10 +53,8 @@ QP::QueryResult QP::Executor::PatternAssignExecutor::executeWildcardWildcard(con
 	return result;
 }
 
-QP::QueryResult QP::Executor::PatternAssignExecutor::executeSynonymWildcard(const QP::StorageAdapter& storage,
-                                                                            const Types::ReferenceArgument& assign,
-                                                                            const Types::ReferenceArgument& synonym) {
-	QP::QueryResult result = QP::QueryResult({assign.getSynonym().symbol, synonym.getSynonym().symbol});
+QueryResult executeSynonymWildcard(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& synonym) {
+	QueryResult result = QueryResult({assign.getSynonym().symbol, synonym.getSynonym().symbol});
 	for (auto const& var_ref : storage.getVariables()) {
 		auto statements = storage.getStmtsWithPatternLHS(var_ref);
 		for (auto const& statement : statements) {
@@ -72,26 +65,21 @@ QP::QueryResult QP::Executor::PatternAssignExecutor::executeSynonymWildcard(cons
 	return result;
 }
 
-QP::QueryResult QP::Executor::PatternAssignExecutor::executeNameExpression(const QP::StorageAdapter& storage,
-                                                                           const Types::ReferenceArgument& assign,
-                                                                           const Types::ReferenceArgument& name,
-                                                                           const Types::ReferenceArgument& expression) {
-	QP::QueryResult result = QP::QueryResult({assign.getSynonym().symbol});
-	auto results = storage.getStmtsWithPattern(name.getName(), expression.getExpression(),
-	                                           expression.getType() == QP::Types::ReferenceType::ExactExpression);
+QueryResult executeNameExpression(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& name,
+                                  const ReferenceArgument& expression) {
+	QueryResult result = QueryResult({assign.getSynonym().symbol});
+	auto results =
+		storage.getStmtsWithPattern(name.getName(), expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
 	for (auto const& entry : results) {
 		result.addRow({to_string(entry->getIdentifier())});
 	}
 	return result;
 }
 
-QP::QueryResult QP::Executor::PatternAssignExecutor::executeWildcardExpression(const QP::StorageAdapter& storage,
-                                                                               const Types::ReferenceArgument& assign,
-                                                                               const Types::ReferenceArgument& expression) {
-	QP::QueryResult result = QP::QueryResult({assign.getSynonym().symbol});
+QueryResult executeWildcardExpression(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& expression) {
+	QueryResult result = QueryResult({assign.getSynonym().symbol});
 	vector<string> statement_result;
-	auto result_pairs =
-		storage.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == QP::Types::ReferenceType::ExactExpression);
+	auto result_pairs = storage.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
 	for (auto const& pair : result_pairs) {
 		result.addRow({to_string(pair.first->getIdentifier())});
 	}
@@ -99,16 +87,68 @@ QP::QueryResult QP::Executor::PatternAssignExecutor::executeWildcardExpression(c
 	return result;
 }
 
-QP::QueryResult QP::Executor::PatternAssignExecutor::executeSynonymExpression(const QP::StorageAdapter& storage,
-                                                                              const Types::ReferenceArgument& assign,
-                                                                              const Types::ReferenceArgument& synonym,
-                                                                              const Types::ReferenceArgument& expression) {
-	QP::QueryResult result = QP::QueryResult({assign.getSynonym().symbol, synonym.getSynonym().symbol});
-	auto result_pairs =
-		storage.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == QP::Types::ReferenceType::ExactExpression);
+QueryResult executeSynonymExpression(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& synonym,
+                                     const ReferenceArgument& expression) {
+	QueryResult result = QueryResult({assign.getSynonym().symbol, synonym.getSynonym().symbol});
+	auto result_pairs = storage.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
 	for (auto const& pair : result_pairs) {
 		result.addRow({to_string(pair.first->getIdentifier()), pair.second});
 	}
 
 	return result;
+}
+
+ExecutorSet executorFactoryNameWildcard(const vector<ReferenceArgument>& args) {
+	Types::Executor trivial_executor = [variable = args.at(1)](const StorageAdapter& storage) {
+		return executeTrivialNameWildcard(storage, variable);
+	};
+	Types::Executor executor = [assign = args.at(0), variable = args.at(1)](const StorageAdapter& storage) {
+		return executeNameWildcard(storage, assign, variable);
+	};
+	return pair{trivial_executor, executor};
+}
+
+ExecutorSet executorFactoryNameExpression(const vector<ReferenceArgument>& args) {
+	Types::Executor trivial_executor = [variable = args.at(1), expression = args.at(2)](const StorageAdapter& storage) {
+		return executeTrivialNameExpression(storage, variable, expression);
+	};
+	Types::Executor executor = [assign = args.at(0), variable = args.at(1), expression = args.at(2)](const StorageAdapter& storage) {
+		return executeNameExpression(storage, assign, variable, expression);
+	};
+	return pair{trivial_executor, executor};
+}
+
+ExecutorSet executorFactoryWildcardWildcard(const vector<ReferenceArgument>& args) {
+	Types::Executor trivial_executor = [](const StorageAdapter& storage) { return executeTrivialSynonymOrWildcardWildcard(storage); };
+	Types::Executor executor = [assign = args.at(0)](const StorageAdapter& storage) { return executeWildcardWildcard(storage, assign); };
+	return pair{trivial_executor, executor};
+}
+
+ExecutorSet executorFactoryWildcardExpression(const vector<ReferenceArgument>& args) {
+	Types::Executor trivial_executor = [expression = args.at(2)](const StorageAdapter& storage) {
+		return executeTrivialSynonymOrWildcardExpression(storage, expression);
+	};
+	Types::Executor executor = [assign = args.at(0), expression = args.at(2)](const StorageAdapter& storage) {
+		return executeWildcardExpression(storage, assign, expression);
+	};
+	return pair{trivial_executor, executor};
+}
+
+ExecutorSet executorFactorySynonymWildcard(const vector<ReferenceArgument>& args) {
+	Types::Executor trivial_executor = [](const StorageAdapter& storage) { return executeTrivialSynonymOrWildcardWildcard(storage); };
+	Types::Executor executor = [assign = args.at(0), variable = args.at(1)](const StorageAdapter& storage) {
+		return executeSynonymWildcard(storage, assign, variable);
+	};
+	return pair{trivial_executor, executor};
+}
+
+ExecutorSet executorFactorySynonymExpression(const vector<ReferenceArgument>& args) {
+	Types::Executor trivial_executor = [expression = args.at(2)](const StorageAdapter& storage) {
+		return executeTrivialSynonymOrWildcardExpression(storage, expression);
+	};
+	Types::Executor executor = [assign = args.at(0), variable = args.at(1), expression = args.at(2)](const StorageAdapter& storage) {
+		return executeSynonymExpression(storage, assign, variable, expression);
+	};
+	return pair{trivial_executor, executor};
+}
 }

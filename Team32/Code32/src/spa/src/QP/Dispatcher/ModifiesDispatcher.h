@@ -1,16 +1,17 @@
 #ifndef SPA_SRC_QP_DISPATCHER_MODIFIESDISPATCHER_H
 #define SPA_SRC_QP_DISPATCHER_MODIFIESDISPATCHER_H
 
-#include <unordered_map>
-#include <utility>
+#include <vector>
 
-#include "QP/Executor/ProcedureVariableExecutor.tpp"
-#include "QP/Executor/StatementVariableExecutor.tpp"
+#include "QP/Dispatcher/Dispatcher.h"
 #include "QP/ReferenceArgument.h"
 #include "QP/Types.h"
 
 namespace QP::Dispatcher::ModifiesDispatcher {
-extern const QP::Types::ArgumentDispatcher dispatcher;
-};
+
+using namespace QP::Types;
+
+ExecutorSetBundle dispatcher(const vector<ReferenceArgument>& arguments);
+}
 
 #endif  // SPA_SRC_QP_DISPATCHER_MODIFIESDISPATCHER_H

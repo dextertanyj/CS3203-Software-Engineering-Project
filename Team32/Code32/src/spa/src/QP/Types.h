@@ -46,7 +46,7 @@ enum class AttributeToken { StatementIndex, ProcedureName, VariableName, Value }
 enum class AttributeType { NumberIdentifier, NameIdentifier, ProcedureName, VariableName };
 
 class ReferenceArgument;
-class ConnectedSynonyms;
+class ClauseGroups;
 
 typedef struct Declaration {
 	DesignEntity type;  // NOLINT(misc-non-private-member-variables-in-classes)
@@ -73,11 +73,6 @@ typedef struct Attribute {
 typedef struct Clause {
 	shared_ptr<Relationship::Relation> relation;
 } Clause;
-
-typedef struct Node {
-	string declaration_symbol;
-	vector<string> adjacent_symbols;
-} Node;
 
 // Types for attribute selection
 typedef std::string Name;

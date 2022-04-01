@@ -51,51 +51,48 @@ void PKB::UsesSRelation::optimize(Types::ParentStore& parent_store, CallsStateme
 	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {
 		vector<shared_ptr<StmtInfo>> stmts_in_proc = proc_iterator->get()->getStatements();
 		// For any procedure, we must process the call statements first before propagating the conditional statements.
-		for (const auto& statement : stmts_in_proc) {
-			if (statement->getType() == StmtType::Call) {
-				optimizeCall(statement, call_store, proc_store, store);
-			}
-		}
-		for (const auto& statement : stmts_in_proc) {
-			if (statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::WhileStmt) {
-				optimizeConditional(statement, parent_store, store);
-			}
-		}
+		std::for_each(stmts_in_proc.begin(), stmts_in_proc.end(), [&call_store, &proc_store, &store](const shared_ptr<StmtInfo>& info) {
+			optimizeCall(info, call_store, proc_store, store);
+		});
+		std::for_each(stmts_in_proc.begin(), stmts_in_proc.end(),
+		              [&parent_store, &store](const shared_ptr<StmtInfo>& info) { optimizeConditional(info, parent_store, store); });
 	}
 }
 
 void PKB::UsesSRelation::optimizeCall(const shared_ptr<StmtInfo>& statement, CallsStatementStore& call_store,
                                       Types::ProcedureStore& proc_store, SVRelationStore<UsesSRelation>& store) {
-	// Need to access CallsStatementStore to get the statements used in the called procedure.
-	VarRefSet variables;
+	if (statement->getType() != StmtType::Call) {
+		return;
+	}
+	// Need to access CallStatementStore to get the statements used in the called procedure.
 	ProcRef called_proc = call_store.getProcedure(statement);
 	shared_ptr<ProcedureInfo> proc_info = proc_store.get(called_proc);
 	vector<shared_ptr<StmtInfo>> stmts_in_called_proc = proc_info->getStatements();
-	for (const auto& stmt_in_called_proc : stmts_in_called_proc) {
-		auto iter = store.statement_key_map.find(stmt_in_called_proc->getIdentifier());
-		// If statement uses a variable, then we must record it in the calling statement.
-		if (iter != store.statement_key_map.end()) {
-			variables.insert(iter->second.begin(), iter->second.end());
-		}
-	}
-	if (!variables.empty()) {
-		store.set(statement, variables);
-	}
+	StmtInfoPtrSet stmt_list(stmts_in_called_proc.begin(), stmts_in_called_proc.end());
+	storeUsedVars(statement, stmt_list, store);
 }
 
 void PKB::UsesSRelation::optimizeConditional(const shared_ptr<StmtInfo>& statement, Types::ParentStore& parent_store,
                                              SVRelationStore<UsesSRelation>& store) {
+	if (statement->getType() != StmtType::IfStmt && statement->getType() != StmtType::WhileStmt) {
+		return;
+	}
 	// For conditional statements, need to look at the child* statements for uses statements.
-	VarRefSet variables;
 	auto children = parent_store.getReverseTransitive(statement->getIdentifier());
-	for (const auto& child : children) {
-		auto iter = store.statement_key_map.find(child->getIdentifier());
+	storeUsedVars(statement, children, store);
+}
+
+void PKB::UsesSRelation::storeUsedVars(const shared_ptr<StmtInfo>& stmt_key, const StmtInfoPtrSet& stmt_list,
+                                       PKB::SVRelationStore<PKB::UsesSRelation>& store) {
+	VarRefSet variables;
+	for (const auto& stmt : stmt_list) {
+		auto iter = store.statement_key_map.find(stmt->getIdentifier());
 		// If child statement uses a variable, then we must record it in the parent conditional statement.
 		if (iter != store.statement_key_map.end()) {
 			variables.insert(iter->second.begin(), iter->second.end());
 		}
 	}
 	if (!variables.empty()) {
-		store.set(statement, variables);
+		store.set(stmt_key, variables);
 	}
 }
