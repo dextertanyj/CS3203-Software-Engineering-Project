@@ -2,14 +2,14 @@
 #define SPA_SRC_COMMON_EXPRESSIONPROCESSOR_ATOMICNODE_H
 
 #include <utility>
+#include <vector>
 
 #include "Common/ExpressionProcessor/ExpressionNode.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 
 class Common::ExpressionProcessor::AtomicNode : public ExpressionNode {
 public:
-	explicit AtomicNode(vector<variant<shared_ptr<ExpressionNode>, MathematicalOperator, VarRef, ConstVal>> tokens)
-		: ExpressionNode(std::move(tokens)){};
+	explicit AtomicNode(vector<TokenType> tokens) : ExpressionNode(std::move(tokens)){};
 	~AtomicNode() override = default;
 };
 

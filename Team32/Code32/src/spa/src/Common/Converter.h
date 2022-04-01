@@ -6,8 +6,6 @@
 
 #include "Common/TypeDefs.h"
 
-using namespace std;
-
 namespace Common::Converter {
 struct ConversionException : public runtime_error {
 	using runtime_error::runtime_error;

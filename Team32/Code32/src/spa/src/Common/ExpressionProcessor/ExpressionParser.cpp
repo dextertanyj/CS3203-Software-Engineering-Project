@@ -15,6 +15,7 @@
 #include "Common/Validator.h"
 
 #define LOGICAL_PRECEDENCE (-1)
+#define START_PRECEDENCE 0
 #define RELATIONAL_PRECEDENCE 1
 #define ADD_SUBTRACT_PRECEDENCE 2
 #define MULTIPLY_DIVIDE_MODULUS_PRECEDENCE 3
@@ -26,7 +27,7 @@ ExpressionParser::ExpressionParser(LexerInterface& lex, ExpressionType type) : l
 Expression ExpressionParser::parse() {
 	Acceptor acceptor = OperatorAcceptor::getAcceptor(type);
 	ParenthesizedExpression lhs = parseTerminal(acceptor);
-	ParenthesizedExpression expression = construct(acceptor, lhs, 0);
+	ParenthesizedExpression expression = construct(acceptor, lhs, START_PRECEDENCE);
 	ParenthesesWrapper test_wrap = ParenthesesWrapper(expression);  // Test if outermost expression has an extra set of parentheses.
 	if (!checkExpressionType(test_wrap.getExpression(), type)) {
 		throw ExpressionProcessorException("Incorrect expression type parsed.");
@@ -34,13 +35,16 @@ Expression ExpressionParser::parse() {
 	return {test_wrap.getExpression(), variables, constants};
 }
 
+/**
+ * This function applies the operator precedence parsing algorithm.
+ */
 ParenthesizedExpression ExpressionParser::construct(Acceptor acceptor, ParenthesizedExpression lhs, int precedence) {
 	string lookahead = lex.peekToken();
 	if (!acceptor(lookahead)) {
 		return lhs;
 	}
 
-	// Binary logical operators are a special case since they must be fully parenthesized
+	// Binary logical operators are a special case since they must be fully parenthesized.
 	if (OperatorAcceptor::acceptBinaryLogical(lookahead)) {
 		return parseBinaryLogical(lhs);
 	}

@@ -14,10 +14,11 @@ public:
 	virtual ~ExpressionNode() = default;
 
 protected:
-	explicit ExpressionNode(vector<variant<shared_ptr<ExpressionNode>, MathematicalOperator, VarRef, ConstVal>> tokens);
+	using TokenType = variant<shared_ptr<ExpressionNode>, MathematicalOperator, VarRef, ConstVal>;
+	explicit ExpressionNode(vector<TokenType> tokens);
 
 private:
-	vector<variant<shared_ptr<ExpressionNode>, MathematicalOperator, VarRef, ConstVal>> tokens;
+	vector<TokenType> tokens;
 };
 
 #endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSIONNODE_H

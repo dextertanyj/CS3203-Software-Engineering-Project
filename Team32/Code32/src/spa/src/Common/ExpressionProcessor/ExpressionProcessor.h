@@ -9,10 +9,13 @@ namespace Common::ExpressionProcessor {
 struct ExpressionProcessorException : public std::runtime_error {
 	using runtime_error::runtime_error;
 };
-namespace OperatorAcceptor {};
+
+enum class ExpressionType { Arithmetic, Relational, Logical };
+
 class ExpressionParser;
 class LexerInterface;
 class Expression;
+
 class ExpressionNode;
 class LogicalNode;
 class BinaryLogicalNode;
@@ -20,13 +23,13 @@ class UnaryLogicalNode;
 class RelationalNode;
 class AtomicNode;
 class ArithmeticNode;
-class ConstantNode;
 class ParenthesesWrapper;
-class VariableNode;  // NOLINT(bugprone-forward-declaration-namespace)
 template <typename T>
 class TerminalNode;
-enum class ExpressionType { Arithmetic, Relational, Logical };
-typedef std::variant<ParenthesesWrapper, std::shared_ptr<ExpressionNode>> ParenthesizedExpression;
-}  // namespace Common::ExpressionProcessor
+
+namespace OperatorAcceptor {};
+
+using ParenthesizedExpression = std::variant<ParenthesesWrapper, std::shared_ptr<ExpressionNode>>;
+}
 
 #endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSIONPROCESSOR_H

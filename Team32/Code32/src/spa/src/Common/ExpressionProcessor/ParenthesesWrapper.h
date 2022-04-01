@@ -6,8 +6,6 @@
 #include "Common/ExpressionProcessor/ExpressionNode.h"
 #include "Common/ExpressionProcessor/LogicalNode.h"
 
-using namespace std;
-
 class Common::ExpressionProcessor::ParenthesesWrapper {
 public:
 	explicit ParenthesesWrapper(ParenthesizedExpression expression);

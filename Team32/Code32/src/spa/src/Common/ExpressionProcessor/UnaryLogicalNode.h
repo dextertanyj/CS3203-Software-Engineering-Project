@@ -7,8 +7,6 @@
 #include "Common/ExpressionProcessor/LogicalNode.h"
 #include "Common/TypeDefs.h"
 
-using namespace std;
-
 class Common::ExpressionProcessor::UnaryLogicalNode : public LogicalNode {
 public:
 	UnaryLogicalNode(MathematicalOperator opr, shared_ptr<LogicalNode> expression);

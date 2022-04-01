@@ -7,9 +7,7 @@
 #define OPEN_PARENTHESES "("
 #define CLOSE_PARENTHESES ")"
 
-Common::ExpressionProcessor::ExpressionNode::ExpressionNode(
-	vector<variant<shared_ptr<ExpressionNode>, MathematicalOperator, VarRef, ConstVal>> tokens)
-	: tokens(move(tokens)) {}
+Common::ExpressionProcessor::ExpressionNode::ExpressionNode(vector<TokenType> tokens) : tokens(move(tokens)) {}
 
 string Common::ExpressionProcessor::ExpressionNode::traversal() {
 	string traversal;

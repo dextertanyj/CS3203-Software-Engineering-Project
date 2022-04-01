@@ -5,8 +5,6 @@
 
 #include "Common/Validator.h"
 
-using namespace std;
-
 MathematicalOperator Common::Converter::convertMathematical(const string& opr) {
 	static const unordered_map<string, MathematicalOperator> map = {
 		{"+", MathematicalOperator::Plus},   {"-", MathematicalOperator::Minus},  {"*", MathematicalOperator::Times},

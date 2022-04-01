@@ -3,12 +3,10 @@
 
 #include <string>
 
-using namespace std;
-
 namespace Common::Validator {
-bool validateArithmeticOperator(const string& op);
-bool validateName(const string& name);
-bool validateInteger(const string& integer);
+bool validateArithmeticOperator(const std::string& opr);
+bool validateName(const std::string& name);
+bool validateInteger(const std::string& integer);
 }
 
 #endif  // SPA_SRC_COMMON_VALIDATOR_H
