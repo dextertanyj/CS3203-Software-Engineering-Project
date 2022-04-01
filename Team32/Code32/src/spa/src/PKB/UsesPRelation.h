@@ -9,8 +9,6 @@
 
 class PKB::UsesPRelation {
 public:
-    static void
-    optimize(const Types::ProcedureStore &, PVRelationStore <UsesPRelation> &, SVRelationStore <UsesSRelation> &);
+	static void optimize(const Types::ProcedureStore&, PVRelationStore<UsesPRelation>&, SVRelationStore<UsesSRelation>&);
 };
-
 #endif  // SPA_SRC_PKB_USESPRELATION_H

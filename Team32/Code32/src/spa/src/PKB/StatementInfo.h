@@ -6,17 +6,14 @@
 
 class PKB::StatementInfo : public StatementInfoInterface {
 public:
-    [[nodiscard]] StmtRef getIdentifier() const override;
-
-    [[nodiscard]] StmtType getType() const override;
+	[[nodiscard]] StmtRef getIdentifier() const override;
+	[[nodiscard]] StmtType getType() const override;
 
 private:
-    StatementInfo(StmtRef index, StmtType type);
-
-    StmtRef index;
-    StmtType type;
-
-    friend class PKB::InfoStore<StmtRef, StmtType, StatementInfo>;
+	StatementInfo(StmtRef index, StmtType type);
+	StmtRef index;
+	StmtType type;
+	friend class PKB::InfoStore<StmtRef, StmtType, StatementInfo>;
 };
 
 #endif  // SPA_SRC_PKB_STATEMENTINFO_H

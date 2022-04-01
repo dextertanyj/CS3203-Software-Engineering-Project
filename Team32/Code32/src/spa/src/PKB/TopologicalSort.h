@@ -9,18 +9,16 @@
 
 using namespace std;
 
-template<class TInfo>
+template <class TInfo>
 class PKB::TopologicalSort {
 public:
-    TopologicalSort();
-
-    template<class TStore, typename TIdent, class TRelation>
-    void sort(const TStore &truth_store, const TransitiveRelationStore <TIdent, TInfo, TRelation> &transitive_store);
-
-    [[nodiscard]] vector<shared_ptr<TInfo>> get() const;
+	TopologicalSort();
+	template <class TStore, typename TIdent, class TRelation>
+	void sort(const TStore& truth_store, const TransitiveRelationStore<TIdent, TInfo, TRelation>& transitive_store);
+	[[nodiscard]] vector<shared_ptr<TInfo>> get() const;
 
 private:
-    vector<shared_ptr<TInfo>> order;
+	vector<shared_ptr<TInfo>> order;
 };
 
 #endif  // SPA_SRC_PKB_TOPOLOGICALSORT_H
