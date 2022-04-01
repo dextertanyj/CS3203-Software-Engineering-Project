@@ -285,7 +285,7 @@ StmtInfoPtrSet PKB::Storage::getAffects(StmtRef node_ref) { return affects_manag
 
 StmtInfoPtrSet PKB::Storage::getAffectedStar(StmtRef node_ref) { return affects_manager.getAffectedStar(node_ref); }
 
-StmtInfoPtrSet PKB::Storage::ge tAffectsStar(StmtRef node_ref) { return affects_manager.getAffectsStar(node_ref); }
+StmtInfoPtrSet PKB::Storage::getAffectsStar(StmtRef node_ref) { return affects_manager.getAffectsStar(node_ref); }
 
 void PKB::Storage::resetCFGCache() {
     next_manager.resetCache();
