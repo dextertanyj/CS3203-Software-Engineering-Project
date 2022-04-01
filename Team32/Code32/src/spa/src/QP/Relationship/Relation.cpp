@@ -36,8 +36,15 @@ QP::QueryResult QP::Relationship::Relation::execute(const QP::StorageAdapter& pk
 	auto invalid_visitor = [&](const Types::Executor&) { assert(false); };
 	auto standard_visitor = [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.second(pkb); };
 	auto optimized_visitor = [&](const pair<Types::Executor, Types::OptimizedExecutor>& execs) {
+		if (existing_results.empty()) {
+			result = execs.second(pkb, {});
+			return;
+		}
 		QueryResult intermediate_result = QueryResult::joinIntraGroupResults(existing_results);
 		existing_results.clear();
+		if (!intermediate_result.getResult()) {
+			return;
+		}
 		existing_results.push_back(intermediate_result);
 		result = execs.second(pkb, intermediate_result);
 	};
