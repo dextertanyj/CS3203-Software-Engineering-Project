@@ -41,4 +41,4 @@ jobs:
       - name: Run lint
         shell: bash
         working-directory: ${{github.workspace}}/Team32/Code32
-        run: find src/spa/src/ -iname '*.h' -o -iname '*.tpp' -o -iname '*.cpp' | parallel clang-tidy -p ${{runner.workspace}}/build {}
+        run: find src/spa/src/ -iname '*.h' -o -iname '*.tpp' -o -iname '*.cpp' | parallel clang-tidy -p ${{runner.workspace}}/build {} --quiet 2>/dev/null
