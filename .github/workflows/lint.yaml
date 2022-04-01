@@ -16,6 +16,7 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: |
+          brew install parallel
           brew install llvm
           ln -s "$(brew --prefix llvm)/bin/clang-format" "/usr/local/bin/clang-format"
           ln -s "$(brew --prefix llvm)/bin/clang-tidy" "/usr/local/bin/clang-tidy"
@@ -40,4 +41,4 @@ jobs:
       - name: Run lint
         shell: bash
         working-directory: ${{github.workspace}}/Team32/Code32
-        run: clang-tidy -p ${{runner.workspace}}/build ./src/spa/src/**/*.cpp ./src/spa/src/**/*.h
+        run: find src/spa/src/ -iname '*.h' -o -iname '*.tpp' -o -iname '*.cpp' | parallel clang-tidy -p ${{runner.workspace}}/build {}
