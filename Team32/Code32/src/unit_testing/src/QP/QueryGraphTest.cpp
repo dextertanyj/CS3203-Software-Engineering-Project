@@ -81,6 +81,7 @@ TEST_CASE("QP::QueryGraph::getSynonymsInGroup Should split synonyms into connect
 	vector<string> group_three = graph.getGroupSynonyms(2);
 	sort(group_one.begin(), group_one.end());
 	sort(group_two.begin(), group_two.end());
+	sort(group_three.begin(), group_three.end());
 	REQUIRE(number_of_groups == 3);
 	REQUIRE(group_one == group_with_f);
 	REQUIRE(group_two == group_with_d);
