@@ -93,7 +93,7 @@ QP::QueryResult QP::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, 
 	vector<QueryResult> result_list;
 
 	for (const Clause& clause : clauses) {
-		QueryResult result = clause.relation->execute(store);
+		QueryResult result = clause.relation->execute(store, result_list);
 		if (!result.getResult()) {
 			return {};
 		}

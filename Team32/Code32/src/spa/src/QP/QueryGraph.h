@@ -54,7 +54,7 @@ private:
 
 	void insertEdgesToQueue(unordered_set<string>& visited_nodes, const string& node_symbol,
 	                        priority_queue<Edge, vector<Edge>, EdgeComparator>& pq) const;
-	string getCheapestNodeInGroup(size_t group_number) const;
+	[[nodiscard]] string getCheapestNodeInGroup(size_t group_number) const;
 	static void addNodeToQueue(const Node& node, queue<string>& queue, unordered_set<string>& unvisited_nodes, unsigned long long& cost);
 };
 

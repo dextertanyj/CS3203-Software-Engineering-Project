@@ -115,21 +115,28 @@ TEST_CASE("StatementExecutor<ClauseType::NextT>:execute") {
 	}
 
 	SECTION("Synonym & Wildcard") {
-		QP::QueryResult result1 = executeSynonymWildcard<ClauseType::NextT>(store, stmt_synonym);
-		QP::QueryResult result2 = executeSynonymWildcard<ClauseType::NextT>(store, read_synonym);
-
+		QP::QueryResult result1 = executeSynonymWildcardOptimized<ClauseType::NextT>(store, {}, stmt_synonym);
 		vector<string> expected_result = {"1", "2", "3", "4"};
 		vector<string> actual_result = result1.getSynonymResult("s");
 		sort(actual_result.begin(), actual_result.end());
 		REQUIRE(actual_result == expected_result);
+
+		QP::QueryResult result2 = executeSynonymWildcardOptimized<ClauseType::NextT>(store, {}, read_synonym);
 		REQUIRE(!result2.getResult());
+
+		QP::QueryResult intermediate = QP::QueryResult(vector<string>{"s"});
+		intermediate.addRow({"1"});
+		intermediate.addRow({"3"});
+		intermediate.addRow({"5"});
+		QP::QueryResult result3 = executeSynonymWildcardOptimized<ClauseType::NextT>(store, intermediate, stmt_synonym);
+		expected_result = {"1", "3"};
+		actual_result = result3.getSynonymResult("s");
+		sort(actual_result.begin(), actual_result.end());
+		REQUIRE(actual_result == expected_result);
 	}
 
 	SECTION("Synonym & Synonym") {
-		QP::QueryResult result1 = executeSynonymSynonym<ClauseType::NextT>(store, stmt_synonym, print_synonym);
-		QP::QueryResult result2 = executeSynonymSynonym<ClauseType::NextT>(store, while_synonym, while_synonym);
-		QP::QueryResult result3 = executeSynonymSynonym<ClauseType::NextT>(store, print_synonym, assign_synonym);
-
+		QP::QueryResult result1 = executeSynonymSynonymOptimized<ClauseType::NextT>(store, {}, stmt_synonym, print_synonym);
 		vector<string> expected_stmt_result = {"1", "1", "2", "3", "4"};
 		vector<string> expected_print_result = {"2", "4", "4", "4", "4"};
 		vector<string> actual_stmt_result = result1.getSynonymResult("s");
@@ -140,20 +147,58 @@ TEST_CASE("StatementExecutor<ClauseType::NextT>:execute") {
 		REQUIRE(actual_print_result == expected_print_result);
 
 		vector<string> expected_while_result = {"3"};
+		QP::QueryResult result2 = executeSynonymSynonymOptimized<ClauseType::NextT>(store, {}, while_synonym, while_synonym);
 		REQUIRE(result2.getSynonymResult("w") == expected_while_result);
 
+		QP::QueryResult result3 = executeSynonymSynonymOptimized<ClauseType::NextT>(store, {}, print_synonym, assign_synonym);
 		REQUIRE(!result3.getResult());
+
+		QP::QueryResult intermediate = QP::QueryResult(vector<string>{"s"});
+		intermediate.addRow({"1"});
+		intermediate.addRow({"3"});
+		intermediate.addRow({"5"});
+		QP::QueryResult result4 = executeSynonymSynonymOptimized<ClauseType::NextT>(store, intermediate, stmt_synonym, print_synonym);
+		expected_stmt_result = {"1", "1", "3"};
+		expected_print_result = {"2", "4", "4"};
+		actual_stmt_result = result4.getSynonymResult("s");
+		actual_print_result = result4.getSynonymResult("p");
+		sort(actual_stmt_result.begin(), actual_stmt_result.end());
+		sort(actual_print_result.begin(), actual_print_result.end());
+		REQUIRE(actual_stmt_result == expected_stmt_result);
+		REQUIRE(actual_print_result == expected_print_result);
+
+		intermediate = QP::QueryResult(vector<string>{"p"});
+		intermediate.addRow({"4"});
+		QP::QueryResult result5 = executeSynonymSynonymOptimized<ClauseType::NextT>(store, intermediate, stmt_synonym, print_synonym);
+		expected_stmt_result = {"1", "2", "3", "4"};
+		expected_print_result = {"4", "4", "4", "4"};
+		actual_stmt_result = result5.getSynonymResult("s");
+		actual_print_result = result5.getSynonymResult("p");
+		sort(actual_stmt_result.begin(), actual_stmt_result.end());
+		sort(actual_print_result.begin(), actual_print_result.end());
+		REQUIRE(actual_stmt_result == expected_stmt_result);
+		REQUIRE(actual_print_result == expected_print_result);
 	}
 
 	SECTION("Wildcard & Synonym") {
-		QP::QueryResult result1 = executeWildcardSynonym<ClauseType::NextT>(store, print_synonym);
-		QP::QueryResult result2 = executeWildcardSynonym<ClauseType::NextT>(store, assign_synonym);
-
+		QP::QueryResult result1 = executeWildcardSynonymOptimized<ClauseType::NextT>(store, {}, print_synonym);
 		vector<string> expected_result = {"2", "4"};
 		vector<string> actual_result = result1.getSynonymResult("p");
 		sort(actual_result.begin(), actual_result.end());
 		REQUIRE(actual_result == expected_result);
+
+		QP::QueryResult result2 = executeWildcardSynonymOptimized<ClauseType::NextT>(store, {}, assign_synonym);
 		REQUIRE(!result2.getResult());
+
+		QP::QueryResult intermediate = QP::QueryResult(vector<string>{"s"});
+		intermediate.addRow({"1"});
+		intermediate.addRow({"2"});
+		intermediate.addRow({"4"});
+		QP::QueryResult result3 = executeWildcardSynonymOptimized<ClauseType::NextT>(store, intermediate, stmt_synonym);
+		expected_result = {"2", "4"};
+		actual_result = result3.getSynonymResult("s");
+		sort(actual_result.begin(), actual_result.end());
+		REQUIRE(actual_result == expected_result);
 	}
 
 	SECTION("Index & Synonym") {

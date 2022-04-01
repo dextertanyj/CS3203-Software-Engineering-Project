@@ -48,8 +48,8 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getWildcardMap() {
 	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
 		{ReferenceType::StatementIndex, StatementExecutor::executorFactoryWildcardIndex<T>},
 		{ReferenceType::Wildcard, StatementExecutor::executorFactoryWildcardWildcard<T>},
-		{DesignEntity::Stmt, StatementExecutor::executorFactoryWildcardSynonym<T>},
-		{DesignEntity::Assign, StatementExecutor::executorFactoryWildcardSynonym<T>},
+		{DesignEntity::Stmt, StatementExecutor::executorFactoryWildcardSynonymOptimized<T>},
+		{DesignEntity::Assign, StatementExecutor::executorFactoryWildcardSynonymOptimized<T>},
 	};
 	return map;
 }
@@ -58,9 +58,9 @@ template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getSynonymMap() {
 	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
 		{ReferenceType::StatementIndex, StatementExecutor::executorFactorySynonymIndex<T>},
-		{ReferenceType::Wildcard, StatementExecutor::executorFactorySynonymWildcard<T>},
-		{DesignEntity::Stmt, StatementExecutor::executorFactorySynonymSynonym<T>},
-		{DesignEntity::Assign, StatementExecutor::executorFactorySynonymSynonym<T>},
+		{ReferenceType::Wildcard, StatementExecutor::executorFactorySynonymWildcardOptimized<T>},
+		{DesignEntity::Stmt, StatementExecutor::executorFactorySynonymSynonymOptimized<T>},
+		{DesignEntity::Assign, StatementExecutor::executorFactorySynonymSynonymOptimized<T>},
 	};
 	return map;
 }
