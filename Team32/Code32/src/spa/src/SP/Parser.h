@@ -9,11 +9,12 @@
 #include "SP/Lexer.h"
 #include "SP/Node/ProgramNode.h"
 #include "SP/SP.h"
+#include "Common/TypeDefs.h"
 
 class SP::Parser {
 public:
 	Parser() = default;
-	unique_ptr<Node::ProgramNode> parse(string source);
+	std::unique_ptr<Node::ProgramNode> parse(string source);
 
 private:
 	SP::Lexer lex;

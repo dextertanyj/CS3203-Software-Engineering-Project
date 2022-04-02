@@ -9,6 +9,8 @@
 #include "SP/Node/WhileNode.h"
 #include "SP/SP.h"
 
+using namespace std;
+
 SP::Node::StatementNode::StatementNode(StmtRef stmt_no) : stmt_no(stmt_no) {}
 
 StmtRef SP::Node::StatementNode::getStmtRef() const { return stmt_no; }

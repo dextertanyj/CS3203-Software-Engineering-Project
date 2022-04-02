@@ -10,19 +10,19 @@
 class SP::Lexer : public Common::ExpressionProcessor::LexerInterface {
 public:
 	Lexer() = default;
-	void initialize(string);
-	string readToken() override;
-	string peekToken() override;
+	void initialize(std::string raw_source);
+	std::string readToken() override;
+	std::string peekToken() override;
 	bool nextToken();
-	bool nextIf(const string& token);
-	bool nextIf(const initializer_list<string>& tokens);
+	bool nextIf(const std::string& token);
+	bool nextIf(const std::initializer_list<std::string>& tokens);
 
 private:
-	string source;
-	sregex_iterator iterator;
+	std::string source;
+	std::sregex_iterator iterator;
 
-	static regex validation_regex;
-	static regex tokenization_regex;
+	static std::regex validation_regex;
+	static std::regex tokenization_regex;
 };
 
 #endif  // SPA_SRC_SP_LEXER_H

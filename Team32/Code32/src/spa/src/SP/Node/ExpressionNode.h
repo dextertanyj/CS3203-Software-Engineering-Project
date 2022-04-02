@@ -10,10 +10,10 @@
 class SP::Node::ExpressionNode {
 public:
 	explicit ExpressionNode(Common::ExpressionProcessor::Expression expression);
-	Common::ExpressionProcessor::Expression extract() const;
-	[[nodiscard]] bool equals(const shared_ptr<ExpressionNode>& object) const;
+	[[nodiscard]] Common::ExpressionProcessor::Expression extract() const;
+	[[nodiscard]] bool equals(const std::shared_ptr<ExpressionNode>& object) const;
 
-	static unique_ptr<ExpressionNode> parseExpression(Lexer& lex, Common::ExpressionProcessor::ExpressionType type);
+	static std::unique_ptr<ExpressionNode> parseExpression(Lexer& lex, Common::ExpressionProcessor::ExpressionType type);
 
 private:
 	Common::ExpressionProcessor::Expression expression;

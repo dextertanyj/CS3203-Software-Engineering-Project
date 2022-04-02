@@ -2,6 +2,8 @@
 
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
+using namespace std;
+
 SP::Node::IfNode::IfNode(StmtRef stmt_no, unique_ptr<ExpressionNode> cond_expr, unique_ptr<StatementListNode> if_stmt_list,
                          unique_ptr<StatementListNode> else_stmt_list)
 	: StatementNode(stmt_no), cond_expr(move(cond_expr)), if_stmt_list(move(if_stmt_list)), else_stmt_list(move(else_stmt_list)) {}

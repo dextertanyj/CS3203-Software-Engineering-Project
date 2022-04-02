@@ -2,7 +2,7 @@
 #define SPA_SRC_SP_NODE_READNODE_H
 
 #include "Common/TypeDefs.h"
-#include "PKB/Storage.h"
+#include "PKB/StorageUpdateInterface.h"
 #include "SP/Lexer.h"
 #include "SP/Node/StatementNode.h"
 #include "SP/Node/VariableNode.h"

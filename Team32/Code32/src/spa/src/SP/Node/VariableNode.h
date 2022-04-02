@@ -11,11 +11,11 @@
 class SP::Node::VariableNode {
 public:
 	explicit VariableNode(VarRef name);
-	[[nodiscard]] bool equals(const shared_ptr<VariableNode>& other) const;
+	[[nodiscard]] bool equals(const std::shared_ptr<VariableNode>& other) const;
 	[[nodiscard]] VarRef extract() const;
 
-	static unique_ptr<VariableNode> parseVariable(Lexer& lex);
-	static unique_ptr<VariableNode> parseVariable(string token);
+	static std::unique_ptr<VariableNode> parseVariable(Lexer& lex);
+	static std::unique_ptr<VariableNode> parseVariable(std::string token);
 
 private:
 	VarRef name;

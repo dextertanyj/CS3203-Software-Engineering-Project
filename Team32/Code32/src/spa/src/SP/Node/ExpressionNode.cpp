@@ -3,6 +3,8 @@
 #include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
+using namespace std;
+
 SP::Node::ExpressionNode::ExpressionNode(Common::ExpressionProcessor::Expression expression) : expression(move(expression)) {}
 
 Common::ExpressionProcessor::Expression SP::Node::ExpressionNode::extract() const { return expression; }

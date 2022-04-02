@@ -2,17 +2,14 @@
 #define SPA_SRC_SP_SP_H
 
 #include <stdexcept>
-#include <unordered_set>
-
-#include "Common/TypeDefs.h"
 
 namespace SP {
-struct ParseException : public runtime_error {
+struct ParseException : public std::runtime_error {
 	using runtime_error::runtime_error;
 };
 
-struct TokenizationException : public runtime_error {
-	using runtime_error::runtime_error;
+struct TokenizationException : public std::runtime_error {
+	using std::runtime_error::runtime_error;
 };
 
 class Processor;

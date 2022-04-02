@@ -5,24 +5,22 @@
 #include <vector>
 
 #include "Common/TypeDefs.h"
-#include "PKB/Storage.h"
+#include "PKB/StorageUpdateInterface.h"
 #include "SP/Node/Node.h"
 #include "SP/Node/StatementNode.h"
-
-using namespace std;
 
 class SP::Node::StatementListNode {
 public:
 	StatementListNode() = default;
-	void addStatementNode(unique_ptr<StatementNode> statement);
+	void addStatementNode(std::unique_ptr<StatementNode> statement);
 	vector<StmtRef> extract(PKB::StorageUpdateInterface& pkb) const;
-	[[nodiscard]] bool equals(const shared_ptr<StatementListNode>& object) const;
-	[[nodiscard]] vector<shared_ptr<StatementNode>> getStatementList() const;
+	[[nodiscard]] bool equals(const std::shared_ptr<StatementListNode>& object) const;
+	[[nodiscard]] std::vector<std::shared_ptr<StatementNode>> getStatementList() const;
 
-	static unique_ptr<StatementListNode> parseStatementList(Lexer& lex, StmtRef& statement_count);
+	static std::unique_ptr<StatementListNode> parseStatementList(Lexer& lex, StmtRef& statement_count);
 
 private:
-	vector<shared_ptr<StatementNode>> stmt_list;
+	std::vector<std::shared_ptr<StatementNode>> stmt_list;
 };
 
 #endif  // SPA_SRC_SP_NODE_STATEMENTLISTNODE_H

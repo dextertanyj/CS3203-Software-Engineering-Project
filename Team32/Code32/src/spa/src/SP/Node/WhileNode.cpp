@@ -2,6 +2,8 @@
 
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
+using namespace std;
+
 SP::Node::WhileNode::WhileNode(StmtRef stmt_no, unique_ptr<ExpressionNode> cond_expr, unique_ptr<StatementListNode> stmt_list)
 	: StatementNode(stmt_no), cond_expr(move(cond_expr)), stmt_list(move(stmt_list)) {}
 

@@ -2,6 +2,8 @@
 
 #include "Common/Validator.h"
 
+using namespace std;
+
 SP::Node::ProcedureNode::ProcedureNode(ProcRef name, unique_ptr<StatementListNode> statements, StmtRef start, StmtRef end)
 	: name(move(name)), start(start), end(end), statements(move(statements)) {}
 
@@ -26,5 +28,5 @@ unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parseProcedure(Lexe
 	unique_ptr<StatementListNode> statement_list = StatementListNode::parseStatementList(lex, statement_count);
 	StmtRef end = statement_count - 1;
 	lex.nextIf("}");
-	return make_unique<ProcedureNode>(name, std::move(statement_list), start, end);
+	return make_unique<ProcedureNode>(name, move(statement_list), start, end);
 }

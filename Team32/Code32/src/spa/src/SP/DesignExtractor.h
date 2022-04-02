@@ -3,14 +3,13 @@
 
 #include <memory>
 
-#include "PKB/Storage.h"
 #include "SP/Node/ProgramNode.h"
 #include "SP/SP.h"
 
 class SP::DesignExtractor {
 public:
 	explicit DesignExtractor(PKB::StorageUpdateInterface& pkb);
-	void extract(const unique_ptr<Node::ProgramNode>& ast);
+	void extract(const std::unique_ptr<Node::ProgramNode>& ast);
 
 private:
 	PKB::StorageUpdateInterface& pkb;

@@ -1,5 +1,7 @@
 #include "SP/Node/PrintNode.h"
 
+using namespace std;
+
 SP::Node::PrintNode::PrintNode(StmtRef stmt_no, unique_ptr<VariableNode> variable) : StatementNode(stmt_no), variable(move(variable)) {}
 
 StmtRef SP::Node::PrintNode::extract(PKB::StorageUpdateInterface& pkb) const {

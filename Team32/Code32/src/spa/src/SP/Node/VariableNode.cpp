@@ -2,6 +2,8 @@
 
 #include "Common/Validator.h"
 
+using namespace std;
+
 SP::Node::VariableNode::VariableNode(VarRef name) : name(move(name)) {}
 
 VarRef SP::Node::VariableNode::extract() const { return name; }
@@ -17,7 +19,7 @@ unique_ptr<SP::Node::VariableNode> SP::Node::VariableNode::parseVariable(SP::Lex
 }
 
 unique_ptr<SP::Node::VariableNode> SP::Node::VariableNode::parseVariable(string token) {
-	VarRef name = std::move(token);
+	VarRef name = move(token);
 	if (!Common::Validator::validateName(name)) {
 		throw SP::ParseException("Invalid variable name.");
 	}

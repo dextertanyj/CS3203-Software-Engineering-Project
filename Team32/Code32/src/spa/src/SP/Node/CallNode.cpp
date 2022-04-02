@@ -1,6 +1,10 @@
 #include "SP/Node/CallNode.h"
 
+#include <utility>
+
 #include "Common/Validator.h"
+
+using namespace std;
 
 SP::Node::CallNode::CallNode(StmtRef stmt_no, ProcRef procedure) : StatementNode(stmt_no), procedure(move(procedure)) {}
 

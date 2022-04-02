@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+using namespace std;
+
 void SP::Node::StatementListNode::addStatementNode(unique_ptr<StatementNode> statement) { stmt_list.push_back(move(statement)); }
 
 vector<StmtRef> SP::Node::StatementListNode::extract(PKB::StorageUpdateInterface& pkb) const {
