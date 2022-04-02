@@ -123,6 +123,9 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
 		auto node = control_flow_graph->getNode(node_ref);
 		buildAffectsGraph(node->getGraphIndex());
 	}
+	if (control_flow_graph->getNode(node_ref)->getStmtInfo()->getType() != StmtType::Assign) {
+		return {};
+	}
 	assert(cache_graph_store.find(node_ref) != cache_graph_store.end());
 	auto node = cache_graph_store.at(node_ref);
 	StmtInfoPtrSet result_set;
@@ -131,6 +134,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
 	}
 	for (const auto& graph_nodes : node->affects) {
 		for (const auto& statements : graph_nodes->statements) {
+			result_set.insert(statements);
 			auto result = getAffectsStar(statements->getIdentifier());
 			result_set.insert(result.begin(), result.end());
 		}
@@ -187,20 +191,10 @@ void PKB::AffectsManager::resetCache() {
 	affected_star_cache.clear();
 }
 
-pair<StmtRef, StmtRef> PKB::AffectsManager::computeAllAffects(size_t graph_index) {
-	auto start = control_flow_graph->getStart(graph_index);
-	auto ends = control_flow_graph->getEnd(graph_index);
-
-	auto start_index = dynamic_pointer_cast<StatementNode>(start)->getNodeRef();
-	auto end = ControlFlowGraph::collectPreviousOfDummy(ends);
-	StmtRef end_index = 0;
-	for (const auto& node : end) {
-		end_index = std::max(end_index, node->getIdentifier());
-	}
-	for (StmtRef i = start_index; i <= end_index; i++) {
+void PKB::AffectsManager::computeAllAffects(StmtRef start, StmtRef end) {
+	for (StmtRef i = start; i <= end; i++) {
 		getAffects(i);
 	}
-	return {start_index, end_index};
 }
 
 void PKB::AffectsManager::transposeAffects(StmtRef start, StmtRef end) {
@@ -218,9 +212,9 @@ void PKB::AffectsManager::transposeAffects(StmtRef start, StmtRef end) {
 }
 
 void PKB::AffectsManager::buildAffectsGraph(size_t graph_index) {
-	auto start_end = computeAllAffects(graph_index);
-	StmtRef start = start_end.first;
-	StmtRef end = start_end.second;
+	StmtRef start = control_flow_graph->getFirstIndex(graph_index);
+	StmtRef end = control_flow_graph->getLastIndex(graph_index);
+	computeAllAffects(start, end);
 	transposeAffects(start, end);
 	StmtRefSet visited;
 	stack<StmtRef> stack;
@@ -231,21 +225,20 @@ void PKB::AffectsManager::buildAffectsGraph(size_t graph_index) {
 	while(!stack.empty()) {
 		StmtRef index = stack.top();
 		stack.pop();
-		if (visited.find(index) == visited.end()) {
+		if (visited.find(index) != visited.end()) {
 			continue;
 		}
 		auto component = buildAffectsGraphReverseVisit(index, visited);
 		auto self = control_flow_graph->getNode(index)->getStmtInfo();
-		if (component.find(self) != component.end()) {
+		if (component.empty()) {
+			auto node = make_shared<CacheGraphNode>(StmtInfoPtrSet{self}, false);
+			cache_graph_store.insert({self->getIdentifier(), node});
+		} else {
+			component.insert(self);
 			auto node = make_shared<CacheGraphNode>(component, true);
 			for (const auto& statement : component) {
 				cache_graph_store.insert({statement->getIdentifier(), node});
 			}
-		} else {
-			assert(component.size() == 1);
-			auto node = make_shared<CacheGraphNode>(component, false);
-			auto statement = *component.begin();
-			cache_graph_store.insert({statement->getIdentifier(), node});
 		}
 	}
 	// Visited only contains assignment statements at this point,
@@ -255,6 +248,9 @@ void PKB::AffectsManager::buildAffectsGraph(size_t graph_index) {
 		auto affects = affects_cache.at(statement);
 		for (const auto& affect : affects) {
 			auto affected_node = cache_graph_store.at(affect->getIdentifier());
+			if (affected_node == current_node) {
+				continue;
+			}
 			current_node->affects.insert(affected_node);
 			affected_node->affected.insert(current_node);
 		}
@@ -270,6 +266,7 @@ void PKB::AffectsManager::buildAffectsGraphVisit(StmtRef index, StmtRefSet& visi
 	if (affects == affects_cache.end()) {
 		return;
 	}
+	visited.insert(index);
 	for (const auto& affect : affects->second) {
 		buildAffectsGraphVisit(affect->getIdentifier(), visited, stack);
 	}
@@ -277,15 +274,23 @@ void PKB::AffectsManager::buildAffectsGraphVisit(StmtRef index, StmtRefSet& visi
 }
 
 StmtInfoPtrSet PKB::AffectsManager::buildAffectsGraphReverseVisit(StmtRef index, StmtRefSet& visited) {
-	if (visited.find(index) != visited.end()) {
-		return {};
-	}
 	visited.insert(index);
 	auto iter = affected_cache.find(index);
-	assert(iter != affected_cache.end());
+	if (iter == affected_cache.end()) {
+		return {};
+	}
 	StmtInfoPtrSet result_set;
-	for (const auto& affected	 : iter->second) {
+	for (const auto& affected : iter->second) {
+		// To account for self-loops we allow a node to visit itself once more.
+		auto affected_idx = affected->getIdentifier();
+		if (visited.find(affected_idx) != visited.end() && affected_idx != index) {
+			continue;
+		}
 		result_set.insert(affected);
+		// We avoid visiting a self loop.
+		if (affected_idx == index) {
+			continue;
+		}
 		auto result = buildAffectsGraphReverseVisit(affected->getIdentifier(), visited);
 		result_set.insert(result.begin(), result.end());
 	}

@@ -45,7 +45,7 @@ private:
 	unordered_map<StmtRef, StmtInfoPtrSet> affects_star_cache;
 	unordered_map<StmtRef, StmtInfoPtrSet> affected_star_cache;
 
-	pair<StmtRef, StmtRef> computeAllAffects(size_t graph_index);
+	void computeAllAffects(StmtRef start, StmtRef end);
 	void transposeAffects(StmtRef start, StmtRef end);
 	StmtInfoPtrSet buildAffectsGraphReverseVisit(StmtRef index, StmtRefSet& visited);
 	void buildAffectsGraphVisit(StmtRef index, StmtRefSet& visited, stack<StmtRef>& stack);
