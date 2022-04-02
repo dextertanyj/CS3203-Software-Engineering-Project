@@ -2,7 +2,8 @@
 
 #include "catch.hpp"
 
-using QP::Types::ResultTable;
+using namespace std;
+using namespace QP;
 
 TEST_CASE("QP::ResulTable::joinResult Should join tables where one is a subset of another") {
 	ResultTable table_one = ResultTable(vector<string>({"a"}));

@@ -2,36 +2,39 @@
 
 #include "catch_tools.h"
 
+using namespace QP;
+using namespace Types;
+
 TEST_CASE("QP::ReferenceArgument Test") {
 	SECTION("Wildcard") {
-		QP::Types::ReferenceArgument arg;
-		REQUIRE_EQUALS(arg.getType(), QP::Types::ReferenceType::Wildcard);
+		ReferenceArgument arg;
+		REQUIRE_EQUALS(arg.getType(), ReferenceType::Wildcard);
 	}
 
 	SECTION("Statement Index") {
-		QP::Types::ReferenceArgument arg = QP::Types::ReferenceArgument(1);
-		REQUIRE_EQUALS(arg.getType(), QP::Types::ReferenceType::StatementIndex);
+		ReferenceArgument arg = ReferenceArgument(1);
+		REQUIRE_EQUALS(arg.getType(), ReferenceType::StatementIndex);
 		REQUIRE_EQUALS(arg.getStatementIndex(), 1);
 	}
 
 	SECTION("Name") {
-		QP::Types::ReferenceArgument arg = QP::Types::ReferenceArgument("Name");
-		REQUIRE_EQUALS(arg.getType(), QP::Types::ReferenceType::Name);
+		ReferenceArgument arg = ReferenceArgument("Name");
+		REQUIRE_EQUALS(arg.getType(), ReferenceType::Name);
 		REQUIRE_EQUALS(arg.getName(), "Name");
 	}
 
 	SECTION("Synonym") {
-		QP::Types::ReferenceArgument arg = QP::Types::ReferenceArgument(QP::Types::Declaration{QP::Types::DesignEntity::If, "ifs"});
-		REQUIRE_EQUALS(arg.getType(), QP::Types::ReferenceType::Synonym);
-		REQUIRE_EQUALS(arg.getSynonym().type, QP::Types::DesignEntity::If);
+		ReferenceArgument arg = ReferenceArgument(Declaration{DesignEntity::If, "ifs"});
+		REQUIRE_EQUALS(arg.getType(), ReferenceType::Synonym);
+		REQUIRE_EQUALS(arg.getSynonym().type, DesignEntity::If);
 		REQUIRE_EQUALS(arg.getSynonym().symbol, "ifs");
 	}
 
 	SECTION("Attribute") {
-		QP::Types::ReferenceArgument arg = QP::Types::ReferenceArgument({QP::Types::AttributeType::NameIdentifier, {QP::Types::DesignEntity::Read, "r"}});
-		REQUIRE_EQUALS(arg.getType(), QP::Types::ReferenceType::Attribute);
-		REQUIRE_EQUALS(arg.getAttribute().synonym.type, QP::Types::DesignEntity::Read);
+		ReferenceArgument arg = ReferenceArgument({AttributeType::NameIdentifier, {DesignEntity::Read, "r"}});
+		REQUIRE_EQUALS(arg.getType(), ReferenceType::Attribute);
+		REQUIRE_EQUALS(arg.getAttribute().synonym.type, DesignEntity::Read);
 		REQUIRE_EQUALS(arg.getAttribute().synonym.symbol, "r");
-		REQUIRE_EQUALS(arg.getAttribute().attribute, QP::Types::AttributeType::NameIdentifier);
+		REQUIRE_EQUALS(arg.getAttribute().attribute, AttributeType::NameIdentifier);
 	}
 }

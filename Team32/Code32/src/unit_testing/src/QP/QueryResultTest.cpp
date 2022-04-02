@@ -2,6 +2,8 @@
 
 #include "catch.hpp"
 
+using namespace std;
+
 TEST_CASE("QP::QueryResult::addRow should set result to true") {
 	QP::QueryResult result = QP::QueryResult(vector<string>({"a"}));
 

@@ -3,8 +3,9 @@
 #include "QP/Executor/ProcedureExecutor.tpp"
 #include "catch.hpp"
 
-using namespace QP::Types;
-using namespace QP::Executor::ProcedureExecutor;
+using namespace QP;
+using namespace Types;
+using namespace Executor::ProcedureExecutor;
 
 TEST_CASE("QP::Executor::ProcedureExecutor<ClauseType::Calls>::execute") {
 	PKB::Storage pkb = PKB::Storage();

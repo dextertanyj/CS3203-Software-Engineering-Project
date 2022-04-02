@@ -8,6 +8,8 @@
 #include "QP/QueryProcessor.h"
 #include "catch.hpp"
 
+using namespace QP;
+
 TEST_CASE("Basic select") {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
@@ -375,12 +377,12 @@ TEST_CASE("Pattern clause") {
 
 	// Assign statements
 	vector<string> assign_token2 = {"x", "+", "1", "*", "9"};
-	QP::QueryExpressionLexer lexer2 = QP::QueryExpressionLexer(assign_token2);
+	Preprocessor::QueryExpressionLexer lexer2 = Preprocessor::QueryExpressionLexer(assign_token2);
 	auto expression2 =
 		Common::ExpressionProcessor::ExpressionParser{lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(3, "y", expression2);
 	vector<string> assign_token3 = {"x", "+", "y"};
-	QP::QueryExpressionLexer lexer3 = QP::QueryExpressionLexer(assign_token3);
+	Preprocessor::QueryExpressionLexer lexer3 = Preprocessor::QueryExpressionLexer(assign_token3);
 	auto expression3 =
 		Common::ExpressionProcessor::ExpressionParser{lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(5, "y", expression3);
@@ -504,17 +506,17 @@ TEST_CASE("One pattern clause") {
 	pkb.setConstant({1, 90});
 
 	vector<string> assign_token1 = {"90"};
-	QP::QueryExpressionLexer lexer1 = QP::QueryExpressionLexer(assign_token1);
+	Preprocessor::QueryExpressionLexer lexer1 = Preprocessor::QueryExpressionLexer(assign_token1);
 	auto expression1 =
 		Common::ExpressionProcessor::ExpressionParser{lexer1, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(1, "x", expression1);
 	vector<string> assign_token2 = {"x", "+", "1"};
-	QP::QueryExpressionLexer lexer2 = QP::QueryExpressionLexer(assign_token2);
+	Preprocessor::QueryExpressionLexer lexer2 = Preprocessor::QueryExpressionLexer(assign_token2);
 	auto expression2 =
 		Common::ExpressionProcessor::ExpressionParser{lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(2, "y", expression2);
 	vector<string> assign_token3 = {"x", "+", "y"};
-	QP::QueryExpressionLexer lexer3 = QP::QueryExpressionLexer(assign_token3);
+	Preprocessor::QueryExpressionLexer lexer3 = Preprocessor::QueryExpressionLexer(assign_token3);
 	auto expression3 =
 		Common::ExpressionProcessor::ExpressionParser{lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(3, "x", expression3);
@@ -579,17 +581,17 @@ TEST_CASE("One such that and one pattern") {
 	pkb.setUses(5, "y");
 
 	vector<string> assign_token1 = {"90"};
-	QP::QueryExpressionLexer lexer1 = QP::QueryExpressionLexer(assign_token1);
+	Preprocessor::QueryExpressionLexer lexer1 = Preprocessor::QueryExpressionLexer(assign_token1);
 	auto expression1 =
 		Common::ExpressionProcessor::ExpressionParser{lexer1, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(1, "x", expression1);
 	vector<string> assign_token2 = {"x", "+", "1"};
-	QP::QueryExpressionLexer lexer2 = QP::QueryExpressionLexer(assign_token2);
+	Preprocessor::QueryExpressionLexer lexer2 = Preprocessor::QueryExpressionLexer(assign_token2);
 	auto expression2 =
 		Common::ExpressionProcessor::ExpressionParser{lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(4, "y", expression2);
 	vector<string> assign_token3 = {"x", "+", "y"};
-	QP::QueryExpressionLexer lexer3 = QP::QueryExpressionLexer(assign_token3);
+	Preprocessor::QueryExpressionLexer lexer3 = Preprocessor::QueryExpressionLexer(assign_token3);
 	auto expression3 =
 		Common::ExpressionProcessor::ExpressionParser{lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(5, "x", expression3);
