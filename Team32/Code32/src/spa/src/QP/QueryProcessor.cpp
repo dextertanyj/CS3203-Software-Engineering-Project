@@ -3,7 +3,7 @@
 #include <exception>
 #include <utility>
 
-#include "QP/QueryPreprocessor.h"
+#include "QP/Preprocessor/QueryPreprocessor.h"
 
 QP::QueryProcessor::QueryProcessor(PKB::StorageAccessInterface& pkb) : store(pkb), evaluator(store), post_processor(store) {}
 

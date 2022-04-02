@@ -1,4 +1,4 @@
-#include "QP/QueryResult.h"
+#include "QueryResult.h"
 
 #include <queue>
 

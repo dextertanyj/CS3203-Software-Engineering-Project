@@ -7,10 +7,11 @@
 #include <unordered_map>
 #include <vector>
 
+#include "QP/Preprocessor/Preprocessor.h"
 #include "QP/QueryProperties.h"
 #include "QP/Types.h"
 
-class QP::QueryPreprocessor {
+class QP::Preprocessor::QueryPreprocessor {
 public:
 	QueryProperties parseQuery(string query);
 
@@ -31,24 +32,24 @@ private:
 	void parseClauses();
 	void parseClauseLoop(void (QueryPreprocessor::*parser)());
 	void parseClause(Types::ClauseType type);
-	void parseClause(Types::ClauseType type, vector<Types::ReferenceArgument> prefixes);
-	void createClause(Types::ClauseType type, vector<Types::ReferenceArgument> arguments);
+	void parseClause(Types::ClauseType type, vector<ReferenceArgument> prefixes);
+	void createClause(Types::ClauseType type, vector<ReferenceArgument> arguments);
 
 	void parseSuchThat();
 	void parseWith();
 	void parsePattern();
-	void parseAssignPattern(Types::ReferenceArgument synonym);
+	void parseAssignPattern(ReferenceArgument synonym);
 
 	optional<Types::DesignEntity> parseDesignEntity();
 	Types::Declaration parseClauseSynonym();
-	vector<Types::ReferenceArgument> parseArgumentList(Types::ReferenceArgument (QueryPreprocessor::*parser)());
-	Types::ReferenceArgument parseAnyArgument();
-	Types::ReferenceArgument parseReferenceArgument();
-	Types::ReferenceArgument parseArgument(optional<Types::ReferenceArgument> (QueryPreprocessor::*parser)());
-	optional<Types::ReferenceArgument> tryParseReferenceArgument();
-	optional<Types::ReferenceArgument> tryParseSelectArgument();
-	optional<Types::ReferenceArgument> tryParseExpressionArgument();
-	Types::ReferenceArgument parseAttribute();
+	vector<ReferenceArgument> parseArgumentList(ReferenceArgument (QueryPreprocessor::*parser)());
+	ReferenceArgument parseAnyArgument();
+	ReferenceArgument parseReferenceArgument();
+	ReferenceArgument parseArgument(optional<ReferenceArgument> (QueryPreprocessor::*parser)());
+	optional<ReferenceArgument> tryParseReferenceArgument();
+	optional<ReferenceArgument> tryParseSelectArgument();
+	optional<ReferenceArgument> tryParseExpressionArgument();
+	ReferenceArgument parseAttribute();
 
 	bool match(const string& token);
 	void reset();
@@ -66,7 +67,7 @@ private:
 	static regex invalid_chars_regex;
 	static regex query_token_regex;
 
-	static void validateSyntax(Types::ClauseType type, vector<Types::ReferenceArgument> arguments);
+	static void validateSyntax(Types::ClauseType type, vector<ReferenceArgument> arguments);
 };
 
 #endif  // SPA_SRC_QP_QUERYPREPROCESSOR_H

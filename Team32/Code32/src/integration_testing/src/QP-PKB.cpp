@@ -4,7 +4,7 @@
 #include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "PKB/Storage.h"
-#include "QP/QueryExpressionLexer.h"
+#include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "QP/QueryProcessor.h"
 #include "catch.hpp"
 

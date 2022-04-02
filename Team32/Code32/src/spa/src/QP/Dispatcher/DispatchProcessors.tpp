@@ -6,7 +6,7 @@
 #include <cassert>
 
 template <typename T>
-QP::Types::ExecutorSetFactory processArgumentRecurse(T map, const vector<QP::Types::ReferenceArgument>& args) {
+QP::Types::ExecutorSetFactory processArgumentRecurse(T map, const vector<QP::ReferenceArgument>& args) {
 	QP::Types::ArgumentDispatchKey key = args.at(0).getType();
 	if (args.at(0).getType() == QP::Types::ReferenceType::Synonym) {
 		key = args.at(0).getSynonym().type;
@@ -21,7 +21,7 @@ QP::Types::ExecutorSetFactory processArgumentRecurse(T map, const vector<QP::Typ
 
 template <>
 inline QP::Types::ExecutorSetFactory processArgumentRecurse(
-	unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map, const vector<QP::Types::ReferenceArgument>& args) {
+	unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactory> map, const vector<QP::ReferenceArgument>& args) {
 	assert(args.size() == 1);
 	QP::Types::ArgumentDispatchKey key = args.at(0).getType();
 	if (args.at(0).getType() == QP::Types::ReferenceType::Synonym) {
@@ -35,7 +35,7 @@ inline QP::Types::ExecutorSetFactory processArgumentRecurse(
 }
 
 template <typename T>
-QP::Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(T map, const vector<QP::Types::ReferenceArgument>& args) {
+QP::Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(T map, const vector<QP::ReferenceArgument>& args) {
 	QP::Types::ArgumentDispatchKey key = args.at(0).getType();
 	if (args.at(0).getType() == QP::Types::ReferenceType::Synonym) {
 		key = args.at(0).getSynonym().type;
@@ -51,7 +51,7 @@ QP::Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(T map, const ve
 template <>
 inline QP::Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(
 	unordered_map<QP::Types::ArgumentDispatchKey, QP::Types::ExecutorSetFactoryBundle> map,
-	const vector<QP::Types::ReferenceArgument>& args) {
+	const vector<QP::ReferenceArgument>& args) {
 	assert(args.size() == 1);
 	QP::Types::ArgumentDispatchKey key = args.at(0).getType();
 	if (args.at(0).getType() == QP::Types::ReferenceType::Synonym) {
@@ -66,12 +66,12 @@ inline QP::Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(
 
 template <typename T>
 QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processArgument(QP::Types::ClauseType type, T map,
-                                                                                 const vector<Types::ReferenceArgument>& args) {
+                                                                                 const vector<ReferenceArgument>& args) {
 	return {type, processArgumentRecurse(map, args)(args)};
 }
 
 template <typename T>
-QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processArgument(T map, const vector<Types::ReferenceArgument>& args) {
+QP::Types::ExecutorSetBundle QP::Dispatcher::DispatchProcessors::processArgument(T map, const vector<ReferenceArgument>& args) {
 	auto result = processArgumentBundleRecurse(map, args);
 	return {result.first, result.second(args)};
 }

@@ -4,7 +4,7 @@
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
 #include "QP/Executor/AttributeExecutor.h"
-#include "QP/QueryExpressionLexer.h"
+#include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "QP/StorageAdapter.h"
 #include "catch.hpp"
 

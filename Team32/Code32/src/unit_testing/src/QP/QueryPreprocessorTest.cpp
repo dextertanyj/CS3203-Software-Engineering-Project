@@ -1,10 +1,10 @@
-#include "QP/QueryPreprocessor.h"
+#include "QP/Preprocessor/QueryPreprocessor.h"
 
 #include <string>
 
-#include "QP/Relationship/Relation.h"
 #include "catch.hpp"
 #include "catch_tools.h"
+#include "QP/Evaluator/Clause.h"
 
 using namespace QP::Types;
 
@@ -846,7 +846,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid Affects(*)") {
 	shared_ptr<QP::Relationship::Relation> clause;
 	QP::QueryPreprocessor qpp;
 	QP::QueryProperties qp = {{}, {}, {}};
-	
+
 	SECTION("Affects") {
 		SECTION("Synonym Synonym") {
 			qp = qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(s1, s2)");
@@ -981,7 +981,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid Affects(*)") {
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery invalid Affects(*)") {
 	QP::QueryPreprocessor qpp;
-	
+
 	SECTION("Syntax Exceptions") {
 		SECTION("Unexpected Name") {
 			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(\"name\", _)"), QP::QuerySyntaxException);

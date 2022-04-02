@@ -1,15 +1,15 @@
 #ifndef SPA_SRC_QP_RELATIONSHIP_RELATION_H
 #define SPA_SRC_QP_RELATIONSHIP_RELATION_H
 
+#include "QP/Evaluator/Evaluator.h"
 #include "QP/QueryResult.h"
 #include "QP/ReferenceArgument.h"
-#include "QP/Relationship/Relationship.h"
 #include "QP/StorageAdapter.h"
 #include "QP/Types.h"
 
-class QP::Relationship::Relation {
+class QP::Evaluator::Clause {
 public:
-	Relation(Types::ClauseType type, vector<Types::ReferenceArgument> arguments, Types::ExecutorSet executor);
+	Clause(Types::ClauseType type, vector<ReferenceArgument> arguments, Types::ExecutorSet executor);
 	[[nodiscard]] QueryResult executeTrivial(const StorageAdapter& pkb) const;
 	[[nodiscard]] QueryResult execute(const StorageAdapter& pkb, vector<QueryResult>& results) const;
 	[[nodiscard]] vector<string> getDeclarationSymbols() const;
@@ -18,7 +18,7 @@ public:
 
 private:
 	Types::ClauseType type;
-	vector<Types::ReferenceArgument> arguments;
+	vector<ReferenceArgument> arguments;
 	Types::ExecutorSet executor;
 };
 

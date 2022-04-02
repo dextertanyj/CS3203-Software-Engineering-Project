@@ -6,22 +6,22 @@
 #include <string>
 #include <unordered_map>
 
-#include "QP/ClauseGroups.h"
+#include "QP/Evaluator/Clause.h"
+#include "QP/Optimizer/ClauseGroups.h"
+#include "QP/Optimizer/Optimizer.h"
 #include "QP/QueryProperties.h"
-#include "QP/Relationship/Relation.h"
 
 using namespace std;
-using QP::Types::Clause;
-using QP::Types::ClauseGroups;
+using QP::Evaluator::Clause;
 using QP::Types::ClauseList;
 using QP::Types::DeclarationList;
 
-class QP::QueryGraph {
+class QP::Optimizer::QueryGraph {
 public:
 	struct Edge {
 		string node_from_symbol;
 		string node_to_symbol;
-		Clause clause;
+		shared_ptr<Clause> clause;
 		size_t weight;
 	};
 
@@ -45,11 +45,11 @@ private:
 	};
 
 	unordered_map<string, Node> nodes;
-	ClauseGroups connected_synonyms;
+	ClauseGroups clause_groups;
 
 	void setEdges(const ClauseList& clause_list);
-	void setEdge(const Clause& clause);
-	void addEdge(const pair<string, string>& symbols, const Clause& clause);
+	void setEdge(const shared_ptr<Clause>& clause);
+	void addEdge(const pair<string, string>& symbols, const shared_ptr<Clause>& clause);
 	void optimize(const DeclarationList& select_list);
 
 	void insertEdgesToQueue(unordered_set<string>& visited_nodes, const string& node_symbol,

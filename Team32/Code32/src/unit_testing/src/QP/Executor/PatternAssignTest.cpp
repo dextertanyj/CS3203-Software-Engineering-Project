@@ -2,7 +2,7 @@
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
 #include "QP/Executor/PatternAssignExecutor.h"
-#include "QP/QueryExpressionLexer.h"
+#include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "catch.hpp"
 
 using namespace QP::Types;

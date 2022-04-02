@@ -1,20 +1,18 @@
-#include "QP/QueryEvaluator.h"
+#include "QueryEvaluator.h"
 
 #include <utility>
 
-#include "QP/ClauseGroups.h"
 #include "QP/QueryUtils.h"
 
-using QP::Types::Clause;
 using QP::Types::DesignEntity;
 
-QP::QueryEvaluator::QueryEvaluator(QP::StorageAdapter& store) : store(store) {}
+QP::Evaluator::QueryEvaluator::QueryEvaluator(QP::StorageAdapter& store) : store(store) {}
 
-QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properties) {
+QP::QueryResult QP::Evaluator::QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 	auto declarations = query_properties.getDeclarationList();
 	auto clauses = query_properties.getClauseList();
 	auto select_list = query_properties.getSelectSynonymList();
-	QueryGraph graph = QueryGraph(declarations, clauses, select_list);
+	Optimizer::QueryGraph graph = Optimizer::QueryGraph(declarations, clauses, select_list);
 	size_t number_of_groups = graph.getNumberOfGroups();
 
 	vector<QueryResult> results;
@@ -44,7 +42,7 @@ QP::QueryResult QP::QueryEvaluator::executeQuery(QueryProperties& query_properti
 	return final_result;
 }
 
-bool QP::QueryEvaluator::executeGroup(ClauseList& clauses, DeclarationList& select_list, vector<QueryResult>& results) {
+bool QP::Evaluator::QueryEvaluator::executeGroup(ClauseList& clauses, DeclarationList& select_list, vector<QueryResult>& results) {
 	if (select_list.empty()) {
 		return executeGroupWithoutSelected(clauses, select_list).getResult();
 	}
@@ -58,7 +56,7 @@ bool QP::QueryEvaluator::executeGroup(ClauseList& clauses, DeclarationList& sele
 	return false;
 }
 
-QP::QueryResult QP::QueryEvaluator::executeGroupWithSelected(ClauseList& clauses, DeclarationList& select_list) {
+QP::QueryResult QP::Evaluator::QueryEvaluator::executeGroupWithSelected(ClauseList& clauses, DeclarationList& select_list) {
 	if (clauses.empty()) {
 		return executeNoClauses(select_list[0]);
 	}
@@ -66,7 +64,7 @@ QP::QueryResult QP::QueryEvaluator::executeGroupWithSelected(ClauseList& clauses
 	return executeNonTrivialGroup(clauses, select_list);
 }
 
-QP::QueryResult QP::QueryEvaluator::executeGroupWithoutSelected(ClauseList& clauses, DeclarationList& select_list) {
+QP::QueryResult QP::Evaluator::QueryEvaluator::executeGroupWithoutSelected(ClauseList& clauses, DeclarationList& select_list) {
 	if (clauses.empty()) {
 		return QueryResult(true);
 	}
@@ -78,9 +76,9 @@ QP::QueryResult QP::QueryEvaluator::executeGroupWithoutSelected(ClauseList& clau
 	return executeNonTrivialGroup(clauses, select_list);
 }
 
-QP::QueryResult QP::QueryEvaluator::executeTrivialGroup(ClauseList& clauses) {
-	for (const Clause& clause : clauses) {
-		QueryResult result = clause.relation->executeTrivial(store);
+QP::QueryResult QP::Evaluator::QueryEvaluator::executeTrivialGroup(ClauseList& clauses) {
+	for (const auto& clause : clauses) {
+		QueryResult result = clause->executeTrivial(store);
 		if (!result.getResult()) {
 			return {};
 		}
@@ -89,11 +87,11 @@ QP::QueryResult QP::QueryEvaluator::executeTrivialGroup(ClauseList& clauses) {
 	return QueryResult(true);
 }
 
-QP::QueryResult QP::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, DeclarationList& select_list) {
+QP::QueryResult QP::Evaluator::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, DeclarationList& select_list) {
 	vector<QueryResult> result_list;
 
-	for (const Clause& clause : clauses) {
-		QueryResult result = clause.relation->execute(store, result_list);
+	for (const auto& clause : clauses) {
+		QueryResult result = clause->execute(store, result_list);
 		if (!result.getResult()) {
 			return {};
 		}
@@ -106,7 +104,7 @@ QP::QueryResult QP::QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, 
 	return final_result;
 }
 
-QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) {
+QP::QueryResult QP::Evaluator::QueryEvaluator::executeNoClauses(const Declaration& select) {
 	switch (select.type) {
 		case DesignEntity::Stmt:
 		case DesignEntity::Read:
@@ -131,7 +129,7 @@ QP::QueryResult QP::QueryEvaluator::executeNoClauses(const Declaration& select) 
 	}
 }
 
-QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(const Declaration& declaration) {
+QP::QueryResult QP::Evaluator::QueryEvaluator::getSpecificStmtType(const Declaration& declaration) {
 	StmtInfoPtrSet stmt_set = store.getStatements();
 	QueryResult result = QueryResult({declaration.symbol});
 
@@ -144,7 +142,7 @@ QP::QueryResult QP::QueryEvaluator::getSpecificStmtType(const Declaration& decla
 	return result;
 }
 
-QP::QueryResult QP::QueryEvaluator::getConstants(const string& symbol) {
+QP::QueryResult QP::Evaluator::QueryEvaluator::getConstants(const string& symbol) {
 	unordered_set<ConstVal> constants = store.getConstants();
 	QueryResult result = QueryResult({symbol});
 
@@ -154,7 +152,7 @@ QP::QueryResult QP::QueryEvaluator::getConstants(const string& symbol) {
 	return result;
 }
 
-QP::QueryResult QP::QueryEvaluator::getVariables(const string& symbol) {
+QP::QueryResult QP::Evaluator::QueryEvaluator::getVariables(const string& symbol) {
 	VarRefSet var_set = store.getVariables();
 	QueryResult result = QueryResult({symbol});
 
@@ -165,7 +163,7 @@ QP::QueryResult QP::QueryEvaluator::getVariables(const string& symbol) {
 	return result;
 }
 
-QP::QueryResult QP::QueryEvaluator::getProcedures(const string& symbol) {
+QP::QueryResult QP::Evaluator::QueryEvaluator::getProcedures(const string& symbol) {
 	ProcRefSet proc_set = store.getProcedures();
 	QueryResult result = QueryResult({symbol});
 
@@ -176,10 +174,10 @@ QP::QueryResult QP::QueryEvaluator::getProcedures(const string& symbol) {
 	return result;
 }
 
-ClauseList QP::QueryEvaluator::getClausesWithoutSynonyms(QueryProperties& query_properties) {
+ClauseList QP::Evaluator::QueryEvaluator::getClausesWithoutSynonyms(QueryProperties& query_properties) {
 	ClauseList clauses;
-	for (const Clause& clause : query_properties.getClauseList()) {
-		if (clause.relation->getDeclarationSymbols().empty()) {
+	for (const auto& clause : query_properties.getClauseList()) {
+		if (clause->getDeclarationSymbols().empty()) {
 			clauses.push_back(clause);
 		}
 	}

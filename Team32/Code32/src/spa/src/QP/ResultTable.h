@@ -13,7 +13,7 @@
 using QP::Types::ResultColumn;
 using QP::Types::ResultRow;
 
-class QP::Types::ResultTable {
+class QP::ResultTable {
 public:
 	ResultTable();
 	explicit ResultTable(vector<string> synonyms_stored);

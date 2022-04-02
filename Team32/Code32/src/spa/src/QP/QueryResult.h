@@ -13,7 +13,7 @@
 
 using QP::Types::ResultColumn;
 using QP::Types::ResultRow;
-using QP::Types::ResultTable;
+using QP::ResultTable;
 
 class QP::QueryResult {
 public:

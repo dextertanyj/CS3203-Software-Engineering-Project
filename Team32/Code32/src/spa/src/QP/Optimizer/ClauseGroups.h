@@ -3,12 +3,13 @@
 
 #include <vector>
 
+#include "QP/Optimizer/Optimizer.h"
 #include "QP/QP.h"
 #include "QP/Types.h"
 
 using QP::Types::DeclarationList;
 
-class QP::Types::ClauseGroups {
+class QP::Optimizer::ClauseGroups {
 public:
 	ClauseGroups() = default;
 

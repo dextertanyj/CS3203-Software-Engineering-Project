@@ -1,8 +1,8 @@
-#include "QP/QueryGraph.h"
+#include "QP/Optimizer/QueryGraph.h"
 
-#include "QP/ClauseGroups.h"
+#include "QP/Optimizer/ClauseGroups.h"
 #include "QP/ReferenceArgument.h"
-#include "QP/Relationship/Relation.h"
+#include "QP/Evaluator/Clause.h"
 #include "catch.hpp"
 
 using namespace QP::Types;

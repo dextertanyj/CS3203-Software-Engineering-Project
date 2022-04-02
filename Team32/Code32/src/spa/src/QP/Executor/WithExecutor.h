@@ -13,39 +13,39 @@ namespace QP::Executor::WithExecutor {
 
 // Trivial Executors
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult executeTrivialAttributeAttribute(const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs,
-                                                 const Types::ReferenceArgument& rhs,
+QP::QueryResult executeTrivialAttributeAttribute(const QP::StorageAdapter& store, const ReferenceArgument& lhs,
+                                                 const ReferenceArgument& rhs,
                                                  Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                                  Types::WithInternalExecutors<TAttribute, TRight> rhs_executors);
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult executeTrivialAttributeConstant(const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs,
-                                                const Types::ReferenceArgument& rhs,
+QP::QueryResult executeTrivialAttributeConstant(const QP::StorageAdapter& store, const ReferenceArgument& lhs,
+                                                const ReferenceArgument& rhs,
                                                 Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                                 Types::WithInternalExecutors<TAttribute, TRight> rhs_executors);
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult executeTrivialConstantAttribute(const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs,
-                                                const Types::ReferenceArgument& rhs,
+QP::QueryResult executeTrivialConstantAttribute(const QP::StorageAdapter& store, const ReferenceArgument& lhs,
+                                                const ReferenceArgument& rhs,
                                                 Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                                 Types::WithInternalExecutors<TAttribute, TRight> rhs_executors);
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult executeTrivialConstantConstant(const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs,
-                                               const Types::ReferenceArgument& rhs,
+QP::QueryResult executeTrivialConstantConstant(const QP::StorageAdapter& store, const ReferenceArgument& lhs,
+                                               const ReferenceArgument& rhs,
                                                Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                                Types::WithInternalExecutors<TAttribute, TRight> rhs_executors);
 
 // Executors
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult executeAttributeAttribute(const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs,
-                                          const Types::ReferenceArgument& rhs,
+QP::QueryResult executeAttributeAttribute(const QP::StorageAdapter& store, const ReferenceArgument& lhs,
+                                          const ReferenceArgument& rhs,
                                           Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                           Types::WithInternalExecutors<TAttribute, TRight> rhs_executors);
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult executeAttributeConstant(const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs,
-                                         const Types::ReferenceArgument& rhs, Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
+QP::QueryResult executeAttributeConstant(const QP::StorageAdapter& store, const ReferenceArgument& lhs,
+                                         const ReferenceArgument& rhs, Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                          Types::WithInternalExecutors<TAttribute, TRight> rhs_executors);
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult executeConstantAttribute(const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs,
-                                         const Types::ReferenceArgument& rhs, Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
+QP::QueryResult executeConstantAttribute(const QP::StorageAdapter& store, const ReferenceArgument& lhs,
+                                         const ReferenceArgument& rhs, Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                          Types::WithInternalExecutors<TAttribute, TRight> rhs_executors);
 }
 

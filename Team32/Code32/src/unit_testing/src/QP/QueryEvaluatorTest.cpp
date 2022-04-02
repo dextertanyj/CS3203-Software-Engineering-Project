@@ -1,9 +1,9 @@
-#include "QP/QueryEvaluator.h"
+#include "QP/Evaluator/QueryEvaluator.h"
 
 #include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/TypeDefs.h"
 #include "QP/Dispatcher/DispatchMap.h"
-#include "QP/QueryExpressionLexer.h"
+#include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "QP/ReferenceArgument.h"
 #include "catch.hpp"
 
