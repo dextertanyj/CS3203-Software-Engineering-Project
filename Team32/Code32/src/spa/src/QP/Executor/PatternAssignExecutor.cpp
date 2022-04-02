@@ -2,7 +2,6 @@
 
 #include "QP/QueryUtils.h"
 
-
 namespace QP::Executor::PatternAssignExecutor {
 
 using namespace std;

@@ -6,10 +6,10 @@
 #include <utility>
 #include <vector>
 
-#include "QP/QP.h"
-#include "QP/Optimizer/QueryGraph.h"
-#include "QP/QueryProperties.h"
 #include "QP/Evaluator/Evaluator.h"
+#include "QP/Optimizer/QueryGraph.h"
+#include "QP/QP.h"
+#include "QP/QueryProperties.h"
 
 using QP::Types::ClauseList;
 using QP::Types::Declaration;
@@ -34,6 +34,5 @@ private:
 	QueryResult getProcedures(const string& symbol);
 	static ClauseList getClausesWithoutSynonyms(QueryProperties& query_properties);
 };
-
 
 #endif  // SPA_SRC_QP_QUERYEVALUATOR_H

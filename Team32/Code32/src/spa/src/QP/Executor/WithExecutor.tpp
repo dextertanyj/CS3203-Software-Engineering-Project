@@ -27,7 +27,7 @@ static QP::QueryResult find(const QP::StorageAdapter& store, HashInfo<TAttribute
                             HashInfo<TAttribute, TProbe> probe_info) {
 	std::unordered_set<TAttribute> attributes;
 	std::for_each(build_info.values.begin(), build_info.values.end(),
-	         [&](const auto& value) { attributes.insert(build_info.mapper(store, value)); });
+	              [&](const auto& value) { attributes.insert(build_info.mapper(store, value)); });
 	for (const auto& probe : probe_info.values) {
 		if (attributes.find(probe_info.mapper(store, probe)) != attributes.end()) {
 			return QP::QueryResult(true);

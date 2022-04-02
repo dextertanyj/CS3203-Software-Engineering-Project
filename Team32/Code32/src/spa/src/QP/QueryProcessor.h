@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "QP/Evaluator/QueryEvaluator.h"
-#include "QP/QueryPostProcessor.h"
 #include "QP/Preprocessor/QueryPreprocessor.h"
+#include "QP/QueryPostProcessor.h"
 #include "QP/StorageAdapter.h"
 
 using std::string;

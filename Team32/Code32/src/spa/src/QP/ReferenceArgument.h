@@ -89,7 +89,7 @@ public:
 
 private:
 	std::variant<std::monostate, Types::Declaration, Types::Attribute, std::string, StmtRef,
-	        std::pair<Common::ExpressionProcessor::Expression, bool>>
+	             std::pair<Common::ExpressionProcessor::Expression, bool>>
 		value;
 };
 
