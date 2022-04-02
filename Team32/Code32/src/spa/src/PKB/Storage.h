@@ -36,6 +36,7 @@ using namespace std;
 
 class PKB::Storage : public PKB::StorageUpdateInterface, public PKB::StorageAccessInterface {
 public:
+	Storage();
 	// Set methods called by Source processor
 	void setProc(ProcRef procedure, StmtRef start, StmtRef end) override;
 	void setCall(StmtRef index, ProcRef name) override;
@@ -165,8 +166,8 @@ private:
 	SVRelationStore<IfControlRelation> if_control_store;
 	SVRelationStore<WhileControlRelation> while_control_store;
 	ControlFlowGraph control_flow_graph;
-	NextManager next_manager = NextManager(control_flow_graph);
-	AffectsManager affects_manager = AffectsManager(control_flow_graph, modifies_s_store, uses_s_store);
+	NextManager next_manager;
+	AffectsManager affects_manager;
 
 	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
 	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set);

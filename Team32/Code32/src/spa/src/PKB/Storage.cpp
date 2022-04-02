@@ -5,6 +5,8 @@
 
 using namespace std;
 
+PKB::Storage::Storage() : next_manager(control_flow_graph), affects_manager(control_flow_graph, modifies_s_store, uses_s_store) {};
+
 // This method will store information about a statement into PKB's statement map.
 // Source Processor is guaranteed to call this method before storing relationships and variables.
 void PKB::Storage::setStmtType(StmtRef index, StmtType type) {
