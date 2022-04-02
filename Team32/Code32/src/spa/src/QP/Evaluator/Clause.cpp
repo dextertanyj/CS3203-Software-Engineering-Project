@@ -4,29 +4,32 @@
 
 #include "QP/QueryUtils.h"
 
-QP::Evaluator::Clause::Clause(Types::ClauseType type, vector<ReferenceArgument> arguments, Types::ExecutorSet executor)
+using namespace QP::Evaluator;
+using namespace QP::Types;
+
+QP::Evaluator::Clause::Clause(ClauseType type, vector<ReferenceArgument> arguments, ExecutorSet executor)
 	: type(type), arguments(move(arguments)), executor(move(executor)) {}
 
 vector<string> QP::Evaluator::Clause::getDeclarationSymbols() const {
 	vector<string> symbols;
 	for (const ReferenceArgument& arg : arguments) {
-		if (arg.getType() == Types::ReferenceType::Synonym) {
+		if (arg.getType() == ReferenceType::Synonym) {
 			symbols.push_back(arg.getSynonym().symbol);
 		}
-		if (arg.getType() == Types::ReferenceType::Attribute) {
+		if (arg.getType() == ReferenceType::Attribute) {
 			symbols.push_back(arg.getAttribute().synonym.symbol);
 		}
 	}
 	return symbols;
 }
 
-QP::Types::ClauseType QP::Evaluator::Clause::getType() const { return type; }
+ClauseType QP::Evaluator::Clause::getType() const { return type; }
 
 QP::QueryResult QP::Evaluator::Clause::executeTrivial(const QP::StorageAdapter& pkb) const {
 	QueryResult result;
 	visit(Visitor{[&](const Types::Executor& exec) { result = exec(pkb); },
 	              [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.first(pkb); },
-	              [&](const pair<Types::Executor, Types::OptimizedExecutor>& execs) { result = execs.first(pkb); }},
+	              [&](const pair<Types::Executor, OptimizedExecutor>& execs) { result = execs.first(pkb); }},
 	      executor);
 	return result;
 }
@@ -35,7 +38,7 @@ QP::QueryResult QP::Evaluator::Clause::execute(const QP::StorageAdapter& pkb, ve
 	QueryResult result;
 	auto invalid_visitor = [&](const Types::Executor&) { assert(false); };  // NOLINT(bugprone-lambda-function-name)
 	auto standard_visitor = [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.second(pkb); };
-	auto optimized_visitor = [&](const pair<Types::Executor, Types::OptimizedExecutor>& execs) {
+	auto optimized_visitor = [&](const pair<Types::Executor, OptimizedExecutor>& execs) {
 		if (existing_results.empty()) {
 			result = execs.second(pkb, {});
 			return;

@@ -9,6 +9,7 @@
 #include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "QP/Types.h"
 
+using namespace std;
 using namespace QP::Types;
 using namespace QP::Dispatcher;
 
@@ -18,10 +19,10 @@ regex QP::Preprocessor::QueryPreprocessor::query_token_regex =
 
 QP::QueryProperties QP::Preprocessor::QueryPreprocessor::parseQuery(string query) {
 	reset();
-	tokenizeQuery(std::move(query));
+	tokenizeQuery(move(query));
 	try {
 		return parseQuery();
-	} catch (const std::out_of_range& e) {
+	} catch (const out_of_range& e) {
 		throw QuerySyntaxException("Unexpected end of query.");
 	}
 }

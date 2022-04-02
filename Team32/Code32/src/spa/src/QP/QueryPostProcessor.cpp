@@ -9,8 +9,6 @@
 #define TUPLE_SEPERATOR " "
 #define TRUE "TRUE"
 #define FALSE "FALSE"
-
-using namespace std;
 using QP::Types::Declaration;
 using QP::Types::DeclarationList;
 

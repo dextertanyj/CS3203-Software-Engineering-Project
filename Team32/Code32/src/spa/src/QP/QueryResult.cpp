@@ -2,6 +2,8 @@
 
 #include <queue>
 
+using namespace std;
+
 QP::QueryResult::QueryResult() : result(false) {}
 
 QP::QueryResult::QueryResult(bool result) : result(result) {}

@@ -5,8 +5,9 @@
 #include "QP/Executor/AttributeExecutor.tpp"
 #include "QP/Executor/WithExecutor.tpp"
 
-using namespace QP::Executor;
-using namespace QP::Types;
+using namespace QP;
+using namespace Executor;
+using namespace Types;
 
 /*
  * Selection and attribute transformation maps
@@ -36,11 +37,11 @@ static const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<
 
 static const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Number>> name_attribute_number_map = {
 	{DispatchAttributeKey{DesignEntity::Read, AttributeType::VariableName},
-     {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<QP::Types::ClauseType::ModifiesS>}},
+     {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<ClauseType::ModifiesS>}},
 	{DispatchAttributeKey{DesignEntity::Call, AttributeType::ProcedureName},
      {AttributeExecutor::selectStatements, AttributeExecutor::callToProcedure}},
 	{DispatchAttributeKey{DesignEntity::Print, AttributeType::VariableName},
-     {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<QP::Types::ClauseType::UsesS>}}};
+     {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<ClauseType::UsesS>}}};
 
 static const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Name>> name_attribute_name_map = {
 	{ReferenceType::Name, {AttributeExecutor::extractName, AttributeExecutor::identity<Name>}},
@@ -113,7 +114,7 @@ static const ReferenceMap<ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<QP::ReferenceArgument>& args) {
+WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<ReferenceArgument>& args) {
 	static const ReferenceMap<ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> map =
 		getExecutorMap<TAttribute, TLeft, TRight>();
 	ReferenceType lhs = args.at(0).getType();
@@ -136,7 +137,7 @@ WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<QP::
  * @return the corresponding executor set.
  */
 template <typename TAttribute, typename TLeft, typename TRight>
-ExecutorSet dispatchHandler(const vector<QP::ReferenceArgument>& args) {
+ExecutorSet dispatchHandler(const vector<ReferenceArgument>& args) {
 	static const auto left_attribute_map = getAttributeMap<TAttribute, TLeft>();
 	static const auto right_attribute_map = getAttributeMap<TAttribute, TRight>();
 	WithClauseArgumentDispatchKey lhs_key = args.at(0).getType();
@@ -149,11 +150,11 @@ ExecutorSet dispatchHandler(const vector<QP::ReferenceArgument>& args) {
 	}
 	auto lhs_executors_iter = left_attribute_map.find(lhs_key);
 	if (lhs_executors_iter == left_attribute_map.end()) {
-		throw QP::QueryDispatchException("Incorrect argument type.");
+		throw QueryDispatchException("Incorrect argument type.");
 	}
 	auto rhs_executors_iter = right_attribute_map.find(rhs_key);
 	if (rhs_executors_iter == right_attribute_map.end()) {
-		throw QP::QueryDispatchException("Incorrect argument type.");
+		throw QueryDispatchException("Incorrect argument type.");
 	}
 	auto lhs_executors = lhs_executors_iter->second;
 	auto rhs_executors = rhs_executors_iter->second;
@@ -163,11 +164,11 @@ ExecutorSet dispatchHandler(const vector<QP::ReferenceArgument>& args) {
 	ExecutorSet result;
 	auto trivial_executor_visitor = [=, lhs = args.at(0), rhs = args.at(1),
 	                                 &result](const WithExecutorFunction<TAttribute, TLeft, TRight>& executor) {
-		result = [=](const QP::StorageAdapter& store) { return executor(store, lhs, rhs, lhs_executors, rhs_executors); };
+		result = [=](const StorageAdapter& store) { return executor(store, lhs, rhs, lhs_executors, rhs_executors); };
 	};
 	auto executor_visitor = [=, lhs = args.at(0), rhs = args.at(1), &result](const ExecutorPair<TAttribute, TLeft, TRight>& executors) {
-		result = pair{[=](const QP::StorageAdapter& store) { return executors.first(store, lhs, rhs, lhs_executors, rhs_executors); },
-		              [=](const QP::StorageAdapter& store) { return executors.second(store, lhs, rhs, lhs_executors, rhs_executors); }};
+		result = pair{[=](const StorageAdapter& store) { return executors.first(store, lhs, rhs, lhs_executors, rhs_executors); },
+		              [=](const StorageAdapter& store) { return executors.second(store, lhs, rhs, lhs_executors, rhs_executors); }};
 	};
 	visit(Visitor{trivial_executor_visitor, executor_visitor}, executor);
 
@@ -180,25 +181,25 @@ ExecutorSet dispatchHandler(const vector<QP::ReferenceArgument>& args) {
  * These maps select the appropriate dispatch handler to use based on the attribute type, left synonym type and right synonym type.
  */
 
-const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<QP::ReferenceArgument>&)>> number_handler_map = {
+const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>> number_handler_map = {
 	{ReferenceType::StatementIndex, dispatchHandler<Number, Number, Number>},
 	{AttributeType::NumberIdentifier, dispatchHandler<Number, Number, Number>},
 	{AttributeType::NumberIdentifier, dispatchHandler<Number, Number, Number>}};
 
-const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<QP::ReferenceArgument>&)>> name_handler_map = {
+const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>> name_handler_map = {
 	{ReferenceType::Name, dispatchHandler<Name, Name, Name>},
 	{AttributeType::NameIdentifier, dispatchHandler<Name, Name, Name>},
 	{AttributeType::VariableName, dispatchHandler<Name, Name, Number>},
 	{AttributeType::ProcedureName, dispatchHandler<Name, Name, Number>}};
 
-const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<QP::ReferenceArgument>&)>> variable_handler_map = {
+const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>> variable_handler_map = {
 	{ReferenceType::Name, dispatchHandler<Name, Number, Name>},
 	{AttributeType::NameIdentifier, dispatchHandler<Name, Number, Name>},
 	{AttributeType::VariableName, dispatchHandler<Name, Number, Number>},
 	{AttributeType::ProcedureName, dispatchHandler<Name, Number, Number>}};
 
 const unordered_map<WithClauseBasicDispatchKey,
-                    unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<QP::ReferenceArgument>&)>>>
+                    unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>>>
 	handler_map = {{ReferenceType::StatementIndex, number_handler_map},
                    {AttributeType::NumberIdentifier, number_handler_map},
                    {ReferenceType::Name, name_handler_map},
@@ -206,7 +207,7 @@ const unordered_map<WithClauseBasicDispatchKey,
                    {AttributeType::ProcedureName, variable_handler_map},
                    {AttributeType::VariableName, variable_handler_map}};
 
-QP::Types::ExecutorSetBundle QP::Dispatcher::WithDispatcher::dispatcher(const vector<ReferenceArgument>& args) {
+ExecutorSetBundle Dispatcher::WithDispatcher::dispatcher(const vector<ReferenceArgument>& args) {
 	assert(args.size() == 2);
 	WithClauseBasicDispatchKey lhs = args.at(0).getType();
 	if (args.at(0).getType() == ReferenceType::Attribute) {
@@ -218,12 +219,12 @@ QP::Types::ExecutorSetBundle QP::Dispatcher::WithDispatcher::dispatcher(const ve
 	}
 	auto handler_iter = handler_map.find(lhs);
 	if (handler_iter == handler_map.end()) {
-		throw QP::QueryDispatchException("Incorrect argument type.");
+		throw QueryDispatchException("Incorrect argument type.");
 	}
 	auto inner_map = handler_iter->second;
 	auto inner_handler_iter = inner_map.find(rhs);
 	if (inner_handler_iter == inner_map.end()) {
-		throw QP::QueryDispatchException("Incorrect argument type.");
+		throw QueryDispatchException("Incorrect argument type.");
 	}
 	return {ClauseType::With, inner_handler_iter->second(args)};
 }

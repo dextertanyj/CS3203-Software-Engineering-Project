@@ -11,8 +11,6 @@
 #include "QP/Optimizer/QueryGraph.h"
 #include "QP/QueryProperties.h"
 #include "QP/Evaluator/Evaluator.h"
-
-using namespace std;
 using QP::Types::ClauseList;
 using QP::Types::Declaration;
 using QP::Types::DeclarationList;

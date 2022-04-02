@@ -2,6 +2,7 @@
 
 #include <utility>
 
+using namespace std;
 using namespace QP::Types;
 
 QP::ReferenceArgument::ReferenceArgument() = default;

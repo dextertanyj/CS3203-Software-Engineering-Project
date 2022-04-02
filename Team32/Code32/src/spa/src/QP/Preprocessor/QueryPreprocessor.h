@@ -13,10 +13,10 @@
 
 class QP::Preprocessor::QueryPreprocessor {
 public:
-	QueryProperties parseQuery(string query);
+	QueryProperties parseQuery(std::string query);
 
 private:
-	void tokenizeQuery(string query);
+	void tokenizeQuery(std::string query);
 
 	// Starting point for recursive descent parser
 	QueryProperties parseQuery();
@@ -32,42 +32,42 @@ private:
 	void parseClauses();
 	void parseClauseLoop(void (QueryPreprocessor::*parser)());
 	void parseClause(Types::ClauseType type);
-	void parseClause(Types::ClauseType type, vector<ReferenceArgument> prefixes);
-	void createClause(Types::ClauseType type, vector<ReferenceArgument> arguments);
+	void parseClause(Types::ClauseType type, std::vector<ReferenceArgument> prefixes);
+	void createClause(Types::ClauseType type, std::vector<ReferenceArgument> arguments);
 
 	void parseSuchThat();
 	void parseWith();
 	void parsePattern();
 	void parseAssignPattern(ReferenceArgument synonym);
 
-	optional<Types::DesignEntity> parseDesignEntity();
+	std::optional<Types::DesignEntity> parseDesignEntity();
 	Types::Declaration parseClauseSynonym();
-	vector<ReferenceArgument> parseArgumentList(ReferenceArgument (QueryPreprocessor::*parser)());
+	std::vector<ReferenceArgument> parseArgumentList(ReferenceArgument (QueryPreprocessor::*parser)());
 	ReferenceArgument parseAnyArgument();
 	ReferenceArgument parseReferenceArgument();
-	ReferenceArgument parseArgument(optional<ReferenceArgument> (QueryPreprocessor::*parser)());
-	optional<ReferenceArgument> tryParseReferenceArgument();
-	optional<ReferenceArgument> tryParseSelectArgument();
-	optional<ReferenceArgument> tryParseExpressionArgument();
+	ReferenceArgument parseArgument(std::optional<ReferenceArgument> (QueryPreprocessor::*parser)());
+	std::optional<ReferenceArgument> tryParseReferenceArgument();
+	std::optional<ReferenceArgument> tryParseSelectArgument();
+	std::optional<ReferenceArgument> tryParseExpressionArgument();
 	ReferenceArgument parseAttribute();
 
-	bool match(const string& token);
+	bool match(const std::string& token);
 	void reset();
 	void validateUnknownPatternSyntax();
-	void logSemanticException(const string&& message);
+	void logSemanticException(const std::string&& message);
 
 	size_t token_index;
-	vector<string> query_tokens;
-	unordered_map<string, Types::Declaration> existing_declarations;
+	std::vector<std::string> query_tokens;
+	std::unordered_map<std::string, Types::Declaration> existing_declarations;
 	Types::SelectList select_list;
 	Types::ClauseList clause_list;
 
-	optional<string> semantic_exception_message;
+	std::optional<std::string> semantic_exception_message;
 
-	static regex invalid_chars_regex;
-	static regex query_token_regex;
+	static std::regex invalid_chars_regex;
+	static std::regex query_token_regex;
 
-	static void validateSyntax(Types::ClauseType type, vector<ReferenceArgument> arguments);
+	static void validateSyntax(Types::ClauseType type, std::vector<ReferenceArgument> arguments);
 };
 
 #endif  // SPA_SRC_QP_QUERYPREPROCESSOR_H

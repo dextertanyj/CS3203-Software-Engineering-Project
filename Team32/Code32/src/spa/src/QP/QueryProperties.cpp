@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <utility>
 
+using namespace std;
+
 QP::QueryProperties::QueryProperties(Types::DeclarationList declaration_list, Types::SelectList select_list, Types::ClauseList clause_list)
 	: declaration_list(move(declaration_list)), select_list(move(select_list)), clause_list(move(clause_list)) {}
 

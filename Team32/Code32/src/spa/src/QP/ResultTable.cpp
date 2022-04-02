@@ -4,6 +4,8 @@
 #include <cassert>
 #include <unordered_set>
 
+using namespace std;
+
 QP::ResultTable::ResultTable() = default;
 
 QP::ResultTable::ResultTable(vector<string> synonyms_stored) : synonyms_stored(synonyms_stored) {
@@ -44,7 +46,8 @@ void QP::ResultTable::insertRow(const ResultRow& row) {
 
 QP::ResultTable QP::ResultTable::filterBySelect(const QP::Types::DeclarationList& select_list) {
 	vector<string> synonyms(select_list.size());
-	transform(select_list.begin(), select_list.end(), synonyms.begin(), [](const Types::Declaration& declaration) { return declaration.symbol; });
+	transform(select_list.begin(), select_list.end(), synonyms.begin(),
+	          [](const Types::Declaration& declaration) { return declaration.symbol; });
 
 	ResultTable filtered_table = ResultTable(synonyms);
 

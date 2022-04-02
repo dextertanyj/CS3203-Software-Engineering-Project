@@ -3,10 +3,13 @@
 #include <algorithm>
 #include <cassert>
 
+using namespace std;
+using namespace QP::Types;
+
 size_t QP::Optimizer::ClauseGroups::getNumberOfGroups() const { return groups.size(); }
 
 void QP::Optimizer::ClauseGroups::insertGroup(unsigned long long group_cost, const vector<string>& synonyms,
-                                          const DeclarationList& selected_synonyms) {
+                                              const DeclarationList& selected_synonyms) {
 	groups.emplace_back(group_cost, synonyms, selected_synonyms);
 }
 

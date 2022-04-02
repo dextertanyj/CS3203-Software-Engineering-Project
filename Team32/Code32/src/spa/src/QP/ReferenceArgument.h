@@ -32,7 +32,7 @@ public:
 	 * Constructs a ReferenceArgument object with synonym type.
 	 * @param name
 	 */
-	explicit ReferenceArgument(string name);
+	explicit ReferenceArgument(std::string name);
 
 	/**
 	 * Constructs a ReferenceArgument object storing a statement index.
@@ -55,7 +55,7 @@ public:
 	 */
 	[[nodiscard]] Types::Declaration getSynonym() const;
 
-	[[nodiscard]] string getSynonymSymbol() const;
+	[[nodiscard]] std::string getSynonymSymbol() const;
 	[[nodiscard]] Types::DesignEntity getSynonymType() const;
 
 	/**
@@ -71,7 +71,7 @@ public:
 	 * @throws ReferenceArgumentException if a name is not stored.
 	 * @return the name stored.
 	 */
-	[[nodiscard]] string getName() const;
+	[[nodiscard]] std::string getName() const;
 
 	/**
 	 * Returns the statement index stored.
@@ -88,7 +88,9 @@ public:
 	[[nodiscard]] Common::ExpressionProcessor::Expression getExpression() const;
 
 private:
-	variant<monostate, Types::Declaration, Types::Attribute, string, StmtRef, pair<Common::ExpressionProcessor::Expression, bool>> value;
+	std::variant<std::monostate, Types::Declaration, Types::Attribute, std::string, StmtRef,
+	        std::pair<Common::ExpressionProcessor::Expression, bool>>
+		value;
 };
 
 #endif  // SPA_SRC_QP_REFERENCEARGUMENT_H

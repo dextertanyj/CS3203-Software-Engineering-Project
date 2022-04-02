@@ -8,8 +8,6 @@
 #include "QueryResult.h"
 #include "QP/StorageAdapter.h"
 
-using namespace std;
-
 class QP::QueryPostProcessor {
 public:
 	explicit QueryPostProcessor(const StorageAdapter& store);
