@@ -5,7 +5,6 @@
 
 #include <algorithm>
 
-namespace {
 template <typename TAttribute, typename TValues>
 struct HashInfo {
 	std::string symbol;
@@ -21,7 +20,6 @@ inline std::string safeToString(T value) {
 template <>
 inline std::string safeToString(std::string value) {
 	return value;
-}
 }
 
 template <typename TAttribute, typename TBuild, typename TProbe>

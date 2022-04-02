@@ -14,7 +14,7 @@ public:
 	virtual ~ExpressionNode() = default;
 
 protected:
-	ExpressionNode(vector<variant<shared_ptr<ExpressionNode>, MathematicalOperator, VarRef, ConstVal>> tokens);
+	explicit ExpressionNode(vector<variant<shared_ptr<ExpressionNode>, MathematicalOperator, VarRef, ConstVal>> tokens);
 
 private:
 	vector<variant<shared_ptr<ExpressionNode>, MathematicalOperator, VarRef, ConstVal>> tokens;

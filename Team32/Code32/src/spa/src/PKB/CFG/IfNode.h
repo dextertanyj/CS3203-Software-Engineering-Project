@@ -6,13 +6,13 @@
 
 class PKB::IfNode : public PKB::StatementNode {
 public:
-	explicit IfNode(shared_ptr<StmtInfo> info);
+	explicit IfNode(const shared_ptr<StmtInfo>& info);
 	void setConnection(shared_ptr<PKB::NodeInterface> next) override;
-	void setNext(shared_ptr<PKB::NodeInterface> next) override;
-	void setPrevious(shared_ptr<PKB::NodeInterface> next) override;
+	void setNext(const shared_ptr<PKB::NodeInterface>& next) override;
+	void setPrevious(const shared_ptr<PKB::NodeInterface>& previous) override;
 
-	void insertIfNext(shared_ptr<PKB::StatementNode> first, shared_ptr<PKB::StatementNode> second);
-	void insertIfExit(shared_ptr<PKB::StatementNode> first, shared_ptr<PKB::StatementNode> second);
+	void insertIfNext(const shared_ptr<PKB::StatementNode>& first, const shared_ptr<PKB::StatementNode>& second);
+	void insertIfExit(const shared_ptr<PKB::StatementNode>& first, const shared_ptr<PKB::StatementNode>& second);
 
 private:
 	shared_ptr<PKB::DummyNode> dummy_node;

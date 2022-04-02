@@ -43,7 +43,7 @@ class UsesSRelation;
 class UsesPRelation;
 class NodeInterface;
 class IfNode;
-class WhileNode;
+class WhileNode;  // NOLINT(bugprone-forward-declaration-namespace)
 class DummyNode;
 class NonConditionalNode;
 class StatementNode;

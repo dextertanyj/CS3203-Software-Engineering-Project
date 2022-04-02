@@ -33,7 +33,7 @@ QP::QueryResult QP::Relationship::Relation::executeTrivial(const QP::StorageAdap
 
 QP::QueryResult QP::Relationship::Relation::execute(const QP::StorageAdapter& pkb, vector<QueryResult>& existing_results) const {
 	QueryResult result;
-	auto invalid_visitor = [&](const Types::Executor&) { assert(false); };
+	auto invalid_visitor = [&](const Types::Executor&) { assert(false); };  // NOLINT(bugprone-lambda-function-name)
 	auto standard_visitor = [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.second(pkb); };
 	auto optimized_visitor = [&](const pair<Types::Executor, Types::OptimizedExecutor>& execs) {
 		if (existing_results.empty()) {

@@ -22,7 +22,7 @@ private:
 	ParenthesizedExpression parseTerminal(Acceptor acceptor);
 	shared_ptr<ExpressionNode> parseTerminalSafe(Acceptor acceptor);
 	shared_ptr<UnaryLogicalNode> parseUnaryLogical();
-	shared_ptr<BinaryLogicalNode> parseBinaryLogical(ParenthesizedExpression lhs);
+	shared_ptr<BinaryLogicalNode> parseBinaryLogical(const ParenthesizedExpression& lhs);
 
 	static shared_ptr<ExpressionNode> getExpression(const ParenthesizedExpression& expression);
 	static bool checkExpressionType(const shared_ptr<ExpressionNode>& expression, ExpressionType type);

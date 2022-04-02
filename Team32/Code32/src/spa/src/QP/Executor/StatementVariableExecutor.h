@@ -13,23 +13,23 @@ using namespace QP::Types;
 
 // Trivial Executors
 template <ClauseType T>
-QueryResult executeTrivialIndexName(const StorageAdapter& storage, const ReferenceArgument& index, const ReferenceArgument& variable);
+QueryResult executeTrivialIndexName(const StorageAdapter& store, const ReferenceArgument& index, const ReferenceArgument& variable);
 template <ClauseType T>
-QueryResult executeTrivialIndexWildcardOrSynonym(const StorageAdapter& storage, const ReferenceArgument& index);
+QueryResult executeTrivialIndexWildcardOrSynonym(const StorageAdapter& store, const ReferenceArgument& index);
 template <ClauseType T>
-QueryResult executeTrivialSynonymName(const StorageAdapter& storage, const ReferenceArgument& index, const ReferenceArgument& variable);
+QueryResult executeTrivialSynonymName(const StorageAdapter& store, const ReferenceArgument& index, const ReferenceArgument& variable);
 template <ClauseType T>
-QueryResult executeTrivialSynonymWildcardOrSynonym(const StorageAdapter& storage, const ReferenceArgument& index);
+QueryResult executeTrivialSynonymWildcardOrSynonym(const StorageAdapter& store, const ReferenceArgument& index);
 
 // Executors
 template <ClauseType T>
-QueryResult executeSynonymName(const StorageAdapter& storage, const ReferenceArgument& index, const ReferenceArgument& variable);
+QueryResult executeSynonymName(const StorageAdapter& store, const ReferenceArgument& index, const ReferenceArgument& variable);
 template <ClauseType T>
-QueryResult executeSynonymWildcard(const StorageAdapter& storage, const ReferenceArgument& index);
+QueryResult executeSynonymWildcard(const StorageAdapter& store, const ReferenceArgument& index);
 template <ClauseType T>
-QueryResult executeSynonymSynonym(const StorageAdapter& storage, const ReferenceArgument& index, const ReferenceArgument& variable);
+QueryResult executeSynonymSynonym(const StorageAdapter& store, const ReferenceArgument& index, const ReferenceArgument& variable);
 template <ClauseType T>
-QueryResult executeIndexSynonym(const StorageAdapter& storage, const ReferenceArgument& index, const ReferenceArgument& variable);
+QueryResult executeIndexSynonym(const StorageAdapter& store, const ReferenceArgument& index, const ReferenceArgument& variable);
 
 // Executor Set Factories
 template <ClauseType T>

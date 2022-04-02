@@ -33,11 +33,11 @@ private:
 	unordered_map<StmtRef, StmtInfoPtrSet> affects_star_cache;
 	unordered_map<StmtRef, StmtInfoPtrSet> affected_star_cache;
 	StmtInfoPtrSet getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode>& node, VarRef variable);
-	void processDFSVisit(Types::DFSInfo& info, StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&),
+	void processDFSVisit(Types::DFSInfo& info, StmtInfoPtrSet (*collector)(const shared_ptr<NodeInterface>&),
 	                     void (AffectsManager::*processor)(Types::DFSInfo&, const shared_ptr<PKB::StatementNode>&));
 	void processNodeAffects(Types::DFSInfo& info, const shared_ptr<PKB::StatementNode>& curr_stmt_node);
 	void processNodeAffected(Types::DFSInfo& info, const shared_ptr<PKB::StatementNode>& curr_stmt_node);
-	void processAffectStarBFS(Types::AffectStarBFSInfo& info, StmtInfoPtrSet (AffectsManager::*collector)(StmtRef),
+	void processAffectStarBFS(Types::AffectStarBFSInfo& info, StmtInfoPtrSet (AffectsManager::*gatherer)(StmtRef),
 	                          unordered_map<StmtRef, StmtInfoPtrSet>& cache);
 	static void evaluateAffectStarBFSNode(const shared_ptr<StmtInfo>& stmt, Types::AffectsStarBFSInfo& info,
 	                                      unordered_map<StmtRef, StmtInfoPtrSet>& cache);

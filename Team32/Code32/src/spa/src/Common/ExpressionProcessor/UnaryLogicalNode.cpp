@@ -1,11 +1,11 @@
 #include "Common/ExpressionProcessor/UnaryLogicalNode.h"
 
+#include <utility>
+
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
-using namespace std;
-
 Common::ExpressionProcessor::UnaryLogicalNode::UnaryLogicalNode(MathematicalOperator opr, shared_ptr<LogicalNode> expression)
-	: LogicalNode({expression, opr}) {
+	: LogicalNode({std::move(expression), opr}) {
 	if (!OperatorAcceptor::acceptUnaryLogical(opr)) {
 		throw ExpressionProcessorException("Expected unary logical operator");
 	}

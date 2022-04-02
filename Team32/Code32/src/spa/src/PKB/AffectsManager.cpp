@@ -64,8 +64,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectedByNodeAndVar(const shared_ptr<PKB
 	return info.nodes;
 }
 
-void PKB::AffectsManager::processDFSVisit(Types::DFSInfo& info,
-                                          StmtInfoPtrSet (ControlFlowGraph::*collector)(const shared_ptr<NodeInterface>&),
+void PKB::AffectsManager::processDFSVisit(Types::DFSInfo& info, StmtInfoPtrSet (*collector)(const shared_ptr<NodeInterface>&),
                                           void (AffectsManager::*processor)(Types::DFSInfo&, const shared_ptr<PKB::StatementNode>&)) {
 	shared_ptr<PKB::NodeInterface> curr_node = info.node_stack.top();
 	info.node_stack.pop();
@@ -73,7 +72,7 @@ void PKB::AffectsManager::processDFSVisit(Types::DFSInfo& info,
 		return;
 	}
 	if (curr_node->getNodeType() == NodeType::Dummy) {
-		StmtInfoPtrSet real_nodes = (control_flow_graph->*collector)(curr_node);
+		StmtInfoPtrSet real_nodes = (*collector)(curr_node);
 		for (const auto& real_node : real_nodes) {
 			info.node_stack.push(control_flow_graph->getNode(real_node->getIdentifier()));
 		}
@@ -141,11 +140,11 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
 	return info.result;
 }
 
-void PKB::AffectsManager::processAffectStarBFS(PKB::Types::AffectStarBFSInfo& info, StmtInfoPtrSet (AffectsManager::*collector)(StmtRef),
+void PKB::AffectsManager::processAffectStarBFS(PKB::Types::AffectStarBFSInfo& info, StmtInfoPtrSet (AffectsManager::*gatherer)(StmtRef),
                                                unordered_map<StmtRef, StmtInfoPtrSet>& cache) {
 	StmtRef current = info.bfs_queue.front();
 	info.bfs_queue.pop();
-	for (const auto& stmt : (this->*collector)(current)) {
+	for (const auto& stmt : (this->*gatherer)(current)) {
 		evaluateAffectStarBFSNode(stmt, info, cache);
 	}
 }

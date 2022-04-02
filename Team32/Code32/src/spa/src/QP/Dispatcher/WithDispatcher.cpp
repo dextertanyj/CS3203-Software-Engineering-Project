@@ -113,11 +113,11 @@ static const ReferenceMap<ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<ReferenceArgument>& arguments) {
+WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<ReferenceArgument>& args) {
 	static const ReferenceMap<ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> map =
 		getExecutorMap<TAttribute, TLeft, TRight>();
-	ReferenceType lhs = arguments.at(0).getType();
-	ReferenceType rhs = arguments.at(1).getType();
+	ReferenceType lhs = args.at(0).getType();
+	ReferenceType rhs = args.at(1).getType();
 	unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> inner_map = map.at(lhs);
 	auto executor = inner_map.at(rhs);
 	return executor;
@@ -136,16 +136,16 @@ WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<Refe
  * @return the corresponding executor set.
  */
 template <typename TAttribute, typename TLeft, typename TRight>
-ExecutorSet dispatchHandler(const vector<ReferenceArgument>& arguments) {
+ExecutorSet dispatchHandler(const vector<ReferenceArgument>& args) {
 	static const auto left_attribute_map = getAttributeMap<TAttribute, TLeft>();
 	static const auto right_attribute_map = getAttributeMap<TAttribute, TRight>();
-	WithClauseArgumentDispatchKey lhs_key = arguments.at(0).getType();
-	if (arguments.at(0).getType() == ReferenceType::Attribute) {
-		lhs_key = pair{arguments.at(0).getAttribute().synonym.type, arguments.at(0).getAttribute().attribute};
+	WithClauseArgumentDispatchKey lhs_key = args.at(0).getType();
+	if (args.at(0).getType() == ReferenceType::Attribute) {
+		lhs_key = pair{args.at(0).getAttribute().synonym.type, args.at(0).getAttribute().attribute};
 	}
-	WithClauseArgumentDispatchKey rhs_key = arguments.at(1).getType();
-	if (arguments.at(1).getType() == ReferenceType::Attribute) {
-		rhs_key = pair{arguments.at(1).getAttribute().synonym.type, arguments.at(1).getAttribute().attribute};
+	WithClauseArgumentDispatchKey rhs_key = args.at(1).getType();
+	if (args.at(1).getType() == ReferenceType::Attribute) {
+		rhs_key = pair{args.at(1).getAttribute().synonym.type, args.at(1).getAttribute().attribute};
 	}
 	auto lhs_executors_iter = left_attribute_map.find(lhs_key);
 	if (lhs_executors_iter == left_attribute_map.end()) {
@@ -157,16 +157,15 @@ ExecutorSet dispatchHandler(const vector<ReferenceArgument>& arguments) {
 	}
 	auto lhs_executors = lhs_executors_iter->second;
 	auto rhs_executors = rhs_executors_iter->second;
-	auto executor = getExecutor<TAttribute, TLeft, TRight>(arguments);
+	auto executor = getExecutor<TAttribute, TLeft, TRight>(args);
 
 	// Curries the corresponding left- and right-hand side executors together with the comparison executor.
 	ExecutorSet result;
-	auto trivial_executor_visitor = [=, lhs = arguments.at(0), rhs = arguments.at(1),
+	auto trivial_executor_visitor = [=, lhs = args.at(0), rhs = args.at(1),
 	                                 &result](const WithExecutorFunction<TAttribute, TLeft, TRight>& executor) {
 		result = [=](const QP::StorageAdapter& store) { return executor(store, lhs, rhs, lhs_executors, rhs_executors); };
 	};
-	auto executor_visitor = [=, lhs = arguments.at(0), rhs = arguments.at(1),
-	                         &result](const ExecutorPair<TAttribute, TLeft, TRight>& executors) {
+	auto executor_visitor = [=, lhs = args.at(0), rhs = args.at(1), &result](const ExecutorPair<TAttribute, TLeft, TRight>& executors) {
 		result = pair{[=](const QP::StorageAdapter& store) { return executors.first(store, lhs, rhs, lhs_executors, rhs_executors); },
 		              [=](const QP::StorageAdapter& store) { return executors.second(store, lhs, rhs, lhs_executors, rhs_executors); }};
 	};
@@ -207,15 +206,15 @@ const unordered_map<WithClauseBasicDispatchKey,
                    {AttributeType::ProcedureName, variable_handler_map},
                    {AttributeType::VariableName, variable_handler_map}};
 
-QP::Types::ExecutorSetBundle QP::Dispatcher::WithDispatcher::dispatcher(const vector<Types::ReferenceArgument>& arguments) {
-	assert(arguments.size() == 2);
-	WithClauseBasicDispatchKey lhs = arguments.at(0).getType();
-	if (arguments.at(0).getType() == ReferenceType::Attribute) {
-		lhs = arguments.at(0).getAttribute().attribute;
+QP::Types::ExecutorSetBundle QP::Dispatcher::WithDispatcher::dispatcher(const vector<Types::ReferenceArgument>& args) {
+	assert(args.size() == 2);
+	WithClauseBasicDispatchKey lhs = args.at(0).getType();
+	if (args.at(0).getType() == ReferenceType::Attribute) {
+		lhs = args.at(0).getAttribute().attribute;
 	}
-	WithClauseBasicDispatchKey rhs = arguments.at(1).getType();
-	if (arguments.at(1).getType() == ReferenceType::Attribute) {
-		rhs = arguments.at(1).getAttribute().attribute;
+	WithClauseBasicDispatchKey rhs = args.at(1).getType();
+	if (args.at(1).getType() == ReferenceType::Attribute) {
+		rhs = args.at(1).getAttribute().attribute;
 	}
 	auto handler_iter = handler_map.find(lhs);
 	if (handler_iter == handler_map.end()) {
@@ -226,5 +225,5 @@ QP::Types::ExecutorSetBundle QP::Dispatcher::WithDispatcher::dispatcher(const ve
 	if (inner_handler_iter == inner_map.end()) {
 		throw QP::QueryDispatchException("Incorrect argument type.");
 	}
-	return {ClauseType::With, inner_handler_iter->second(arguments)};
+	return {ClauseType::With, inner_handler_iter->second(args)};
 }

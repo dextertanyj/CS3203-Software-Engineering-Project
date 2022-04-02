@@ -8,8 +8,8 @@ class PKB::DummyNode : public PKB::NodeInterface, public enable_shared_from_this
 public:
 	explicit DummyNode(StmtRef ref);
 	void setConnection(shared_ptr<NodeInterface> next) override;
-	void setNext(shared_ptr<PKB::NodeInterface> next) override;
-	void setPrevious(shared_ptr<PKB::NodeInterface> prev) override;
+	void setNext(const shared_ptr<PKB::NodeInterface>& next) override;
+	void setPrevious(const shared_ptr<PKB::NodeInterface>& prev) override;
 
 	StmtRef getNodeRef() const override;
 	~DummyNode() override = default;

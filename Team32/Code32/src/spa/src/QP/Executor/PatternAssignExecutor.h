@@ -11,19 +11,19 @@ namespace QP::Executor::PatternAssignExecutor {
 using namespace QP::Types;
 
 // Trivial Executors
-QueryResult executeTrivialNameWildcard(const StorageAdapter& storage, const ReferenceArgument& name);
-QueryResult executeTrivialSynonymOrWildcardWildcard(const StorageAdapter& storage);
-QueryResult executeTrivialNameExpression(const StorageAdapter& storage, const ReferenceArgument& name, const ReferenceArgument& expression);
-QueryResult executeTrivialSynonymOrWildcardExpression(const StorageAdapter& storage, const ReferenceArgument& expression);
+QueryResult executeTrivialNameWildcard(const StorageAdapter& store, const ReferenceArgument& name);
+QueryResult executeTrivialSynonymOrWildcardWildcard(const StorageAdapter& store);
+QueryResult executeTrivialNameExpression(const StorageAdapter& store, const ReferenceArgument& name, const ReferenceArgument& expression);
+QueryResult executeTrivialSynonymOrWildcardExpression(const StorageAdapter& store, const ReferenceArgument& expression);
 
 // Executors
-QueryResult executeNameWildcard(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& name);
-QueryResult executeWildcardWildcard(const StorageAdapter& storage, const ReferenceArgument& assign);
-QueryResult executeSynonymWildcard(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& synonym);
-QueryResult executeNameExpression(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& name,
+QueryResult executeNameWildcard(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& name);
+QueryResult executeWildcardWildcard(const StorageAdapter& store, const ReferenceArgument& assign);
+QueryResult executeSynonymWildcard(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& synonym);
+QueryResult executeNameExpression(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& name,
                                   const ReferenceArgument& expression);
-QueryResult executeWildcardExpression(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& expression);
-QueryResult executeSynonymExpression(const StorageAdapter& storage, const ReferenceArgument& assign, const ReferenceArgument& synonym,
+QueryResult executeWildcardExpression(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& expression);
+QueryResult executeSynonymExpression(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& synonym,
                                      const ReferenceArgument& expression);
 
 // Executor Set Factories

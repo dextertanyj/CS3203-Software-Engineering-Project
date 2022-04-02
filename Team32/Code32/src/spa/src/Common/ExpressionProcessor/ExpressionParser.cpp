@@ -42,7 +42,7 @@ ParenthesizedExpression ExpressionParser::construct(Acceptor acceptor, Parenthes
 
 	// Binary logical operators are a special case since they must be fully parenthesized
 	if (OperatorAcceptor::acceptBinaryLogical(lookahead)) {
-		return parseBinaryLogical(move(lhs));
+		return parseBinaryLogical(lhs);
 	}
 
 	while (acceptor(lookahead) && getPrecedence(Converter::convertMathematical(lookahead)) >= precedence) {
@@ -113,7 +113,7 @@ shared_ptr<UnaryLogicalNode> ExpressionParser::parseUnaryLogical() {
 	return make_shared<UnaryLogicalNode>(MathematicalOperator::Not, logical_expression);
 }
 
-shared_ptr<BinaryLogicalNode> ExpressionParser::parseBinaryLogical(ParenthesizedExpression lhs) {
+shared_ptr<BinaryLogicalNode> ExpressionParser::parseBinaryLogical(const ParenthesizedExpression& lhs) {
 	string token = lex.readToken();
 	MathematicalOperator op = Converter::convertMathematical(token);
 	ParenthesizedExpression rhs = parseTerminal(OperatorAcceptor::acceptLogical);
