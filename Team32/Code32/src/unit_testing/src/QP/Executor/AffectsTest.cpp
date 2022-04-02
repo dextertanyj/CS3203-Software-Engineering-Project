@@ -198,7 +198,9 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 		QP::QueryResult result1 = executeIndexSynonym<ClauseType::Affects>(store, stmt_no1, assign_synonym);
 		vector<string> expected_result_1 = {"3", "5"};
 		REQUIRE(result1.getResult());
-		REQUIRE(result1.getSynonymResult("a") == expected_result_1);
+		vector<string> actual_result = result1.getSynonymResult("a");
+		sort(actual_result.begin(), actual_result.end());
+		REQUIRE(actual_result == expected_result_1);
 		QP::QueryResult result2 = executeIndexSynonym<ClauseType::Affects>(store, stmt_no5, assign_synonym);
 		vector<string> expected_result_2 = {"6"};
 		REQUIRE(result2.getResult());
