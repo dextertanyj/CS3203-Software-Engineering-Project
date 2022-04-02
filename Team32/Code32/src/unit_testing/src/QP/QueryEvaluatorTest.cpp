@@ -2,6 +2,7 @@
 
 #include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/TypeDefs.h"
+#include "PKB/Storage.h"
 #include "QP/Dispatcher/DispatchMap.h"
 #include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "QP/ReferenceArgument.h"

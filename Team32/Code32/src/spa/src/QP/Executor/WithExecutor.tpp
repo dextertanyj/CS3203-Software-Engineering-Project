@@ -26,7 +26,7 @@ template <typename TAttribute, typename TBuild, typename TProbe>
 static QP::QueryResult find(const QP::StorageAdapter& store, HashInfo<TAttribute, TBuild> build_info,
                             HashInfo<TAttribute, TProbe> probe_info) {
 	std::unordered_set<TAttribute> attributes;
-	for_each(build_info.values.begin(), build_info.values.end(),
+	std::for_each(build_info.values.begin(), build_info.values.end(),
 	         [&](const auto& value) { attributes.insert(build_info.mapper(store, value)); });
 	for (const auto& probe : probe_info.values) {
 		if (attributes.find(probe_info.mapper(store, probe)) != attributes.end()) {
