@@ -42,11 +42,11 @@ class ParentRelation;
 class UsesSRelation;
 class UsesPRelation;
 class NodeInterface;
-class IfNode;
-class WhileNode;  // NOLINT(bugprone-forward-declaration-namespace)
+class StatementNode;  // NOLINT(bugprone-forward-declaration-namespace)
+class IfNode;         // NOLINT(bugprone-forward-declaration-namespace)
+class WhileNode;      // NOLINT(bugprone-forward-declaration-namespace)
 class DummyNode;
 class NonConditionalNode;
-class StatementNode;
 class ControlFlowGraph;
 class NextManager;
 class AffectsManager;
