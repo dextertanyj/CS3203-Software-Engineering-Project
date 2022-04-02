@@ -10,8 +10,8 @@
 
 using namespace QP;
 using namespace Preprocessor;
-using namespace Types;
 using namespace Executor;
+using namespace Types;
 using namespace Common::ExpressionProcessor;
 
 TEST_CASE("WithExecutor::execute") {

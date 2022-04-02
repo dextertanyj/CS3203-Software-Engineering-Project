@@ -4,8 +4,8 @@
 #include "catch.hpp"
 
 using namespace QP;
-using namespace Types;
 using namespace Executor::ProcedureVariableExecutor;
+using namespace Types;
 
 TEST_CASE("ProcedureVariableExecutor<ClauseType::UsesP>:execute") {
 	PKB::Storage pkb = PKB::Storage();

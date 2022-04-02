@@ -4,8 +4,8 @@
 #include "catch.hpp"
 
 using namespace QP;
-using namespace Types;
 using namespace Executor::StatementExecutor;
+using namespace Types;
 
 TEST_CASE("StatementExecutor<ClauseType::Follows>::execute") {
 	PKB::Storage pkb = PKB::Storage();

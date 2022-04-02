@@ -6,9 +6,9 @@
 #include "catch.hpp"
 
 using namespace QP;
-using namespace Types;
 using namespace Preprocessor;
 using namespace Executor::PatternAssignExecutor;
+using namespace Types;
 using namespace Common::ExpressionProcessor;
 
 TEST_CASE("PatternAssignExecutor::execute") {
