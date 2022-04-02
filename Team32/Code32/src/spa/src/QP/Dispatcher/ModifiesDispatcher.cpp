@@ -5,6 +5,7 @@
 #include "QP/Dispatcher/DispatchProcessors.tpp"
 #include "QP/Dispatcher/VariableDispatcher.tpp"
 
+using namespace std;
 using namespace QP::Dispatcher;
 using namespace QP::Types;
 

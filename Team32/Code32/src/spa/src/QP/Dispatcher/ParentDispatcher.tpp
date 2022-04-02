@@ -8,6 +8,7 @@
 
 namespace QP::Dispatcher::ParentDispatcher {
 
+using namespace std;
 using namespace QP::Executor;
 
 template <ClauseType T>

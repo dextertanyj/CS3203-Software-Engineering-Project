@@ -7,6 +7,8 @@
 
 namespace QP::Executor::StatementVariableExecutor {
 
+using namespace std;
+
 template <ClauseType T>
 QueryResult executeTrivialIndexName(const StorageAdapter& store, const ReferenceArgument& index, const ReferenceArgument& variable) {
 	return QueryResult(store.checkStatementVariableRelation<T>(index.getStatementIndex(), variable.getName()));

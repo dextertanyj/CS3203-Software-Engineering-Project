@@ -27,11 +27,11 @@ QueryResult executeSynonym(const StorageAdapter& store, const ReferenceArgument&
 
 // Executor Set Factories
 template <ClauseType T>
-ExecutorSet executorFactoryName(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryName(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryWildcard(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryWildcard(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonym(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactorySynonym(const std::vector<ReferenceArgument>& args);
 };
 
 #endif  // SPA_SRC_QP_EXECUTOR_PATTERNCONTAINERSTATEMENTEXECUTOR_H

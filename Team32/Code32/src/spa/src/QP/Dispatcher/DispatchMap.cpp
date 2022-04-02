@@ -32,7 +32,7 @@ const ArgumentDispatchMap dispatch_map = {
 	{ClauseType::With, WithDispatcher::dispatcher},
 };
 
-const unordered_map<string, ClauseType> clause_map = {
+const std::unordered_map<std::string, ClauseType> clause_map = {
 	{"Affects", ClauseType::Affects},
 	{"Affects*", ClauseType::AffectsT},
 	{"Calls", ClauseType::Calls},
@@ -47,17 +47,17 @@ const unordered_map<string, ClauseType> clause_map = {
 	{"Uses", ClauseType::UnknownUses},
 };
 
-static const unordered_set<ReferenceType> name_wildcard = {ReferenceType::Name, ReferenceType::Wildcard};
-static const unordered_set<ReferenceType> statement = {ReferenceType::StatementIndex, ReferenceType::Wildcard, ReferenceType::Synonym};
-static const unordered_set<ReferenceType> entity = {ReferenceType::Name, ReferenceType::Wildcard, ReferenceType::Synonym};
-static const unordered_set<ReferenceType> statement_entity = {ReferenceType::Name, ReferenceType::StatementIndex, ReferenceType::Wildcard,
-                                                              ReferenceType::Synonym};
-static const unordered_set<ReferenceType> expression = {ReferenceType::ExactExpression, ReferenceType::SubExpression,
-                                                        ReferenceType::Wildcard};
-static const unordered_set<ReferenceType> wildcard = {ReferenceType::Wildcard};
-static const unordered_set<ReferenceType> attribute = {ReferenceType::Attribute, ReferenceType::Name, ReferenceType::StatementIndex};
+static const std::unordered_set<ReferenceType> name_wildcard = {ReferenceType::Name, ReferenceType::Wildcard};
+static const std::unordered_set<ReferenceType> statement = {ReferenceType::StatementIndex, ReferenceType::Wildcard, ReferenceType::Synonym};
+static const std::unordered_set<ReferenceType> entity = {ReferenceType::Name, ReferenceType::Wildcard, ReferenceType::Synonym};
+static const std::unordered_set<ReferenceType> statement_entity = {ReferenceType::Name, ReferenceType::StatementIndex,
+                                                                   ReferenceType::Wildcard, ReferenceType::Synonym};
+static const std::unordered_set<ReferenceType> expression = {ReferenceType::ExactExpression, ReferenceType::SubExpression,
+                                                             ReferenceType::Wildcard};
+static const std::unordered_set<ReferenceType> wildcard = {ReferenceType::Wildcard};
+static const std::unordered_set<ReferenceType> attribute = {ReferenceType::Attribute, ReferenceType::Name, ReferenceType::StatementIndex};
 
-const unordered_map<ClauseType, vector<unordered_set<ReferenceType>>> syntax_map = {
+const std::unordered_map<ClauseType, std::vector<std::unordered_set<ReferenceType>>> syntax_map = {
 	{ClauseType::Affects, {statement, statement}},
 	{ClauseType::AffectsT, {statement, statement}},
 	{ClauseType::Calls, {entity, entity}},
@@ -75,22 +75,22 @@ const unordered_map<ClauseType, vector<unordered_set<ReferenceType>>> syntax_map
 	{ClauseType::UnknownUses, {statement_entity, entity}},
 	{ClauseType::With, {attribute, attribute}}};
 
-const unordered_map<size_t, vector<unordered_set<ReferenceType>>> pattern_syntax_map = {
+const std::unordered_map<size_t, std::vector<std::unordered_set<ReferenceType>>> pattern_syntax_map = {
 	{ASSIGN_WHILE_PATTERN_ARGUMENT_COUNT, {entity, name_wildcard}},
 	{IF_PATTERN_ARGUMENT_COUNT, {entity, wildcard, wildcard}},
 };
 
-const unordered_map<DesignEntity, ClauseType> pattern_clause_map = {
+const std::unordered_map<DesignEntity, ClauseType> pattern_clause_map = {
 	{DesignEntity::If, ClauseType::PatternIf},
 	{DesignEntity::While, ClauseType::PatternWhile},
 };
 
-const unordered_map<string, AttributeToken> attribute_token_map = {{"stmt#", AttributeToken::StatementIndex},
-                                                                   {"varName", AttributeToken::VariableName},
-                                                                   {"procName", AttributeToken::ProcedureName},
-                                                                   {"value", AttributeToken::Value}};
+const std::unordered_map<std::string, AttributeToken> attribute_token_map = {{"stmt#", AttributeToken::StatementIndex},
+                                                                             {"varName", AttributeToken::VariableName},
+                                                                             {"procName", AttributeToken::ProcedureName},
+                                                                             {"value", AttributeToken::Value}};
 
-const unordered_map<pair<DesignEntity, AttributeToken>, AttributeType> attribute_map = {
+const std::unordered_map<std::pair<DesignEntity, AttributeToken>, AttributeType> attribute_map = {
 	{{DesignEntity::Stmt, AttributeToken::StatementIndex}, AttributeType::NumberIdentifier},
 	{{DesignEntity::Read, AttributeToken::StatementIndex}, AttributeType::NumberIdentifier},
 	{{DesignEntity::Print, AttributeToken::StatementIndex}, AttributeType::NumberIdentifier},
@@ -105,7 +105,7 @@ const unordered_map<pair<DesignEntity, AttributeToken>, AttributeType> attribute
 	{{DesignEntity::Variable, AttributeToken::VariableName}, AttributeType::NameIdentifier},
 	{{DesignEntity::Constant, AttributeToken::Value}, AttributeType::NumberIdentifier}};
 
-const unordered_map<string, DesignEntity> design_entity_map = {
+const std::unordered_map<std::string, DesignEntity> design_entity_map = {
 	{"stmt", DesignEntity::Stmt},           {"read", DesignEntity::Read},         {"print", DesignEntity::Print},
 	{"call", DesignEntity::Call},           {"while", DesignEntity::While},       {"if", DesignEntity::If},
 	{"assign", DesignEntity::Assign},       {"variable", DesignEntity::Variable}, {"constant", DesignEntity::Constant},

@@ -6,11 +6,11 @@
 #include <utility>
 #include <vector>
 
-#include "PKB/Storage.h"
 #include "QP/QP.h"
 #include "QP/Optimizer/QueryGraph.h"
 #include "QP/QueryProperties.h"
 #include "QP/Evaluator/Evaluator.h"
+
 using QP::Types::ClauseList;
 using QP::Types::Declaration;
 using QP::Types::DeclarationList;

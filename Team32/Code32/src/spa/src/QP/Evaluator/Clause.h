@@ -9,10 +9,10 @@
 
 class QP::Evaluator::Clause {
 public:
-	Clause(Types::ClauseType type, vector<ReferenceArgument> arguments, Types::ExecutorSet executor);
+	Clause(Types::ClauseType type, std::vector<ReferenceArgument> arguments, Types::ExecutorSet executor);
 	[[nodiscard]] QueryResult executeTrivial(const StorageAdapter& pkb) const;
-	[[nodiscard]] QueryResult execute(const StorageAdapter& pkb, vector<QueryResult>& results) const;
-	[[nodiscard]] vector<string> getDeclarationSymbols() const;
+	[[nodiscard]] QueryResult execute(const StorageAdapter& pkb, std::vector<QueryResult>& results) const;
+	[[nodiscard]] std::vector<std::string> getDeclarationSymbols() const;
 	[[nodiscard]] Types::ClauseType getType() const;
 	[[nodiscard]] size_t getCost() const;
 

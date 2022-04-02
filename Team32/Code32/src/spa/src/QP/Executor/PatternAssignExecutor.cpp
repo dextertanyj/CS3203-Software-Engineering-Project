@@ -2,7 +2,10 @@
 
 #include "QP/QueryUtils.h"
 
+
 namespace QP::Executor::PatternAssignExecutor {
+
+using namespace std;
 
 // Trivial Executors
 QueryResult executeTrivialNameWildcard(const StorageAdapter& store, const ReferenceArgument& name) {

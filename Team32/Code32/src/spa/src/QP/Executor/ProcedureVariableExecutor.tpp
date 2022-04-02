@@ -5,6 +5,8 @@
 
 namespace QP::Executor::ProcedureVariableExecutor {
 
+using namespace std;
+
 template <ClauseType T>
 QueryResult executeTrivialNameName(const StorageAdapter& store, const ReferenceArgument& procedure, const ReferenceArgument& variable) {
 	return QueryResult(store.checkProcedureVariableRelation<T>(procedure.getName(), variable.getName()));

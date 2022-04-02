@@ -54,29 +54,29 @@ QueryResult executeSynonymSynonymOptimized(const StorageAdapter& store, const Qu
 
 // Executor Set Factories
 template <ClauseType T>
-ExecutorSet executorFactoryIndexIndex(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryIndexIndex(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryIndexWildcard(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryIndexWildcard(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryIndexSynonym(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryIndexSynonym(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryWildcardIndex(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryWildcardIndex(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryWildcardWildcard(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryWildcardWildcard(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryWildcardSynonym(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryWildcardSynonym(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonymIndex(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactorySynonymIndex(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonymWildcard(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactorySynonymWildcard(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonymSynonym(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactorySynonymSynonym(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryWildcardSynonymOptimized(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryWildcardSynonymOptimized(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonymWildcardOptimized(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactorySynonymWildcardOptimized(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonymSynonymOptimized(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactorySynonymSynonymOptimized(const std::vector<ReferenceArgument>& args);
 };
 
 #endif  // SPA_SRC_QP_EXECUTOR_STATEMENTEXECUTOR_H

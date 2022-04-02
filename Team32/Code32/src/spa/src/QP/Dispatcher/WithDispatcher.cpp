@@ -5,6 +5,7 @@
 #include "QP/Executor/AttributeExecutor.tpp"
 #include "QP/Executor/WithExecutor.tpp"
 
+using namespace std;
 using namespace QP;
 using namespace Executor;
 using namespace Types;
