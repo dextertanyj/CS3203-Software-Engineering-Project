@@ -118,7 +118,6 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		StmtRef statement_number = 1;
 		unique_ptr<ExpressionNode> expression =
 			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
-		expression->extract();
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
@@ -139,7 +138,6 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		StmtRef statement_number = 2;
 		unique_ptr<ExpressionNode> expression =
 			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
-		expression->extract();
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
@@ -158,7 +156,6 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		StmtRef statement_number = 3;
 		unique_ptr<ExpressionNode> expression =
 			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
-		expression->extract();
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);

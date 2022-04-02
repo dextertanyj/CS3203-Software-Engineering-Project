@@ -4,19 +4,9 @@
 
 using namespace std;
 
-SP::Node::StatementListNode::StatementListNode() = default;
-
 void SP::Node::StatementListNode::addStatementNode(unique_ptr<StatementNode> statement) { stmt_list.push_back(move(statement)); }
 
-unique_ptr<SP::Node::StatementListNode> SP::Node::StatementListNode::parseStatementList(Lexer& lex, StmtRef& statement_count) {
-	unique_ptr<StatementListNode> statement_list = make_unique<StatementListNode>();
-	do {
-		statement_list->addStatementNode(StatementNode::parseStatement(lex, statement_count));
-	} while (lex.peekToken() != "}");
-	return statement_list;
-}
-
-vector<StmtRef> SP::Node::StatementListNode::extract(PKB::StorageUpdateInterface& pkb) {
+vector<StmtRef> SP::Node::StatementListNode::extract(PKB::StorageUpdateInterface& pkb) const {
 	vector<StmtRef> children;
 	for (auto iter = stmt_list.begin(); iter < stmt_list.end(); ++iter) {
 		children.push_back(iter->get()->extract(pkb));
@@ -31,7 +21,7 @@ vector<StmtRef> SP::Node::StatementListNode::extract(PKB::StorageUpdateInterface
 	return children;
 }
 
-bool SP::Node::StatementListNode::equals(const shared_ptr<StatementListNode>& object) {
+bool SP::Node::StatementListNode::equals(const shared_ptr<StatementListNode>& object) const {
 	if (this->stmt_list.size() != object->stmt_list.size()) {
 		return false;
 	}
@@ -43,4 +33,12 @@ bool SP::Node::StatementListNode::equals(const shared_ptr<StatementListNode>& ob
 	return true;
 }
 
-vector<shared_ptr<SP::Node::StatementNode>> SP::Node::StatementListNode::getStatementList() { return this->stmt_list; }
+vector<shared_ptr<SP::Node::StatementNode>> SP::Node::StatementListNode::getStatementList() const { return this->stmt_list; }
+
+unique_ptr<SP::Node::StatementListNode> SP::Node::StatementListNode::parseStatementList(Lexer& lex, StmtRef& statement_count) {
+	unique_ptr<StatementListNode> statement_list = make_unique<StatementListNode>();
+	do {
+		statement_list->addStatementNode(StatementNode::parseStatement(lex, statement_count));
+	} while (lex.peekToken() != "}");
+	return statement_list;
+}

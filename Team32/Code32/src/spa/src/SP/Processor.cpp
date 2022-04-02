@@ -1,20 +1,15 @@
 #include "SP/Processor.h"
 
-#include <cstdlib>
-#include <exception>
 #include <iostream>
 #include <memory>
+#include <utility>
 
-#include "SP/Lexer.h"
+SP::Processor::Processor(PKB::StorageUpdateInterface& pkb) : extractor(pkb) {}
 
-using namespace std;
-
-SP::Processor::Processor(PKB::StorageUpdateInterface& pkb) : parser(SP::Lexer()), extractor(pkb) {}
-
-void SP::Processor::process(string source) {
+void SP::Processor::process(std::string source) {
 	try {
-		unique_ptr<Node::ProgramNode> ast = parser.parse(std::move(source));
-		extractor.extract(std::move(ast));
+		std::unique_ptr<Node::ProgramNode> ast = parser.parse(std::move(source));
+		extractor.extract(ast);
 	} catch (const TokenizationException& e) {
 		cout << e.what() << endl;
 		exit(1);

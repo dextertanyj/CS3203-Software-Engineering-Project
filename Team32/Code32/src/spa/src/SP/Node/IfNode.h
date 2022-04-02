@@ -5,26 +5,25 @@
 #include <string>
 
 #include "Common/TypeDefs.h"
-#include "PKB/Storage.h"
+#include "PKB/StorageUpdateInterface.h"
 #include "SP/Node/ExpressionNode.h"
 #include "SP/Node/Node.h"
 #include "SP/Node/StatementListNode.h"
 #include "SP/Node/StatementNode.h"
 
-using namespace std;
-
 class SP::Node::IfNode : public StatementNode {
 public:
-	IfNode(StmtRef stmt_no, unique_ptr<ExpressionNode> cond_expr, unique_ptr<StatementListNode> if_stmt_list,
-	       unique_ptr<StatementListNode> else_stmt_list);
-	static unique_ptr<IfNode> parseIfStatement(Lexer& lex, StmtRef& statement_count);
-	StmtRef extract(PKB::StorageUpdateInterface& pkb) override;
-	bool equals(const shared_ptr<StatementNode>& object) override;
+	IfNode(StmtRef stmt_no, std::unique_ptr<ExpressionNode> cond_expr, std::unique_ptr<StatementListNode> if_stmt_list,
+	       std::unique_ptr<StatementListNode> else_stmt_list);
+	StmtRef extract(PKB::StorageUpdateInterface& pkb) const override;
+	[[nodiscard]] bool equals(const std::shared_ptr<StatementNode>& object) const override;
+
+	static std::unique_ptr<IfNode> parseIfStatement(Lexer& lex, StmtRef& statement_count);
 
 private:
-	shared_ptr<ExpressionNode> cond_expr;
-	shared_ptr<StatementListNode> if_stmt_list;
-	shared_ptr<StatementListNode> else_stmt_list;
+	std::shared_ptr<ExpressionNode> cond_expr;
+	std::shared_ptr<StatementListNode> if_stmt_list;
+	std::shared_ptr<StatementListNode> else_stmt_list;
 };
 
 #endif  // SPA_SRC_SP_NODE_IFNODE_H

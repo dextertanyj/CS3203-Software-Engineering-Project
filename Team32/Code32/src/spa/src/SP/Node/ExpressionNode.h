@@ -7,14 +7,13 @@
 #include "SP/Lexer.h"
 #include "SP/Node/Node.h"
 
-using namespace std;
-
 class SP::Node::ExpressionNode {
 public:
-	static unique_ptr<ExpressionNode> parseExpression(Lexer& lex, Common::ExpressionProcessor::ExpressionType type);
 	explicit ExpressionNode(Common::ExpressionProcessor::Expression expression);
-	Common::ExpressionProcessor::Expression extract();
-	bool equals(const shared_ptr<ExpressionNode>& object);
+	[[nodiscard]] Common::ExpressionProcessor::Expression extract() const;
+	[[nodiscard]] bool equals(const std::shared_ptr<ExpressionNode>& object) const;
+
+	static std::unique_ptr<ExpressionNode> parseExpression(Lexer& lex, Common::ExpressionProcessor::ExpressionType type);
 
 private:
 	Common::ExpressionProcessor::Expression expression;

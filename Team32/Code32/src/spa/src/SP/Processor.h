@@ -3,7 +3,6 @@
 
 #include <string>
 
-#include "PKB/Storage.h"
 #include "SP/DesignExtractor.h"
 #include "SP/Parser.h"
 #include "SP/SP.h"
@@ -11,7 +10,7 @@
 class SP::Processor {
 public:
 	explicit Processor(PKB::StorageUpdateInterface& pkb);
-	void process(string source);
+	void process(std::string source);
 
 private:
 	SP::Parser parser;

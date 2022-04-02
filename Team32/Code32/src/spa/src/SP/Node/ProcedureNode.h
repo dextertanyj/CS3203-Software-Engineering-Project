@@ -5,24 +5,23 @@
 #include <string>
 
 #include "Common/TypeDefs.h"
-#include "PKB/Storage.h"
+#include "PKB/StorageUpdateInterface.h"
 #include "SP/Lexer.h"
 #include "SP/Node/StatementListNode.h"
 
-using namespace std;
-
 class SP::Node::ProcedureNode {
 public:
-	ProcedureNode(string name, unique_ptr<StatementListNode> stmt_list, StmtRef start, StmtRef end);
-	static unique_ptr<ProcedureNode> parseProcedure(Lexer& lex, StmtRef& statement_count);
-	void extract(PKB::StorageUpdateInterface& pkb);
-	bool equals(const shared_ptr<ProcedureNode>& object);
+	ProcedureNode(ProcRef name, std::unique_ptr<StatementListNode> statements, StmtRef start, StmtRef end);
+	void extract(PKB::StorageUpdateInterface& pkb) const;
+	[[nodiscard]] bool equals(const std::shared_ptr<ProcedureNode>& object) const;
+
+	static std::unique_ptr<ProcedureNode> parseProcedure(Lexer& lex, StmtRef& statement_count);
 
 private:
 	ProcRef name;
 	StmtRef start;
 	StmtRef end;
-	shared_ptr<StatementListNode> stmt_list;
+	std::shared_ptr<StatementListNode> statements;
 };
 
 #endif  // SPA_SRC_SP_NODE_PROCEDURENODE_H

@@ -1,15 +1,19 @@
 #include "SP/Node/ReadNode.h"
 
+#include <utility>
+
+using namespace std;
+
 SP::Node::ReadNode::ReadNode(StmtRef stmt_no, unique_ptr<VariableNode> variable) : StatementNode(stmt_no), variable(move(variable)) {}
 
-StmtRef SP::Node::ReadNode::extract(PKB::StorageUpdateInterface& pkb) {
+StmtRef SP::Node::ReadNode::extract(PKB::StorageUpdateInterface& pkb) const {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::Read);
 	pkb.setModifies(stmt_ref, variable->extract());
 	return stmt_ref;
 }
 
-bool SP::Node::ReadNode::equals(const shared_ptr<StatementNode>& object) {
+bool SP::Node::ReadNode::equals(const shared_ptr<StatementNode>& object) const {
 	shared_ptr<ReadNode> other = dynamic_pointer_cast<ReadNode>(object);
 	if (other == nullptr) {
 		return false;

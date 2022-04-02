@@ -5,22 +5,21 @@
 #include <string>
 
 #include "Common/TypeDefs.h"
-#include "PKB/Storage.h"
+#include "PKB/StorageUpdateInterface.h"
 #include "SP/Lexer.h"
 #include "SP/Node/StatementNode.h"
 #include "SP/Node/VariableNode.h"
 
-using namespace std;
-
 class SP::Node::PrintNode : public StatementNode {
 public:
-	PrintNode(StmtRef stmt_no, unique_ptr<VariableNode> variable);
-	StmtRef extract(PKB::StorageUpdateInterface& pkb) override;
-	bool equals(const shared_ptr<StatementNode>& object) override;
-	static unique_ptr<PrintNode> parsePrintStatement(Lexer& lex, StmtRef& statement_count);
+	PrintNode(StmtRef stmt_no, std::unique_ptr<VariableNode> variable);
+	StmtRef extract(PKB::StorageUpdateInterface& pkb) const override;
+	[[nodiscard]] bool equals(const std::shared_ptr<StatementNode>& object) const override;
+
+	static std::unique_ptr<PrintNode> parsePrintStatement(Lexer& lex, StmtRef& statement_count);
 
 private:
-	shared_ptr<VariableNode> variable;
+	std::shared_ptr<VariableNode> variable;
 };
 
 #endif  // SPA_SRC_SP_NODE_PRINTNODE_H

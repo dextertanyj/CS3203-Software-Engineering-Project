@@ -5,23 +5,22 @@
 #include <vector>
 
 #include "Common/TypeDefs.h"
-#include "PKB/Storage.h"
+#include "PKB/StorageUpdateInterface.h"
 #include "SP/Lexer.h"
 #include "SP/Node/ProcedureNode.h"
 
-using namespace std;
-
 class SP::Node::ProgramNode {
 public:
-	ProgramNode();
-	void addProcedureNode(unique_ptr<ProcedureNode> procedure);
-	static unique_ptr<ProgramNode> parseProgram(Lexer& lex, StmtRef& statement_count);
-	void extract(PKB::StorageUpdateInterface& pkb);
-	bool equals(const shared_ptr<ProgramNode>& object);
-	vector<shared_ptr<ProcedureNode>> getProcedures();
+	ProgramNode() = default;
+	void addProcedureNode(std::unique_ptr<ProcedureNode> procedure);
+	void extract(PKB::StorageUpdateInterface& pkb) const;
+	[[nodiscard]] bool equals(const std::shared_ptr<ProgramNode>& object) const;
+	[[nodiscard]] std::vector<std::shared_ptr<ProcedureNode>> getProcedures() const;
+
+	static std::unique_ptr<ProgramNode> parseProgram(Lexer& lex, StmtRef& statement_count);
 
 private:
-	vector<shared_ptr<ProcedureNode>> procedures;
+	std::vector<std::shared_ptr<ProcedureNode>> procedures;
 };
 
 #endif  // SPA_SRC_SP_NODE_PROGRAMNODE_H
