@@ -9,7 +9,7 @@
 
 class Common::ExpressionProcessor::ArithmeticNode : public AtomicNode {
 public:
-	ArithmeticNode(MathematicalOperator opr, shared_ptr<AtomicNode> lhs, shared_ptr<AtomicNode> rhs);
+	ArithmeticNode(MathematicalOperator opr, std::shared_ptr<AtomicNode> lhs, std::shared_ptr<AtomicNode> rhs);
 };
 
 #endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_ARITHMETICNODE_H

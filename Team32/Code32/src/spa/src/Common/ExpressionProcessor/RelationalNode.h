@@ -9,7 +9,7 @@
 
 class Common::ExpressionProcessor::RelationalNode : public LogicalNode {
 public:
-	RelationalNode(MathematicalOperator opr, shared_ptr<AtomicNode> lhs, shared_ptr<AtomicNode> rhs);
+	RelationalNode(MathematicalOperator opr, std::shared_ptr<AtomicNode> lhs, std::shared_ptr<AtomicNode> rhs);
 };
 
 #endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_RELATIONALNODE_H

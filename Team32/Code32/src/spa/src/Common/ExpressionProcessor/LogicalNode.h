@@ -9,7 +9,7 @@
 
 class Common::ExpressionProcessor::LogicalNode : public ExpressionNode {
 public:
-	explicit LogicalNode(vector<TokenType> tokens) : ExpressionNode(move(tokens)){};
+	explicit LogicalNode(std::vector<TokenType> tokens) : ExpressionNode(std::move(tokens)){};
 	~LogicalNode() override = default;
 };
 

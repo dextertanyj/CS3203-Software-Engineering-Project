@@ -20,6 +20,7 @@
 #define ADD_SUBTRACT_PRECEDENCE 2
 #define MULTIPLY_DIVIDE_MODULUS_PRECEDENCE 3
 
+using namespace std;
 using namespace Common::ExpressionProcessor;
 
 ExpressionParser::ExpressionParser(LexerInterface& lex, ExpressionType type) : lex(lex), type(type) {}
@@ -51,10 +52,10 @@ ParenthesizedExpression ExpressionParser::construct(Acceptor acceptor, Parenthes
 
 	while (acceptor(lookahead) && getPrecedence(Converter::convertMathematical(lookahead)) >= precedence) {
 		string token = lex.readToken();
-		MathematicalOperator op = Converter::convertMathematical(token);
+		MathematicalOperator opr = Converter::convertMathematical(token);
 		shared_ptr<ExpressionNode> rhs = parseTerminalSafe(acceptor);
 		lookahead = lex.peekToken();
-		while (acceptor(lookahead) && getPrecedence(Converter::convertMathematical(lookahead)) > getPrecedence(op)) {
+		while (acceptor(lookahead) && getPrecedence(Converter::convertMathematical(lookahead)) > getPrecedence(opr)) {
 			rhs = getExpression(construct(acceptor, rhs, getPrecedence(Converter::convertMathematical(lookahead))));
 			lookahead = lex.peekToken();
 		}
@@ -64,9 +65,9 @@ ParenthesizedExpression ExpressionParser::construct(Acceptor acceptor, Parenthes
 			throw ExpressionProcessorException("Expected atomic expression.");
 		}
 		if (OperatorAcceptor::acceptRelationalStrict(token)) {
-			lhs = make_shared<RelationalNode>(op, lhs_atomic, rhs_atomic);
+			lhs = make_shared<RelationalNode>(opr, lhs_atomic, rhs_atomic);
 		} else {
-			lhs = make_shared<ArithmeticNode>(op, lhs_atomic, rhs_atomic);
+			lhs = make_shared<ArithmeticNode>(opr, lhs_atomic, rhs_atomic);
 		}
 	}
 	return lhs;

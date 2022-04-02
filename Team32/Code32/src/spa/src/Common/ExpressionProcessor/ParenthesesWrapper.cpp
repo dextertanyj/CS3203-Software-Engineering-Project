@@ -1,5 +1,7 @@
 #include "Common/ExpressionProcessor/ParenthesesWrapper.h"
 
+using namespace std;
+
 /**
  * This constructor checks for nested parentheses and rejects any already parenthesized logical expression.
  * For all other expression types, any existing parentheses is unwrapped to ensure only a single wrapper applies to any expression.

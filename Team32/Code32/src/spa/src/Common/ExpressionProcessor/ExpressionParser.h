@@ -15,17 +15,17 @@ public:
 private:
 	LexerInterface& lex;
 	ExpressionType type;
-	unordered_set<VarRef> variables;
-	unordered_set<ConstVal> constants;
+	std::unordered_set<VarRef> variables;
+	std::unordered_set<ConstVal> constants;
 
 	ParenthesizedExpression construct(Acceptor acceptor, ParenthesizedExpression lhs, int precedence);
 	ParenthesizedExpression parseTerminal(Acceptor acceptor);
-	shared_ptr<ExpressionNode> parseTerminalSafe(Acceptor acceptor);
-	shared_ptr<UnaryLogicalNode> parseUnaryLogical();
-	shared_ptr<BinaryLogicalNode> parseBinaryLogical(const ParenthesizedExpression& lhs);
+	std::shared_ptr<ExpressionNode> parseTerminalSafe(Acceptor acceptor);
+	std::shared_ptr<UnaryLogicalNode> parseUnaryLogical();
+	std::shared_ptr<BinaryLogicalNode> parseBinaryLogical(const ParenthesizedExpression& lhs);
 
-	static shared_ptr<ExpressionNode> getExpression(const ParenthesizedExpression& expression);
-	static bool checkExpressionType(const shared_ptr<ExpressionNode>& expression, ExpressionType type);
+	static std::shared_ptr<ExpressionNode> getExpression(const ParenthesizedExpression& expression);
+	static bool checkExpressionType(const std::shared_ptr<ExpressionNode>& expression, ExpressionType type);
 	static int getPrecedence(MathematicalOperator opr);
 };
 

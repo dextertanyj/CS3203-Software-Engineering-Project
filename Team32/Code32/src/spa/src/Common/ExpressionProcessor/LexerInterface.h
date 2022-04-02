@@ -7,16 +7,16 @@
 
 class Common::ExpressionProcessor::LexerInterface {
 public:
-	virtual string readToken() = 0;
-	virtual string peekToken() = 0;
+	virtual std::string readToken() = 0;
+	virtual std::string peekToken() = 0;
 
-	bool check(const string& token) {
-		string peek = peekToken();
+	bool check(const std::string& token) {
+		std::string peek = peekToken();
 		return peek == token;
 	}
 
-	void match(const string& token) {
-		string read = readToken();
+	void match(const std::string& token) {
+		std::string read = readToken();
 		if (read != token) {
 			throw ExpressionProcessorException("Unexpected token received: " + read + ".");
 		}

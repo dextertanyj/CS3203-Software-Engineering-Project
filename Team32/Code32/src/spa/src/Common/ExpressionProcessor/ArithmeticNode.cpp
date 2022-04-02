@@ -4,8 +4,8 @@
 
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
-Common::ExpressionProcessor::ArithmeticNode::ArithmeticNode(MathematicalOperator opr, shared_ptr<AtomicNode> lhs,
-                                                            shared_ptr<AtomicNode> rhs)
+Common::ExpressionProcessor::ArithmeticNode::ArithmeticNode(MathematicalOperator opr, std::shared_ptr<AtomicNode> lhs,
+                                                            std::shared_ptr<AtomicNode> rhs)
 	: AtomicNode({std::move(lhs), std::move(rhs), opr}) {
 	if (!OperatorAcceptor::acceptArithmetic(opr)) {
 		throw ExpressionProcessorException("Expected arithmetic operator.");

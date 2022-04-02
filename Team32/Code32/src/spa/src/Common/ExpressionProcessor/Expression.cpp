@@ -2,16 +2,16 @@
 
 using namespace Common::ExpressionProcessor;
 
-Expression::Expression(shared_ptr<ExpressionNode> root, unordered_set<VarRef> variables, unordered_set<ConstVal> constants)
-	: root(move(root)), variables(move(variables)), constants(move(constants)) {
+Expression::Expression(std::shared_ptr<ExpressionNode> root, std::unordered_set<VarRef> variables, std::unordered_set<ConstVal> constants)
+	: root(std::move(root)), variables(std::move(variables)), constants(std::move(constants)) {
 	if (this->root != nullptr) {
 		traversal = this->root->traversal();
 	}
 }
 
-unordered_set<ConstVal> Expression::getConstants() const { return constants; }
+std::unordered_set<ConstVal> Expression::getConstants() const { return constants; }
 
-unordered_set<VarRef> Expression::getVariables() const { return variables; }
+std::unordered_set<VarRef> Expression::getVariables() const { return variables; }
 
 bool Expression::contains(const Expression& other) const { return traversal.find(other.traversal) != std::string::npos; }
 

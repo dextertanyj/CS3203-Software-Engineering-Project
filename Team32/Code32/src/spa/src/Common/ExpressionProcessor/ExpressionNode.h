@@ -10,15 +10,15 @@
 
 class Common::ExpressionProcessor::ExpressionNode {
 public:
-	string traversal();
+	std::string traversal();
 	virtual ~ExpressionNode() = default;
 
 protected:
-	using TokenType = variant<shared_ptr<ExpressionNode>, MathematicalOperator, VarRef, ConstVal>;
-	explicit ExpressionNode(vector<TokenType> tokens);
+	using TokenType = std::variant<std::shared_ptr<ExpressionNode>, MathematicalOperator, VarRef, ConstVal>;
+	explicit ExpressionNode(std::vector<TokenType> tokens);
 
 private:
-	vector<TokenType> tokens;
+	std::vector<TokenType> tokens;
 };
 
 #endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSIONNODE_H

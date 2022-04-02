@@ -1,5 +1,7 @@
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
+using namespace std;
+
 Acceptor Common::ExpressionProcessor::OperatorAcceptor::getAcceptor(ExpressionType type) {
 	switch (type) {
 		case ExpressionType::Arithmetic:

@@ -9,10 +9,10 @@
 class Common::ExpressionProcessor::ParenthesesWrapper {
 public:
 	explicit ParenthesesWrapper(ParenthesizedExpression expression);
-	[[nodiscard]] shared_ptr<ExpressionNode> getExpression() const;
+	[[nodiscard]] std::shared_ptr<ExpressionNode> getExpression() const;
 
 private:
-	shared_ptr<ExpressionNode> expression;
+	std::shared_ptr<ExpressionNode> expression;
 };
 
 #endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_PARENTHESESWRAPPER_H

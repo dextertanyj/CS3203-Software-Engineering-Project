@@ -9,7 +9,7 @@
 
 class Common::ExpressionProcessor::BinaryLogicalNode : public LogicalNode {
 public:
-	BinaryLogicalNode(MathematicalOperator opr, shared_ptr<LogicalNode> lhs, shared_ptr<LogicalNode> rhs);
+	BinaryLogicalNode(MathematicalOperator opr, std::shared_ptr<LogicalNode> lhs, std::shared_ptr<LogicalNode> rhs);
 };
 
 #endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_BINARYLOGICALNODE_H
