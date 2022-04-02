@@ -6,10 +6,10 @@
 #include <memory>
 #include <string>
 
+#include "Common/TypeDefs.h"
 #include "SP/Lexer.h"
 #include "SP/Node/ProgramNode.h"
 #include "SP/SP.h"
-#include "Common/TypeDefs.h"
 
 class SP::Parser {
 public:
