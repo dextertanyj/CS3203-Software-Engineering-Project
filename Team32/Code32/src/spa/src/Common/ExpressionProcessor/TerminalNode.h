@@ -1,8 +1,6 @@
 #ifndef SPA_SRC_COMMON_EXPRESSIONPROCESSOR_TERMINALNODE_H
 #define SPA_SRC_COMMON_EXPRESSIONPROCESSOR_TERMINALNODE_H
 
-#include <memory>
-
 #include "Common/ExpressionProcessor/AtomicNode.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 

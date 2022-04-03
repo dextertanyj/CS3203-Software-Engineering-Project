@@ -15,10 +15,12 @@
 #include "Common/Validator.h"
 
 #define LOGICAL_PRECEDENCE (-1)
+#define START_PRECEDENCE 0
 #define RELATIONAL_PRECEDENCE 1
 #define ADD_SUBTRACT_PRECEDENCE 2
 #define MULTIPLY_DIVIDE_MODULUS_PRECEDENCE 3
 
+using namespace std;
 using namespace Common::ExpressionProcessor;
 
 ExpressionParser::ExpressionParser(LexerInterface& lex, ExpressionType type) : lex(lex), type(type) {}
@@ -26,7 +28,7 @@ ExpressionParser::ExpressionParser(LexerInterface& lex, ExpressionType type) : l
 Expression ExpressionParser::parse() {
 	Acceptor acceptor = OperatorAcceptor::getAcceptor(type);
 	ParenthesizedExpression lhs = parseTerminal(acceptor);
-	ParenthesizedExpression expression = construct(acceptor, lhs, 0);
+	ParenthesizedExpression expression = construct(acceptor, lhs, START_PRECEDENCE);
 	ParenthesesWrapper test_wrap = ParenthesesWrapper(expression);  // Test if outermost expression has an extra set of parentheses.
 	if (!checkExpressionType(test_wrap.getExpression(), type)) {
 		throw ExpressionProcessorException("Incorrect expression type parsed.");
@@ -34,23 +36,26 @@ Expression ExpressionParser::parse() {
 	return {test_wrap.getExpression(), variables, constants};
 }
 
+/**
+ * This function applies the operator precedence parsing algorithm.
+ */
 ParenthesizedExpression ExpressionParser::construct(Acceptor acceptor, ParenthesizedExpression lhs, int precedence) {
 	string lookahead = lex.peekToken();
 	if (!acceptor(lookahead)) {
 		return lhs;
 	}
 
-	// Binary logical operators are a special case since they must be fully parenthesized
+	// Binary logical operators are a special case since they must be fully parenthesized.
 	if (OperatorAcceptor::acceptBinaryLogical(lookahead)) {
 		return parseBinaryLogical(lhs);
 	}
 
 	while (acceptor(lookahead) && getPrecedence(Converter::convertMathematical(lookahead)) >= precedence) {
 		string token = lex.readToken();
-		MathematicalOperator op = Converter::convertMathematical(token);
+		MathematicalOperator opr = Converter::convertMathematical(token);
 		shared_ptr<ExpressionNode> rhs = parseTerminalSafe(acceptor);
 		lookahead = lex.peekToken();
-		while (acceptor(lookahead) && getPrecedence(Converter::convertMathematical(lookahead)) > getPrecedence(op)) {
+		while (acceptor(lookahead) && getPrecedence(Converter::convertMathematical(lookahead)) > getPrecedence(opr)) {
 			rhs = getExpression(construct(acceptor, rhs, getPrecedence(Converter::convertMathematical(lookahead))));
 			lookahead = lex.peekToken();
 		}
@@ -60,9 +65,9 @@ ParenthesizedExpression ExpressionParser::construct(Acceptor acceptor, Parenthes
 			throw ExpressionProcessorException("Expected atomic expression.");
 		}
 		if (OperatorAcceptor::acceptRelationalStrict(token)) {
-			lhs = make_shared<RelationalNode>(op, lhs_atomic, rhs_atomic);
+			lhs = make_shared<RelationalNode>(opr, lhs_atomic, rhs_atomic);
 		} else {
-			lhs = make_shared<ArithmeticNode>(op, lhs_atomic, rhs_atomic);
+			lhs = make_shared<ArithmeticNode>(opr, lhs_atomic, rhs_atomic);
 		}
 	}
 	return lhs;

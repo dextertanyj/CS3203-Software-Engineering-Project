@@ -2,14 +2,14 @@
 #define SPA_SRC_COMMON_EXPRESSIONPROCESSOR_LOGICALNODE_H
 
 #include <utility>
+#include <vector>
 
 #include "Common/ExpressionProcessor/ExpressionNode.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 
 class Common::ExpressionProcessor::LogicalNode : public ExpressionNode {
 public:
-	explicit LogicalNode(vector<variant<shared_ptr<ExpressionNode>, MathematicalOperator, VarRef, ConstVal>> tokens)
-		: ExpressionNode(std::move(tokens)){};
+	explicit LogicalNode(std::vector<TokenType> tokens) : ExpressionNode(std::move(tokens)){};
 	~LogicalNode() override = default;
 };
 

@@ -6,6 +6,8 @@
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
 
+using namespace std;
+
 namespace PKB {
 class StorageUpdateInterface;
 class StorageAccessInterface;

@@ -5,10 +5,8 @@
 
 #include "Common/Validator.h"
 
-using namespace std;
-
-MathematicalOperator Common::Converter::convertMathematical(const string& opr) {
-	static const unordered_map<string, MathematicalOperator> map = {
+MathematicalOperator Common::Converter::convertMathematical(const std::string& opr) {
+	static const std::unordered_map<std::string, MathematicalOperator> map = {
 		{"+", MathematicalOperator::Plus},   {"-", MathematicalOperator::Minus},  {"*", MathematicalOperator::Times},
 		{"/", MathematicalOperator::Divide}, {"%", MathematicalOperator::Modulo}, {">", MathematicalOperator::GT},
 		{">=", MathematicalOperator::GTE},   {"<", MathematicalOperator::LT},     {"<=", MathematicalOperator::LTE},
@@ -21,8 +19,8 @@ MathematicalOperator Common::Converter::convertMathematical(const string& opr) {
 	return iter->second;
 }
 
-string Common::Converter::mathematicalToString(const MathematicalOperator& opr) {
-	static const unordered_map<MathematicalOperator, string> map = {
+std::string Common::Converter::mathematicalToString(const MathematicalOperator& opr) {
+	static const std::unordered_map<MathematicalOperator, std::string> map = {
 		{MathematicalOperator::Plus, "+"},   {MathematicalOperator::Minus, "-"},  {MathematicalOperator::Times, "*"},
 		{MathematicalOperator::Divide, "/"}, {MathematicalOperator::Modulo, "%"}, {MathematicalOperator::GT, ">"},
 		{MathematicalOperator::GTE, ">="},   {MathematicalOperator::LT, "<"},     {MathematicalOperator::LTE, "<="},
@@ -31,15 +29,15 @@ string Common::Converter::mathematicalToString(const MathematicalOperator& opr) 
 	return map.at(opr);
 }
 
-ConstVal Common::Converter::convertInteger(const string& integer) {
+ConstVal Common::Converter::convertInteger(const std::string& integer) {
 	if (!Common::Validator::validateInteger(integer)) {
 		throw ConversionException("Invalid integer provided: " + integer + ".");
 	}
 	try {
-		return stoull(integer);
-	} catch (invalid_argument&) {
+		return std::stoull(integer);
+	} catch (std::invalid_argument&) {
 		throw ConversionException("Invalid argument.");
-	} catch (out_of_range&) {
+	} catch (std::out_of_range&) {
 		throw ConversionException("Integer out of range.");
 	}
 }

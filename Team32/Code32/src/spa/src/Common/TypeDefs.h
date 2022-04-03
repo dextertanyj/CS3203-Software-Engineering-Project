@@ -8,8 +8,6 @@
 
 #include "Common/Hash.h"
 
-using namespace std;
-
 template <class... Ts>
 struct Visitor : Ts... {
 	using Ts::operator()...;
@@ -18,12 +16,13 @@ struct Visitor : Ts... {
 template <class... Ts>
 Visitor(Ts...) -> Visitor<Ts...>;
 
-typedef size_t StmtRef;
-typedef unsigned long long int ConstVal;
-typedef string VarRef;
-typedef string ProcRef;
+using StmtRef = size_t;
+using ConstVal = unsigned long long int;
+using VarRef = std::string;
+using ProcRef = std::string;
 
 enum class StmtType { Assign, Print, Call, Read, WhileStmt, IfStmt };
+enum class MathematicalOperator { Plus, Minus, Times, Divide, Modulo, EQ, NEQ, LT, LTE, GT, GTE, And, Or, Not };
 
 class StatementInfoInterface {
 public:
@@ -32,14 +31,12 @@ public:
 	virtual ~StatementInfoInterface() = default;
 };
 
-typedef StatementInfoInterface StmtInfo;
-
-typedef unordered_set<shared_ptr<StmtInfo>> StmtInfoPtrSet;
-typedef unordered_set<VarRef> VarRefSet;
-typedef unordered_set<ProcRef> ProcRefSet;
-typedef unordered_set<StmtRef> StmtRefSet;
-typedef unordered_set<pair<shared_ptr<StmtInfo>, VarRef>> StmtInfoPtrVarRefSet;
-
-enum class MathematicalOperator { Plus, Minus, Times, Divide, Modulo, EQ, NEQ, LT, LTE, GT, GTE, And, Or, Not };
+using StmtInfo = StatementInfoInterface;
+using StmtInfoPtr = std::shared_ptr<StmtInfo>;
+using StmtInfoPtrSet = std::unordered_set<StmtInfoPtr>;
+using VarRefSet = std::unordered_set<VarRef>;
+using ProcRefSet = std::unordered_set<ProcRef>;
+using StmtRefSet = std::unordered_set<StmtRef>;
+using StmtInfoPtrVarRefSet = std::unordered_set<std::pair<StmtInfoPtr, VarRef>>;
 
 #endif

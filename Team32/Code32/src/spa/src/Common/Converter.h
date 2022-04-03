@@ -6,15 +6,14 @@
 
 #include "Common/TypeDefs.h"
 
-using namespace std;
-
 namespace Common::Converter {
-struct ConversionException : public runtime_error {
+struct ConversionException : public std::runtime_error {
 	using runtime_error::runtime_error;
 };
-MathematicalOperator convertMathematical(const string& opr);
-string mathematicalToString(const MathematicalOperator& opr);
-ConstVal convertInteger(const string& integer);
+
+MathematicalOperator convertMathematical(const std::string& opr);
+std::string mathematicalToString(const MathematicalOperator& opr);
+ConstVal convertInteger(const std::string& integer);
 }
 
 #endif  // SPA_SRC_COMMON_CONVERTER_H

@@ -15,54 +15,56 @@ Acceptor Common::ExpressionProcessor::OperatorAcceptor::getAcceptor(ExpressionTy
 	}
 }
 
-bool Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic(const string& op) {
-	return op == "+" || op == "-" || op == "*" || op == "/" || op == "%";
+bool Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic(const string& opr) {
+	return opr == "+" || opr == "-" || opr == "*" || opr == "/" || opr == "%";
 }
 
-bool Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic(MathematicalOperator op) {
-	return op == MathematicalOperator::Plus || op == MathematicalOperator::Minus || op == MathematicalOperator::Times ||
-	       op == MathematicalOperator::Divide || op == MathematicalOperator::Modulo;
+bool Common::ExpressionProcessor::OperatorAcceptor::acceptArithmetic(MathematicalOperator opr) {
+	return opr == MathematicalOperator::Plus || opr == MathematicalOperator::Minus || opr == MathematicalOperator::Times ||
+	       opr == MathematicalOperator::Divide || opr == MathematicalOperator::Modulo;
 }
 
-bool Common::ExpressionProcessor::OperatorAcceptor::acceptRelationalStrict(const string& op) {
-	return op == "==" || op == "!=" || op == ">" || op == ">=" || op == "<" || op == "<=";
+bool Common::ExpressionProcessor::OperatorAcceptor::acceptRelationalStrict(const string& opr) {
+	return opr == "==" || opr == "!=" || opr == ">" || opr == ">=" || opr == "<" || opr == "<=";
 }
 
-bool Common::ExpressionProcessor::OperatorAcceptor::acceptRelationalStrict(MathematicalOperator op) {
-	return op == MathematicalOperator::EQ || op == MathematicalOperator::NEQ || op == MathematicalOperator::GT ||
-	       op == MathematicalOperator::GTE || op == MathematicalOperator::LT || op == MathematicalOperator::LTE;
+bool Common::ExpressionProcessor::OperatorAcceptor::acceptRelationalStrict(MathematicalOperator opr) {
+	return opr == MathematicalOperator::EQ || opr == MathematicalOperator::NEQ || opr == MathematicalOperator::GT ||
+	       opr == MathematicalOperator::GTE || opr == MathematicalOperator::LT || opr == MathematicalOperator::LTE;
 }
 
-bool Common::ExpressionProcessor::OperatorAcceptor::acceptRelational(const string& op) {
-	return acceptRelationalStrict(op) || acceptArithmetic(op);
+bool Common::ExpressionProcessor::OperatorAcceptor::acceptRelational(const string& opr) {
+	return acceptRelationalStrict(opr) || acceptArithmetic(opr);
 }
 
-bool Common::ExpressionProcessor::OperatorAcceptor::acceptRelational(MathematicalOperator op) {
-	return acceptRelationalStrict(op) || acceptArithmetic(op);
+bool Common::ExpressionProcessor::OperatorAcceptor::acceptRelational(MathematicalOperator opr) {
+	return acceptRelationalStrict(opr) || acceptArithmetic(opr);
 }
 
-bool Common::ExpressionProcessor::OperatorAcceptor::acceptBinaryLogical(const string& op) { return op == "&&" || op == "||"; }
+bool Common::ExpressionProcessor::OperatorAcceptor::acceptBinaryLogical(const string& opr) { return opr == "&&" || opr == "||"; }
 
-bool Common::ExpressionProcessor::OperatorAcceptor::acceptBinaryLogical(MathematicalOperator op) {
-	return op == MathematicalOperator::And || op == MathematicalOperator::Or;
+bool Common::ExpressionProcessor::OperatorAcceptor::acceptBinaryLogical(MathematicalOperator opr) {
+	return opr == MathematicalOperator::And || opr == MathematicalOperator::Or;
 }
 
-bool Common::ExpressionProcessor::OperatorAcceptor::acceptUnaryLogical(const string& op) { return op == "!"; }
+bool Common::ExpressionProcessor::OperatorAcceptor::acceptUnaryLogical(const string& opr) { return opr == "!"; }
 
-bool Common::ExpressionProcessor::OperatorAcceptor::acceptUnaryLogical(MathematicalOperator op) { return op == MathematicalOperator::Not; }
-
-bool Common::ExpressionProcessor::OperatorAcceptor::acceptLogicalStrict(const string& op) {
-	return acceptBinaryLogical(op) || acceptUnaryLogical(op);
+bool Common::ExpressionProcessor::OperatorAcceptor::acceptUnaryLogical(MathematicalOperator opr) {
+	return opr == MathematicalOperator::Not;
 }
 
-bool Common::ExpressionProcessor::OperatorAcceptor::acceptLogicalStrict(MathematicalOperator op) {
-	return acceptBinaryLogical(op) || acceptUnaryLogical(op);
+bool Common::ExpressionProcessor::OperatorAcceptor::acceptLogicalStrict(const string& opr) {
+	return acceptBinaryLogical(opr) || acceptUnaryLogical(opr);
 }
 
-bool Common::ExpressionProcessor::OperatorAcceptor::acceptLogical(const string& op) {
-	return acceptLogicalStrict(op) || acceptRelational(op);
+bool Common::ExpressionProcessor::OperatorAcceptor::acceptLogicalStrict(MathematicalOperator opr) {
+	return acceptBinaryLogical(opr) || acceptUnaryLogical(opr);
 }
 
-bool Common::ExpressionProcessor::OperatorAcceptor::acceptLogical(MathematicalOperator op) {
-	return acceptLogicalStrict(op) || acceptRelational(op);
+bool Common::ExpressionProcessor::OperatorAcceptor::acceptLogical(const string& opr) {
+	return acceptLogicalStrict(opr) || acceptRelational(opr);
+}
+
+bool Common::ExpressionProcessor::OperatorAcceptor::acceptLogical(MathematicalOperator opr) {
+	return acceptLogicalStrict(opr) || acceptRelational(opr);
 }
