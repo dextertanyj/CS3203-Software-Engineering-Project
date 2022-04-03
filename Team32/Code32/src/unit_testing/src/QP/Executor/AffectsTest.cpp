@@ -16,8 +16,6 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	pkb.setStmtType(2, StmtType::IfStmt);
 	pkb.setStmtType(3, StmtType::Assign);
 	pkb.setStmtType(4, StmtType::Read);
-	pkb.setIfControl(2, "x");
-	pkb.setUses(2, "x");
 	pkb.setModifies(4, "x");
 	pkb.setStmtType(5, StmtType::Assign);
 	pkb.setStmtType(6, StmtType::Assign);
@@ -33,7 +31,6 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	pkb.setCall(9, "A");
 	pkb.setStmtType(10, StmtType::Assign);
 	pkb.setProc("B", 7, 10);
-	pkb.populateComplexRelations();
 
 	vector<string> assign_token1 = {"3", "+", "y"};
 	QP::QueryExpressionLexer lexer1 = QP::QueryExpressionLexer(assign_token1);
@@ -158,19 +155,19 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	}
 
 	SECTION("Trivial: Wildcard & Wildcard") {
-		QP::QueryResult result1 = executeTrivialWildcardWildcard<ClauseType::Next>(store);
+		QP::QueryResult result1 = executeTrivialWildcardWildcard<ClauseType::Affects>(store);
 
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("Trivial: Wildcard & Synonym") {
-		QP::QueryResult result1 = executeTrivialWildcardSynonym<ClauseType::Next>(store, assign_synonym);
+		QP::QueryResult result1 = executeTrivialWildcardSynonym<ClauseType::Affects>(store, assign_synonym);
 
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("Trivial: Synonym & Wildcard") {
-		QP::QueryResult result1 = executeTrivialSynonymWildcard<ClauseType::Next>(store, assign_synonym);
+		QP::QueryResult result1 = executeTrivialSynonymWildcard<ClauseType::Affects>(store, assign_synonym);
 
 		REQUIRE(result1.getResult());
 	}
@@ -231,14 +228,14 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 
 	SECTION("Synonym & Synonym") {
 		QP::QueryResult result1 = executeSynonymSynonym<ClauseType::Affects>(store, assign_synonym, assign_synonym2);
-		vector<string> expected_result_1 = {"3", "5", "6"};
-		vector<string> expected_result_2 = {"1", "1", "5"};
 		REQUIRE(result1.getResult());
+		vector<string> expected_result_1 = {"3", "5", "6"};
 		vector<string> actual_result_1 = result1.getSynonymResult("a1");
-		vector<string> actual_result_2 = result1.getSynonymResult("a");
 		sort(actual_result_1.begin(), actual_result_1.end());
-		sort(actual_result_2.begin(), actual_result_2.end());
 		REQUIRE(actual_result_1 == expected_result_1);
+		vector<string> expected_result_2 = {"1", "1", "5"};
+		vector<string> actual_result_2 = result1.getSynonymResult("a");
+		sort(actual_result_2.begin(), actual_result_2.end());
 		REQUIRE(actual_result_2 == expected_result_2);
 	}
 }
