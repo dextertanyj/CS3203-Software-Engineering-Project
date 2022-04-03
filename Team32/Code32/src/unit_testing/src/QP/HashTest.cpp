@@ -25,10 +25,6 @@ TEST_CASE("QP Hash Test") {
 		Relationship::Relation(Types::ClauseType::Follows, vector<Types::ReferenceArgument>({name1, wildcard}), exec);
 	Relationship::Relation relation4 =
 		Relationship::Relation(Types::ClauseType::FollowsT, vector<Types::ReferenceArgument>({name2, name2}), exec);
-	Types::Clause clause1 = {make_unique<Relationship::Relation>(relation1)};
-	Types::Clause clause2 = {make_unique<Relationship::Relation>(relation2)};
-	Types::Clause clause3 = {make_unique<Relationship::Relation>(relation3)};
-	Types::Clause clause4 = {make_unique<Relationship::Relation>(relation4)};
 
 	SECTION("Declaration") {
 		REQUIRE_EQUALS(std::hash<Types::Declaration>()(dec_a), std::hash<Types::Declaration>()(dec_b));
@@ -50,18 +46,5 @@ TEST_CASE("QP Hash Test") {
 		REQUIRE_EQUALS(std::hash<Relationship::Relation>()(relation1), std::hash<Relationship::Relation>()(relation2));
 		REQUIRE(std::hash<Relationship::Relation>()(relation2) != std::hash<Relationship::Relation>()(relation3));
 		REQUIRE(std::hash<Relationship::Relation>()(relation2) != std::hash<Relationship::Relation>()(relation4));
-	}
-
-	SECTION("Clause") {
-		unordered_set<Types::Clause> set;
-		set.insert(clause1);
-		set.insert(clause2);
-		set.insert(clause3);
-		set.insert(clause4);
-		REQUIRE(set.size() == 3);
-
-		REQUIRE_EQUALS(std::hash<Types::Clause>()(clause1), std::hash<Types::Clause>()(clause2));
-		REQUIRE(std::hash<Types::Clause>()(clause2) != std::hash<Types::Clause>()(clause3));
-		REQUIRE(std::hash<Types::Clause>()(clause2) != std::hash<Types::Clause>()(clause4));
 	}
 }

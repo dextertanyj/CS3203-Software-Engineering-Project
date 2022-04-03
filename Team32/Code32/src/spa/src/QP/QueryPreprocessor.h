@@ -59,7 +59,7 @@ private:
 	size_t token_index;
 	vector<string> query_tokens;
 	unordered_map<string, Types::Declaration> existing_declarations;
-	unordered_set<Types::Clause> clause_set;
+	unordered_set<Relationship::Relation> relation_set;
 	Types::SelectList select_list;
 	Types::ClauseList clause_list;
 

@@ -46,15 +46,6 @@ struct hash<QP::Relationship::Relation> {
 		return seed;
 	}
 };
-
-static inline bool operator==(const QP::Types::Clause& clause1, const QP::Types::Clause& clause2) {
-	return (*clause1.relation.get()) == (*clause2.relation.get());
-}
-
-template <>
-struct hash<QP::Types::Clause> {
-	std::size_t operator()(const QP::Types::Clause& key) const { return hash<QP::Relationship::Relation>()(*key.relation.get()); }
-};
 }
 
 #endif  // SPA_SRC_QP_HASH_H
