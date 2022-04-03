@@ -10,6 +10,25 @@ using namespace QP::Executor::StatementExecutor;
 using namespace Common::ExpressionProcessor;
 
 TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
+	/*
+	 * procedure A {
+	 * 	x = 3 + y;         //1
+	 * 	if (x < 0) then {  //2
+	 * 		y = 4 * x;     //3
+	 * 	} else {
+	 * 		read x;        //4
+	 * 	}
+	 * 	y = x / 3;         //5
+	 * 	x = y - 2;         //6
+	 * }
+	 *
+	 * procedure B {
+	 * 	x = 8 * y;
+	 * 	z = 100;
+	 * 	call A;
+	 * 	y = x + 10;
+	 *}
+	 */
 	PKB::Storage pkb = PKB::Storage();
 	QP::StorageAdapter store = QP::StorageAdapter(pkb);
 	pkb.setStmtType(1, StmtType::Assign);
@@ -209,7 +228,11 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	}
 
 	SECTION("Synonym & Wildcard") {
-		QP::QueryResult result1 = executeSynonymWildcard<ClauseType::Affects>(store, assign_synonym);
+		QP::QueryResult intermediate = QP::QueryResult(vector<string>{"a"});
+		intermediate.addRow({"1"});
+		intermediate.addRow({"4"});
+		intermediate.addRow({"5"});
+		QP::QueryResult result1 = executeSynonymWildcardOptimized<ClauseType::Affects>(store, intermediate, assign_synonym);
 		vector<string> expected_result_1 = {"1", "5"};
 		REQUIRE(result1.getResult());
 		vector<string> actual_result = result1.getSynonymResult("a");
@@ -218,7 +241,12 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	}
 
 	SECTION("Wildcard & Synonym") {
-		QP::QueryResult result1 = executeWildcardSynonym<ClauseType::Affects>(store, assign_synonym);
+		QP::QueryResult intermediate = QP::QueryResult(vector<string>{"a"});
+		intermediate.addRow({"3"});
+		intermediate.addRow({"5"});
+		intermediate.addRow({"6"});
+		intermediate.addRow({"1"});
+		QP::QueryResult result1 = executeWildcardSynonymOptimized<ClauseType::Affects>(store, intermediate, assign_synonym);
 		vector<string> expected_result_1 = {"3", "5", "6"};
 		REQUIRE(result1.getResult());
 		vector<string> actual_result = result1.getSynonymResult("a");

@@ -10,6 +10,31 @@ using namespace QP::Executor::StatementExecutor;
 using namespace Common::ExpressionProcessor;
 
 TEST_CASE("StatementExecutor<ClauseType::AffectsT>::execute") {
+	/*
+	 * procedure A {
+	 * 	if (x < 0) then {   //1
+	 * 		y = 4 * x;      //2
+	 * 	} else {
+	 * 		read x;         //3
+ 	 * 		read y;         //4
+	 * 	}
+	 * }
+	 *
+	 * procedure B {
+	 * 	x = 8 * y;           //5
+	 * 	while (y < 0) {      //6
+	 *		z = a + 100;     //7
+	 *		y = x / 6;       //8
+	 *		while (z > 0) {  //9
+	 *			a = x + a;   //10
+	 *			x = y + 10;  //11
+	 *			call A;      //12
+	 *			x = y + 10;  //13
+	 *			a = z - a;   //14
+	 *		}
+	 *	}
+	 *}
+	 */
 	PKB::Storage pkb = PKB::Storage();
 	QP::StorageAdapter store = QP::StorageAdapter(pkb);
 	pkb.setStmtType(1, StmtType::IfStmt);
@@ -223,6 +248,12 @@ TEST_CASE("StatementExecutor<ClauseType::AffectsT>::execute") {
 	}
 
 	SECTION("Synonym & Wildcard") {
+		QP::QueryResult intermediate = QP::QueryResult(vector<string>{"a"});
+		intermediate.addRow({"10"});
+		intermediate.addRow({"11"});
+		intermediate.addRow({"14"});
+		intermediate.addRow({"7"});
+		intermediate.addRow({"8"});
 		QP::QueryResult result1 = executeSynonymWildcard<ClauseType::AffectsT>(store, assign_synonym);
 		vector<string> expected_result_1 = {"10", "13", "14", "5", "8"};
 		REQUIRE(result1.getResult());
@@ -232,7 +263,15 @@ TEST_CASE("StatementExecutor<ClauseType::AffectsT>::execute") {
 	}
 
 	SECTION("Wildcard & Synonym") {
-		QP::QueryResult result1 = executeWildcardSynonym<ClauseType::AffectsT>(store, assign_synonym);
+		QP::QueryResult intermediate = QP::QueryResult(vector<string>{"a"});
+		intermediate.addRow({"10"});
+		intermediate.addRow({"11"});
+		intermediate.addRow({"14"});
+		intermediate.addRow({"7"});
+		intermediate.addRow({"8"});
+		intermediate.addRow({"5"});
+		intermediate.addRow({"13"});
+		QP::QueryResult result1 = executeWildcardSynonymOptimized<ClauseType::AffectsT>(store, intermediate, assign_synonym);
 		vector<string> expected_result_1 = {"10", "11", "14", "7", "8"};
 		REQUIRE(result1.getResult());
 		vector<string> actual_result_1 = result1.getSynonymResult("a");
