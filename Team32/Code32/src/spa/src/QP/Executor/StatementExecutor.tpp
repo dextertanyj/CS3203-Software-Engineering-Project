@@ -4,6 +4,7 @@
 #include "QP/Executor/StatementExecutor.h"
 
 #include <algorithm>
+#include <iterator>
 
 #include "QP/QueryUtils.h"
 
@@ -335,10 +336,10 @@ inline QueryResult executeSynonymSynonym<ClauseType::AffectsT>(const StorageAdap
 
 // Optimized Executors
 
-inline vector<StmtRef> buildCandidates(const vector<string>& existing_results) {
-	vector<StmtRef> candidates(existing_results.size());
-	transform(existing_results.begin(), existing_results.end(), candidates.begin(), [](const auto& result) { return (stoull(result)); });
-	sort(candidates.begin(), candidates.end(), greater<StmtRef>{});
+inline set<StmtRef, greater<>> buildCandidates(const vector<string>& existing_results) {
+	set<StmtRef, greater<>> candidates;
+	transform(existing_results.begin(), existing_results.end(), inserter(candidates, candidates.end()),
+	          [](const auto& result) { return (stoull(result)); });
 	return candidates;
 }
 
@@ -430,9 +431,9 @@ QueryResult executeSynonymSynonymOptimized(const StorageAdapter& store, const Qu
 		getter = &StorageAdapter::getForwardStatements<T>;
 	}
 
-	vector<StmtRef> candidates = buildCandidates(existing_results);
+	set<StmtRef, greater<>> candidates = buildCandidates(existing_results);
 
-	for (auto& candidate : candidates) {
+	for (const auto& candidate : candidates) {
 		StmtInfoPtrSet other_set = (&store->*getter)(candidate);
 		checkSet(candidate, other, other_set, result);
 	}
