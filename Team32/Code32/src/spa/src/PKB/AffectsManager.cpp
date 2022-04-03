@@ -2,8 +2,7 @@
 
 #include <cassert>
 
-PKB::AffectsManager::AffectsManager(ControlFlowGraph& control_flow_graph,
-                                    SVRelationStore<PKB::ModifiesSRelation>& modifies_store,
+PKB::AffectsManager::AffectsManager(ControlFlowGraph& control_flow_graph, SVRelationStore<PKB::ModifiesSRelation>& modifies_store,
                                     SVRelationStore<PKB::UsesSRelation>& uses_store)
 	: control_flow_graph(control_flow_graph), uses_store(uses_store), modifies_store(modifies_store) {}
 
@@ -191,7 +190,7 @@ void PKB::AffectsManager::buildCacheGraph(size_t graph_index) {
 		buildCacheGraphForwardVisit(i, visited, stack);
 	}
 	visited.clear();
-	while(!stack.empty()) {
+	while (!stack.empty()) {
 		StmtRef index = stack.top();
 		stack.pop();
 		if (visited.find(index) != visited.end()) {
