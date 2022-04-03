@@ -21,19 +21,6 @@ typedef InfoStore<StmtRef, StmtType, StatementInfo> StatementStore;
 typedef TransitiveRelationStore<ProcRef, ProcedureInfo, CallsRelation> CallStore;
 typedef TransitiveRelationStore<StmtRef, StmtInfo, ParentRelation> ParentStore;
 typedef TransitiveRelationStore<StmtRef, StmtInfo, FollowsRelation> FollowsStore;
-
-typedef struct AffectsStarBFSInfo {
-	queue<StmtRef> bfs_queue;
-	StmtRefSet visited_set;
-	StmtInfoPtrSet result;
-} AffectStarBFSInfo;
-
-typedef struct DFSInfo {
-	VarRef variable;
-	stack<shared_ptr<PKB::NodeInterface>> node_stack;
-	unordered_set<shared_ptr<PKB::NodeInterface>> visited_set;
-	StmtInfoPtrSet nodes;
-} DFSInfo;
 }
 
 #endif  // SPA_SRC_PKB_TYPES_H

@@ -16,26 +16,31 @@ TEST_CASE("PKB::PKB Follows Methods Test") {
 	StmtRef s_max = SIZE_MAX;
 	StmtRef s_zero = 0;
 
-	SECTION("PKB::PKB::setFollows Test") {
+	SECTION("PKB::PKB::setFollows Invalid Test") {
 		pkb.setStmtType(SIZE_MAX, StmtType::Read);
 		// Invalid setting of negative statement number to statement map.
 		CHECK_THROWS(pkb.setStmtType(0, StmtType::Assign));
+	}
 
+	SECTION("PKB::PKB::setFollows Test") {
 		// Verify that normal setting works.
 		CHECK_NOTHROW(pkb.setFollows(s_1, s_2));
 		CHECK_NOTHROW(pkb.setFollows(s_2, s_3));
-		pkb = TestUtilities::generateFollowsTestPKB();
+	}
 
+	SECTION("PKB::PKB::setFollows Existing Follower Test") {
 		// If s_1 already has a follower, it should not be able to have a new direct follower.
 		CHECK_NOTHROW(pkb.setFollows(s_1, s_2));
 		CHECK_THROWS(pkb.setFollows(s_1, s_max));
-		pkb = TestUtilities::generateFollowsTestPKB();
+	}
 
+	SECTION("PKB::PKB::setFollows Existing Following Test") {
 		// If s_3 already follows s_2, then it should not be allowed to follow s_1.
 		CHECK_NOTHROW(pkb.setFollows(s_2, s_3));
 		CHECK_THROWS(pkb.setFollows(s_1, s_3));
-		pkb = TestUtilities::generateFollowsTestPKB();
+	}
 
+		SECTION("PKB::PKB::setFollows Invalid Arguments Test") {
 		// Verify that improper arguments lead to an exception thrown.
 		CHECK_THROWS(pkb.setFollows(s_1, s_1));
 		CHECK_THROWS(pkb.setFollows(s_zero, s_1));
@@ -200,8 +205,9 @@ TEST_CASE("PKB::PKB Parent Methods Test") {
 		// A child cannot have multiple parents.
 		CHECK_THROWS(pkb.setParent(s_2, s_max));
 		CHECK_THROWS(pkb.setParent(s_1, s_3));
-		pkb = TestUtilities::generateParentTestPKB();
+	}
 
+	SECTION("PKB::PKB::setParent Invalid Test") {
 		// Verify that improper arguments lead to an exception thrown.
 		CHECK_THROWS(pkb.setParent(s_zero, s_1));
 		CHECK_THROWS(pkb.setParent(s_2, s_1));

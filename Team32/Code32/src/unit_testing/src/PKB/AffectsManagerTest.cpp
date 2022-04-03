@@ -11,7 +11,7 @@ TEST_CASE("PKB::AffectsManager::getAffects Test") {
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	PKB::SVRelationStore<PKB::ModifiesSRelation> modifies_store;
 	PKB::SVRelationStore<PKB::UsesSRelation> uses_store;
-	PKB::AffectsManager affects_manager = PKB::AffectsManager( cfg, modifies_store, uses_store);
+	PKB::AffectsManager affects_manager = PKB::AffectsManager(cfg, modifies_store, uses_store);
 
 	SECTION("PKB::AffectsManager::getAffects Simple Consecutive Assign Statement Test") {
 		/* SIMPLE Code:
