@@ -96,6 +96,16 @@ TEST_CASE("Basic select") {
 		REQUIRE(result2 == vector<string>{"TRUE"});
 		REQUIRE(result3 == vector<string>{"FALSE"});
 	}
+
+	SECTION("Select attribute") {
+		string query = "stmt s; Select s.stmt#";
+
+		vector<string> result = processor.processQuery(query);
+
+		vector<string> expected_result = {"1", "2", "3", "4"};
+		sort(result.begin(), result.end());
+		REQUIRE(result == expected_result);
+	}
 };
 
 TEST_CASE("Parent clause") {
@@ -644,6 +654,80 @@ TEST_CASE("One such that and one pattern") {
 
 		vector<string> expected_result = {"5"};
 		REQUIRE(result == expected_result);
+	}
+}
+
+TEST_CASE("With clauses") {
+	PKB::Storage pkb = PKB::Storage();
+	pkb.setStmtType(1, StmtType::Read);
+	pkb.setStmtType(2, StmtType::Print);
+	pkb.setStmtType(3, StmtType::Call);
+	pkb.setStmtType(4, StmtType::Assign);
+
+	pkb.setModifies(1, "y");
+	pkb.setUses(2, "y");
+	pkb.setModifies(4, "x");
+	pkb.setProc("proc1", 1, 3);
+	pkb.setProc("proc2", 4, 4);
+	pkb.setCall(3, "proc2");
+	pkb.populateComplexRelations();
+
+	QP::QueryProcessor processor = QP::QueryProcessor(pkb);
+
+	SECTION("int & int") {
+		string query1 = "Select BOOLEAN with 1 = 1";
+		string query2 = "Select BOOLEAN with 2 = 1";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		REQUIRE(result1 == vector<string>({"TRUE"}));
+		REQUIRE(result2 == vector<string>({"FALSE"}));
+	}
+
+	SECTION("synonym & int") {
+		string query1 = "stmt s; Select s with s.stmt# = 1";
+		string query2 = "assign a; Select a with a.stmt# = 1";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		REQUIRE(result1 == vector<string>({"1"}));
+		REQUIRE(result2 == vector<string>({}));
+	}
+
+	SECTION("string & string") {
+		string query1 = "stmt s; Select s.stmt# with \"a\" = \"a\"";
+		string query2 = "stmt s; Select s.stmt# with \"a\" = \"b\"";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		sort(result1.begin(), result1.end());
+		REQUIRE(result1 == vector<string>({"1", "2", "3", "4"}));
+		REQUIRE(result2 == vector<string>({}));
+	}
+
+	SECTION("synonym & string") {
+		string query1 = "variable v; Select v.varName with v.varName = \"x\"";
+		string query2 = "variable v; Select v with v.varName = \"b\"";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		REQUIRE(result1 == vector<string>({"x"}));
+		REQUIRE(result2 == vector<string>({}));
+	}
+
+	SECTION("synonym & synonym") {
+		string query1 = "stmt s, s1; Select s.stmt# with s.stmt# = s1.stmt#";
+		string query2 = "print p; read r; Select p with p.varName = r.varName";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		REQUIRE(result1 == vector<string>({"1", "2", "3", "4"}));
+		REQUIRE(result2 == vector<string>({"2"}));
 	}
 }
 
