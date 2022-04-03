@@ -1338,7 +1338,7 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Duplicate clauses") {
 
 	qp = qpp.parseQuery(
 		UnivDeclarations +
-		"Select a1 such that Follows(w1, a1) and Follows(w1, a1) and Follows(a1, w1) and Follows(w1, w1) and Follows(a1, _) and Parent(a1, _");
+		"Select a1 such that Follows(w1, a1) and Follows(w1, a1) and Follows(a1, w1) and Follows(w1, w1) and Follows(w1, _) and Parent(w1, _)");
 	REQUIRE(qp.getClauseList().size() == 5);
 	clause = qp.getClauseList()[0].relation;
 	REQUIRE(clause->getType() == ClauseType::Follows);
@@ -1351,10 +1351,10 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery Duplicate clauses") {
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"w1", "w1"}));
 	clause = qp.getClauseList()[3].relation;
 	REQUIRE(clause->getType() == ClauseType::Follows);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1"}));
+	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"w1"}));
 	clause = qp.getClauseList()[4].relation;
 	REQUIRE(clause->getType() == ClauseType::Parent);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1"}));
+	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"w1"}));
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that/pattern/with clauses") {
