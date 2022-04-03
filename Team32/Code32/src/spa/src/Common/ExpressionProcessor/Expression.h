@@ -15,6 +15,7 @@ public:
 	Expression(std::shared_ptr<ExpressionNode> root, std::unordered_set<VarRef> variables, std::unordered_set<ConstVal> constants);
 	[[nodiscard]] std::unordered_set<ConstVal> getConstants() const;
 	[[nodiscard]] std::unordered_set<VarRef> getVariables() const;
+	[[nodiscard]] std::string getTraversal() const;
 	[[nodiscard]] bool operator==(const Expression& other) const;
 	[[nodiscard]] bool contains(const Expression& other) const;
 

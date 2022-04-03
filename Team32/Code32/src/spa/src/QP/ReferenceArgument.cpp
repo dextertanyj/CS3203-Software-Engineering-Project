@@ -112,4 +112,6 @@ bool QP::Types::ReferenceArgument::operator==(const ReferenceArgument& other) co
 		case ReferenceType::Attribute:
 			return getAttribute() == other.getAttribute();
 	}
+
+	return false;
 }

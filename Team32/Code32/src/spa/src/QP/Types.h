@@ -70,8 +70,19 @@ typedef struct Attribute {
 	bool operator==(const Attribute& other) const { return attribute == other.attribute && synonym == other.synonym; }
 } Attribute;
 
+struct AttributeHash {
+	std::size_t operator()(const Attribute& key) const {
+		std::size_t seed = 0;
+		size_t declarationHash = DeclarationHash{}(key.synonym);
+		combineHash(seed, declarationHash);
+		combineHash(seed, (int)key.attribute);
+		return seed;
+	}
+};
+
 typedef struct Clause {
 	shared_ptr<Relationship::Relation> relation;
+	bool operator==(const Clause& other) const { return relation.get() == other.relation.get(); }
 } Clause;
 
 // Types for attribute selection
