@@ -1,28 +1,41 @@
 #ifndef SPA_SRC_QP_HASH_H
 #define SPA_SRC_QP_HASH_H
 
-#include "QP/QP.h"
+#include "Common/ExpressionProcessor/Expression.h"
+#include "Common/Hash.h"
+#include "QP/Types.h"
+#include "QP/Relationship/Relation.h"
 
 namespace std {
 template <>
+struct hash<Common::ExpressionProcessor::Expression> {
+	std::size_t operator()(const Common::ExpressionProcessor::Expression& key) const { return hash<std::string>()(key.getTraversal()); }
+};
+
+template <>
+struct hash<QP::Types::Declaration> {
+	std::size_t operator()(const QP::Types::Declaration& key) const {
+		std::size_t seed = 0;
+		combineHash(seed, key.symbol);
+		combineHash(seed, key.type);
+		return seed;
+	}
+};
+
+template <>
+struct hash<QP::Types::Attribute> {
+	std::size_t operator()(const QP::Types::Attribute& key) const {
+		std::size_t seed = 0;
+		combineHash(seed, key.synonym);
+		combineHash(seed, (int)key.attribute);
+		return seed;
+	}
+};
+
+template <>
 struct hash<QP::Types::ReferenceArgument> {
 	std::size_t operator()(const QP::Types::ReferenceArgument& key) const {
-		QP::Types::ReferenceType type = key.getType();
-		switch (type) {
-			case QP::Types::ReferenceType::StatementIndex:
-				return hash<size_t>{}(key.getStatementIndex());
-			case QP::Types::ReferenceType::Synonym:
-				return hash<string>{}(key.getSynonymSymbol());
-			case QP::Types::ReferenceType::Wildcard:
-				return hash<string>{}("_");
-			case QP::Types::ReferenceType::Name:
-				return hash<string>{}(key.getName());
-			case QP::Types::ReferenceType::ExactExpression:
-			case QP::Types::ReferenceType::SubExpression:
-				return hash<string>{}(key.getExpression().getTraversal());
-			case QP::Types::ReferenceType::Attribute:
-				return QP::Types::AttributeHash{}(key.getAttribute());
-		}
+		return hash<QP::Types::ArgumentValue>()(key.getValue());
 	}
 };
 
@@ -38,9 +51,7 @@ struct hash<QP::Relationship::Relation> {
 
 template <>
 struct hash<QP::Types::Clause> {
-	std::size_t operator()(const QP::Types::Clause& key) const {
-		return hash<QP::Relationship::Relation>{}(key.relation.get());
-	}
+	std::size_t operator()(const QP::Types::Clause& key) const { return hash<QP::Relationship::Relation>()(*key.relation.get()); }
 };
 }
 

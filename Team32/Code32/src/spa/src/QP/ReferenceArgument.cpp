@@ -90,6 +90,10 @@ Common::ExpressionProcessor::Expression QP::Types::ReferenceArgument::getExpress
 	return expr;
 }
 
+QP::Types::ArgumentValue QP::Types::ReferenceArgument::getValue() const {
+	return value;
+}
+
 bool QP::Types::ReferenceArgument::operator==(const ReferenceArgument& other) const {
 	ReferenceType type = getType();
 

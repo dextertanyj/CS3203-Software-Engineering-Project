@@ -1,4 +1,5 @@
 #include "QP/QueryProperties.h"
+#include "QP/Hash.h"
 
 #include <algorithm>
 #include <utility>
@@ -11,7 +12,7 @@ QP::Types::DeclarationList QP::QueryProperties::getDeclarationList() { return de
 QP::Types::SelectList QP::QueryProperties::getSelectList() { return select_list; }
 
 QP::Types::DeclarationList QP::QueryProperties::getSelectSynonymList() {
-	unordered_set<Types::Declaration, Types::DeclarationHash> set;
+	unordered_set<Types::Declaration> set;
 	for_each(select_list.begin(), select_list.end(), [&](const Types::ReferenceArgument& arg) { set.insert(arg.getSynonym()); });
 	return {set.begin(), set.end()};
 }

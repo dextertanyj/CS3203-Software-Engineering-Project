@@ -89,10 +89,15 @@ public:
 	 */
 	[[nodiscard]] Common::ExpressionProcessor::Expression getExpression() const;
 
+	/**
+	 * Returns the argument stored.
+	 */
+	[[nodiscard]] ArgumentValue getValue() const;
+
 	[[nodiscard]] bool operator==(const ReferenceArgument& other) const;
 
 private:
-	variant<monostate, Declaration, Attribute, string, StmtRef, pair<Common::ExpressionProcessor::Expression, bool>> value;
+	ArgumentValue value;
 };
 
 #endif  // SPA_SRC_QP_REFERENCEARGUMENT_H

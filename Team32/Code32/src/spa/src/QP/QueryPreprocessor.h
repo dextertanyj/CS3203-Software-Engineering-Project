@@ -9,6 +9,7 @@
 
 #include "QP/QueryProperties.h"
 #include "QP/Types.h"
+#include "QP/Hash.h"
 
 class QP::QueryPreprocessor {
 public:
@@ -58,6 +59,7 @@ private:
 	size_t token_index;
 	vector<string> query_tokens;
 	unordered_map<string, Types::Declaration> existing_declarations;
+	unordered_set<Types::Clause> clause_set;
 	Types::SelectList select_list;
 	Types::ClauseList clause_list;
 
