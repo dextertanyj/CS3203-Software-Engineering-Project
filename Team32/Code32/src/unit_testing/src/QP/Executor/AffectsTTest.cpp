@@ -254,8 +254,8 @@ TEST_CASE("StatementExecutor<ClauseType::AffectsT>::execute") {
 		intermediate.addRow({"14"});
 		intermediate.addRow({"7"});
 		intermediate.addRow({"8"});
-		QP::QueryResult result1 = executeSynonymWildcard<ClauseType::AffectsT>(store, assign_synonym);
-		vector<string> expected_result_1 = {"10", "13", "14", "5", "8"};
+		QP::QueryResult result1 = executeSynonymWildcardOptimized<ClauseType::AffectsT>(store, intermediate, assign_synonym);
+		vector<string> expected_result_1 = {"10", "14", "8"};
 		REQUIRE(result1.getResult());
 		vector<string> actual_result_1 = result1.getSynonymResult("a");
 		sort(actual_result_1.begin(), actual_result_1.end());
@@ -280,14 +280,35 @@ TEST_CASE("StatementExecutor<ClauseType::AffectsT>::execute") {
 	}
 
 	SECTION("Synonym & Synonym") {
-		QP::QueryResult result1 = executeSynonymSynonym<ClauseType::AffectsT>(store, assign_synonym, assign_synonym2);
+		QP::QueryResult intermediate = QP::QueryResult(vector<string>{"a"});
+		intermediate.addRow({"10"});
+		intermediate.addRow({"11"});
+		intermediate.addRow({"5"});
+		intermediate.addRow({"13"});
+		QP::QueryResult result1 = executeSynonymSynonymOptimized<ClauseType::AffectsT>(store, intermediate, assign_synonym, assign_synonym2);
 		REQUIRE(result1.getResult());
-		vector<string> expected_result_1 = {"10", "10", "10", "13", "13", "13", "13", "13", "14", "14", "14", "5", "5", "5", "5", "5", "8"};
+		vector<string> expected_result_1 = {"10", "10", "10", "13", "13", "13", "13", "13", "5", "5", "5", "5", "5"};
 		vector<string> actual_result_1 = result1.getSynonymResult("a");
 		sort(actual_result_1.begin(), actual_result_1.end());
 		REQUIRE(actual_result_1 == expected_result_1);
-		vector<string> expected_result_2 = {"10", "10", "10", "10", "11", "11", "11", "14", "14", "14", "14", "7", "7", "7", "7", "8", "8"};
+		vector<string> expected_result_2 = {"10", "10", "10", "11", "11", "14", "14", "14", "7", "7", "7", "8", "8"};
 		vector<string> actual_result_2 = result1.getSynonymResult("a1");
+		sort(actual_result_2.begin(), actual_result_2.end());
+		REQUIRE(actual_result_2 == expected_result_2);
+
+		intermediate = QP::QueryResult(vector<string>{"a1"});
+		intermediate.addRow({"11"});
+		intermediate.addRow({"14"});
+		intermediate.addRow({"5"});
+		intermediate.addRow({"13"});
+		result1 = executeSynonymSynonymOptimized<ClauseType::AffectsT>(store, intermediate, assign_synonym, assign_synonym2);
+		REQUIRE(result1.getResult());
+		expected_result_1 = {"10", "13", "13", "14", "5", "5", "8"};
+		actual_result_1 = result1.getSynonymResult("a");
+		sort(actual_result_1.begin(), actual_result_1.end());
+		REQUIRE(actual_result_1 == expected_result_1);
+		expected_result_2 = {"11", "11", "11", "14", "14", "14", "14"};
+		actual_result_2 = result1.getSynonymResult("a1");
 		sort(actual_result_2.begin(), actual_result_2.end());
 		REQUIRE(actual_result_2 == expected_result_2);
 	}
