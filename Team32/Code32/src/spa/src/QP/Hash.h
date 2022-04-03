@@ -3,8 +3,8 @@
 
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/Hash.h"
-#include "QP/Types.h"
 #include "QP/Relationship/Relation.h"
+#include "QP/Types.h"
 
 namespace std {
 template <>
@@ -34,9 +34,7 @@ struct hash<QP::Types::Attribute> {
 
 template <>
 struct hash<QP::Types::ReferenceArgument> {
-	std::size_t operator()(const QP::Types::ReferenceArgument& key) const {
-		return hash<QP::Types::ArgumentValue>()(key.getValue());
-	}
+	std::size_t operator()(const QP::Types::ReferenceArgument& key) const { return hash<QP::Types::ArgumentValue>()(key.getValue()); }
 };
 
 template <>
@@ -48,6 +46,10 @@ struct hash<QP::Relationship::Relation> {
 		return seed;
 	}
 };
+
+static inline bool operator==(const QP::Types::Clause& clause1, const QP::Types::Clause& clause2) {
+	return (*clause1.relation.get()) == (*clause2.relation.get());
+}
 
 template <>
 struct hash<QP::Types::Clause> {

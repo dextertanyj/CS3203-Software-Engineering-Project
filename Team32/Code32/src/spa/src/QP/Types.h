@@ -65,7 +65,6 @@ typedef variant<monostate, Declaration, Attribute, string, StmtRef, pair<Common:
 
 typedef struct Clause {
 	shared_ptr<Relationship::Relation> relation;
-	bool operator==(const Clause& other) const { return relation.get() == other.relation.get(); }
 } Clause;
 
 // Types for attribute selection

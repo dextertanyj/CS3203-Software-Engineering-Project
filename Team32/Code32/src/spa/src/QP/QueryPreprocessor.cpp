@@ -155,7 +155,11 @@ void QP::QueryPreprocessor::createClause(ClauseType type, vector<ReferenceArgume
 	ArgumentDispatcher argument_dispatcher = DispatchMap::dispatch_map.at(type);
 	try {
 		auto info = argument_dispatcher(arguments);
-		this->clause_list.push_back({make_unique<Relationship::Relation>(info.first, move(arguments), info.second)});
+		Clause clause = {make_unique<Relationship::Relation>(info.first, move(arguments), info.second)};
+		if (clause_set.count(clause) == 0) {
+			this->clause_list.push_back(clause);
+		}
+		this->clause_set.insert(clause);
 	} catch (const QueryDispatchException& e) {
 		logSemanticException(e.what());
 	}
@@ -366,6 +370,7 @@ void QP::QueryPreprocessor::reset() {
 	existing_declarations.clear();
 	select_list.clear();
 	clause_list.clear();
+	clause_set.clear();
 }
 
 void QP::QueryPreprocessor::validateUnknownPatternSyntax() {
