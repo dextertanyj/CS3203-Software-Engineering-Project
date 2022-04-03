@@ -14,7 +14,7 @@ using namespace QP::Dispatcher;
 
 regex QP::QueryPreprocessor::invalid_chars_regex = regex(R"([^a-zA-Z0-9\s,"_\(\);\+\-\*\/%<>#\.=])");
 regex QP::QueryPreprocessor::query_token_regex =
-	regex(R"(Follows\*|Calls\*|Parent\*|Next\*|stmt#|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\+|-|\*|\/|%|_|,|\"|<|>|\*|#|\.|=)");
+	regex(R"(Affects\*|Follows\*|Calls\*|Parent\*|Next\*|stmt#|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\+|-|\*|\/|%|_|,|\"|<|>|\*|#|\.|=)");
 
 QP::QueryProperties QP::QueryPreprocessor::parseQuery(string query) {
 	reset();

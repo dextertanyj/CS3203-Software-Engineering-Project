@@ -842,6 +842,197 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid Next(*)") {
 	}
 }
 
+TEST_CASE("QP::QueryPreprocessor::parseQuery valid Affects(*)") {
+	shared_ptr<QP::Relationship::Relation> clause;
+	QP::QueryPreprocessor qpp;
+	QP::QueryProperties qp = {{}, {}, {}};
+	
+	SECTION("Affects") {
+		SECTION("Synonym Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(s1, s2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"s1", "s2"}));
+		}
+
+		SECTION("Synonym Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(a1, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1"}));
+		}
+
+		SECTION("Synonym Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(a1, 20)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1"}));
+		}
+
+		SECTION("Index Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(1, a2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a2"}));
+		}
+
+		SECTION("Index Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(32, 3)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Index Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(1010, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Wildcard Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(_, a2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a2"}));
+		}
+
+		SECTION("Wildcard Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(_, 1)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Wildcard Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(_, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+	}
+
+	SECTION("Affects*") {
+		SECTION("Synonym Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects*(s1, s2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"s1", "s2"}));
+		}
+
+		SECTION("Synonym Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects*(a1, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1"}));
+		}
+
+		SECTION("Synonym Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects*(a1, 20)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1"}));
+		}
+
+		SECTION("Index Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a2 such that Affects*(1, a2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a2"}));
+		}
+
+		SECTION("Index Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects*(32, 3)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Index Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects*(1010, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Wildcard Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects*(_, a2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a2"}));
+		}
+
+		SECTION("Wildcard Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects*(_, 1)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Wildcard Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects*(_, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+	}
+}
+
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery invalid Affects(*)") {
+	QP::QueryPreprocessor qpp;
+	
+	SECTION("Syntax Exceptions") {
+		SECTION("Unexpected Name") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(\"name\", _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(_, \"name\")"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects*(\"name\", _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects*(_, \"name\")"), QP::QuerySyntaxException);
+		}
+
+		SECTION("Misspelled Keyword") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that affects(1, 2)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that affects*(1, 2)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects *(1, 2)"), QP::QuerySyntaxException);
+		}
+
+		SECTION("Invalid Synonym Symbol") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(0s, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(_, 0s)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Affects*(0s, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Affects*(_, 0s)"), QP::QuerySyntaxException);
+		}
+
+		SECTION("Invalid Index Value") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(01, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(_, 03)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Affects*(01, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Affects*(_, 03)"), QP::QuerySyntaxException);
+		}
+
+		SECTION("Incorrect Argument Count") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(01, _, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Affects*(01, _, _)"), QP::QuerySyntaxException);
+		}
+	}
+
+	SECTION("Semantic Exception") {
+		SECTION("Undeclared Synonym") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(_, UND)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(UND, _)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects*(_, UND)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects*(UND, _)"), QP::QuerySemanticException);
+		}
+
+		SECTION("Mismatched Synonym Type") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(_, c1)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(i1, _)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects*(_, w1)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects*(r1, _)"), QP::QuerySemanticException);
+		}
+	}
+}
+
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid while pattern") {
 	shared_ptr<QP::Relationship::Relation> clause;
 
