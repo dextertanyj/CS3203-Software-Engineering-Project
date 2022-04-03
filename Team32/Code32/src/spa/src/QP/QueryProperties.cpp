@@ -1,8 +1,9 @@
 #include "QP/QueryProperties.h"
-#include "QP/Hash.h"
 
 #include <algorithm>
 #include <utility>
+
+#include "QP/Hash.h"
 
 QP::QueryProperties::QueryProperties(Types::DeclarationList declaration_list, Types::SelectList select_list, Types::ClauseList clause_list)
 	: declaration_list(move(declaration_list)), select_list(move(select_list)), clause_list(move(clause_list)) {}

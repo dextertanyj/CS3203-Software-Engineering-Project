@@ -7,9 +7,9 @@
 #include <unordered_map>
 #include <vector>
 
+#include "QP/Hash.h"
 #include "QP/QueryProperties.h"
 #include "QP/Types.h"
-#include "QP/Hash.h"
 
 class QP::QueryPreprocessor {
 public:
