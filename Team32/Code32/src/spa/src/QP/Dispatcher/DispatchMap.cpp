@@ -58,6 +58,8 @@ static const unordered_set<ReferenceType> wildcard = {ReferenceType::Wildcard};
 static const unordered_set<ReferenceType> attribute = {ReferenceType::Attribute, ReferenceType::Name, ReferenceType::StatementIndex};
 
 const unordered_map<ClauseType, vector<unordered_set<ReferenceType>>> syntax_map = {
+	{ClauseType::Affects, {statement, statement}},
+	{ClauseType::AffectsT, {statement, statement}},
 	{ClauseType::Calls, {entity, entity}},
 	{ClauseType::CallsT, {entity, entity}},
 	{ClauseType::Follows, {statement, statement}},

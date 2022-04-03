@@ -2,9 +2,9 @@
 
 #include <string>
 
+#include "QP/Relationship/Relation.h"
 #include "catch.hpp"
 #include "catch_tools.h"
-#include "QP/Relationship/Relation.h"
 
 using namespace QP::Types;
 
@@ -356,115 +356,6 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Follows(*)") {
 	REQUIRE_THROWS_AS(qpp6.parseQuery(UnivDeclarations + "Select s1 such that Follows(s1, 007)"), QP::QuerySyntaxException);
 }
 
-TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Next(*)") {
-	shared_ptr<QP::Relationship::Relation> clause;
-	// Combinations of stmtRef : synonym | '_' | INTEGER for Next
-	QP::QueryPreprocessor qpp1;
-	QP::QueryProperties qp1 = qpp1.parseQuery(UnivDeclarations + "Select s1 such that Next(s1, s2)");
-	clause = qp1.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Next);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"s1", "s2"}));
-
-	QP::QueryPreprocessor qpp2;
-	QP::QueryProperties qp2 = qpp2.parseQuery(UnivDeclarations + "Select i1 such that Next(i1, _)");
-	clause = qp2.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Next);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"i1"}));
-
-	QP::QueryPreprocessor qpp3;
-	QP::QueryProperties qp3 = qpp3.parseQuery(UnivDeclarations + "Select r1 such that Next(r1, 20)");
-	clause = qp3.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Next);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"r1"}));
-
-	QP::QueryPreprocessor qpp4;
-	QP::QueryProperties qp4 = qpp4.parseQuery(UnivDeclarations + "Select a1 such that Next(1, a1)");
-	clause = qp4.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Next);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1"}));
-
-	QP::QueryPreprocessor qpp5;
-	QP::QueryProperties qp5 = qpp5.parseQuery(UnivDeclarations + "Select i1 such that Next(32, 3)");
-	clause = qp5.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Next);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>());
-
-	QP::QueryPreprocessor qpp6;
-	QP::QueryProperties qp6 = qpp6.parseQuery(UnivDeclarations + "Select w2 such that Next(1010, _)");
-	clause = qp6.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Next);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>());
-
-	QP::QueryPreprocessor qpp7;
-	QP::QueryProperties qp7 = qpp7.parseQuery(UnivDeclarations + "Select s1 such that Next(_, p2)");
-	clause = qp7.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Next);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"p2"}));
-
-	QP::QueryPreprocessor qpp8;
-	QP::QueryProperties qp8 = qpp8.parseQuery(UnivDeclarations + "Select i1 such that Next(_, 1)");
-	clause = qp8.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Next);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>());
-
-	QP::QueryPreprocessor qpp9;
-	QP::QueryProperties qp9 = qpp9.parseQuery(UnivDeclarations + "Select w2 such that Next(_, _)");
-	clause = qp9.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Next);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>());
-
-	// Follows*
-	QP::QueryPreprocessor qpp10;
-	QP::QueryProperties qp10 = qpp10.parseQuery(UnivDeclarations + "Select c2 such that Next*(w1, c2)");
-	clause = qp10.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::NextT);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"w1", "c2"}));
-	QP::QueryPreprocessor qpp11;
-	QP::QueryProperties qp11 = qpp11.parseQuery(UnivDeclarations + "Select c2 such that Next*      (   w1  , c2  )");
-	clause = qp11.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::NextT);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"w1", "c2"}));
-
-	// Multiple Follows(*) clauses
-	QP::QueryPreprocessor qpp12;
-	QP::QueryProperties qp12 = qpp12.parseQuery(UnivDeclarations + "Select c2 such that Next(i1, _) and Next(w1, c2)");
-	clause = qp12.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::Next);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"i1"}));
-	clause = qp12.getClauseList()[1].relation;
-	REQUIRE(clause->getType() == ClauseType::Next);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"w1", "c2"}));
-	QP::QueryPreprocessor qpp13;
-	QP::QueryProperties qp13 = qpp13.parseQuery(UnivDeclarations + "Select c2 such that Next*(i1, _) and Next(w1, c2)");
-	clause = qp13.getClauseList()[0].relation;
-	REQUIRE(clause->getType() == ClauseType::NextT);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"i1"}));
-	clause = qp13.getClauseList()[1].relation;
-	REQUIRE(clause->getType() == ClauseType::Next);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"w1", "c2"}));
-}
-
-TEST_CASE("QP::QueryPreprocessor::parseQuery invalid such that Next(*)") {
-	// Missing (
-	QP::QueryPreprocessor qpp1;
-	REQUIRE_THROWS_AS(qpp1.parseQuery(UnivDeclarations + "Select s1 such that Next s1, s2)"), QP::QuerySyntaxException);
-	// disjoint *
-	QP::QueryPreprocessor qpp2;
-	REQUIRE_THROWS_AS(qpp2.parseQuery(UnivDeclarations + "Select s1 such that Next *(s1, s2)"), QP::QuerySyntaxException);
-	// non-statement synonyms
-	QP::QueryPreprocessor qpp3;
-	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select s1 such that Next(pc1, s2)"), QP::QuerySemanticException);
-	// misspelt word
-	QP::QueryPreprocessor qpp4;
-	REQUIRE_THROWS_AS(qpp4.parseQuery(UnivDeclarations + "Select s1 such that Nexts(s1, s2)"), QP::QuerySyntaxException);
-	// disallowed statement reference
-	QP::QueryPreprocessor qpp5;
-	REQUIRE_THROWS_AS(qpp5.parseQuery(UnivDeclarations + "Select s1 such that Next(s1, \"x\")"), QP::QuerySyntaxException);
-	// statement number with leading 0
-	QP::QueryPreprocessor qpp6;
-	REQUIRE_THROWS_AS(qpp6.parseQuery(UnivDeclarations + "Select s1 such that Next(s1, 007)"), QP::QuerySyntaxException);
-}
-
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that UsesS/P") {
 	// Valid UsesS
 	shared_ptr<QP::Relationship::Relation> clause;
@@ -759,6 +650,387 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid such that Calls(*)") {
 	clause = qp10.getClauseList()[0].relation;
 	REQUIRE(clause->getType() == ClauseType::CallsT);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"pc1", "pc2"}));
+}
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery valid Next(*)") {
+	shared_ptr<QP::Relationship::Relation> clause;
+	QP::QueryPreprocessor qpp;
+	QP::QueryProperties qp = {{}, {}, {}};
+
+	SECTION("Next") {
+		SECTION("Synonym Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select s1 such that Next(s1, s2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Next);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"s1", "s2"}));
+		}
+
+		SECTION("Synonym Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select i1 such that Next(i1, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Next);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"i1"}));
+		}
+
+		SECTION("Synonym Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select r1 such that Next(r1, 20)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Next);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"r1"}));
+		}
+
+		SECTION("Index Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Next(1, a1)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Next);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1"}));
+		}
+
+		SECTION("Index Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select i1 such that Next(32, 3)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Next);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Index Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select w2 such that Next(1010, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Next);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Wildcard Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select s1 such that Next(_, p2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Next);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"p2"}));
+		}
+
+		SECTION("Wildcard Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select i1 such that Next(_, 1)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Next);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Wildcard Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select w2 such that Next(_, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Next);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+	}
+
+	SECTION("Next*") {
+		SECTION("Synonym Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select s1 such that Next*(s1, s2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::NextT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"s1", "s2"}));
+		}
+
+		SECTION("Synonym Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select i1 such that Next*(i1, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::NextT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"i1"}));
+		}
+
+		SECTION("Synonym Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select r1 such that Next*(r1, 20)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::NextT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"r1"}));
+		}
+
+		SECTION("Index Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Next*(1, a1)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::NextT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1"}));
+		}
+
+		SECTION("Index Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select i1 such that Next*(32, 3)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::NextT);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Index Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select w2 such that Next*(1010, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::NextT);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Wildcard Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select s1 such that Next*(_, p2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::NextT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"p2"}));
+		}
+
+		SECTION("Wildcard Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select i1 such that Next*(_, 1)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::NextT);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Wildcard Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select w2 such that Next*(_, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::NextT);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+	}
+}
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery invalid Next(*)") {
+	QP::QueryPreprocessor qpp;
+
+	SECTION("Syntax Exceptions") {
+		SECTION("Unexpected Name") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next(\"name\", _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next(_, \"name\")"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next*(\"name\", _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next*(_, \"name\")"), QP::QuerySyntaxException);
+		}
+
+		SECTION("Misspelled Keyword") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that next(1, 2)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that next*(1, 2)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next *(1, 2)"), QP::QuerySyntaxException);
+		}
+
+		SECTION("Invalid Synonym Symbol") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next(0s, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next(_, 0s)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Next*(0s, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Next*(_, 0s)"), QP::QuerySyntaxException);
+		}
+
+		SECTION("Invalid Index Value") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next(01, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next(_, 03)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Next*(01, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Next*(_, 03)"), QP::QuerySyntaxException);
+		}
+
+		SECTION("Incorrect Argument Count") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next(01, _, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Next*(01, _, _)"), QP::QuerySyntaxException);
+		}
+	}
+
+	SECTION("Semantic Exception") {
+		SECTION("Undeclared Synonym") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next(_, UND)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next(UND, _)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next*(_, UND)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next*(UND, _)"), QP::QuerySemanticException);
+		}
+
+		SECTION("Mismatched Synonym Type") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next(_, v1)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next(pc1, _)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next*(_, v1)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Next*(ct1, _)"), QP::QuerySemanticException);
+		}
+	}
+}
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery valid Affects(*)") {
+	shared_ptr<QP::Relationship::Relation> clause;
+	QP::QueryPreprocessor qpp;
+	QP::QueryProperties qp = {{}, {}, {}};
+	
+	SECTION("Affects") {
+		SECTION("Synonym Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(s1, s2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"s1", "s2"}));
+		}
+
+		SECTION("Synonym Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(a1, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1"}));
+		}
+
+		SECTION("Synonym Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(a1, 20)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1"}));
+		}
+
+		SECTION("Index Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(1, a2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a2"}));
+		}
+
+		SECTION("Index Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(32, 3)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Index Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(1010, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Wildcard Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(_, a2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a2"}));
+		}
+
+		SECTION("Wildcard Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(_, 1)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Wildcard Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects(_, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::Affects);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+	}
+
+	SECTION("Affects*") {
+		SECTION("Synonym Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects*(s1, s2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"s1", "s2"}));
+		}
+
+		SECTION("Synonym Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects*(a1, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1"}));
+		}
+
+		SECTION("Synonym Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects*(a1, 20)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1"}));
+		}
+
+		SECTION("Index Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a2 such that Affects*(1, a2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a2"}));
+		}
+
+		SECTION("Index Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects*(32, 3)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Index Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects*(1010, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Wildcard Synonym") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects*(_, a2)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a2"}));
+		}
+
+		SECTION("Wildcard Index") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects*(_, 1)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+
+		SECTION("Wildcard Wildcard") {
+			qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Affects*(_, _)");
+			clause = qp.getClauseList()[0].relation;
+			REQUIRE(clause->getType() == ClauseType::AffectsT);
+			REQUIRE(clause->getDeclarationSymbols().empty());
+		}
+	}
+}
+
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery invalid Affects(*)") {
+	QP::QueryPreprocessor qpp;
+	
+	SECTION("Syntax Exceptions") {
+		SECTION("Unexpected Name") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(\"name\", _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(_, \"name\")"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects*(\"name\", _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects*(_, \"name\")"), QP::QuerySyntaxException);
+		}
+
+		SECTION("Misspelled Keyword") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that affects(1, 2)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that affects*(1, 2)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects *(1, 2)"), QP::QuerySyntaxException);
+		}
+
+		SECTION("Invalid Synonym Symbol") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(0s, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(_, 0s)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Affects*(0s, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Affects*(_, 0s)"), QP::QuerySyntaxException);
+		}
+
+		SECTION("Invalid Index Value") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(01, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(_, 03)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Affects*(01, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Affects*(_, 03)"), QP::QuerySyntaxException);
+		}
+
+		SECTION("Incorrect Argument Count") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(01, _, _)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select p1 such that Affects*(01, _, _)"), QP::QuerySyntaxException);
+		}
+	}
+
+	SECTION("Semantic Exception") {
+		SECTION("Undeclared Synonym") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(_, UND)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(UND, _)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects*(_, UND)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects*(UND, _)"), QP::QuerySemanticException);
+		}
+
+		SECTION("Mismatched Synonym Type") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(_, c1)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects(i1, _)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects*(_, w1)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 such that Affects*(r1, _)"), QP::QuerySemanticException);
+		}
+	}
 }
 
 TEST_CASE("QP::QueryPreprocessor::parseQuery valid while pattern") {
