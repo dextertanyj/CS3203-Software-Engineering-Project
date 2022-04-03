@@ -4,6 +4,7 @@
 #include "QP/Executor/StatementExecutor.h"
 
 #include <algorithm>
+#include <iterator>
 
 #include "QP/QueryUtils.h"
 
