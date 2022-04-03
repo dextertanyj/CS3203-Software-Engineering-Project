@@ -9,7 +9,7 @@
 #define TUPLE_SEPERATOR " "
 #define TRUE "TRUE"
 #define FALSE "FALSE"
-using QP::Types::Declaration;
+
 using QP::Types::DeclarationList;
 
 QP::QueryPostProcessor::QueryPostProcessor(const StorageAdapter& store) : store(store) {}
