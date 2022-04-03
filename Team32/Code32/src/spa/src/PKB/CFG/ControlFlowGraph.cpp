@@ -198,43 +198,43 @@ void PKB::ControlFlowGraph::clear() {
 	end_map.clear();
 }
 
-unordered_set<shared_ptr<PKB::StatementNode>> PKB::ControlFlowGraph::getPreviousNodes(StmtRef index) const {
+StmtRefSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef index) const {
 	auto node = getNode(index);
 	if (node == nullptr) {
 		return {};
 	}
-	unordered_set<shared_ptr<StatementNode>> result_set;
+	StmtRefSet result_set;
 	for (const auto& previous : node->getPreviousNodes()) {
 		if (previous->getNodeType() == NodeType::Dummy) {
 			auto previous_set = collectPreviousOfDummy(previous);
 			for (const auto& real : previous_set) {
-				result_set.insert(getNode(real->getIdentifier()));
+				result_set.insert(real->getIdentifier());
 			}
 			continue;
 		}
 		assert(dynamic_pointer_cast<StatementNode>(previous) != nullptr);
-		result_set.insert(dynamic_pointer_cast<StatementNode>(previous));
+		result_set.insert(previous->getNodeRef());
 	}
 	return result_set;
 }
 
 
-unordered_set<shared_ptr<PKB::StatementNode>> PKB::ControlFlowGraph::getNextNodes(StmtRef index) const {
+StmtRefSet PKB::ControlFlowGraph::getNextNodes(StmtRef index) const {
 	auto node = getNode(index);
 	if (node == nullptr) {
 		return {};
 	}
-	unordered_set<shared_ptr<StatementNode>> result_set;
+	StmtRefSet result_set;
 	for (const auto& previous : node->getNextNodes()) {
 		if (previous->getNodeType() == NodeType::Dummy) {
 			auto previous_set = collectNextOfDummy(previous);
 			for (const auto& real : previous_set) {
-				result_set.insert(getNode(real->getIdentifier()));
+				result_set.insert(real->getIdentifier());
 			}
 			continue;
 		}
 		assert(dynamic_pointer_cast<StatementNode>(previous) != nullptr);
-		result_set.insert(dynamic_pointer_cast<StatementNode>(previous));
+		result_set.insert(previous->getNodeRef());
 	}
 	return result_set;
 }

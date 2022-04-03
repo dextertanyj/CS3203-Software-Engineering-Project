@@ -17,8 +17,8 @@ public:
 	void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref);
 
 	[[nodiscard]] bool contains(StmtRef index) const;
-	[[nodiscard]] unordered_set<shared_ptr<StatementNode>> getPreviousNodes(StmtRef index) const;
-	[[nodiscard]] unordered_set<shared_ptr<StatementNode>> getNextNodes(StmtRef index) const;
+	[[nodiscard]] StmtRefSet getPreviousNodes(StmtRef index) const;
+	[[nodiscard]] StmtRefSet getNextNodes(StmtRef index) const;
 	[[nodiscard]] shared_ptr<StmtInfo> getStatementInfo(StmtRef index) const;
 
 	[[nodiscard]] shared_ptr<StatementNode> getNode(StmtRef ref) const;
