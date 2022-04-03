@@ -12,10 +12,20 @@
 class PKB::ControlFlowGraph {
 public:
 	void createNode(shared_ptr<StmtInfo> stmt_info);
-	shared_ptr<StatementNode> getNode(StmtRef ref);
-	size_t getGraphIndex(StmtRef ref);
-	StmtRef getFirstIndex(size_t graph_index);
-	StmtRef getLastIndex(size_t graph_index);
+	void setNext(StmtRef previous, StmtRef next);
+	void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next);
+	void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref);
+
+	[[nodiscard]] bool contains(StmtRef index) const;
+	[[nodiscard]] unordered_set<shared_ptr<StatementNode>> getPreviousNodes(StmtRef index) const;
+	[[nodiscard]] unordered_set<shared_ptr<StatementNode>> getNextNodes(StmtRef index) const;
+	[[nodiscard]] shared_ptr<StmtInfo> getStatementInfo(StmtRef index) const;
+
+	[[nodiscard]] shared_ptr<StatementNode> getNode(StmtRef ref) const;
+	[[nodiscard]] StmtType getType(StmtRef ref) const;
+	[[nodiscard]] size_t getGraphIndex(StmtRef ref) const;
+	[[nodiscard]] StmtRef getFirstIndex(size_t graph_index) const;
+	[[nodiscard]] StmtRef getLastIndex(size_t graph_index) const;
 	shared_ptr<NodeInterface> getStart(size_t graph_index);
 	shared_ptr<NodeInterface> getEnd(size_t graph_index);
 	void clear();

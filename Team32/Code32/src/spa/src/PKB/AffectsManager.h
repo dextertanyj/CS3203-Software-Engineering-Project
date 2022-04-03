@@ -28,8 +28,8 @@ public:
 private:
 	struct DFSInfo {
 		VarRef variable;
-		stack<shared_ptr<PKB::NodeInterface>> node_stack;
-		unordered_set<shared_ptr<PKB::NodeInterface>> visited_set;
+		stack<StmtRef> node_stack;
+		unordered_set<StmtRef> visited_set;
 		StmtInfoPtrSet nodes;
 	};
 
@@ -53,11 +53,11 @@ private:
 	unordered_map<StmtRef, StmtInfoPtrSet> affects_star_cache;
 	unordered_map<StmtRef, StmtInfoPtrSet> affected_star_cache;
 
-	StmtInfoPtrSet getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode>& node, VarRef variable);
-	void processDFSVisit(DFSInfo& info, StmtInfoPtrSet (*collector)(const shared_ptr<NodeInterface>&),
-	                     void (AffectsManager::*processor)(DFSInfo&, const shared_ptr<PKB::StatementNode>&));
-	void processNodeAffects(DFSInfo& info, const shared_ptr<PKB::StatementNode>& curr_stmt_node);
-	void processNodeAffected(DFSInfo& info, const shared_ptr<PKB::StatementNode>& curr_stmt_node);
+	StmtInfoPtrSet getAffectedByNodeAndVar(const StmtRef& node, VarRef variable);
+	void processDFSVisit(DFSInfo& info,
+	                     void (AffectsManager::*processor)(DFSInfo&, const StmtRef&));
+	void processNodeAffects(DFSInfo& info, const StmtRef& current);
+	void processNodeAffected(DFSInfo& info, const StmtRef& current);
 
 	void buildCacheGraph(size_t graph_index);
 	void computeAllAffects(StmtRef start, StmtRef end);

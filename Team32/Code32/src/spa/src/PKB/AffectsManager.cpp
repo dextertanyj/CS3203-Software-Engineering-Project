@@ -17,18 +17,21 @@ StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
 		return affects_cache.at(first);
 	}
 
-	shared_ptr<PKB::StatementNode> start_node = this->control_flow_graph.getNode(first);
-	if (start_node->getStmtInfo()->getType() != StmtType::Assign) {
+	if (!control_flow_graph.contains(first)) {
+		return {};
+	}
+
+	if (control_flow_graph.getType(first) != StmtType::Assign) {
 		return {};
 	}
 
 	VarRef variable = *(modifies_store.getByStmt(first).begin());
 	DFSInfo info = {std::move(variable), {}, {}, {}};
-	for (const auto& neighbour : start_node->getNextNodes()) {
-		info.node_stack.push(neighbour);
+	for (const auto& neighbour : control_flow_graph.getNextNodes(first)) {
+		info.node_stack.push(neighbour->getNodeRef());
 	}
 	while (!info.node_stack.empty()) {
-		processDFSVisit(info, &ControlFlowGraph::collectNextOfDummy, &AffectsManager::processNodeAffects);
+		processDFSVisit(info, &AffectsManager::processNodeAffects);
 	}
 
 	affects_cache.insert({first, info.nodes});
@@ -40,14 +43,18 @@ StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
 		return affected_cache.at(second);
 	}
 
-	shared_ptr<PKB::StatementNode> node = this->control_flow_graph.getNode(second);
-	if (node->getStmtInfo()->getType() != StmtType::Assign) {
+	if (!control_flow_graph.contains(second)) {
 		return {};
 	}
+
+	if (control_flow_graph.getType(second) != StmtType::Assign) {
+		return {};
+	}
+
 	VarRefSet variables = uses_store.getByStmt(second);
 	StmtInfoPtrSet affected_set;
 	for (const string& variable : variables) {
-		StmtInfoPtrSet affected = getAffectedByNodeAndVar(node, variable);
+		StmtInfoPtrSet affected = getAffectedByNodeAndVar(second, variable);
 		affected_set.insert(affected.begin(), affected.end());
 	}
 
@@ -55,55 +62,46 @@ StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
 	return affected_set;
 }
 
-StmtInfoPtrSet PKB::AffectsManager::getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode>& node, VarRef variable) {
+StmtInfoPtrSet PKB::AffectsManager::getAffectedByNodeAndVar(const StmtRef& node, VarRef variable) {
 	DFSInfo info = {std::move(variable), {}, {}, {}};
-	for (const auto& neighbour : node->getPreviousNodes()) {
-		info.node_stack.push(neighbour);
+	for (const auto& neighbour : control_flow_graph.getPreviousNodes(node)) {
+		info.node_stack.push(neighbour->getNodeRef());
 	}
 	while (!info.node_stack.empty()) {
-		processDFSVisit(info, &ControlFlowGraph::collectPreviousOfDummy, &AffectsManager::processNodeAffected);
+		processDFSVisit(info, &AffectsManager::processNodeAffected);
 	}
 	return info.nodes;
 }
 
-void PKB::AffectsManager::processDFSVisit(DFSInfo& info, StmtInfoPtrSet (*collector)(const shared_ptr<NodeInterface>&),
-                                          void (AffectsManager::*processor)(DFSInfo&, const shared_ptr<PKB::StatementNode>&)) {
-	shared_ptr<PKB::NodeInterface> curr_node = info.node_stack.top();
+void PKB::AffectsManager::processDFSVisit(DFSInfo& info, void (AffectsManager::*processor)(DFSInfo&, const StmtRef&)) {
+	StmtRef current = info.node_stack.top();
 	info.node_stack.pop();
-	if (info.visited_set.find(curr_node) != info.visited_set.end()) {
+	if (info.visited_set.find(current) != info.visited_set.end()) {
 		return;
 	}
-	if (curr_node->getNodeType() == NodeType::Dummy) {
-		StmtInfoPtrSet real_nodes = (*collector)(curr_node);
-		for (const auto& real_node : real_nodes) {
-			info.node_stack.push(control_flow_graph.getNode(real_node->getIdentifier()));
-		}
-		return;
-	}
-	info.visited_set.insert(curr_node);
-	shared_ptr<PKB::StatementNode> curr_stmt_node = dynamic_pointer_cast<PKB::StatementNode>(curr_node);
-	(this->*processor)(info, curr_stmt_node);
+	info.visited_set.insert(current);
+	(this->*processor)(info, current);
 }
 
-void PKB::AffectsManager::processNodeAffects(DFSInfo& info, const shared_ptr<PKB::StatementNode>& curr_stmt_node) {
-	if (uses_store.check(curr_stmt_node->getNodeRef(), info.variable) && curr_stmt_node->getStmtInfo()->getType() == StmtType::Assign) {
-		info.nodes.insert(curr_stmt_node->getStmtInfo());
+void PKB::AffectsManager::processNodeAffects(DFSInfo& info, const StmtRef& current) {
+	if (uses_store.check(current, info.variable) && control_flow_graph.getType(current) == StmtType::Assign) {
+		info.nodes.insert(control_flow_graph.getStatementInfo(current));
 	}
-	if (!modifies_store.check(curr_stmt_node->getNodeRef(), info.variable)) {
-		for (const auto& neighbour : curr_stmt_node->getNextNodes()) {
-			info.node_stack.push(neighbour);
+	if (!modifies_store.check(current, info.variable)) {
+		for (const auto& neighbour : control_flow_graph.getNextNodes(current)) {
+			info.node_stack.push(neighbour->getNodeRef());
 		}
 	}
 }
 
-void PKB::AffectsManager::processNodeAffected(DFSInfo& info, const shared_ptr<PKB::StatementNode>& curr_stmt_node) {
-	if (modifies_store.check(curr_stmt_node->getNodeRef(), info.variable)) {
-		if (curr_stmt_node->getStmtInfo()->getType() == StmtType::Assign) {
-			info.nodes.insert(curr_stmt_node->getStmtInfo());
+void PKB::AffectsManager::processNodeAffected(DFSInfo& info, const StmtRef& current) {
+	if (modifies_store.check(current, info.variable)) {
+		if (control_flow_graph.getType(current) == StmtType::Assign) {
+			info.nodes.insert(control_flow_graph.getStatementInfo(current));
 		}
 	} else {
-		for (const auto& neighbour : curr_stmt_node->getPreviousNodes()) {
-			info.node_stack.push(neighbour);
+		for (const auto& neighbour : control_flow_graph.getPreviousNodes(current)) {
+			info.node_stack.push(neighbour->getNodeRef());
 		}
 	}
 }

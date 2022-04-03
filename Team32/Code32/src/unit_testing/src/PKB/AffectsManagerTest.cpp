@@ -45,10 +45,10 @@ TEST_CASE("PKB::AffectsManager::getAffects Test") {
 		CHECK_NOTHROW(uses_store.set(assign_stmt_4, "z"));
 		CHECK_NOTHROW(uses_store.set(assign_stmt_5, "x"));
 
-		CHECK_NOTHROW(next_manager.setNext(1, 2));
-		CHECK_NOTHROW(next_manager.setNext(2, 3));
-		CHECK_NOTHROW(next_manager.setNext(3, 4));
-		CHECK_NOTHROW(next_manager.setNext(4, 5));
+		CHECK_NOTHROW(cfg.setNext(1, 2));
+		CHECK_NOTHROW(cfg.setNext(2, 3));
+		CHECK_NOTHROW(cfg.setNext(3, 4));
+		CHECK_NOTHROW(cfg.setNext(4, 5));
 
 		CHECK(affects_manager.getAffects(1) == StmtInfoPtrSet{assign_stmt_2, assign_stmt_3});
 		CHECK(affects_manager.getAffects(2) == StmtInfoPtrSet{assign_stmt_4});
@@ -108,15 +108,15 @@ TEST_CASE("PKB::AffectsManager::getAffects Test") {
 		CHECK_NOTHROW(uses_store.set(assign_stmt_8, "x"));
 		CHECK_NOTHROW(uses_store.set(assign_stmt_9, "b"));
 
-		CHECK_NOTHROW(next_manager.setIfNext(2, 3, 5));
-		CHECK_NOTHROW(next_manager.setIfExit(4, 7, 2));
+		CHECK_NOTHROW(cfg.setIfNext(2, 3, 5));
+		CHECK_NOTHROW(cfg.setIfExit(4, 7, 2));
 
-		CHECK_NOTHROW(next_manager.setNext(1, 2));
-		CHECK_NOTHROW(next_manager.setNext(2, 8));
-		CHECK_NOTHROW(next_manager.setNext(3, 4));
-		CHECK_NOTHROW(next_manager.setNext(5, 6));
-		CHECK_NOTHROW(next_manager.setNext(6, 7));
-		CHECK_NOTHROW(next_manager.setNext(8, 9));
+		CHECK_NOTHROW(cfg.setNext(1, 2));
+		CHECK_NOTHROW(cfg.setNext(2, 8));
+		CHECK_NOTHROW(cfg.setNext(3, 4));
+		CHECK_NOTHROW(cfg.setNext(5, 6));
+		CHECK_NOTHROW(cfg.setNext(6, 7));
+		CHECK_NOTHROW(cfg.setNext(8, 9));
 
 		CHECK_NOTHROW(cfg.optimize());
 
@@ -186,18 +186,18 @@ TEST_CASE("PKB::AffectsManager::getAffects Test") {
 		CHECK_NOTHROW(uses_store.set(assign_stmt_9, "x"));
 		CHECK_NOTHROW(uses_store.set(assign_stmt_10, "x"));
 
-		CHECK_NOTHROW(next_manager.setNext(1, 2));
-		CHECK_NOTHROW(next_manager.setNext(2, 3));
-		CHECK_NOTHROW(next_manager.setNext(3, 2));
-		CHECK_NOTHROW(next_manager.setNext(2, 4));
-		CHECK_NOTHROW(next_manager.setNext(4, 5));
-		CHECK_NOTHROW(next_manager.setNext(5, 6));
-		CHECK_NOTHROW(next_manager.setNext(6, 7));
-		CHECK_NOTHROW(next_manager.setNext(7, 8));
-		CHECK_NOTHROW(next_manager.setNext(7, 4));
-		CHECK_NOTHROW(next_manager.setNext(8, 9));
-		CHECK_NOTHROW(next_manager.setNext(9, 7));
-		CHECK_NOTHROW(next_manager.setNext(4, 10));
+		CHECK_NOTHROW(cfg.setNext(1, 2));
+		CHECK_NOTHROW(cfg.setNext(2, 3));
+		CHECK_NOTHROW(cfg.setNext(3, 2));
+		CHECK_NOTHROW(cfg.setNext(2, 4));
+		CHECK_NOTHROW(cfg.setNext(4, 5));
+		CHECK_NOTHROW(cfg.setNext(5, 6));
+		CHECK_NOTHROW(cfg.setNext(6, 7));
+		CHECK_NOTHROW(cfg.setNext(7, 8));
+		CHECK_NOTHROW(cfg.setNext(7, 4));
+		CHECK_NOTHROW(cfg.setNext(8, 9));
+		CHECK_NOTHROW(cfg.setNext(9, 7));
+		CHECK_NOTHROW(cfg.setNext(4, 10));
 
 		CHECK(affects_manager.getAffects(1) == StmtInfoPtrSet{assign_stmt_3, assign_stmt_5, assign_stmt_10});
 		CHECK(affects_manager.getAffects(2).empty());
@@ -256,10 +256,10 @@ TEST_CASE("PKB::AffectsManager::getAffected Test") {
 		CHECK_NOTHROW(uses_store.set(assign_stmt_5, "c"));
 		CHECK_NOTHROW(uses_store.set(assign_stmt_5, "d"));
 
-		CHECK_NOTHROW(next_manager.setNext(1, 2));
-		CHECK_NOTHROW(next_manager.setNext(2, 3));
-		CHECK_NOTHROW(next_manager.setNext(3, 4));
-		CHECK_NOTHROW(next_manager.setNext(4, 5));
+		CHECK_NOTHROW(cfg.setNext(1, 2));
+		CHECK_NOTHROW(cfg.setNext(2, 3));
+		CHECK_NOTHROW(cfg.setNext(3, 4));
+		CHECK_NOTHROW(cfg.setNext(4, 5));
 
 		CHECK(affects_manager.getAffected(1).empty());
 		CHECK(affects_manager.getAffected(2) == StmtInfoPtrSet{assign_stmt_1});
@@ -330,16 +330,16 @@ TEST_CASE("PKB::AffectsManager::getAffected Test") {
 		CHECK_NOTHROW(uses_store.set(assign_stmt_10, "c"));
 		CHECK_NOTHROW(uses_store.set(assign_stmt_10, "x"));
 
-		CHECK_NOTHROW(next_manager.setIfNext(5, 6, 8));
-		CHECK_NOTHROW(next_manager.setIfExit(7, 9, 5));
+		CHECK_NOTHROW(cfg.setIfNext(5, 6, 8));
+		CHECK_NOTHROW(cfg.setIfExit(7, 9, 5));
 
-		CHECK_NOTHROW(next_manager.setNext(1, 2));
-		CHECK_NOTHROW(next_manager.setNext(2, 3));
-		CHECK_NOTHROW(next_manager.setNext(3, 4));
-		CHECK_NOTHROW(next_manager.setNext(4, 5));
-		CHECK_NOTHROW(next_manager.setNext(5, 10));
-		CHECK_NOTHROW(next_manager.setNext(6, 7));
-		CHECK_NOTHROW(next_manager.setNext(8, 9));
+		CHECK_NOTHROW(cfg.setNext(1, 2));
+		CHECK_NOTHROW(cfg.setNext(2, 3));
+		CHECK_NOTHROW(cfg.setNext(3, 4));
+		CHECK_NOTHROW(cfg.setNext(4, 5));
+		CHECK_NOTHROW(cfg.setNext(5, 10));
+		CHECK_NOTHROW(cfg.setNext(6, 7));
+		CHECK_NOTHROW(cfg.setNext(8, 9));
 
 		CHECK_NOTHROW(cfg.optimize());
 
@@ -411,18 +411,18 @@ TEST_CASE("PKB::AffectsManager::getAffected Test") {
 		CHECK_NOTHROW(uses_store.set(assign_stmt_9, "x"));
 		CHECK_NOTHROW(uses_store.set(assign_stmt_10, "x"));
 
-		CHECK_NOTHROW(next_manager.setNext(1, 2));
-		CHECK_NOTHROW(next_manager.setNext(2, 3));
-		CHECK_NOTHROW(next_manager.setNext(3, 2));
-		CHECK_NOTHROW(next_manager.setNext(2, 4));
-		CHECK_NOTHROW(next_manager.setNext(4, 5));
-		CHECK_NOTHROW(next_manager.setNext(5, 6));
-		CHECK_NOTHROW(next_manager.setNext(6, 7));
-		CHECK_NOTHROW(next_manager.setNext(7, 8));
-		CHECK_NOTHROW(next_manager.setNext(7, 4));
-		CHECK_NOTHROW(next_manager.setNext(8, 9));
-		CHECK_NOTHROW(next_manager.setNext(9, 7));
-		CHECK_NOTHROW(next_manager.setNext(4, 10));
+		CHECK_NOTHROW(cfg.setNext(1, 2));
+		CHECK_NOTHROW(cfg.setNext(2, 3));
+		CHECK_NOTHROW(cfg.setNext(3, 2));
+		CHECK_NOTHROW(cfg.setNext(2, 4));
+		CHECK_NOTHROW(cfg.setNext(4, 5));
+		CHECK_NOTHROW(cfg.setNext(5, 6));
+		CHECK_NOTHROW(cfg.setNext(6, 7));
+		CHECK_NOTHROW(cfg.setNext(7, 8));
+		CHECK_NOTHROW(cfg.setNext(7, 4));
+		CHECK_NOTHROW(cfg.setNext(8, 9));
+		CHECK_NOTHROW(cfg.setNext(9, 7));
+		CHECK_NOTHROW(cfg.setNext(4, 10));
 
 		CHECK(affects_manager.getAffected(1).empty());
 		CHECK(affects_manager.getAffected(2).empty());
@@ -497,18 +497,18 @@ TEST_CASE("PKB::AffectsManager::checkAffects Test") {
 	CHECK_NOTHROW(uses_store.set(assign_stmt_9, "x"));
 	CHECK_NOTHROW(uses_store.set(assign_stmt_10, "x"));
 
-	CHECK_NOTHROW(next_manager.setNext(1, 2));
-	CHECK_NOTHROW(next_manager.setNext(2, 3));
-	CHECK_NOTHROW(next_manager.setNext(3, 2));
-	CHECK_NOTHROW(next_manager.setNext(2, 4));
-	CHECK_NOTHROW(next_manager.setNext(4, 5));
-	CHECK_NOTHROW(next_manager.setNext(5, 6));
-	CHECK_NOTHROW(next_manager.setNext(6, 7));
-	CHECK_NOTHROW(next_manager.setNext(7, 8));
-	CHECK_NOTHROW(next_manager.setNext(7, 4));
-	CHECK_NOTHROW(next_manager.setNext(8, 9));
-	CHECK_NOTHROW(next_manager.setNext(9, 7));
-	CHECK_NOTHROW(next_manager.setNext(4, 10));
+	CHECK_NOTHROW(cfg.setNext(1, 2));
+	CHECK_NOTHROW(cfg.setNext(2, 3));
+	CHECK_NOTHROW(cfg.setNext(3, 2));
+	CHECK_NOTHROW(cfg.setNext(2, 4));
+	CHECK_NOTHROW(cfg.setNext(4, 5));
+	CHECK_NOTHROW(cfg.setNext(5, 6));
+	CHECK_NOTHROW(cfg.setNext(6, 7));
+	CHECK_NOTHROW(cfg.setNext(7, 8));
+	CHECK_NOTHROW(cfg.setNext(7, 4));
+	CHECK_NOTHROW(cfg.setNext(8, 9));
+	CHECK_NOTHROW(cfg.setNext(9, 7));
+	CHECK_NOTHROW(cfg.setNext(4, 10));
 
 	CHECK_NOTHROW(cfg.optimize());
 
@@ -595,18 +595,18 @@ TEST_CASE("PKB::AffectsManager::checkAffectsStar Test") {
 	CHECK_NOTHROW(uses_store.set(assign_stmt_9, "x"));
 	CHECK_NOTHROW(uses_store.set(assign_stmt_10, "x"));
 
-	CHECK_NOTHROW(next_manager.setNext(1, 2));
-	CHECK_NOTHROW(next_manager.setNext(2, 3));
-	CHECK_NOTHROW(next_manager.setNext(3, 2));
-	CHECK_NOTHROW(next_manager.setNext(2, 4));
-	CHECK_NOTHROW(next_manager.setNext(4, 5));
-	CHECK_NOTHROW(next_manager.setNext(5, 6));
-	CHECK_NOTHROW(next_manager.setNext(6, 7));
-	CHECK_NOTHROW(next_manager.setNext(7, 8));
-	CHECK_NOTHROW(next_manager.setNext(7, 4));
-	CHECK_NOTHROW(next_manager.setNext(8, 9));
-	CHECK_NOTHROW(next_manager.setNext(9, 7));
-	CHECK_NOTHROW(next_manager.setNext(4, 10));
+	CHECK_NOTHROW(cfg.setNext(1, 2));
+	CHECK_NOTHROW(cfg.setNext(2, 3));
+	CHECK_NOTHROW(cfg.setNext(3, 2));
+	CHECK_NOTHROW(cfg.setNext(2, 4));
+	CHECK_NOTHROW(cfg.setNext(4, 5));
+	CHECK_NOTHROW(cfg.setNext(5, 6));
+	CHECK_NOTHROW(cfg.setNext(6, 7));
+	CHECK_NOTHROW(cfg.setNext(7, 8));
+	CHECK_NOTHROW(cfg.setNext(7, 4));
+	CHECK_NOTHROW(cfg.setNext(8, 9));
+	CHECK_NOTHROW(cfg.setNext(9, 7));
+	CHECK_NOTHROW(cfg.setNext(4, 10));
 
 	CHECK_NOTHROW(cfg.optimize());
 
@@ -665,13 +665,13 @@ TEST_CASE("PKB::AffectsManager::checkAffectsStar While Nested Test") {
 	CHECK_NOTHROW(uses_store.set(assign_stmt_5, "b"));
 	CHECK_NOTHROW(uses_store.set(assign_stmt_6, "b"));
 
-	CHECK_NOTHROW(next_manager.setNext(1, 2));
-	CHECK_NOTHROW(next_manager.setNext(2, 3));
-	CHECK_NOTHROW(next_manager.setNext(3, 1));
-	CHECK_NOTHROW(next_manager.setNext(3, 4));
-	CHECK_NOTHROW(next_manager.setNext(4, 5));
-	CHECK_NOTHROW(next_manager.setNext(5, 6));
-	CHECK_NOTHROW(next_manager.setNext(6, 3));
+	CHECK_NOTHROW(cfg.setNext(1, 2));
+	CHECK_NOTHROW(cfg.setNext(2, 3));
+	CHECK_NOTHROW(cfg.setNext(3, 1));
+	CHECK_NOTHROW(cfg.setNext(3, 4));
+	CHECK_NOTHROW(cfg.setNext(4, 5));
+	CHECK_NOTHROW(cfg.setNext(5, 6));
+	CHECK_NOTHROW(cfg.setNext(6, 3));
 
 	CHECK_NOTHROW(cfg.optimize());
 
@@ -755,18 +755,18 @@ TEST_CASE("PKB::AffectsManager::getAffectsStar Test") {
 	CHECK_NOTHROW(uses_store.set(assign_stmt_10, "x"));
 	CHECK_NOTHROW(uses_store.set(assign_stmt_11, "x"));
 
-	CHECK_NOTHROW(next_manager.setNext(1, 2));
-	CHECK_NOTHROW(next_manager.setNext(2, 3));
-	CHECK_NOTHROW(next_manager.setNext(3, 2));
-	CHECK_NOTHROW(next_manager.setNext(2, 4));
-	CHECK_NOTHROW(next_manager.setIfNext(4, 5, 10));
-	CHECK_NOTHROW(next_manager.setNext(5, 6));
-	CHECK_NOTHROW(next_manager.setNext(6, 7));
-	CHECK_NOTHROW(next_manager.setNext(7, 8));
-	CHECK_NOTHROW(next_manager.setNext(8, 9));
-	CHECK_NOTHROW(next_manager.setNext(9, 7));
-	CHECK_NOTHROW(next_manager.setIfExit(7, 10, 4));
-	CHECK_NOTHROW(next_manager.setNext(4, 11));
+	CHECK_NOTHROW(cfg.setNext(1, 2));
+	CHECK_NOTHROW(cfg.setNext(2, 3));
+	CHECK_NOTHROW(cfg.setNext(3, 2));
+	CHECK_NOTHROW(cfg.setNext(2, 4));
+	CHECK_NOTHROW(cfg.setIfNext(4, 5, 10));
+	CHECK_NOTHROW(cfg.setNext(5, 6));
+	CHECK_NOTHROW(cfg.setNext(6, 7));
+	CHECK_NOTHROW(cfg.setNext(7, 8));
+	CHECK_NOTHROW(cfg.setNext(8, 9));
+	CHECK_NOTHROW(cfg.setNext(9, 7));
+	CHECK_NOTHROW(cfg.setIfExit(7, 10, 4));
+	CHECK_NOTHROW(cfg.setNext(4, 11));
 
 	CHECK_NOTHROW(cfg.optimize());
 
@@ -832,16 +832,16 @@ TEST_CASE("PKB::AffectsManager::getAffectsStar Nested While Test") {
 	CHECK_NOTHROW(uses_store.set(assign_stmt_7, "x"));
 	CHECK_NOTHROW(uses_store.set(assign_stmt_8, VarRefSet{"b", "x"}));
 
-	CHECK_NOTHROW(next_manager.setNext(1, 2));
-	CHECK_NOTHROW(next_manager.setNext(2, 3));
-	CHECK_NOTHROW(next_manager.setNext(3, 4));
-	CHECK_NOTHROW(next_manager.setNext(4, 5));
-	CHECK_NOTHROW(next_manager.setNext(5, 3));
-	CHECK_NOTHROW(next_manager.setNext(3, 6));
-	CHECK_NOTHROW(next_manager.setNext(6, 7));
-	CHECK_NOTHROW(next_manager.setNext(7, 2));
-	CHECK_NOTHROW(next_manager.setNext(2, 8));
-	CHECK_NOTHROW(next_manager.setNext(8, 1));
+	CHECK_NOTHROW(cfg.setNext(1, 2));
+	CHECK_NOTHROW(cfg.setNext(2, 3));
+	CHECK_NOTHROW(cfg.setNext(3, 4));
+	CHECK_NOTHROW(cfg.setNext(4, 5));
+	CHECK_NOTHROW(cfg.setNext(5, 3));
+	CHECK_NOTHROW(cfg.setNext(3, 6));
+	CHECK_NOTHROW(cfg.setNext(6, 7));
+	CHECK_NOTHROW(cfg.setNext(7, 2));
+	CHECK_NOTHROW(cfg.setNext(2, 8));
+	CHECK_NOTHROW(cfg.setNext(8, 1));
 
 	CHECK_NOTHROW(cfg.optimize());
 
@@ -918,18 +918,18 @@ TEST_CASE("PKB::AffectsManager::getAffectedStar Test") {
 	CHECK_NOTHROW(uses_store.set(assign_stmt_10, "x"));
 	CHECK_NOTHROW(uses_store.set(assign_stmt_11, "x"));
 
-	CHECK_NOTHROW(next_manager.setNext(1, 2));
-	CHECK_NOTHROW(next_manager.setNext(2, 3));
-	CHECK_NOTHROW(next_manager.setNext(3, 2));
-	CHECK_NOTHROW(next_manager.setNext(2, 4));
-	CHECK_NOTHROW(next_manager.setIfNext(4, 5, 10));
-	CHECK_NOTHROW(next_manager.setNext(5, 6));
-	CHECK_NOTHROW(next_manager.setNext(6, 7));
-	CHECK_NOTHROW(next_manager.setNext(7, 8));
-	CHECK_NOTHROW(next_manager.setNext(8, 9));
-	CHECK_NOTHROW(next_manager.setNext(9, 7));
-	CHECK_NOTHROW(next_manager.setIfExit(7, 10, 4));
-	CHECK_NOTHROW(next_manager.setNext(4, 11));
+	CHECK_NOTHROW(cfg.setNext(1, 2));
+	CHECK_NOTHROW(cfg.setNext(2, 3));
+	CHECK_NOTHROW(cfg.setNext(3, 2));
+	CHECK_NOTHROW(cfg.setNext(2, 4));
+	CHECK_NOTHROW(cfg.setIfNext(4, 5, 10));
+	CHECK_NOTHROW(cfg.setNext(5, 6));
+	CHECK_NOTHROW(cfg.setNext(6, 7));
+	CHECK_NOTHROW(cfg.setNext(7, 8));
+	CHECK_NOTHROW(cfg.setNext(8, 9));
+	CHECK_NOTHROW(cfg.setNext(9, 7));
+	CHECK_NOTHROW(cfg.setIfExit(7, 10, 4));
+	CHECK_NOTHROW(cfg.setNext(4, 11));
 
 	CHECK_NOTHROW(cfg.optimize());
 

@@ -4,64 +4,6 @@
 #include "TestUtilities.h"
 #include "catch.hpp"
 
-TEST_CASE("PKB::NextManager::setNext Test") {
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
-	PKB::NextManager next_manager = PKB::NextManager(cfg);
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
-	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
-	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
-	shared_ptr<StmtInfo> assign_stmt = TestUtilities::createStmtInfo(5, StmtType::Assign);
-
-	cfg.createNode(if_stmt);
-	cfg.createNode(while_stmt);
-	cfg.createNode(print_stmt);
-	cfg.createNode(read_stmt);
-	cfg.createNode(assign_stmt);
-
-	CHECK_THROWS(next_manager.setNext(if_stmt->getIdentifier(), if_stmt->getIdentifier()));
-
-	CHECK_NOTHROW(next_manager.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier()));
-	CHECK_NOTHROW(next_manager.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier()));
-	CHECK_NOTHROW(next_manager.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier()));
-}
-
-TEST_CASE("PKB::NextManager::setIfNext Test") {
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
-	PKB::NextManager next_manager = PKB::NextManager(cfg);
-	shared_ptr<StmtInfo> if_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(2, StmtType::Print);
-	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(3, StmtType::Read);
-	shared_ptr<StmtInfo> if_stmt_2 = TestUtilities::createStmtInfo(4, StmtType::IfStmt);
-	cfg.createNode(if_stmt_1);
-	cfg.createNode(if_stmt_2);
-	cfg.createNode(print_stmt);
-	cfg.createNode(read_stmt);
-
-	CHECK_THROWS(next_manager.setIfNext(if_stmt_2->getIdentifier(), print_stmt->getIdentifier(), read_stmt->getIdentifier()));
-	CHECK_THROWS(next_manager.setIfNext(if_stmt_1->getIdentifier(), read_stmt->getIdentifier(), print_stmt->getIdentifier()));
-
-	CHECK_NOTHROW(next_manager.setIfNext(if_stmt_1->getIdentifier(), print_stmt->getIdentifier(), read_stmt->getIdentifier()));
-}
-
-TEST_CASE("PKB::NextManager::setIfExit Test") {
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
-	PKB::NextManager next_manager = PKB::NextManager(cfg);
-	shared_ptr<StmtInfo> if_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(2, StmtType::Print);
-	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(3, StmtType::Read);
-	shared_ptr<StmtInfo> if_stmt_2 = TestUtilities::createStmtInfo(4, StmtType::IfStmt);
-	cfg.createNode(if_stmt_1);
-	cfg.createNode(if_stmt_2);
-	cfg.createNode(print_stmt);
-	cfg.createNode(read_stmt);
-
-	CHECK_THROWS(next_manager.setIfExit(print_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt_2->getIdentifier()));
-	CHECK_THROWS(next_manager.setIfExit(read_stmt->getIdentifier(), print_stmt->getIdentifier(), if_stmt_1->getIdentifier()));
-
-	CHECK_NOTHROW(next_manager.setIfExit(print_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt_1->getIdentifier()));
-}
-
 TEST_CASE("PKB::NextManager::getNext Test") {
 	/* SIMPLE Code:
 	 * 1. if (x==0) {
@@ -87,11 +29,11 @@ TEST_CASE("PKB::NextManager::getNext Test") {
 	cfg.createNode(read_stmt);
 	cfg.createNode(assign_stmt);
 
-	next_manager.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
-	next_manager.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
-	next_manager.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
-	next_manager.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
-	next_manager.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
+	cfg.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
+	cfg.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
+	cfg.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
+	cfg.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
+	cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
 
 	CHECK(next_manager.getNext(if_stmt->getIdentifier()) == unordered_set{while_stmt, read_stmt});
 	CHECK(next_manager.getNext(while_stmt->getIdentifier()) == unordered_set{assign_stmt, print_stmt});
@@ -125,11 +67,11 @@ TEST_CASE("PKB::NextManager::getPrevious Test") {
 	cfg.createNode(read_stmt);
 	cfg.createNode(assign_stmt);
 
-	next_manager.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
-	next_manager.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
-	next_manager.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
-	next_manager.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
-	next_manager.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
+	cfg.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
+	cfg.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
+	cfg.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
+	cfg.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
+	cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
 
 	CHECK(next_manager.getPrevious(if_stmt->getIdentifier()).empty());
 	CHECK(next_manager.getPrevious(while_stmt->getIdentifier()) == unordered_set{if_stmt, print_stmt});
@@ -163,11 +105,11 @@ TEST_CASE("PKB::NextManager::checkNext Test") {
 	cfg.createNode(read_stmt);
 	cfg.createNode(assign_stmt);
 
-	next_manager.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
-	next_manager.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
-	next_manager.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
-	next_manager.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
-	next_manager.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
+	cfg.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
+	cfg.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
+	cfg.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
+	cfg.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
+	cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
 
 	CHECK(next_manager.checkNext(1, 2));
 	CHECK(next_manager.checkNext(1, 4));
@@ -223,15 +165,15 @@ TEST_CASE("PKB::NextManager Overall Complicated Stress Test") {
 	cfg.createNode(assign_stmt_9);
 	cfg.createNode(call_stmt_10);
 
-	next_manager.setIfNext(if_stmt_1->getIdentifier(), if_stmt_2->getIdentifier(), if_stmt_7->getIdentifier());
-	next_manager.setIfNext(if_stmt_2->getIdentifier(), print_stmt_3->getIdentifier(), if_stmt_4->getIdentifier());
-	next_manager.setIfNext(if_stmt_4->getIdentifier(), read_stmt_5->getIdentifier(), assign_stmt_6->getIdentifier());
-	next_manager.setIfNext(if_stmt_7->getIdentifier(), assign_stmt_8->getIdentifier(), assign_stmt_9->getIdentifier());
-	next_manager.setIfExit(assign_stmt_8->getIdentifier(), assign_stmt_9->getIdentifier(), if_stmt_7->getIdentifier());
-	next_manager.setIfExit(read_stmt_5->getIdentifier(), assign_stmt_6->getIdentifier(), if_stmt_4->getIdentifier());
-	next_manager.setIfExit(print_stmt_3->getIdentifier(), if_stmt_4->getIdentifier(), if_stmt_2->getIdentifier());
-	next_manager.setIfExit(if_stmt_2->getIdentifier(), if_stmt_7->getIdentifier(), if_stmt_1->getIdentifier());
-	next_manager.setNext(if_stmt_1->getIdentifier(), call_stmt_10->getIdentifier());
+	cfg.setIfNext(if_stmt_1->getIdentifier(), if_stmt_2->getIdentifier(), if_stmt_7->getIdentifier());
+	cfg.setIfNext(if_stmt_2->getIdentifier(), print_stmt_3->getIdentifier(), if_stmt_4->getIdentifier());
+	cfg.setIfNext(if_stmt_4->getIdentifier(), read_stmt_5->getIdentifier(), assign_stmt_6->getIdentifier());
+	cfg.setIfNext(if_stmt_7->getIdentifier(), assign_stmt_8->getIdentifier(), assign_stmt_9->getIdentifier());
+	cfg.setIfExit(assign_stmt_8->getIdentifier(), assign_stmt_9->getIdentifier(), if_stmt_7->getIdentifier());
+	cfg.setIfExit(read_stmt_5->getIdentifier(), assign_stmt_6->getIdentifier(), if_stmt_4->getIdentifier());
+	cfg.setIfExit(print_stmt_3->getIdentifier(), if_stmt_4->getIdentifier(), if_stmt_2->getIdentifier());
+	cfg.setIfExit(if_stmt_2->getIdentifier(), if_stmt_7->getIdentifier(), if_stmt_1->getIdentifier());
+	cfg.setNext(if_stmt_1->getIdentifier(), call_stmt_10->getIdentifier());
 
 	CHECK(next_manager.getNext(if_stmt_1->getIdentifier()) == unordered_set{if_stmt_2, if_stmt_7});
 	CHECK(next_manager.getNext(if_stmt_2->getIdentifier()) == unordered_set{print_stmt_3, if_stmt_4});
@@ -285,12 +227,12 @@ TEST_CASE("PKB::NextManager::checkNextStar Test") {
 	cfg.createNode(assign_stmt);
 	cfg.createNode(call_stmt);
 
-	next_manager.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
-	next_manager.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
-	next_manager.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
-	next_manager.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
-	next_manager.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
-	next_manager.setNext(assign_stmt->getIdentifier(), call_stmt->getIdentifier());
+	cfg.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
+	cfg.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
+	cfg.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
+	cfg.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
+	cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
+	cfg.setNext(assign_stmt->getIdentifier(), call_stmt->getIdentifier());
 	cfg.optimize();
 
 	CHECK(next_manager.getNextStar(1) == unordered_set{print_stmt, while_stmt, read_stmt, assign_stmt, call_stmt});
@@ -329,12 +271,12 @@ TEST_CASE("PKB::NextManager::getPreviousStar Test") {
 	cfg.createNode(assign_stmt);
 	cfg.createNode(call_stmt);
 
-	next_manager.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
-	next_manager.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
-	next_manager.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
-	next_manager.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
-	next_manager.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
-	next_manager.setNext(assign_stmt->getIdentifier(), call_stmt->getIdentifier());
+	cfg.setIfNext(if_stmt->getIdentifier(), while_stmt->getIdentifier(), read_stmt->getIdentifier());
+	cfg.setIfExit(while_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt->getIdentifier());
+	cfg.setNext(while_stmt->getIdentifier(), print_stmt->getIdentifier());
+	cfg.setNext(print_stmt->getIdentifier(), while_stmt->getIdentifier());
+	cfg.setNext(if_stmt->getIdentifier(), assign_stmt->getIdentifier());
+	cfg.setNext(assign_stmt->getIdentifier(), call_stmt->getIdentifier());
 	cfg.optimize();
 
 	CHECK(next_manager.getPreviousStar(1) == StmtInfoPtrSet{});
@@ -402,22 +344,22 @@ TEST_CASE("PKB::NextManager Nested Container Test") {
 	cfg.createNode(stmt_12);
 	cfg.createNode(stmt_13);
 
-	next_manager.setIfNext(1, 2, 6);
-	next_manager.setIfExit(2, 6, 1);
-	next_manager.setNext(2, 3);
-	next_manager.setNext(3, 4);
-	next_manager.setNext(4, 5);
-	next_manager.setNext(5, 3);
-	next_manager.setNext(3, 2);
-	next_manager.setNext(6, 7);
-	next_manager.setNext(7, 6);
-	next_manager.setIfNext(7, 8, 11);
-	next_manager.setIfExit(8, 11, 7);
-	next_manager.setNext(8, 9);
-	next_manager.setNext(9, 10);
-	next_manager.setNext(10, 8);
-	next_manager.setIfNext(11, 12, 13);
-	next_manager.setIfExit(12, 13, 11);
+	cfg.setIfNext(1, 2, 6);
+	cfg.setIfExit(2, 6, 1);
+	cfg.setNext(2, 3);
+	cfg.setNext(3, 4);
+	cfg.setNext(4, 5);
+	cfg.setNext(5, 3);
+	cfg.setNext(3, 2);
+	cfg.setNext(6, 7);
+	cfg.setNext(7, 6);
+	cfg.setIfNext(7, 8, 11);
+	cfg.setIfExit(8, 11, 7);
+	cfg.setNext(8, 9);
+	cfg.setNext(9, 10);
+	cfg.setNext(10, 8);
+	cfg.setIfNext(11, 12, 13);
+	cfg.setIfExit(12, 13, 11);
 
 	cfg.optimize();
 

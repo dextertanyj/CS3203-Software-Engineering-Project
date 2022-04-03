@@ -11,7 +11,7 @@ public:
 	StatementNode(NodeType type, shared_ptr<StmtInfo> info);
 	void setConnection(shared_ptr<NodeInterface> next) override;
 
-	shared_ptr<StmtInfo> getStmtInfo() { return this->stmt_info; };
+	[[nodiscard]] shared_ptr<StmtInfo> getStmtInfo() const { return this->stmt_info; };
 	StmtRef getNodeRef() const override;
 	~StatementNode() override = default;
 

@@ -14,55 +14,6 @@ struct GreaterComparator {
 
 PKB::NextManager::NextManager(ControlFlowGraph& control_flow_graph) : control_flow_graph(control_flow_graph) {}
 
-void PKB::NextManager::setNext(StmtRef previous, StmtRef next) {
-	if (previous == next) {
-		throw invalid_argument("Cannot set a node's direct next to itself.");
-	}
-	try {
-		auto prev_node = control_flow_graph.getNode(previous);
-		auto next_node = control_flow_graph.getNode(next);
-		prev_node->setConnection(next_node);
-	} catch (const invalid_argument& e) {
-		throw e;
-	}
-}
-
-void PKB::NextManager::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) {
-	if (prev >= then_next || prev >= else_next || then_next >= else_next) {
-		throw invalid_argument("Ordering or value(s) of provided statement references is invalid.");
-	}
-	try {
-		auto prev_node = control_flow_graph.getNode(prev);
-		auto then_next_node = control_flow_graph.getNode(then_next);
-		auto else_next_node = control_flow_graph.getNode(else_next);
-		if (prev_node->getNodeType() != NodeType::If) {
-			throw invalid_argument("First argument must refer to an if statement.");
-		}
-		shared_ptr<PKB::IfNode> if_ctrl_node = dynamic_pointer_cast<PKB::IfNode>(prev_node);
-		if_ctrl_node->insertIfNext(then_next_node, else_next_node);
-	} catch (const invalid_argument& e) {
-		throw e;
-	}
-}
-
-void PKB::NextManager::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) {
-	if (if_stmt_ref >= then_prev || if_stmt_ref >= else_prev || then_prev >= else_prev) {
-		throw invalid_argument("Ordering or value(s) of provided statement references is invalid.");
-	}
-	try {
-		auto then_prev_node = control_flow_graph.getNode(then_prev);
-		auto else_prev_node = control_flow_graph.getNode(else_prev);
-		auto if_ctrl_node = control_flow_graph.getNode(if_stmt_ref);
-		if (if_ctrl_node->getNodeType() != NodeType::If) {
-			throw invalid_argument("Third argument must refer to an if control statement.");
-		}
-		shared_ptr<PKB::IfNode> if_node = dynamic_pointer_cast<PKB::IfNode>(if_ctrl_node);
-		if_node->insertIfExit(then_prev_node, else_prev_node);
-	} catch (const invalid_argument& e) {
-		throw e;
-	}
-}
-
 bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
 	try {
 		auto prev_node = control_flow_graph.getNode(first);

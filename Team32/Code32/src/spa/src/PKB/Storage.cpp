@@ -117,12 +117,14 @@ void PKB::Storage::setWhileControl(StmtRef index, VarRef name) {
 
 void PKB::Storage::setNode(shared_ptr<StmtInfo> info) { this->control_flow_graph.createNode(move(info)); }
 
-void PKB::Storage::setNext(StmtRef previous, StmtRef next) { next_manager.setNext(previous, next); }
+void PKB::Storage::setNext(StmtRef previous, StmtRef next) { control_flow_graph.setNext(previous, next); }
 
-void PKB::Storage::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) { next_manager.setIfNext(prev, then_next, else_next); }
+void PKB::Storage::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) {
+	control_flow_graph.setIfNext(prev, then_next, else_next);
+}
 
 void PKB::Storage::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) {
-	next_manager.setIfExit(then_prev, else_prev, if_stmt_ref);
+	control_flow_graph.setIfExit(then_prev, else_prev, if_stmt_ref);
 }
 
 StmtInfoPtrSet PKB::Storage::getStatements() {
