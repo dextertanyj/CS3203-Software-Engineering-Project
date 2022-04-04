@@ -2,11 +2,11 @@
 
 #include <cassert>
 
-PKB::StatementNode::StatementNode(const shared_ptr<StmtInfo>& info) : NodeInterface(NodeType::NonConditional), stmt_info(info) {
+PKB::StatementNode::StatementNode(const shared_ptr<StmtInfo>& info) : NodeInterface(Types::NodeType::Statement), stmt_info(info) {
 	assert(info->getType() != StmtType::WhileStmt || info->getType() != StmtType::IfStmt);
 }
 
-PKB::StatementNode::StatementNode(NodeType type, const shared_ptr<StmtInfo>& info) : NodeInterface(type), stmt_info(info) {}
+PKB::StatementNode::StatementNode(Types::NodeType type, const shared_ptr<StmtInfo>& info) : NodeInterface(type), stmt_info(info) {}
 
 void PKB::StatementNode::setConnection(shared_ptr<NodeInterface> next) {
 	setNext(next);

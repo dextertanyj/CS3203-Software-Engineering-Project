@@ -3,9 +3,10 @@
 #include <cassert>
 
 #include "PKB/CFG/DummyNode.h"
+#include "PKB/Types.h"
 
 PKB::IfNode::IfNode(const shared_ptr<StmtInfo>& info)
-	: PKB::StatementNode(NodeType::If, info), dummy_node(make_shared<PKB::DummyNode>(info->getIdentifier())) {
+	: PKB::StatementNode(Types::NodeType::If, info), dummy_node(make_shared<PKB::DummyNode>(info->getIdentifier())) {
 	assert(info->getType() == StmtType::IfStmt);
 }
 

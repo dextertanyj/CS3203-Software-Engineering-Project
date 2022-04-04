@@ -1,8 +1,10 @@
-#include "DummyNode.h"
+#include "PKB/CFG/DummyNode.h"
 
 #include <cassert>
 
-PKB::DummyNode::DummyNode(StmtRef ref) : PKB::NodeInterface(NodeType::Dummy), if_control_stmt_ref(ref) {}
+#include "PKB/Types.h"
+
+PKB::DummyNode::DummyNode(StmtRef ref) : PKB::NodeInterface(Types::NodeType::Dummy), if_control_stmt_ref(ref) {}
 
 size_t PKB::DummyNode::getNodeRef() const { return if_control_stmt_ref; }
 

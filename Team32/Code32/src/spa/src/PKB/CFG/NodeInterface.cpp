@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-PKB::NodeInterface::NodeInterface(NodeType type) : node_type(type) {}
+PKB::NodeInterface::NodeInterface(Types::NodeType type) : node_type(type) {}
 
 void PKB::NodeInterface::setGraphIndex(size_t index) {
 	assert(graph_index == 0);
@@ -31,4 +31,4 @@ unordered_set<shared_ptr<PKB::NodeInterface>> PKB::NodeInterface::getPreviousNod
 
 size_t PKB::NodeInterface::getGraphIndex() const { return graph_index; }
 
-PKB::NodeType PKB::NodeInterface::getNodeType() const { return node_type; }
+PKB::Types::NodeType PKB::NodeInterface::getNodeType() const { return node_type; }

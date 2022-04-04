@@ -6,6 +6,7 @@
 #include "PKB/CFG/StatementNode.h"
 #include "PKB/CFG/WhileNode.h"
 #include "PKB/PKB.h"
+#include "PKB/Types.h"
 #include "catch.hpp"
 #include "climits"
 
@@ -165,10 +166,10 @@ TEST_CASE("PKB::NodeInterface::getNodeType Test") {
 	shared_ptr<PKB::NodeInterface> print_node = make_shared<PKB::StatementNode>(PKB::StatementNode(print_stmt));
 	shared_ptr<PKB::NodeInterface> read_node = make_shared<PKB::StatementNode>(PKB::StatementNode(read_stmt));
 
-	REQUIRE(if_node->getNodeType() == PKB::NodeType::If);
-	REQUIRE(while_node->getNodeType() == PKB::NodeType::While);
-	REQUIRE(print_node->getNodeType() == PKB::NodeType::NonConditional);
-	REQUIRE(read_node->getNodeType() == PKB::NodeType::NonConditional);
+	REQUIRE(if_node->getNodeType() == PKB::Types::NodeType::If);
+	REQUIRE(while_node->getNodeType() == PKB::Types::NodeType::While);
+	REQUIRE(print_node->getNodeType() == PKB::Types::NodeType::Statement);
+	REQUIRE(read_node->getNodeType() == PKB::Types::NodeType::Statement);
 }
 
 TEST_CASE("PKB::NodeInterface Comparator Test") {
