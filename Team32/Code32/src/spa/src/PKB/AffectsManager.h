@@ -28,8 +28,8 @@ public:
 private:
 	struct DFSInfo {
 		VarRef variable;
-		stack<StmtRef> node_stack;
-		unordered_set<StmtRef> visited_set;
+		stack<shared_ptr<StmtInfo>> node_stack;
+		StmtInfoPtrSet visited_set;
 		StmtInfoPtrSet nodes;
 	};
 
@@ -55,9 +55,9 @@ private:
 
 	StmtInfoPtrSet getAffectedByNodeAndVar(const StmtRef& node, VarRef variable);
 	void processDFSVisit(DFSInfo& info,
-	                     void (AffectsManager::*processor)(DFSInfo&, const StmtRef&));
-	void processNodeAffects(DFSInfo& info, const StmtRef& current);
-	void processNodeAffected(DFSInfo& info, const StmtRef& current);
+	                     void (AffectsManager::*processor)(DFSInfo&, const shared_ptr<StmtInfo>&));
+	void processNodeAffects(DFSInfo& info, const shared_ptr<StmtInfo>& current);
+	void processNodeAffected(DFSInfo& info, const shared_ptr<StmtInfo>& current);
 
 	void buildCacheGraph(size_t graph_index);
 	void computeAllAffects(StmtRef start, StmtRef end);

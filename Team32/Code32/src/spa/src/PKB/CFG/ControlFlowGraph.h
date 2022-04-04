@@ -17,17 +17,21 @@ public:
 	void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref);
 
 	[[nodiscard]] bool contains(StmtRef index) const;
-	[[nodiscard]] StmtRefSet getPreviousNodes(StmtRef index) const;
-	[[nodiscard]] StmtRefSet getNextNodes(StmtRef index) const;
+	[[nodiscard]] StmtInfoPtrSet getPreviousNodes(StmtRef index) const;
+	[[nodiscard]] StmtInfoPtrSet getNextNodes(StmtRef index) const;
 	[[nodiscard]] shared_ptr<StmtInfo> getStatementInfo(StmtRef index) const;
+	[[nodiscard]] StmtInfoPtrSet getLoopExternalNextNodes(StmtRef index) const;
+	[[nodiscard]] StmtInfoPtrSet getLoopExternalPreviousNodes(StmtRef index) const;
+	[[nodiscard]] StmtInfoPtrSet getLoopInternalNextNodes(StmtRef index) const;
+	[[nodiscard]] StmtInfoPtrSet getLoopInternalPreviousNodes(StmtRef index) const;
 
 	[[nodiscard]] shared_ptr<StatementNode> getNode(StmtRef ref) const;
 	[[nodiscard]] StmtType getType(StmtRef ref) const;
 	[[nodiscard]] size_t getGraphIndex(StmtRef ref) const;
 	[[nodiscard]] StmtRef getFirstIndex(size_t graph_index) const;
 	[[nodiscard]] StmtRef getLastIndex(size_t graph_index) const;
-	shared_ptr<NodeInterface> getStart(size_t graph_index);
-	shared_ptr<NodeInterface> getEnd(size_t graph_index);
+	[[nodiscard]] shared_ptr<StmtInfo> getStart(size_t graph_index) const;
+	[[nodiscard]] StmtInfoPtrSet getEnd(size_t graph_index) const;
 	void clear();
 	void optimize();
 
@@ -35,12 +39,23 @@ public:
 	static StmtInfoPtrSet collectPreviousOfDummy(const shared_ptr<NodeInterface>& dummy_node);
 
 private:
+	using LoopNodePair = pair<StmtInfoPtrSet, StmtInfoPtrSet>;
+	using NodeGatherer = unordered_set<shared_ptr<PKB::NodeInterface>> (NodeInterface::*)() const;
+	using Collector = StmtInfoPtrSet (*)(const shared_ptr<NodeInterface>&);
+
+	template <typename Comparator>
+	LoopNodePair groupLoopNeighbouringNodes(StmtRef index, NodeGatherer gatherer, Collector collector) const;
+
+	StmtInfoPtrSet checkLoopNeighbour(const shared_ptr<NodeInterface>& node, Collector collector) const;
+	template <class T>
+	void handleDummyNodeSearch(T& queue, const shared_ptr<NodeInterface>& dummy_node, Collector collector) const;
+
 	void processGraphNode(const shared_ptr<NodeInterface>& node, size_t graph_index, StmtRef& last,
 	                      unordered_set<shared_ptr<NodeInterface>>& visited);
 	unordered_map<StmtRef, shared_ptr<StatementNode>> statement_node_map;
 	unordered_map<size_t, StmtRef> first_index_map;
 	unordered_map<size_t, StmtRef> last_index_map;
-	unordered_map<size_t, shared_ptr<NodeInterface>> start_map;
+	unordered_map<size_t, shared_ptr<StatementNode>> start_map;
 	unordered_map<size_t, shared_ptr<NodeInterface>> end_map;
 };
 
