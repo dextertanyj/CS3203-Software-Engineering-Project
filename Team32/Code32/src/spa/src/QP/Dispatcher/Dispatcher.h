@@ -2,7 +2,6 @@
 #define SPA_SRC_QP_DISPATCHER_DISPATCHER_H
 
 namespace QP::Dispatcher {
-namespace DispatchMap {}
 namespace DispatchProcessors {}
 namespace AffectsDispatcher {}
 namespace CallsDispatcher {}

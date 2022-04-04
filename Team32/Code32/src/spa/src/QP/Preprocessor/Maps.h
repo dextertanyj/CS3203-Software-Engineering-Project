@@ -4,7 +4,7 @@
 #include "QP/QP.h"
 #include "QP/Types.h"
 
-namespace QP::Dispatcher::DispatchMap {
+namespace QP::Preprocessor::Maps {
 
 using namespace QP::Types;
 

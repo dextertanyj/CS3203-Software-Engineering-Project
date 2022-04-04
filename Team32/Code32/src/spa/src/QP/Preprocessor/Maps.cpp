@@ -1,4 +1,4 @@
-#include "QP/Dispatcher/DispatchMap.h"
+#include "Maps.h"
 
 #include "QP/Dispatcher/AffectsDispatcher.tpp"
 #include "QP/Dispatcher/CallsDispatcher.tpp"
@@ -11,7 +11,9 @@
 #include "QP/Dispatcher/UsesDispatcher.h"
 #include "QP/Dispatcher/WithDispatcher.h"
 
-namespace QP::Dispatcher::DispatchMap {
+using namespace QP::Dispatcher;
+
+namespace QP::Preprocessor::Maps {
 
 const ArgumentDispatchMap dispatch_map = {
 	{ClauseType::Affects, AffectsDispatcher::dispatcher<ClauseType::Affects>},

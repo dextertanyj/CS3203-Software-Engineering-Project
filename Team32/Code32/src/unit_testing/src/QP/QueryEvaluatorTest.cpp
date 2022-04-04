@@ -3,7 +3,7 @@
 #include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
-#include "QP/Dispatcher/DispatchMap.h"
+#include "QP/Preprocessor/Maps.h"
 #include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "QP/ReferenceArgument.h"
 #include "catch.hpp"
@@ -12,7 +12,6 @@ using namespace QP;
 using namespace Evaluator;
 using namespace Preprocessor;
 using namespace Types;
-using namespace Dispatcher;
 
 TEST_CASE("QueryEvaluator::execute") {
 	PKB::Storage pkb = PKB::Storage();
@@ -88,9 +87,8 @@ TEST_CASE("QueryEvaluator::execute") {
 	};
 
 	SECTION("One non-trivial such that clause") {
-		ClauseList clauses = {
-			{make_unique<Clause>(ClauseType::ModifiesS, vector<ReferenceArgument>({assign_syn, var_syn}),
-		                         DispatchMap::dispatch_map.at(ClauseType::UnknownModifies)({assign_syn, var_syn}).second)}};
+		ClauseList clauses = {{make_unique<Clause>(ClauseType::ModifiesS, vector<ReferenceArgument>({assign_syn, var_syn}),
+		                                           Maps::dispatch_map.at(ClauseType::UnknownModifies)({assign_syn, var_syn}).second)}};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{assign_declaration}}, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
@@ -102,7 +100,7 @@ TEST_CASE("QueryEvaluator::execute") {
 
 	SECTION("One trivial such that clause") {
 		ClauseList clauses = {{make_unique<Clause>(ClauseType::ModifiesS, vector<ReferenceArgument>({stmt_no1, var_syn}),
-		                                           DispatchMap::dispatch_map.at(ClauseType::UnknownModifies)({stmt_no1, var_syn}).second)}};
+		                                           Maps::dispatch_map.at(ClauseType::UnknownModifies)({stmt_no1, var_syn}).second)}};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{assign_declaration}}, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
@@ -116,8 +114,7 @@ TEST_CASE("QueryEvaluator::execute") {
 	SECTION("One trivial pattern clause") {
 		ClauseList clauses = {{make_unique<Clause>(
 			ClauseType::PatternAssign, vector<ReferenceArgument>({assign_syn, wildcard, ReferenceArgument(query_expression, false)}),
-			DispatchMap::dispatch_map.at(ClauseType::PatternAssign)({assign_syn, wildcard, ReferenceArgument(query_expression, false)})
-				.second)}};
+			Maps::dispatch_map.at(ClauseType::PatternAssign)({assign_syn, wildcard, ReferenceArgument(query_expression, false)}).second)}};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{var_declaration}}, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
@@ -130,8 +127,7 @@ TEST_CASE("QueryEvaluator::execute") {
 	SECTION("One non-trivial pattern clause") {
 		ClauseList clauses = {{make_unique<Clause>(
 			ClauseType::PatternAssign, vector<ReferenceArgument>({assign_syn, var_syn, ReferenceArgument(query_expression, false)}),
-			DispatchMap::dispatch_map.at(ClauseType::PatternAssign)({assign_syn, var_syn, ReferenceArgument(query_expression, false)})
-				.second)}};
+			Maps::dispatch_map.at(ClauseType::PatternAssign)({assign_syn, var_syn, ReferenceArgument(query_expression, false)}).second)}};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{var_declaration}}, clauses);
 
 		QP::QueryResult result = evaluator.executeQuery(properties);
@@ -144,10 +140,10 @@ TEST_CASE("QueryEvaluator::execute") {
 	SECTION("Trivial pattern clause and trival such that clause") {
 		ClauseList clauses = {
 			{make_unique<Clause>(ClauseType::ModifiesS, vector<ReferenceArgument>({stmt_no1, var_syn}),
-		                         DispatchMap::dispatch_map.at(ClauseType::UnknownModifies)({stmt_no1, var_syn}).second)},
+		                         Maps::dispatch_map.at(ClauseType::UnknownModifies)({stmt_no1, var_syn}).second)},
 			{make_unique<Clause>(
 				ClauseType::PatternAssign, vector<ReferenceArgument>({assign_syn, var_syn, ReferenceArgument(query_expression, false)}),
-				DispatchMap::dispatch_map.at(ClauseType::PatternAssign)({assign_syn, var_syn, ReferenceArgument(query_expression, false)})
+				Maps::dispatch_map.at(ClauseType::PatternAssign)({assign_syn, var_syn, ReferenceArgument(query_expression, false)})
 					.second)},
 		};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{stmt1_declaration}}, clauses);
@@ -163,10 +159,10 @@ TEST_CASE("QueryEvaluator::execute") {
 	SECTION("Non-trivial pattern clause and such that clause") {
 		ClauseList clauses = {
 			{make_unique<Clause>(ClauseType::ModifiesS, vector<ReferenceArgument>({stmt_no1, var_syn}),
-		                         DispatchMap::dispatch_map.at(ClauseType::UnknownModifies)({stmt_no1, var_syn}).second)},
+		                         Maps::dispatch_map.at(ClauseType::UnknownModifies)({stmt_no1, var_syn}).second)},
 			{make_unique<Clause>(
 				ClauseType::PatternAssign, vector<ReferenceArgument>({assign_syn, var_syn, ReferenceArgument(query_expression, false)}),
-				DispatchMap::dispatch_map.at(ClauseType::PatternAssign)({assign_syn, var_syn, ReferenceArgument(query_expression, false)})
+				Maps::dispatch_map.at(ClauseType::PatternAssign)({assign_syn, var_syn, ReferenceArgument(query_expression, false)})
 					.second)},
 		};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{var_declaration}}, clauses);
@@ -181,17 +177,17 @@ TEST_CASE("QueryEvaluator::execute") {
 	SECTION("Multiple clauses") {
 		ClauseList clauses = {
 			{make_unique<Clause>(ClauseType::ModifiesS, vector<ReferenceArgument>({stmt_no1, var_syn}),
-		                         DispatchMap::dispatch_map.at(ClauseType::UnknownModifies)({stmt_no1, var_syn}).second)},
+		                         Maps::dispatch_map.at(ClauseType::UnknownModifies)({stmt_no1, var_syn}).second)},
 			{make_unique<Clause>(ClauseType::Follows, vector<ReferenceArgument>({assign_syn, wildcard}),
-		                         DispatchMap::dispatch_map.at(ClauseType::Follows)({assign_syn, wildcard}).second)},
+		                         Maps::dispatch_map.at(ClauseType::Follows)({assign_syn, wildcard}).second)},
 			{make_unique<Clause>(
 				ClauseType::PatternAssign, vector<ReferenceArgument>({assign_syn, var_syn, ReferenceArgument(query_expression, false)}),
-				DispatchMap::dispatch_map.at(ClauseType::PatternAssign)({assign_syn, var_syn, ReferenceArgument(query_expression, false)})
+				Maps::dispatch_map.at(ClauseType::PatternAssign)({assign_syn, var_syn, ReferenceArgument(query_expression, false)})
 					.second)},
 			{make_unique<Clause>(ClauseType::FollowsT, vector<ReferenceArgument>({stmt_no1, stmt_no2}),
-		                         DispatchMap::dispatch_map.at(ClauseType::FollowsT)({stmt_no1, stmt_no2}).second)},
+		                         Maps::dispatch_map.at(ClauseType::FollowsT)({stmt_no1, stmt_no2}).second)},
 			{make_unique<Clause>(ClauseType::ModifiesS, vector<ReferenceArgument>({stmt_no1, wildcard}),
-		                         DispatchMap::dispatch_map.at(ClauseType::UnknownModifies)({stmt_no1, wildcard}).second)},
+		                         Maps::dispatch_map.at(ClauseType::UnknownModifies)({stmt_no1, wildcard}).second)},
 		};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, {ReferenceArgument{var_declaration}}, clauses);
 
@@ -213,9 +209,9 @@ TEST_CASE("QueryEvaluator::execute") {
 	SECTION("Select boolean positive test") {
 		ClauseList clauses = {
 			{make_unique<Clause>(ClauseType::ModifiesS, vector<ReferenceArgument>({stmt_no1, var_syn}),
-		                         DispatchMap::dispatch_map.at(ClauseType::UnknownModifies)({stmt_no1, var_syn}).second)},
+		                         Maps::dispatch_map.at(ClauseType::UnknownModifies)({stmt_no1, var_syn}).second)},
 			{make_unique<Clause>(ClauseType::Follows, vector<ReferenceArgument>({assign_syn, wildcard}),
-		                         DispatchMap::dispatch_map.at(ClauseType::Follows)({assign_syn, wildcard}).second)},
+		                         Maps::dispatch_map.at(ClauseType::Follows)({assign_syn, wildcard}).second)},
 		};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, {}, clauses);
 
@@ -227,9 +223,9 @@ TEST_CASE("QueryEvaluator::execute") {
 	SECTION("Select boolean negative test") {
 		ClauseList clauses = {
 			{make_unique<Clause>(ClauseType::Follows, vector<ReferenceArgument>({wildcard, stmt_no1}),
-		                         DispatchMap::dispatch_map.at(ClauseType::Follows)({wildcard, stmt_no1}).second)},
+		                         Maps::dispatch_map.at(ClauseType::Follows)({wildcard, stmt_no1}).second)},
 			{make_unique<Clause>(ClauseType::Follows, vector<ReferenceArgument>({wildcard, stmt1_syn}),
-		                         DispatchMap::dispatch_map.at(ClauseType::Follows)({wildcard, stmt1_syn}).second)},
+		                         Maps::dispatch_map.at(ClauseType::Follows)({wildcard, stmt1_syn}).second)},
 		};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, {}, clauses);
 
@@ -264,7 +260,7 @@ TEST_CASE("QueryEvaluator::execute") {
 		};
 		ClauseList clauses = {
 			{make_unique<Clause>(ClauseType::ModifiesS, vector<ReferenceArgument>({assign_syn, var_syn}),
-		                         DispatchMap::dispatch_map.at(ClauseType::UnknownModifies)({assign_syn, var_syn}).second)},
+		                         Maps::dispatch_map.at(ClauseType::UnknownModifies)({assign_syn, var_syn}).second)},
 		};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, select_list, clauses);
 
@@ -281,11 +277,11 @@ TEST_CASE("QueryEvaluator::execute") {
 		};
 		ClauseList clauses = {
 			{make_unique<Clause>(ClauseType::ModifiesS, vector<ReferenceArgument>({assign_syn, var_syn}),
-		                         DispatchMap::dispatch_map.at(ClauseType::UnknownModifies)({assign_syn, var_syn}).second)},
+		                         Maps::dispatch_map.at(ClauseType::UnknownModifies)({assign_syn, var_syn}).second)},
 			{make_unique<Clause>(ClauseType::Follows, vector<ReferenceArgument>({wildcard, stmt1_syn}),
-		                         DispatchMap::dispatch_map.at(ClauseType::Follows)({wildcard, stmt1_syn}).second)},
+		                         Maps::dispatch_map.at(ClauseType::Follows)({wildcard, stmt1_syn}).second)},
 			{make_unique<Clause>(ClauseType::Follows, vector<ReferenceArgument>({wildcard, wildcard}),
-		                         DispatchMap::dispatch_map.at(ClauseType::Follows)({wildcard, wildcard}).second)},
+		                         Maps::dispatch_map.at(ClauseType::Follows)({wildcard, wildcard}).second)},
 		};
 		QP::QueryProperties properties = QP::QueryProperties(declarations, select_list, clauses);
 
