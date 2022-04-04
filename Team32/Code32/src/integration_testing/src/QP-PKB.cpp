@@ -376,6 +376,80 @@ TEST_CASE("Next clause") {
 	}
 };
 
+TEST_CASE("Affects clause") {
+	PKB::Storage pkb = PKB::Storage();
+
+	vector<string> assign_token1 = {"1"};
+	Preprocessor::QueryExpressionLexer lexer1 = Preprocessor::QueryExpressionLexer(assign_token1);
+	auto expression1 =
+		Common::ExpressionProcessor::ExpressionParser{lexer1, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
+	vector<string> assign_token2 = {"x", "+", "10", "*", "3"};
+	Preprocessor::QueryExpressionLexer lexer2 = Preprocessor::QueryExpressionLexer(assign_token2);
+	auto expression2 =
+		Common::ExpressionProcessor::ExpressionParser{lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
+	vector<string> assign_token3 = {"y"};
+	Preprocessor::QueryExpressionLexer lexer3 = Preprocessor::QueryExpressionLexer(assign_token1);
+	auto expression3 =
+		Common::ExpressionProcessor::ExpressionParser{lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
+	vector<string> assign_token4 = {"y", "+", "x"};
+	Preprocessor::QueryExpressionLexer lexer4 = Preprocessor::QueryExpressionLexer(assign_token2);
+	auto expression4 =
+		Common::ExpressionProcessor::ExpressionParser{lexer4, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
+	
+	pkb.setStmtType(1, StmtType::Assign);
+	pkb.setStmtType(2, StmtType::Assign);
+	pkb.setStmtType(3, StmtType::Assign);
+	pkb.setStmtType(4, StmtType::Assign);
+
+	pkb.setAssign(1, "x", expression1);
+	pkb.setModifies(1, "x");
+	pkb.setAssign(2, "y", expression2);
+	pkb.setModifies(2, "y");
+	pkb.setUses(2, "x");
+	pkb.setAssign(3, "x", expression3);
+	pkb.setModifies(3, "x");
+	pkb.setUses(3, "y");
+	pkb.setAssign(4, "z", expression4);
+	pkb.setModifies(4, "z");
+	pkb.setUses(4, "x");
+	pkb.setUses(4, "y");
+
+	pkb.setNext(1, 2);
+	pkb.setNext(2, 3);
+	pkb.setNext(3, 4);
+
+	pkb.populateComplexRelations();
+
+	QP::QueryProcessor processor = QP::QueryProcessor(pkb);
+
+	SECTION("Affects") {
+		string query1 = "stmt s; Select s such that Affects(2, s)";
+		string query2 = "stmt s; Select s such that Affects(1, s)";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"3", "4"};
+		vector<string> expected_result2 = {"2"};
+		sort(result1.begin(), result1.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
+	}
+
+	SECTION("Affects*") {
+		string query1 = "stmt s; Select s such that Affects*(1, s)";
+		string query2 = "stmt s; Select BOOLEAN such that Affects*(s, s)";
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		vector<string> expected_result1 = {"2", "3", "4"};
+		vector<string> expected_result2 = {"FALSE"};
+		sort(result1.begin(), result1.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
+	}
+};
+
 TEST_CASE("Pattern clause") {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::IfStmt);
@@ -386,16 +460,16 @@ TEST_CASE("Pattern clause") {
 	pkb.setStmtType(6, StmtType::WhileStmt);
 
 	// Assign statements
-	vector<string> assign_token2 = {"x", "+", "1", "*", "9"};
+	vector<string> assign_token1 = {"x", "+", "1", "*", "9"};
+	Preprocessor::QueryExpressionLexer lexer1 = Preprocessor::QueryExpressionLexer(assign_token1);
+	auto expression1 =
+		Common::ExpressionProcessor::ExpressionParser{lexer1, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
+	pkb.setAssign(3, "y", expression1);
+	vector<string> assign_token2 = {"x", "+", "y"};
 	Preprocessor::QueryExpressionLexer lexer2 = Preprocessor::QueryExpressionLexer(assign_token2);
 	auto expression2 =
 		Common::ExpressionProcessor::ExpressionParser{lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
-	pkb.setAssign(3, "y", expression2);
-	vector<string> assign_token3 = {"x", "+", "y"};
-	Preprocessor::QueryExpressionLexer lexer3 = Preprocessor::QueryExpressionLexer(assign_token3);
-	auto expression3 =
-		Common::ExpressionProcessor::ExpressionParser{lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
-	pkb.setAssign(5, "y", expression3);
+	pkb.setAssign(5, "y", expression2);
 
 	// While statements
 	pkb.setWhileControl(2, "x");
@@ -686,7 +760,7 @@ TEST_CASE("With clauses") {
 	}
 
 	SECTION("synonym & int") {
-		string query1 = "stmt s; Select s with s.stmt# = 1";
+		string query1 = "stmt s; Select s with 1 = s.stmt#";
 		string query2 = "assign a; Select a with a.stmt# = 1";
 
 		vector<string> result1 = processor.processQuery(query1);
@@ -726,6 +800,7 @@ TEST_CASE("With clauses") {
 		vector<string> result1 = processor.processQuery(query1);
 		vector<string> result2 = processor.processQuery(query2);
 
+		sort(result1.begin(), result1.end());
 		REQUIRE(result1 == vector<string>({"1", "2", "3", "4"}));
 		REQUIRE(result2 == vector<string>({"2"}));
 	}
