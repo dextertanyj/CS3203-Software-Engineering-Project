@@ -11,10 +11,10 @@
 
 class PKB::ControlFlowGraph {
 public:
-	void createNode(shared_ptr<StmtInfo> stmt_info);
-	void setNext(StmtRef previous, StmtRef next);
-	void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next);
-	void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref);
+	void createNode(const shared_ptr<StmtInfo>& stmt_info);
+	void setNext(StmtRef previous, StmtRef next) const;
+	void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) const;
+	void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) const;
 
 	[[nodiscard]] bool contains(StmtRef index) const;
 	[[nodiscard]] StmtInfoPtrSet getPreviousNodes(StmtRef index) const;
@@ -32,8 +32,9 @@ public:
 	[[nodiscard]] StmtRef getLastIndex(size_t graph_index) const;
 	[[nodiscard]] shared_ptr<StmtInfo> getStart(size_t graph_index) const;
 	[[nodiscard]] StmtInfoPtrSet getEnd(size_t graph_index) const;
-	void clear();
+
 	void optimize();
+	void clear();
 
 	static StmtInfoPtrSet collectNextOfDummy(const shared_ptr<NodeInterface>& dummy_node);
 	static StmtInfoPtrSet collectPreviousOfDummy(const shared_ptr<NodeInterface>& dummy_node);
@@ -45,13 +46,14 @@ private:
 
 	template <typename Comparator>
 	LoopNodePair groupLoopNeighbouringNodes(StmtRef index, NodeGatherer gatherer, Collector collector) const;
+	StmtInfoPtrSet collectLoopNeighbours(const shared_ptr<NodeInterface>& node, Collector collector) const;
 
-	StmtInfoPtrSet checkLoopNeighbour(const shared_ptr<NodeInterface>& node, Collector collector) const;
 	template <class T>
 	void handleDummyNodeSearch(T& queue, const shared_ptr<NodeInterface>& dummy_node, Collector collector) const;
 
 	void processGraphNode(const shared_ptr<NodeInterface>& node, size_t graph_index, StmtRef& last,
 	                      unordered_set<shared_ptr<NodeInterface>>& visited);
+
 	unordered_map<StmtRef, shared_ptr<StatementNode>> statement_node_map;
 	unordered_map<size_t, StmtRef> first_index_map;
 	unordered_map<size_t, StmtRef> last_index_map;

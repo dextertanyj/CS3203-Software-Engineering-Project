@@ -1,11 +1,11 @@
 #include "PKB/CFG/NodeInterface.h"
 
+#include <cassert>
+
 PKB::NodeInterface::NodeInterface(NodeType type) : node_type(type) {}
 
 void PKB::NodeInterface::setGraphIndex(size_t index) {
-	if (this->graph_index != 0) {
-		throw invalid_argument("Node has already been assigned a unique graph index.");
-	}
+	assert(graph_index == 0);
 	graph_index = index;
 }
 
@@ -29,6 +29,6 @@ unordered_set<shared_ptr<PKB::NodeInterface>> PKB::NodeInterface::getPreviousNod
 	return results;
 }
 
-size_t PKB::NodeInterface::getGraphIndex() const { return this->graph_index; }
+size_t PKB::NodeInterface::getGraphIndex() const { return graph_index; }
 
-PKB::NodeType PKB::NodeInterface::getNodeType() const { return this->node_type; }
+PKB::NodeType PKB::NodeInterface::getNodeType() const { return node_type; }

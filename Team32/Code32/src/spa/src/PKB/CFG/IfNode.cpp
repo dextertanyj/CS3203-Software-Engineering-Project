@@ -1,12 +1,12 @@
 #include "PKB/CFG/IfNode.h"
 
+#include <cassert>
+
 #include "PKB/CFG/DummyNode.h"
 
 PKB::IfNode::IfNode(const shared_ptr<StmtInfo>& info)
 	: PKB::StatementNode(NodeType::If, info), dummy_node(make_shared<PKB::DummyNode>(info->getIdentifier())) {
-	if (info->getType() != StmtType::IfStmt) {
-		throw invalid_argument("Provided statement info is not an if statement");
-	}
+	assert(info->getType() == StmtType::IfStmt);
 }
 
 void PKB::IfNode::setConnection(shared_ptr<PKB::NodeInterface> next) {
@@ -14,16 +14,18 @@ void PKB::IfNode::setConnection(shared_ptr<PKB::NodeInterface> next) {
 	next->setPrevious(dummy_node);
 }
 
-void PKB::IfNode::setNext(const shared_ptr<PKB::NodeInterface>& next) { insertNext(next); }
+void PKB::IfNode::setNext(const shared_ptr<PKB::NodeInterface>& next) {
+	assert(getNextNodes().size() < 2);
+	insertNext(next);
+}
 
 void PKB::IfNode::setPrevious(const shared_ptr<PKB::NodeInterface>& previous) {
-	if (!getPreviousNodes().empty()) {
-		throw logic_error("Non-dummy node cannot have more than 1 previous node.");
-	}
+	assert(getPreviousNodes().empty());
 	insertPrevious(previous);
 }
 
 void PKB::IfNode::insertIfNext(const shared_ptr<PKB::StatementNode>& first, const shared_ptr<PKB::StatementNode>& second) {
+	assert(getNextNodes().empty());
 	setNext(first);
 	setNext(second);
 	first->setPrevious(shared_from_this());

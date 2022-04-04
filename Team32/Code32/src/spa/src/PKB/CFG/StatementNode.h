@@ -8,10 +8,13 @@
 
 class PKB::StatementNode : public PKB::NodeInterface, public enable_shared_from_this<StatementNode> {
 public:
-	StatementNode(NodeType type, shared_ptr<StmtInfo> info);
+	StatementNode(const shared_ptr<StmtInfo>& info);
+	StatementNode(NodeType type, const shared_ptr<StmtInfo>& info);
 	void setConnection(shared_ptr<NodeInterface> next) override;
+	void setPrevious(const shared_ptr<NodeInterface>& prev) override;
+	void setNext(const shared_ptr<NodeInterface>& next) override;
 
-	[[nodiscard]] shared_ptr<StmtInfo> getStmtInfo() const { return this->stmt_info; };
+	[[nodiscard]] shared_ptr<StmtInfo> getStmtInfo() const;
 	StmtRef getNodeRef() const override;
 	~StatementNode() override = default;
 

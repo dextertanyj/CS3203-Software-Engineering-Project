@@ -53,18 +53,18 @@ private:
 	unordered_map<StmtRef, StmtInfoPtrSet> affects_star_cache;
 	unordered_map<StmtRef, StmtInfoPtrSet> affected_star_cache;
 
-	StmtInfoPtrSet getAffectedByNodeAndVar(const StmtRef& node, VarRef variable);
-	void processDFSVisit(DFSInfo& info, void (AffectsManager::*processor)(DFSInfo&, const shared_ptr<StmtInfo>&));
-	void processNodeAffects(DFSInfo& info, const shared_ptr<StmtInfo>& current);
-	void processNodeAffected(DFSInfo& info, const shared_ptr<StmtInfo>& current);
+	StmtInfoPtrSet getAffectedLoop(StmtRef node, VarRef variable) const;
+	void processDFSVisit(DFSInfo& info, void (AffectsManager::*processor)(DFSInfo&, const shared_ptr<StmtInfo>&) const) const;
+	void processNodeAffects(DFSInfo& info, const shared_ptr<StmtInfo>& current) const;
+	void processNodeAffected(DFSInfo& info, const shared_ptr<StmtInfo>& current) const;
 
 	void buildCacheGraph(size_t graph_index);
 	void computeAllAffects(StmtRef start, StmtRef end);
 	void transposeAffects(StmtRef start, StmtRef end);
-	void buildCacheGraphForwardVisit(StmtRef index, StmtRefSet& visited, stack<StmtRef>& stack);
-	StmtInfoPtrSet buildCacheGraphReverseVisit(StmtRef index, StmtRefSet& visited);
-	void processComponent(const StmtRef& index, StmtInfoPtrSet component);
-	void connectRelevantComponents(const StmtRef& index);
+	void buildCacheGraphForwardVisit(StmtRef index, StmtRefSet& visited, stack<StmtRef>& stack) const;
+	StmtInfoPtrSet buildCacheGraphReverseVisit(StmtRef index, StmtRefSet& visited) const;
+	void processComponent(StmtRef index, StmtInfoPtrSet component);
+	void connectRelevantComponents(StmtRef index);
 };
 
 #endif  // SPA_AFFECTSMANAGER_H

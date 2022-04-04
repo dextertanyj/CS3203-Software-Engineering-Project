@@ -1,21 +1,17 @@
 #include "PKB/CFG/WhileNode.h"
 
+#include <cassert>
+
 PKB::WhileNode::WhileNode(const shared_ptr<StmtInfo>& info) : PKB::StatementNode(NodeType::While, info) {
-	if (info->getType() != StmtType::WhileStmt) {
-		throw invalid_argument("Provided statement info is not a while statement");
-	}
+	assert(info->getType() == StmtType::WhileStmt);
 }
 
 void PKB::WhileNode::setNext(const shared_ptr<NodeInterface>& next) {
-	if (getNextNodes().size() > 1) {
-		throw logic_error("While Node cannot have more than 2 next statements.");
-	}
+	assert(getNextNodes().size() < 2);
 	insertNext(next);
 }
 
 void PKB::WhileNode::setPrevious(const shared_ptr<NodeInterface>& prev) {
-	if (getPreviousNodes().size() > 1) {
-		throw logic_error("While node cannot have more than 2 previous nodes.");
-	}
+	assert(getPreviousNodes().size() < 2);
 	insertPrevious(prev);
 }
