@@ -41,7 +41,7 @@ template <>
 struct hash<QP::Relationship::Relation> {
 	std::size_t operator()(const QP::Relationship::Relation& key) const {
 		std::size_t seed = 0;
-		combineHash(seed, (int)key.getType());
+		combineHash(seed, static_cast<int>(key.getType()));
 		combineHash(seed, key.getArguments());
 		return seed;
 	}
