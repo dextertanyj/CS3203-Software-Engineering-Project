@@ -26,7 +26,6 @@ public:
 	[[nodiscard]] ResultRow getRow(size_t row_number) const;
 	[[nodiscard]] ResultRow getRowWithOrder(const std::vector<std::string>& synonyms, size_t row_number) const;
 	void insertRow(const ResultRow& row);
-	void removeRow(size_t row_number);
 	ResultTable filterBySelect(const QP::Types::DeclarationList& select_list);
 	bool containsRow(const ResultRow& row);
 	static ResultTable joinTables(const ResultTable& table_one, const ResultTable& table_two);
@@ -36,7 +35,7 @@ private:
 	std::vector<std::string> synonyms_stored;
 	std::vector<ResultRow> table;
 
-	static ResultTable intersectTables(ResultTable superset_table, const ResultTable& subset_table);
+	static ResultTable intersectTables(const ResultTable& superset_table, const ResultTable& subset_table);
 	static ResultTable hashJoinTables(const ResultTable& table_one, const ResultTable& table_two);
 	static ResultTable loopJoinTables(const ResultTable& table_one, const ResultTable& table_two);
 	static std::unordered_multimap<ResultRow, size_t> buildHashTable(ResultTable& table, const std::vector<std::string>& key_synonyms);
