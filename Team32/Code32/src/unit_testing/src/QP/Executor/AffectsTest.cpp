@@ -5,6 +5,7 @@
 #include "QP/QueryExpressionLexer.h"
 #include "catch.hpp"
 
+using namespace QP;
 using namespace QP::Types;
 using namespace QP::Executor::StatementExecutor;
 using namespace Common::ExpressionProcessor;
@@ -30,7 +31,7 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	 *}
 	 */
 	PKB::Storage pkb = PKB::Storage();
-	QP::StorageAdapter store = QP::StorageAdapter(pkb);
+	StorageAdapter store = StorageAdapter(pkb);
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::IfStmt);
 	pkb.setStmtType(3, StmtType::Assign);
@@ -52,42 +53,42 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	pkb.setProc("B", 7, 10);
 
 	vector<string> assign_token1 = {"3", "+", "y"};
-	QP::QueryExpressionLexer lexer1 = QP::QueryExpressionLexer(assign_token1);
+	QueryExpressionLexer lexer1 = QueryExpressionLexer(assign_token1);
 	auto expression1 = ExpressionParser{lexer1, ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(1, "x", expression1);
 	pkb.setModifies(1, "x");
 	pkb.setUses(1, "y");
 	vector<string> assign_token2 = {"4", "*", "x"};
-	QP::QueryExpressionLexer lexer2 = QP::QueryExpressionLexer(assign_token2);
+	QueryExpressionLexer lexer2 = QueryExpressionLexer(assign_token2);
 	auto expression2 = ExpressionParser{lexer2, ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(3, "y", expression2);
 	pkb.setModifies(3, "y");
 	pkb.setUses(3, "x");
 	vector<string> assign_token3 = {"x", "/", "3"};
-	QP::QueryExpressionLexer lexer3 = QP::QueryExpressionLexer(assign_token3);
+	QueryExpressionLexer lexer3 = QueryExpressionLexer(assign_token3);
 	auto expression3 = ExpressionParser{lexer3, ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(5, "y", expression3);
 	pkb.setModifies(5, "y");
 	pkb.setUses(5, "x");
 	vector<string> assign_token4 = {"y", "-", "2"};
-	QP::QueryExpressionLexer lexer4 = QP::QueryExpressionLexer(assign_token4);
+	QueryExpressionLexer lexer4 = QueryExpressionLexer(assign_token4);
 	auto expression4 = ExpressionParser{lexer4, ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(6, "x", expression4);
 	pkb.setModifies(6, "x");
 	pkb.setUses(6, "y");
 	vector<string> assign_token5 = {"8", "*", "y"};
-	QP::QueryExpressionLexer lexer5 = QP::QueryExpressionLexer(assign_token5);
+	QueryExpressionLexer lexer5 = QueryExpressionLexer(assign_token5);
 	auto expression5 = ExpressionParser{lexer5, ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(7, "x", expression5);
 	pkb.setModifies(7, "x");
 	pkb.setUses(7, "y");
 	vector<string> assign_token6 = {"100"};
-	QP::QueryExpressionLexer lexer6 = QP::QueryExpressionLexer(assign_token6);
+	QueryExpressionLexer lexer6 = QueryExpressionLexer(assign_token6);
 	auto expression6 = ExpressionParser{lexer6, ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(8, "z", expression6);
 	pkb.setModifies(8, "z");
 	vector<string> assign_token7 = {"x", "+", "10"};
-	QP::QueryExpressionLexer lexer7 = QP::QueryExpressionLexer(assign_token7);
+	QueryExpressionLexer lexer7 = QueryExpressionLexer(assign_token7);
 	auto expression7 = ExpressionParser{lexer7, ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(10, "y", expression7);
 	pkb.setModifies(10, "y");
@@ -104,11 +105,11 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	ReferenceArgument assign_synonym2 = ReferenceArgument(Declaration{DesignEntity::Assign, "a1"});
 
 	SECTION("Trivial: Index & Index") {
-		QP::QueryResult result1 = executeTrivialIndexIndex<ClauseType::Affects>(store, stmt_no1, stmt_no3);
-		QP::QueryResult result2 = executeTrivialIndexIndex<ClauseType::Affects>(store, stmt_no1, stmt_no5);
-		QP::QueryResult result3 = executeTrivialIndexIndex<ClauseType::Affects>(store, stmt_no3, stmt_no6);
-		QP::QueryResult result4 = executeTrivialIndexIndex<ClauseType::Affects>(store, stmt_no8, stmt_no10);
-		QP::QueryResult result5 = executeTrivialIndexIndex<ClauseType::Affects>(store, stmt_no7, stmt_no10);
+		QueryResult result1 = executeTrivialIndexIndex<ClauseType::Affects>(store, stmt_no1, stmt_no3);
+		QueryResult result2 = executeTrivialIndexIndex<ClauseType::Affects>(store, stmt_no1, stmt_no5);
+		QueryResult result3 = executeTrivialIndexIndex<ClauseType::Affects>(store, stmt_no3, stmt_no6);
+		QueryResult result4 = executeTrivialIndexIndex<ClauseType::Affects>(store, stmt_no8, stmt_no10);
+		QueryResult result5 = executeTrivialIndexIndex<ClauseType::Affects>(store, stmt_no7, stmt_no10);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(result2.getResult());
@@ -118,11 +119,11 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	}
 
 	SECTION("Trivial: Index & Wildcard") {
-		QP::QueryResult result1 = executeTrivialIndexWildcard<ClauseType::Affects>(store, stmt_no1);
-		QP::QueryResult result2 = executeTrivialIndexWildcard<ClauseType::Affects>(store, stmt_no1);
-		QP::QueryResult result3 = executeTrivialIndexWildcard<ClauseType::Affects>(store, stmt_no3);
-		QP::QueryResult result4 = executeTrivialIndexWildcard<ClauseType::Affects>(store, stmt_no8);
-		QP::QueryResult result5 = executeTrivialIndexWildcard<ClauseType::Affects>(store, stmt_no7);
+		QueryResult result1 = executeTrivialIndexWildcard<ClauseType::Affects>(store, stmt_no1);
+		QueryResult result2 = executeTrivialIndexWildcard<ClauseType::Affects>(store, stmt_no1);
+		QueryResult result3 = executeTrivialIndexWildcard<ClauseType::Affects>(store, stmt_no3);
+		QueryResult result4 = executeTrivialIndexWildcard<ClauseType::Affects>(store, stmt_no8);
+		QueryResult result5 = executeTrivialIndexWildcard<ClauseType::Affects>(store, stmt_no7);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(result2.getResult());
@@ -132,11 +133,11 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	}
 
 	SECTION("Trivial: Index & Synonym") {
-		QP::QueryResult result1 = executeTrivialIndexSynonym<ClauseType::Affects>(store, stmt_no1, assign_synonym);
-		QP::QueryResult result2 = executeTrivialIndexSynonym<ClauseType::Affects>(store, stmt_no1, assign_synonym);
-		QP::QueryResult result3 = executeTrivialIndexSynonym<ClauseType::Affects>(store, stmt_no3, assign_synonym);
-		QP::QueryResult result4 = executeTrivialIndexSynonym<ClauseType::Affects>(store, stmt_no8, assign_synonym);
-		QP::QueryResult result5 = executeTrivialIndexSynonym<ClauseType::Affects>(store, stmt_no7, assign_synonym);
+		QueryResult result1 = executeTrivialIndexSynonym<ClauseType::Affects>(store, stmt_no1, assign_synonym);
+		QueryResult result2 = executeTrivialIndexSynonym<ClauseType::Affects>(store, stmt_no1, assign_synonym);
+		QueryResult result3 = executeTrivialIndexSynonym<ClauseType::Affects>(store, stmt_no3, assign_synonym);
+		QueryResult result4 = executeTrivialIndexSynonym<ClauseType::Affects>(store, stmt_no8, assign_synonym);
+		QueryResult result5 = executeTrivialIndexSynonym<ClauseType::Affects>(store, stmt_no7, assign_synonym);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(result2.getResult());
@@ -146,11 +147,11 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	}
 
 	SECTION("Trivial: Wildcard & Index") {
-		QP::QueryResult result1 = executeTrivialWildcardIndex<ClauseType::Affects>(store, stmt_no3);
-		QP::QueryResult result2 = executeTrivialWildcardIndex<ClauseType::Affects>(store, stmt_no5);
-		QP::QueryResult result3 = executeTrivialWildcardIndex<ClauseType::Affects>(store, stmt_no6);
-		QP::QueryResult result4 = executeTrivialWildcardIndex<ClauseType::Affects>(store, stmt_no7);
-		QP::QueryResult result5 = executeTrivialWildcardIndex<ClauseType::Affects>(store, stmt_no10);
+		QueryResult result1 = executeTrivialWildcardIndex<ClauseType::Affects>(store, stmt_no3);
+		QueryResult result2 = executeTrivialWildcardIndex<ClauseType::Affects>(store, stmt_no5);
+		QueryResult result3 = executeTrivialWildcardIndex<ClauseType::Affects>(store, stmt_no6);
+		QueryResult result4 = executeTrivialWildcardIndex<ClauseType::Affects>(store, stmt_no7);
+		QueryResult result5 = executeTrivialWildcardIndex<ClauseType::Affects>(store, stmt_no10);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(result2.getResult());
@@ -160,11 +161,11 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	}
 
 	SECTION("Trivial: Synonym & Index") {
-		QP::QueryResult result1 = executeTrivialSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no3);
-		QP::QueryResult result2 = executeTrivialSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no5);
-		QP::QueryResult result3 = executeTrivialSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no6);
-		QP::QueryResult result4 = executeTrivialSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no7);
-		QP::QueryResult result5 = executeTrivialSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no10);
+		QueryResult result1 = executeTrivialSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no3);
+		QueryResult result2 = executeTrivialSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no5);
+		QueryResult result3 = executeTrivialSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no6);
+		QueryResult result4 = executeTrivialSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no7);
+		QueryResult result5 = executeTrivialSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no10);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(result2.getResult());
@@ -174,65 +175,65 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	}
 
 	SECTION("Trivial: Wildcard & Wildcard") {
-		QP::QueryResult result1 = executeTrivialWildcardWildcard<ClauseType::Affects>(store);
+		QueryResult result1 = executeTrivialWildcardWildcard<ClauseType::Affects>(store);
 
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("Trivial: Wildcard & Synonym") {
-		QP::QueryResult result1 = executeTrivialWildcardSynonym<ClauseType::Affects>(store, assign_synonym);
+		QueryResult result1 = executeTrivialWildcardSynonym<ClauseType::Affects>(store, assign_synonym);
 
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("Trivial: Synonym & Wildcard") {
-		QP::QueryResult result1 = executeTrivialSynonymWildcard<ClauseType::Affects>(store, assign_synonym);
+		QueryResult result1 = executeTrivialSynonymWildcard<ClauseType::Affects>(store, assign_synonym);
 
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("Synonym & Index") {
-		QP::QueryResult result1 = executeSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no3);
+		QueryResult result1 = executeSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no3);
 		vector<string> expected_result_1 = {"1"};
 		REQUIRE(result1.getResult());
 		REQUIRE(result1.getSynonymResult("a") == expected_result_1);
-		QP::QueryResult result2 = executeSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no5);
+		QueryResult result2 = executeSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no5);
 		vector<string> expected_result_2 = {"1"};
 		REQUIRE(result2.getResult());
 		REQUIRE(result2.getSynonymResult("a") == expected_result_2);
-		QP::QueryResult result3 = executeSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no6);
+		QueryResult result3 = executeSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no6);
 		vector<string> expected_result_3 = {"5"};
 		REQUIRE(result3.getResult());
 		REQUIRE(result3.getSynonymResult("a") == expected_result_3);
-		QP::QueryResult result4 = executeSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no10);
+		QueryResult result4 = executeSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no10);
 		REQUIRE_FALSE(result4.getResult());
-		QP::QueryResult result5 = executeSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no10);
+		QueryResult result5 = executeSynonymIndex<ClauseType::Affects>(store, assign_synonym, stmt_no10);
 		REQUIRE_FALSE(result5.getResult());
 	}
 
 	SECTION("Index & Synonym") {
-		QP::QueryResult result1 = executeIndexSynonym<ClauseType::Affects>(store, stmt_no1, assign_synonym);
+		QueryResult result1 = executeIndexSynonym<ClauseType::Affects>(store, stmt_no1, assign_synonym);
 		vector<string> expected_result_1 = {"3", "5"};
 		REQUIRE(result1.getResult());
 		vector<string> actual_result = result1.getSynonymResult("a");
 		sort(actual_result.begin(), actual_result.end());
 		REQUIRE(actual_result == expected_result_1);
-		QP::QueryResult result2 = executeIndexSynonym<ClauseType::Affects>(store, stmt_no5, assign_synonym);
+		QueryResult result2 = executeIndexSynonym<ClauseType::Affects>(store, stmt_no5, assign_synonym);
 		vector<string> expected_result_2 = {"6"};
 		REQUIRE(result2.getResult());
 		REQUIRE(result2.getSynonymResult("a") == expected_result_2);
-		QP::QueryResult result4 = executeIndexSynonym<ClauseType::Affects>(store, stmt_no8, assign_synonym);
+		QueryResult result4 = executeIndexSynonym<ClauseType::Affects>(store, stmt_no8, assign_synonym);
 		REQUIRE_FALSE(result4.getResult());
-		QP::QueryResult result5 = executeIndexSynonym<ClauseType::Affects>(store, stmt_no7, assign_synonym);
+		QueryResult result5 = executeIndexSynonym<ClauseType::Affects>(store, stmt_no7, assign_synonym);
 		REQUIRE_FALSE(result5.getResult());
 	}
 
 	SECTION("Synonym & Wildcard") {
-		QP::QueryResult intermediate = QP::QueryResult(vector<string>{"a"});
+		QueryResult intermediate = QueryResult(vector<string>{"a"});
 		intermediate.addRow({"1"});
 		intermediate.addRow({"4"});
 		intermediate.addRow({"5"});
-		QP::QueryResult result1 = executeSynonymWildcardOptimized<ClauseType::Affects>(store, intermediate, assign_synonym);
+		QueryResult result1 = executeSynonymWildcardOptimized<ClauseType::Affects>(store, intermediate, assign_synonym);
 		vector<string> expected_result_1 = {"1", "5"};
 		REQUIRE(result1.getResult());
 		vector<string> actual_result = result1.getSynonymResult("a");
@@ -241,12 +242,12 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	}
 
 	SECTION("Wildcard & Synonym") {
-		QP::QueryResult intermediate = QP::QueryResult(vector<string>{"a"});
+		QueryResult intermediate = QueryResult(vector<string>{"a"});
 		intermediate.addRow({"3"});
 		intermediate.addRow({"5"});
 		intermediate.addRow({"6"});
 		intermediate.addRow({"1"});
-		QP::QueryResult result1 = executeWildcardSynonymOptimized<ClauseType::Affects>(store, intermediate, assign_synonym);
+		QueryResult result1 = executeWildcardSynonymOptimized<ClauseType::Affects>(store, intermediate, assign_synonym);
 		vector<string> expected_result_1 = {"3", "5", "6"};
 		REQUIRE(result1.getResult());
 		vector<string> actual_result = result1.getSynonymResult("a");
@@ -255,11 +256,11 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 	}
 
 	SECTION("Synonym & Synonym") {
-		QP::QueryResult intermediate = QP::QueryResult(vector<string>{"a1"});
+		QueryResult intermediate = QueryResult(vector<string>{"a1"});
 		intermediate.addRow({"3"});
 		intermediate.addRow({"6"});
 		intermediate.addRow({"1"});
-		QP::QueryResult result1 = executeSynonymSynonymOptimized<ClauseType::Affects>(store, intermediate, assign_synonym, assign_synonym2);
+		QueryResult result1 = executeSynonymSynonymOptimized<ClauseType::Affects>(store, intermediate, assign_synonym, assign_synonym2);
 		REQUIRE(result1.getResult());
 		vector<string> expected_result_1 = {"3", "6"};
 		vector<string> actual_result_1 = result1.getSynonymResult("a1");
@@ -270,7 +271,7 @@ TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {
 		sort(actual_result_2.begin(), actual_result_2.end());
 		REQUIRE(actual_result_2 == expected_result_2);
 
-		intermediate = QP::QueryResult(vector<string>{"a"});
+		intermediate = QueryResult(vector<string>{"a"});
 		intermediate.addRow({"1"});
 		intermediate.addRow({"4"});
 		result1 = executeSynonymSynonymOptimized<ClauseType::Affects>(store, intermediate, assign_synonym, assign_synonym2);
