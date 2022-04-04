@@ -12,19 +12,15 @@ TEST_CASE("QP Hash Test") {
 	Types::Attribute attr_a = {Types::AttributeType::NumberIdentifier, dec_a};
 	Types::Attribute attr_b = {Types::AttributeType::NumberIdentifier, dec_b};
 	Types::Attribute attr_c = {Types::AttributeType::VariableName, dec_a};
-	Types::ReferenceArgument wildcard = Types::ReferenceArgument();
-	Types::ReferenceArgument synonym = Types::ReferenceArgument(dec_a);
-	Types::ReferenceArgument name1 = Types::ReferenceArgument("a");
-	Types::ReferenceArgument name2 = Types::ReferenceArgument("a");
+	ReferenceArgument wildcard = ReferenceArgument();
+	ReferenceArgument synonym = ReferenceArgument(dec_a);
+	ReferenceArgument name1 = ReferenceArgument("a");
+	ReferenceArgument name2 = ReferenceArgument("a");
 	Types::ExecutorSet exec = {};
-	Relationship::Relation relation1 =
-		Relationship::Relation(Types::ClauseType::Follows, vector<Types::ReferenceArgument>({name1, name1}), exec);
-	Relationship::Relation relation2 =
-		Relationship::Relation(Types::ClauseType::Follows, vector<Types::ReferenceArgument>({name2, name2}), exec);
-	Relationship::Relation relation3 =
-		Relationship::Relation(Types::ClauseType::Follows, vector<Types::ReferenceArgument>({name1, wildcard}), exec);
-	Relationship::Relation relation4 =
-		Relationship::Relation(Types::ClauseType::FollowsT, vector<Types::ReferenceArgument>({name2, name2}), exec);
+	Evaluator::Clause clause_1 = Evaluator::Clause(Types::ClauseType::Follows, vector<ReferenceArgument>({name1, name1}), exec);
+	Evaluator::Clause clause_2 = Evaluator::Clause(Types::ClauseType::Follows, vector<ReferenceArgument>({name2, name2}), exec);
+	Evaluator::Clause clause_3 = Evaluator::Clause(Types::ClauseType::Follows, vector<ReferenceArgument>({name1, wildcard}), exec);
+	Evaluator::Clause clause_4 = Evaluator::Clause(Types::ClauseType::FollowsT, vector<ReferenceArgument>({name2, name2}), exec);
 
 	SECTION("Declaration") {
 		REQUIRE_EQUALS(std::hash<Types::Declaration>()(dec_a), std::hash<Types::Declaration>()(dec_b));
@@ -37,14 +33,14 @@ TEST_CASE("QP Hash Test") {
 	}
 
 	SECTION("ReferenceArgument") {
-		REQUIRE_EQUALS(std::hash<Types::ReferenceArgument>()(name1), std::hash<Types::ReferenceArgument>()(name2));
-		REQUIRE(std::hash<Types::ReferenceArgument>()(wildcard) != std::hash<Types::ReferenceArgument>()(synonym));
-		REQUIRE(std::hash<Types::ReferenceArgument>()(name1) != std::hash<Types::ReferenceArgument>()(synonym));
+		REQUIRE_EQUALS(std::hash<ReferenceArgument>()(name1), std::hash<ReferenceArgument>()(name2));
+		REQUIRE(std::hash<ReferenceArgument>()(wildcard) != std::hash<ReferenceArgument>()(synonym));
+		REQUIRE(std::hash<ReferenceArgument>()(name1) != std::hash<ReferenceArgument>()(synonym));
 	}
 
 	SECTION("Relation") {
-		REQUIRE_EQUALS(std::hash<Relationship::Relation>()(relation1), std::hash<Relationship::Relation>()(relation2));
-		REQUIRE(std::hash<Relationship::Relation>()(relation2) != std::hash<Relationship::Relation>()(relation3));
-		REQUIRE(std::hash<Relationship::Relation>()(relation2) != std::hash<Relationship::Relation>()(relation4));
+		REQUIRE_EQUALS(std::hash<Evaluator::Clause>()(clause_1), std::hash<Evaluator::Clause>()(clause_2));
+		REQUIRE(std::hash<Evaluator::Clause>()(clause_2) != std::hash<Evaluator::Clause>()(clause_3));
+		REQUIRE(std::hash<Evaluator::Clause>()(clause_2) != std::hash<Evaluator::Clause>()(clause_4));
 	}
 }

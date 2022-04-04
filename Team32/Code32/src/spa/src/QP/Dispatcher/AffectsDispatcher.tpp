@@ -9,6 +9,7 @@
 
 namespace QP::Dispatcher::AffectsDispatcher {
 
+using namespace std;
 using namespace QP::Executor;
 
 template <ClauseType T>

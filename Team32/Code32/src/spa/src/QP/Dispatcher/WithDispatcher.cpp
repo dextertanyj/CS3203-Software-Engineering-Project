@@ -5,8 +5,10 @@
 #include "QP/Executor/AttributeExecutor.tpp"
 #include "QP/Executor/WithExecutor.tpp"
 
-using namespace QP::Executor;
-using namespace QP::Types;
+using namespace std;
+using namespace QP;
+using namespace Executor;
+using namespace Types;
 
 /*
  * Selection and attribute transformation maps
@@ -36,11 +38,11 @@ static const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<
 
 static const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Number>> name_attribute_number_map = {
 	{DispatchAttributeKey{DesignEntity::Read, AttributeType::VariableName},
-     {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<QP::Types::ClauseType::ModifiesS>}},
+     {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<ClauseType::ModifiesS>}},
 	{DispatchAttributeKey{DesignEntity::Call, AttributeType::ProcedureName},
      {AttributeExecutor::selectStatements, AttributeExecutor::callToProcedure}},
 	{DispatchAttributeKey{DesignEntity::Print, AttributeType::VariableName},
-     {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<QP::Types::ClauseType::UsesS>}}};
+     {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<ClauseType::UsesS>}}};
 
 static const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Name>> name_attribute_name_map = {
 	{ReferenceType::Name, {AttributeExecutor::extractName, AttributeExecutor::identity<Name>}},
@@ -149,11 +151,11 @@ ExecutorSet dispatchHandler(const vector<ReferenceArgument>& args) {
 	}
 	auto lhs_executors_iter = left_attribute_map.find(lhs_key);
 	if (lhs_executors_iter == left_attribute_map.end()) {
-		throw QP::QueryDispatchException("Incorrect argument type.");
+		throw QueryDispatchException("Incorrect argument type.");
 	}
 	auto rhs_executors_iter = right_attribute_map.find(rhs_key);
 	if (rhs_executors_iter == right_attribute_map.end()) {
-		throw QP::QueryDispatchException("Incorrect argument type.");
+		throw QueryDispatchException("Incorrect argument type.");
 	}
 	auto lhs_executors = lhs_executors_iter->second;
 	auto rhs_executors = rhs_executors_iter->second;
@@ -163,11 +165,11 @@ ExecutorSet dispatchHandler(const vector<ReferenceArgument>& args) {
 	ExecutorSet result;
 	auto trivial_executor_visitor = [=, lhs = args.at(0), rhs = args.at(1),
 	                                 &result](const WithExecutorFunction<TAttribute, TLeft, TRight>& executor) {
-		result = [=](const QP::StorageAdapter& store) { return executor(store, lhs, rhs, lhs_executors, rhs_executors); };
+		result = [=](const StorageAdapter& store) { return executor(store, lhs, rhs, lhs_executors, rhs_executors); };
 	};
 	auto executor_visitor = [=, lhs = args.at(0), rhs = args.at(1), &result](const ExecutorPair<TAttribute, TLeft, TRight>& executors) {
-		result = pair{[=](const QP::StorageAdapter& store) { return executors.first(store, lhs, rhs, lhs_executors, rhs_executors); },
-		              [=](const QP::StorageAdapter& store) { return executors.second(store, lhs, rhs, lhs_executors, rhs_executors); }};
+		result = pair{[=](const StorageAdapter& store) { return executors.first(store, lhs, rhs, lhs_executors, rhs_executors); },
+		              [=](const StorageAdapter& store) { return executors.second(store, lhs, rhs, lhs_executors, rhs_executors); }};
 	};
 	visit(Visitor{trivial_executor_visitor, executor_visitor}, executor);
 
@@ -206,7 +208,7 @@ const unordered_map<WithClauseBasicDispatchKey,
                    {AttributeType::ProcedureName, variable_handler_map},
                    {AttributeType::VariableName, variable_handler_map}};
 
-QP::Types::ExecutorSetBundle QP::Dispatcher::WithDispatcher::dispatcher(const vector<Types::ReferenceArgument>& args) {
+ExecutorSetBundle Dispatcher::WithDispatcher::dispatcher(const vector<ReferenceArgument>& args) {
 	assert(args.size() == 2);
 	WithClauseBasicDispatchKey lhs = args.at(0).getType();
 	if (args.at(0).getType() == ReferenceType::Attribute) {
@@ -218,12 +220,12 @@ QP::Types::ExecutorSetBundle QP::Dispatcher::WithDispatcher::dispatcher(const ve
 	}
 	auto handler_iter = handler_map.find(lhs);
 	if (handler_iter == handler_map.end()) {
-		throw QP::QueryDispatchException("Incorrect argument type.");
+		throw QueryDispatchException("Incorrect argument type.");
 	}
 	auto inner_map = handler_iter->second;
 	auto inner_handler_iter = inner_map.find(rhs);
 	if (inner_handler_iter == inner_map.end()) {
-		throw QP::QueryDispatchException("Incorrect argument type.");
+		throw QueryDispatchException("Incorrect argument type.");
 	}
 	return {ClauseType::With, inner_handler_iter->second(args)};
 }

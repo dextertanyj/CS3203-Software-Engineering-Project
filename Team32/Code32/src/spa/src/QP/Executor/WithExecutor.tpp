@@ -8,7 +8,7 @@
 template <typename TAttribute, typename TValues>
 struct HashInfo {
 	std::string symbol;
-	unordered_set<TValues> values;
+	std::unordered_set<TValues> values;
 	QP::Types::AttributeMapper<TAttribute, TValues> mapper;
 };
 
@@ -25,9 +25,9 @@ inline std::string safeToString(std::string value) {
 template <typename TAttribute, typename TBuild, typename TProbe>
 static QP::QueryResult find(const QP::StorageAdapter& store, HashInfo<TAttribute, TBuild> build_info,
                             HashInfo<TAttribute, TProbe> probe_info) {
-	unordered_set<TAttribute> attributes;
-	for_each(build_info.values.begin(), build_info.values.end(),
-	         [&](const auto& value) { attributes.insert(build_info.mapper(store, value)); });
+	std::unordered_set<TAttribute> attributes;
+	std::for_each(build_info.values.begin(), build_info.values.end(),
+	              [&](const auto& value) { attributes.insert(build_info.mapper(store, value)); });
 	for (const auto& probe : probe_info.values) {
 		if (attributes.find(probe_info.mapper(store, probe)) != attributes.end()) {
 			return QP::QueryResult(true);
@@ -36,10 +36,14 @@ static QP::QueryResult find(const QP::StorageAdapter& store, HashInfo<TAttribute
 	return {};
 }
 
+namespace QP::Executor::WithExecutor {
+
+using namespace std;
+
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult QP::Executor::WithExecutor::executeTrivialAttributeAttribute(
-	const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs, const Types::ReferenceArgument& rhs,
-	Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors, Types::WithInternalExecutors<TAttribute, TRight> rhs_executors) {
+QueryResult executeTrivialAttributeAttribute(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+                                             WithInternalExecutors<TAttribute, TLeft> lhs_executors,
+                                             WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	unordered_set<TLeft> left_values = lhs_executors.first(store, lhs);
 	unordered_set<TRight> right_values = rhs_executors.first(store, rhs);
 	unordered_set<TAttribute> attributes;
@@ -52,9 +56,9 @@ QP::QueryResult QP::Executor::WithExecutor::executeTrivialAttributeAttribute(
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult QP::Executor::WithExecutor::executeTrivialAttributeConstant(
-	const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs, const Types::ReferenceArgument& rhs,
-	Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors, Types::WithInternalExecutors<TAttribute, TRight> rhs_executors) {
+QueryResult executeTrivialAttributeConstant(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+                                            WithInternalExecutors<TAttribute, TLeft> lhs_executors,
+                                            WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	unordered_set<TLeft> left_values = lhs_executors.first(store, lhs);
 	TAttribute right_value = rhs_executors.second(store, (*rhs_executors.first(store, rhs).begin()));
 	for (const auto& left : left_values) {
@@ -66,18 +70,16 @@ QP::QueryResult QP::Executor::WithExecutor::executeTrivialAttributeConstant(
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult QP::Executor::WithExecutor::executeTrivialConstantAttribute(
-	const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs, const Types::ReferenceArgument& rhs,
-	Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors, Types::WithInternalExecutors<TAttribute, TRight> rhs_executors) {
+QueryResult executeTrivialConstantAttribute(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+                                            WithInternalExecutors<TAttribute, TLeft> lhs_executors,
+                                            WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	return executeTrivialAttributeConstant(store, rhs, lhs, rhs_executors, lhs_executors);
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult QP::Executor::WithExecutor::executeTrivialConstantConstant(const QP::StorageAdapter& store,
-                                                                           const Types::ReferenceArgument& lhs,
-                                                                           const Types::ReferenceArgument& rhs,
-                                                                           Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
-                                                                           Types::WithInternalExecutors<TAttribute, TRight> rhs_executors) {
+QueryResult executeTrivialConstantConstant(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+                                           WithInternalExecutors<TAttribute, TLeft> lhs_executors,
+                                           WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	TAttribute left_value = lhs_executors.second(store, (*lhs_executors.first(store, lhs).begin()));
 	TAttribute right_value = rhs_executors.second(store, (*rhs_executors.first(store, rhs).begin()));
 	if (left_value == right_value) {
@@ -87,13 +89,12 @@ QP::QueryResult QP::Executor::WithExecutor::executeTrivialConstantConstant(const
 }
 
 template <typename TAttribute, typename TBuild, typename TProbe>
-static QP::QueryResult hashJoin(const QP::StorageAdapter& store, HashInfo<TAttribute, TBuild> build_info,
-                                HashInfo<TAttribute, TProbe> probe_info) {
+static QueryResult hashJoin(const StorageAdapter& store, HashInfo<TAttribute, TBuild> build_info, HashInfo<TAttribute, TProbe> probe_info) {
 	unordered_multimap<TAttribute, TBuild> build_table;
 	for (const auto& build : build_info.values) {
 		build_table.insert({build_info.mapper(store, build), build});
 	}
-	QP::QueryResult result = QP::QueryResult({build_info.symbol, probe_info.symbol});
+	QueryResult result = QueryResult({build_info.symbol, probe_info.symbol});
 	for (const auto& probe : probe_info.values) {
 		TAttribute attribute = probe_info.mapper(store, probe);
 		auto iter = build_table.equal_range(attribute);
@@ -103,10 +104,9 @@ static QP::QueryResult hashJoin(const QP::StorageAdapter& store, HashInfo<TAttri
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult QP::Executor::WithExecutor::executeAttributeAttribute(const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs,
-                                                                      const Types::ReferenceArgument& rhs,
-                                                                      Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
-                                                                      Types::WithInternalExecutors<TAttribute, TRight> rhs_executors) {
+QueryResult executeAttributeAttribute(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+                                      WithInternalExecutors<TAttribute, TLeft> lhs_executors,
+                                      WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	unordered_set<TLeft> left_values = lhs_executors.first(store, lhs);
 	unordered_set<TRight> right_values = rhs_executors.first(store, rhs);
 	// Reduce memory usage by building hash table on smaller set.
@@ -119,10 +119,9 @@ QP::QueryResult QP::Executor::WithExecutor::executeAttributeAttribute(const QP::
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult QP::Executor::WithExecutor::executeAttributeConstant(const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs,
-                                                                     const Types::ReferenceArgument& rhs,
-                                                                     Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
-                                                                     Types::WithInternalExecutors<TAttribute, TRight> rhs_executors) {
+QueryResult executeAttributeConstant(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+                                     WithInternalExecutors<TAttribute, TLeft> lhs_executors,
+                                     WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	unordered_set<TLeft> left_values = lhs_executors.first(store, lhs);
 	TAttribute right_value = rhs_executors.second(store, (*rhs_executors.first(store, rhs).begin()));
 	QueryResult result = QueryResult({lhs.getAttribute().synonym.symbol});
@@ -135,11 +134,11 @@ QP::QueryResult QP::Executor::WithExecutor::executeAttributeConstant(const QP::S
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult QP::Executor::WithExecutor::executeConstantAttribute(const QP::StorageAdapter& store, const Types::ReferenceArgument& lhs,
-                                                                     const Types::ReferenceArgument& rhs,
-                                                                     Types::WithInternalExecutors<TAttribute, TLeft> lhs_executors,
-                                                                     Types::WithInternalExecutors<TAttribute, TRight> rhs_executors) {
+QueryResult executeConstantAttribute(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+                                     WithInternalExecutors<TAttribute, TLeft> lhs_executors,
+                                     WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	return executeAttributeConstant(store, rhs, lhs, rhs_executors, lhs_executors);
+}
 }
 
 #endif  // SPA_SRC_QP_EXECUTOR_WITHEXECUTOR_TPP

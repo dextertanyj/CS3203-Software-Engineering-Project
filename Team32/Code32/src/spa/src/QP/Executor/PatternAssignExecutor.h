@@ -27,12 +27,12 @@ QueryResult executeSynonymExpression(const StorageAdapter& store, const Referenc
                                      const ReferenceArgument& expression);
 
 // Executor Set Factories
-ExecutorSet executorFactoryNameWildcard(const vector<ReferenceArgument>& args);
-ExecutorSet executorFactoryNameExpression(const vector<ReferenceArgument>& args);
-ExecutorSet executorFactoryWildcardWildcard(const vector<ReferenceArgument>& args);
-ExecutorSet executorFactoryWildcardExpression(const vector<ReferenceArgument>& args);
-ExecutorSet executorFactorySynonymWildcard(const vector<ReferenceArgument>& args);
-ExecutorSet executorFactorySynonymExpression(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryNameWildcard(const std::vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryNameExpression(const std::vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryWildcardWildcard(const std::vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryWildcardExpression(const std::vector<ReferenceArgument>& args);
+ExecutorSet executorFactorySynonymWildcard(const std::vector<ReferenceArgument>& args);
+ExecutorSet executorFactorySynonymExpression(const std::vector<ReferenceArgument>& args);
 };
 
 #endif  // SPA_SRC_QP_EXECUTOR_PATTERNASSIGNEXECUTOR_H

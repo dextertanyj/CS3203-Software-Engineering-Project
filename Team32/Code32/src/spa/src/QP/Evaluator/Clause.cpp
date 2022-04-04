@@ -1,43 +1,45 @@
-#include "QP/Relationship/Relation.h"
+#include "QP/Evaluator/Clause.h"
 
 #include <cassert>
 
 #include "QP/QueryUtils.h"
 
-QP::Relationship::Relation::Relation(Types::ClauseType type, vector<Types::ReferenceArgument> arguments, Types::ExecutorSet executor)
+using namespace std;
+using namespace QP::Evaluator;
+using namespace QP::Types;
+
+QP::Evaluator::Clause::Clause(ClauseType type, vector<ReferenceArgument> arguments, ExecutorSet executor)
 	: type(type), arguments(move(arguments)), executor(move(executor)) {}
 
-vector<string> QP::Relationship::Relation::getDeclarationSymbols() const {
+vector<string> QP::Evaluator::Clause::getDeclarationSymbols() const {
 	vector<string> symbols;
-	for (const Types::ReferenceArgument& arg : arguments) {
-		if (arg.getType() == Types::ReferenceType::Synonym) {
+	for (const ReferenceArgument& arg : arguments) {
+		if (arg.getType() == ReferenceType::Synonym) {
 			symbols.push_back(arg.getSynonym().symbol);
 		}
-		if (arg.getType() == Types::ReferenceType::Attribute) {
+		if (arg.getType() == ReferenceType::Attribute) {
 			symbols.push_back(arg.getAttribute().synonym.symbol);
 		}
 	}
 	return symbols;
 }
 
-vector<QP::Types::ReferenceArgument> QP::Relationship::Relation::getArguments() const { return arguments; }
+ClauseType QP::Evaluator::Clause::getType() const { return type; }
 
-QP::Types::ClauseType QP::Relationship::Relation::getType() const { return type; }
-
-QP::QueryResult QP::Relationship::Relation::executeTrivial(const QP::StorageAdapter& pkb) const {
+QP::QueryResult QP::Evaluator::Clause::executeTrivial(const QP::StorageAdapter& pkb) const {
 	QueryResult result;
 	visit(Visitor{[&](const Types::Executor& exec) { result = exec(pkb); },
 	              [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.first(pkb); },
-	              [&](const pair<Types::Executor, Types::OptimizedExecutor>& execs) { result = execs.first(pkb); }},
+	              [&](const pair<Types::Executor, OptimizedExecutor>& execs) { result = execs.first(pkb); }},
 	      executor);
 	return result;
 }
 
-QP::QueryResult QP::Relationship::Relation::execute(const QP::StorageAdapter& pkb, vector<QueryResult>& existing_results) const {
+QP::QueryResult QP::Evaluator::Clause::execute(const QP::StorageAdapter& pkb, vector<QueryResult>& existing_results) const {
 	QueryResult result;
 	auto invalid_visitor = [&](const Types::Executor&) { assert(false); };  // NOLINT(bugprone-lambda-function-name)
 	auto standard_visitor = [&](const pair<Types::Executor, Types::Executor>& execs) { result = execs.second(pkb); };
-	auto optimized_visitor = [&](const pair<Types::Executor, Types::OptimizedExecutor>& execs) {
+	auto optimized_visitor = [&](const pair<Types::Executor, OptimizedExecutor>& execs) {
 		if (existing_results.empty()) {
 			result = execs.second(pkb, {});
 			return;
@@ -54,17 +56,17 @@ QP::QueryResult QP::Relationship::Relation::execute(const QP::StorageAdapter& pk
 	return result;
 }
 
-size_t QP::Relationship::Relation::getCost() const {
+size_t QP::Evaluator::Clause::getCost() const {
 	size_t number_of_declarations = getDeclarationSymbols().size();
 	return QP::Utilities::cost_map[type] * number_of_declarations;
 }
 
-bool QP::Relationship::Relation::operator==(const Relation& other) const {
+bool QP::Evaluator::Clause::operator==(const Clause& other) const {
 	if (type != other.getType()) {
 		return false;
 	}
 
-	vector<Types::ReferenceArgument> other_arguments = other.getArguments();
+	vector<ReferenceArgument> other_arguments = other.arguments;
 	for (size_t i = 0; i < arguments.size(); i++) {
 		if (arguments[i] == other_arguments[i]) {
 			continue;

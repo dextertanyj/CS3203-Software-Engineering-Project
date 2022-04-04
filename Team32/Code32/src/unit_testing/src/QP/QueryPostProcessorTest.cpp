@@ -4,23 +4,26 @@
 #include "QP/ReferenceArgument.h"
 #include "catch.hpp"
 
-TEST_CASE("QP::QueryPostProcessor::processResult No results") {
-	PKB::Storage pkb;
-	QP::StorageAdapter store(pkb);
-	QP::QueryPostProcessor post_processor(store);
+using namespace QP;
+using namespace Types;
 
-	QP::QueryProperties properties = QP::QueryProperties({}, {QP::Types::ReferenceArgument{{QP::Types::DesignEntity::Stmt, "s"}}}, {});
-	QP::QueryResult result = QP::QueryResult();
+TEST_CASE("QueryPostProcessor::processResult No results") {
+	PKB::Storage pkb;
+	StorageAdapter store(pkb);
+	QueryPostProcessor post_processor(store);
+
+	QueryProperties properties = QueryProperties({}, {ReferenceArgument{{DesignEntity::Stmt, "s"}}}, {});
+	QueryResult result = QueryResult();
 	REQUIRE(post_processor.processResult(properties, result).empty());
 }
 
-TEST_CASE("QP::QueryPostProcessor::processResult List of statement number") {
+TEST_CASE("QueryPostProcessor::processResult List of statement number") {
 	PKB::Storage pkb;
-	QP::StorageAdapter store(pkb);
-	QP::QueryPostProcessor post_processor(store);
+	StorageAdapter store(pkb);
+	QueryPostProcessor post_processor(store);
 
-	QP::QueryProperties properties = QP::QueryProperties({}, {QP::Types::ReferenceArgument{{QP::Types::DesignEntity::Stmt, "s"}}}, {});
-	QP::QueryResult result = QP::QueryResult(vector<string>{"s"});
+	QueryProperties properties = QueryProperties({}, {ReferenceArgument{{DesignEntity::Stmt, "s"}}}, {});
+	QueryResult result = QueryResult(vector<string>{"s"});
 	result.addRow({"1"});
 	result.addRow({"2"});
 	result.addRow({"3"});
@@ -31,13 +34,13 @@ TEST_CASE("QP::QueryPostProcessor::processResult List of statement number") {
 	REQUIRE(result_string == vector<string>({"1", "2", "3"}));
 }
 
-TEST_CASE("QP::QueryPostProcessor::processResult Boolean") {
+TEST_CASE("QueryPostProcessor::processResult Boolean") {
 	PKB::Storage pkb;
-	QP::StorageAdapter store(pkb);
-	QP::QueryPostProcessor post_processor(store);
+	StorageAdapter store(pkb);
+	QueryPostProcessor post_processor(store);
 
-	QP::QueryProperties properties = QP::QueryProperties({}, {}, {});
-	QP::QueryResult result = QP::QueryResult(true);
+	QueryProperties properties = QueryProperties({}, {}, {});
+	QueryResult result = QueryResult(true);
 
 	vector<string> result_string = post_processor.processResult(properties, result);
 
@@ -45,17 +48,17 @@ TEST_CASE("QP::QueryPostProcessor::processResult Boolean") {
 	REQUIRE(result_string == vector<string>({"TRUE"}));
 }
 
-TEST_CASE("QP::QueryPostProcessor::processResult Tuple") {
+TEST_CASE("QueryPostProcessor::processResult Tuple") {
 	PKB::Storage pkb;
-	QP::StorageAdapter store(pkb);
-	QP::QueryPostProcessor post_processor(store);
+	StorageAdapter store(pkb);
+	QueryPostProcessor post_processor(store);
 
-	QP::Types::SelectList select_list = {
-		QP::Types::ReferenceArgument{{QP::Types::DesignEntity::Stmt, "s"}},
-		QP::Types::ReferenceArgument{{QP::Types::DesignEntity::Stmt, "s1"}},
+	SelectList select_list = {
+		ReferenceArgument{{DesignEntity::Stmt, "s"}},
+		ReferenceArgument{{DesignEntity::Stmt, "s1"}},
 	};
-	QP::QueryProperties properties = QP::QueryProperties({}, select_list, {});
-	QP::QueryResult result = QP::QueryResult(vector<string>{"s", "s1"});
+	QueryProperties properties = QueryProperties({}, select_list, {});
+	QueryResult result = QueryResult(vector<string>{"s", "s1"});
 	result.addRow({"1", "5"});
 	result.addRow({"2", "6"});
 	result.addRow({"3", "7"});
@@ -66,17 +69,17 @@ TEST_CASE("QP::QueryPostProcessor::processResult Tuple") {
 	REQUIRE(result_string == vector<string>({"1 5", "2 6", "3 7"}));
 }
 
-TEST_CASE("QP::QueryPostProcessor::processResult Tuple repeated") {
+TEST_CASE("QueryPostProcessor::processResult Tuple repeated") {
 	PKB::Storage pkb;
-	QP::StorageAdapter store(pkb);
-	QP::QueryPostProcessor post_processor(store);
+	StorageAdapter store(pkb);
+	QueryPostProcessor post_processor(store);
 
-	QP::Types::SelectList select_list = {
-		QP::Types::ReferenceArgument{{QP::Types::DesignEntity::Stmt, "s"}},
-		QP::Types::ReferenceArgument{{QP::Types::DesignEntity::Stmt, "s"}},
+	SelectList select_list = {
+		ReferenceArgument{{DesignEntity::Stmt, "s"}},
+		ReferenceArgument{{DesignEntity::Stmt, "s"}},
 	};
-	QP::QueryProperties properties = QP::QueryProperties({}, select_list, {});
-	QP::QueryResult result = QP::QueryResult(vector<string>{"s", "s1"});
+	QueryProperties properties = QueryProperties({}, select_list, {});
+	QueryResult result = QueryResult(vector<string>{"s", "s1"});
 	result.addRow({"1", "5"});
 	result.addRow({"2", "6"});
 	result.addRow({"3", "7"});
@@ -87,14 +90,13 @@ TEST_CASE("QP::QueryPostProcessor::processResult Tuple repeated") {
 	REQUIRE(result_string == vector<string>({"1 1", "2 2", "3 3"}));
 }
 
-TEST_CASE("QP::QueryPostProcessor::processResult Trivial Attribute") {
+TEST_CASE("QueryPostProcessor::processResult Trivial Attribute") {
 	PKB::Storage pkb;
-	QP::StorageAdapter store(pkb);
-	QP::QueryPostProcessor post_processor(store);
+	StorageAdapter store(pkb);
+	QueryPostProcessor post_processor(store);
 
-	QP::QueryProperties properties = QP::QueryProperties(
-		{}, {QP::Types::ReferenceArgument{{QP::Types::AttributeType::NumberIdentifier, {QP::Types::DesignEntity::Stmt, "s"}}}}, {});
-	QP::QueryResult result = QP::QueryResult(vector<string>{"s"});
+	QueryProperties properties = QueryProperties({}, {ReferenceArgument{{AttributeType::NumberIdentifier, {DesignEntity::Stmt, "s"}}}}, {});
+	QueryResult result = QueryResult(vector<string>{"s"});
 	result.addRow({"1"});
 	result.addRow({"2"});
 	result.addRow({"3"});
@@ -105,7 +107,7 @@ TEST_CASE("QP::QueryPostProcessor::processResult Trivial Attribute") {
 	REQUIRE(result_string == vector<string>({"1", "2", "3"}));
 }
 
-TEST_CASE("QP::QueryPostProcessor::processResult Attribute") {
+TEST_CASE("QueryPostProcessor::processResult Attribute") {
 	PKB::Storage pkb;
 	pkb.setStmtType(1, StmtType::Print);
 	pkb.setStmtType(2, StmtType::Print);
@@ -113,12 +115,11 @@ TEST_CASE("QP::QueryPostProcessor::processResult Attribute") {
 	pkb.setUses(1, "x");
 	pkb.setUses(2, "y");
 	pkb.setUses(3, "z");
-	QP::StorageAdapter store(pkb);
-	QP::QueryPostProcessor post_processor(store);
+	StorageAdapter store(pkb);
+	QueryPostProcessor post_processor(store);
 
-	QP::QueryProperties properties = QP::QueryProperties(
-		{}, {QP::Types::ReferenceArgument{{QP::Types::AttributeType::VariableName, {QP::Types::DesignEntity::Print, "p"}}}}, {});
-	QP::QueryResult result = QP::QueryResult(vector<string>{"p"});
+	QueryProperties properties = QueryProperties({}, {ReferenceArgument{{AttributeType::VariableName, {DesignEntity::Print, "p"}}}}, {});
+	QueryResult result = QueryResult(vector<string>{"p"});
 	result.addRow({"1"});
 	result.addRow({"2"});
 	result.addRow({"3"});

@@ -10,6 +10,7 @@
 
 namespace QP::Dispatcher::VariableDispatcher {
 
+using namespace std;
 using namespace QP::Executor;
 
 template <ClauseType T>

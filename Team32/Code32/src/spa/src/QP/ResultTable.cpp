@@ -4,27 +4,27 @@
 #include <cassert>
 #include <unordered_set>
 
-using QP::Types::ResultTable;
+using namespace std;
 
-QP::Types::ResultTable::ResultTable() = default;
+QP::ResultTable::ResultTable() = default;
 
-QP::Types::ResultTable::ResultTable(vector<string> synonyms_stored) : synonyms_stored(synonyms_stored) {
+QP::ResultTable::ResultTable(vector<string> synonyms_stored) : synonyms_stored(synonyms_stored) {
 	for (size_t i = 0; i < synonyms_stored.size(); i++) {
 		this->synonyms_to_index_map.insert({synonyms_stored[i], i});
 	}
 }
 
-size_t QP::Types::ResultTable::getNumberOfRows() const { return table.size(); }
+size_t QP::ResultTable::getNumberOfRows() const { return table.size(); }
 
-size_t QP::Types::ResultTable::getNumberOfColumns() const { return synonyms_stored.size(); }
+size_t QP::ResultTable::getNumberOfColumns() const { return synonyms_stored.size(); }
 
-vector<ResultRow> QP::Types::ResultTable::getTable() const { return table; }
+vector<ResultRow> QP::ResultTable::getTable() const { return table; }
 
-vector<string> QP::Types::ResultTable::getSynonymsStored() const { return synonyms_stored; }
+vector<string> QP::ResultTable::getSynonymsStored() const { return synonyms_stored; }
 
-unordered_map<string, size_t> QP::Types::ResultTable::getSynonymsStoredMap() const { return synonyms_to_index_map; }
+unordered_map<string, size_t> QP::ResultTable::getSynonymsStoredMap() const { return synonyms_to_index_map; }
 
-ResultColumn QP::Types::ResultTable::getColumn(const string& synonym) const {
+ResultColumn QP::ResultTable::getColumn(const string& synonym) const {
 	assert(synonyms_to_index_map.find(synonym) != synonyms_to_index_map.end());
 
 	size_t col_pos = synonyms_to_index_map.at(synonym);
@@ -36,17 +36,18 @@ ResultColumn QP::Types::ResultTable::getColumn(const string& synonym) const {
 	return column;
 }
 
-ResultRow QP::Types::ResultTable::getRow(size_t row_number) const { return table.at(row_number); }
+ResultRow QP::ResultTable::getRow(size_t row_number) const { return table.at(row_number); }
 
-void QP::Types::ResultTable::insertRow(const ResultRow& row) {
+void QP::ResultTable::insertRow(const ResultRow& row) {
 	assert(row.size() == getNumberOfColumns());
 
 	table.push_back(row);
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::filterBySelect(const QP::Types::DeclarationList& select_list) {
+QP::ResultTable QP::ResultTable::filterBySelect(const QP::Types::DeclarationList& select_list) {
 	vector<string> synonyms(select_list.size());
-	transform(select_list.begin(), select_list.end(), synonyms.begin(), [](const Declaration& declaration) { return declaration.symbol; });
+	transform(select_list.begin(), select_list.end(), synonyms.begin(),
+	          [](const Types::Declaration& declaration) { return declaration.symbol; });
 
 	ResultTable filtered_table = ResultTable(synonyms);
 
@@ -66,16 +67,16 @@ QP::Types::ResultTable QP::Types::ResultTable::filterBySelect(const QP::Types::D
 	return filtered_table;
 }
 
-bool QP::Types::ResultTable::containsRow(const ResultRow& row) {
+bool QP::ResultTable::containsRow(const ResultRow& row) {
 	return any_of(table.begin(), table.end(), [row](auto const& row_stored) { return row_stored == row; });
 }
 
-void QP::Types::ResultTable::removeRow(size_t row_number) {
+void QP::ResultTable::removeRow(size_t row_number) {
 	// Narrowing conversion, implementation defined behaviour for values greater than long.
 	table.erase(table.begin() + static_cast<vector<string>::difference_type>(row_number));
 }
 
-ResultRow QP::Types::ResultTable::getRowWithOrder(const vector<string>& synonyms, size_t row_number) const {
+ResultRow QP::ResultTable::getRowWithOrder(const vector<string>& synonyms, size_t row_number) const {
 	ResultRow row_with_order;
 	ResultRow row = table.at(row_number);
 	for (string const& synonym : synonyms) {
@@ -84,7 +85,7 @@ ResultRow QP::Types::ResultTable::getRowWithOrder(const vector<string>& synonyms
 	return row_with_order;
 }
 
-unordered_multimap<ResultRow, size_t> QP::Types::ResultTable::buildHashTable(ResultTable& table, const vector<string>& key_synonyms) {
+unordered_multimap<ResultRow, size_t> QP::ResultTable::buildHashTable(ResultTable& table, const vector<string>& key_synonyms) {
 	unordered_multimap<ResultRow, size_t> map;
 	unordered_map<string, size_t> synonyms_to_index_map = table.getSynonymsStoredMap();
 	size_t row_number = 0;
@@ -101,7 +102,7 @@ unordered_multimap<ResultRow, size_t> QP::Types::ResultTable::buildHashTable(Res
 	return map;
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::intersectTables(ResultTable superset_table, const ResultTable& subset_table) {
+QP::ResultTable QP::ResultTable::intersectTables(ResultTable superset_table, const ResultTable& subset_table) {
 	vector<string> common_synonyms = subset_table.synonyms_stored;
 	vector<ResultRow> table = subset_table.table;
 	unordered_set<ResultRow> record_set(table.begin(), table.end());
@@ -128,7 +129,7 @@ static ResultRow mergeRow(ResultRow current_row, const ResultRow& other_row, con
 	return current_row;
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::hashJoinTables(const ResultTable& table_one, const ResultTable& table_two) {
+QP::ResultTable QP::ResultTable::hashJoinTables(const ResultTable& table_one, const ResultTable& table_two) {
 	ResultTable larger_table;
 	ResultTable smaller_table;
 	if (table_one.getNumberOfRows() >= table_two.getNumberOfRows()) {
@@ -167,7 +168,7 @@ QP::Types::ResultTable QP::Types::ResultTable::hashJoinTables(const ResultTable&
 	return final_table;
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::loopJoinTables(const ResultTable& table_one, const ResultTable& table_two) {
+QP::ResultTable QP::ResultTable::loopJoinTables(const ResultTable& table_one, const ResultTable& table_two) {
 	vector<string> final_synonyms;
 	final_synonyms.insert(final_synonyms.end(), table_one.synonyms_stored.begin(), table_one.synonyms_stored.end());
 	final_synonyms.insert(final_synonyms.end(), table_two.synonyms_stored.begin(), table_two.synonyms_stored.end());
@@ -184,7 +185,7 @@ QP::Types::ResultTable QP::Types::ResultTable::loopJoinTables(const ResultTable&
 	return table;
 }
 
-QP::Types::ResultTable QP::Types::ResultTable::joinTables(const ResultTable& table_one, const ResultTable& table_two) {
+QP::ResultTable QP::ResultTable::joinTables(const ResultTable& table_one, const ResultTable& table_two) {
 	ResultTable superset_table;
 	ResultTable subset_table;
 

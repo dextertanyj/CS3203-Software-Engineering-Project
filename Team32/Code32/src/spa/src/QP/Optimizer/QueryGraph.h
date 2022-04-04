@@ -6,22 +6,17 @@
 #include <string>
 #include <unordered_map>
 
-#include "QP/ClauseGroups.h"
+#include "QP/Evaluator/Clause.h"
+#include "QP/Optimizer/ClauseGroups.h"
+#include "QP/Optimizer/Optimizer.h"
 #include "QP/QueryProperties.h"
-#include "QP/Relationship/Relation.h"
 
-using namespace std;
-using QP::Types::Clause;
-using QP::Types::ClauseGroups;
-using QP::Types::ClauseList;
-using QP::Types::DeclarationList;
-
-class QP::QueryGraph {
+class QP::Optimizer::QueryGraph {
 public:
 	struct Edge {
 		string node_from_symbol;
 		string node_to_symbol;
-		Clause clause;
+		shared_ptr<Evaluator::Clause> clause;
 		size_t weight;
 	};
 
@@ -32,11 +27,12 @@ public:
 		size_t weight;
 	};
 
-	explicit QueryGraph(const DeclarationList& declarations, const ClauseList& clauses, const DeclarationList& select_list);
+	explicit QueryGraph(const Types::DeclarationList& declarations, const Types::ClauseList& clauses,
+	                    const Types::DeclarationList& select_list);
 	[[nodiscard]] size_t getNumberOfGroups() const;
 	[[nodiscard]] vector<string> getGroupSynonyms(size_t group_number) const;
-	[[nodiscard]] DeclarationList getGroupSelectedSynonyms(size_t group_number) const;
-	[[nodiscard]] ClauseList getGroupClauses(size_t group_number) const;
+	[[nodiscard]] Types::DeclarationList getGroupSelectedSynonyms(size_t group_number) const;
+	[[nodiscard]] Types::ClauseList getGroupClauses(size_t group_number) const;
 	[[nodiscard]] unordered_map<string, Node> getNodes() const;
 
 private:
@@ -45,12 +41,12 @@ private:
 	};
 
 	unordered_map<string, Node> nodes;
-	ClauseGroups connected_synonyms;
+	ClauseGroups clause_groups;
 
-	void setEdges(const ClauseList& clause_list);
-	void setEdge(const Clause& clause);
-	void addEdge(const pair<string, string>& symbols, const Clause& clause);
-	void optimize(const DeclarationList& select_list);
+	void setEdges(const Types::ClauseList& clause_list);
+	void setEdge(const shared_ptr<Evaluator::Clause>& clause);
+	void addEdge(const pair<string, string>& symbols, const shared_ptr<Evaluator::Clause>& clause);
+	void optimize(const Types::DeclarationList& select_list);
 
 	void insertEdgesToQueue(unordered_set<string>& visited_nodes, const string& node_symbol,
 	                        priority_queue<Edge, vector<Edge>, EdgeComparator>& pq) const;

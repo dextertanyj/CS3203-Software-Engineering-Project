@@ -9,9 +9,7 @@
 #include "QP/QP.h"
 #include "QP/Types.h"
 
-using namespace std;
-
-class QP::Types::ReferenceArgument {
+class QP::ReferenceArgument {
 public:
 	/**
 	 * Constructs a ReferenceArgument object with wildcard type.
@@ -22,19 +20,19 @@ public:
 	 * Constructs a ReferenceArgument object with synonym type.
 	 * @param synonym
 	 */
-	explicit ReferenceArgument(Declaration synonym);
+	explicit ReferenceArgument(Types::Declaration synonym);
 
 	/**
 	 * Constructs a ReferenceArgument object with synonym and attribute type.
 	 * @param attribute
 	 */
-	explicit ReferenceArgument(Attribute attribute);
+	explicit ReferenceArgument(Types::Attribute attribute);
 
 	/**
 	 * Constructs a ReferenceArgument object with synonym type.
 	 * @param name
 	 */
-	explicit ReferenceArgument(string name);
+	explicit ReferenceArgument(std::string name);
 
 	/**
 	 * Constructs a ReferenceArgument object storing a statement index.
@@ -48,32 +46,32 @@ public:
 	 * Returns the type of reference stored.
 	 * @return the type of reference stored.
 	 */
-	[[nodiscard]] ReferenceType getType() const;
+	[[nodiscard]] Types::ReferenceType getType() const;
 
 	/**
 	 * Returns the synonym stored.
 	 * @throws ReferenceArgumentException if a synonym is not stored.
 	 * @return the synonym stored.
 	 */
-	[[nodiscard]] Declaration getSynonym() const;
+	[[nodiscard]] Types::Declaration getSynonym() const;
 
-	[[nodiscard]] string getSynonymSymbol() const;
-	[[nodiscard]] DesignEntity getSynonymType() const;
+	[[nodiscard]] std::string getSynonymSymbol() const;
+	[[nodiscard]] Types::DesignEntity getSynonymType() const;
 
 	/**
 	 * Returns the synonym and attribute stored.
 	 * @throws ReferenceArgumentException if a synonym and attribute are not stored.
 	 * @return the synonym and attribute stored.
 	 */
-	[[nodiscard]] Attribute getAttribute() const;
-	[[nodiscard]] AttributeType getAttributeType() const;
+	[[nodiscard]] Types::Attribute getAttribute() const;
+	[[nodiscard]] Types::AttributeType getAttributeType() const;
 
 	/**
 	 * Returns the name stored.
 	 * @throws ReferenceArgumentException if a name is not stored.
 	 * @return the name stored.
 	 */
-	[[nodiscard]] string getName() const;
+	[[nodiscard]] std::string getName() const;
 
 	/**
 	 * Returns the statement index stored.
@@ -94,7 +92,7 @@ public:
 	friend std::hash<ReferenceArgument>;
 
 private:
-	ArgumentValue value;
+	Types::ArgumentValue value;
 };
 
 #endif  // SPA_SRC_QP_REFERENCEARGUMENT_H

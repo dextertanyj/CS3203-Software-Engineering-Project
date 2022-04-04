@@ -4,6 +4,8 @@
 
 namespace QP::Executor::PatternAssignExecutor {
 
+using namespace std;
+
 // Trivial Executors
 QueryResult executeTrivialNameWildcard(const StorageAdapter& store, const ReferenceArgument& name) {
 	return QueryResult(!store.getStmtsWithPatternLHS(name.getName()).empty());

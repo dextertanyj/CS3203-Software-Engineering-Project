@@ -11,7 +11,7 @@ namespace QP::Dispatcher::UsesDispatcher {
 
 using namespace QP::Types;
 
-ExecutorSetBundle dispatcher(const vector<ReferenceArgument>& args);
+ExecutorSetBundle dispatcher(const std::vector<ReferenceArgument>& args);
 }
 
 #endif  // SPA_SRC_QP_DISPATCHER_USESDISPATCHER_H

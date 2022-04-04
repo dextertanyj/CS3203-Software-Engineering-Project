@@ -5,51 +5,47 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 namespace QP {
-namespace Relationship {};
-class QueryEvaluator;
-class QueryExpressionLexer;
-class QueryPostProcessor;
-class QueryGraph;
-class QueryPreprocessor;
-class QueryProcessor;
-class QueryProperties;
+namespace Preprocessor {}
+namespace Dispatcher {}
+namespace Executor {}
+namespace Evaluator {}
+namespace Optimizer {}
+namespace Utilities {}
+namespace Types {}
+
+class ReferenceArgument;
+class ResultTable;
 class QueryResult;
+class QueryProcessor;
+class QueryPostProcessor;
+class QueryProperties;
 class StorageAdapter;
-namespace Utilities {};
-namespace Types {};
 
-namespace Dispatcher {};
-namespace Executor {};
-
-namespace DispatchProcessors {};
-
-struct QueryDispatchException : public runtime_error {
+struct QueryDispatchException : public std::runtime_error {
 	using runtime_error::runtime_error;
 };
 
-struct QuerySyntaxException : public runtime_error {
+struct QuerySyntaxException : public std::runtime_error {
 	using runtime_error::runtime_error;
 };
 
-struct QueryException : public runtime_error {
+struct QueryException : public std::runtime_error {
 	using runtime_error::runtime_error;
 };
 
-struct QueryTokenizationException : public runtime_error {
+struct QueryTokenizationException : public std::runtime_error {
 	using runtime_error::runtime_error;
 };
 
-struct ReferenceArgumentException : public logic_error {
+struct ReferenceArgumentException : public std::logic_error {
 	using logic_error::logic_error;
 };
 
-struct QuerySemanticException : public runtime_error {
-	vector<string> result;  // NOLINT(misc-non-private-member-variables-in-classes)
-	explicit QuerySemanticException(const string& message) : runtime_error(message){};
-	QuerySemanticException(vector<string> result, const string& message) : runtime_error(message), result(move(result)){};
+struct QuerySemanticException : public std::runtime_error {
+	std::vector<std::string> result;  // NOLINT(misc-non-private-member-variables-in-classes)
+	explicit QuerySemanticException(const std::string& message) : runtime_error(message){};
+	QuerySemanticException(std::vector<std::string> result, const std::string& message) : runtime_error(message), result(move(result)){};
 };
 }
 

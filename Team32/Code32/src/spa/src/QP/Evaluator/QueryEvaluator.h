@@ -6,18 +6,16 @@
 #include <utility>
 #include <vector>
 
-#include "PKB/Storage.h"
+#include "QP/Evaluator/Evaluator.h"
+#include "QP/Optimizer/QueryGraph.h"
 #include "QP/QP.h"
-#include "QP/QueryGraph.h"
 #include "QP/QueryProperties.h"
-#include "QP/QueryResult.h"
 
-using namespace std;
 using QP::Types::ClauseList;
 using QP::Types::Declaration;
 using QP::Types::DeclarationList;
 
-class QP::QueryEvaluator {
+class QP::Evaluator::QueryEvaluator {
 public:
 	explicit QueryEvaluator(QP::StorageAdapter& store);
 	QueryResult executeQuery(QueryProperties& query_properties);

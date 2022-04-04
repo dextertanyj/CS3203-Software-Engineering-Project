@@ -3,17 +3,17 @@
 #include "QP/QueryUtils.h"
 
 std::unordered_set<QP::Types::Name> QP::Executor::AttributeExecutor::extractName(const QP::StorageAdapter& /*store*/,
-                                                                                 const Types::ReferenceArgument& argument) {
+                                                                                 const ReferenceArgument& argument) {
 	return {argument.getName()};
 };
 
 std::unordered_set<QP::Types::Number> QP::Executor::AttributeExecutor::extractNumber(const QP::StorageAdapter& /*store*/,
-                                                                                     const Types::ReferenceArgument& argument) {
+                                                                                     const ReferenceArgument& argument) {
 	return {argument.getStatementIndex()};
 };
 
 std::unordered_set<QP::Types::Number> QP::Executor::AttributeExecutor::selectStatements(const QP::StorageAdapter& store,
-                                                                                        const Types::ReferenceArgument& argument) {
+                                                                                        const ReferenceArgument& argument) {
 	Types::Declaration synonym = argument.getAttribute().synonym;
 	StmtInfoPtrSet statements = store.getStatements();
 	std::unordered_set<Types::Number> result;
@@ -27,17 +27,17 @@ std::unordered_set<QP::Types::Number> QP::Executor::AttributeExecutor::selectSta
 }
 
 std::unordered_set<QP::Types::Number> QP::Executor::AttributeExecutor::selectConstants(const QP::StorageAdapter& store,
-                                                                                       const Types::ReferenceArgument& /*unused*/) {
+                                                                                       const ReferenceArgument& /*unused*/) {
 	return store.getConstants();
 }
 
 std::unordered_set<QP::Types::Name> QP::Executor::AttributeExecutor::selectProcedures(const QP::StorageAdapter& store,
-                                                                                      const Types::ReferenceArgument& /*unused*/) {
+                                                                                      const ReferenceArgument& /*unused*/) {
 	return store.getProcedures();
 }
 
 std::unordered_set<QP::Types::Name> QP::Executor::AttributeExecutor::selectVariables(const QP::StorageAdapter& store,
-                                                                                     const Types::ReferenceArgument& /*unused*/) {
+                                                                                     const ReferenceArgument& /*unused*/) {
 	return store.getVariables();
 }
 

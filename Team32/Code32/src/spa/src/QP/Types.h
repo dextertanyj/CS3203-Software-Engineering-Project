@@ -4,18 +4,19 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <variant>
 #include <vector>
 
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/Hash.h"
-#include "PKB/PKB.h"
+#include "Common/TypeDefs.h"
+#include "QP/Evaluator/Evaluator.h"
 #include "QP/QP.h"
-#include "QP/Relationship/Relationship.h"
-
-using namespace std;
 
 namespace QP::Types {
+
 enum class DesignEntity { Stmt, Read, Print, Call, While, If, Assign, Variable, Constant, Procedure };
 
 enum class ClauseType {
@@ -45,69 +46,66 @@ enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpress
 enum class AttributeToken { StatementIndex, ProcedureName, VariableName, Value };
 enum class AttributeType { NumberIdentifier, NameIdentifier, ProcedureName, VariableName };
 
-class ReferenceArgument;
-class ClauseGroups;
-
-typedef struct Declaration {
-	DesignEntity type;  // NOLINT(misc-non-private-member-variables-in-classes)
-	string symbol;      // NOLINT(misc-non-private-member-variables-in-classes)
+struct Declaration {
+	DesignEntity type;   // NOLINT(misc-non-private-member-variables-in-classes)
+	std::string symbol;  // NOLINT(misc-non-private-member-variables-in-classes)
 	bool operator==(const Declaration& other) const { return type == other.type && symbol == other.symbol; }
-} Declaration;
+};
 
-typedef struct Attribute {
+struct Attribute {
 	// We cast 0 rather than use a concrete enum value to prevent favouring a particular value if the enum is updated.
 	AttributeType attribute = static_cast<AttributeType>(0);  // NOLINT(misc-non-private-member-variables-in-classes)
 	Declaration synonym;                                      // NOLINT(misc-non-private-member-variables-in-classes)
 	bool operator==(const Attribute& other) const { return attribute == other.attribute && synonym == other.synonym; }
-} Attribute;
+};
 
-typedef variant<monostate, Declaration, Attribute, string, StmtRef, pair<Common::ExpressionProcessor::Expression, bool>> ArgumentValue;
-
-typedef struct Clause {
-	shared_ptr<Relationship::Relation> relation;
-} Clause;
+using ArgumentValue =
+	std::variant<std::monostate, Declaration, Attribute, std::string, StmtRef, std::pair<Common::ExpressionProcessor::Expression, bool>>;
 
 // Types for attribute selection
-typedef std::string Name;
-typedef unsigned long long Number;
+using Name = std::string;
+using Number = unsigned long long;
 template <typename TSynonym>
-using SelectExecutor = std::function<std::unordered_set<TSynonym>(const QP::StorageAdapter&, const ReferenceArgument&)>;
+using SelectExecutor = std::function<std::unordered_set<TSynonym>(const StorageAdapter&, const ReferenceArgument&)>;
 template <typename TAttribute, typename TSynonym>
-using AttributeMapper = std::function<TAttribute(const QP::StorageAdapter&, const TSynonym&)>;
+using AttributeMapper = std::function<TAttribute(const StorageAdapter&, const TSynonym&)>;
 
 // Types for such-that and pattern clause execution
-typedef function<QP::QueryResult(const QP::StorageAdapter&)> Executor;
-typedef function<QP::QueryResult(const QP::StorageAdapter&, const QP::QueryResult&)> OptimizedExecutor;
-typedef variant<Executor, pair<Executor, Executor>, pair<Executor, OptimizedExecutor>> ExecutorSet;
-typedef function<ExecutorSet(const vector<ReferenceArgument>&)> ExecutorSetFactory;
-typedef pair<ClauseType, ExecutorSetFactory> ExecutorSetFactoryBundle;
-typedef variant<ReferenceType, DesignEntity> ArgumentDispatchKey;
-typedef pair<ClauseType, ExecutorSet> ExecutorSetBundle;
-typedef function<ExecutorSetBundle(const vector<ReferenceArgument>&)> ArgumentDispatcher;
-typedef unordered_map<ClauseType, ArgumentDispatcher> ArgumentDispatchMap;
+using Executor = std::function<QueryResult(const StorageAdapter&)>;
+
+using Types::Executor;
+
+using OptimizedExecutor = std::function<QueryResult(const StorageAdapter&, const QueryResult&)>;
+using ExecutorSet =
+	std::variant<Types::Executor, std::pair<Types::Executor, Types::Executor>, std::pair<Types::Executor, OptimizedExecutor>>;
+using ExecutorSetFactory = std::function<ExecutorSet(const std::vector<ReferenceArgument>&)>;
+using ExecutorSetFactoryBundle = std::pair<ClauseType, ExecutorSetFactory>;
+using ArgumentDispatchKey = std::variant<ReferenceType, DesignEntity>;
+using ExecutorSetBundle = std::pair<ClauseType, ExecutorSet>;
+using ArgumentDispatcher = std::function<ExecutorSetBundle(const std::vector<ReferenceArgument>&)>;
+using ArgumentDispatchMap = std::unordered_map<ClauseType, ArgumentDispatcher>;
 
 // Types for with clause execution
 template <typename TAttribute, typename TSynonym>
 using WithInternalExecutors = std::pair<SelectExecutor<TSynonym>, AttributeMapper<TAttribute, TSynonym>>;
-typedef pair<DesignEntity, AttributeType> DispatchAttributeKey;
-typedef variant<ReferenceType, DispatchAttributeKey> WithClauseArgumentDispatchKey;
-typedef variant<ReferenceType, AttributeType> WithClauseBasicDispatchKey;
+using DispatchAttributeKey = std::pair<DesignEntity, AttributeType>;
+using WithClauseArgumentDispatchKey = std::variant<ReferenceType, DispatchAttributeKey>;
+using WithClauseBasicDispatchKey = std::variant<ReferenceType, AttributeType>;
 template <typename TAttribute, typename TLeft, typename TRight>
-using WithExecutorFunction = function<QP::QueryResult(
-	const QP::StorageAdapter& store, const QP::Types::ReferenceArgument& lhs, const QP::Types::ReferenceArgument& rhs,
-	QP::Types::WithInternalExecutors<TAttribute, TLeft>, QP::Types::WithInternalExecutors<TAttribute, TRight>)>;
+using WithExecutorFunction =
+	std::function<QueryResult(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+                              Types::WithInternalExecutors<TAttribute, TLeft>, Types::WithInternalExecutors<TAttribute, TRight>)>;
 template <typename TAttribute, typename TLeft, typename TRight>
 using WithExecutorFunctionSet =
-	variant<WithExecutorFunction<TAttribute, TLeft, TRight>,
-            pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>>;
+	std::variant<WithExecutorFunction<TAttribute, TLeft, TRight>,
+                 std::pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>>;
 
-typedef vector<Declaration> DeclarationList;
-typedef vector<ReferenceArgument> SelectList;
-typedef vector<Clause> ClauseList;
+using DeclarationList = std::vector<Declaration>;
+using SelectList = std::vector<ReferenceArgument>;
+using ClauseList = std::vector<std::shared_ptr<Evaluator::Clause>>;
 
-class ResultTable;
-typedef vector<string> ResultRow;
-typedef vector<string> ResultColumn;
+using ResultRow = std::vector<std::string>;
+using ResultColumn = std::vector<std::string>;
 }
 
 #endif  // SPA_SRC_QP_TYPES_H

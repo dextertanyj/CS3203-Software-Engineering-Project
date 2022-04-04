@@ -5,10 +5,8 @@
 
 #include "QP/QP.h"
 #include "QP/QueryProperties.h"
-#include "QP/QueryResult.h"
 #include "QP/StorageAdapter.h"
-
-using namespace std;
+#include "QueryResult.h"
 
 class QP::QueryPostProcessor {
 public:

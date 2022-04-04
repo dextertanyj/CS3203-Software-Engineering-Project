@@ -5,6 +5,7 @@
 #include "QP/Dispatcher/DispatchProcessors.tpp"
 #include "QP/Executor/PatternContainerStatementExecutor.tpp"
 
+using namespace std;
 using namespace QP::Executor;
 using namespace QP::Types;
 

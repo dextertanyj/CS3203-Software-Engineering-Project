@@ -3,12 +3,13 @@
 #include "QP/Executor/PatternContainerStatementExecutor.tpp"
 #include "catch.hpp"
 
-using namespace QP::Types;
-using namespace QP::Executor::PatternContainerStatementExecutor;
+using namespace QP;
+using namespace Executor::PatternContainerStatementExecutor;
+using namespace Types;
 
 TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternWhile>::execute") {
 	PKB::Storage pkb = PKB::Storage();
-	QP::StorageAdapter store = QP::StorageAdapter(pkb);
+	StorageAdapter store = StorageAdapter(pkb);
 	pkb.setStmtType(1, StmtType::WhileStmt);
 	pkb.setStmtType(2, StmtType::WhileStmt);
 	pkb.setStmtType(3, StmtType::WhileStmt);
@@ -22,36 +23,36 @@ TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternWhile>::execute"
 	pkb.setUses(4, "a");
 	pkb.populateComplexRelations();
 
-	ReferenceArgument syn_while = ReferenceArgument(Declaration{QP::Types::DesignEntity::While, "w"});
-	ReferenceArgument syn_var = ReferenceArgument(Declaration{QP::Types::DesignEntity::Variable, "v"});
+	ReferenceArgument syn_while = ReferenceArgument(Declaration{Types::DesignEntity::While, "w"});
+	ReferenceArgument syn_var = ReferenceArgument(Declaration{Types::DesignEntity::Variable, "v"});
 	ReferenceArgument a = ReferenceArgument("a");
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
 	ReferenceArgument z = ReferenceArgument("z");
 
 	SECTION("Trivial: Name") {
-		QP::QueryResult result1 = executeTrivialName<ClauseType::PatternWhile>(store, x);
-		QP::QueryResult result2 = executeTrivialName<ClauseType::PatternWhile>(store, a);
+		QueryResult result1 = executeTrivialName<ClauseType::PatternWhile>(store, x);
+		QueryResult result2 = executeTrivialName<ClauseType::PatternWhile>(store, a);
 
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Trivial: Wildcard or Synonym") {
-		QP::QueryResult result1 = executeTrivialWildcardOrSynonym<ClauseType::PatternWhile>(store);
+		QueryResult result1 = executeTrivialWildcardOrSynonym<ClauseType::PatternWhile>(store);
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("Non-Trivial: Name") {
-		QP::QueryResult result1 = executeName<ClauseType::PatternWhile>(store, syn_while, x);
-		QP::QueryResult result2 = executeName<ClauseType::PatternWhile>(store, syn_while, a);
+		QueryResult result1 = executeName<ClauseType::PatternWhile>(store, syn_while, x);
+		QueryResult result2 = executeName<ClauseType::PatternWhile>(store, syn_while, a);
 
 		REQUIRE(result1.getSynonymResult("w") == vector<string>{"1"});
 		REQUIRE(!result2.getResult());
 	}
 
 	SECTION("Non-Trivial: Wildcard") {
-		QP::QueryResult result1 = executeWildcard<ClauseType::PatternWhile>(store, syn_while);
+		QueryResult result1 = executeWildcard<ClauseType::PatternWhile>(store, syn_while);
 
 		vector<string> expected_result = {"1", "2"};
 		vector<string> actual_result = result1.getSynonymResult("w");
@@ -60,7 +61,7 @@ TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternWhile>::execute"
 	}
 
 	SECTION("Non-Trivial: Synonym") {
-		QP::QueryResult result1 = executeSynonym<ClauseType::PatternWhile>(store, syn_while, syn_var);
+		QueryResult result1 = executeSynonym<ClauseType::PatternWhile>(store, syn_while, syn_var);
 
 		vector<string> expected_result_w = {"1", "1", "2"};
 		vector<string> actual_result_w = result1.getSynonymResult("w");

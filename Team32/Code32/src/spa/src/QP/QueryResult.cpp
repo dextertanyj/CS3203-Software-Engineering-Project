@@ -1,6 +1,8 @@
-#include "QP/QueryResult.h"
+#include "QueryResult.h"
 
 #include <queue>
+
+using namespace std;
 
 QP::QueryResult::QueryResult() : result(false) {}
 

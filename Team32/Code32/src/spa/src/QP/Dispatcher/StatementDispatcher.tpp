@@ -7,6 +7,7 @@
 
 namespace QP::Dispatcher::StatementDispatcher {
 
+using namespace std;
 using namespace QP::Executor;
 
 template <ClauseType T>

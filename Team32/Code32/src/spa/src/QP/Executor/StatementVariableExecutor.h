@@ -33,17 +33,17 @@ QueryResult executeIndexSynonym(const StorageAdapter& store, const ReferenceArgu
 
 // Executor Set Factories
 template <ClauseType T>
-ExecutorSet executorFactoryIndexName(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryIndexName(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryIndexWildcard(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryIndexWildcard(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryIndexSynonym(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryIndexSynonym(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonymName(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactorySynonymName(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonymWildcard(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactorySynonymWildcard(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonymSynonym(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactorySynonymSynonym(const std::vector<ReferenceArgument>& args);
 }
 
 #endif  // SPA_SRC_QP_EXECUTOR_STATEMENTVARIABLEEXECUTOR_H

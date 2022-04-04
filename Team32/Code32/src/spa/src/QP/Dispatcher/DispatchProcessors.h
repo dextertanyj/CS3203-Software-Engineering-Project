@@ -8,10 +8,10 @@
 
 namespace QP::Dispatcher::DispatchProcessors {
 template <typename T>
-Types::ExecutorSetBundle processArgument(Types::ClauseType type, T map, const vector<Types::ReferenceArgument>& args);
+Types::ExecutorSetBundle processArgument(Types::ClauseType type, T map, const std::vector<ReferenceArgument>& args);
 
 template <typename T>
-Types::ExecutorSetBundle processArgument(T map, const vector<Types::ReferenceArgument>& args);
+Types::ExecutorSetBundle processArgument(T map, const std::vector<ReferenceArgument>& args);
 };
 
 #endif  // SPA_SRC_QP_DISPATCHER_DISPATCHPROCESSORS_H

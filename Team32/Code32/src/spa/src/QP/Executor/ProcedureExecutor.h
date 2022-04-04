@@ -37,23 +37,23 @@ QueryResult executeSynonymSynonym(const StorageAdapter& store, const ReferenceAr
 
 // Executor Set Factories
 template <ClauseType T>
-ExecutorSet executorFactoryNameName(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryNameName(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryNameWildcard(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryNameWildcard(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryNameSynonym(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryNameSynonym(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryWildcardName(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryWildcardName(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryWildcardWildcard(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryWildcardWildcard(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryWildcardSynonym(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactoryWildcardSynonym(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonymName(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactorySynonymName(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonymWildcard(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactorySynonymWildcard(const std::vector<ReferenceArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonymSynonym(const vector<ReferenceArgument>& args);
+ExecutorSet executorFactorySynonymSynonym(const std::vector<ReferenceArgument>& args);
 };
 
 #endif  // SPA_SRC_QP_EXECUTOR_PROCEDUREEXECUTOR_H

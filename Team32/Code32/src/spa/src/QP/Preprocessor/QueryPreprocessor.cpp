@@ -1,32 +1,32 @@
-#include "QueryPreprocessor.h"
+#include "QP/Preprocessor/QueryPreprocessor.h"
 
 #include <utility>
 
 #include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/Validator.h"
 #include "QP/Dispatcher/DispatchMap.h"
-#include "QP/QueryExpressionLexer.h"
-#include "QP/Relationship/Relation.h"
+#include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "QP/Types.h"
 
+using namespace std;
 using namespace QP::Types;
 using namespace QP::Dispatcher;
 
-regex QP::QueryPreprocessor::invalid_chars_regex = regex(R"([^a-zA-Z0-9\s,"_\(\);\+\-\*\/%<>#\.=])");
-regex QP::QueryPreprocessor::query_token_regex =
+regex QP::Preprocessor::QueryPreprocessor::invalid_chars_regex = regex(R"([^a-zA-Z0-9\s,"_\(\);\+\-\*\/%<>#\.=])");
+regex QP::Preprocessor::QueryPreprocessor::query_token_regex =
 	regex(R"(Affects\*|Follows\*|Calls\*|Parent\*|Next\*|stmt#|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\+|-|\*|\/|%|_|,|\"|<|>|\*|#|\.|=)");
 
-QP::QueryProperties QP::QueryPreprocessor::parseQuery(string query) {
+QP::QueryProperties QP::Preprocessor::QueryPreprocessor::parseQuery(string query) {
 	reset();
-	tokenizeQuery(std::move(query));
+	tokenizeQuery(move(query));
 	try {
 		return parseQuery();
-	} catch (const std::out_of_range& e) {
+	} catch (const out_of_range& e) {
 		throw QuerySyntaxException("Unexpected end of query.");
 	}
 }
 
-void QP::QueryPreprocessor::tokenizeQuery(string query) {
+void QP::Preprocessor::QueryPreprocessor::tokenizeQuery(string query) {
 	if (regex_search(query, invalid_chars_regex)) {
 		throw QueryTokenizationException("Illegal token encountered.");
 	}
@@ -39,7 +39,7 @@ void QP::QueryPreprocessor::tokenizeQuery(string query) {
 	}
 }
 
-QP::QueryProperties QP::QueryPreprocessor::parseQuery() {
+QP::QueryProperties QP::Preprocessor::QueryPreprocessor::parseQuery() {
 	parseDeclarations();
 	parseSelect();
 	while (token_index < this->query_tokens.size()) {
@@ -57,12 +57,17 @@ QP::QueryProperties QP::QueryPreprocessor::parseQuery() {
 		throw QuerySemanticException({}, semantic_exception_message.value());
 	}
 
-	return {declarations, this->select_list, this->clause_list};
+	ClauseList clauses;
+	clauses.reserve(clause_set.size());
+	transform(clause_set.begin(), clause_set.end(), back_inserter(clauses),
+	          [](const auto& clause) { return make_shared<Evaluator::Clause>(clause); });
+
+	return {declarations, this->select_list, clauses};
 }
 
 // Declaration
 
-void QP::QueryPreprocessor::parseDeclarations() {
+void QP::Preprocessor::QueryPreprocessor::parseDeclarations() {
 	optional<DesignEntity> entity = parseDesignEntity();
 	while (entity.has_value()) {
 		parseDeclarationGroup(entity.value());
@@ -70,7 +75,7 @@ void QP::QueryPreprocessor::parseDeclarations() {
 	}
 }
 
-void QP::QueryPreprocessor::parseDeclarationGroup(const DesignEntity& type) {
+void QP::Preprocessor::QueryPreprocessor::parseDeclarationGroup(const DesignEntity& type) {
 	if (!Common::Validator::validateName(this->query_tokens.at(token_index))) {
 		throw QuerySyntaxException("Unexpected token found in declaration.");
 	}
@@ -80,7 +85,7 @@ void QP::QueryPreprocessor::parseDeclarationGroup(const DesignEntity& type) {
 	match(";");
 }
 
-void QP::QueryPreprocessor::parseDeclaration(const DesignEntity& type) {
+void QP::Preprocessor::QueryPreprocessor::parseDeclaration(const DesignEntity& type) {
 	string current_token = this->query_tokens.at(token_index++);
 	if (existing_declarations.find(current_token) != existing_declarations.end()) {
 		logSemanticException("Duplicate synonym.");
@@ -91,7 +96,7 @@ void QP::QueryPreprocessor::parseDeclaration(const DesignEntity& type) {
 
 // Select
 
-void QP::QueryPreprocessor::parseSelect() {
+void QP::Preprocessor::QueryPreprocessor::parseSelect() {
 	match("Select");
 	string current_token = query_tokens.at(token_index);
 	if (current_token == "BOOLEAN" && existing_declarations.find("BOOLEAN") == existing_declarations.end()) {
@@ -101,7 +106,7 @@ void QP::QueryPreprocessor::parseSelect() {
 	}
 }
 
-void QP::QueryPreprocessor::parseSelectList() {
+void QP::Preprocessor::QueryPreprocessor::parseSelectList() {
 	if (query_tokens.at(token_index) == "<") {
 		match("<");
 		do {
@@ -115,7 +120,7 @@ void QP::QueryPreprocessor::parseSelectList() {
 
 // Clause - General
 
-void QP::QueryPreprocessor::parseClauses() {
+void QP::Preprocessor::QueryPreprocessor::parseClauses() {
 	if (this->query_tokens.at(token_index) == "such") {
 		++token_index;
 		match("that");
@@ -135,31 +140,27 @@ void QP::QueryPreprocessor::parseClauses() {
 	throw QP::QuerySyntaxException("Unexpected token received.");
 }
 
-void QP::QueryPreprocessor::parseClauseLoop(void (QueryPreprocessor::*parser)()) {
+void QP::Preprocessor::QueryPreprocessor::parseClauseLoop(void (QueryPreprocessor::*parser)()) {
 	do {
 		(this->*parser)();
 	} while (token_index < this->query_tokens.size() && this->query_tokens.at(token_index) == "and" && match("and"));
 }
 
-void QP::QueryPreprocessor::parseClause(ClauseType type) { parseClause(type, {}); }
+void QP::Preprocessor::QueryPreprocessor::parseClause(ClauseType type) { parseClause(type, {}); }
 
-void QP::QueryPreprocessor::parseClause(ClauseType type, vector<ReferenceArgument> prefixes) {
+void QP::Preprocessor::QueryPreprocessor::parseClause(ClauseType type, vector<ReferenceArgument> prefixes) {
 	vector<ReferenceArgument> arguments = parseArgumentList(&QueryPreprocessor::parseReferenceArgument);
 	prefixes.insert(prefixes.end(), arguments.begin(), arguments.end());
 	createClause(type, move(prefixes));
 }
 
-void QP::QueryPreprocessor::createClause(ClauseType type, vector<ReferenceArgument> arguments) {
+void QP::Preprocessor::QueryPreprocessor::createClause(ClauseType type, vector<ReferenceArgument> arguments) {
 	validateSyntax(type, arguments);
 
 	ArgumentDispatcher argument_dispatcher = DispatchMap::dispatch_map.at(type);
 	try {
 		auto info = argument_dispatcher(arguments);
-		Relationship::Relation relation = Relationship::Relation(info.first, move(arguments), info.second);
-		if (relation_set.find(relation) == relation_set.end()) {
-			this->clause_list.push_back({make_unique<Relationship::Relation>(relation)});
-		}
-		this->relation_set.insert(relation);
+		clause_set.emplace(info.first, move(arguments), info.second);
 	} catch (const QueryDispatchException& e) {
 		logSemanticException(e.what());
 	}
@@ -167,7 +168,7 @@ void QP::QueryPreprocessor::createClause(ClauseType type, vector<ReferenceArgume
 
 // Clause - Such that
 
-void QP::QueryPreprocessor::parseSuchThat() {
+void QP::Preprocessor::QueryPreprocessor::parseSuchThat() {
 	auto clause_type_iter = DispatchMap::clause_map.find(this->query_tokens.at(token_index));
 	if (clause_type_iter == DispatchMap::clause_map.end()) {
 		throw QuerySyntaxException("Unknown relation type.");
@@ -179,7 +180,7 @@ void QP::QueryPreprocessor::parseSuchThat() {
 
 // Clause - With
 
-void QP::QueryPreprocessor::parseWith() {
+void QP::Preprocessor::QueryPreprocessor::parseWith() {
 	vector<ReferenceArgument> arguments;
 	arguments.push_back(parseReferenceArgument());
 	match("=");
@@ -189,7 +190,7 @@ void QP::QueryPreprocessor::parseWith() {
 
 // Clause - Pattern
 
-void QP::QueryPreprocessor::parsePattern() {
+void QP::Preprocessor::QueryPreprocessor::parsePattern() {
 	Declaration synonym = parseClauseSynonym();
 	ReferenceArgument synonym_argument = ReferenceArgument(synonym);
 	// Assign Pattern requires custom parsing to always parse last argument as expression even if presented as name.
@@ -206,7 +207,7 @@ void QP::QueryPreprocessor::parsePattern() {
 	}
 }
 
-void QP::QueryPreprocessor::parseAssignPattern(ReferenceArgument synonym) {
+void QP::Preprocessor::QueryPreprocessor::parseAssignPattern(ReferenceArgument synonym) {
 	match("(");
 	ReferenceArgument variable = parseReferenceArgument();
 	match(",");
@@ -223,7 +224,7 @@ void QP::QueryPreprocessor::parseAssignPattern(ReferenceArgument synonym) {
 
 // Atomic entities
 
-optional<DesignEntity> QP::QueryPreprocessor::parseDesignEntity() {
+optional<DesignEntity> QP::Preprocessor::QueryPreprocessor::parseDesignEntity() {
 	auto iter = DispatchMap::design_entity_map.find(query_tokens.at(token_index));
 	if (iter == DispatchMap::design_entity_map.end()) {
 		return {};
@@ -232,7 +233,7 @@ optional<DesignEntity> QP::QueryPreprocessor::parseDesignEntity() {
 	return iter->second;
 }
 
-vector<ReferenceArgument> QP::QueryPreprocessor::parseArgumentList(ReferenceArgument (QueryPreprocessor::*parser)()) {
+vector<QP::ReferenceArgument> QP::Preprocessor::QueryPreprocessor::parseArgumentList(ReferenceArgument (QueryPreprocessor::*parser)()) {
 	vector<ReferenceArgument> arguments;
 	match("(");
 	do {
@@ -242,7 +243,7 @@ vector<ReferenceArgument> QP::QueryPreprocessor::parseArgumentList(ReferenceArgu
 	return arguments;
 }
 
-ReferenceArgument QP::QueryPreprocessor::parseAnyArgument() {
+QP::ReferenceArgument QP::Preprocessor::QueryPreprocessor::parseAnyArgument() {
 	auto result = tryParseReferenceArgument();
 	if (!result.has_value()) {
 		result = tryParseSelectArgument();
@@ -256,7 +257,7 @@ ReferenceArgument QP::QueryPreprocessor::parseAnyArgument() {
 	return result.value();
 }
 
-ReferenceArgument QP::QueryPreprocessor::parseReferenceArgument() {
+QP::ReferenceArgument QP::Preprocessor::QueryPreprocessor::parseReferenceArgument() {
 	auto result = tryParseReferenceArgument();
 	if (!result.has_value()) {
 		result = tryParseSelectArgument();
@@ -267,7 +268,7 @@ ReferenceArgument QP::QueryPreprocessor::parseReferenceArgument() {
 	return result.value();
 }
 
-ReferenceArgument QP::QueryPreprocessor::parseArgument(optional<ReferenceArgument> (QueryPreprocessor::*parser)()) {
+QP::ReferenceArgument QP::Preprocessor::QueryPreprocessor::parseArgument(optional<ReferenceArgument> (QueryPreprocessor::*parser)()) {
 	auto result = (this->*parser)();
 	if (!result.has_value()) {
 		throw QuerySyntaxException("Unexpected argument.");
@@ -275,7 +276,7 @@ ReferenceArgument QP::QueryPreprocessor::parseArgument(optional<ReferenceArgumen
 	return result.value();
 }
 
-optional<ReferenceArgument> QP::QueryPreprocessor::tryParseReferenceArgument() {
+optional<QP::ReferenceArgument> QP::Preprocessor::QueryPreprocessor::tryParseReferenceArgument() {
 	if (this->query_tokens.at(token_index) == "_") {
 		token_index++;
 		return ReferenceArgument();
@@ -292,7 +293,7 @@ optional<ReferenceArgument> QP::QueryPreprocessor::tryParseReferenceArgument() {
 	return {};
 }
 
-optional<ReferenceArgument> QP::QueryPreprocessor::tryParseSelectArgument() {
+optional<QP::ReferenceArgument> QP::Preprocessor::QueryPreprocessor::tryParseSelectArgument() {
 	if (token_index + 1 < query_tokens.size() && this->query_tokens.at(token_index + 1) == ".") {
 		return parseAttribute();
 	}
@@ -302,7 +303,7 @@ optional<ReferenceArgument> QP::QueryPreprocessor::tryParseSelectArgument() {
 	return {};
 }
 
-ReferenceArgument QP::QueryPreprocessor::parseAttribute() {
+QP::ReferenceArgument QP::Preprocessor::QueryPreprocessor::parseAttribute() {
 	Declaration synonym = parseClauseSynonym();
 	match(".");
 	auto token_iter = DispatchMap::attribute_token_map.find(query_tokens.at(token_index));
@@ -318,7 +319,7 @@ ReferenceArgument QP::QueryPreprocessor::parseAttribute() {
 	return ReferenceArgument(Attribute{iter->second, synonym});
 }
 
-optional<ReferenceArgument> QP::QueryPreprocessor::tryParseExpressionArgument() {
+optional<QP::ReferenceArgument> QP::Preprocessor::QueryPreprocessor::tryParseExpressionArgument() {
 	bool is_contains = false;
 	if (query_tokens.at(token_index) == "_") {
 		is_contains = true;
@@ -343,7 +344,7 @@ optional<ReferenceArgument> QP::QueryPreprocessor::tryParseExpressionArgument() 
 	return ReferenceArgument(expression, !is_contains);
 }
 
-Declaration QP::QueryPreprocessor::parseClauseSynonym() {
+Declaration QP::Preprocessor::QueryPreprocessor::parseClauseSynonym() {
 	auto synonym_search_result = existing_declarations.find(query_tokens.at(token_index));
 	token_index++;
 	if (synonym_search_result == existing_declarations.end()) {
@@ -355,7 +356,7 @@ Declaration QP::QueryPreprocessor::parseClauseSynonym() {
 
 // Others
 
-bool QP::QueryPreprocessor::match(const string& token) {
+bool QP::Preprocessor::QueryPreprocessor::match(const string& token) {
 	if (this->query_tokens.at(token_index) != token) {
 		throw QuerySyntaxException("Expected: " + token + ". Received: " + this->query_tokens.at(token_index) + ".");
 	}
@@ -363,17 +364,16 @@ bool QP::QueryPreprocessor::match(const string& token) {
 	return true;
 }
 
-void QP::QueryPreprocessor::reset() {
+void QP::Preprocessor::QueryPreprocessor::reset() {
 	token_index = 0;
 	semantic_exception_message = optional<string>();
 	query_tokens.clear();
 	existing_declarations.clear();
 	select_list.clear();
-	clause_list.clear();
-	relation_set.clear();
+	clause_set.clear();
 }
 
-void QP::QueryPreprocessor::validateUnknownPatternSyntax() {
+void QP::Preprocessor::QueryPreprocessor::validateUnknownPatternSyntax() {
 	vector<ReferenceArgument> arguments = parseArgumentList(&QueryPreprocessor::parseAnyArgument);
 	auto iter = DispatchMap::pattern_syntax_map.find(arguments.size());
 	if (iter == DispatchMap::pattern_syntax_map.end()) {
@@ -388,13 +388,13 @@ void QP::QueryPreprocessor::validateUnknownPatternSyntax() {
 	}
 }
 
-void QP::QueryPreprocessor::logSemanticException(const string&& message) {
+void QP::Preprocessor::QueryPreprocessor::logSemanticException(const string&& message) {
 	if (!semantic_exception_message.has_value()) {
 		semantic_exception_message = message;
 	}
 }
 
-void QP::QueryPreprocessor::validateSyntax(ClauseType type, vector<ReferenceArgument> arguments) {
+void QP::Preprocessor::QueryPreprocessor::validateSyntax(ClauseType type, vector<ReferenceArgument> arguments) {
 	auto expected_types = DispatchMap::syntax_map.at(type);
 	if (expected_types.size() != arguments.size()) {
 		throw QuerySyntaxException("Invalid number of arguments.");

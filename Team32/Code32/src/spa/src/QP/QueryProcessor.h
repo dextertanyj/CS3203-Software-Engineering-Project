@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "QP/QueryEvaluator.h"
+#include "QP/Evaluator/QueryEvaluator.h"
+#include "QP/Preprocessor/QueryPreprocessor.h"
 #include "QP/QueryPostProcessor.h"
-#include "QP/QueryPreprocessor.h"
 #include "QP/StorageAdapter.h"
 
 using std::string;
@@ -19,8 +19,8 @@ public:
 
 private:
 	StorageAdapter store;
-	QueryPreprocessor pre_processor;
-	QueryEvaluator evaluator;
+	Preprocessor::QueryPreprocessor pre_processor;
+	Evaluator::QueryEvaluator evaluator;
 	QueryPostProcessor post_processor;
 };
 

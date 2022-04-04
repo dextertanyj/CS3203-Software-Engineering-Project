@@ -1,13 +1,14 @@
-#include "Common/TypeDefs.h"
 #include "Common/ExpressionProcessor/ExpressionParser.h"
+#include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
 #include "QP/Executor/StatementExecutor.tpp"
-#include "QP/QueryExpressionLexer.h"
+#include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "catch.hpp"
 
 using namespace QP;
-using namespace QP::Types;
-using namespace QP::Executor::StatementExecutor;
+using namespace Preprocessor;
+using namespace Executor::StatementExecutor;
+using namespace Types;
 using namespace Common::ExpressionProcessor;
 
 TEST_CASE("StatementExecutor<ClauseType::AffectsT>::execute") {
@@ -17,7 +18,7 @@ TEST_CASE("StatementExecutor<ClauseType::AffectsT>::execute") {
 	 * 		y = 4 * x;      //2
 	 * 	} else {
 	 * 		read x;         //3
- 	 * 		read y;         //4
+	 * 		read y;         //4
 	 * 	}
 	 * }
 	 *
@@ -58,7 +59,7 @@ TEST_CASE("StatementExecutor<ClauseType::AffectsT>::execute") {
 	pkb.setCall(12, "A");
 	pkb.setStmtType(13, StmtType::Assign);
 	pkb.setStmtType(14, StmtType::Assign);
-	pkb.setNext(5,6);
+	pkb.setNext(5, 6);
 	pkb.setNext(6, 7);
 	pkb.setNext(7, 8);
 	pkb.setNext(8, 9);
@@ -171,7 +172,6 @@ TEST_CASE("StatementExecutor<ClauseType::AffectsT>::execute") {
 		REQUIRE(result2.getResult());
 		REQUIRE(result3.getResult());
 		REQUIRE_FALSE(result4.getResult());
-
 	}
 
 	SECTION("Trivial: Synonym & Index") {

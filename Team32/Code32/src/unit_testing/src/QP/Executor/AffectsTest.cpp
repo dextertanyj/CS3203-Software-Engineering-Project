@@ -1,13 +1,14 @@
-#include "Common/TypeDefs.h"
 #include "Common/ExpressionProcessor/ExpressionParser.h"
+#include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
 #include "QP/Executor/StatementExecutor.tpp"
-#include "QP/QueryExpressionLexer.h"
+#include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "catch.hpp"
 
 using namespace QP;
-using namespace QP::Types;
-using namespace QP::Executor::StatementExecutor;
+using namespace Preprocessor;
+using namespace Executor::StatementExecutor;
+using namespace Types;
 using namespace Common::ExpressionProcessor;
 
 TEST_CASE("StatementExecutor<ClauseType::Affects>::execute") {

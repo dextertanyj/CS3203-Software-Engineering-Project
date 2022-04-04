@@ -4,8 +4,6 @@
 #include "QP/ReferenceArgument.h"
 #include "QP/Types.h"
 
-using namespace std;
-
 class QP::QueryProperties {
 public:
 	QueryProperties(Types::DeclarationList declaration_list, Types::SelectList select_list, Types::ClauseList clause_list);

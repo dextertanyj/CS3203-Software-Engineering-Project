@@ -2,30 +2,32 @@
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
 #include "QP/Executor/PatternAssignExecutor.h"
-#include "QP/QueryExpressionLexer.h"
+#include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "catch.hpp"
 
-using namespace QP::Types;
-using namespace QP::Executor::PatternAssignExecutor;
+using namespace QP;
+using namespace Preprocessor;
+using namespace Executor::PatternAssignExecutor;
+using namespace Types;
 using namespace Common::ExpressionProcessor;
 
 TEST_CASE("PatternAssignExecutor::execute") {
 	PKB::Storage pkb = PKB::Storage();
-	QP::StorageAdapter store = QP::StorageAdapter(pkb);
+	StorageAdapter store = StorageAdapter(pkb);
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Assign);
 	pkb.setStmtType(3, StmtType::Assign);
 
 	vector<string> assign_token1 = {"1"};
-	QP::QueryExpressionLexer lexer1 = QP::QueryExpressionLexer(assign_token1);
+	QueryExpressionLexer lexer1 = QueryExpressionLexer(assign_token1);
 	auto expression1 = ExpressionParser{lexer1, ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(1, "x", expression1);
 	vector<string> assign_token2 = {"x", "+", "1"};
-	QP::QueryExpressionLexer lexer2 = QP::QueryExpressionLexer(assign_token2);
+	QueryExpressionLexer lexer2 = QueryExpressionLexer(assign_token2);
 	auto expression2 = ExpressionParser{lexer2, ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(2, "y", expression2);
 	vector<string> assign_token3 = {"x", "+", "y"};
-	QP::QueryExpressionLexer lexer3 = QP::QueryExpressionLexer(assign_token3);
+	QueryExpressionLexer lexer3 = QueryExpressionLexer(assign_token3);
 	auto expression3 = ExpressionParser{lexer3, ExpressionType::Arithmetic}.parse();
 	pkb.setAssign(3, "y", expression3);
 
@@ -36,34 +38,34 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	unordered_set<ConstVal> constants = {0, 1};
 	pkb.setConstant(constants);
 
-	ReferenceArgument syn_assign = ReferenceArgument(Declaration{QP::Types::DesignEntity::Assign, "a"});
+	ReferenceArgument syn_assign = ReferenceArgument(Declaration{Types::DesignEntity::Assign, "a"});
 
 	ReferenceArgument x = ReferenceArgument("x");
 	ReferenceArgument y = ReferenceArgument("y");
 	ReferenceArgument z = ReferenceArgument("z");
-	ReferenceArgument var = ReferenceArgument(Declaration{QP::Types::DesignEntity::Variable, "var"});
+	ReferenceArgument var = ReferenceArgument(Declaration{Types::DesignEntity::Variable, "var"});
 
 	vector<string> query_token1 = {"1"};
-	QP::QueryExpressionLexer lexer4 = QP::QueryExpressionLexer(query_token1);
+	QueryExpressionLexer lexer4 = QueryExpressionLexer(query_token1);
 	auto query_expression1 = ExpressionParser{lexer4, ExpressionType::Arithmetic}.parse();
 	vector<string> query_token2 = {"0"};
-	QP::QueryExpressionLexer lexer5 = QP::QueryExpressionLexer(query_token2);
+	QueryExpressionLexer lexer5 = QueryExpressionLexer(query_token2);
 	auto query_expression2 = ExpressionParser{lexer5, ExpressionType::Arithmetic}.parse();
 	vector<string> query_token3 = {"x"};
-	QP::QueryExpressionLexer lexer6 = QP::QueryExpressionLexer(query_token3);
+	QueryExpressionLexer lexer6 = QueryExpressionLexer(query_token3);
 	auto query_expression3 = ExpressionParser{lexer6, ExpressionType::Arithmetic}.parse();
 
 	SECTION("Trivial: Wildcard & Wildcard") {
-		QP::QueryResult result1 = executeTrivialSynonymOrWildcardWildcard(store);
+		QueryResult result1 = executeTrivialSynonymOrWildcardWildcard(store);
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("Trivial: Wildcard & Expression") {
-		QP::QueryResult result1 =
+		QueryResult result1 =
 			executeTrivialSynonymOrWildcardExpression(store, ReferenceArgument(query_expression1, true));
-		QP::QueryResult result2 =
+		QueryResult result2 =
 			executeTrivialSynonymOrWildcardExpression(store, ReferenceArgument(query_expression2, true));
-		QP::QueryResult result3 =
+		QueryResult result3 =
 			executeTrivialSynonymOrWildcardExpression(store, ReferenceArgument(query_expression3, true));
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -71,11 +73,11 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	}
 
 	SECTION("Trivial: Wildcard & Sub-Expression") {
-		QP::QueryResult result1 =
+		QueryResult result1 =
 			executeTrivialSynonymOrWildcardExpression(store, ReferenceArgument(query_expression1, false));
-		QP::QueryResult result2 =
+		QueryResult result2 =
 			executeTrivialSynonymOrWildcardExpression(store, ReferenceArgument(query_expression2, false));
-		QP::QueryResult result3 =
+		QueryResult result3 =
 			executeTrivialSynonymOrWildcardExpression(store, ReferenceArgument(query_expression3, false));
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -83,24 +85,24 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	}
 
 	SECTION("Trivial: Name & Wildcard") {
-		QP::QueryResult result1 = executeTrivialNameWildcard(store, x);
-		QP::QueryResult result2 = executeTrivialNameWildcard(store, y);
-		QP::QueryResult result3 = executeTrivialNameWildcard(store, z);
+		QueryResult result1 = executeTrivialNameWildcard(store, x);
+		QueryResult result2 = executeTrivialNameWildcard(store, y);
+		QueryResult result3 = executeTrivialNameWildcard(store, z);
 		REQUIRE(result1.getResult());
 		REQUIRE(result2.getResult());
 		REQUIRE(!result3.getResult());
 	}
 
 	SECTION("Trivial: Name & Expression") {
-		QP::QueryResult result1 = executeTrivialNameExpression(store, x, ReferenceArgument(query_expression1, true));
-		QP::QueryResult result2 = executeTrivialNameExpression(store, x, ReferenceArgument(query_expression2, true));
-		QP::QueryResult result3 = executeTrivialNameExpression(store, x, ReferenceArgument(query_expression3, true));
-		QP::QueryResult result4 = executeTrivialNameExpression(store, y, ReferenceArgument(query_expression1, true));
-		QP::QueryResult result5 = executeTrivialNameExpression(store, y, ReferenceArgument(query_expression2, true));
-		QP::QueryResult result6 = executeTrivialNameExpression(store, y, ReferenceArgument(query_expression3, true));
-		QP::QueryResult result7 = executeTrivialNameExpression(store, z, ReferenceArgument(query_expression1, true));
-		QP::QueryResult result8 = executeTrivialNameExpression(store, z, ReferenceArgument(query_expression2, true));
-		QP::QueryResult result9 = executeTrivialNameExpression(store, z, ReferenceArgument(query_expression3, true));
+		QueryResult result1 = executeTrivialNameExpression(store, x, ReferenceArgument(query_expression1, true));
+		QueryResult result2 = executeTrivialNameExpression(store, x, ReferenceArgument(query_expression2, true));
+		QueryResult result3 = executeTrivialNameExpression(store, x, ReferenceArgument(query_expression3, true));
+		QueryResult result4 = executeTrivialNameExpression(store, y, ReferenceArgument(query_expression1, true));
+		QueryResult result5 = executeTrivialNameExpression(store, y, ReferenceArgument(query_expression2, true));
+		QueryResult result6 = executeTrivialNameExpression(store, y, ReferenceArgument(query_expression3, true));
+		QueryResult result7 = executeTrivialNameExpression(store, z, ReferenceArgument(query_expression1, true));
+		QueryResult result8 = executeTrivialNameExpression(store, z, ReferenceArgument(query_expression2, true));
+		QueryResult result9 = executeTrivialNameExpression(store, z, ReferenceArgument(query_expression3, true));
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
 		REQUIRE(!result3.getResult());
@@ -113,23 +115,23 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	}
 
 	SECTION("Trivial: Name & Sub-Expression") {
-		QP::QueryResult result1 =
+		QueryResult result1 =
 			executeTrivialNameExpression(store, x, ReferenceArgument(query_expression1, false));
-		QP::QueryResult result2 =
+		QueryResult result2 =
 			executeTrivialNameExpression(store, x, ReferenceArgument(query_expression2, false));
-		QP::QueryResult result3 =
+		QueryResult result3 =
 			executeTrivialNameExpression(store, x, ReferenceArgument(query_expression3, false));
-		QP::QueryResult result4 =
+		QueryResult result4 =
 			executeTrivialNameExpression(store, y, ReferenceArgument(query_expression1, false));
-		QP::QueryResult result5 =
+		QueryResult result5 =
 			executeTrivialNameExpression(store, y, ReferenceArgument(query_expression2, false));
-		QP::QueryResult result6 =
+		QueryResult result6 =
 			executeTrivialNameExpression(store, y, ReferenceArgument(query_expression3, false));
-		QP::QueryResult result7 =
+		QueryResult result7 =
 			executeTrivialNameExpression(store, z, ReferenceArgument(query_expression1, false));
-		QP::QueryResult result8 =
+		QueryResult result8 =
 			executeTrivialNameExpression(store, z, ReferenceArgument(query_expression2, false));
-		QP::QueryResult result9 =
+		QueryResult result9 =
 			executeTrivialNameExpression(store, z, ReferenceArgument(query_expression3, false));
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -143,16 +145,16 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	}
 
 	SECTION("Trivial: Synonym & Wildcard") {
-		QP::QueryResult result1 = executeTrivialSynonymOrWildcardWildcard(store);
+		QueryResult result1 = executeTrivialSynonymOrWildcardWildcard(store);
 		REQUIRE(result1.getResult());
 	}
 
 	SECTION("Trivial: Synonym & Expression") {
-		QP::QueryResult result1 =
+		QueryResult result1 =
 			executeTrivialSynonymOrWildcardExpression(store, ReferenceArgument(query_expression1, true));
-		QP::QueryResult result2 =
+		QueryResult result2 =
 			executeTrivialSynonymOrWildcardExpression(store, ReferenceArgument(query_expression2, true));
-		QP::QueryResult result3 =
+		QueryResult result3 =
 			executeTrivialSynonymOrWildcardExpression(store, ReferenceArgument(query_expression3, true));
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -160,11 +162,11 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	}
 
 	SECTION("Trivial: Synonym & Sub-Expression") {
-		QP::QueryResult result1 =
+		QueryResult result1 =
 			executeTrivialSynonymOrWildcardExpression(store, ReferenceArgument(query_expression1, false));
-		QP::QueryResult result2 =
+		QueryResult result2 =
 			executeTrivialSynonymOrWildcardExpression(store, ReferenceArgument(query_expression2, false));
-		QP::QueryResult result3 =
+		QueryResult result3 =
 			executeTrivialSynonymOrWildcardExpression(store, ReferenceArgument(query_expression3, false));
 		REQUIRE(result1.getResult());
 		REQUIRE(!result2.getResult());
@@ -172,7 +174,7 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	}
 
 	SECTION("Wildcard & Wildcard") {
-		QP::QueryResult result1 = executeWildcardWildcard(store, syn_assign);
+		QueryResult result1 = executeWildcardWildcard(store, syn_assign);
 		vector<string> expected_result = {"1", "2", "3"};
 		REQUIRE(result1.getResult());
 		auto result1vec = result1.getSynonymResult("a");
@@ -181,11 +183,11 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	}
 
 	SECTION("Wildcard & Expression") {
-		QP::QueryResult result1 =
+		QueryResult result1 =
 			executeWildcardExpression(store, syn_assign, ReferenceArgument(query_expression1, true));
-		QP::QueryResult result2 =
+		QueryResult result2 =
 			executeWildcardExpression(store, syn_assign, ReferenceArgument(query_expression2, true));
-		QP::QueryResult result3 =
+		QueryResult result3 =
 			executeWildcardExpression(store, syn_assign, ReferenceArgument(query_expression3, true));
 		vector<string> expected_result1 = {"1"};
 		REQUIRE(result1.getResult());
@@ -195,11 +197,11 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	}
 
 	SECTION("Wildcard & Sub-Expression") {
-		QP::QueryResult result1 =
+		QueryResult result1 =
 			executeWildcardExpression(store, syn_assign, ReferenceArgument(query_expression1, false));
-		QP::QueryResult result2 =
+		QueryResult result2 =
 			executeWildcardExpression(store, syn_assign, ReferenceArgument(query_expression2, false));
-		QP::QueryResult result3 =
+		QueryResult result3 =
 			executeWildcardExpression(store, syn_assign, ReferenceArgument(query_expression3, false));
 		vector<string> expected_result1 = {"1", "2"};
 		vector<string> expected_result3 = {"2", "3"};
@@ -215,9 +217,9 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	}
 
 	SECTION("Name & Wildcard") {
-		QP::QueryResult result1 = executeNameWildcard(store, syn_assign, x);
-		QP::QueryResult result2 = executeNameWildcard(store, syn_assign, y);
-		QP::QueryResult result3 = executeNameWildcard(store, syn_assign, z);
+		QueryResult result1 = executeNameWildcard(store, syn_assign, x);
+		QueryResult result2 = executeNameWildcard(store, syn_assign, y);
+		QueryResult result3 = executeNameWildcard(store, syn_assign, z);
 
 		vector<string> expected_result1 = {"1"};
 		vector<string> expected_result2 = {"2", "3"};
@@ -231,23 +233,23 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	}
 
 	SECTION("Name & Expression") {
-		QP::QueryResult result1 =
+		QueryResult result1 =
 			executeNameExpression(store, syn_assign, x, ReferenceArgument(query_expression1, true));
-		QP::QueryResult result2 =
+		QueryResult result2 =
 			executeNameExpression(store, syn_assign, x, ReferenceArgument(query_expression2, true));
-		QP::QueryResult result3 =
+		QueryResult result3 =
 			executeNameExpression(store, syn_assign, x, ReferenceArgument(query_expression3, true));
-		QP::QueryResult result4 =
+		QueryResult result4 =
 			executeNameExpression(store, syn_assign, y, ReferenceArgument(query_expression1, true));
-		QP::QueryResult result5 =
+		QueryResult result5 =
 			executeNameExpression(store, syn_assign, y, ReferenceArgument(query_expression2, true));
-		QP::QueryResult result6 =
+		QueryResult result6 =
 			executeNameExpression(store, syn_assign, y, ReferenceArgument(query_expression3, true));
-		QP::QueryResult result7 =
+		QueryResult result7 =
 			executeNameExpression(store, syn_assign, z, ReferenceArgument(query_expression1, true));
-		QP::QueryResult result8 =
+		QueryResult result8 =
 			executeNameExpression(store, syn_assign, z, ReferenceArgument(query_expression2, true));
-		QP::QueryResult result9 =
+		QueryResult result9 =
 			executeNameExpression(store, syn_assign, z, ReferenceArgument(query_expression3, true));
 		vector<string> expected_result1 = {"1"};
 		REQUIRE(result1.getResult());
@@ -263,23 +265,23 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	}
 
 	SECTION("Name & Sub-Expression") {
-		QP::QueryResult result1 =
+		QueryResult result1 =
 			executeNameExpression(store, syn_assign, x, ReferenceArgument(query_expression1, false));
-		QP::QueryResult result2 =
+		QueryResult result2 =
 			executeNameExpression(store, syn_assign, x, ReferenceArgument(query_expression2, false));
-		QP::QueryResult result3 =
+		QueryResult result3 =
 			executeNameExpression(store, syn_assign, x, ReferenceArgument(query_expression3, false));
-		QP::QueryResult result4 =
+		QueryResult result4 =
 			executeNameExpression(store, syn_assign, y, ReferenceArgument(query_expression1, false));
-		QP::QueryResult result5 =
+		QueryResult result5 =
 			executeNameExpression(store, syn_assign, y, ReferenceArgument(query_expression2, false));
-		QP::QueryResult result6 =
+		QueryResult result6 =
 			executeNameExpression(store, syn_assign, y, ReferenceArgument(query_expression3, false));
-		QP::QueryResult result7 =
+		QueryResult result7 =
 			executeNameExpression(store, syn_assign, z, ReferenceArgument(query_expression1, false));
-		QP::QueryResult result8 =
+		QueryResult result8 =
 			executeNameExpression(store, syn_assign, z, ReferenceArgument(query_expression2, false));
-		QP::QueryResult result9 =
+		QueryResult result9 =
 			executeNameExpression(store, syn_assign, z, ReferenceArgument(query_expression3, false));
 		vector<string> expected_result1 = {"1"};
 		vector<string> expected_result4 = {"2"};
@@ -301,7 +303,7 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	}
 
 	SECTION("Synonym & Wildcard") {
-		QP::QueryResult result1 = executeSynonymWildcard(store, syn_assign, var);
+		QueryResult result1 = executeSynonymWildcard(store, syn_assign, var);
 		vector<string> expected_result1 = {"1", "2", "3"};
 		vector<string> expected_result_var1 = {"x", "y", "y"};
 		REQUIRE(result1.getResult());
@@ -314,11 +316,11 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	}
 
 	SECTION("Synonym & Expression") {
-		QP::QueryResult result1 =
+		QueryResult result1 =
 			executeSynonymExpression(store, syn_assign, var, ReferenceArgument(query_expression1, true));
-		QP::QueryResult result2 =
+		QueryResult result2 =
 			executeSynonymExpression(store, syn_assign, var, ReferenceArgument(query_expression2, true));
-		QP::QueryResult result3 =
+		QueryResult result3 =
 			executeSynonymExpression(store, syn_assign, var, ReferenceArgument(query_expression3, true));
 		vector<string> expected_result1 = {"1"};
 		vector<string> expected_result_var1 = {"x"};
@@ -332,11 +334,11 @@ TEST_CASE("PatternAssignExecutor::execute") {
 	}
 
 	SECTION("Synonym & Sub-Expression") {
-		QP::QueryResult result1 =
+		QueryResult result1 =
 			executeSynonymExpression(store, syn_assign, var, ReferenceArgument(query_expression1, false));
-		QP::QueryResult result2 =
+		QueryResult result2 =
 			executeSynonymExpression(store, syn_assign, var, ReferenceArgument(query_expression2, false));
-		QP::QueryResult result3 =
+		QueryResult result3 =
 			executeSynonymExpression(store, syn_assign, var, ReferenceArgument(query_expression3, false));
 		vector<string> expected_result1 = {"1", "2"};
 		vector<string> expected_result_var1 = {"x", "y"};

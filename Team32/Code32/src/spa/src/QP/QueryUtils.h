@@ -15,13 +15,13 @@
 #define WITH_COST 3
 
 namespace QP::Utilities {
-static unordered_map<Types::DesignEntity, StmtType> design_ent_to_stmt_type = {
+static std::unordered_map<Types::DesignEntity, StmtType> design_ent_to_stmt_type = {
 	{Types::DesignEntity::Read, StmtType::Read}, {Types::DesignEntity::Print, StmtType::Print},
 	{Types::DesignEntity::Call, StmtType::Call}, {Types::DesignEntity::While, StmtType::WhileStmt},
 	{Types::DesignEntity::If, StmtType::IfStmt}, {Types::DesignEntity::Assign, StmtType::Assign},
 };
 
-static unordered_map<Types::ClauseType, size_t> cost_map = {
+static std::unordered_map<Types::ClauseType, size_t> cost_map = {
 	{Types::ClauseType::Affects, AFFECTS_COST},
 	{Types::ClauseType::AffectsT, AFFECTS_COST},
 	{Types::ClauseType::Calls, UNIT_COST},
@@ -42,12 +42,12 @@ static unordered_map<Types::ClauseType, size_t> cost_map = {
 	{Types::ClauseType::With, WITH_COST},
 };
 
-inline bool checkStmtTypeMatch(const shared_ptr<StmtInfo>& stmt, Types::DesignEntity design_entity) {
+inline bool checkStmtTypeMatch(const std::shared_ptr<StmtInfo>& stmt, Types::DesignEntity design_entity) {
 	if (stmt == nullptr) {
 		return false;
 	}
 
-	return design_entity == Types::DesignEntity::Stmt || stmt->getType() == design_ent_to_stmt_type[design_entity];
+	return design_entity == Types::DesignEntity::Stmt || stmt->getType() == design_ent_to_stmt_type.at(design_entity);
 }
 };
 
