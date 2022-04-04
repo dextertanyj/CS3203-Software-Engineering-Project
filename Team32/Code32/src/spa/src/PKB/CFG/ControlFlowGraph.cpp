@@ -8,18 +8,6 @@
 #include "PKB/CFG/StatementNode.h"
 #include "PKB/CFG/WhileNode.h"
 
-struct LessComparator {
-	bool operator()(const shared_ptr<StmtInfo>& lhs, const shared_ptr<StmtInfo>& rhs) const {
-		return lhs->getIdentifier() < rhs->getIdentifier();
-	}
-};
-
-struct GreaterComparator {
-	bool operator()(const shared_ptr<StmtInfo>& lhs, const shared_ptr<StmtInfo>& rhs) const {
-		return lhs->getIdentifier() > rhs->getIdentifier();
-	}
-};
-
 void PKB::ControlFlowGraph::setNext(StmtRef previous, StmtRef next) {
 	if (previous == next) {
 		throw invalid_argument("Cannot set a node's direct next to itself.");

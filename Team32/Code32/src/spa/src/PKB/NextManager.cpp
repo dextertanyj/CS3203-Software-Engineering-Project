@@ -4,18 +4,6 @@
 #include <cassert>
 #include <queue>
 
-struct LessComparator {
-	bool operator()(const shared_ptr<StmtInfo>& lhs, const shared_ptr<StmtInfo>& rhs) const {
-		return lhs->getIdentifier() < rhs->getIdentifier();
-	}
-};
-
-struct GreaterComparator {
-	bool operator()(const shared_ptr<StmtInfo>& lhs, const shared_ptr<StmtInfo>& rhs) const {
-		return lhs->getIdentifier() > rhs->getIdentifier();
-	}
-};
-
 PKB::NextManager::NextManager(ControlFlowGraph& control_flow_graph) : control_flow_graph(control_flow_graph) {}
 
 bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {

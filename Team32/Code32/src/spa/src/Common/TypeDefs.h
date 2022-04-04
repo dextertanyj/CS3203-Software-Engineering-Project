@@ -39,4 +39,16 @@ using ProcRefSet = std::unordered_set<ProcRef>;
 using StmtRefSet = std::unordered_set<StmtRef>;
 using StmtInfoPtrVarRefSet = std::unordered_set<std::pair<StmtInfoPtr, VarRef>>;
 
+struct LessComparator {
+	bool operator()(const std::shared_ptr<StmtInfo>& lhs, const std::shared_ptr<StmtInfo>& rhs) const {
+		return lhs->getIdentifier() < rhs->getIdentifier();
+	}
+};
+
+struct GreaterComparator {
+	bool operator()(const std::shared_ptr<StmtInfo>& lhs, const std::shared_ptr<StmtInfo>& rhs) const {
+		return lhs->getIdentifier() > rhs->getIdentifier();
+	}
+};
+
 #endif
