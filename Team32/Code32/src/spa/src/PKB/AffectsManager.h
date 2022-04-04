@@ -54,8 +54,7 @@ private:
 	unordered_map<StmtRef, StmtInfoPtrSet> affected_star_cache;
 
 	StmtInfoPtrSet getAffectedByNodeAndVar(const StmtRef& node, VarRef variable);
-	void processDFSVisit(DFSInfo& info,
-	                     void (AffectsManager::*processor)(DFSInfo&, const shared_ptr<StmtInfo>&));
+	void processDFSVisit(DFSInfo& info, void (AffectsManager::*processor)(DFSInfo&, const shared_ptr<StmtInfo>&));
 	void processNodeAffects(DFSInfo& info, const shared_ptr<StmtInfo>& current);
 	void processNodeAffected(DFSInfo& info, const shared_ptr<StmtInfo>& current);
 
