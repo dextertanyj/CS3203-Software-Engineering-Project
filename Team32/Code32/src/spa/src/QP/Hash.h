@@ -9,7 +9,7 @@
 namespace std {
 template <>
 struct hash<Common::ExpressionProcessor::Expression> {
-	std::size_t operator()(const Common::ExpressionProcessor::Expression& key) const { return hash<std::string>()(key.getTraversal()); }
+	std::size_t operator()(const Common::ExpressionProcessor::Expression& key) const { return hash<std::string>()(key.traversal); }
 };
 
 template <>
@@ -27,14 +27,14 @@ struct hash<QP::Types::Attribute> {
 	std::size_t operator()(const QP::Types::Attribute& key) const {
 		std::size_t seed = 0;
 		combineHash(seed, key.synonym);
-		combineHash(seed, (int)key.attribute);
+		combineHash(seed, static_cast<int>(key.attribute));
 		return seed;
 	}
 };
 
 template <>
 struct hash<QP::Types::ReferenceArgument> {
-	std::size_t operator()(const QP::Types::ReferenceArgument& key) const { return hash<QP::Types::ArgumentValue>()(key.getValue()); }
+	std::size_t operator()(const QP::Types::ReferenceArgument& key) const { return hash<QP::Types::ArgumentValue>()(key.value); }
 };
 
 template <>

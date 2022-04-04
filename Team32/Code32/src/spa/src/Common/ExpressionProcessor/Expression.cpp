@@ -13,8 +13,6 @@ std::unordered_set<ConstVal> Expression::getConstants() const { return constants
 
 std::unordered_set<VarRef> Expression::getVariables() const { return variables; }
 
-std::string Expression::getTraversal() const { return traversal; }
-
 bool Expression::contains(const Expression& other) const { return traversal.find(other.traversal) != std::string::npos; }
 
 bool Expression::operator==(const Expression& other) const { return traversal == other.traversal; }

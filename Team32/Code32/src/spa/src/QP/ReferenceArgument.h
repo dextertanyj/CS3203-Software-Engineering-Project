@@ -89,12 +89,9 @@ public:
 	 */
 	[[nodiscard]] Common::ExpressionProcessor::Expression getExpression() const;
 
-	/**
-	 * Returns the argument stored.
-	 */
-	[[nodiscard]] ArgumentValue getValue() const;
-
 	[[nodiscard]] bool operator==(const ReferenceArgument& other) const;
+
+	friend std::hash<ReferenceArgument>;
 
 private:
 	ArgumentValue value;
