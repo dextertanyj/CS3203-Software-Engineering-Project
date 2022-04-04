@@ -316,24 +316,6 @@ TEST_CASE("QueryPreprocessor::parseQuery valid such that Follows(*)") {
 	clause = qp11.getClauseList()[0];
 	REQUIRE(clause->getType() == ClauseType::FollowsT);
 	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"w1", "c2"}));
-
-	// Multiple Follows(*) clauses
-	QueryPreprocessor qpp12;
-	QP::QueryProperties qp12 = qpp12.parseQuery(UnivDeclarations + "Select c2 such that Follows(i1, _) and Follows(w1, c2)");
-	clause = qp12.getClauseList()[0];
-	REQUIRE(clause->getType() == ClauseType::Follows);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"i1"}));
-	clause = qp12.getClauseList()[1];
-	REQUIRE(clause->getType() == ClauseType::Follows);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"w1", "c2"}));
-	QueryPreprocessor qpp13;
-	QP::QueryProperties qp13 = qpp13.parseQuery(UnivDeclarations + "Select c2 such that Follows*(i1, _) and Follows(w1, c2)");
-	clause = qp13.getClauseList()[0];
-	REQUIRE(clause->getType() == ClauseType::FollowsT);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"i1"}));
-	clause = qp13.getClauseList()[1];
-	REQUIRE(clause->getType() == ClauseType::Follows);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"w1", "c2"}));
 }
 
 TEST_CASE("QueryPreprocessor::parseQuery invalid such that Follows(*)") {
@@ -979,7 +961,6 @@ TEST_CASE("QP::QueryPreprocessor::parseQuery valid Affects(*)") {
 	}
 }
 
-
 TEST_CASE("QP::QueryPreprocessor::parseQuery invalid Affects(*)") {
 	QueryPreprocessor qpp;
 
@@ -1101,24 +1082,38 @@ TEST_CASE("QueryPreprocessor::parseQuery invalid if pattern") {
 }
 
 TEST_CASE("QueryPreprocessor::parseQuery Multiple such that") {
-	shared_ptr<QP::Evaluator::Clause> clause;
-	QueryPreprocessor qpp1;
-	QP::QueryProperties qp1 = qpp1.parseQuery(UnivDeclarations + "Select c2 such that Modifies(c2, _) and Follows(w1, c2)");
-	clause = qp1.getClauseList()[0];
-	REQUIRE(clause->getType() == ClauseType::ModifiesS);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"c2"}));
-	clause = qp1.getClauseList()[1];
-	REQUIRE(clause->getType() == ClauseType::Follows);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"w1", "c2"}));
+	ClauseList clauses;
+	QueryPreprocessor qpp;
+	QP::QueryProperties qp = {{}, {}, {}};
+	bool result;
 
-	QueryPreprocessor qpp2;
-	QP::QueryProperties qp2 = qpp2.parseQuery(UnivDeclarations + "Select w2 such that Parent*(7, _) such that Uses(w2, v1)");
-	clause = qp2.getClauseList()[0];
-	REQUIRE(clause->getType() == ClauseType::ParentT);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>());
-	clause = qp2.getClauseList()[1];
-	REQUIRE(clause->getType() == ClauseType::UsesS);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"w2", "v1"}));
+	SECTION("And") {
+		qp = qpp.parseQuery(UnivDeclarations + "Select c2 such that Modifies(c2, _) and Follows(w1, c2)");
+		REQUIRE(qp.getClauseList().size() == 2);
+		clauses = qp.getClauseList();
+		result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+			return clause->getType() == ClauseType::ModifiesS && clause->getDeclarationSymbols() == vector<string>({"c2"});
+		});
+		REQUIRE(result);
+		result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+			return clause->getType() == ClauseType::Follows && clause->getDeclarationSymbols() == vector<string>({"w1", "c2"});
+		});
+		REQUIRE(result);
+	}
+
+	SECTION("Such That") {
+		qp = qpp.parseQuery(UnivDeclarations + "Select w2 such that Parent*(7, _) such that Uses(w2, v1)");
+		REQUIRE(qp.getClauseList().size() == 2);
+		clauses = qp.getClauseList();
+		result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+			return clause->getType() == ClauseType::ParentT && clause->getDeclarationSymbols().empty();
+		});
+		REQUIRE(result);
+		result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+			return clause->getType() == ClauseType::UsesS && clause->getDeclarationSymbols() == vector<string>({"w2", "v1"});
+		});
+		REQUIRE(result);
+	}
 }
 
 TEST_CASE("QueryPreprocessor::parseQuery valid pattern") {
@@ -1284,25 +1279,36 @@ TEST_CASE("QueryPreprocessor::parseQuery valid with") {
 }
 
 TEST_CASE("QueryPreprocessor::parseQuery Multiple with clauses") {
-	shared_ptr<QP::Evaluator::Clause> clause;
+	ClauseList clauses;
 	QueryPreprocessor qpp;
 	QP::QueryProperties qp = {{}, {}, {}};
+	bool result;
 
-	qp = qpp.parseQuery(UnivDeclarations + "Select a1 with ct1.value = ct2.value and \"name\" = p1.varName");
-	clause = qp.getClauseList()[0];
-	REQUIRE(clause->getType() == ClauseType::With);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"ct1", "ct2"}));
-	clause = qp.getClauseList()[1];
-	REQUIRE(clause->getType() == ClauseType::With);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"p1"}));
+	SECTION("And") {
+		qp = qpp.parseQuery(UnivDeclarations + "Select a1 with ct1.value = ct2.value and \"name\" = p1.varName");
+		clauses = qp.getClauseList();
+		result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+			return clause->getType() == ClauseType::With && clause->getDeclarationSymbols() == vector<string>({"ct1", "ct2"});
+		});
+		REQUIRE(result);
+		result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+			return clause->getType() == ClauseType::With && clause->getDeclarationSymbols() == vector<string>({"p1"});
+		});
+		REQUIRE(result);
+	}
 
-	qp = qpp.parseQuery(UnivDeclarations + "Select a1 with ct1.value = ct2.value with \"name\" = p1.varName");
-	clause = qp.getClauseList()[0];
-	REQUIRE(clause->getType() == ClauseType::With);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"ct1", "ct2"}));
-	clause = qp.getClauseList()[1];
-	REQUIRE(clause->getType() == ClauseType::With);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"p1"}));
+	SECTION("With") {
+		qp = qpp.parseQuery(UnivDeclarations + "Select a1 with ct1.value = ct2.value with \"name\" = p1.varName");
+		clauses = qp.getClauseList();
+		result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+			return clause->getType() == ClauseType::With && clause->getDeclarationSymbols() == vector<string>({"ct1", "ct2"});
+		});
+		REQUIRE(result);
+		result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+			return clause->getType() == ClauseType::With && clause->getDeclarationSymbols() == vector<string>({"p1"});
+		});
+		REQUIRE(result);
+	}
 }
 
 TEST_CASE("QueryPreprocessor::parseQuery invalid with") {
@@ -1332,21 +1338,64 @@ TEST_CASE("QueryPreprocessor::parseQuery invalid with") {
 	}
 }
 
-TEST_CASE("QueryPreprocessor::parseQuery Multiple such that/pattern/with clauses") {
-	shared_ptr<QP::Evaluator::Clause> clause;
+TEST_CASE("QP::QueryPreprocessor::parseQuery Duplicate clauses") {
+	ClauseList clauses;
 	QueryPreprocessor qpp;
 	QP::QueryProperties qp = {{}, {}, {}};
+	bool result;
+
+	qp = qpp.parseQuery(UnivDeclarations +
+	                    "Select a1 such that Follows(w1, a1) and Follows(w1, a1) and Follows(a1, w1) and Follows(w1, w1) and "
+	                    "Follows(w1, _) and Parent(w1, _)");
+	REQUIRE(qp.getClauseList().size() == 5);
+	clauses = qp.getClauseList();
+	result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+		return clause->getType() == ClauseType::Follows && clause->getDeclarationSymbols() == vector<string>({"w1", "a1"});
+	});
+	REQUIRE(result);
+	result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+		return clause->getType() == ClauseType::Follows && clause->getDeclarationSymbols() == vector<string>({"a1", "w1"});
+	});
+	REQUIRE(result);
+	result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+		return clause->getType() == ClauseType::Follows && clause->getDeclarationSymbols() == vector<string>({"a1", "w1"});
+	});
+	REQUIRE(result);
+	result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+		return clause->getType() == ClauseType::Follows && clause->getDeclarationSymbols() == vector<string>({"w1", "w1"});
+	});
+	REQUIRE(result);
+	result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+		return clause->getType() == ClauseType::Follows && clause->getDeclarationSymbols() == vector<string>({"w1"});
+	});
+	REQUIRE(result);
+	result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+		return clause->getType() == ClauseType::Parent && clause->getDeclarationSymbols() == vector<string>({"w1"});
+	});
+	REQUIRE(result);
+}
+
+TEST_CASE("QP::QueryPreprocessor::parseQuery Multiple such that/pattern/with clauses") {
+	ClauseList clauses;
+	QueryPreprocessor qpp;
+	QP::QueryProperties qp = {{}, {}, {}};
+	bool result;
 
 	qp = qpp.parseQuery(UnivDeclarations + "Select a1 such that Follows(w1, a1) pattern a1(v1, _\"2-4\"_) with a1.stmt# = ct1.value");
-	clause = qp.getClauseList()[0];
-	REQUIRE(clause->getType() == ClauseType::Follows);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"w1", "a1"}));
-	clause = qp.getClauseList()[1];
-	REQUIRE(clause->getType() == ClauseType::PatternAssign);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1", "v1"}));
-	clause = qp.getClauseList()[2];
-	REQUIRE(clause->getType() == ClauseType::With);
-	REQUIRE(clause->getDeclarationSymbols() == vector<string>({"a1", "ct1"}));
+	REQUIRE(qp.getClauseList().size() == 3);
+	clauses = qp.getClauseList();
+	result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+		return clause->getType() == ClauseType::Follows && clause->getDeclarationSymbols() == vector<string>({"w1", "a1"});
+	});
+	REQUIRE(result);
+	result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+		return clause->getType() == ClauseType::PatternAssign && clause->getDeclarationSymbols() == vector<string>({"a1", "v1"});
+	});
+	REQUIRE(result);
+	result = any_of(clauses.begin(), clauses.end(), [](const auto& clause) {
+		return clause->getType() == ClauseType::With && clause->getDeclarationSymbols() == vector<string>({"a1", "ct1"});
+	});
+	REQUIRE(result);
 }
 
 TEST_CASE("QueryPreprocessor::parseQuery Semantic exceptions") {

@@ -60,3 +60,19 @@ size_t QP::Evaluator::Clause::getCost() const {
 	size_t number_of_declarations = getDeclarationSymbols().size();
 	return QP::Utilities::cost_map[type] * number_of_declarations;
 }
+
+bool QP::Evaluator::Clause::operator==(const Clause& other) const {
+	if (type != other.getType()) {
+		return false;
+	}
+
+	vector<ReferenceArgument> other_arguments = other.arguments;
+	for (size_t i = 0; i < arguments.size(); i++) {
+		if (arguments[i] == other_arguments[i]) {
+			continue;
+		}
+		return false;
+	}
+
+	return true;
+}

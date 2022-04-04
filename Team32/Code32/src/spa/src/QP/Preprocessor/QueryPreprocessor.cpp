@@ -1,11 +1,10 @@
-#include "QueryPreprocessor.h"
+#include "QP/Preprocessor/QueryPreprocessor.h"
 
 #include <utility>
 
 #include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/Validator.h"
 #include "QP/Dispatcher/DispatchMap.h"
-#include "QP/Evaluator/Clause.h"
 #include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "QP/Types.h"
 
@@ -58,7 +57,12 @@ QP::QueryProperties QP::Preprocessor::QueryPreprocessor::parseQuery() {
 		throw QuerySemanticException({}, semantic_exception_message.value());
 	}
 
-	return {declarations, this->select_list, this->clause_list};
+	ClauseList clauses;
+	clauses.reserve(clause_set.size());
+	transform(clause_set.begin(), clause_set.end(), back_inserter(clauses),
+	          [](const auto& clause) { return make_shared<Evaluator::Clause>(clause); });
+
+	return {declarations, this->select_list, clauses};
 }
 
 // Declaration
@@ -156,7 +160,7 @@ void QP::Preprocessor::QueryPreprocessor::createClause(ClauseType type, vector<R
 	ArgumentDispatcher argument_dispatcher = DispatchMap::dispatch_map.at(type);
 	try {
 		auto info = argument_dispatcher(arguments);
-		this->clause_list.push_back(make_unique<Evaluator::Clause>(info.first, move(arguments), info.second));
+		clause_set.emplace(info.first, move(arguments), info.second);
 	} catch (const QueryDispatchException& e) {
 		logSemanticException(e.what());
 	}
@@ -366,7 +370,7 @@ void QP::Preprocessor::QueryPreprocessor::reset() {
 	query_tokens.clear();
 	existing_declarations.clear();
 	select_list.clear();
-	clause_list.clear();
+	clause_set.clear();
 }
 
 void QP::Preprocessor::QueryPreprocessor::validateUnknownPatternSyntax() {

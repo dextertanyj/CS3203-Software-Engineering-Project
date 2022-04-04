@@ -87,10 +87,12 @@ public:
 	 */
 	[[nodiscard]] Common::ExpressionProcessor::Expression getExpression() const;
 
+	[[nodiscard]] bool operator==(const ReferenceArgument& other) const;
+
+	friend std::hash<ReferenceArgument>;
+
 private:
-	std::variant<std::monostate, Types::Declaration, Types::Attribute, std::string, StmtRef,
-	             std::pair<Common::ExpressionProcessor::Expression, bool>>
-		value;
+	Types::ArgumentValue value;
 };
 
 #endif  // SPA_SRC_QP_REFERENCEARGUMENT_H

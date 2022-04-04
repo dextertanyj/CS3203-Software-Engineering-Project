@@ -9,7 +9,9 @@
 #include <variant>
 #include <vector>
 
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/Hash.h"
+#include "Common/TypeDefs.h"
 #include "QP/Evaluator/Evaluator.h"
 #include "QP/QP.h"
 
@@ -50,21 +52,15 @@ struct Declaration {
 	bool operator==(const Declaration& other) const { return type == other.type && symbol == other.symbol; }
 };
 
-struct DeclarationHash {
-	std::size_t operator()(const Declaration& key) const {
-		std::size_t seed = 0;
-		combineHash(seed, key.symbol);
-		combineHash(seed, key.type);
-		return seed;
-	}
-};
-
 struct Attribute {
 	// We cast 0 rather than use a concrete enum value to prevent favouring a particular value if the enum is updated.
 	AttributeType attribute = static_cast<AttributeType>(0);  // NOLINT(misc-non-private-member-variables-in-classes)
 	Declaration synonym;                                      // NOLINT(misc-non-private-member-variables-in-classes)
 	bool operator==(const Attribute& other) const { return attribute == other.attribute && synonym == other.synonym; }
 };
+
+using ArgumentValue =
+	std::variant<std::monostate, Declaration, Attribute, std::string, StmtRef, std::pair<Common::ExpressionProcessor::Expression, bool>>;
 
 // Types for attribute selection
 using Name = std::string;
@@ -80,7 +76,8 @@ using Executor = std::function<QueryResult(const StorageAdapter&)>;
 using Types::Executor;
 
 using OptimizedExecutor = std::function<QueryResult(const StorageAdapter&, const QueryResult&)>;
-using ExecutorSet = std::variant<Types::Executor, std::pair<Types::Executor, Types::Executor>, std::pair<Types::Executor, OptimizedExecutor>>;
+using ExecutorSet =
+	std::variant<Types::Executor, std::pair<Types::Executor, Types::Executor>, std::pair<Types::Executor, OptimizedExecutor>>;
 using ExecutorSetFactory = std::function<ExecutorSet(const std::vector<ReferenceArgument>&)>;
 using ExecutorSetFactoryBundle = std::pair<ClauseType, ExecutorSetFactory>;
 using ArgumentDispatchKey = std::variant<ReferenceType, DesignEntity>;

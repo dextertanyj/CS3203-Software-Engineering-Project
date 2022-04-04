@@ -15,6 +15,9 @@ public:
 	[[nodiscard]] std::vector<std::string> getDeclarationSymbols() const;
 	[[nodiscard]] Types::ClauseType getType() const;
 	[[nodiscard]] size_t getCost() const;
+	[[nodiscard]] bool operator==(const Clause& other) const;
+
+	friend std::hash<QP::Evaluator::Clause>;
 
 private:
 	Types::ClauseType type;

@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "QP/Evaluator/Clause.h"
+#include "QP/Hash.h"
 #include "QP/Preprocessor/Preprocessor.h"
 #include "QP/QueryProperties.h"
 #include "QP/Types.h"
@@ -60,7 +62,7 @@ private:
 	std::vector<std::string> query_tokens;
 	std::unordered_map<std::string, Types::Declaration> existing_declarations;
 	Types::SelectList select_list;
-	Types::ClauseList clause_list;
+	std::unordered_set<Evaluator::Clause> clause_set;
 
 	std::optional<std::string> semantic_exception_message;
 

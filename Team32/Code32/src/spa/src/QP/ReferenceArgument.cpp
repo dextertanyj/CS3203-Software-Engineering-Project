@@ -92,3 +92,5 @@ Common::ExpressionProcessor::Expression QP::ReferenceArgument::getExpression() c
 	      value);
 	return expr;
 }
+
+bool QP::ReferenceArgument::operator==(const ReferenceArgument& other) const { return value == other.value; }
