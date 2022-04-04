@@ -54,21 +54,14 @@ typedef struct Declaration {
 	bool operator==(const Declaration& other) const { return type == other.type && symbol == other.symbol; }
 } Declaration;
 
-struct DeclarationHash {
-	std::size_t operator()(const Declaration& key) const {
-		std::size_t seed = 0;
-		combineHash(seed, key.symbol);
-		combineHash(seed, key.type);
-		return seed;
-	}
-};
-
 typedef struct Attribute {
 	// We cast 0 rather than use a concrete enum value to prevent favouring a particular value if the enum is updated.
 	AttributeType attribute = static_cast<AttributeType>(0);  // NOLINT(misc-non-private-member-variables-in-classes)
 	Declaration synonym;                                      // NOLINT(misc-non-private-member-variables-in-classes)
 	bool operator==(const Attribute& other) const { return attribute == other.attribute && synonym == other.synonym; }
 } Attribute;
+
+typedef variant<monostate, Declaration, Attribute, string, StmtRef, pair<Common::ExpressionProcessor::Expression, bool>> ArgumentValue;
 
 typedef struct Clause {
 	shared_ptr<Relationship::Relation> relation;

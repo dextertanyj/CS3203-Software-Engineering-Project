@@ -18,6 +18,8 @@ public:
 	[[nodiscard]] bool operator==(const Expression& other) const;
 	[[nodiscard]] bool contains(const Expression& other) const;
 
+	friend std::hash<Expression>;
+
 private:
 	std::shared_ptr<ExpressionNode> root;
 	std::string traversal;

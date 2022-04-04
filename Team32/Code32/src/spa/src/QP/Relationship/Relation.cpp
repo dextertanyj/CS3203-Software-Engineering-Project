@@ -20,6 +20,8 @@ vector<string> QP::Relationship::Relation::getDeclarationSymbols() const {
 	return symbols;
 }
 
+vector<QP::Types::ReferenceArgument> QP::Relationship::Relation::getArguments() const { return arguments; }
+
 QP::Types::ClauseType QP::Relationship::Relation::getType() const { return type; }
 
 QP::QueryResult QP::Relationship::Relation::executeTrivial(const QP::StorageAdapter& pkb) const {
@@ -55,4 +57,20 @@ QP::QueryResult QP::Relationship::Relation::execute(const QP::StorageAdapter& pk
 size_t QP::Relationship::Relation::getCost() const {
 	size_t number_of_declarations = getDeclarationSymbols().size();
 	return QP::Utilities::cost_map[type] * number_of_declarations;
+}
+
+bool QP::Relationship::Relation::operator==(const Relation& other) const {
+	if (type != other.getType()) {
+		return false;
+	}
+
+	vector<Types::ReferenceArgument> other_arguments = other.getArguments();
+	for (size_t i = 0; i < arguments.size(); i++) {
+		if (arguments[i] == other_arguments[i]) {
+			continue;
+		}
+		return false;
+	}
+
+	return true;
 }
