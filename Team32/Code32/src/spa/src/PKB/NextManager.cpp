@@ -12,15 +12,15 @@ struct GreaterComparator {
 	bool operator()(const shared_ptr<PKB::StatementNode>& lhs, const shared_ptr<PKB::StatementNode>& rhs) const { return *lhs > *rhs; }
 };
 
-PKB::NextManager::NextManager(ControlFlowGraph& control_flow_graph) : control_flow_graph(&control_flow_graph) {}
+PKB::NextManager::NextManager(ControlFlowGraph& control_flow_graph) : control_flow_graph(control_flow_graph) {}
 
 void PKB::NextManager::setNext(StmtRef previous, StmtRef next) {
 	if (previous == next) {
 		throw invalid_argument("Cannot set a node's direct next to itself.");
 	}
 	try {
-		auto prev_node = control_flow_graph->getNode(previous);
-		auto next_node = control_flow_graph->getNode(next);
+		auto prev_node = control_flow_graph.getNode(previous);
+		auto next_node = control_flow_graph.getNode(next);
 		prev_node->setConnection(next_node);
 	} catch (const invalid_argument& e) {
 		throw e;
@@ -32,9 +32,9 @@ void PKB::NextManager::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_n
 		throw invalid_argument("Ordering or value(s) of provided statement references is invalid.");
 	}
 	try {
-		auto prev_node = control_flow_graph->getNode(prev);
-		auto then_next_node = control_flow_graph->getNode(then_next);
-		auto else_next_node = control_flow_graph->getNode(else_next);
+		auto prev_node = control_flow_graph.getNode(prev);
+		auto then_next_node = control_flow_graph.getNode(then_next);
+		auto else_next_node = control_flow_graph.getNode(else_next);
 		if (prev_node->getNodeType() != NodeType::If) {
 			throw invalid_argument("First argument must refer to an if statement.");
 		}
@@ -50,9 +50,9 @@ void PKB::NextManager::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef i
 		throw invalid_argument("Ordering or value(s) of provided statement references is invalid.");
 	}
 	try {
-		auto then_prev_node = control_flow_graph->getNode(then_prev);
-		auto else_prev_node = control_flow_graph->getNode(else_prev);
-		auto if_ctrl_node = control_flow_graph->getNode(if_stmt_ref);
+		auto then_prev_node = control_flow_graph.getNode(then_prev);
+		auto else_prev_node = control_flow_graph.getNode(else_prev);
+		auto if_ctrl_node = control_flow_graph.getNode(if_stmt_ref);
 		if (if_ctrl_node->getNodeType() != NodeType::If) {
 			throw invalid_argument("Third argument must refer to an if control statement.");
 		}
@@ -65,8 +65,8 @@ void PKB::NextManager::setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef i
 
 bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
 	try {
-		auto prev_node = control_flow_graph->getNode(first);
-		auto next_node = control_flow_graph->getNode(second);
+		auto prev_node = control_flow_graph.getNode(first);
+		auto next_node = control_flow_graph.getNode(second);
 		StmtInfoPtrSet next_nodes_of_prev = this->getNext(first);
 		return any_of(next_nodes_of_prev.begin(), next_nodes_of_prev.end(),
 		              [second](const shared_ptr<StmtInfo>& next_info) { return next_info->getIdentifier() == second; });
@@ -85,8 +85,8 @@ bool PKB::NextManager::checkNextStar(StmtRef first, StmtRef second) {
 		return any_of(previous_set.begin(), previous_set.end(),
 		              [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == first; });
 	}
-	auto first_node = control_flow_graph->getNode(first);
-	auto second_node = control_flow_graph->getNode(second);
+	auto first_node = control_flow_graph.getNode(first);
+	auto second_node = control_flow_graph.getNode(second);
 	if (first_node->getGraphIndex() != second_node->getGraphIndex()) {
 		return false;
 	}
@@ -94,7 +94,7 @@ bool PKB::NextManager::checkNextStar(StmtRef first, StmtRef second) {
 }
 
 StmtInfoPtrSet PKB::NextManager::getNext(StmtRef node_ref) {
-	shared_ptr<PKB::StatementNode> curr_node = control_flow_graph->getNode(node_ref);
+	shared_ptr<PKB::StatementNode> curr_node = control_flow_graph.getNode(node_ref);
 	StmtInfoPtrSet next_nodes;
 	for (const auto& node : curr_node->getNextNodes()) {
 		if (node->getNodeType() == NodeType::Dummy) {
@@ -112,7 +112,7 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 	if (next_cache.find(node_ref) != next_cache.end()) {
 		return next_cache.find(node_ref)->second;
 	}
-	shared_ptr<StatementNode> target = control_flow_graph->getNode(node_ref);
+	shared_ptr<StatementNode> target = control_flow_graph.getNode(node_ref);
 	TraversalInformation info = {next_cache, &NodeInterface::getNextNodes, &NextManager::processLoopExit,
 	                             &ControlFlowGraph::collectNextOfDummy};
 	priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementNode>>, LessComparator> queue =
@@ -126,7 +126,7 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 }
 
 StmtInfoPtrSet PKB::NextManager::getPrevious(StmtRef node_ref) {
-	shared_ptr<PKB::StatementNode> curr_node = this->control_flow_graph->getNode(node_ref);
+	shared_ptr<PKB::StatementNode> curr_node = this->control_flow_graph.getNode(node_ref);
 	StmtInfoPtrSet prev_nodes;
 	for (const auto& node : curr_node->getPreviousNodes()) {
 		// If previous node is a dummy node, need to get the previous nodes of the dummy node.
@@ -145,7 +145,7 @@ StmtInfoPtrSet PKB::NextManager::getPreviousStar(StmtRef node_ref) {
 	if (previous_cache.find(node_ref) != previous_cache.end()) {
 		return previous_cache.find(node_ref)->second;
 	}
-	shared_ptr<StatementNode> target = control_flow_graph->getNode(node_ref);
+	shared_ptr<StatementNode> target = control_flow_graph.getNode(node_ref);
 	TraversalInformation info = {previous_cache, &NodeInterface::getPreviousNodes, &NextManager::processLoopEntry,
 	                             &ControlFlowGraph::collectPreviousOfDummy};
 	priority_queue<shared_ptr<PKB::StatementNode>, vector<shared_ptr<PKB::StatementNode>>, GreaterComparator> queue =
@@ -166,8 +166,8 @@ void PKB::NextManager::resetCache() {
 bool PKB::NextManager::checkNextStarOptimized(const shared_ptr<StatementNode>& first_node, const shared_ptr<StatementNode>& second_node) {
 	StmtRef first = first_node->getNodeRef();
 	StmtRef second = second_node->getNodeRef();
-	auto start = control_flow_graph->getStart(first_node->getGraphIndex());
-	auto end = control_flow_graph->getEnd(first_node->getGraphIndex());
+	auto start = control_flow_graph.getStart(first_node->getGraphIndex());
+	auto end = control_flow_graph.getEnd(first_node->getGraphIndex());
 	shared_ptr<StatementNode> true_start = dynamic_pointer_cast<StatementNode>(start);
 	shared_ptr<StatementNode> true_end;
 	if (end->getNodeType() == NodeType::Dummy) {
@@ -405,7 +405,7 @@ void PKB::NextManager::handleDummyNodeSearch(T& queue, const shared_ptr<NodeInte
                                              StmtInfoPtrSet (*collector)(const shared_ptr<NodeInterface>&)) {
 	auto nodes = (*collector)(dummy_node);
 	for (const auto& info : nodes) {
-		shared_ptr<StatementNode> node = control_flow_graph->getNode(info->getIdentifier());
+		shared_ptr<StatementNode> node = control_flow_graph.getNode(info->getIdentifier());
 		queue.emplace(node);
 	}
 }

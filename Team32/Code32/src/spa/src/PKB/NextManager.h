@@ -76,7 +76,7 @@ private:
 	                           StmtInfoPtrSet (*collector)(const shared_ptr<NodeInterface>&));
 
 	// Members
-	ControlFlowGraph* control_flow_graph;
+	ControlFlowGraph& control_flow_graph;
 	unordered_map<StmtRef, StmtInfoPtrSet> next_cache;
 	unordered_map<StmtRef, StmtInfoPtrSet> previous_cache;
 };
