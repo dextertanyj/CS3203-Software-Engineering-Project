@@ -1045,7 +1045,7 @@ TEST_CASE("QueryPreprocessor::parseQuery invalid while pattern") {
 	REQUIRE_THROWS_AS(qpp2.parseQuery(UnivDeclarations + "Select w1 pattern w1(\"var\", p)"), QP::QuerySyntaxException);
 
 	QueryPreprocessor qpp3;
-	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select w1 pattern w1(_, \"s\")"), QP::QuerySyntaxException);
+	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select w1 pattern w1(_, \"s\")"), QP::QuerySemanticException);
 }
 
 TEST_CASE("QueryPreprocessor::parseQuery valid if pattern") {
@@ -1075,7 +1075,7 @@ TEST_CASE("QueryPreprocessor::parseQuery invalid if pattern") {
 	REQUIRE_THROWS_AS(qpp1.parseQuery(UnivDeclarations + "Select i1 pattern i1(v1, v2, _)"), QP::QuerySyntaxException);
 
 	QueryPreprocessor qpp2;
-	REQUIRE_THROWS_AS(qpp2.parseQuery(UnivDeclarations + "Select i1 pattern i1(\"var\", _)"), QP::QuerySyntaxException);
+	REQUIRE_THROWS_AS(qpp2.parseQuery(UnivDeclarations + "Select i1 pattern i1(\"var\", _)"), QP::QuerySemanticException);
 
 	QueryPreprocessor qpp3;
 	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, \"s\", _)"), QP::QuerySyntaxException);

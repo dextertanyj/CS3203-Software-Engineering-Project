@@ -26,7 +26,9 @@ Types::ExecutorSetFactory processArgumentRecurse(T map, const vector<ReferenceAr
 template <>
 inline Types::ExecutorSetFactory processArgumentRecurse(unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> map,
                                                         const vector<ReferenceArgument>& args) {
-	assert(args.size() == 1);
+	if (args.size() != 1) {
+		throw QueryDispatchException("Incorrect argument count.");
+	}
 	Types::ArgumentDispatchKey key = args.at(0).getType();
 	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
 		key = args.at(0).getSynonym().type;
@@ -55,7 +57,9 @@ Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(T map, const vector
 template <>
 inline Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(
 	unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle> map, const vector<ReferenceArgument>& args) {
-	assert(args.size() == 1);
+	if (args.size() != 1) {
+		throw QueryDispatchException("Incorrect argument count.");
+	}
 	Types::ArgumentDispatchKey key = args.at(0).getType();
 	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
 		key = args.at(0).getSynonym().type;
