@@ -171,8 +171,8 @@ void QP::Preprocessor::QueryPreprocessor::createClause(ClauseType type, vector<R
 // Clause - Such that
 
 void QP::Preprocessor::QueryPreprocessor::parseSuchThat() {
-	auto clause_type_iter = Maps::clause_map.find(this->query_tokens.at(token_index));
-	if (clause_type_iter == Maps::clause_map.end()) {
+	auto clause_type_iter = Maps::such_that_clause_map.find(this->query_tokens.at(token_index));
+	if (clause_type_iter == Maps::such_that_clause_map.end()) {
 		throw QuerySyntaxException("Unknown relation type.");
 	}
 	token_index++;

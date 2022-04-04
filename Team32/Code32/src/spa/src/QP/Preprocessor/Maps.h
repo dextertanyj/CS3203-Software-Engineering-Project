@@ -9,7 +9,7 @@ namespace QP::Preprocessor::Maps {
 using namespace QP::Types;
 
 extern const ArgumentDispatchMap dispatch_map;
-extern const std::unordered_map<std::string, ClauseType> clause_map;
+extern const std::unordered_map<std::string, ClauseType> such_that_clause_map;
 extern const std::unordered_map<DesignEntity, ClauseType> pattern_clause_map;
 extern const std::unordered_map<std::string, DesignEntity> design_entity_map;
 extern const std::unordered_map<std::string, AttributeToken> attribute_token_map;

@@ -34,7 +34,7 @@ const ArgumentDispatchMap dispatch_map = {
 	{ClauseType::With, WithDispatcher::dispatcher},
 };
 
-const std::unordered_map<std::string, ClauseType> clause_map = {
+const std::unordered_map<std::string, ClauseType> such_that_clause_map = {
 	{"Affects", ClauseType::Affects},
 	{"Affects*", ClauseType::AffectsT},
 	{"Calls", ClauseType::Calls},
