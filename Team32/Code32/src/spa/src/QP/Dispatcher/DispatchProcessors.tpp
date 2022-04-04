@@ -24,8 +24,8 @@ Types::ExecutorSetFactory processArgumentRecurse(T map, const vector<ReferenceAr
 }
 
 template <>
-inline Types::ExecutorSetFactory processArgumentRecurse(
-	unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> map, const vector<ReferenceArgument>& args) {
+inline Types::ExecutorSetFactory processArgumentRecurse(unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> map,
+                                                        const vector<ReferenceArgument>& args) {
 	assert(args.size() == 1);
 	Types::ArgumentDispatchKey key = args.at(0).getType();
 	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
