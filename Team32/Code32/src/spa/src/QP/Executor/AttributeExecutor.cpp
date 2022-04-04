@@ -21,7 +21,7 @@ std::unordered_set<QP::Types::Number> QP::Executor::AttributeExecutor::selectSta
 		if (!QP::Utilities::checkStmtTypeMatch(statement, synonym)) {
 			continue;
 		}
-		result.insert(statement->getIdentifier());
+		result.emplace(statement->getIdentifier());
 	}
 	return result;
 }

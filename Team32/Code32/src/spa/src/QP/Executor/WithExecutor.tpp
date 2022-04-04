@@ -27,7 +27,7 @@ static QP::QueryResult find(const QP::StorageAdapter& store, HashInfo<TAttribute
                             HashInfo<TAttribute, TProbe> probe_info) {
 	std::unordered_set<TAttribute> attributes;
 	std::for_each(build_info.values.begin(), build_info.values.end(),
-	              [&](const auto& value) { attributes.insert(build_info.mapper(store, value)); });
+	              [&](const auto& value) { attributes.emplace(build_info.mapper(store, value)); });
 	for (const auto& probe : probe_info.values) {
 		if (attributes.find(probe_info.mapper(store, probe)) != attributes.end()) {
 			return QP::QueryResult(true);
@@ -92,7 +92,7 @@ template <typename TAttribute, typename TBuild, typename TProbe>
 static QueryResult hashJoin(const StorageAdapter& store, HashInfo<TAttribute, TBuild> build_info, HashInfo<TAttribute, TProbe> probe_info) {
 	unordered_multimap<TAttribute, TBuild> build_table;
 	for (const auto& build : build_info.values) {
-		build_table.insert({build_info.mapper(store, build), build});
+		build_table.emplace(build_info.mapper(store, build), build);
 	}
 	QueryResult result = QueryResult({build_info.symbol, probe_info.symbol});
 	for (const auto& probe : probe_info.values) {

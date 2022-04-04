@@ -98,7 +98,7 @@ unordered_map<string, vector<size_t>> QP::QueryResult::getSynonymIndexMap(const 
 	for (size_t i = 1; i < results.size(); i++) {
 		for (const auto& synonym : results[i].getSynonymsStored()) {
 			if (synonym_to_index_map.find(synonym) == synonym_to_index_map.end()) {
-				synonym_to_index_map.insert({synonym, {i}});
+				synonym_to_index_map.emplace(synonym, vector<size_t>({i}));
 			} else {
 				synonym_to_index_map.find(synonym)->second.push_back(i);
 			}
@@ -125,7 +125,7 @@ void QP::QueryResult::addNeighboursToQueue(const vector<size_t>& indexes, priori
 			continue;
 		}
 		queue.push(idx);
-		completed.insert(idx);
+		completed.emplace(idx);
 	}
 }
 

@@ -13,7 +13,7 @@ using namespace QP::Types;
 QueryGraph::QueryGraph(const DeclarationList& declarations, const ClauseList& clauses, const DeclarationList& select_list) {
 	for (const Declaration& declaration : declarations) {
 		Node node = {declaration.symbol, {}, {}, SIZE_MAX};
-		nodes.insert({declaration.symbol, node});
+		nodes.emplace(declaration.symbol, node);
 	}
 	setEdges(clauses);
 	optimize(select_list);
@@ -36,7 +36,7 @@ ClauseList QueryGraph::getGroupClauses(size_t group_number) const {
 
 	unordered_set<string> visited_nodes;
 	const Node& cheapest_node = nodes.at(getCheapestNodeInGroup(group_number));
-	visited_nodes.insert(cheapest_node.declaration_symbol);
+	visited_nodes.emplace(cheapest_node.declaration_symbol);
 	for (auto const& edge : cheapest_node.outgoing_edges) {
 		priority_queue.push(edge);
 	}
@@ -81,7 +81,7 @@ void QueryGraph::setEdge(const shared_ptr<Clause>& clause) {
 
 void QueryGraph::addEdge(const pair<string, string>& symbols, const shared_ptr<Clause>& clause) {
 	Node& node = this->nodes.at(symbols.first);
-	node.adjacent_symbols.insert(symbols.second);
+	node.adjacent_symbols.emplace(symbols.second);
 	size_t edge_weight = clause->getCost();
 	node.outgoing_edges.push_back({symbols.first, symbols.second, clause, edge_weight});
 
@@ -102,14 +102,14 @@ void QueryGraph::optimize(const DeclarationList& select_list) {
 	DeclarationList current_selected;
 
 	for (auto& node : nodes) {
-		unvisited_nodes.insert(node.first);
+		unvisited_nodes.emplace(node.first);
 	}
 
 	for (const Declaration& declaration : select_list) {
-		selected_nodes.insert({declaration.symbol, declaration});
+		selected_nodes.emplace(declaration.symbol, declaration);
 	}
 
-	queue<string> queue;
+  queue<string> queue;
 	auto start = *unvisited_nodes.begin();
 	queue.push(start);
 	unvisited_nodes.erase(start);
@@ -159,7 +159,7 @@ void QueryGraph::addNodeToQueue(const Node& node, queue<string>& queue, unordere
 
 void QueryGraph::insertEdgesToQueue(unordered_set<string>& visited_nodes, const string& node_symbol,
                                     priority_queue<Edge, vector<Edge>, EdgeComparator>& pq) const {
-	visited_nodes.insert(node_symbol);
+	visited_nodes.emplace(node_symbol);
 	const Node& node = nodes.at(node_symbol);
 	for (auto const& new_edge : node.outgoing_edges) {
 		if (visited_nodes.find(new_edge.node_to_symbol) == visited_nodes.end()) {
