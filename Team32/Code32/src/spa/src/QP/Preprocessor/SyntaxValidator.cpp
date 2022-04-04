@@ -1,5 +1,6 @@
 #include "QP/Preprocessor/SyntaxValidator.h"
 
+#include <cassert>
 #include <unordered_set>
 
 #include "QP/ReferenceArgument.h"
