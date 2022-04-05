@@ -50,6 +50,7 @@ const std::unordered_map<std::string, ClauseType> such_that_clause_map = {
 };
 
 const std::unordered_map<DesignEntity, ClauseType> pattern_clause_map = {
+	{DesignEntity::Assign, ClauseType::PatternAssign},
 	{DesignEntity::If, ClauseType::PatternIf},
 	{DesignEntity::While, ClauseType::PatternWhile},
 };

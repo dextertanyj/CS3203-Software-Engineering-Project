@@ -40,7 +40,6 @@ private:
 	void parseSuchThat();
 	void parseWith();
 	void parsePattern();
-	void parseAssignPattern(ReferenceArgument synonym);
 
 	std::optional<Types::DesignEntity> parseDesignEntity();
 	Types::Declaration parseClauseSynonym();

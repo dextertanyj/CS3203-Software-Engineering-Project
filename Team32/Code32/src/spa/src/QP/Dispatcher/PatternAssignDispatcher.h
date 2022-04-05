@@ -11,7 +11,7 @@ namespace QP::Dispatcher::PatternAssignDispatcher {
 
 using namespace QP::Types;
 
-ExecutorSetBundle dispatcher(const std::vector<ReferenceArgument>& args);
+ExecutorSetBundle dispatcher(std::vector<ReferenceArgument>& args);
 };
 
 #endif  // SPA_SRC_QP_DISPATCHER_PATTERNASSIGNDISPATCHER_H
