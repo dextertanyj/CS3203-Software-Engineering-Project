@@ -3,7 +3,7 @@
 #include "SP/SP.h"
 
 std::regex SP::Lexer::tokenization_regex =  // NOLINT
-	std::regex(R"(([a-zA-Z][0-9a-zA-Z]*|[0-9]+|\{|\}|\(|\)|;|!={0,1}|={1,2}|&&|\|\||>={0,1}|<={0,1}|\+|-|\*|\/|%))");
+	std::regex(R"(([a-zA-Z][0-9a-zA-Z]*|0|[1-9][0-9]*|\{|\}|\(|\)|;|!={0,1}|={1,2}|&{1,2}|\|{1,2}|>={0,1}|<={0,1}|\+|\-|\*|\/|%))");
 std::regex SP::Lexer::validation_regex =  // NOLINT
 	std::regex(R"(([^a-zA-Z0-9\s\{\}\(\);=!&\|><\+\-\*\/%]))");
 

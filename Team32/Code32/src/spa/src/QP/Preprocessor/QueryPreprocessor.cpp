@@ -13,8 +13,8 @@ using namespace QP::Types;
 using namespace QP::Dispatcher;
 
 regex QP::Preprocessor::QueryPreprocessor::invalid_chars_regex = regex(R"([^a-zA-Z0-9\s,"_\(\);\+\-\*\/%<>#\.=])");
-regex QP::Preprocessor::QueryPreprocessor::query_token_regex =
-	regex(R"(Affects\*|Follows\*|Calls\*|Parent\*|Next\*|stmt#|[a-zA-Z][a-zA-Z0-9]*|[0-9]+|\(|\)|;|\+|-|\*|\/|%|_|,|\"|<|>|\*|#|\.|=)");
+regex QP::Preprocessor::QueryPreprocessor::query_token_regex = regex(
+	R"(Affects\*|Follows\*|Calls\*|Parent\*|Next\*|stmt#|[a-zA-Z][a-zA-Z0-9]*|0|[1-9][0-9]*|\(|\)|;|\+|\-|\*|\/|%|_|,|\"|<|>|\*|#|\.|=)");
 
 QP::QueryProperties QP::Preprocessor::QueryPreprocessor::parseQuery(string query) {
 	reset();
