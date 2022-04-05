@@ -48,7 +48,6 @@ void PKB::ControlFlowGraph::setIfExit(StmtRef then_prev, StmtRef else_prev, Stmt
 
 void PKB::ControlFlowGraph::createNode(const shared_ptr<StmtInfo>& stmt_info) {
 	assert(statement_node_map.find(stmt_info->getIdentifier()) == statement_node_map.end());
-
 	// Check node type and create respective node.
 	if (stmt_info->getType() == StmtType::If) {
 		shared_ptr<PKB::IfNode> to_insert = make_shared<PKB::IfNode>(stmt_info);

@@ -4,19 +4,14 @@
 #include <utility>
 
 void PKB::ParentRelation::insertForward(const shared_ptr<StmtInfo>& parent_to_insert) {
-	if (getSelf()->getIdentifier() <= parent_to_insert->getIdentifier()) {
-		throw invalid_argument("Statement out of order");
-	}
-	if (this->parent != nullptr) {
-		throw invalid_argument("This statement already has a parent_to_insert");
-	}
+	assert(getSelf()->getIdentifier() > parent_to_insert->getIdentifier());
+	assert(this->parent == nullptr);
+
 	this->parent = parent_to_insert;
 }
 
 void PKB::ParentRelation::insertReverse(const shared_ptr<StmtInfo>& child_to_insert) {
-	if (getSelf()->getIdentifier() >= child_to_insert->getIdentifier()) {
-		throw invalid_argument("Statement out of order");
-	}
+	assert(getSelf()->getIdentifier() < child_to_insert->getIdentifier());
 	this->children.emplace(child_to_insert);
 }
 

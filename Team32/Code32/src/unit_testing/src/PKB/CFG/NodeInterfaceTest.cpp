@@ -18,7 +18,6 @@ TEST_CASE("PKB::NodeInterface Constructor Test") {
 	CHECK_NOTHROW(PKB::IfNode(if_stmt));
 	CHECK_NOTHROW(PKB::WhileNode(while_stmt));
 	CHECK_NOTHROW(PKB::StatementNode(print_stmt));
-
 	CHECK_NOTHROW(PKB::DummyNode(1));
 	CHECK_NOTHROW(PKB::DummyNode(INT_MAX));
 }

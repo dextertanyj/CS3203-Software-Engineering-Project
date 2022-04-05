@@ -46,18 +46,6 @@ TEST_CASE("PKB::Types::ProcedureStore Test") {
 		}
 	}
 
-	SECTION("Insert Repeated Procedure Name") {
-		store.insert(name_1, single_statement);
-		REQUIRE_THROWS_AS(store.insert(name_1, statements), logic_error);
-	}
-
-	SECTION("Insert Invalid Name") { REQUIRE_THROWS_AS(store.insert("", single_statement), invalid_argument); }
-
-	SECTION("Get... No Record") {
-		REQUIRE_EQUALS(store.get(name_1), nullptr);
-		REQUIRE_EQUALS(store.getAll(), unordered_set<shared_ptr<PKB::ProcedureInfo>>());
-	}
-
 	SECTION("Clear") {
 		store.insert(name_1, single_statement);
 		REQUIRE_EQUALS(store.get(name_1)->getIdentifier(), name_1);

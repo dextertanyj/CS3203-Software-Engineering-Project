@@ -23,9 +23,7 @@ void PKB::Storage::setProc(ProcRef procedure, StmtRef start, StmtRef end) {
 	vector<shared_ptr<StmtInfo>> statements;
 	for (StmtRef index = start; index <= end; index++) {
 		shared_ptr<StmtInfo> statement = statement_store.get(index);
-		if (statement == nullptr) {
-			throw invalid_argument("Statement not found.");
-		}
+		assert(statement != nullptr);
 		statements.push_back(statement);
 	}
 	procedure_store.insert(procedure, statements);
@@ -39,53 +37,41 @@ void PKB::Storage::setCall(StmtRef index, ProcRef name) {
 void PKB::Storage::setParent(StmtRef parent, StmtRef child) {
 	shared_ptr<StmtInfo> parent_info = statement_store.get(parent);
 	shared_ptr<StmtInfo> child_info = statement_store.get(child);
-	if (parent_info == nullptr || child_info == nullptr) {
-		throw invalid_argument("Statement does not exist.");
-	}
+	assert(parent_info != nullptr && child_info != nullptr);
 	parent_store.set(parent_info, child_info);
 }
 
 void PKB::Storage::setFollows(StmtRef front, StmtRef back) {
 	shared_ptr<StmtInfo> following_info = statement_store.get(front);
 	shared_ptr<StmtInfo> follower_info = statement_store.get(back);
-	if (following_info == nullptr || follower_info == nullptr) {
-		throw invalid_argument("Statement does not exist.");
-	}
+	assert(following_info != nullptr && follower_info != nullptr);
 	follows_store.set(following_info, follower_info);
 }
 
 void PKB::Storage::setModifies(StmtRef index, VarRef name) {
 	shared_ptr<StmtInfo> statement = statement_store.get(index);
-	if (statement == nullptr) {
-		throw invalid_argument("Statement does not exist.");
-	}
+	assert(statement != nullptr);
 	variable_store.insert(name);
 	modifies_s_store.set(move(statement), move(name));
 }
 
 void PKB::Storage::setModifies(StmtRef index, VarRefSet names) {
 	shared_ptr<StmtInfo> statement = statement_store.get(index);
-	if (statement == nullptr) {
-		throw invalid_argument("Statement does not exist.");
-	}
+	assert(statement != nullptr);
 	variable_store.insert(names);
 	modifies_s_store.set(move(statement), move(names));
 }
 
 void PKB::Storage::setUses(StmtRef index, VarRef name) {
 	shared_ptr<StmtInfo> statement = statement_store.get(index);
-	if (statement == nullptr) {
-		throw invalid_argument("Statement does not exist.");
-	}
+	assert(statement != nullptr);
 	variable_store.insert(name);
 	uses_s_store.set(statement, move(name));
 }
 
 void PKB::Storage::setUses(StmtRef index, VarRefSet names) {
 	shared_ptr<StmtInfo> statement = statement_store.get(index);
-	if (statement == nullptr) {
-		throw invalid_argument("Statement does not exist.");
-	}
+	assert(statement != nullptr);
 	variable_store.insert(names);
 	uses_s_store.set(statement, move(names));
 }

@@ -38,22 +38,6 @@ TEST_CASE("PKB::AssignStore::setAssign Success Test") {
 	REQUIRE(obj->second.expression == getBasicOpTree());
 }
 
-TEST_CASE("PKB::AssignStore::setAssign Duplicate StmtNo Test") {
-	PKB::AssignStore store = PKB::AssignStore();
-	store.setAssign(TestUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree());
-	REQUIRE_THROWS_AS(store.setAssign(TestUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree()), invalid_argument);
-}
-
-TEST_CASE("PKB::AssignStore::setAssign Invalid VarRef Test") {
-	PKB::AssignStore store = PKB::AssignStore();
-	REQUIRE_THROWS_AS(store.setAssign(TestUtilities::createStmtInfo(2, StmtType::Assign), "", getBasicOpTree()), invalid_argument);
-}
-
-TEST_CASE("PKB::AssignStore::setAssign Invalid Statement Type Test") {
-	PKB::AssignStore store = PKB::AssignStore();
-	REQUIRE_THROWS_AS(store.setAssign(TestUtilities::createStmtInfo(3, StmtType::Print), "", getBasicOpTree()), invalid_argument);
-}
-
 TEST_CASE("PKB::AssignStore::patternExists Exact Match Test") {
 	PKB::AssignStore store = PKB::AssignStore();
 	store.setAssign(TestUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree());

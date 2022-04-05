@@ -8,7 +8,7 @@
 bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Read) {
-		throw invalid_argument("Read statements cannot use a variable");
+		return false;
 	}
 	if (statement->getType() == StmtType::While || statement->getType() == StmtType::If || statement->getType() == StmtType::Call ||
 	    statement->getType() == StmtType::Assign) {
@@ -26,7 +26,7 @@ bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const s
                                   const VarRefSet& variables) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Read) {
-		throw invalid_argument("Read statements cannot use a variable");
+		return false;
 	}
 	if (statement->getType() == StmtType::While || statement->getType() == StmtType::If || statement->getType() == StmtType::Call ||
 	    statement->getType() == StmtType::Assign || variables.empty()) {

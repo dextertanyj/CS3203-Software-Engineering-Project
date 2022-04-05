@@ -21,7 +21,7 @@ TEST_CASE("PKB::UsesSRelation") {
 		REQUIRE(PKB::UsesSRelation::validate(&store, s3, "x"));
 		REQUIRE(PKB::UsesSRelation::validate(&store, s4, "x"));
 		REQUIRE(PKB::UsesSRelation::validate(&store, s5, "x"));
-		REQUIRE_THROWS_AS(PKB::UsesSRelation::validate(&store, s9, "x"), invalid_argument);
+		REQUIRE_FALSE(PKB::UsesSRelation::validate(&store, s9, "x"));
 		store.set(s1, "x");
 		store.set(s2, "x");
 		store.set(s3, "x");
@@ -42,7 +42,7 @@ TEST_CASE("PKB::UsesSRelation") {
 		REQUIRE(PKB::UsesSRelation::validate(&store, s3, var_refs));
 		REQUIRE(PKB::UsesSRelation::validate(&store, s4, var_refs));
 		REQUIRE_FALSE(PKB::UsesSRelation::validate(&store, s5, var_refs));
-		REQUIRE_THROWS_AS(PKB::UsesSRelation::validate(&store, s9, var_refs), invalid_argument);
+		REQUIRE_FALSE(PKB::UsesSRelation::validate(&store, s9, var_refs));
 	}
 
 	SECTION("PKB::UsesSRelation::optimize Test") {

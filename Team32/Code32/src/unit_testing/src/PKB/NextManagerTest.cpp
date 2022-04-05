@@ -370,7 +370,10 @@ TEST_CASE("PKB::NextManager Nested Container Test") {
 	auto previous_bottom_loop = unordered_set{stmt_1, stmt_6, stmt_7, stmt_8, stmt_9, stmt_10, stmt_11, stmt_12, stmt_13};
 
 	SECTION("Next Star Independent") {
-		SECTION("1") { CHECK(next_manager.getNextStar(1) == unordered_set{stmt_2, stmt_3, stmt_4, stmt_5, stmt_6, stmt_7, stmt_8, stmt_9, stmt_10, stmt_11, stmt_12, stmt_13}); }
+		SECTION("1") {
+			CHECK(next_manager.getNextStar(1) ==
+			      unordered_set{stmt_2, stmt_3, stmt_4, stmt_5, stmt_6, stmt_7, stmt_8, stmt_9, stmt_10, stmt_11, stmt_12, stmt_13});
+		}
 		SECTION("2") { CHECK(next_manager.getNextStar(2) == next_top_loop); }
 		SECTION("3") { CHECK(next_manager.getNextStar(3) == next_top_loop); }
 		SECTION("4") { CHECK(next_manager.getNextStar(4) == next_top_loop); }
@@ -404,7 +407,8 @@ TEST_CASE("PKB::NextManager Nested Container Test") {
 	SECTION("Next Star Cache Test") {
 		CHECK(next_manager.getNextStar(8) == next_bottom_loop);
 		CHECK(next_manager.getNextStar(3) == next_top_loop);
-		CHECK(next_manager.getNextStar(1) == unordered_set{stmt_2, stmt_3, stmt_4, stmt_5, stmt_6, stmt_7, stmt_8, stmt_9, stmt_10, stmt_11, stmt_12, stmt_13});
+		CHECK(next_manager.getNextStar(1) ==
+		      unordered_set{stmt_2, stmt_3, stmt_4, stmt_5, stmt_6, stmt_7, stmt_8, stmt_9, stmt_10, stmt_11, stmt_12, stmt_13});
 	}
 
 	SECTION("Previous Star Cache Test") {

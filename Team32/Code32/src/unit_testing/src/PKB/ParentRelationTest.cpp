@@ -7,16 +7,11 @@
 TEST_CASE("PKB::ParentRelation::insertForward Test") {
 	PKB::ParentRelation relation = PKB::ParentRelation(TestUtilities::createStmtInfo(3, StmtType::Read));
 	REQUIRE_NOTHROW(relation.insertForward(TestUtilities::createStmtInfo(2, StmtType::Print)));
-	REQUIRE_THROWS_AS(relation.insertForward(TestUtilities::createStmtInfo(2, StmtType::Assign)), std::exception);
-	REQUIRE_THROWS_AS(relation.insertForward(TestUtilities::createStmtInfo(4, StmtType::Assign)), std::exception);
-	REQUIRE_THROWS_AS(relation.insertForward(TestUtilities::createStmtInfo(3, StmtType::Read)), std::exception);
 }
 
 TEST_CASE("PKB::ParentRelation::insertReverse Test") {
 	PKB::ParentRelation relation = PKB::ParentRelation(TestUtilities::createStmtInfo(2, StmtType::Read));
 	REQUIRE_NOTHROW(relation.insertReverse(TestUtilities::createStmtInfo(3, StmtType::Print)));
-	REQUIRE_THROWS_AS(relation.insertReverse(TestUtilities::createStmtInfo(1, StmtType::Assign)), std::exception);
-	REQUIRE_THROWS_AS(relation.insertReverse(TestUtilities::createStmtInfo(2, StmtType::Read)), std::exception);
 }
 
 TEST_CASE("PKB::ParentRelation::appendReverseTransitive Test") {
@@ -27,7 +22,6 @@ TEST_CASE("PKB::ParentRelation::appendReverseTransitive Test") {
 	unordered_set<shared_ptr<StmtInfo>> set({s1, s2, s3});
 	PKB::ParentRelation relation = PKB::ParentRelation(TestUtilities::createStmtInfo(4, StmtType::Read));
 	REQUIRE_NOTHROW(relation.appendReverseTransitive(set));
-	REQUIRE_THROWS_AS(relation.appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>>({s4})), std::exception);
 	unordered_set<shared_ptr<StmtInfo>> set2;
 	REQUIRE_NOTHROW(relation.appendForwardTransitive(set2));
 }
@@ -42,7 +36,6 @@ TEST_CASE("PKB::ParentRelation::appendForwardTransitive Test") {
 	REQUIRE_EQUALS(relation.getForwardTransitive().size(), 0);
 	REQUIRE_NOTHROW(relation.appendForwardTransitive(set));
 	REQUIRE_EQUALS(relation.getForwardTransitive().size(), 3);
-	REQUIRE_THROWS_AS(relation.appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>>({s4})), std::exception);
 	REQUIRE_EQUALS(relation.getForwardTransitive().size(), 3);
 	unordered_set<shared_ptr<StmtInfo>> set2;
 	REQUIRE_NOTHROW(relation.appendForwardTransitive(set2));
@@ -77,7 +70,6 @@ TEST_CASE("PKB::ParentRelation::getForwardTransitive Test") {
 	REQUIRE_EQUALS(relation.getForwardTransitive().size(), 0);
 	REQUIRE_NOTHROW(relation.appendForwardTransitive(set));
 	REQUIRE_EQUALS(relation.getForwardTransitive().size(), 3);
-	REQUIRE_THROWS_AS(relation.appendForwardTransitive(unordered_set<shared_ptr<StmtInfo>>({s4})), std::exception);
 	REQUIRE_EQUALS(relation.getForwardTransitive().size(), 3);
 	unordered_set<shared_ptr<StmtInfo>> set2;
 	REQUIRE_NOTHROW(relation.appendForwardTransitive(set2));
@@ -94,7 +86,6 @@ TEST_CASE("PKB::ParentRelation::getReverseTransitive Test") {
 	REQUIRE_EQUALS(relation.getReverseTransitive().size(), 0);
 	REQUIRE_NOTHROW(relation.appendReverseTransitive(set));
 	REQUIRE_EQUALS(relation.getReverseTransitive().size(), 3);
-	REQUIRE_THROWS_AS(relation.appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>>({s4})), std::exception);
 	REQUIRE_EQUALS(relation.getReverseTransitive().size(), 3);
 	unordered_set<shared_ptr<StmtInfo>> set2;
 	REQUIRE_NOTHROW(relation.appendReverseTransitive(set2));
@@ -126,7 +117,6 @@ TEST_CASE("PKB::ParentRelation Overall Test") {
 	REQUIRE_EQUALS(relation.getReverseTransitive().size(), 2);
 	REQUIRE(relation.getReverseTransitive().find(s3) != relation.getReverseTransitive().end());
 	REQUIRE(relation.getReverseTransitive().find(s4) != relation.getReverseTransitive().end());
-	REQUIRE_THROWS_AS(relation.appendReverseTransitive(unordered_set<shared_ptr<StmtInfo>>({self})), std::exception);
 }
 
 TEST_CASE("PKB::ParentRelation::optimize Test") {

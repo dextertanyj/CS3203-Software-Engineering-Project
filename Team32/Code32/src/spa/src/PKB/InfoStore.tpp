@@ -10,9 +10,7 @@ PKB::InfoStore<TIdent, TContent, TInfo>::InfoStore() = default;
 
 template <typename TIdent, typename TContent, class TInfo>
 void PKB::InfoStore<TIdent, TContent, TInfo>::insert(const TIdent& identifier, TContent content) {
-	if (store.find(identifier) != store.end()) {
-		throw logic_error("Already defined.");
-	}
+	assert(store.find(identifier) == store.end());
 	shared_ptr<TInfo> info = shared_ptr<TInfo>(new TInfo(identifier, std::move(content)));
 	store.emplace(identifier, std::move(info));
 }

@@ -15,13 +15,9 @@ PKB::SVRelationStore<T>::SVRelationStore() = default;
 template <class T>
 void PKB::SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRef variable) {
 	StmtRef index = statement->getIdentifier();
-	if (variable.length() == 0) {
-		throw invalid_argument("Variable name must have length more than 0.");
-	}
 
-	if (!T::validate(this, statement, variable)) {
-		throw invalid_argument("Relationship set error.");
-	}
+	assert(variable.length() != 0);
+	assert(T::validate(this, statement, variable));
 
 	auto variable_iter = variable_key_map.find(variable);
 	auto statement_iter = statement_key_map.find(index);
@@ -43,14 +39,10 @@ template <class T>
 void PKB::SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRefSet variables) {
 	StmtRef index = statement->getIdentifier();
 	for (const VarRef& variable : variables) {
-		if (variable.length() == 0) {
-			throw invalid_argument("Variable name must have length more than 0.");
-		}
+		assert(variable.length() != 0);
 	}
 
-	if (!T::validate(this, statement, variables)) {
-		throw invalid_argument("Relationship set error.");
-	}
+	assert(T::validate(this, statement, variables));
 
 	auto statement_iter = statement_key_map.find(index);
 	if (statement_iter == statement_key_map.end()) {
@@ -71,12 +63,8 @@ void PKB::SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRefSet vari
 
 template <class T>
 bool PKB::SVRelationStore<T>::check(StmtRef index, const VarRef& variable) {
-	if (index <= 0) {
-		throw invalid_argument("Statement number must be a positive integer.");
-	}
-	if (variable.length() == 0) {
-		throw invalid_argument("Variable name must have length more than 0.");
-	}
+	assert(index > 0);
+	assert(variable.length() != 0);
 
 	auto iter = variable_key_map.find(variable);
 	if (iter == variable_key_map.end()) {
@@ -89,9 +77,7 @@ bool PKB::SVRelationStore<T>::check(StmtRef index, const VarRef& variable) {
 
 template <class T>
 VarRefSet PKB::SVRelationStore<T>::getByStmt(StmtRef index) {
-	if (index <= 0) {
-		throw invalid_argument("Statement number must be a positive integer.");
-	}
+	assert(index > 0);
 
 	auto iter = statement_key_map.find(index);
 	if (iter == statement_key_map.end()) {
@@ -102,9 +88,7 @@ VarRefSet PKB::SVRelationStore<T>::getByStmt(StmtRef index) {
 
 template <class T>
 StmtInfoPtrSet PKB::SVRelationStore<T>::getByVar(const VarRef& variable) {
-	if (variable.length() == 0) {
-		throw invalid_argument("Variable name must have length more than 0.");
-	}
+	assert(variable.length() != 0);
 
 	auto iter = variable_key_map.find(variable);
 	if (iter == variable_key_map.end()) {

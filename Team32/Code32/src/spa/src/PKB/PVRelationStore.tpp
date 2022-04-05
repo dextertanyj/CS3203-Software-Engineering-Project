@@ -8,12 +8,8 @@ PKB::PVRelationStore<T>::PVRelationStore() = default;
 
 template <class T>
 void PKB::PVRelationStore<T>::set(const ProcRef& proc, const VarRef& variable) {
-	if (variable.length() == 0) {
-		throw invalid_argument("Variable name must have length more than 0.");
-	}
-	if (proc.length() == 0) {
-		throw invalid_argument("Procedure must have length more than 0.");
-	}
+	assert(variable.length() != 0);
+	assert(proc.length() != 0);
 
 	auto variable_iter = variable_key_map.find(variable);
 	auto proc_iter = proc_key_map.find(proc);
@@ -34,13 +30,9 @@ void PKB::PVRelationStore<T>::set(const ProcRef& proc, const VarRef& variable) {
 template <class T>
 void PKB::PVRelationStore<T>::set(const ProcRef& proc, const VarRefSet& variables) {
 	for (const VarRef& variable : variables) {
-		if (variable.length() == 0) {
-			throw invalid_argument("Variable name must have length more than 0.");
-		}
+		assert(variable.length() != 0);
 	}
-	if (proc.length() == 0) {
-		throw invalid_argument("Procedure must have length more than 0.");
-	}
+	assert(proc.length() != 0);
 
 	auto proc_iter = proc_key_map.find(proc);
 	if (proc_iter == proc_key_map.end()) {
@@ -61,12 +53,8 @@ void PKB::PVRelationStore<T>::set(const ProcRef& proc, const VarRefSet& variable
 
 template <class T>
 bool PKB::PVRelationStore<T>::check(const ProcRef& proc, const VarRef& variable) {
-	if (proc.length() == 0) {
-		throw invalid_argument("Procedure must have length more than 0.");
-	}
-	if (variable.length() == 0) {
-		throw invalid_argument("Variable name must have length more than 0.");
-	}
+	assert(variable.length() != 0);
+	assert(proc.length() != 0);
 
 	auto iter = variable_key_map.find(variable);
 	if (iter == variable_key_map.end()) {
@@ -78,9 +66,7 @@ bool PKB::PVRelationStore<T>::check(const ProcRef& proc, const VarRef& variable)
 
 template <class T>
 VarRefSet PKB::PVRelationStore<T>::getByProc(const ProcRef& proc) {
-	if (proc.length() == 0) {
-		throw invalid_argument("Procedure must have length more than 0.");
-	}
+	assert(proc.length() != 0);
 
 	auto iter = proc_key_map.find(proc);
 	if (iter == proc_key_map.end()) {
@@ -91,9 +77,7 @@ VarRefSet PKB::PVRelationStore<T>::getByProc(const ProcRef& proc) {
 
 template <class T>
 ProcRefSet PKB::PVRelationStore<T>::getByVar(const VarRef& variable) {
-	if (variable.length() == 0) {
-		throw invalid_argument("Variable name must have length more than 0.");
-	}
+	assert(variable.length() != 0);
 
 	auto iter = variable_key_map.find(variable);
 	if (iter == variable_key_map.end()) {
