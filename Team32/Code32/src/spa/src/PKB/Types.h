@@ -7,6 +7,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
 #include "PKB/CallsRelation.h"
 #include "PKB/FollowsRelation.h"
@@ -14,7 +15,6 @@
 #include "PKB/ParentRelation.h"
 #include "PKB/ProcedureInfo.h"
 #include "PKB/StatementInfo.h"
-#include "Common/ExpressionProcessor/Expression.h"
 
 namespace PKB::Types {
 typedef InfoStore<ProcRef, vector<shared_ptr<StmtInfo>>, ProcedureInfo> ProcedureStore;
