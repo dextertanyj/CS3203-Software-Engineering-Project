@@ -11,6 +11,7 @@ using namespace QP::Optimizer;
 using namespace QP::Types;
 
 QueryGraph::QueryGraph(const DeclarationList& declarations, const ClauseList& clauses, const DeclarationList& select_list) {
+	nodes.reserve(declarations.size());
 	for (const Declaration& declaration : declarations) {
 		Node node = {declaration.symbol, {}, {}, SIZE_MAX};
 		nodes.emplace(declaration.symbol, node);
@@ -100,6 +101,8 @@ void QueryGraph::optimize(const DeclarationList& select_list) {
 	unsigned long long current_cost = 0;
 	vector<string> current_synonyms;
 	DeclarationList current_selected;
+	unvisited_nodes.reserve(nodes.size());
+	selected_nodes.reserve(select_list.size());
 
 	for (auto& node : nodes) {
 		unvisited_nodes.emplace(node.first);

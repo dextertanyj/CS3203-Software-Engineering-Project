@@ -16,6 +16,7 @@ QP::Types::SelectList QP::QueryProperties::getSelectList() { return select_list;
 
 QP::Types::DeclarationList QP::QueryProperties::getSelectSynonymList() {
 	unordered_set<Types::Declaration> set;
+	set.reserve(select_list.size());
 	for_each(select_list.begin(), select_list.end(), [&](const ReferenceArgument& arg) { set.emplace(arg.getSynonym()); });
 	return {set.begin(), set.end()};
 }

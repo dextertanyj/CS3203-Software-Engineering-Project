@@ -9,6 +9,7 @@ using namespace std;
 QP::ResultTable::ResultTable() = default;
 
 QP::ResultTable::ResultTable(vector<string> synonyms_stored) : synonyms_stored(synonyms_stored) {
+	this->synonyms_to_index_map.reserve(synonyms_stored.size());
 	for (size_t i = 0; i < synonyms_stored.size(); i++) {
 		this->synonyms_to_index_map.emplace(synonyms_stored[i], i);
 	}
@@ -52,6 +53,7 @@ QP::ResultTable QP::ResultTable::filterBySelect(const QP::Types::DeclarationList
 	ResultTable filtered_table = ResultTable(synonyms);
 
 	unordered_set<ResultRow> rows;
+	rows.reserve(getNumberOfRows());
 	for (auto const& row : table) {
 		ResultRow sub_row(select_list.size());
 		for (int i = 0; i < select_list.size(); i++) {
@@ -83,6 +85,7 @@ ResultRow QP::ResultTable::getRowWithOrder(const vector<string>& synonyms, size_
 
 unordered_multimap<ResultRow, size_t> QP::ResultTable::buildHashTable(ResultTable& table, const vector<string>& key_synonyms) {
 	unordered_multimap<ResultRow, size_t> map;
+	map.reserve(table.getNumberOfRows());
 	unordered_map<string, size_t> synonyms_to_index_map = table.getSynonymsStoredMap();
 	size_t row_number = 0;
 	for (ResultRow const& row : table.table) {
@@ -118,6 +121,7 @@ QP::ResultTable QP::ResultTable::intersectTables(const ResultTable& superset_tab
 
 static ResultRow mergeRow(ResultRow current_row, const ResultRow& other_row, const vector<string>& synonym_order,
                           const unordered_map<string, size_t>& synonym_map) {
+	current_row.reserve(current_row.size() + synonym_order.size());
 	for (string const& synonym : synonym_order) {
 		size_t index = synonym_map.at(synonym);
 		current_row.push_back(other_row.at(index));
@@ -138,6 +142,8 @@ QP::ResultTable QP::ResultTable::hashJoinTables(const ResultTable& table_one, co
 
 	vector<string> common_synonyms;
 	vector<string> new_synonyms;
+	common_synonyms.reserve(smaller_table.getSynonymsStored().size());
+	new_synonyms.reserve(smaller_table.getSynonymsStored().size());
 	unordered_map<string, size_t> current_synonyms = larger_table.getSynonymsStoredMap();
 	for (auto const& synonym : smaller_table.getSynonymsStored()) {
 		if (current_synonyms.find(synonym) != current_synonyms.end()) {
@@ -174,6 +180,7 @@ QP::ResultTable QP::ResultTable::loopJoinTables(const ResultTable& table_one, co
 	for (auto const& table_one_row : table_one.table) {
 		for (auto const& table_two_row : table_two.table) {
 			ResultRow row = table_one_row;
+			row.reserve(table_two_row.size());
 			row.insert(row.end(), table_two_row.begin(), table_two_row.end());
 			table.insertRow(row);
 		}
