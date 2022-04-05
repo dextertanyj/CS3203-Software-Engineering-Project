@@ -6,8 +6,8 @@
 namespace QP::Preprocessor {
 class QueryExpressionLexer;
 class QueryPreprocessor;
-namespace Maps {}
 
+namespace Maps {}
 namespace SyntaxValidator {}
 }
 
