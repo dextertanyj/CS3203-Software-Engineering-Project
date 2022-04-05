@@ -395,7 +395,7 @@ TEST_CASE("Affects clause") {
 	Preprocessor::QueryExpressionLexer lexer4 = Preprocessor::QueryExpressionLexer(assign_token2);
 	auto expression4 =
 		Common::ExpressionProcessor::ExpressionParser{lexer4, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
-	
+
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Assign);
 	pkb.setStmtType(3, StmtType::Assign);
