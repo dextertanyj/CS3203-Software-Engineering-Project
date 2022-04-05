@@ -10,13 +10,10 @@
 
 void PKB::ControlFlowGraph::setNext(StmtRef previous, StmtRef next) const {
 	assert(previous != next);
-	try {
-		auto prev_node = getNode(previous);
-		auto next_node = getNode(next);
-		prev_node->setConnection(next_node);
-	} catch (const invalid_argument& e) {
-		throw e;
-	}
+	auto prev_node = getNode(previous);
+	auto next_node = getNode(next);
+	assert(prev_node != nullptr && next_node != nullptr);
+	prev_node->setConnection(next_node);
 }
 
 void PKB::ControlFlowGraph::setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) const {
@@ -123,7 +120,7 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getEnd(size_t graph_index) const {
 StmtInfoPtrSet PKB::ControlFlowGraph::collectNextOfDummy(const shared_ptr<PKB::NodeInterface>& dummy_node) {
 	shared_ptr<PKB::NodeInterface> result = dummy_node;
 	while (result->getNodeType() == Types::NodeType::Dummy && !(result->getNextNodes().empty())) {
-		assert(result->getNextNodes().size() < 2);
+		assert(result->getNextNodes().size() == 1);
 		result = *result->getNextNodes().begin();
 	}
 
