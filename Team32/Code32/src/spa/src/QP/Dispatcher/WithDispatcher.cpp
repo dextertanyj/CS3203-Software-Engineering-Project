@@ -100,8 +100,8 @@ static const ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>& g
 		{ReferenceType::Name, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
 		{ReferenceType::StatementIndex, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
 		{ReferenceType::Attribute,
-	     ExecutorPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeAttribute<TAttribute, TLeft, TRight>,
-	                                             WithExecutor::executeAttributeAttribute<TAttribute, TLeft, TRight>)}};
+	     ExecutorPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialConstantAttribute<TAttribute, TLeft, TRight>,
+	                                             WithExecutor::executeConstantAttribute<TAttribute, TLeft, TRight>)}};
 	return map;
 }
 
@@ -209,7 +209,9 @@ const unordered_map<WithClauseBasicDispatchKey,
                    {AttributeType::VariableName, variable_handler_map}};
 
 ExecutorSetBundle Dispatcher::WithDispatcher::dispatcher(const vector<ReferenceArgument>& args) {
-	assert(args.size() == 2);
+	if (args.size() != 2) {
+		throw QueryDispatchException("Incorrect argument count.");
+	}
 	WithClauseBasicDispatchKey lhs = args.at(0).getType();
 	if (args.at(0).getType() == ReferenceType::Attribute) {
 		lhs = args.at(0).getAttribute().attribute;
