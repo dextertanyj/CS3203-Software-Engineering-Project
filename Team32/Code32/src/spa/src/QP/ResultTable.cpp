@@ -199,7 +199,7 @@ QP::ResultTable QP::ResultTable::joinTables(const ResultTable& table_one, const 
 	                                  [&](auto const& synonym) { return superset_synonyms.find(synonym) != superset_synonyms.end(); });
 
 	if (number_of_match == subset_synonyms.size()) {
-		return intersectTables(move(superset_table), subset_table);
+		return intersectTables(superset_table, subset_table);
 	}
 
 	if (number_of_match > 0) {
