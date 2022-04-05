@@ -91,7 +91,6 @@ QueryResult executeTrivialConstantConstant(const StorageAdapter& store, const Re
 template <typename TAttribute, typename TBuild, typename TProbe>
 static QueryResult hashJoin(const StorageAdapter& store, HashInfo<TAttribute, TBuild> build_info, HashInfo<TAttribute, TProbe> probe_info) {
 	unordered_multimap<TAttribute, TBuild> build_table;
-	build_table.reserve(build_info.values.size());
 	for (const auto& build : build_info.values) {
 		build_table.emplace(build_info.mapper(store, build), build);
 	}

@@ -55,9 +55,10 @@ QP::ResultTable QP::ResultTable::filterBySelect(const QP::Types::DeclarationList
 	unordered_set<ResultRow> rows;
 	rows.reserve(getNumberOfRows());
 	for (auto const& row : table) {
-		ResultRow sub_row(select_list.size());
-		for (int i = 0; i < select_list.size(); i++) {
-			sub_row[i] = row.at(synonyms_to_index_map.at(select_list[i].symbol));
+		ResultRow sub_row;
+		sub_row.reserve(select_list.size());
+		for (const auto& select : select_list) {
+			sub_row.push_back(row.at(synonyms_to_index_map.at(select.symbol)));
 		}
 		rows.emplace(sub_row);
 	}
@@ -85,7 +86,6 @@ ResultRow QP::ResultTable::getRowWithOrder(const vector<string>& synonyms, size_
 
 unordered_multimap<ResultRow, size_t> QP::ResultTable::buildHashTable(ResultTable& table, const vector<string>& key_synonyms) {
 	unordered_multimap<ResultRow, size_t> map;
-	map.reserve(table.getNumberOfRows());
 	unordered_map<string, size_t> synonyms_to_index_map = table.getSynonymsStoredMap();
 	size_t row_number = 0;
 	for (ResultRow const& row : table.table) {
@@ -142,8 +142,6 @@ QP::ResultTable QP::ResultTable::hashJoinTables(const ResultTable& table_one, co
 
 	vector<string> common_synonyms;
 	vector<string> new_synonyms;
-	common_synonyms.reserve(smaller_table.getSynonymsStored().size());
-	new_synonyms.reserve(smaller_table.getSynonymsStored().size());
 	unordered_map<string, size_t> current_synonyms = larger_table.getSynonymsStoredMap();
 	for (auto const& synonym : smaller_table.getSynonymsStored()) {
 		if (current_synonyms.find(synonym) != current_synonyms.end()) {
