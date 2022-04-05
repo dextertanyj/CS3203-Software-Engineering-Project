@@ -109,7 +109,7 @@ void QueryGraph::optimize(const DeclarationList& select_list) {
 		selected_nodes.emplace(declaration.symbol, declaration);
 	}
 
-  queue<string> queue;
+	queue<string> queue;
 	auto start = *unvisited_nodes.begin();
 	queue.push(start);
 	unvisited_nodes.erase(start);
