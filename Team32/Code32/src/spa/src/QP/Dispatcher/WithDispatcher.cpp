@@ -143,11 +143,11 @@ ExecutorSet dispatchHandler(const vector<ReferenceArgument>& args) {
 	static const auto right_attribute_map = getAttributeMap<TAttribute, TRight>();
 	WithClauseArgumentDispatchKey lhs_key = args.at(0).getType();
 	if (args.at(0).getType() == ReferenceType::Attribute) {
-		lhs_key = pair{args.at(0).getAttribute().synonym.type, args.at(0).getAttribute().attribute};
+		lhs_key = pair{args.at(0).getSynonymType(), args.at(0).getAttributeType()};
 	}
 	WithClauseArgumentDispatchKey rhs_key = args.at(1).getType();
 	if (args.at(1).getType() == ReferenceType::Attribute) {
-		rhs_key = pair{args.at(1).getAttribute().synonym.type, args.at(1).getAttribute().attribute};
+		rhs_key = pair{args.at(1).getSynonymType(), args.at(1).getAttributeType()};
 	}
 	auto lhs_executors_iter = left_attribute_map.find(lhs_key);
 	if (lhs_executors_iter == left_attribute_map.end()) {
@@ -212,11 +212,11 @@ ExecutorSetBundle Dispatcher::WithDispatcher::dispatcher(const vector<ReferenceA
 	assert(args.size() == 2);
 	WithClauseBasicDispatchKey lhs = args.at(0).getType();
 	if (args.at(0).getType() == ReferenceType::Attribute) {
-		lhs = args.at(0).getAttribute().attribute;
+		lhs = args.at(0).getAttributeType();
 	}
 	WithClauseBasicDispatchKey rhs = args.at(1).getType();
 	if (args.at(1).getType() == ReferenceType::Attribute) {
-		rhs = args.at(1).getAttribute().attribute;
+		rhs = args.at(1).getAttributeType();
 	}
 	auto handler_iter = handler_map.find(lhs);
 	if (handler_iter == handler_map.end()) {

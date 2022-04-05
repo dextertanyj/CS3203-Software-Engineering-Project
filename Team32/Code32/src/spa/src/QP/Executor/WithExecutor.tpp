@@ -48,11 +48,11 @@ QueryResult executeTrivialAttributeAttribute(const StorageAdapter& store, const 
 	unordered_set<TRight> right_values = rhs_executors.first(store, rhs);
 	unordered_set<TAttribute> attributes;
 	if (left_values.size() < right_values.size()) {
-		return find<TAttribute, TLeft, TRight>(store, {lhs.getAttribute().synonym.symbol, move(left_values), lhs_executors.second},
-		                                       {rhs.getAttribute().synonym.symbol, move(right_values), rhs_executors.second});
+		return find<TAttribute, TLeft, TRight>(store, {lhs.getSynonymSymbol(), move(left_values), lhs_executors.second},
+		                                       {rhs.getSynonymSymbol(), move(right_values), rhs_executors.second});
 	}
-	return find<TAttribute, TRight, TLeft>(store, {rhs.getAttribute().synonym.symbol, move(right_values), rhs_executors.second},
-	                                       {lhs.getAttribute().synonym.symbol, move(left_values), lhs_executors.second});
+	return find<TAttribute, TRight, TLeft>(store, {rhs.getSynonymSymbol(), move(right_values), rhs_executors.second},
+	                                       {lhs.getSynonymSymbol(), move(left_values), lhs_executors.second});
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
@@ -111,11 +111,11 @@ QueryResult executeAttributeAttribute(const StorageAdapter& store, const Referen
 	unordered_set<TRight> right_values = rhs_executors.first(store, rhs);
 	// Reduce memory usage by building hash table on smaller set.
 	if (left_values.size() < right_values.size()) {
-		return hashJoin<TAttribute, TLeft, TRight>(store, {lhs.getAttribute().synonym.symbol, move(left_values), lhs_executors.second},
-		                                           {rhs.getAttribute().synonym.symbol, move(right_values), rhs_executors.second});
+		return hashJoin<TAttribute, TLeft, TRight>(store, {lhs.getSynonymSymbol(), move(left_values), lhs_executors.second},
+		                                           {rhs.getSynonymSymbol(), move(right_values), rhs_executors.second});
 	}
-	return hashJoin<TAttribute, TRight, TLeft>(store, {rhs.getAttribute().synonym.symbol, move(right_values), rhs_executors.second},
-	                                           {lhs.getAttribute().synonym.symbol, move(left_values), lhs_executors.second});
+	return hashJoin<TAttribute, TRight, TLeft>(store, {rhs.getSynonymSymbol(), move(right_values), rhs_executors.second},
+	                                           {lhs.getSynonymSymbol(), move(left_values), lhs_executors.second});
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
@@ -124,7 +124,7 @@ QueryResult executeAttributeConstant(const StorageAdapter& store, const Referenc
                                      WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	unordered_set<TLeft> left_values = lhs_executors.first(store, lhs);
 	TAttribute right_value = rhs_executors.second(store, (*rhs_executors.first(store, rhs).begin()));
-	QueryResult result = QueryResult({lhs.getAttribute().synonym.symbol});
+	QueryResult result = QueryResult({lhs.getSynonymSymbol()});
 	for (const auto& left : left_values) {
 		if (lhs_executors.second(store, left) == right_value) {
 			result.addRow({safeToString(left)});

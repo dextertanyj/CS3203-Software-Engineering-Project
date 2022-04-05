@@ -36,7 +36,7 @@ QueryResult executeTrivialSynonymWildcardOrSynonym(const StorageAdapter& store) 
 
 template <ClauseType T>
 QueryResult executeNameSynonym(const StorageAdapter& store, const ReferenceArgument& procedure, const ReferenceArgument& variable) {
-	QueryResult result = QueryResult({variable.getSynonym().symbol});
+	QueryResult result = QueryResult({variable.getSynonymSymbol()});
 	VarRefSet var_set = store.getVariableByProcedure<T>(procedure.getName());
 	for (auto const& var : var_set) {
 		result.addRow({var});
@@ -47,7 +47,7 @@ QueryResult executeNameSynonym(const StorageAdapter& store, const ReferenceArgum
 
 template <ClauseType T>
 QueryResult executeSynonymName(const StorageAdapter& store, const ReferenceArgument& procedure, const ReferenceArgument& variable) {
-	QueryResult result = QueryResult({procedure.getSynonym().symbol});
+	QueryResult result = QueryResult({procedure.getSynonymSymbol()});
 	ProcRefSet proc_set = store.getProcedureByVariable<T>(variable.getName());
 	for (auto const& proc : proc_set) {
 		result.addRow({proc});
@@ -58,7 +58,7 @@ QueryResult executeSynonymName(const StorageAdapter& store, const ReferenceArgum
 
 template <ClauseType T>
 QueryResult executeSynonymWildcard(const StorageAdapter& store, const ReferenceArgument& procedure) {
-	QueryResult result = QueryResult({procedure.getSynonym().symbol});
+	QueryResult result = QueryResult({procedure.getSynonymSymbol()});
 	unordered_set<ProcRef> proc_set = store.getProcedures();
 	for (auto const& proc : proc_set) {
 		VarRefSet var_set = store.getVariableByProcedure<T>(proc);
@@ -71,7 +71,7 @@ QueryResult executeSynonymWildcard(const StorageAdapter& store, const ReferenceA
 
 template <ClauseType T>
 QueryResult executeSynonymSynonym(const StorageAdapter& store, const ReferenceArgument& procedure, const ReferenceArgument& variable) {
-	QueryResult result = QueryResult({procedure.getSynonym().symbol, variable.getSynonym().symbol});
+	QueryResult result = QueryResult({procedure.getSynonymSymbol(), variable.getSynonymSymbol()});
 	unordered_set<ProcRef> proc_set = store.getProcedures();
 	vector<string> proc_column;
 	vector<string> var_column;

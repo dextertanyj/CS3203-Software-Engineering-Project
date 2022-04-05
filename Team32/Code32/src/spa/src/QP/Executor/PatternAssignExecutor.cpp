@@ -33,7 +33,7 @@ QueryResult executeTrivialSynonymOrWildcardExpression(const StorageAdapter& stor
 
 // Executors
 QueryResult executeNameWildcard(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& name) {
-	QueryResult result = QueryResult({assign.getSynonym().symbol});
+	QueryResult result = QueryResult({assign.getSynonymSymbol()});
 	auto results = store.getStmtsWithPatternLHS(name.getName());
 	for (auto const& entry : results) {
 		result.addRow({to_string(entry->getIdentifier())});
@@ -43,7 +43,7 @@ QueryResult executeNameWildcard(const StorageAdapter& store, const ReferenceArgu
 }
 
 QueryResult executeWildcardWildcard(const StorageAdapter& store, const ReferenceArgument& assign) {
-	QueryResult result = QueryResult({assign.getSynonym().symbol});
+	QueryResult result = QueryResult({assign.getSynonymSymbol()});
 	auto results = store.getStatements();
 	for (auto const& entry : results) {
 		if (Utilities::checkStmtTypeMatch(entry, DesignEntity::Assign)) {
@@ -55,7 +55,7 @@ QueryResult executeWildcardWildcard(const StorageAdapter& store, const Reference
 }
 
 QueryResult executeSynonymWildcard(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& synonym) {
-	QueryResult result = QueryResult({assign.getSynonym().symbol, synonym.getSynonym().symbol});
+	QueryResult result = QueryResult({assign.getSynonymSymbol(), synonym.getSynonymSymbol()});
 	for (auto const& var_ref : store.getVariables()) {
 		auto statements = store.getStmtsWithPatternLHS(var_ref);
 		for (auto const& statement : statements) {
@@ -68,7 +68,7 @@ QueryResult executeSynonymWildcard(const StorageAdapter& store, const ReferenceA
 
 QueryResult executeNameExpression(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& name,
                                   const ReferenceArgument& expression) {
-	QueryResult result = QueryResult({assign.getSynonym().symbol});
+	QueryResult result = QueryResult({assign.getSynonymSymbol()});
 	auto results =
 		store.getStmtsWithPattern(name.getName(), expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
 	for (auto const& entry : results) {
@@ -78,7 +78,7 @@ QueryResult executeNameExpression(const StorageAdapter& store, const ReferenceAr
 }
 
 QueryResult executeWildcardExpression(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& expression) {
-	QueryResult result = QueryResult({assign.getSynonym().symbol});
+	QueryResult result = QueryResult({assign.getSynonymSymbol()});
 	vector<string> statement_result;
 	auto result_pairs = store.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
 	for (auto const& pair : result_pairs) {
@@ -90,7 +90,7 @@ QueryResult executeWildcardExpression(const StorageAdapter& store, const Referen
 
 QueryResult executeSynonymExpression(const StorageAdapter& store, const ReferenceArgument& assign, const ReferenceArgument& synonym,
                                      const ReferenceArgument& expression) {
-	QueryResult result = QueryResult({assign.getSynonym().symbol, synonym.getSynonym().symbol});
+	QueryResult result = QueryResult({assign.getSynonymSymbol(), synonym.getSynonymSymbol()});
 	auto result_pairs = store.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
 	for (auto const& pair : result_pairs) {
 		result.addRow({to_string(pair.first->getIdentifier()), pair.second});
