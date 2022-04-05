@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
@@ -17,14 +18,15 @@ public:
 	bool patternExists(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPattern(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& var_name);
-	StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match);
-	unordered_map<StmtRef, PKB::AssignRelation> getAssignMap();
+	StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression, bool is_exact_match);
+	unordered_map<VarRef, unordered_set<PKB::AssignRelation>> getAssignMap();
 	void clear();
 
 private:
-	static bool compareExpressions(AssignRelation& relation, const VarRef& variable, const Common::EP::Expression& op_tree,
-	                               bool is_exact_match);
-	unordered_map<StmtRef, PKB::AssignRelation> store;
+	static bool compareExpressions(const Common::ExpressionProcessor::Expression& expression,
+	                               const Common::ExpressionProcessor::Expression& op_tree, bool is_exact_match);
+	unordered_map<VarRef, unordered_set<PKB::AssignRelation>> var_to_relation_store;
+	unordered_map<Common::ExpressionProcessor::Expression, unordered_set<PKB::AssignRelation>> exp_to_relation_store;
 };
 
 #endif
