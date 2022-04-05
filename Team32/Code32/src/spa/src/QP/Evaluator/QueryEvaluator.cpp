@@ -91,6 +91,7 @@ QueryResult QueryEvaluator::executeTrivialGroup(ClauseList& clauses) {
 
 QueryResult QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, DeclarationList& select_list) {
 	vector<QueryResult> result_list;
+	result_list.reserve(clauses.size());
 
 	for (const auto& clause : clauses) {
 		QueryResult result = clause->execute(store, result_list);

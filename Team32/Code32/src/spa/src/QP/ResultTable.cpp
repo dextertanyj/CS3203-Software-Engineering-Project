@@ -73,6 +73,7 @@ bool QP::ResultTable::containsRow(const ResultRow& row) {
 
 ResultRow QP::ResultTable::getRowWithOrder(const vector<string>& synonyms, size_t row_number) const {
 	ResultRow row_with_order;
+	row_with_order.reserve(synonyms.size());
 	ResultRow row = table.at(row_number);
 	for (string const& synonym : synonyms) {
 		row_with_order.push_back(row.at(synonyms_to_index_map.at(synonym)));
