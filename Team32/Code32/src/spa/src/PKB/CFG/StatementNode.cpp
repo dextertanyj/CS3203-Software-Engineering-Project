@@ -26,7 +26,3 @@ void PKB::StatementNode::setPrevious(const shared_ptr<NodeInterface>& prev) {
 shared_ptr<StmtInfo> PKB::StatementNode::getStmtInfo() const { return stmt_info; }
 
 StmtRef PKB::StatementNode::getNodeRef() const { return stmt_info->getIdentifier(); }
-
-bool PKB::StatementNode::operator<(const PKB::StatementNode& other) const { return getNodeRef() < other.getNodeRef(); }
-
-bool PKB::StatementNode::operator>(const PKB::StatementNode& other) const { return getNodeRef() > other.getNodeRef(); }

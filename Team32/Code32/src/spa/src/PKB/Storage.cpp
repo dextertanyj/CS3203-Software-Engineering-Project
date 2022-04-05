@@ -12,7 +12,7 @@ PKB::Storage::Storage() : next_manager(control_flow_graph), affects_manager(cont
 void PKB::Storage::setStmtType(StmtRef index, StmtType type) {
 	statement_store.insert(index, type);
 	shared_ptr<StmtInfo> info = statement_store.get(index);
-	setNode(move(info));
+	setNode(info);
 }
 
 void PKB::Storage::setConstant(ConstVal value) { constant_store.insert(value); }
@@ -115,7 +115,7 @@ void PKB::Storage::setWhileControl(StmtRef index, VarRef name) {
 	while_control_store.set(info, name);
 }
 
-void PKB::Storage::setNode(shared_ptr<StmtInfo> info) { this->control_flow_graph.createNode(move(info)); }
+void PKB::Storage::setNode(const shared_ptr<StmtInfo>& info) { control_flow_graph.createNode(info); }
 
 void PKB::Storage::setNext(StmtRef previous, StmtRef next) { control_flow_graph.setNext(previous, next); }
 
