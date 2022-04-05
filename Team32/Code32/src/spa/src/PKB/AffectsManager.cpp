@@ -7,6 +7,9 @@ PKB::AffectsManager::AffectsManager(ControlFlowGraph& control_flow_graph, SVRela
 	: control_flow_graph(control_flow_graph), uses_store(uses_store), modifies_store(modifies_store) {}
 
 bool PKB::AffectsManager::checkAffects(StmtRef first, StmtRef second) {
+	if (!control_flow_graph.contains(first) || !control_flow_graph.contains(second)) {
+		return false;
+	}
 	StmtInfoPtrSet affected_nodes = getAffects(first);
 	return any_of(affected_nodes.begin(), affected_nodes.end(),
 	              [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == second; });
@@ -119,6 +122,9 @@ void PKB::AffectsManager::processNodeAffected(DFSInfo& info, const shared_ptr<St
 }
 
 bool PKB::AffectsManager::checkAffectsStar(StmtRef first, StmtRef second) {
+	if (!control_flow_graph.contains(first) || !control_flow_graph.contains(second)) {
+		return false;
+	}
 	StmtInfoPtrSet affected_nodes = getAffectsStar(first);
 	return any_of(affected_nodes.begin(), affected_nodes.end(),
 	              [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == second; });

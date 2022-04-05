@@ -17,6 +17,9 @@ bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
 }
 
 bool PKB::NextManager::checkNextStar(StmtRef first, StmtRef second) {
+	if (!control_flow_graph.contains(first) || !control_flow_graph.contains(second)) {
+		return false;
+	}
 	if (next_cache.find(first) != next_cache.end()) {
 		StmtInfoPtrSet next_set = next_cache.at(first);
 		return any_of(next_set.begin(), next_set.end(), [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == second; });
@@ -32,9 +35,17 @@ bool PKB::NextManager::checkNextStar(StmtRef first, StmtRef second) {
 	return checkNextStarOptimized(first, second);
 }
 
-StmtInfoPtrSet PKB::NextManager::getNext(StmtRef node_ref) { return control_flow_graph.getNextNodes(node_ref); }
+StmtInfoPtrSet PKB::NextManager::getNext(StmtRef node_ref) {
+	if (!control_flow_graph.contains(node_ref)) {
+		return {};
+	}
+	return control_flow_graph.getNextNodes(node_ref);
+}
 
 StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
+	if (!control_flow_graph.contains(node_ref)) {
+		return {};
+	}
 	if (next_cache.find(node_ref) != next_cache.end()) {
 		return next_cache.find(node_ref)->second;
 	}
@@ -49,9 +60,17 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 	return next_cache.find(node_ref)->second;
 }
 
-StmtInfoPtrSet PKB::NextManager::getPrevious(StmtRef node_ref) { return control_flow_graph.getPreviousNodes(node_ref); }
+StmtInfoPtrSet PKB::NextManager::getPrevious(StmtRef node_ref) {
+	if (!control_flow_graph.contains(node_ref)) {
+		return {};
+	}
+	return control_flow_graph.getPreviousNodes(node_ref);
+}
 
 StmtInfoPtrSet PKB::NextManager::getPreviousStar(StmtRef node_ref) {
+	if (!control_flow_graph.contains(node_ref)) {
+		return {};
+	}
 	if (previous_cache.find(node_ref) != previous_cache.end()) {
 		return previous_cache.find(node_ref)->second;
 	}
