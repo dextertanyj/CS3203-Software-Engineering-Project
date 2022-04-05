@@ -39,6 +39,17 @@ StmtInfoPtrSet PKB::NextManager::getNext(StmtRef node_ref) {
 	if (!control_flow_graph.contains(node_ref)) {
 		return {};
 	}
+	shared_ptr<PKB::StatementNode> curr_node = control_flow_graph.getNode(node_ref);
+	StmtInfoPtrSet next_nodes;
+	for (const auto& node : curr_node->getNextNodes()) {
+		if (node->getNodeType() == Types::NodeType::Dummy) {
+			StmtInfoPtrSet next_of_dummy = PKB::ControlFlowGraph::collectNextOfDummy(node);
+			next_nodes.insert(next_of_dummy.begin(), next_of_dummy.end());
+		} else {
+			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(node);
+			next_nodes.emplace(stmt_node->getStmtInfo());
+		}
+	}
 	return control_flow_graph.getNextNodes(node_ref);
 }
 
@@ -63,6 +74,18 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 StmtInfoPtrSet PKB::NextManager::getPrevious(StmtRef node_ref) {
 	if (!control_flow_graph.contains(node_ref)) {
 		return {};
+	}
+	shared_ptr<PKB::StatementNode> curr_node = this->control_flow_graph.getNode(node_ref);
+	StmtInfoPtrSet prev_nodes;
+	for (const auto& node : curr_node->getPreviousNodes()) {
+		// If previous node is a dummy node, need to get the previous nodes of the dummy node.
+		if (node->getNodeType() == Types::NodeType::Dummy) {
+			StmtInfoPtrSet prev_of_dummy = PKB::ControlFlowGraph::collectPreviousOfDummy(node);
+			prev_nodes.insert(prev_of_dummy.begin(), prev_of_dummy.end());
+		} else {
+			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(node);
+			prev_nodes.emplace(stmt_node->getStmtInfo());
+		}
 	}
 	return control_flow_graph.getPreviousNodes(node_ref);
 }
@@ -158,7 +181,7 @@ void PKB::NextManager::processQueue(const shared_ptr<StmtInfo>& node, TraversalI
 		auto cached_set = info.cache.find(current->getIdentifier())->second;
 		star.insert(cached_set.begin(), cached_set.end());
 	}
-	info.cache.insert({node->getIdentifier(), star});
+	info.cache.emplace(node->getIdentifier(), star);
 }
 
 template <class Comparator>
@@ -193,11 +216,11 @@ void PKB::NextManager::processLoopNode(const shared_ptr<StmtInfo>& node, Travers
 		for (const auto& subsequent : subsequent_nodes) {
 			auto subsequent_next_star = info.cache.find(subsequent->getIdentifier())->second;
 			combined.merge(subsequent_next_star);
-			combined.insert(subsequent);
+			combined.emplace(subsequent);
 		}
 	}
 	for (const auto& internal_node : loop_nodes) {
-		info.cache.insert({internal_node->getIdentifier(), combined});
+		info.cache.emplace(internal_node->getIdentifier(), combined);
 	}
 }
 
@@ -206,7 +229,7 @@ StmtInfoPtrSet PKB::NextManager::traverseLoop(const shared_ptr<StmtInfo>& node) 
 	assert(node->getType() == StmtType::WhileStmt);
 	StmtInfoPtrSet set;
 	queue<shared_ptr<StmtInfo>> queue;
-	set.insert(node);
+	set.emplace(node);
 	auto next_internal_nodes = control_flow_graph.getLoopInternalNextNodes(node->getIdentifier());
 	assert(next_internal_nodes.size() == 1);
 	queue.push(*next_internal_nodes.begin());
@@ -219,7 +242,7 @@ StmtInfoPtrSet PKB::NextManager::traverseLoop(const shared_ptr<StmtInfo>& node) 
 }
 
 void PKB::NextManager::handleTraverseLoopNode(queue<shared_ptr<StmtInfo>>& queue, StmtInfoPtrSet& set, const shared_ptr<StmtInfo>& node) {
-	set.insert(node);
+	set.emplace(node);
 	auto next_set = control_flow_graph.getNextNodes(node->getIdentifier());
 	for (const auto& next : next_set) {
 		if (set.find(next) != set.end()) {

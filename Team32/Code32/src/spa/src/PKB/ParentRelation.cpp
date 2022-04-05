@@ -17,7 +17,7 @@ void PKB::ParentRelation::insertReverse(const shared_ptr<StmtInfo>& child_to_ins
 	if (getSelf()->getIdentifier() >= child_to_insert->getIdentifier()) {
 		throw invalid_argument("Statement out of order");
 	}
-	this->children.insert(child_to_insert);
+	this->children.emplace(child_to_insert);
 }
 
 StmtInfoPtrSet PKB::ParentRelation::getForward() const {
@@ -44,7 +44,7 @@ template <>
 StmtInfoPtrSet PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::ParentRelation>::populateTransitive(ParentRelation& current,
                                                                                                         StmtInfoPtrSet previous) {
 	current.appendForwardTransitive(previous);
-	previous.insert(current.getSelf());
+	previous.emplace(current.getSelf());
 	StmtInfoPtrSet result;
 	for (const shared_ptr<StmtInfo>& child : current.getReverse()) {
 		auto relation = map.find(child->getIdentifier());
@@ -52,6 +52,6 @@ StmtInfoPtrSet PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::ParentRelati
 		result.insert(transitive_children.begin(), transitive_children.end());
 	}
 	current.appendReverseTransitive(result);
-	result.insert(current.getSelf());
+	result.emplace(current.getSelf());
 	return result;
 }

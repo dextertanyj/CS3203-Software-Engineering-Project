@@ -49,13 +49,13 @@ template <>
 StmtInfoPtrSet PKB::TransitiveRelationStore<StmtRef, StmtInfo, PKB::FollowsRelation>::populateTransitive(FollowsRelation& current,
                                                                                                          StmtInfoPtrSet previous) {
 	current.appendForwardTransitive(previous);
-	previous.insert(current.getSelf());
+	previous.emplace(current.getSelf());
 	StmtInfoPtrSet result;
 	if (!current.getReverse().empty()) {
 		auto follower = map.find((*current.getReverse().begin())->getIdentifier());
 		result = populateTransitive(follower->second, previous);
 	}
 	current.appendReverseTransitive(result);
-	result.insert(current.getSelf());
+	result.emplace(current.getSelf());
 	return result;
 }

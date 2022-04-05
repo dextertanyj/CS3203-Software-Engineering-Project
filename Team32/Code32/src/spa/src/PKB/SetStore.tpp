@@ -8,7 +8,7 @@ PKB::SetStore<T>::SetStore() = default;
 
 template <typename T>
 void PKB::SetStore<T>::insert(const T& item) {
-	store.insert(item);
+	store.emplace(item);
 }
 
 template <typename T>

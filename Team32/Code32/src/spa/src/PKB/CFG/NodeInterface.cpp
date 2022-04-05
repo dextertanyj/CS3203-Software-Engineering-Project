@@ -16,7 +16,7 @@ void PKB::NodeInterface::insertPrevious(const shared_ptr<NodeInterface>& previou
 unordered_set<shared_ptr<PKB::NodeInterface>> PKB::NodeInterface::getNextNodes() const {
 	unordered_set<shared_ptr<NodeInterface>> results;
 	for (const auto& ptr : next_nodes) {
-		results.insert(ptr.lock());
+		results.emplace(ptr.lock());
 	}
 	return results;
 }
@@ -24,7 +24,7 @@ unordered_set<shared_ptr<PKB::NodeInterface>> PKB::NodeInterface::getNextNodes()
 unordered_set<shared_ptr<PKB::NodeInterface>> PKB::NodeInterface::getPreviousNodes() const {
 	unordered_set<shared_ptr<NodeInterface>> results;
 	for (const auto& ptr : previous_nodes) {
-		results.insert(ptr.lock());
+		results.emplace(ptr.lock());
 	}
 	return results;
 }

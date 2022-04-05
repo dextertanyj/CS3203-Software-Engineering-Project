@@ -37,7 +37,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
 		processDFSVisit(info, &AffectsManager::processNodeAffects);
 	}
 
-	affects_cache.insert({first, info.nodes});
+	affects_cache.emplace(first, info.nodes);
 	return info.nodes;
 }
 
@@ -61,7 +61,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
 		affected_set.insert(affected.begin(), affected.end());
 	}
 
-	affected_cache.insert({second, affected_set});
+	affected_cache.emplace(second, affected_set);
 	return affected_set;
 }
 
@@ -83,7 +83,7 @@ void PKB::AffectsManager::processDFSVisit(DFSInfo& info,
 	if (info.visited_set.find(current) != info.visited_set.end()) {
 		return;
 	}
-	info.visited_set.insert(current);
+	info.visited_set.emplace(current);
 	(this->*processor)(info, current);
 }
 
@@ -91,7 +91,7 @@ void PKB::AffectsManager::processNodeAffects(DFSInfo& info, const shared_ptr<Stm
 	auto current_idx = current->getIdentifier();
 	auto current_type = current->getType();
 	if (uses_store.check(current_idx, info.variable) && current_type == StmtType::Assign) {
-		info.nodes.insert(current);
+		info.nodes.emplace(current);
 	}
 
 	// If the current statement is a container, its modifies consist only of the modifies of statements within it.
@@ -112,7 +112,7 @@ void PKB::AffectsManager::processNodeAffected(DFSInfo& info, const shared_ptr<St
 	// If the current statement is a container, its modifies consist only of the modifies of statements within it.
 	if (!is_container && modifies_store.check(current_idx, info.variable)) {
 		if (current->getType() == StmtType::Assign) {
-			info.nodes.insert(current);
+			info.nodes.emplace(current);
 		}
 	} else {
 		for (const auto& neighbour : control_flow_graph.getPreviousNodes(current_idx)) {
@@ -153,12 +153,12 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
 	}
 	for (const auto& graph_nodes : node->affects) {
 		for (const auto& statements : graph_nodes->statements) {
-			result_set.insert(statements);
+			result_set.emplace(statements);
 			auto result = getAffectsStar(statements->getIdentifier());
 			result_set.insert(result.begin(), result.end());
 		}
 	}
-	affects_star_cache.insert({node_ref, result_set});
+	affects_star_cache.emplace(node_ref, result_set);
 	return result_set;
 }
 
@@ -185,12 +185,12 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
 	}
 	for (const auto& graph_nodes : node->affected) {
 		for (const auto& statements : graph_nodes->statements) {
-			result_set.insert(statements);
+			result_set.emplace(statements);
 			auto result = getAffectedStar(statements->getIdentifier());
 			result_set.insert(result.begin(), result.end());
 		}
 	}
-	affected_star_cache.insert({node_ref, result_set});
+	affected_star_cache.emplace(node_ref, result_set);
 	return result_set;
 }
 
@@ -245,7 +245,7 @@ void PKB::AffectsManager::transposeAffects(StmtRef start, StmtRef end) {
 		auto info = control_flow_graph.getStatementInfo(i);
 		auto affected_set = iter->second;
 		for (const auto& affected : affected_set) {
-			affected_cache[affected->getIdentifier()].insert(info);
+			affected_cache[affected->getIdentifier()].emplace(info);
 		}
 	}
 }
@@ -259,7 +259,7 @@ void PKB::AffectsManager::buildCacheGraphForwardVisit(StmtRef index, StmtRefSet&
 	if (affects == affects_cache.end()) {
 		return;
 	}
-	visited.insert(index);
+	visited.emplace(index);
 	for (const auto& affect : affects->second) {
 		buildCacheGraphForwardVisit(affect->getIdentifier(), visited, stack);
 	}
@@ -267,7 +267,7 @@ void PKB::AffectsManager::buildCacheGraphForwardVisit(StmtRef index, StmtRefSet&
 }
 
 StmtInfoPtrSet PKB::AffectsManager::buildCacheGraphReverseVisit(StmtRef index, StmtRefSet& visited) const {
-	visited.insert(index);
+	visited.emplace(index);
 	auto iter = affected_cache.find(index);
 	if (iter == affected_cache.end()) {
 		return {};
@@ -279,7 +279,7 @@ StmtInfoPtrSet PKB::AffectsManager::buildCacheGraphReverseVisit(StmtRef index, S
 		if (visited.find(affected_idx) != visited.end() && affected_idx != index) {
 			continue;
 		}
-		result_set.insert(affected);
+		result_set.emplace(affected);
 		// We avoid visiting a self loop.
 		if (affected_idx == index) {
 			continue;
@@ -294,12 +294,12 @@ void PKB::AffectsManager::processComponent(StmtRef index, StmtInfoPtrSet compone
 	auto self = control_flow_graph.getStatementInfo(index);
 	if (component.empty()) {
 		auto node = make_shared<CacheGraphNode>(StmtInfoPtrSet{self}, false);
-		cache_graph_store.insert({self->getIdentifier(), node});
+		cache_graph_store.emplace(self->getIdentifier(), node);
 	} else {
-		component.insert(self);
+		component.emplace(self);
 		auto node = make_shared<CacheGraphNode>(component, true);
 		for (const auto& statement : component) {
-			cache_graph_store.insert({statement->getIdentifier(), node});
+			cache_graph_store.emplace(statement->getIdentifier(), node);
 		}
 	}
 }
@@ -312,7 +312,7 @@ void PKB::AffectsManager::connectRelevantComponents(StmtRef index) {
 		if (affected_node == current_node) {
 			continue;
 		}
-		current_node->affects.insert(affected_node);
-		affected_node->affected.insert(current_node);
+		current_node->affects.emplace(affected_node);
+		affected_node->affected.emplace(current_node);
 	}
 }

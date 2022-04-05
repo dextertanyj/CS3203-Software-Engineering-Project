@@ -21,7 +21,7 @@ void PKB::AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, VarRef v
 		throw invalid_argument("Statement already bound to existing expression");
 	}
 	AssignRelation relation = {statement, move(variable), move(expression)};
-	store.insert({idx, relation});
+	store.emplace(idx, relation);
 }
 
 bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
@@ -39,7 +39,7 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPattern(const VarRef& variable, con
 	StmtInfoPtrSet result;
 	for (auto& assignment : store) {
 		if (compareExpressions(assignment.second, variable, expression, is_exact_match)) {
-			result.insert(assignment.second.node);
+			result.emplace(assignment.second.node);
 		}
 	}
 	return result;
@@ -49,7 +49,7 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) 
 	StmtInfoPtrSet result;
 	for (const auto& assignment : store) {
 		if (assignment.second.variable == var_name) {
-			result.insert(assignment.second.node);
+			result.emplace(assignment.second.node);
 		}
 	}
 	return result;
@@ -62,7 +62,7 @@ StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::Expr
 		AssignRelation assign_relation = assignment.second;
 		if (compareExpressions(assign_relation, "", expression, is_exact_match)) {
 			pair<shared_ptr<StmtInfo>, VarRef> pair = make_pair(assignment.second.node, assignment.second.variable);
-			result.insert(pair);
+			result.emplace(pair);
 		}
 	}
 	return result;
