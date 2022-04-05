@@ -82,7 +82,7 @@ using ExecutorSetFactory = std::function<ExecutorSet(const std::vector<Reference
 using ExecutorSetFactoryBundle = std::pair<ClauseType, ExecutorSetFactory>;
 using ArgumentDispatchKey = std::variant<ReferenceType, DesignEntity>;
 using ExecutorSetBundle = std::pair<ClauseType, ExecutorSet>;
-using ArgumentDispatcher = std::function<ExecutorSetBundle(const std::vector<ReferenceArgument>&)>;
+using ArgumentDispatcher = std::function<ExecutorSetBundle(std::vector<ReferenceArgument>&)>;
 using ArgumentDispatchMap = std::unordered_map<ClauseType, ArgumentDispatcher>;
 
 // Types for with clause execution

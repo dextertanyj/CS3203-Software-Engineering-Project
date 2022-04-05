@@ -134,17 +134,3 @@ TEST_CASE("QP::ResultTable::containsRow Should check if row exists") {
 	REQUIRE(table.containsRow(vector<string>({"1", "a", "2"})));
 	REQUIRE(!table.containsRow(vector<string>({"1", "b", "2"})));
 }
-
-TEST_CASE("QP::ResultTable::removeRow Should remove row at specified position") {
-	ResultTable table = ResultTable({"a", "b", "c"});
-	table.insertRow({"1", "a", "2"});
-	table.insertRow({"3", "b", "4"});
-	table.insertRow({"5", "c", "6"});
-	table.insertRow({"1", "d", "2"});
-	table.insertRow({"7", "e", "8"});
-
-	table.removeRow(3);
-
-	REQUIRE(table.getNumberOfRows() == 4);
-	REQUIRE(!table.containsRow(vector<string>({"1", "d", "2"})));
-}

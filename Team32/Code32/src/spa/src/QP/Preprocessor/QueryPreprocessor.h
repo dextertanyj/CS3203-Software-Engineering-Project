@@ -40,7 +40,6 @@ private:
 	void parseSuchThat();
 	void parseWith();
 	void parsePattern();
-	void parseAssignPattern(ReferenceArgument synonym);
 
 	std::optional<Types::DesignEntity> parseDesignEntity();
 	Types::Declaration parseClauseSynonym();
@@ -55,7 +54,7 @@ private:
 
 	bool match(const std::string& token);
 	void reset();
-	void validateUnknownPatternSyntax();
+	void handleUnknownPattern();
 	void logSemanticException(const std::string&& message);
 
 	size_t token_index;
@@ -68,8 +67,6 @@ private:
 
 	static std::regex invalid_chars_regex;
 	static std::regex query_token_regex;
-
-	static void validateSyntax(Types::ClauseType type, std::vector<ReferenceArgument> arguments);
 };
 
 #endif  // SPA_SRC_QP_QUERYPREPROCESSOR_H

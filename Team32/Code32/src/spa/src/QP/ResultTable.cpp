@@ -71,11 +71,6 @@ bool QP::ResultTable::containsRow(const ResultRow& row) {
 	return any_of(table.begin(), table.end(), [row](auto const& row_stored) { return row_stored == row; });
 }
 
-void QP::ResultTable::removeRow(size_t row_number) {
-	// Narrowing conversion, implementation defined behaviour for values greater than long.
-	table.erase(table.begin() + static_cast<vector<string>::difference_type>(row_number));
-}
-
 ResultRow QP::ResultTable::getRowWithOrder(const vector<string>& synonyms, size_t row_number) const {
 	ResultRow row_with_order;
 	ResultRow row = table.at(row_number);
@@ -102,22 +97,22 @@ unordered_multimap<ResultRow, size_t> QP::ResultTable::buildHashTable(ResultTabl
 	return map;
 }
 
-QP::ResultTable QP::ResultTable::intersectTables(ResultTable superset_table, const ResultTable& subset_table) {
+QP::ResultTable QP::ResultTable::intersectTables(const ResultTable& superset_table, const ResultTable& subset_table) {
 	vector<string> common_synonyms = subset_table.synonyms_stored;
 	vector<ResultRow> table = subset_table.table;
 	unordered_set<ResultRow> record_set(table.begin(), table.end());
 
+	ResultTable result = ResultTable(superset_table.getSynonymsStored());
+
 	size_t number_of_rows = superset_table.getNumberOfRows();
-	size_t pos = 0;
 	for (size_t i = 0; i < number_of_rows; i++) {
-		if (record_set.find(superset_table.getRowWithOrder(common_synonyms, pos)) == record_set.end()) {
-			superset_table.removeRow(pos);
-		} else {
-			pos++;
+		if (record_set.find(superset_table.getRowWithOrder(common_synonyms, i)) == record_set.end()) {
+			continue;
 		}
+		result.insertRow(superset_table.getRow(i));
 	}
 
-	return superset_table;
+	return result;
 }
 
 static ResultRow mergeRow(ResultRow current_row, const ResultRow& other_row, const vector<string>& synonym_order,
@@ -204,7 +199,7 @@ QP::ResultTable QP::ResultTable::joinTables(const ResultTable& table_one, const 
 	                                  [&](auto const& synonym) { return superset_synonyms.find(synonym) != superset_synonyms.end(); });
 
 	if (number_of_match == subset_synonyms.size()) {
-		return intersectTables(move(superset_table), subset_table);
+		return intersectTables(superset_table, subset_table);
 	}
 
 	if (number_of_match > 0) {

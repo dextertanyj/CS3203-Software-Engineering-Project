@@ -6,6 +6,9 @@
 namespace QP::Preprocessor {
 class QueryExpressionLexer;
 class QueryPreprocessor;
+
+namespace Maps {}
+namespace SyntaxValidator {}
 }
 
 #endif  // SPA_PREPROCESSOR_H

@@ -1045,7 +1045,7 @@ TEST_CASE("QueryPreprocessor::parseQuery invalid while pattern") {
 	REQUIRE_THROWS_AS(qpp2.parseQuery(UnivDeclarations + "Select w1 pattern w1(\"var\", p)"), QP::QuerySyntaxException);
 
 	QueryPreprocessor qpp3;
-	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select w1 pattern w1(_, \"s\")"), QP::QuerySyntaxException);
+	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select w1 pattern w1(_, \"s\")"), QP::QuerySemanticException);
 }
 
 TEST_CASE("QueryPreprocessor::parseQuery valid if pattern") {
@@ -1075,7 +1075,7 @@ TEST_CASE("QueryPreprocessor::parseQuery invalid if pattern") {
 	REQUIRE_THROWS_AS(qpp1.parseQuery(UnivDeclarations + "Select i1 pattern i1(v1, v2, _)"), QP::QuerySyntaxException);
 
 	QueryPreprocessor qpp2;
-	REQUIRE_THROWS_AS(qpp2.parseQuery(UnivDeclarations + "Select i1 pattern i1(\"var\", _)"), QP::QuerySyntaxException);
+	REQUIRE_THROWS_AS(qpp2.parseQuery(UnivDeclarations + "Select i1 pattern i1(\"var\", _)"), QP::QuerySemanticException);
 
 	QueryPreprocessor qpp3;
 	REQUIRE_THROWS_AS(qpp3.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, \"s\", _)"), QP::QuerySyntaxException);
@@ -1166,6 +1166,199 @@ TEST_CASE("QueryPreprocessor::parseQuery valid pattern") {
 }
 
 TEST_CASE("QueryPreprocessor::parseQuery invalid pattern") {
+	QueryPreprocessor qpp;
+
+	SECTION("Semantic Exceptions") {
+		SECTION("Assign") {
+			SECTION("Incorrect argument types") {
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select a1 pattern a1(s1, _)"), QP::QuerySemanticException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select a1 pattern a1(ct1, _)"), QP::QuerySemanticException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select a1 pattern a1(UND, _)"), QP::QuerySemanticException);
+			}
+
+			SECTION("Incorrect argument count") {
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select a1 pattern a1(_, _, _)"), QP::QuerySemanticException);
+			}
+		}
+		SECTION("If") {
+			SECTION("Incorrect argument types") {
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(s1, _, _)"), QP::QuerySemanticException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(ct1, _, _)"), QP::QuerySemanticException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(UND, _, _)"), QP::QuerySemanticException);
+			}
+
+			SECTION("Incorrect argument count") {
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, _)"), QP::QuerySemanticException);
+			}
+		}
+		SECTION("While") {
+			SECTION("Incorrect argument types") {
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(s1, _)"), QP::QuerySemanticException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(ct1, _)"), QP::QuerySemanticException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(UND, _)"), QP::QuerySemanticException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(_, \"name\")"), QP::QuerySemanticException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(_, \"name + 1\")"), QP::QuerySemanticException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(_, _\"name\"_)"), QP::QuerySemanticException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(_, _\"name + 1\"_)"), QP::QuerySemanticException);
+			}
+
+			SECTION("Incorrect argument count") {
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(_, _, _)"), QP::QuerySemanticException);
+			}
+		}
+		SECTION("Unknown") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, _)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, _, _)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, _)"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, _, _)"), QP::QuerySemanticException);
+		}
+	}
+
+	SECTION("Syntax Exceptions") {
+		SECTION("Assign") {
+			SECTION("Incorrect argument types") {
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select a1 pattern a1(1, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select a1 pattern a1(ct1.value, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select a1 pattern a1(\"name + 1\", _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select a1 pattern a1(_\"name\"_, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select a1 pattern a1(_\"name + 1\"_, _)"), QP::QuerySyntaxException);
+
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select a1 pattern a1(_, 1)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select a1 pattern a1(_, ct1)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select a1 pattern a1(_, ct1.value)"), QP::QuerySyntaxException);
+			}
+
+			SECTION("Incorrect argument count") {
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select a1 pattern a1(_)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select a1 pattern a1(_, _, _, _)"), QP::QuerySyntaxException);
+			}
+		}
+		SECTION("If") {
+			SECTION("Incorrect argument types") {
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, 1, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, ct1, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, ct1.value, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, \"name\", _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, _\"name\"_, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, \"name + 1\", _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, _\"name + 1\"_, _)"),
+				                  QP::QuerySyntaxException);
+
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, _, 1)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, _, ct1)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, _, ct1.value)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, _, \"name\")"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, _, _\"name\"_)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, _, \"name + 1\")"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, _, _\"name + 1\"_)"),
+				                  QP::QuerySyntaxException);
+			}
+
+			SECTION("Incorrect argument count") {
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select i1 pattern i1(_, _, _, _)"), QP::QuerySyntaxException);
+			}
+		}
+		SECTION("While") {
+			SECTION("Incorrect argument types") {
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(1, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(ct1.value, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(\"name + 1\", _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(_\"name\"_, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(_\"name + 1\"_, _)"), QP::QuerySyntaxException);
+
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(_, 1)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(_, ct1)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(_, ct1.value)"), QP::QuerySyntaxException);
+			}
+
+			SECTION("Incorrect argument count") {
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(_)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select w1 pattern w1(_, _, _, _)"), QP::QuerySyntaxException);
+			}
+		}
+		SECTION("Unknown") {
+			SECTION("Incorrect argument types") {
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(1, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(ct1.value, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(\"name + 1\", _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_\"name\"_, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_\"name + 1\"_, _)"), QP::QuerySyntaxException);
+
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, 1)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, ct1)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, ct1.value)"), QP::QuerySyntaxException);
+
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(1, _, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(ct1.value, _, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(\"name + 1\", _, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_\"name\"_, _, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_\"name + 1\"_, _, _)"),
+				                  QP::QuerySyntaxException);
+
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, 1, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, ct1, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, ct1.value, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, \"name\", _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, _\"name\"_, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, \"name + 1\", _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, _\"name + 1\"_, _)"),
+				                  QP::QuerySyntaxException);
+
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, _, 1)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, _, ct1)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, _, ct1.value)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, _, \"name\")"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, _, _\"name\"_)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, _, \"name + 1\")"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, _, _\"name + 1\"_)"),
+				                  QP::QuerySyntaxException);
+
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(1, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(ct1.value, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(\"name + 1\", _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_\"name\"_, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_\"name + 1\"_, _)"), QP::QuerySyntaxException);
+
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, 1)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, ct1)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, ct1.value)"), QP::QuerySyntaxException);
+
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(1, _, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(ct1.value, _, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(\"name + 1\", _, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_\"name\"_, _, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_\"name + 1\"_, _, _)"),
+				                  QP::QuerySyntaxException);
+
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, 1, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, ct1, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, ct1.value, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, \"name\", _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, _\"name\"_, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, \"name + 1\", _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, _\"name + 1\"_, _)"),
+				                  QP::QuerySyntaxException);
+
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, _, 1)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, _, ct1)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, _, ct1.value)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, _, \"name\")"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, _, _\"name\"_)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, _, \"name + 1\")"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, _, _\"name + 1\"_)"),
+				                  QP::QuerySyntaxException);
+			}
+
+			SECTION("Incorrect argument count") {
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern UND(_, _, _, _)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_)"), QP::QuerySyntaxException);
+				REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 pattern s1(_, _, _, _)"), QP::QuerySyntaxException);
+			}
+		}
+	}
+
 	// invalid synonym
 	QueryPreprocessor qpp1;
 	REQUIRE_THROWS_AS(qpp1.parseQuery(UnivDeclarations + "Select a1 pattern s1(v1, \"x\")"), QP::QuerySemanticException);
@@ -1314,27 +1507,51 @@ TEST_CASE("QueryPreprocessor::parseQuery Multiple with clauses") {
 TEST_CASE("QueryPreprocessor::parseQuery invalid with") {
 	QueryPreprocessor qpp;
 
-	SECTION("Undeclared synonym") {
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with x.stmt# = 20"), QP::QuerySemanticException);
+	SECTION("Semantic Exceptions") {
+		SECTION("Type mismatch") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with 1 = \"name\""), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with \"name\" = 1"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with c1.procName = 1"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with v1.varName = 1"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with p1.varName = 1"), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with s1.stmt# = \"this\""), QP::QuerySemanticException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with ct1.value = \"this\""), QP::QuerySemanticException);
+		}
+
+		SECTION("Undeclared synonym") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with x.stmt# = 20"), QP::QuerySemanticException);
+		}
 	}
 
-	SECTION("Invalid attribute") {
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with s1.stmt = 20"), QP::QuerySyntaxException);
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with ct1.val = 20"), QP::QuerySyntaxException);
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with p1.varname = \"name\""), QP::QuerySyntaxException);
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with r1.varname = \"name\""), QP::QuerySyntaxException);
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with pc1.procname = \"name\""), QP::QuerySyntaxException);
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with c1.procname = \"name\""), QP::QuerySyntaxException);
-	}
+	SECTION("Syntax Exceptions") {
+		SECTION("Invalid structure") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with s1.stmt#, 20"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with (s1.stmt# = 20)"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with s1 = 20"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with 20 = s1"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with 20.value = s1"), QP::QuerySyntaxException);
+		}
 
-	SECTION("Type mismatch") {
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with 1 = \"name\""), QP::QuerySemanticException);
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with \"name\" = 1"), QP::QuerySemanticException);
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with c1.procName = 1"), QP::QuerySemanticException);
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with v1.varName = 1"), QP::QuerySemanticException);
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with p1.varName = 1"), QP::QuerySemanticException);
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with s1.stmt# = \"this\""), QP::QuerySemanticException);
-		REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with ct1.value = \"this\""), QP::QuerySemanticException);
+		SECTION("Invalid argument") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with _ = 20"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with 20 = _"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with 20 = \"name + 1\""), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with 20 = _\"name\"_"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with 20 = _\"name + 1\"_"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with \"name + 1\" = 20"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with _\"name\"_ = 20"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with _\"name + 1\"_ = 20"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with 20 = s1 = 20"), QP::QuerySyntaxException);
+		}
+
+		SECTION("Invalid attribute") {
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with s1.stmt = 20"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with ct1.val = 20"), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with p1.varname = \"name\""), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with r1.varname = \"name\""), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with pc1.procname = \"name\""), QP::QuerySyntaxException);
+			REQUIRE_THROWS_AS(qpp.parseQuery(UnivDeclarations + "Select s1 with c1.procname = \"name\""), QP::QuerySyntaxException);
+		}
 	}
 }
 
