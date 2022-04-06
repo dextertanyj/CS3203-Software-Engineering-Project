@@ -55,17 +55,16 @@ string QP::ClauseArgument::getSynonymSymbol() const {
 
 DesignEntity QP::ClauseArgument::getSynonymType() const {
 	DesignEntity type;
-	visit(Visitor{[](auto) { throw QP::ClauseArgumentException("Synonym not stored."); },
-	              [&](const Declaration& arg) { type = arg.type; }, [&](const Attribute& arg) { type = arg.synonym.type; }},
+	visit(Visitor{[](auto) { throw QP::ClauseArgumentException("Synonym not stored."); }, [&](const Declaration& arg) { type = arg.type; },
+	              [&](const Attribute& arg) { type = arg.synonym.type; }},
 	      value);
 	return type;
 }
 
 Attribute QP::ClauseArgument::getAttribute() const {
 	Attribute attribute;
-	visit(
-		Visitor{[](auto) { throw QP::ClauseArgumentException("Attribute not stored."); }, [&](Attribute arg) { attribute = move(arg); }},
-		value);
+	visit(Visitor{[](auto) { throw QP::ClauseArgumentException("Attribute not stored."); }, [&](Attribute arg) { attribute = move(arg); }},
+	      value);
 	return attribute;
 }
 

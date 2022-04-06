@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "QP/Dispatcher/Dispatcher.h"
 #include "QP/ClauseArgument.h"
+#include "QP/Dispatcher/Dispatcher.h"
 #include "QP/Types.h"
 
 namespace QP::Dispatcher::WithDispatcher {

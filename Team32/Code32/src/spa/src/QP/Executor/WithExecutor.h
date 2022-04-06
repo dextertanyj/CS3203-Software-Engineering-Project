@@ -5,8 +5,8 @@
 #include <unordered_set>
 #include <utility>
 
-#include "QP/QueryResult.h"
 #include "QP/ClauseArgument.h"
+#include "QP/QueryResult.h"
 #include "QP/Types.h"
 
 namespace QP::Executor::WithExecutor {
@@ -15,8 +15,8 @@ using namespace QP::Types;
 
 // Trivial Executors
 template <typename TAttribute, typename TLeft, typename TRight>
-QP::QueryResult executeTrivialAttributeAttribute(const QP::StorageAdapter& store, const ClauseArgument& lhs,
-                                                 const ClauseArgument& rhs, WithInternalExecutors<TAttribute, TLeft> lhs_executors,
+QP::QueryResult executeTrivialAttributeAttribute(const QP::StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs,
+                                                 WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                                  WithInternalExecutors<TAttribute, TRight> rhs_executors);
 template <typename TAttribute, typename TLeft, typename TRight>
 QP::QueryResult executeTrivialAttributeConstant(const QP::StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs,

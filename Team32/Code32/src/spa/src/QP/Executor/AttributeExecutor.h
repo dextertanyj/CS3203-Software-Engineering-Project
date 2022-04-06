@@ -3,8 +3,8 @@
 
 #include <unordered_set>
 
-#include "QP/Executor/Executor.h"
 #include "QP/ClauseArgument.h"
+#include "QP/Executor/Executor.h"
 #include "QP/StorageAdapter.h"
 
 namespace QP::Executor::AttributeExecutor {

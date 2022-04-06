@@ -1,9 +1,9 @@
 #ifndef SPA_SRC_QP_RELATIONSHIP_RELATION_H
 #define SPA_SRC_QP_RELATIONSHIP_RELATION_H
 
+#include "QP/ClauseArgument.h"
 #include "QP/Evaluator/Evaluator.h"
 #include "QP/QueryResult.h"
-#include "QP/ClauseArgument.h"
 #include "QP/StorageAdapter.h"
 #include "QP/Types.h"
 
