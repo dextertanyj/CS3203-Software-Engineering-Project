@@ -13,13 +13,12 @@ using namespace std;
 using namespace QP::Types;
 
 static const unordered_set<ArgumentType> name_expression_wildcard = {ArgumentType::Name, ArgumentType::ExactExpression,
-                                                                      ArgumentType::SubExpression, ArgumentType::Wildcard};
+                                                                     ArgumentType::SubExpression, ArgumentType::Wildcard};
 static const unordered_set<ArgumentType> statement = {ArgumentType::Number, ArgumentType::Wildcard, ArgumentType::Synonym};
 static const unordered_set<ArgumentType> entity = {ArgumentType::Name, ArgumentType::Wildcard, ArgumentType::Synonym};
 static const unordered_set<ArgumentType> statement_entity = {ArgumentType::Name, ArgumentType::Number, ArgumentType::Wildcard,
-                                                              ArgumentType::Synonym};
-static const unordered_set<ArgumentType> expression = {ArgumentType::ExactExpression, ArgumentType::SubExpression,
-                                                        ArgumentType::Wildcard};
+                                                             ArgumentType::Synonym};
+static const unordered_set<ArgumentType> expression = {ArgumentType::ExactExpression, ArgumentType::SubExpression, ArgumentType::Wildcard};
 static const unordered_set<ArgumentType> wildcard = {ArgumentType::Wildcard};
 static const unordered_set<ArgumentType> attribute = {ArgumentType::Attribute, ArgumentType::Name, ArgumentType::Number};
 static const unordered_set<ArgumentType> synonym = {ArgumentType::Synonym};

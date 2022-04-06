@@ -15,8 +15,7 @@ using upper_map = unordered_map<ArgumentDispatchKey, lower_map>;
 
 static const upper_map map = {
 	{ArgumentType::Name,
-     {{ArgumentType::Wildcard,
-       {{ArgumentType::Wildcard, PatternContainerStatementExecutor::executorFactoryName<ClauseType::PatternIf>}}}}},
+     {{ArgumentType::Wildcard, {{ArgumentType::Wildcard, PatternContainerStatementExecutor::executorFactoryName<ClauseType::PatternIf>}}}}},
 	{ArgumentType::Wildcard,
      {{ArgumentType::Wildcard,
        {{ArgumentType::Wildcard, PatternContainerStatementExecutor::executorFactoryWildcard<ClauseType::PatternIf>}}}}},
