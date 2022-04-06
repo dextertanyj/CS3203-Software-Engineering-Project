@@ -197,7 +197,7 @@ TEST_CASE("QueryPreprocessor::parseQuery Select attribute") {
 
 	SECTION("Single attribute") {
 		qp = qpp.parseQuery(UnivDeclarations + "Select s1.stmt#");
-		REQUIRE(qp.getSelectList()[0].getType() == QP::Types::ReferenceType::Attribute);
+		REQUIRE(qp.getSelectList()[0].getType() == QP::Types::ArgumentType::Attribute);
 		REQUIRE(qp.getSelectList()[0].getAttributeType() == QP::Types::AttributeType::NumberIdentifier);
 		REQUIRE(qp.getSelectList()[0].getSynonymSymbol() == "s1");
 		REQUIRE(qp.getSelectList()[0].getSynonymType() == QP::Types::DesignEntity::Stmt);
@@ -205,10 +205,10 @@ TEST_CASE("QueryPreprocessor::parseQuery Select attribute") {
 
 	SECTION("Attribute and synonym") {
 		qp = qpp.parseQuery(UnivDeclarations + "Select <s1, s1.stmt#>");
-		REQUIRE(qp.getSelectList()[0].getType() == QP::Types::ReferenceType::Synonym);
+		REQUIRE(qp.getSelectList()[0].getType() == QP::Types::ArgumentType::Synonym);
 		REQUIRE(qp.getSelectList()[0].getSynonymSymbol() == "s1");
 		REQUIRE(qp.getSelectList()[0].getSynonymType() == QP::Types::DesignEntity::Stmt);
-		REQUIRE(qp.getSelectList()[1].getType() == QP::Types::ReferenceType::Attribute);
+		REQUIRE(qp.getSelectList()[1].getType() == QP::Types::ArgumentType::Attribute);
 		REQUIRE(qp.getSelectList()[1].getAttributeType() == QP::Types::AttributeType::NumberIdentifier);
 		REQUIRE(qp.getSelectList()[1].getSynonymSymbol() == "s1");
 		REQUIRE(qp.getSelectList()[1].getSynonymType() == QP::Types::DesignEntity::Stmt);
@@ -216,15 +216,15 @@ TEST_CASE("QueryPreprocessor::parseQuery Select attribute") {
 
 	SECTION("Multiple attributes") {
 		qp = qpp.parseQuery(UnivDeclarations + "Select <s1.stmt#, s2.stmt#, p1.varName>");
-		REQUIRE(qp.getSelectList()[0].getType() == QP::Types::ReferenceType::Attribute);
+		REQUIRE(qp.getSelectList()[0].getType() == QP::Types::ArgumentType::Attribute);
 		REQUIRE(qp.getSelectList()[0].getAttributeType() == QP::Types::AttributeType::NumberIdentifier);
 		REQUIRE(qp.getSelectList()[0].getSynonymSymbol() == "s1");
 		REQUIRE(qp.getSelectList()[0].getSynonymType() == QP::Types::DesignEntity::Stmt);
-		REQUIRE(qp.getSelectList()[1].getType() == QP::Types::ReferenceType::Attribute);
+		REQUIRE(qp.getSelectList()[1].getType() == QP::Types::ArgumentType::Attribute);
 		REQUIRE(qp.getSelectList()[1].getAttributeType() == QP::Types::AttributeType::NumberIdentifier);
 		REQUIRE(qp.getSelectList()[1].getSynonymSymbol() == "s2");
 		REQUIRE(qp.getSelectList()[1].getSynonymType() == QP::Types::DesignEntity::Stmt);
-		REQUIRE(qp.getSelectList()[2].getType() == QP::Types::ReferenceType::Attribute);
+		REQUIRE(qp.getSelectList()[2].getType() == QP::Types::ArgumentType::Attribute);
 		REQUIRE(qp.getSelectList()[2].getAttributeType() == QP::Types::AttributeType::VariableName);
 		REQUIRE(qp.getSelectList()[2].getSynonymSymbol() == "p1");
 		REQUIRE(qp.getSelectList()[2].getSynonymType() == QP::Types::DesignEntity::Print);

@@ -24,16 +24,16 @@ QP::ClauseArgument::ClauseArgument(Common::ExpressionProcessor::Expression expre
  *
  * The type is determined through the use of exhaustive overloaded visitor functions that capture the argument type to an external variable.
  */
-ReferenceType QP::ClauseArgument::getType() const {
-	ReferenceType type = ReferenceType::Wildcard;
-	visit(Visitor{[&](const StmtRef& /*unused*/) { type = ReferenceType::StatementIndex; },
-	              [&](const Declaration& /*unused*/) { type = ReferenceType::Synonym; },
-	              [&](const string& /*unused*/) { type = ReferenceType::Name; },
+ArgumentType QP::ClauseArgument::getType() const {
+	ArgumentType type = ArgumentType::Wildcard;
+	visit(Visitor{[&](const StmtRef& /*unused*/) { type = ArgumentType::Number; },
+	              [&](const Declaration& /*unused*/) { type = ArgumentType::Synonym; },
+	              [&](const string& /*unused*/) { type = ArgumentType::Name; },
 	              [&](const pair<Common::ExpressionProcessor::Expression, bool>& arg) {
-					  type = arg.second ? ReferenceType::ExactExpression : ReferenceType::SubExpression;
+					  type = arg.second ? ArgumentType::ExactExpression : ArgumentType::SubExpression;
 				  },
-	              [&](const Attribute& /*unused*/) { type = ReferenceType::Attribute; },
-	              [&](const monostate& /*unused*/) { type = ReferenceType::Wildcard; }},
+	              [&](const Attribute& /*unused*/) { type = ArgumentType::Attribute; },
+	              [&](const monostate& /*unused*/) { type = ArgumentType::Wildcard; }},
 	      value);
 	return type;
 }

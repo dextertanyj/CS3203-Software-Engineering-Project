@@ -38,7 +38,7 @@ const unordered_map<QP::Types::DispatchAttributeKey, function<string(const QP::S
 	{{QP::Types::DesignEntity::Print, QP::Types::AttributeType::VariableName}, statementToVariable<QP::Types::ClauseType::UsesS>}};
 
 static inline string applyTransform(const QP::StorageAdapter& store, const QP::ClauseArgument& argument, string result) {
-	if (argument.getType() == QP::Types::ReferenceType::Synonym) {
+	if (argument.getType() == QP::Types::ArgumentType::Synonym) {
 		return result;
 	}
 	auto iter = transform_map.find({argument.getSynonymType(), argument.getAttributeType()});
