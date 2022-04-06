@@ -238,8 +238,7 @@ public:
 	};
 
 	// Pattern Assign
-	[[nodiscard]] bool patternExists(const VarRef& name, const Common::EP::Expression& expression,
-	                                 bool is_exact_match) const {
+	[[nodiscard]] bool patternExists(const VarRef& name, const Common::EP::Expression& expression, bool is_exact_match) const {
 		return pkb.patternExists(name, expression, is_exact_match);
 	};
 	[[nodiscard]] StmtInfoPtrSet getStmtsWithPattern(const VarRef& name, const Common::EP::Expression& expression,
@@ -247,8 +246,7 @@ public:
 		return pkb.getStmtsWithPattern(name, expression, is_exact_match);
 	};
 	[[nodiscard]] StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& name) const { return pkb.getStmtsWithPatternLHS(name); };
-	[[nodiscard]] StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::EP::Expression& expression,
-	                                                          bool is_exact_match) const {
+	[[nodiscard]] StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match) const {
 		return pkb.getStmtsWithPatternRHS(expression, is_exact_match);
 	}
 

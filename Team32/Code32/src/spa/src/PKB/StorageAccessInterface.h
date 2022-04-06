@@ -45,8 +45,7 @@ public:
 
 	// Assign get methods
 	virtual bool patternExists(const VarRef& name, const Common::EP::Expression& expression, bool is_exact_match) = 0;
-	virtual StmtInfoPtrSet getStmtsWithPattern(const VarRef& name, const Common::EP::Expression& expression,
-	                                           bool is_exact_match) = 0;
+	virtual StmtInfoPtrSet getStmtsWithPattern(const VarRef& name, const Common::EP::Expression& expression, bool is_exact_match) = 0;
 	virtual StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& name) = 0;
 	virtual StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match) = 0;
 

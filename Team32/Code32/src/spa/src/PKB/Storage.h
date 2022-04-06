@@ -100,8 +100,7 @@ public:
 
 	// Assign get methods
 	bool patternExists(const VarRef& name, const Common::EP::Expression& expression, bool is_exact_match) override;
-	StmtInfoPtrSet getStmtsWithPattern(const VarRef& name, const Common::EP::Expression& expression,
-	                                   bool is_exact_match) override;
+	StmtInfoPtrSet getStmtsWithPattern(const VarRef& name, const Common::EP::Expression& expression, bool is_exact_match) override;
 	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& name) override;
 	StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match) override;
 
