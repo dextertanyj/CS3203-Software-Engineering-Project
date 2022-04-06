@@ -41,7 +41,7 @@ namespace QP::Executor::WithExecutor {
 using namespace std;
 
 template <typename TAttribute, typename TLeft, typename TRight>
-QueryResult executeTrivialAttributeAttribute(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+QueryResult executeTrivialAttributeAttribute(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs,
                                              WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                              WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	unordered_set<TLeft> left_values = lhs_executors.first(store, lhs);
@@ -56,7 +56,7 @@ QueryResult executeTrivialAttributeAttribute(const StorageAdapter& store, const 
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-QueryResult executeTrivialAttributeConstant(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+QueryResult executeTrivialAttributeConstant(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs,
                                             WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                             WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	unordered_set<TLeft> left_values = lhs_executors.first(store, lhs);
@@ -70,14 +70,14 @@ QueryResult executeTrivialAttributeConstant(const StorageAdapter& store, const R
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-QueryResult executeTrivialConstantAttribute(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+QueryResult executeTrivialConstantAttribute(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs,
                                             WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                             WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	return executeTrivialAttributeConstant(store, rhs, lhs, rhs_executors, lhs_executors);
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-QueryResult executeTrivialConstantConstant(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+QueryResult executeTrivialConstantConstant(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs,
                                            WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                            WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	TAttribute left_value = lhs_executors.second(store, (*lhs_executors.first(store, lhs).begin()));
@@ -104,7 +104,7 @@ static QueryResult hashJoin(const StorageAdapter& store, HashInfo<TAttribute, TB
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-QueryResult executeAttributeAttribute(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+QueryResult executeAttributeAttribute(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs,
                                       WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                       WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	unordered_set<TLeft> left_values = lhs_executors.first(store, lhs);
@@ -119,7 +119,7 @@ QueryResult executeAttributeAttribute(const StorageAdapter& store, const Referen
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-QueryResult executeAttributeConstant(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+QueryResult executeAttributeConstant(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs,
                                      WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                      WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	unordered_set<TLeft> left_values = lhs_executors.first(store, lhs);
@@ -134,7 +134,7 @@ QueryResult executeAttributeConstant(const StorageAdapter& store, const Referenc
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-QueryResult executeConstantAttribute(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+QueryResult executeConstantAttribute(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs,
                                      WithInternalExecutors<TAttribute, TLeft> lhs_executors,
                                      WithInternalExecutors<TAttribute, TRight> rhs_executors) {
 	return executeAttributeConstant(store, rhs, lhs, rhs_executors, lhs_executors);

@@ -1,7 +1,7 @@
 #ifndef SPA_SRC_QP_QUERYPROPERTIES_H
 #define SPA_SRC_QP_QUERYPROPERTIES_H
 
-#include "QP/ReferenceArgument.h"
+#include "QP/ClauseArgument.h"
 #include "QP/Types.h"
 
 class QP::QueryProperties {

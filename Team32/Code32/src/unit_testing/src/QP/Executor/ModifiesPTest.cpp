@@ -20,12 +20,12 @@ TEST_CASE("ProcedureVariableExecutor<ClauseType::ModifiesP>::execute") {
 	pkb.setProc("B", 3, 4);
 	pkb.populateComplexRelations();
 
-	ReferenceArgument left_proc_no1 = ReferenceArgument("A");
-	ReferenceArgument left_proc_no2 = ReferenceArgument("B");
-	ReferenceArgument left_proc_no3 = ReferenceArgument(Declaration{DesignEntity::Procedure, "procedure"});
-	ReferenceArgument x = ReferenceArgument("x");
-	ReferenceArgument y = ReferenceArgument("y");
-	ReferenceArgument var = ReferenceArgument(Declaration{DesignEntity::Variable, "var"});
+	ClauseArgument left_proc_no1 = ClauseArgument("A");
+	ClauseArgument left_proc_no2 = ClauseArgument("B");
+	ClauseArgument left_proc_no3 = ClauseArgument(Declaration{DesignEntity::Procedure, "procedure"});
+	ClauseArgument x = ClauseArgument("x");
+	ClauseArgument y = ClauseArgument("y");
+	ClauseArgument var = ClauseArgument(Declaration{DesignEntity::Variable, "var"});
 
 	SECTION("Trivial: Name & Name") {
 		QueryResult result1 = executeTrivialNameName<ClauseType::ModifiesP>(store, left_proc_no1, x);

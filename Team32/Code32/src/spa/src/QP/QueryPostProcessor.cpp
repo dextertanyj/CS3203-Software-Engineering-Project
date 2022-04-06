@@ -37,7 +37,7 @@ const unordered_map<QP::Types::DispatchAttributeKey, function<string(const QP::S
 	{{QP::Types::DesignEntity::Call, QP::Types::AttributeType::ProcedureName}, callToProcedure},
 	{{QP::Types::DesignEntity::Print, QP::Types::AttributeType::VariableName}, statementToVariable<QP::Types::ClauseType::UsesS>}};
 
-static inline string applyTransform(const QP::StorageAdapter& store, const QP::ReferenceArgument& argument, string result) {
+static inline string applyTransform(const QP::StorageAdapter& store, const QP::ClauseArgument& argument, string result) {
 	if (argument.getType() == QP::Types::ReferenceType::Synonym) {
 		return result;
 	}
@@ -58,7 +58,7 @@ vector<string> QP::QueryPostProcessor::processStandardResult(QueryProperties& qu
 	Types::SelectList select_list = query_properties.getSelectList();
 	vector<string> synonyms(select_list.size());
 	transform(select_list.begin(), select_list.end(), synonyms.begin(),
-	          [](const ReferenceArgument& argument) { return argument.getSynonymSymbol(); });
+	          [](const ClauseArgument& argument) { return argument.getSynonymSymbol(); });
 
 	for (size_t i = 0; i < table_size; i++) {
 		ResultRow row = query_result.getRowWithOrder(synonyms, i);

@@ -28,8 +28,8 @@ struct hash<QP::Types::Attribute> {
 };
 
 template <>
-struct hash<QP::ReferenceArgument> {
-	std::size_t operator()(const QP::ReferenceArgument& key) const { return hash<QP::Types::ArgumentValue>()(key.value); }
+struct hash<QP::ClauseArgument> {
+	std::size_t operator()(const QP::ClauseArgument& key) const { return hash<QP::Types::ArgumentValue>()(key.value); }
 };
 
 template <>

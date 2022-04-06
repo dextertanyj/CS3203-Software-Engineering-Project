@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_REFERENCEARGUMENT_H
-#define SPA_SRC_QP_REFERENCEARGUMENT_H
+#ifndef SPA_SRC_QP_CLAUSEARGUMENT_H
+#define SPA_SRC_QP_CLAUSEARGUMENT_H
 
 #include <string>
 #include <variant>
@@ -9,38 +9,38 @@
 #include "QP/QP.h"
 #include "QP/Types.h"
 
-class QP::ReferenceArgument {
+class QP::ClauseArgument {
 public:
 	/**
-	 * Constructs a ReferenceArgument object with wildcard type.
+	 * Constructs a ClauseArgument object with wildcard type.
 	 */
-	explicit ReferenceArgument();
+	explicit ClauseArgument();
 
 	/**
-	 * Constructs a ReferenceArgument object with synonym type.
+	 * Constructs a ClauseArgument object with synonym type.
 	 * @param synonym
 	 */
-	explicit ReferenceArgument(Types::Declaration synonym);
+	explicit ClauseArgument(Types::Declaration synonym);
 
 	/**
-	 * Constructs a ReferenceArgument object with synonym and attribute type.
+	 * Constructs a ClauseArgument object with synonym and attribute type.
 	 * @param attribute
 	 */
-	explicit ReferenceArgument(Types::Attribute attribute);
+	explicit ClauseArgument(Types::Attribute attribute);
 
 	/**
-	 * Constructs a ReferenceArgument object with synonym type.
+	 * Constructs a ClauseArgument object with synonym type.
 	 * @param name
 	 */
-	explicit ReferenceArgument(std::string name);
+	explicit ClauseArgument(std::string name);
 
 	/**
-	 * Constructs a ReferenceArgument object storing a statement index.
+	 * Constructs a ClauseArgument object storing a statement index.
 	 * @param statement_index
 	 */
-	explicit ReferenceArgument(StmtRef statement_index);
+	explicit ClauseArgument(StmtRef statement_index);
 
-	explicit ReferenceArgument(Common::ExpressionProcessor::Expression expression, bool exact);
+	explicit ClauseArgument(Common::ExpressionProcessor::Expression expression, bool exact);
 
 	/**
 	 * Returns the type of reference stored.
@@ -50,7 +50,7 @@ public:
 
 	/**
 	 * Returns the synonym stored.
-	 * @throws ReferenceArgumentException if a synonym is not stored.
+	 * @throws ClauseArgumentException if a synonym is not stored.
 	 * @return the synonym stored.
 	 */
 	[[nodiscard]] Types::Declaration getSynonym() const;
@@ -60,7 +60,7 @@ public:
 
 	/**
 	 * Returns the synonym and attribute stored.
-	 * @throws ReferenceArgumentException if a synonym and attribute are not stored.
+	 * @throws ClauseArgumentException if a synonym and attribute are not stored.
 	 * @return the synonym and attribute stored.
 	 */
 	[[nodiscard]] Types::Attribute getAttribute() const;
@@ -68,31 +68,31 @@ public:
 
 	/**
 	 * Returns the name stored.
-	 * @throws ReferenceArgumentException if a name is not stored.
+	 * @throws ClauseArgumentException if a name is not stored.
 	 * @return the name stored.
 	 */
 	[[nodiscard]] std::string getName() const;
 
 	/**
 	 * Returns the statement index stored.
-	 * @throws ReferenceArgumentException if a statement index is not stored.
+	 * @throws ClauseArgumentException if a statement index is not stored.
 	 * @return the statement index stored.
 	 */
 	[[nodiscard]] StmtRef getStatementIndex() const;
 
 	/**
 	 * Returns the expression stored.
-	 * @throws ReferenceArgumentException if an expression is not stored.
+	 * @throws ClauseArgumentException if an expression is not stored.
 	 * @return the expression stored.
 	 */
 	[[nodiscard]] Common::ExpressionProcessor::Expression getExpression() const;
 
-	[[nodiscard]] bool operator==(const ReferenceArgument& other) const;
+	[[nodiscard]] bool operator==(const ClauseArgument& other) const;
 
-	friend std::hash<ReferenceArgument>;
+	friend std::hash<ClauseArgument>;
 
 private:
 	Types::ArgumentValue value;
 };
 
-#endif  // SPA_SRC_QP_REFERENCEARGUMENT_H
+#endif  // SPA_SRC_QP_CLAUSEARGUMENT_H

@@ -1,7 +1,7 @@
 #include "QP/QueryPostProcessor.h"
 
 #include "PKB/Storage.h"
-#include "QP/ReferenceArgument.h"
+#include "QP/ClauseArgument.h"
 #include "catch.hpp"
 
 using namespace QP;
@@ -12,7 +12,7 @@ TEST_CASE("QueryPostProcessor::processResult No results") {
 	StorageAdapter store(pkb);
 	QueryPostProcessor post_processor(store);
 
-	QueryProperties properties = QueryProperties({}, {ReferenceArgument{{DesignEntity::Stmt, "s"}}}, {});
+	QueryProperties properties = QueryProperties({}, {ClauseArgument{{DesignEntity::Stmt, "s"}}}, {});
 	QueryResult result = QueryResult();
 	REQUIRE(post_processor.processResult(properties, result).empty());
 }
@@ -22,7 +22,7 @@ TEST_CASE("QueryPostProcessor::processResult List of statement number") {
 	StorageAdapter store(pkb);
 	QueryPostProcessor post_processor(store);
 
-	QueryProperties properties = QueryProperties({}, {ReferenceArgument{{DesignEntity::Stmt, "s"}}}, {});
+	QueryProperties properties = QueryProperties({}, {ClauseArgument{{DesignEntity::Stmt, "s"}}}, {});
 	QueryResult result = QueryResult(vector<string>{"s"});
 	result.addRow({"1"});
 	result.addRow({"2"});
@@ -54,8 +54,8 @@ TEST_CASE("QueryPostProcessor::processResult Tuple") {
 	QueryPostProcessor post_processor(store);
 
 	SelectList select_list = {
-		ReferenceArgument{{DesignEntity::Stmt, "s"}},
-		ReferenceArgument{{DesignEntity::Stmt, "s1"}},
+		ClauseArgument{{DesignEntity::Stmt, "s"}},
+		ClauseArgument{{DesignEntity::Stmt, "s1"}},
 	};
 	QueryProperties properties = QueryProperties({}, select_list, {});
 	QueryResult result = QueryResult(vector<string>{"s", "s1"});
@@ -75,8 +75,8 @@ TEST_CASE("QueryPostProcessor::processResult Tuple repeated") {
 	QueryPostProcessor post_processor(store);
 
 	SelectList select_list = {
-		ReferenceArgument{{DesignEntity::Stmt, "s"}},
-		ReferenceArgument{{DesignEntity::Stmt, "s"}},
+		ClauseArgument{{DesignEntity::Stmt, "s"}},
+		ClauseArgument{{DesignEntity::Stmt, "s"}},
 	};
 	QueryProperties properties = QueryProperties({}, select_list, {});
 	QueryResult result = QueryResult(vector<string>{"s", "s1"});
@@ -95,7 +95,7 @@ TEST_CASE("QueryPostProcessor::processResult Trivial Attribute") {
 	StorageAdapter store(pkb);
 	QueryPostProcessor post_processor(store);
 
-	QueryProperties properties = QueryProperties({}, {ReferenceArgument{{AttributeType::NumberIdentifier, {DesignEntity::Stmt, "s"}}}}, {});
+	QueryProperties properties = QueryProperties({}, {ClauseArgument{{AttributeType::NumberIdentifier, {DesignEntity::Stmt, "s"}}}}, {});
 	QueryResult result = QueryResult(vector<string>{"s"});
 	result.addRow({"1"});
 	result.addRow({"2"});
@@ -118,7 +118,7 @@ TEST_CASE("QueryPostProcessor::processResult Attribute") {
 	StorageAdapter store(pkb);
 	QueryPostProcessor post_processor(store);
 
-	QueryProperties properties = QueryProperties({}, {ReferenceArgument{{AttributeType::VariableName, {DesignEntity::Print, "p"}}}}, {});
+	QueryProperties properties = QueryProperties({}, {ClauseArgument{{AttributeType::VariableName, {DesignEntity::Print, "p"}}}}, {});
 	QueryResult result = QueryResult(vector<string>{"p"});
 	result.addRow({"1"});
 	result.addRow({"2"});

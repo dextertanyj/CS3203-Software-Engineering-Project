@@ -4,19 +4,19 @@
 #include <unordered_set>
 
 #include "QP/Executor/Executor.h"
-#include "QP/ReferenceArgument.h"
+#include "QP/ClauseArgument.h"
 #include "QP/StorageAdapter.h"
 
 namespace QP::Executor::AttributeExecutor {
 // Constant extractors
-std::unordered_set<Types::Name> extractName(const QP::StorageAdapter& store, const ReferenceArgument& argument);
-std::unordered_set<Types::Number> extractNumber(const QP::StorageAdapter& store, const ReferenceArgument& argument);
+std::unordered_set<Types::Name> extractName(const QP::StorageAdapter& store, const ClauseArgument& argument);
+std::unordered_set<Types::Number> extractNumber(const QP::StorageAdapter& store, const ClauseArgument& argument);
 
 // Select executors
-std::unordered_set<Types::Number> selectStatements(const QP::StorageAdapter& store, const ReferenceArgument& argument);
-std::unordered_set<Types::Number> selectConstants(const QP::StorageAdapter& store, const ReferenceArgument& argument);
-std::unordered_set<Types::Name> selectProcedures(const QP::StorageAdapter& store, const ReferenceArgument& argument);
-std::unordered_set<Types::Name> selectVariables(const QP::StorageAdapter& store, const ReferenceArgument& argument);
+std::unordered_set<Types::Number> selectStatements(const QP::StorageAdapter& store, const ClauseArgument& argument);
+std::unordered_set<Types::Number> selectConstants(const QP::StorageAdapter& store, const ClauseArgument& argument);
+std::unordered_set<Types::Name> selectProcedures(const QP::StorageAdapter& store, const ClauseArgument& argument);
+std::unordered_set<Types::Name> selectVariables(const QP::StorageAdapter& store, const ClauseArgument& argument);
 
 // Attribute mappers
 template <typename T>

@@ -45,12 +45,12 @@ static Common::ExpressionProcessor::Expression convertNameToExpression(const str
 	return parser.parse();
 }
 
-ExecutorSetBundle QP::Dispatcher::PatternAssignDispatcher::dispatcher(vector<ReferenceArgument>& args) {
+ExecutorSetBundle QP::Dispatcher::PatternAssignDispatcher::dispatcher(vector<ClauseArgument>& args) {
 	// Single token exact match expressions are parsed as a name and require conversion.
 	if (args.size() == PATTERN_ARGUMENT_COUNT && args[EXPRESSION_ARGUMENT_INDEX].getType() == Types::ReferenceType::Name) {
 		auto name = args[EXPRESSION_ARGUMENT_INDEX].getName();
 		auto expression = convertNameToExpression(name);
-		args[EXPRESSION_ARGUMENT_INDEX] = ReferenceArgument{move(expression), EXACT_MATCH};
+		args[EXPRESSION_ARGUMENT_INDEX] = ClauseArgument{move(expression), EXACT_MATCH};
 	}
 	return DispatchProcessors::processArgument(ClauseType::PatternAssign, argument_dispatch_map, args);
 }

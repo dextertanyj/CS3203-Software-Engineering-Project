@@ -21,12 +21,12 @@ TEST_CASE("Executor::ProcedureExecutor<ClauseType::CallsT>::execute") {
 	pkb.setCall(3, "proc3");
 	pkb.populateComplexRelations();
 
-	ReferenceArgument proc1 = ReferenceArgument("proc1");
-	ReferenceArgument proc2 = ReferenceArgument("proc2");
-	ReferenceArgument proc3 = ReferenceArgument("proc3");
-	ReferenceArgument proc_synonym_1 = ReferenceArgument(Declaration{DesignEntity::Procedure, "p1"});
-	ReferenceArgument proc_synonym_2 = ReferenceArgument(Declaration{DesignEntity::Procedure, "p2"});
-	ReferenceArgument wildcard = ReferenceArgument();
+	ClauseArgument proc1 = ClauseArgument("proc1");
+	ClauseArgument proc2 = ClauseArgument("proc2");
+	ClauseArgument proc3 = ClauseArgument("proc3");
+	ClauseArgument proc_synonym_1 = ClauseArgument(Declaration{DesignEntity::Procedure, "p1"});
+	ClauseArgument proc_synonym_2 = ClauseArgument(Declaration{DesignEntity::Procedure, "p2"});
+	ClauseArgument wildcard = ClauseArgument();
 
 	SECTION("Trivial: Name & Name") {
 		QueryResult result1 = executeTrivialNameName<ClauseType::CallsT>(store, proc1, proc3);
