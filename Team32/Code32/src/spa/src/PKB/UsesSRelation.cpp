@@ -24,8 +24,7 @@ bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const S
 	                [variable](const VarRef& existing_var) { return existing_var != variable; }));
 }
 
-bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const StmtInfoPtr& statement,
-                                  const VarRefSet& variables) {
+bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const StmtInfoPtr& statement, const VarRefSet& variables) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Read) {
 		return false;
@@ -53,16 +52,15 @@ void PKB::UsesSRelation::optimize(Types::ParentStore& parent_store, CallsStateme
 	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {
 		vector<StmtInfoPtr> stmts_in_proc = proc_iterator->get()->getStatements();
 		// For any procedure, we must process the call statements first before propagating the conditional statements.
-		for_each(stmts_in_proc.begin(), stmts_in_proc.end(), [&call_store, &proc_store, &store](const StmtInfoPtr& info) {
-			optimizeCall(info, call_store, proc_store, store);
-		});
 		for_each(stmts_in_proc.begin(), stmts_in_proc.end(),
-		              [&parent_store, &store](const StmtInfoPtr& info) { optimizeConditional(info, parent_store, store); });
+		         [&call_store, &proc_store, &store](const StmtInfoPtr& info) { optimizeCall(info, call_store, proc_store, store); });
+		for_each(stmts_in_proc.begin(), stmts_in_proc.end(),
+		         [&parent_store, &store](const StmtInfoPtr& info) { optimizeConditional(info, parent_store, store); });
 	}
 }
 
-void PKB::UsesSRelation::optimizeCall(const StmtInfoPtr& statement, CallsStatementStore& call_store,
-                                      Types::ProcedureStore& proc_store, SVRelationStore<UsesSRelation>& store) {
+void PKB::UsesSRelation::optimizeCall(const StmtInfoPtr& statement, CallsStatementStore& call_store, Types::ProcedureStore& proc_store,
+                                      SVRelationStore<UsesSRelation>& store) {
 	if (statement->getType() != StmtType::Call) {
 		return;
 	}

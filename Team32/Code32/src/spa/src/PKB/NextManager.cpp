@@ -26,8 +26,7 @@ bool PKB::NextManager::checkNextStar(StmtRef first, StmtRef second) {
 	}
 	if (previous_cache.find(second) != previous_cache.end()) {
 		StmtInfoPtrSet previous_set = previous_cache.at(second);
-		return any_of(previous_set.begin(), previous_set.end(),
-		              [&](const StmtInfoPtr& info) { return info->getIdentifier() == first; });
+		return any_of(previous_set.begin(), previous_set.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == first; });
 	}
 	if (control_flow_graph.getGraphIndex(first) != control_flow_graph.getGraphIndex(second)) {
 		return false;
@@ -101,12 +100,10 @@ bool PKB::NextManager::checkNextStarOptimized(const StmtRef& first_node, const S
 	size_t distance_to_start = start - second_node;
 	if (distance_to_end < distance_to_start) {
 		StmtInfoPtrSet next_set = getNextStar(first_node);
-		return any_of(next_set.begin(), next_set.end(),
-		              [&](const StmtInfoPtr& info) { return info->getIdentifier() == second_node; });
+		return any_of(next_set.begin(), next_set.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == second_node; });
 	}
 	StmtInfoPtrSet previous_set = getPreviousStar(second_node);
-	return any_of(previous_set.begin(), previous_set.end(),
-	              [&](const StmtInfoPtr& info) { return info->getIdentifier() == first_node; });
+	return any_of(previous_set.begin(), previous_set.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == first_node; });
 }
 
 template <class Comparator>

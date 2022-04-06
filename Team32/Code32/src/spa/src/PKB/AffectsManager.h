@@ -34,8 +34,8 @@ private:
 	};
 
 	struct CacheGraphNode {
-		StmtInfoPtrSet statements;                           // NOLINT(misc-non-private-member-variables-in-classes)
-		bool strongly_connected;                             // NOLINT(misc-non-private-member-variables-in-classes)
+		StmtInfoPtrSet statements;                                     // NOLINT(misc-non-private-member-variables-in-classes)
+		bool strongly_connected;                                       // NOLINT(misc-non-private-member-variables-in-classes)
 		std::unordered_set<std::shared_ptr<CacheGraphNode>> affected;  // NOLINT(misc-non-private-member-variables-in-classes)
 		std::unordered_set<std::shared_ptr<CacheGraphNode>> affects;   // NOLINT(misc-non-private-member-variables-in-classes)
 

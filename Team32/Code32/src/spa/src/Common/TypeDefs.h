@@ -41,15 +41,11 @@ using StmtRefSet = std::unordered_set<StmtRef>;
 using StmtInfoPtrVarRefSet = std::unordered_set<std::pair<StmtInfoPtr, VarRef>>;
 
 struct LessComparator {
-	bool operator()(const StmtInfoPtr& lhs, const StmtInfoPtr& rhs) const {
-		return lhs->getIdentifier() < rhs->getIdentifier();
-	}
+	bool operator()(const StmtInfoPtr& lhs, const StmtInfoPtr& rhs) const { return lhs->getIdentifier() < rhs->getIdentifier(); }
 };
 
 struct GreaterComparator {
-	bool operator()(const StmtInfoPtr& lhs, const StmtInfoPtr& rhs) const {
-		return lhs->getIdentifier() > rhs->getIdentifier();
-	}
+	bool operator()(const StmtInfoPtr& lhs, const StmtInfoPtr& rhs) const { return lhs->getIdentifier() > rhs->getIdentifier(); }
 };
 
 #endif

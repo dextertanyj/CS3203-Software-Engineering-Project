@@ -21,8 +21,7 @@ public:
 
 private:
 	std::unordered_map<StmtRef, ProcRef> map;
-	void populate(const StmtInfoPtr& stmt, const PKB::Types::ProcedureStore& procedures,
-	              const std::shared_ptr<ProcedureInfo>& procedure,
+	void populate(const StmtInfoPtr& stmt, const PKB::Types::ProcedureStore& procedures, const std::shared_ptr<ProcedureInfo>& procedure,
 	              TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>& store) const;
 };
 

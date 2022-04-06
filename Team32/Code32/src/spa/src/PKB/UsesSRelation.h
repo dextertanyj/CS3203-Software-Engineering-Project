@@ -18,10 +18,8 @@ public:
 private:
 	static void optimizeCall(const StmtInfoPtr& statement, CallsStatementStore& call_store, Types::ProcedureStore& proc_store,
 	                         SVRelationStore<UsesSRelation>& store);
-	static void optimizeConditional(const StmtInfoPtr& statement, Types::ParentStore& parent_store,
-	                                SVRelationStore<UsesSRelation>& store);
-	static void storeUsedVars(const StmtInfoPtr& stmt_key, const StmtInfoPtrSet& stmt_list,
-	                          SVRelationStore<UsesSRelation>& store);
+	static void optimizeConditional(const StmtInfoPtr& statement, Types::ParentStore& parent_store, SVRelationStore<UsesSRelation>& store);
+	static void storeUsedVars(const StmtInfoPtr& stmt_key, const StmtInfoPtrSet& stmt_list, SVRelationStore<UsesSRelation>& store);
 };
 
 #endif  // SPA_SRC_PKB_USESSRELATION_H

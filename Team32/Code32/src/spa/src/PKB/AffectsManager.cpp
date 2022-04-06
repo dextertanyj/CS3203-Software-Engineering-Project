@@ -13,8 +13,7 @@ bool PKB::AffectsManager::checkAffects(StmtRef first, StmtRef second) {
 		return false;
 	}
 	StmtInfoPtrSet affected_nodes = getAffects(first);
-	return any_of(affected_nodes.begin(), affected_nodes.end(),
-	              [&](const StmtInfoPtr& info) { return info->getIdentifier() == second; });
+	return any_of(affected_nodes.begin(), affected_nodes.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == second; });
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
@@ -78,8 +77,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectedLoop(StmtRef node, VarRef variabl
 	return info.nodes;
 }
 
-void PKB::AffectsManager::processDFSVisit(DFSInfo& info,
-                                          void (AffectsManager::*processor)(DFSInfo&, const StmtInfoPtr&) const) const {
+void PKB::AffectsManager::processDFSVisit(DFSInfo& info, void (AffectsManager::*processor)(DFSInfo&, const StmtInfoPtr&) const) const {
 	StmtInfoPtr current = info.node_stack.top();
 	info.node_stack.pop();
 	if (info.visited_set.find(current) != info.visited_set.end()) {
@@ -128,8 +126,7 @@ bool PKB::AffectsManager::checkAffectsStar(StmtRef first, StmtRef second) {
 		return false;
 	}
 	StmtInfoPtrSet affected_nodes = getAffectsStar(first);
-	return any_of(affected_nodes.begin(), affected_nodes.end(),
-	              [&](const StmtInfoPtr& info) { return info->getIdentifier() == second; });
+	return any_of(affected_nodes.begin(), affected_nodes.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == second; });
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {

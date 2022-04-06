@@ -56,8 +56,7 @@ struct IfControlRelation {
 	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const StmtInfoPtr& statement, const VarRef& /*var*/) {
 		return statement->getType() == StmtType::If;
 	}
-	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const StmtInfoPtr& statement,
-	                     const VarRefSet& /*var_set*/) {
+	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const StmtInfoPtr& statement, const VarRefSet& /*var_set*/) {
 		return statement->getType() == StmtType::If;
 	}
 };
@@ -66,8 +65,7 @@ struct WhileControlRelation {
 	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const StmtInfoPtr& statement, const VarRef& /*var*/) {
 		return statement->getType() == StmtType::While;
 	}
-	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const StmtInfoPtr& statement,
-	                     const VarRefSet& /*var_set*/) {
+	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const StmtInfoPtr& statement, const VarRefSet& /*var_set*/) {
 		return statement->getType() == StmtType::While;
 	}
 };

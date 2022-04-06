@@ -20,8 +20,7 @@ private:
 	                         SVRelationStore<ModifiesSRelation>& store);
 	static void optimizeConditional(const StmtInfoPtr& statement, Types::ParentStore& parent_store,
 	                                SVRelationStore<ModifiesSRelation>& store);
-	static void storeModifiedVars(const StmtInfoPtr& stmt_key, const StmtInfoPtrSet& stmt_list,
-	                              SVRelationStore<ModifiesSRelation>& store);
+	static void storeModifiedVars(const StmtInfoPtr& stmt_key, const StmtInfoPtrSet& stmt_list, SVRelationStore<ModifiesSRelation>& store);
 };
 
 #endif  // SPA_SRC_PKB_MODIFIESSRELATION_H
