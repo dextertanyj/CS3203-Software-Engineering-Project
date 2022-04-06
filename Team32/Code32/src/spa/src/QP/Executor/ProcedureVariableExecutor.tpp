@@ -8,17 +8,17 @@ namespace QP::Executor::ProcedureVariableExecutor {
 using namespace std;
 
 template <ClauseType T>
-QueryResult executeTrivialNameName(const StorageAdapter& store, const ReferenceArgument& procedure, const ReferenceArgument& variable) {
+QueryResult executeTrivialNameName(const StorageAdapter& store, const ClauseArgument& procedure, const ClauseArgument& variable) {
 	return QueryResult(store.checkProcedureVariableRelation<T>(procedure.getName(), variable.getName()));
 }
 
 template <ClauseType T>
-QueryResult executeTrivialNameWildcardOrSynonym(const StorageAdapter& store, const ReferenceArgument& procedure) {
+QueryResult executeTrivialNameWildcardOrSynonym(const StorageAdapter& store, const ClauseArgument& procedure) {
 	return QueryResult(!store.getVariableByProcedure<T>(procedure.getName()).empty());
 }
 
 template <ClauseType T>
-QueryResult executeTrivialSynonymName(const StorageAdapter& store, const ReferenceArgument& variable) {
+QueryResult executeTrivialSynonymName(const StorageAdapter& store, const ClauseArgument& variable) {
 	return QueryResult(!store.getProcedureByVariable<T>(variable.getName()).empty());
 }
 
@@ -35,7 +35,7 @@ QueryResult executeTrivialSynonymWildcardOrSynonym(const StorageAdapter& store) 
 }
 
 template <ClauseType T>
-QueryResult executeNameSynonym(const StorageAdapter& store, const ReferenceArgument& procedure, const ReferenceArgument& variable) {
+QueryResult executeNameSynonym(const StorageAdapter& store, const ClauseArgument& procedure, const ClauseArgument& variable) {
 	QueryResult result = QueryResult({variable.getSynonymSymbol()});
 	VarRefSet var_set = store.getVariableByProcedure<T>(procedure.getName());
 	for (auto const& var : var_set) {
@@ -46,7 +46,7 @@ QueryResult executeNameSynonym(const StorageAdapter& store, const ReferenceArgum
 }
 
 template <ClauseType T>
-QueryResult executeSynonymName(const StorageAdapter& store, const ReferenceArgument& procedure, const ReferenceArgument& variable) {
+QueryResult executeSynonymName(const StorageAdapter& store, const ClauseArgument& procedure, const ClauseArgument& variable) {
 	QueryResult result = QueryResult({procedure.getSynonymSymbol()});
 	ProcRefSet proc_set = store.getProcedureByVariable<T>(variable.getName());
 	for (auto const& proc : proc_set) {
@@ -57,7 +57,7 @@ QueryResult executeSynonymName(const StorageAdapter& store, const ReferenceArgum
 }
 
 template <ClauseType T>
-QueryResult executeSynonymWildcard(const StorageAdapter& store, const ReferenceArgument& procedure) {
+QueryResult executeSynonymWildcard(const StorageAdapter& store, const ClauseArgument& procedure) {
 	QueryResult result = QueryResult({procedure.getSynonymSymbol()});
 	unordered_set<ProcRef> proc_set = store.getProcedures();
 	for (auto const& proc : proc_set) {
@@ -70,7 +70,7 @@ QueryResult executeSynonymWildcard(const StorageAdapter& store, const ReferenceA
 }
 
 template <ClauseType T>
-QueryResult executeSynonymSynonym(const StorageAdapter& store, const ReferenceArgument& procedure, const ReferenceArgument& variable) {
+QueryResult executeSynonymSynonym(const StorageAdapter& store, const ClauseArgument& procedure, const ClauseArgument& variable) {
 	QueryResult result = QueryResult({procedure.getSynonymSymbol(), variable.getSynonymSymbol()});
 	unordered_set<ProcRef> proc_set = store.getProcedures();
 	vector<string> proc_column;
@@ -85,19 +85,19 @@ QueryResult executeSynonymSynonym(const StorageAdapter& store, const ReferenceAr
 }
 
 template <ClauseType T>
-ExecutorSet executorFactoryNameName(const vector<ReferenceArgument>& args) {
+ExecutorSet executorFactoryNameName(const vector<ClauseArgument>& args) {
 	return [procedure = args.at(0), variable = args.at(1)](const StorageAdapter& store) {
 		return executeTrivialNameName<T>(store, procedure, variable);
 	};
 }
 
 template <ClauseType T>
-ExecutorSet executorFactoryNameWildcard(const vector<ReferenceArgument>& args) {
+ExecutorSet executorFactoryNameWildcard(const vector<ClauseArgument>& args) {
 	return [procedure = args.at(0)](const StorageAdapter& store) { return executeTrivialNameWildcardOrSynonym<T>(store, procedure); };
 }
 
 template <ClauseType T>
-ExecutorSet executorFactoryNameSynonym(const vector<ReferenceArgument>& args) {
+ExecutorSet executorFactoryNameSynonym(const vector<ClauseArgument>& args) {
 	Types::Executor trivial_executor = [procedure = args.at(0)](const StorageAdapter& store) {
 		return executeTrivialNameWildcardOrSynonym<T>(store, procedure);
 	};
@@ -108,7 +108,7 @@ ExecutorSet executorFactoryNameSynonym(const vector<ReferenceArgument>& args) {
 }
 
 template <ClauseType T>
-ExecutorSet executorFactorySynonymName(const vector<ReferenceArgument>& args) {
+ExecutorSet executorFactorySynonymName(const vector<ClauseArgument>& args) {
 	Types::Executor trivial_executor = [variable = args.at(1)](const StorageAdapter& store) {
 		return executeTrivialSynonymName<T>(store, variable);
 	};
@@ -119,7 +119,7 @@ ExecutorSet executorFactorySynonymName(const vector<ReferenceArgument>& args) {
 }
 
 template <ClauseType T>
-ExecutorSet executorFactorySynonymWildcard(const vector<ReferenceArgument>& args) {
+ExecutorSet executorFactorySynonymWildcard(const vector<ClauseArgument>& args) {
 	Types::Executor trivial_executor = [](const StorageAdapter& store) { return executeTrivialSynonymWildcardOrSynonym<T>(store); };
 	Types::Executor executor = [procedure = args.at(0)](const StorageAdapter& store) {
 		return executeSynonymWildcard<T>(store, procedure);
@@ -128,7 +128,7 @@ ExecutorSet executorFactorySynonymWildcard(const vector<ReferenceArgument>& args
 }
 
 template <ClauseType T>
-ExecutorSet executorFactorySynonymSynonym(const vector<ReferenceArgument>& args) {
+ExecutorSet executorFactorySynonymSynonym(const vector<ClauseArgument>& args) {
 	Types::Executor trivial_executor = [](const StorageAdapter& store) { return executeTrivialSynonymWildcardOrSynonym<T>(store); };
 	Types::Executor executor = [procedure = args.at(0), variable = args.at(1)](const StorageAdapter& store) {
 		return executeSynonymSynonym<T>(store, procedure, variable);

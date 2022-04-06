@@ -3,7 +3,7 @@
 #include <cassert>
 #include <unordered_set>
 
-#include "QP/ReferenceArgument.h"
+#include "QP/ClauseArgument.h"
 #include "QP/Types.h"
 
 #define ASSIGN_WHILE_PATTERN_ARGUMENT_COUNT (3)
@@ -46,14 +46,14 @@ const unordered_map<size_t, vector<unordered_set<ReferenceType>>> pattern_syntax
 	{IF_PATTERN_ARGUMENT_COUNT, {synonym, entity, wildcard, wildcard}},
 };
 
-bool QP::Preprocessor::SyntaxValidator::validateArgumentsSyntax(ClauseType type, const vector<ReferenceArgument>& arguments) {
+bool QP::Preprocessor::SyntaxValidator::validateArgumentsSyntax(ClauseType type, const vector<ClauseArgument>& arguments) {
 	if (pattern_clauses.find(type) != pattern_clauses.end()) {
 		return validatePatternArgumentsSyntax(arguments);
 	}
 	return validateStandardArgumentsSyntax(type, arguments);
 }
 
-bool QP::Preprocessor::SyntaxValidator::validateStandardArgumentsSyntax(ClauseType type, const vector<ReferenceArgument>& arguments) {
+bool QP::Preprocessor::SyntaxValidator::validateStandardArgumentsSyntax(ClauseType type, const vector<ClauseArgument>& arguments) {
 	assert(syntax_argument_map.find(type) != syntax_argument_map.end());
 	auto expected_types = syntax_argument_map.at(type);
 	if (expected_types.size() != arguments.size()) {
@@ -68,7 +68,7 @@ bool QP::Preprocessor::SyntaxValidator::validateStandardArgumentsSyntax(ClauseTy
 	return true;
 }
 
-bool QP::Preprocessor::SyntaxValidator::validatePatternArgumentsSyntax(const vector<ReferenceArgument>& arguments) {
+bool QP::Preprocessor::SyntaxValidator::validatePatternArgumentsSyntax(const vector<ClauseArgument>& arguments) {
 	auto iter = pattern_syntax_argument_map.find(arguments.size());
 	if (iter == pattern_syntax_argument_map.end()) {
 		return false;

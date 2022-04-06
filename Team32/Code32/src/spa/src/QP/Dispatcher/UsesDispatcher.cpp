@@ -20,6 +20,6 @@ static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKe
 	{DesignEntity::While, VariableDispatcher::getStatementMap<ClauseType::UsesS>()},
 	{DesignEntity::If, VariableDispatcher::getStatementMap<ClauseType::UsesS>()}};
 
-ExecutorSetBundle QP::Dispatcher::UsesDispatcher::dispatcher(const vector<ReferenceArgument>& args) {
+ExecutorSetBundle QP::Dispatcher::UsesDispatcher::dispatcher(const vector<ClauseArgument>& args) {
 	return DispatchProcessors::processArgument(argument_dispatch_map, args);
 }

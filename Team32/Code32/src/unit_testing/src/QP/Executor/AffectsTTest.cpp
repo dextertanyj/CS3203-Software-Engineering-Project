@@ -121,14 +121,14 @@ TEST_CASE("StatementExecutor<ClauseType::AffectsT>::execute") {
 	pkb.setUses(14, "a");
 	pkb.populateComplexRelations();
 
-	ReferenceArgument stmt_no5 = ReferenceArgument(5);
-	ReferenceArgument stmt_no7 = ReferenceArgument(7);
-	ReferenceArgument stmt_no8 = ReferenceArgument(8);
-	ReferenceArgument stmt_no11 = ReferenceArgument(11);
-	ReferenceArgument stmt_no13 = ReferenceArgument(13);
-	ReferenceArgument stmt_no14 = ReferenceArgument(14);
-	ReferenceArgument assign_synonym = ReferenceArgument(Declaration{DesignEntity::Assign, "a"});
-	ReferenceArgument assign_synonym2 = ReferenceArgument(Declaration{DesignEntity::Assign, "a1"});
+	ClauseArgument stmt_no5 = ClauseArgument(5);
+	ClauseArgument stmt_no7 = ClauseArgument(7);
+	ClauseArgument stmt_no8 = ClauseArgument(8);
+	ClauseArgument stmt_no11 = ClauseArgument(11);
+	ClauseArgument stmt_no13 = ClauseArgument(13);
+	ClauseArgument stmt_no14 = ClauseArgument(14);
+	ClauseArgument assign_synonym = ClauseArgument(Declaration{DesignEntity::Assign, "a"});
+	ClauseArgument assign_synonym2 = ClauseArgument(Declaration{DesignEntity::Assign, "a1"});
 
 	SECTION("Trivial: Index & Index") {
 		QueryResult result1 = executeTrivialIndexIndex<ClauseType::AffectsT>(store, stmt_no5, stmt_no11);

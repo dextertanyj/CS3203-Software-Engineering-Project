@@ -26,6 +26,6 @@ static const upper_map map = {
 
 static const unordered_map<QP::Types::ArgumentDispatchKey, upper_map> argument_dispatch_map = {{DesignEntity::If, map}};
 
-ExecutorSetBundle QP::Dispatcher::PatternIfDispatcher::dispatcher(const vector<ReferenceArgument>& args) {
+ExecutorSetBundle QP::Dispatcher::PatternIfDispatcher::dispatcher(const vector<ClauseArgument>& args) {
 	return DispatchProcessors::processArgument(ClauseType::PatternIf, argument_dispatch_map, args);
 }

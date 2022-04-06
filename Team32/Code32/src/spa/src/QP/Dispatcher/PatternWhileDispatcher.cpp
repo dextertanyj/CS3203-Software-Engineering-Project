@@ -21,6 +21,6 @@ static const outer_map map = {
 
 static const unordered_map<QP::Types::ArgumentDispatchKey, outer_map> argument_dispatch_map = {{DesignEntity::While, map}};
 
-ExecutorSetBundle QP::Dispatcher::PatternWhileDispatcher::dispatcher(const vector<ReferenceArgument>& args) {
+ExecutorSetBundle QP::Dispatcher::PatternWhileDispatcher::dispatcher(const vector<ClauseArgument>& args) {
 	return DispatchProcessors::processArgument(ClauseType::PatternWhile, argument_dispatch_map, args);
 }

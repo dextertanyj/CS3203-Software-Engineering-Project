@@ -14,7 +14,7 @@ namespace Optimizer {}
 namespace Utilities {}
 namespace Types {}
 
-class ReferenceArgument;
+class ClauseArgument;
 class ResultTable;
 class QueryResult;
 class QueryProcessor;
