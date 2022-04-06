@@ -31,7 +31,7 @@ QueryResult executeTrivialWildcardOrSynonym(const StorageAdapter& store) {
 // Executors
 template <ClauseType T>
 QueryResult executeName(const StorageAdapter& store, const ReferenceArgument& stmt, const ReferenceArgument& var) {
-	QueryResult result = QueryResult({stmt.getSynonym().symbol});
+	QueryResult result = QueryResult({stmt.getSynonymSymbol()});
 	StmtInfoPtrSet stmt_set = store.getControlStmt<T>(var.getName());
 	for (auto const& stmt_ref : stmt_set) {
 		result.addRow({to_string(stmt_ref->getIdentifier())});
@@ -42,10 +42,10 @@ QueryResult executeName(const StorageAdapter& store, const ReferenceArgument& st
 
 template <ClauseType T>
 QueryResult executeWildcard(const StorageAdapter& store, const ReferenceArgument& stmt) {
-	QueryResult result = QueryResult({stmt.getSynonym().symbol});
+	QueryResult result = QueryResult({stmt.getSynonymSymbol()});
 	StmtInfoPtrSet stmt_set = store.getStatements();
 	for (auto const& stmt_ref : stmt_set) {
-		if (!Utilities::checkStmtTypeMatch(stmt_ref, stmt.getSynonym().type)) {
+		if (!Utilities::checkStmtTypeMatch(stmt_ref, stmt.getSynonymType())) {
 			continue;
 		}
 
@@ -60,7 +60,7 @@ QueryResult executeWildcard(const StorageAdapter& store, const ReferenceArgument
 
 template <ClauseType T>
 QueryResult executeSynonym(const StorageAdapter& store, const ReferenceArgument& stmt, const ReferenceArgument& var) {
-	QueryResult result = QueryResult({stmt.getSynonym().symbol, var.getSynonym().symbol});
+	QueryResult result = QueryResult({stmt.getSynonymSymbol(), var.getSynonymSymbol()});
 	VarRefSet var_set = store.getVariables();
 	for (auto const& var_ref : var_set) {
 		StmtInfoPtrSet stmt_set = store.getControlStmt<T>(var_ref);

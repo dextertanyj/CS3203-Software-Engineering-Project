@@ -13,7 +13,7 @@ template <typename T>
 Types::ExecutorSetFactory processArgumentRecurse(T map, const vector<ReferenceArgument>& args) {
 	Types::ArgumentDispatchKey key = args.at(0).getType();
 	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
-		key = args.at(0).getSynonym().type;
+		key = args.at(0).getSynonymType();
 	}
 	auto iter = map.find(key);
 	if (iter == map.end()) {
@@ -31,7 +31,7 @@ inline Types::ExecutorSetFactory processArgumentRecurse(unordered_map<Types::Arg
 	}
 	Types::ArgumentDispatchKey key = args.at(0).getType();
 	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
-		key = args.at(0).getSynonym().type;
+		key = args.at(0).getSynonymType();
 	}
 	auto iter = map.find(key);
 	if (iter == map.end()) {
@@ -44,7 +44,7 @@ template <typename T>
 Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(T map, const vector<ReferenceArgument>& args) {
 	Types::ArgumentDispatchKey key = args.at(0).getType();
 	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
-		key = args.at(0).getSynonym().type;
+		key = args.at(0).getSynonymType();
 	}
 	auto iter = map.find(key);
 	if (iter == map.end()) {
@@ -62,7 +62,7 @@ inline Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(
 	}
 	Types::ArgumentDispatchKey key = args.at(0).getType();
 	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
-		key = args.at(0).getSynonym().type;
+		key = args.at(0).getSynonymType();
 	}
 	auto iter = map.find(key);
 	if (iter == map.end()) {

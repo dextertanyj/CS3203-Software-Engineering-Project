@@ -34,7 +34,7 @@ QueryResult executeTrivialWildcardOrSynonymWildcardOrSynonym(const StorageAdapte
 
 template <ClauseType T>
 QueryResult executeTrivialSynonymSynonym(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs) {
-	if (lhs.getSynonym().symbol == rhs.getSynonym().symbol) {
+	if (lhs.getSynonymSymbol() == rhs.getSynonymSymbol()) {
 		return {};
 	}
 	return executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(store);
@@ -43,7 +43,7 @@ QueryResult executeTrivialSynonymSynonym(const StorageAdapter& store, const Refe
 // Executors
 template <ClauseType T>
 QueryResult executeNameSynonym(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs) {
-	QueryResult result = QueryResult({rhs.getSynonym().symbol});
+	QueryResult result = QueryResult({rhs.getSynonymSymbol()});
 	ProcRefSet rhs_set = store.getReverseProcedures<T>(lhs.getName());
 	for (auto const& rhs_reference : rhs_set) {
 		result.addRow({rhs_reference});
@@ -54,7 +54,7 @@ QueryResult executeNameSynonym(const StorageAdapter& store, const ReferenceArgum
 
 template <ClauseType T>
 QueryResult executeWildcardSynonym(const StorageAdapter& store, const ReferenceArgument& rhs) {
-	QueryResult result = QueryResult({rhs.getSynonym().symbol});
+	QueryResult result = QueryResult({rhs.getSynonymSymbol()});
 	ProcRefSet procedures = store.getProcedures();
 	for (auto const& procedure : procedures) {
 		ProcRefSet lhss = store.getForwardProcedures<T>(procedure);
@@ -68,7 +68,7 @@ QueryResult executeWildcardSynonym(const StorageAdapter& store, const ReferenceA
 
 template <ClauseType T>
 QueryResult executeSynonymName(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs) {
-	QueryResult result = QueryResult({lhs.getSynonym().symbol});
+	QueryResult result = QueryResult({lhs.getSynonymSymbol()});
 	ProcRefSet lhs_set = store.getForwardProcedures<T>(rhs.getName());
 	for (auto const& lhs_reference : lhs_set) {
 		result.addRow({lhs_reference});
@@ -78,7 +78,7 @@ QueryResult executeSynonymName(const StorageAdapter& store, const ReferenceArgum
 
 template <ClauseType T>
 QueryResult executeSynonymWildcard(const StorageAdapter& store, const ReferenceArgument& lhs) {
-	QueryResult result = QueryResult({lhs.getSynonym().symbol});
+	QueryResult result = QueryResult({lhs.getSynonymSymbol()});
 	ProcRefSet procedures = store.getProcedures();
 	for (auto const& procedure : procedures) {
 		ProcRefSet rhs_set = store.getReverseProcedures<T>(procedure);
@@ -91,11 +91,11 @@ QueryResult executeSynonymWildcard(const StorageAdapter& store, const ReferenceA
 
 template <ClauseType T>
 QueryResult executeSynonymSynonym(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs) {
-	if (lhs.getSynonym().symbol == rhs.getSynonym().symbol) {
+	if (lhs.getSynonymSymbol() == rhs.getSynonymSymbol()) {
 		return {};
 	}
 
-	QueryResult result = QueryResult({lhs.getSynonym().symbol, rhs.getSynonym().symbol});
+	QueryResult result = QueryResult({lhs.getSynonymSymbol(), rhs.getSynonymSymbol()});
 
 	ProcRefSet procedures = store.getProcedures();
 	for (auto const& procedure : procedures) {
