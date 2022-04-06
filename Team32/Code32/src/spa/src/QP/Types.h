@@ -42,7 +42,7 @@ enum class ClauseType {
 	With
 };
 
-enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression, Attribute };
+enum class ArgumentType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression, Attribute };
 enum class AttributeToken { StatementIndex, ProcedureName, VariableName, Value };
 enum class AttributeType { NumberIdentifier, NameIdentifier, ProcedureName, VariableName };
 
@@ -80,7 +80,7 @@ using ExecutorSet =
 	std::variant<Types::Executor, std::pair<Types::Executor, Types::Executor>, std::pair<Types::Executor, OptimizedExecutor>>;
 using ExecutorSetFactory = std::function<ExecutorSet(const std::vector<ClauseArgument>&)>;
 using ExecutorSetFactoryBundle = std::pair<ClauseType, ExecutorSetFactory>;
-using ArgumentDispatchKey = std::variant<ReferenceType, DesignEntity>;
+using ArgumentDispatchKey = std::variant<ArgumentType, DesignEntity>;
 using ExecutorSetBundle = std::pair<ClauseType, ExecutorSet>;
 using ArgumentDispatcher = std::function<ExecutorSetBundle(std::vector<ClauseArgument>&)>;
 using ArgumentDispatchMap = std::unordered_map<ClauseType, ArgumentDispatcher>;
@@ -89,8 +89,8 @@ using ArgumentDispatchMap = std::unordered_map<ClauseType, ArgumentDispatcher>;
 template <typename TAttribute, typename TSynonym>
 using WithInternalExecutors = std::pair<SelectExecutor<TSynonym>, AttributeMapper<TAttribute, TSynonym>>;
 using DispatchAttributeKey = std::pair<DesignEntity, AttributeType>;
-using WithClauseArgumentDispatchKey = std::variant<ReferenceType, DispatchAttributeKey>;
-using WithClauseBasicDispatchKey = std::variant<ReferenceType, AttributeType>;
+using WithClauseArgumentDispatchKey = std::variant<ArgumentType, DispatchAttributeKey>;
+using WithClauseBasicDispatchKey = std::variant<ArgumentType, AttributeType>;
 template <typename TAttribute, typename TLeft, typename TRight>
 using WithExecutorFunction =
 	std::function<QueryResult(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs,

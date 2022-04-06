@@ -14,7 +14,7 @@ QP::Evaluator::Clause::Clause(ClauseType type, vector<ClauseArgument> arguments,
 vector<string> QP::Evaluator::Clause::getDeclarationSymbols() const {
 	vector<string> symbols;
 	for (const ClauseArgument& arg : arguments) {
-		if (arg.getType() == ReferenceType::Synonym || arg.getType() == ReferenceType::Attribute) {
+		if (arg.getType() == ArgumentType::Synonym || arg.getType() == ArgumentType::Attribute) {
 			symbols.push_back(arg.getSynonymSymbol());
 		}
 	}

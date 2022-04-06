@@ -16,25 +16,25 @@ using namespace QP::Executor;
 using namespace QP::Types;
 
 static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> name_map = {
-	{ReferenceType::Wildcard, PatternAssignExecutor::executorFactoryNameWildcard},
-	{ReferenceType::ExactExpression, PatternAssignExecutor::executorFactoryNameExpression},
-	{ReferenceType::SubExpression, PatternAssignExecutor::executorFactoryNameExpression},
+	{ArgumentType::Wildcard, PatternAssignExecutor::executorFactoryNameWildcard},
+	{ArgumentType::ExactExpression, PatternAssignExecutor::executorFactoryNameExpression},
+	{ArgumentType::SubExpression, PatternAssignExecutor::executorFactoryNameExpression},
 };
 
 static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> wildcard_map = {
-	{ReferenceType::Wildcard, PatternAssignExecutor::executorFactoryWildcardWildcard},
-	{ReferenceType::ExactExpression, PatternAssignExecutor::executorFactoryWildcardExpression},
-	{ReferenceType::SubExpression, PatternAssignExecutor::executorFactoryWildcardExpression},
+	{ArgumentType::Wildcard, PatternAssignExecutor::executorFactoryWildcardWildcard},
+	{ArgumentType::ExactExpression, PatternAssignExecutor::executorFactoryWildcardExpression},
+	{ArgumentType::SubExpression, PatternAssignExecutor::executorFactoryWildcardExpression},
 };
 
 static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> variable_synonym_map = {
-	{ReferenceType::Wildcard, PatternAssignExecutor::executorFactorySynonymWildcard},
-	{ReferenceType::ExactExpression, PatternAssignExecutor::executorFactorySynonymExpression},
-	{ReferenceType::SubExpression, PatternAssignExecutor::executorFactorySynonymExpression},
+	{ArgumentType::Wildcard, PatternAssignExecutor::executorFactorySynonymWildcard},
+	{ArgumentType::ExactExpression, PatternAssignExecutor::executorFactorySynonymExpression},
+	{ArgumentType::SubExpression, PatternAssignExecutor::executorFactorySynonymExpression},
 };
 
 static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>> synonym_map = {
-	{ReferenceType::Name, name_map}, {ReferenceType::Wildcard, wildcard_map}, {DesignEntity::Variable, variable_synonym_map}};
+	{ArgumentType::Name, name_map}, {ArgumentType::Wildcard, wildcard_map}, {DesignEntity::Variable, variable_synonym_map}};
 
 static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>>>
 	argument_dispatch_map = {{DesignEntity::Assign, synonym_map}};
@@ -47,7 +47,7 @@ static Common::ExpressionProcessor::Expression convertNameToExpression(const str
 
 ExecutorSetBundle QP::Dispatcher::PatternAssignDispatcher::dispatcher(vector<ClauseArgument>& args) {
 	// Single token exact match expressions are parsed as a name and require conversion.
-	if (args.size() == PATTERN_ARGUMENT_COUNT && args[EXPRESSION_ARGUMENT_INDEX].getType() == Types::ReferenceType::Name) {
+	if (args.size() == PATTERN_ARGUMENT_COUNT && args[EXPRESSION_ARGUMENT_INDEX].getType() == Types::ArgumentType::Name) {
 		auto name = args[EXPRESSION_ARGUMENT_INDEX].getName();
 		auto expression = convertNameToExpression(name);
 		args[EXPRESSION_ARGUMENT_INDEX] = ClauseArgument{move(expression), EXACT_MATCH};

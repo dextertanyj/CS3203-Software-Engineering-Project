@@ -12,7 +12,7 @@ using namespace std;
 template <typename T>
 Types::ExecutorSetFactory processArgumentRecurse(T map, const vector<ClauseArgument>& args) {
 	Types::ArgumentDispatchKey key = args.at(0).getType();
-	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
+	if (args.at(0).getType() == Types::ArgumentType::Synonym) {
 		key = args.at(0).getSynonymType();
 	}
 	auto iter = map.find(key);
@@ -30,7 +30,7 @@ inline Types::ExecutorSetFactory processArgumentRecurse(unordered_map<Types::Arg
 		throw QueryDispatchException("Incorrect argument count.");
 	}
 	Types::ArgumentDispatchKey key = args.at(0).getType();
-	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
+	if (args.at(0).getType() == Types::ArgumentType::Synonym) {
 		key = args.at(0).getSynonymType();
 	}
 	auto iter = map.find(key);
@@ -43,7 +43,7 @@ inline Types::ExecutorSetFactory processArgumentRecurse(unordered_map<Types::Arg
 template <typename T>
 Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(T map, const vector<ClauseArgument>& args) {
 	Types::ArgumentDispatchKey key = args.at(0).getType();
-	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
+	if (args.at(0).getType() == Types::ArgumentType::Synonym) {
 		key = args.at(0).getSynonymType();
 	}
 	auto iter = map.find(key);
@@ -61,7 +61,7 @@ inline Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(
 		throw QueryDispatchException("Incorrect argument count.");
 	}
 	Types::ArgumentDispatchKey key = args.at(0).getType();
-	if (args.at(0).getType() == Types::ReferenceType::Synonym) {
+	if (args.at(0).getType() == Types::ArgumentType::Synonym) {
 		key = args.at(0).getSynonymType();
 	}
 	auto iter = map.find(key);

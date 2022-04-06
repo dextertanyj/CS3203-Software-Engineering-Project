@@ -23,12 +23,12 @@ QueryResult executeTrivialSynonymOrWildcardWildcard(const StorageAdapter& store)
 
 QueryResult executeTrivialNameExpression(const StorageAdapter& store, const ClauseArgument& name, const ClauseArgument& expression) {
 	return QueryResult(
-		store.patternExists(name.getName(), expression.getExpression(), expression.getType() == ReferenceType::ExactExpression));
+		store.patternExists(name.getName(), expression.getExpression(), expression.getType() == ArgumentType::ExactExpression));
 }
 
 QueryResult executeTrivialSynonymOrWildcardExpression(const StorageAdapter& store, const ClauseArgument& expression) {
 	return QueryResult(
-		!store.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ReferenceType::ExactExpression).empty());
+		!store.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ArgumentType::ExactExpression).empty());
 }
 
 // Executors
@@ -70,7 +70,7 @@ QueryResult executeNameExpression(const StorageAdapter& store, const ClauseArgum
                                   const ClauseArgument& expression) {
 	QueryResult result = QueryResult({assign.getSynonymSymbol()});
 	auto results =
-		store.getStmtsWithPattern(name.getName(), expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
+		store.getStmtsWithPattern(name.getName(), expression.getExpression(), expression.getType() == ArgumentType::ExactExpression);
 	for (auto const& entry : results) {
 		result.addRow({to_string(entry->getIdentifier())});
 	}
@@ -80,7 +80,7 @@ QueryResult executeNameExpression(const StorageAdapter& store, const ClauseArgum
 QueryResult executeWildcardExpression(const StorageAdapter& store, const ClauseArgument& assign, const ClauseArgument& expression) {
 	QueryResult result = QueryResult({assign.getSynonymSymbol()});
 	vector<string> statement_result;
-	auto result_pairs = store.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
+	auto result_pairs = store.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ArgumentType::ExactExpression);
 	for (auto const& pair : result_pairs) {
 		result.addRow({to_string(pair.first->getIdentifier())});
 	}
@@ -91,7 +91,7 @@ QueryResult executeWildcardExpression(const StorageAdapter& store, const ClauseA
 QueryResult executeSynonymExpression(const StorageAdapter& store, const ClauseArgument& assign, const ClauseArgument& synonym,
                                      const ClauseArgument& expression) {
 	QueryResult result = QueryResult({assign.getSynonymSymbol(), synonym.getSynonymSymbol()});
-	auto result_pairs = store.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ReferenceType::ExactExpression);
+	auto result_pairs = store.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ArgumentType::ExactExpression);
 	for (auto const& pair : result_pairs) {
 		result.addRow({to_string(pair.first->getIdentifier()), pair.second});
 	}

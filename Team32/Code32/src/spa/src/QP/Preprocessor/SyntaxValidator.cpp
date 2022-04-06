@@ -12,21 +12,21 @@
 using namespace std;
 using namespace QP::Types;
 
-static const unordered_set<ReferenceType> name_expression_wildcard = {ReferenceType::Name, ReferenceType::ExactExpression,
-                                                                      ReferenceType::SubExpression, ReferenceType::Wildcard};
-static const unordered_set<ReferenceType> statement = {ReferenceType::StatementIndex, ReferenceType::Wildcard, ReferenceType::Synonym};
-static const unordered_set<ReferenceType> entity = {ReferenceType::Name, ReferenceType::Wildcard, ReferenceType::Synonym};
-static const unordered_set<ReferenceType> statement_entity = {ReferenceType::Name, ReferenceType::StatementIndex, ReferenceType::Wildcard,
-                                                              ReferenceType::Synonym};
-static const unordered_set<ReferenceType> expression = {ReferenceType::ExactExpression, ReferenceType::SubExpression,
-                                                        ReferenceType::Wildcard};
-static const unordered_set<ReferenceType> wildcard = {ReferenceType::Wildcard};
-static const unordered_set<ReferenceType> attribute = {ReferenceType::Attribute, ReferenceType::Name, ReferenceType::StatementIndex};
-static const unordered_set<ReferenceType> synonym = {ReferenceType::Synonym};
+static const unordered_set<ArgumentType> name_expression_wildcard = {ArgumentType::Name, ArgumentType::ExactExpression,
+                                                                      ArgumentType::SubExpression, ArgumentType::Wildcard};
+static const unordered_set<ArgumentType> statement = {ArgumentType::StatementIndex, ArgumentType::Wildcard, ArgumentType::Synonym};
+static const unordered_set<ArgumentType> entity = {ArgumentType::Name, ArgumentType::Wildcard, ArgumentType::Synonym};
+static const unordered_set<ArgumentType> statement_entity = {ArgumentType::Name, ArgumentType::StatementIndex, ArgumentType::Wildcard,
+                                                              ArgumentType::Synonym};
+static const unordered_set<ArgumentType> expression = {ArgumentType::ExactExpression, ArgumentType::SubExpression,
+                                                        ArgumentType::Wildcard};
+static const unordered_set<ArgumentType> wildcard = {ArgumentType::Wildcard};
+static const unordered_set<ArgumentType> attribute = {ArgumentType::Attribute, ArgumentType::Name, ArgumentType::StatementIndex};
+static const unordered_set<ArgumentType> synonym = {ArgumentType::Synonym};
 
 const unordered_set<ClauseType> pattern_clauses = {ClauseType::PatternAssign, ClauseType::PatternIf, ClauseType::PatternWhile};
 
-const unordered_map<ClauseType, vector<unordered_set<ReferenceType>>> syntax_argument_map = {
+const unordered_map<ClauseType, vector<unordered_set<ArgumentType>>> syntax_argument_map = {
 	{ClauseType::Affects, {statement, statement}},
 	{ClauseType::AffectsT, {statement, statement}},
 	{ClauseType::Calls, {entity, entity}},
@@ -41,7 +41,7 @@ const unordered_map<ClauseType, vector<unordered_set<ReferenceType>>> syntax_arg
 	{ClauseType::UnknownUses, {statement_entity, entity}},
 	{ClauseType::With, {attribute, attribute}}};
 
-const unordered_map<size_t, vector<unordered_set<ReferenceType>>> pattern_syntax_argument_map = {
+const unordered_map<size_t, vector<unordered_set<ArgumentType>>> pattern_syntax_argument_map = {
 	{ASSIGN_WHILE_PATTERN_ARGUMENT_COUNT, {synonym, entity, name_expression_wildcard}},
 	{IF_PATTERN_ARGUMENT_COUNT, {synonym, entity, wildcard, wildcard}},
 };

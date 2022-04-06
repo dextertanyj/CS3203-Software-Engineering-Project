@@ -46,7 +46,7 @@ public:
 	 * Returns the type of reference stored.
 	 * @return the type of reference stored.
 	 */
-	[[nodiscard]] Types::ReferenceType getType() const;
+	[[nodiscard]] Types::ArgumentType getType() const;
 
 	/**
 	 * Returns the synonym stored.

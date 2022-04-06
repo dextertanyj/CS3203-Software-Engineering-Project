@@ -10,8 +10,8 @@ using namespace QP::Dispatcher;
 using namespace QP::Types;
 
 static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>> argument_dispatch_map = {
-	{ReferenceType::Name, VariableDispatcher::getNameMap<ClauseType::ModifiesP>()},
-	{ReferenceType::StatementIndex, VariableDispatcher::getIndexMap<ClauseType::ModifiesS>()},
+	{ArgumentType::Name, VariableDispatcher::getNameMap<ClauseType::ModifiesP>()},
+	{ArgumentType::StatementIndex, VariableDispatcher::getIndexMap<ClauseType::ModifiesS>()},
 	{DesignEntity::Procedure, VariableDispatcher::getProcedureMap<ClauseType::ModifiesP>()},
 	{DesignEntity::Stmt, VariableDispatcher::getStatementMap<ClauseType::ModifiesS>()},
 	{DesignEntity::Call, VariableDispatcher::getStatementMap<ClauseType::ModifiesS>()},
