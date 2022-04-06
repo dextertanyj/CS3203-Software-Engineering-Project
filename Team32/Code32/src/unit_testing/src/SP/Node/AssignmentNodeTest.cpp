@@ -103,7 +103,7 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement") {
 	SECTION("Incomplete Brackets Test") {
 		lex.initialize("= ((x + 6);");
 		REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count"),
-		                  Common::ExpressionProcessor::ExpressionProcessorException);
+		                  SP::ParseException);
 		REQUIRE_EQUALS(statement_count, 1);
 		REQUIRE_EQUALS(lex.peekToken(), "");
 	}

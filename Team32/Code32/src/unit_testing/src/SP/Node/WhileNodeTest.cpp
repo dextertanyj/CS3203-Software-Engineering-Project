@@ -80,7 +80,7 @@ TEST_CASE("SP::Node::WhileNode::parseWhileStatement") {
 
 	SECTION("Missing Condition Token Test") {
 		lex.initialize("( ) { count = count + 1; call readPoint; }");
-		REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), Common::ExpressionProcessor::ExpressionProcessorException);
+		REQUIRE_THROWS_AS(WhileNode::parseWhileStatement(lex, statement_count), SP::ParseException);
 		REQUIRE_EQUALS(statement_count, 2);
 		REQUIRE_EQUALS(lex.peekToken(), "{");
 	}

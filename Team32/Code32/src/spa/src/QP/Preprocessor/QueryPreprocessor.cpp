@@ -319,12 +319,16 @@ optional<QP::ReferenceArgument> QP::Preprocessor::QueryPreprocessor::tryParseExp
 		match("_");
 	}
 	QueryExpressionLexer lexer = QueryExpressionLexer(expression_tokens);
-	Common::ExpressionProcessor::Expression expression =
-		Common::ExpressionProcessor::ExpressionParser{lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
-	if (!lexer.readToken().empty()) {
-		return {};
+	auto parser = Common::ExpressionProcessor::ExpressionParser{lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic};
+	try {
+		auto expression = parser.parse();
+		if (!lexer.readToken().empty()) {
+			return {};
+		}
+		return ReferenceArgument(expression, !is_contains);
+	} catch (const Common::ExpressionProcessor::ExpressionProcessorException& e) {
+		throw QuerySyntaxException(e.what());
 	}
-	return ReferenceArgument(expression, !is_contains);
 }
 
 Declaration QP::Preprocessor::QueryPreprocessor::parseClauseSynonym() {

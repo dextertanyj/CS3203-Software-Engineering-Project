@@ -94,7 +94,7 @@ TEST_CASE("SP::Node::IfNode::parseIfStatement") {
 
 	SECTION("Missing Condition Test") {
 		lex.initialize("(  ) then { read y; } else { x = 10; }");
-		REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), Common::ExpressionProcessor::ExpressionProcessorException);
+		REQUIRE_THROWS_AS(IfNode::parseIfStatement(lex, statement_count), SP::ParseException);
 		REQUIRE_EQUALS(statement_count, 2);
 		REQUIRE_EQUALS(lex.peekToken(), "then");
 	}
