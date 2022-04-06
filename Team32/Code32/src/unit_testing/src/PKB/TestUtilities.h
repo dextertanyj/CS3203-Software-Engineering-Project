@@ -31,7 +31,7 @@ inline PKB::Storage generateFollowsTestPKB() {
 
 inline PKB::Storage generateParentTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
-	pkb.setStmtType(1, StmtType::WhileStmt);
+	pkb.setStmtType(1, StmtType::While);
 	pkb.setStmtType(2, StmtType::If);
 	pkb.setStmtType(3, StmtType::Call);
 	pkb.setStmtType(4, StmtType::Print);
@@ -50,7 +50,7 @@ inline PKB::Storage generateUsesTestPKB() {
 	pkb.setStmtType(3, StmtType::Print);
 	pkb.setStmtType(4, StmtType::Call);
 	pkb.setStmtType(5, StmtType::Call);
-	pkb.setStmtType(6, StmtType::WhileStmt);
+	pkb.setStmtType(6, StmtType::While);
 	return pkb;
 };
 
@@ -108,7 +108,7 @@ inline PKB::Storage generateNextTestPKB() {
 
 inline PKB::Types::StatementStore generateStatementStore() {
 	PKB::Types::StatementStore statement_store = PKB::Types::StatementStore();
-	statement_store.insert(1, StmtType::WhileStmt);
+	statement_store.insert(1, StmtType::While);
 	statement_store.insert(2, StmtType::If);
 	statement_store.insert(3, StmtType::Assign);
 	statement_store.insert(4, StmtType::Call);

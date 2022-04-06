@@ -11,8 +11,8 @@ TEST_CASE("StatementVariableExecutor<ClauseType::ModifiesS>::execute") {
 	PKB::Storage pkb = PKB::Storage();
 	StorageAdapter store = StorageAdapter(pkb);
 	pkb.setStmtType(1, StmtType::Assign);
-	pkb.setStmtType(2, StmtType::WhileStmt);
-	pkb.setStmtType(3, StmtType::WhileStmt);
+	pkb.setStmtType(2, StmtType::While);
+	pkb.setStmtType(3, StmtType::While);
 	pkb.setStmtType(4, StmtType::If);
 	pkb.setModifies(1, "x");
 	pkb.setModifies(2, "x");

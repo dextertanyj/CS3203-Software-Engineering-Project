@@ -10,7 +10,7 @@ TEST_CASE("PKB::Types::StatementStore Test") {
 	PKB::Types::StatementStore store;
 	StmtRef s_0 = 0, s_1 = 1, s_2 = 2, s_3 = 3, s_4 = 4, s_5 = 5, s_6 = 6;
 	StmtType t_1 = StmtType::If, t_2 = StmtType::Assign, t_3 = StmtType::Call, t_4 = StmtType::Read, t_5 = StmtType::Print,
-			 t_6 = StmtType::WhileStmt;
+			 t_6 = StmtType::While;
 
 	SECTION("Insert") {
 		store.insert(s_1, t_1);

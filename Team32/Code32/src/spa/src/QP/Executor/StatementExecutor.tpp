@@ -60,7 +60,7 @@ inline QueryResult executeTrivialWildcardWildcard<ClauseType::Parent>(const Stor
 	StmtInfoPtrSet statements = store.getStatements();
 	for (auto const& statement : statements) {
 		// Avoid call to PKB unless statement can contain others.
-		if (statement->getType() != StmtType::If && statement->getType() != StmtType::WhileStmt) {
+		if (statement->getType() != StmtType::If && statement->getType() != StmtType::While) {
 			continue;
 		}
 		StmtInfoPtrSet rhs_set = store.getReverseStatements<ClauseType::Parent>(statement->getIdentifier());

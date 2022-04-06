@@ -12,7 +12,7 @@ TEST_CASE("StatementExecutor<ClauseType::Next>::execute") {
 	StorageAdapter store = StorageAdapter(pkb);
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
-	pkb.setStmtType(3, StmtType::WhileStmt);
+	pkb.setStmtType(3, StmtType::While);
 	pkb.setStmtType(4, StmtType::If);
 	pkb.setNext(1, 2);
 	pkb.setNext(2, 3);

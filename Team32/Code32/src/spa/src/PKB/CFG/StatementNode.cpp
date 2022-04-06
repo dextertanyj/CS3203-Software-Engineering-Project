@@ -3,7 +3,7 @@
 #include <cassert>
 
 PKB::StatementNode::StatementNode(const shared_ptr<StmtInfo>& info) : NodeInterface(Types::NodeType::Statement), stmt_info(info) {
-	assert(info->getType() != StmtType::WhileStmt || info->getType() != StmtType::If);
+	assert(info->getType() != StmtType::While || info->getType() != StmtType::If);
 }
 
 PKB::StatementNode::StatementNode(Types::NodeType type, const shared_ptr<StmtInfo>& info) : NodeInterface(type), stmt_info(info) {}

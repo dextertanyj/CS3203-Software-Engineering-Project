@@ -14,7 +14,7 @@ TEST_CASE("Basic select") {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
-	pkb.setStmtType(3, StmtType::WhileStmt);
+	pkb.setStmtType(3, StmtType::While);
 	pkb.setStmtType(4, StmtType::If);
 	pkb.setConstant({1, 4, 90, 2000});
 	pkb.setUses(3, "x");
@@ -102,7 +102,7 @@ TEST_CASE("Parent clause") {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::If);
 	pkb.setStmtType(2, StmtType::Read);
-	pkb.setStmtType(3, StmtType::WhileStmt);
+	pkb.setStmtType(3, StmtType::While);
 	pkb.setStmtType(4, StmtType::If);
 	pkb.setParent(1, 2);
 	pkb.setParent(1, 3);
@@ -328,7 +328,7 @@ TEST_CASE("Next clause") {
 	pkb.setStmtType(1, StmtType::Read);
 	pkb.setStmtType(2, StmtType::Print);
 	pkb.setStmtType(3, StmtType::Call);
-	pkb.setStmtType(4, StmtType::WhileStmt);
+	pkb.setStmtType(4, StmtType::While);
 	pkb.setStmtType(5, StmtType::Assign);
 	pkb.setNext(1, 2);
 	pkb.setNext(2, 3);
@@ -369,11 +369,11 @@ TEST_CASE("Next clause") {
 TEST_CASE("Pattern clause") {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::If);
-	pkb.setStmtType(2, StmtType::WhileStmt);
+	pkb.setStmtType(2, StmtType::While);
 	pkb.setStmtType(3, StmtType::Assign);
 	pkb.setStmtType(4, StmtType::If);
 	pkb.setStmtType(5, StmtType::Assign);
-	pkb.setStmtType(6, StmtType::WhileStmt);
+	pkb.setStmtType(6, StmtType::While);
 
 	// Assign statements
 	vector<string> assign_token2 = {"x", "+", "1", "*", "9"};
@@ -451,7 +451,7 @@ TEST_CASE("Pattern clause") {
 TEST_CASE("One such that clause") {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
-	pkb.setStmtType(2, StmtType::WhileStmt);
+	pkb.setStmtType(2, StmtType::While);
 	pkb.setStmtType(3, StmtType::Read);
 	pkb.setConstant({1, 4, 90, 2000});
 	pkb.setUses(1, "x");
@@ -565,7 +565,7 @@ TEST_CASE("One pattern clause") {
 TEST_CASE("One such that and one pattern") {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
-	pkb.setStmtType(2, StmtType::WhileStmt);
+	pkb.setStmtType(2, StmtType::While);
 	pkb.setStmtType(3, StmtType::Read);
 	pkb.setStmtType(4, StmtType::Assign);
 	pkb.setStmtType(5, StmtType::Assign);
@@ -652,7 +652,7 @@ TEST_CASE("Multiple clauses") {
 	pkb.setStmtType(1, StmtType::Read);
 	pkb.setStmtType(2, StmtType::If);
 	pkb.setStmtType(3, StmtType::Call);
-	pkb.setStmtType(4, StmtType::WhileStmt);
+	pkb.setStmtType(4, StmtType::While);
 	pkb.setStmtType(5, StmtType::Assign);
 	pkb.setStmtType(6, StmtType::Print);
 	pkb.setFollows(1, 2);

@@ -131,7 +131,7 @@ TEST_CASE("PKB::ParentRelation Overall Test") {
 
 TEST_CASE("PKB::ParentRelation::optimize Test") {
 	PKB::Types::ParentStore store = PKB::Types::ParentStore();
-	shared_ptr<StmtInfo> s1 = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> s1 = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> s2 = TestUtilities::createStmtInfo(7, StmtType::Assign);
 	shared_ptr<StmtInfo> s3 = TestUtilities::createStmtInfo(3, StmtType::If);
 	shared_ptr<StmtInfo> s1_if = TestUtilities::createStmtInfo(4, StmtType::Read);

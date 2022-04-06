@@ -7,7 +7,7 @@
 TEST_CASE("PKB::ControlFlowGraph::createNode Test") {
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 	CHECK_NOTHROW(cfg.createNode(if_stmt));
 	CHECK_NOTHROW(cfg.createNode(while_stmt));
@@ -18,7 +18,7 @@ TEST_CASE("PKB::ControlFlowGraph::createNode Test") {
 TEST_CASE("PKB::ControlFlowGraph::setNext Test") {
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 	shared_ptr<StmtInfo> assign_stmt = TestUtilities::createStmtInfo(5, StmtType::Assign);

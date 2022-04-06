@@ -54,7 +54,7 @@ void PKB::ControlFlowGraph::createNode(const shared_ptr<StmtInfo>& stmt_info) {
 		shared_ptr<PKB::IfNode> to_insert = make_shared<PKB::IfNode>(stmt_info);
 		statement_node_map.insert({stmt_info->getIdentifier(), to_insert});
 
-	} else if (stmt_info->getType() == StmtType::WhileStmt) {
+	} else if (stmt_info->getType() == StmtType::While) {
 		shared_ptr<PKB::WhileNode> to_insert = make_shared<PKB::WhileNode>(stmt_info);
 		statement_node_map.insert({stmt_info->getIdentifier(), to_insert});
 	} else {

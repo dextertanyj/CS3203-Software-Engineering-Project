@@ -13,7 +13,7 @@ TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternIf>::execute") {
 	pkb.setStmtType(1, StmtType::If);
 	pkb.setStmtType(2, StmtType::If);
 	pkb.setStmtType(3, StmtType::If);
-	pkb.setStmtType(4, StmtType::WhileStmt);
+	pkb.setStmtType(4, StmtType::While);
 	pkb.setIfControl(1, "x");
 	pkb.setIfControl(1, "y");
 	pkb.setIfControl(2, "z");

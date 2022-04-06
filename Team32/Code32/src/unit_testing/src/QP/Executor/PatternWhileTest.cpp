@@ -10,9 +10,9 @@ using namespace Types;
 TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternWhile>::execute") {
 	PKB::Storage pkb = PKB::Storage();
 	StorageAdapter store = StorageAdapter(pkb);
-	pkb.setStmtType(1, StmtType::WhileStmt);
-	pkb.setStmtType(2, StmtType::WhileStmt);
-	pkb.setStmtType(3, StmtType::WhileStmt);
+	pkb.setStmtType(1, StmtType::While);
+	pkb.setStmtType(2, StmtType::While);
+	pkb.setStmtType(3, StmtType::While);
 	pkb.setStmtType(4, StmtType::Assign);
 	pkb.setWhileControl(1, "x");
 	pkb.setWhileControl(1, "y");

@@ -12,7 +12,7 @@ TEST_CASE("PKB::SVRelationStore") {
 	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(6, StmtType::Assign);
 	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(7, StmtType::If);
 	shared_ptr<StmtInfo> s_4 = TestUtilities::createStmtInfo(1, StmtType::Read);
-	shared_ptr<StmtInfo> s_5 = TestUtilities::createStmtInfo(8, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> s_5 = TestUtilities::createStmtInfo(8, StmtType::While);
 
 	VarRefSet v_1 = {"x", "y", "z"};
 	VarRefSet v_2 = {"a", "b"};
@@ -42,7 +42,7 @@ TEST_CASE("PKB::SVRelationStore") {
 		CHECK_THROWS(if_control_store.set(s_2, "y"));
 		CHECK_NOTHROW(if_control_store.set(s_3, "x"));
 
-		// Statements that are not of type WhileStmt should throw an error
+		// Statements that are not of type While should throw an error
 		CHECK_THROWS(while_control_store.set(s_3, "x"));
 		CHECK_THROWS(while_control_store.set(s_4, "y"));
 		CHECK_NOTHROW(while_control_store.set(s_5, "x"));
@@ -68,7 +68,7 @@ TEST_CASE("PKB::SVRelationStore") {
 		CHECK_THROWS(if_control_store.set(s_2, v_1));
 		CHECK_NOTHROW(if_control_store.set(s_3, v_2));
 
-		// Statements that are not of type WhileStmt should throw an error
+		// Statements that are not of type While should throw an error
 		CHECK_THROWS(while_control_store.set(s_3, v_2));
 		CHECK_THROWS(while_control_store.set(s_4, v_1));
 		CHECK_NOTHROW(while_control_store.set(s_5, v_5));

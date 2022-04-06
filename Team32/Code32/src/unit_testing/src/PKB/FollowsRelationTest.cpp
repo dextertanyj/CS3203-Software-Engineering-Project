@@ -132,7 +132,7 @@ TEST_CASE("PKB::FollowsRelation Overall Test") {
 TEST_CASE("PKB::FollowsRelation::optimize Test") {
 	PKB::Types::FollowsStore store = PKB::Types::FollowsStore();
 	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(1, StmtType::Call);
-	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> s_2_1 = TestUtilities::createStmtInfo(3, StmtType::Read);
 	shared_ptr<StmtInfo> s_2_2 = TestUtilities::createStmtInfo(4, StmtType::Print);
 	shared_ptr<StmtInfo> s_2_3 = TestUtilities::createStmtInfo(5, StmtType::Assign);

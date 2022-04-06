@@ -19,7 +19,7 @@ TEST_CASE("WithExecutor::execute") {
 	StorageAdapter store = StorageAdapter(pkb);
 	pkb.setStmtType(1, StmtType::Print);
 	pkb.setStmtType(2, StmtType::Call);
-	pkb.setStmtType(3, StmtType::WhileStmt);
+	pkb.setStmtType(3, StmtType::While);
 	pkb.setStmtType(4, StmtType::Read);
 	pkb.setUses(1, "x");
 	pkb.setUses(3, "x");

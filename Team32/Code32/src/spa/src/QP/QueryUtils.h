@@ -17,7 +17,7 @@
 namespace QP::Utilities {
 static std::unordered_map<Types::DesignEntity, StmtType> design_ent_to_stmt_type = {
 	{Types::DesignEntity::Read, StmtType::Read}, {Types::DesignEntity::Print, StmtType::Print},
-	{Types::DesignEntity::Call, StmtType::Call}, {Types::DesignEntity::While, StmtType::WhileStmt},
+	{Types::DesignEntity::Call, StmtType::Call}, {Types::DesignEntity::While, StmtType::While},
 	{Types::DesignEntity::If, StmtType::If}, {Types::DesignEntity::Assign, StmtType::Assign},
 };
 
