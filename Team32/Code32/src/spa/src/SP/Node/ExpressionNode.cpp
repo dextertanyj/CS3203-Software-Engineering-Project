@@ -13,6 +13,11 @@ bool SP::Node::ExpressionNode::equals(const shared_ptr<ExpressionNode>& object) 
 
 unique_ptr<SP::Node::ExpressionNode> SP::Node::ExpressionNode::parseExpression(Lexer& lex,
                                                                                Common::ExpressionProcessor::ExpressionType type) {
-	Common::ExpressionProcessor::Expression expression = Common::ExpressionProcessor::ExpressionParser{lex, type}.parse();
-	return make_unique<ExpressionNode>(expression);
+	auto parser = Common::ExpressionProcessor::ExpressionParser{lex, type};
+	try {
+		auto expression = parser.parse();
+		return make_unique<ExpressionNode>(expression);
+	} catch (const Common::ExpressionProcessor::ExpressionProcessorException& e) {
+		throw ParseException(e.what());
+	}
 }
