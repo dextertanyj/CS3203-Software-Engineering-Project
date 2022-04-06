@@ -1,0 +1,130 @@
+1 - procedure.procName 1
+procedure p;
+Select p.procName
+all, b
+5000
+2 - procedure.procName 2
+procedure p, p1;
+Select <p1.procName, p.procName>
+all all, all b, b all, b b
+5000
+3 - call.procName 1
+call c;
+Select c.procName
+b
+5000
+4 - call.procName 2
+call c, c1;
+Select <c, c1.procName>
+3 b
+5000
+5 - variable.varName 1
+variable v;
+Select v.varName
+b, x, y, z
+5000
+6 - variable.varName 2
+variable v;
+Select <v.varName, v.varName>
+b b, x x, y y, z z
+5000
+7 - read.varName 1
+read r;
+Select r.varName
+x, y
+5000
+8 - read.varName 2
+read r;
+Select <r.varName, r>
+x 1, y 2
+5000
+9 - print.varName 1
+print p;
+Select p.varName
+x y
+5000
+10 - print.varName 2
+print p;
+Select <p.varName, p.stmt#>
+x 6, x 8, y 9
+5000
+11 - constant.value 1
+constant c;
+Select c.value
+0, 1, 2, 5, 3000000000
+5000
+12 - constant.value 2
+constant c, c1;
+Select <c.value, c1>
+0 0, 0 1, 0 2, 0 5, 0 3000000000, 1 0, 1 1, 1 2, 1 5, 1 3000000000, 2 0, 2 1, 2 2, 2 5, 2 3000000000, 5 0, 5 1, 5 2, 5 5, 5 3000000000, 3000000000 0, 3000000000 1, 3000000000 2, 3000000000 5, 3000000000 3000000000
+5000
+13 - stmt.stmt# 1
+stmt s;
+Select s.stmt#
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+5000
+14 - stmt.stmt# 2
+stmt s;
+Select <s.stmt#>
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+5000
+15 - read.stmt# 1
+read r;
+Select r.stmt#
+1, 2
+5000
+16 - read.stmt# 2
+read r, r1;
+Select <r.stmt#, r1.stmt#>
+1 1, 1 2, 2 1, 2 2
+5000
+17 - print.stmt# 1
+print p;
+Select p.stmt#
+6, 8, 9
+5000
+18 - print.stmt# 2
+print p, p1;
+Select <p.stmt#, p1.stmt#>
+6 6, 6 8, 6 9, 8 6, 8 8, 8 9, 9 6, 9 8, 9 9
+5000
+19 - call.stmt# 1
+call call;
+Select call.stmt#
+3
+5000
+20 - call.stmt# 2
+call call;
+Select <call.stmt#>
+3
+5000
+21 - while.stmt# 1
+while w;
+Select w.stmt#
+5
+5000
+22 - while.stmt# 2
+while w, w1;
+Select <w.stmt#, w1.stmt#>
+5 5
+5000
+23 - if.stmt# 1
+if if;
+Select if.stmt#
+4
+5000
+24 - if.stmt# 2
+if if;
+Select <if.stmt#>
+4
+5000
+25 - assign.stmt# 1
+assign a; 
+Select a.stmt#
+7, 10, 11
+5000
+26 - assign.stmt# 2
+assign a, a1; 
+Select <a.stmt#, a1.stmt#>
+7 7, 7 10, 7 11, 10 7, 10 10, 10 11, 11 7, 11 10, 11 11
+5000
