@@ -21,7 +21,7 @@ void PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::set(shared_ptr<TInf
 	if (back_iter == map.end()) {
 		TRelation relation = TRelation(back);
 		relation.insertForward(front);
-		map.insert({back_ident, relation});
+		map.emplace(back_ident, relation);
 	} else {
 		back_iter->second.insertForward(front);
 	}
@@ -29,7 +29,7 @@ void PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::set(shared_ptr<TInf
 	if (front_iter == map.end()) {
 		TRelation relation = TRelation(front);
 		relation.insertReverse(back);
-		map.insert(make_pair(front_ident, relation));
+		map.emplace(front_ident, relation);
 	} else {
 		front_iter->second.insertReverse(back);
 	}

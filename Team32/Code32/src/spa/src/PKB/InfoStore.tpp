@@ -14,14 +14,14 @@ void PKB::InfoStore<TIdent, TContent, TInfo>::insert(const TIdent& identifier, T
 		throw logic_error("Already defined.");
 	}
 	shared_ptr<TInfo> info = shared_ptr<TInfo>(new TInfo(identifier, std::move(content)));
-	store.insert({identifier, std::move(info)});
+	store.emplace(identifier, std::move(info));
 }
 
 template <typename TIdent, typename TContent, class TInfo>
 unordered_set<shared_ptr<TInfo>> PKB::InfoStore<TIdent, TContent, TInfo>::getAll() const {
 	unordered_set<shared_ptr<TInfo>> result;
 	for (const auto& key_value : store) {
-		result.insert(key_value.second);
+		result.emplace(key_value.second);
 	}
 	return result;
 }

@@ -68,7 +68,7 @@ QP::QueryResult QP::QueryResult::joinIntraGroupResults(vector<QP::QueryResult>& 
 	}
 	sort(results.begin(), results.end(), compareLength);
 
-	unordered_map<string, vector<size_t>> synonym_to_index_map = getSynonymIndexMap(results);
+	unordered_map<string, vector<size_t>> synonym_to_index_map = getSynonymToResultIndexMap(results);
 	unordered_set<size_t> completed = {0};
 	ResultTable table = results[0].getTable();
 	priority_queue<size_t, vector<size_t>, greater<>> queue;
@@ -93,12 +93,12 @@ bool QP::QueryResult::compareLength(const QP::QueryResult& lhs, const QP::QueryR
 	return lhs.getNumberOfRows() < rhs.getNumberOfRows();
 }
 
-unordered_map<string, vector<size_t>> QP::QueryResult::getSynonymIndexMap(const vector<QP::QueryResult>& results) {
+unordered_map<string, vector<size_t>> QP::QueryResult::getSynonymToResultIndexMap(const vector<QP::QueryResult>& results) {
 	unordered_map<string, vector<size_t>> synonym_to_index_map;
 	for (size_t i = 1; i < results.size(); i++) {
 		for (const auto& synonym : results[i].getSynonymsStored()) {
 			if (synonym_to_index_map.find(synonym) == synonym_to_index_map.end()) {
-				synonym_to_index_map.insert({synonym, {i}});
+				synonym_to_index_map.emplace(synonym, vector<size_t>({i}));
 			} else {
 				synonym_to_index_map.find(synonym)->second.push_back(i);
 			}
@@ -125,7 +125,7 @@ void QP::QueryResult::addNeighboursToQueue(const vector<size_t>& indexes, priori
 			continue;
 		}
 		queue.push(idx);
-		completed.insert(idx);
+		completed.emplace(idx);
 	}
 }
 

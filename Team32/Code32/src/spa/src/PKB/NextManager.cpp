@@ -158,7 +158,7 @@ void PKB::NextManager::processQueue(const shared_ptr<StmtInfo>& node, TraversalI
 		auto cached_set = info.cache.find(current->getIdentifier())->second;
 		star.insert(cached_set.begin(), cached_set.end());
 	}
-	info.cache.insert({node->getIdentifier(), star});
+	info.cache.emplace(node->getIdentifier(), star);
 }
 
 template <class Comparator>
@@ -193,11 +193,11 @@ void PKB::NextManager::processLoopNode(const shared_ptr<StmtInfo>& node, Travers
 		for (const auto& subsequent : subsequent_nodes) {
 			auto subsequent_next_star = info.cache.find(subsequent->getIdentifier())->second;
 			combined.merge(subsequent_next_star);
-			combined.insert(subsequent);
+			combined.emplace(subsequent);
 		}
 	}
 	for (const auto& internal_node : loop_nodes) {
-		info.cache.insert({internal_node->getIdentifier(), combined});
+		info.cache.emplace(internal_node->getIdentifier(), combined);
 	}
 }
 
@@ -206,7 +206,7 @@ StmtInfoPtrSet PKB::NextManager::traverseLoop(const shared_ptr<StmtInfo>& node) 
 	assert(node->getType() == StmtType::WhileStmt);
 	StmtInfoPtrSet set;
 	queue<shared_ptr<StmtInfo>> queue;
-	set.insert(node);
+	set.emplace(node);
 	auto next_internal_nodes = control_flow_graph.getLoopInternalNextNodes(node->getIdentifier());
 	assert(next_internal_nodes.size() == 1);
 	queue.push(*next_internal_nodes.begin());
@@ -219,7 +219,7 @@ StmtInfoPtrSet PKB::NextManager::traverseLoop(const shared_ptr<StmtInfo>& node) 
 }
 
 void PKB::NextManager::handleTraverseLoopNode(queue<shared_ptr<StmtInfo>>& queue, StmtInfoPtrSet& set, const shared_ptr<StmtInfo>& node) {
-	set.insert(node);
+	set.emplace(node);
 	auto next_set = control_flow_graph.getNextNodes(node->getIdentifier());
 	for (const auto& next : next_set) {
 		if (set.find(next) != set.end()) {

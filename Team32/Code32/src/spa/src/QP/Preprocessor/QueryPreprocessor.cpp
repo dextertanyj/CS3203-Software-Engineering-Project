@@ -91,7 +91,7 @@ void QP::Preprocessor::QueryPreprocessor::parseDeclaration(const DesignEntity& t
 		logSemanticException("Duplicate synonym.");
 		return;
 	}
-	this->existing_declarations.insert({current_token, {type, current_token}});
+	this->existing_declarations.emplace(current_token, Declaration{type, current_token});
 }
 
 // Select

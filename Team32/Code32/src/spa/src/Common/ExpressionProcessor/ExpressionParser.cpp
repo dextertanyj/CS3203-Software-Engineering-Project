@@ -90,12 +90,12 @@ ParenthesizedExpression ExpressionParser::parseTerminal(Acceptor acceptor) {
 		return ParenthesesWrapper(expression);
 	}
 	if (Validator::validateName(token)) {
-		variables.insert(token);
+		variables.emplace(token);
 		return make_shared<TerminalNode<VarRef>>(token);
 	}
 	if (Validator::validateInteger(token)) {
 		ConstVal value = Converter::convertInteger(token);
-		constants.insert(value);
+		constants.emplace(value);
 		return make_shared<TerminalNode<ConstVal>>(value);
 	}
 	throw ExpressionProcessorException("Unexpected token received: " + token + ".");

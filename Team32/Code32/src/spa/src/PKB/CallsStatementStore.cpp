@@ -12,7 +12,7 @@ void PKB::CallsStatementStore::set(const shared_ptr<StmtInfo>& statement, ProcRe
 	if (map.find(index) != map.end()) {
 		throw logic_error("Call statement already set.");
 	}
-	map.insert({index, std::move(procedure)});
+	map.emplace(index, std::move(procedure));
 }
 
 ProcRef PKB::CallsStatementStore::getProcedure(const shared_ptr<StmtInfo>& statement) const {

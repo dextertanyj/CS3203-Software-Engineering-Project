@@ -37,7 +37,7 @@ private:
 	bool result;
 	ResultTable table;
 	static bool compareLength(const QueryResult& lhs, const QueryResult& rhs);
-	static std::unordered_map<std::string, std::vector<size_t>> getSynonymIndexMap(const std::vector<QueryResult>& results);
+	static std::unordered_map<std::string, std::vector<size_t>> getSynonymToResultIndexMap(const std::vector<QueryResult>& results);
 	static void findNeighbours(const QueryResult& current, std::unordered_map<std::string, std::vector<size_t>>& synonym_to_index_map,
 	                           std::priority_queue<size_t, std::vector<size_t>, std::greater<>>& queue,
 	                           std::unordered_set<size_t>& completed);

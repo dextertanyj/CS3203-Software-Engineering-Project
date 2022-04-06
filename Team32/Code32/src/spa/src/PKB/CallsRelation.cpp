@@ -6,14 +6,14 @@ void PKB::CallsRelation::insertForward(const shared_ptr<ProcedureInfo>& caller) 
 	if (getSelf() == caller) {
 		throw invalid_argument("Recursive call detected.");
 	}
-	this->callers.insert(caller);
+	this->callers.emplace(caller);
 }
 
 void PKB::CallsRelation::insertReverse(const shared_ptr<ProcedureInfo>& callee) {
 	if (getSelf() == callee) {
 		throw invalid_argument("Recursive call detected.");
 	}
-	this->callees.insert(callee);
+	this->callees.emplace(callee);
 }
 
 void PKB::CallsRelation::appendForwardTransitive(const unordered_set<shared_ptr<ProcedureInfo>>& new_callers) {
@@ -50,7 +50,7 @@ unordered_set<shared_ptr<PKB::ProcedureInfo>>
 PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>::populateTransitive(
 	CallsRelation& current, unordered_set<shared_ptr<ProcedureInfo>> previous) {
 	current.appendForwardTransitive(previous);
-	previous.insert(current.getSelf());
+	previous.emplace(current.getSelf());
 	unordered_set<shared_ptr<ProcedureInfo>> result = current.getReverseTransitive();
 	bool unset = result.empty();
 	unordered_set<shared_ptr<ProcedureInfo>> callers = current.getForwardTransitive();
@@ -68,6 +68,6 @@ PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>::p
 	if (unset) {
 		current.appendReverseTransitive(result);
 	}
-	result.insert(current.getSelf());
+	result.emplace(current.getSelf());
 	return result;
 }

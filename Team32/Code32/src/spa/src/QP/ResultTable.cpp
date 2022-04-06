@@ -9,8 +9,9 @@ using namespace std;
 QP::ResultTable::ResultTable() = default;
 
 QP::ResultTable::ResultTable(vector<string> synonyms_stored) : synonyms_stored(synonyms_stored) {
+	this->synonyms_to_index_map.reserve(synonyms_stored.size());
 	for (size_t i = 0; i < synonyms_stored.size(); i++) {
-		this->synonyms_to_index_map.insert({synonyms_stored[i], i});
+		this->synonyms_to_index_map.emplace(synonyms_stored[i], i);
 	}
 }
 
@@ -52,12 +53,14 @@ QP::ResultTable QP::ResultTable::filterBySelect(const QP::Types::DeclarationList
 	ResultTable filtered_table = ResultTable(synonyms);
 
 	unordered_set<ResultRow> rows;
+	rows.reserve(getNumberOfRows());
 	for (auto const& row : table) {
-		ResultRow sub_row(select_list.size());
-		for (int i = 0; i < select_list.size(); i++) {
-			sub_row[i] = row.at(synonyms_to_index_map.at(select_list[i].symbol));
+		ResultRow sub_row;
+		sub_row.reserve(select_list.size());
+		for (const auto& select : select_list) {
+			sub_row.push_back(row.at(synonyms_to_index_map.at(select.symbol)));
 		}
-		rows.insert(sub_row);
+		rows.emplace(sub_row);
 	}
 
 	for (auto const& row : rows) {
@@ -73,6 +76,7 @@ bool QP::ResultTable::containsRow(const ResultRow& row) {
 
 ResultRow QP::ResultTable::getRowWithOrder(const vector<string>& synonyms, size_t row_number) const {
 	ResultRow row_with_order;
+	row_with_order.reserve(synonyms.size());
 	ResultRow row = table.at(row_number);
 	for (string const& synonym : synonyms) {
 		row_with_order.push_back(row.at(synonyms_to_index_map.at(synonym)));
@@ -90,7 +94,7 @@ unordered_multimap<ResultRow, size_t> QP::ResultTable::buildHashTable(ResultTabl
 		for (string const& synonym : key_synonyms) {
 			sub_row.push_back(row.at(synonyms_to_index_map.at(synonym)));
 		}
-		map.insert({sub_row, row_number});
+		map.emplace(sub_row, row_number);
 		row_number++;
 	}
 
@@ -117,6 +121,7 @@ QP::ResultTable QP::ResultTable::intersectTables(const ResultTable& superset_tab
 
 static ResultRow mergeRow(ResultRow current_row, const ResultRow& other_row, const vector<string>& synonym_order,
                           const unordered_map<string, size_t>& synonym_map) {
+	current_row.reserve(current_row.size() + synonym_order.size());
 	for (string const& synonym : synonym_order) {
 		size_t index = synonym_map.at(synonym);
 		current_row.push_back(other_row.at(index));
@@ -165,6 +170,7 @@ QP::ResultTable QP::ResultTable::hashJoinTables(const ResultTable& table_one, co
 
 QP::ResultTable QP::ResultTable::loopJoinTables(const ResultTable& table_one, const ResultTable& table_two) {
 	vector<string> final_synonyms;
+	final_synonyms.reserve(table_one.synonyms_stored.size() + table_two.synonyms_stored.size());
 	final_synonyms.insert(final_synonyms.end(), table_one.synonyms_stored.begin(), table_one.synonyms_stored.end());
 	final_synonyms.insert(final_synonyms.end(), table_two.synonyms_stored.begin(), table_two.synonyms_stored.end());
 
@@ -172,6 +178,7 @@ QP::ResultTable QP::ResultTable::loopJoinTables(const ResultTable& table_one, co
 	for (auto const& table_one_row : table_one.table) {
 		for (auto const& table_two_row : table_two.table) {
 			ResultRow row = table_one_row;
+			row.reserve(table_two_row.size());
 			row.insert(row.end(), table_two_row.begin(), table_two_row.end());
 			table.insertRow(row);
 		}
