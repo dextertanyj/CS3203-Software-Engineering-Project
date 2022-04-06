@@ -65,7 +65,7 @@ Select s with s.stmt# = 3
 5000
 14 - stmt.stmt# 1 rev
 stmt s;
-Select s with 3 = s.stmt# = 3
+Select s with 3 = s.stmt#
 3
 5000
 15 - read.stmt# 1
@@ -212,4 +212,24 @@ Select if with if.stmt# = v.stmt#
 assign a; constant c;
 Select a with a.stmt# = c.value
 1, 2, 10, 36
+5000
+44 - syntax error 1
+stmt s;
+Select s with 3 = s.stmt# = 3
+
+5000
+45 - syntax error 2
+stmt s;
+Select s with 3 == 3
+
+5000
+44 - explicit and
+procedure pc; print p; stmt s;
+Select <pc.procName, p.stmt#> with pc.procName = p.varName and p.stmt# = s.stmt#
+y2 8
+5000
+45 - 2 with clauses
+procedure pc; print p; stmt s;
+Select <p, p, pc> with pc.procName = p.varName with p.stmt# = s.stmt#
+8 8 y2
 5000
