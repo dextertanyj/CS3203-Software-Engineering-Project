@@ -11,8 +11,8 @@
 #include "climits"
 
 TEST_CASE("PKB::NodeInterface Constructor Test") {
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 
 	CHECK_NOTHROW(PKB::IfNode(if_stmt));
@@ -24,8 +24,8 @@ TEST_CASE("PKB::NodeInterface Constructor Test") {
 }
 
 TEST_CASE("PKB::NodeInterface::setNext Test") {
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 
@@ -39,8 +39,8 @@ TEST_CASE("PKB::NodeInterface::setNext Test") {
 }
 
 TEST_CASE("PKB::IfNode::insertIfNext Test") {
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 
 	shared_ptr<PKB::IfNode> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
@@ -51,8 +51,8 @@ TEST_CASE("PKB::IfNode::insertIfNext Test") {
 }
 
 TEST_CASE("PKB::IfNode::insertIfExit Test") {
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 
 	shared_ptr<PKB::IfNode> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
@@ -63,8 +63,8 @@ TEST_CASE("PKB::IfNode::insertIfExit Test") {
 }
 
 TEST_CASE("PKB::NodeInterface::getNextNodes Test") {
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 
@@ -84,8 +84,8 @@ TEST_CASE("PKB::NodeInterface::getNextNodes Test") {
 }
 
 TEST_CASE("PKB::NodeInterface::setPrevious Test") {
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 
@@ -101,8 +101,8 @@ TEST_CASE("PKB::NodeInterface::setPrevious Test") {
 }
 
 TEST_CASE("PKB::NodeInterface::getPreviousNodes Test") {
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 
@@ -123,13 +123,13 @@ TEST_CASE("PKB::NodeInterface::getPreviousNodes Test") {
 }
 
 TEST_CASE("PKB::NodeInterface::setGraphIndex Test") {
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
 	shared_ptr<PKB::NodeInterface> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
 	CHECK_NOTHROW(if_node->setGraphIndex(5));
 }
 
 TEST_CASE("PKB::NodeInterface::getGraphIndex Test") {
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
 	shared_ptr<PKB::NodeInterface> if_node = make_shared<PKB::IfNode>(PKB::IfNode(if_stmt));
 	REQUIRE(if_node->getGraphIndex() == 0);
 	if_node->setGraphIndex(5);
@@ -137,8 +137,8 @@ TEST_CASE("PKB::NodeInterface::getGraphIndex Test") {
 }
 
 TEST_CASE("PKB::NodeInterface::getNodeRef Test") {
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 
@@ -156,8 +156,8 @@ TEST_CASE("PKB::NodeInterface::getNodeRef Test") {
 }
 
 TEST_CASE("PKB::NodeInterface::getNodeType Test") {
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 
@@ -173,8 +173,8 @@ TEST_CASE("PKB::NodeInterface::getNodeType Test") {
 }
 
 TEST_CASE("PKB::NodeInterface Comparator Test") {
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 

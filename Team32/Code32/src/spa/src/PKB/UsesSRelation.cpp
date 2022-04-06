@@ -10,7 +10,7 @@ bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const s
 	if (statement->getType() == StmtType::Read) {
 		throw invalid_argument("Read statements cannot use a variable");
 	}
-	if (statement->getType() == StmtType::WhileStmt || statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::Call ||
+	if (statement->getType() == StmtType::While || statement->getType() == StmtType::If || statement->getType() == StmtType::Call ||
 	    statement->getType() == StmtType::Assign) {
 		return true;
 	}
@@ -28,7 +28,7 @@ bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const s
 	if (statement->getType() == StmtType::Read) {
 		throw invalid_argument("Read statements cannot use a variable");
 	}
-	if (statement->getType() == StmtType::WhileStmt || statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::Call ||
+	if (statement->getType() == StmtType::While || statement->getType() == StmtType::If || statement->getType() == StmtType::Call ||
 	    statement->getType() == StmtType::Assign || variables.empty()) {
 		return true;
 	}
@@ -74,7 +74,7 @@ void PKB::UsesSRelation::optimizeCall(const shared_ptr<StmtInfo>& statement, Cal
 
 void PKB::UsesSRelation::optimizeConditional(const shared_ptr<StmtInfo>& statement, Types::ParentStore& parent_store,
                                              SVRelationStore<UsesSRelation>& store) {
-	if (statement->getType() != StmtType::IfStmt && statement->getType() != StmtType::WhileStmt) {
+	if (statement->getType() != StmtType::If && statement->getType() != StmtType::While) {
 		return;
 	}
 	// For conditional statements, need to look at the child* statements for uses statements.

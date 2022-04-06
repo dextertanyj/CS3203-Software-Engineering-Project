@@ -26,7 +26,7 @@ TEST_CASE("PKB::FollowsRelation::insertReverse Test") {
 TEST_CASE("PKB::FollowsRelation::appendReverseTransitive Test") {
 	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(5, StmtType::Print);
 	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(6, StmtType::Assign);
-	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(7, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(7, StmtType::If);
 	shared_ptr<StmtInfo> s_4 = TestUtilities::createStmtInfo(1, StmtType::Print);
 	unordered_set<shared_ptr<StmtInfo>> set({s_1, s_2, s_3});
 	PKB::FollowsRelation relation = PKB::FollowsRelation(TestUtilities::createStmtInfo(4, StmtType::Read));
@@ -39,7 +39,7 @@ TEST_CASE("PKB::FollowsRelation::appendReverseTransitive Test") {
 TEST_CASE("PKB::FollowsRelation::appendForwardTransitive Test") {
 	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(1, StmtType::Print);
 	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(2, StmtType::Assign);
-	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(3, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(3, StmtType::If);
 	shared_ptr<StmtInfo> s_4 = TestUtilities::createStmtInfo(7, StmtType::Print);
 	unordered_set<shared_ptr<StmtInfo>> set({s_1, s_2, s_3});
 	PKB::FollowsRelation relation = PKB::FollowsRelation(TestUtilities::createStmtInfo(6, StmtType::Read));
@@ -70,7 +70,7 @@ TEST_CASE("PKB::FollowsRelation::getReverse Test") {
 TEST_CASE("PKB::FollowsRelation::getForwardTransitive Test") {
 	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(1, StmtType::Print);
 	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(2, StmtType::Assign);
-	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(3, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(3, StmtType::If);
 	shared_ptr<StmtInfo> s_4 = TestUtilities::createStmtInfo(7, StmtType::Print);
 	unordered_set<shared_ptr<StmtInfo>> set({s_1, s_2, s_3});
 	PKB::FollowsRelation relation = PKB::FollowsRelation(TestUtilities::createStmtInfo(6, StmtType::Read));
@@ -87,7 +87,7 @@ TEST_CASE("PKB::FollowsRelation::getForwardTransitive Test") {
 TEST_CASE("PKB::FollowsRelation::getReverseTransitive Test") {
 	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(3, StmtType::Print);
 	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(4, StmtType::Assign);
-	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(5, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(5, StmtType::If);
 	shared_ptr<StmtInfo> s_4 = TestUtilities::createStmtInfo(1, StmtType::Assign);
 	unordered_set<shared_ptr<StmtInfo>> set({s_1, s_2, s_3});
 	PKB::FollowsRelation relation = PKB::FollowsRelation(TestUtilities::createStmtInfo(2, StmtType::Read));
@@ -104,7 +104,7 @@ TEST_CASE("PKB::FollowsRelation::getReverseTransitive Test") {
 TEST_CASE("PKB::FollowsRelation Overall Test") {
 	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(1, StmtType::Print);
 	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(2, StmtType::Assign);
-	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(4, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(4, StmtType::If);
 	shared_ptr<StmtInfo> s_4 = TestUtilities::createStmtInfo(7, StmtType::Call);
 	unordered_set<shared_ptr<StmtInfo>> forward({s_1, s_2});
 	unordered_set<shared_ptr<StmtInfo>> reverse({s_3, s_4});
@@ -132,11 +132,11 @@ TEST_CASE("PKB::FollowsRelation Overall Test") {
 TEST_CASE("PKB::FollowsRelation::optimize Test") {
 	PKB::Types::FollowsStore store = PKB::Types::FollowsStore();
 	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(1, StmtType::Call);
-	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> s_2_1 = TestUtilities::createStmtInfo(3, StmtType::Read);
 	shared_ptr<StmtInfo> s_2_2 = TestUtilities::createStmtInfo(4, StmtType::Print);
 	shared_ptr<StmtInfo> s_2_3 = TestUtilities::createStmtInfo(5, StmtType::Assign);
-	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(6, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(6, StmtType::If);
 	store.set(s_1, s_2);
 	store.set(s_2, s_3);
 	store.set(s_2_1, s_2_2);

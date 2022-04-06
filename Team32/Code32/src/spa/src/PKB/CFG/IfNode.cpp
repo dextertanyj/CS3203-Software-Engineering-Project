@@ -7,7 +7,7 @@
 
 PKB::IfNode::IfNode(const shared_ptr<StmtInfo>& info)
 	: PKB::StatementNode(Types::NodeType::If, info), dummy_node(make_shared<PKB::DummyNode>(info->getIdentifier())) {
-	assert(info->getType() == StmtType::IfStmt);
+	assert(info->getType() == StmtType::If);
 }
 
 void PKB::IfNode::setConnection(shared_ptr<PKB::NodeInterface> next) {

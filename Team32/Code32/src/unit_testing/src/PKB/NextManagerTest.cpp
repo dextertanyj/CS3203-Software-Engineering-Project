@@ -17,8 +17,8 @@ TEST_CASE("PKB::NextManager::getNext Test") {
 	 * */
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 	shared_ptr<StmtInfo> assign_stmt = TestUtilities::createStmtInfo(5, StmtType::Assign);
@@ -55,8 +55,8 @@ TEST_CASE("PKB::NextManager::getPrevious Test") {
 	 * */
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 	shared_ptr<StmtInfo> assign_stmt = TestUtilities::createStmtInfo(5, StmtType::Assign);
@@ -93,8 +93,8 @@ TEST_CASE("PKB::NextManager::checkNext Test") {
 	 * */
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 	shared_ptr<StmtInfo> assign_stmt = TestUtilities::createStmtInfo(5, StmtType::Assign);
@@ -143,13 +143,13 @@ TEST_CASE("PKB::NextManager Overall Complicated Stress Test") {
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 
-	shared_ptr<StmtInfo> if_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> if_stmt_2 = TestUtilities::createStmtInfo(2, StmtType::IfStmt);
+	shared_ptr<StmtInfo> if_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> if_stmt_2 = TestUtilities::createStmtInfo(2, StmtType::If);
 	shared_ptr<StmtInfo> print_stmt_3 = TestUtilities::createStmtInfo(3, StmtType::Print);
-	shared_ptr<StmtInfo> if_stmt_4 = TestUtilities::createStmtInfo(4, StmtType::IfStmt);
+	shared_ptr<StmtInfo> if_stmt_4 = TestUtilities::createStmtInfo(4, StmtType::If);
 	shared_ptr<StmtInfo> read_stmt_5 = TestUtilities::createStmtInfo(5, StmtType::Read);
 	shared_ptr<StmtInfo> assign_stmt_6 = TestUtilities::createStmtInfo(6, StmtType::Assign);
-	shared_ptr<StmtInfo> if_stmt_7 = TestUtilities::createStmtInfo(7, StmtType::IfStmt);
+	shared_ptr<StmtInfo> if_stmt_7 = TestUtilities::createStmtInfo(7, StmtType::If);
 	shared_ptr<StmtInfo> assign_stmt_8 = TestUtilities::createStmtInfo(8, StmtType::Assign);
 	shared_ptr<StmtInfo> assign_stmt_9 = TestUtilities::createStmtInfo(9, StmtType::Assign);
 	shared_ptr<StmtInfo> call_stmt_10 = TestUtilities::createStmtInfo(10, StmtType::Call);
@@ -213,8 +213,8 @@ TEST_CASE("PKB::NextManager::checkNextStar Test") {
 	 * */
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 	shared_ptr<StmtInfo> assign_stmt = TestUtilities::createStmtInfo(5, StmtType::Assign);
@@ -257,8 +257,8 @@ TEST_CASE("PKB::NextManager::getPreviousStar Test") {
 	 * */
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
-	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(3, StmtType::Print);
 	shared_ptr<StmtInfo> read_stmt = TestUtilities::createStmtInfo(4, StmtType::Read);
 	shared_ptr<StmtInfo> assign_stmt = TestUtilities::createStmtInfo(5, StmtType::Assign);
@@ -316,17 +316,17 @@ TEST_CASE("PKB::NextManager Nested Container Test") {
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 
-	shared_ptr<StmtInfo> stmt_1 = TestUtilities::createStmtInfo(1, StmtType::IfStmt);
-	shared_ptr<StmtInfo> stmt_2 = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
-	shared_ptr<StmtInfo> stmt_3 = TestUtilities::createStmtInfo(3, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> stmt_1 = TestUtilities::createStmtInfo(1, StmtType::If);
+	shared_ptr<StmtInfo> stmt_2 = TestUtilities::createStmtInfo(2, StmtType::While);
+	shared_ptr<StmtInfo> stmt_3 = TestUtilities::createStmtInfo(3, StmtType::While);
 	shared_ptr<StmtInfo> stmt_4 = TestUtilities::createStmtInfo(4, StmtType::Read);
 	shared_ptr<StmtInfo> stmt_5 = TestUtilities::createStmtInfo(5, StmtType::Print);
-	shared_ptr<StmtInfo> stmt_6 = TestUtilities::createStmtInfo(6, StmtType::WhileStmt);
-	shared_ptr<StmtInfo> stmt_7 = TestUtilities::createStmtInfo(7, StmtType::IfStmt);
-	shared_ptr<StmtInfo> stmt_8 = TestUtilities::createStmtInfo(8, StmtType::WhileStmt);
+	shared_ptr<StmtInfo> stmt_6 = TestUtilities::createStmtInfo(6, StmtType::While);
+	shared_ptr<StmtInfo> stmt_7 = TestUtilities::createStmtInfo(7, StmtType::If);
+	shared_ptr<StmtInfo> stmt_8 = TestUtilities::createStmtInfo(8, StmtType::While);
 	shared_ptr<StmtInfo> stmt_9 = TestUtilities::createStmtInfo(9, StmtType::Read);
 	shared_ptr<StmtInfo> stmt_10 = TestUtilities::createStmtInfo(10, StmtType::Print);
-	shared_ptr<StmtInfo> stmt_11 = TestUtilities::createStmtInfo(11, StmtType::IfStmt);
+	shared_ptr<StmtInfo> stmt_11 = TestUtilities::createStmtInfo(11, StmtType::If);
 	shared_ptr<StmtInfo> stmt_12 = TestUtilities::createStmtInfo(12, StmtType::Read);
 	shared_ptr<StmtInfo> stmt_13 = TestUtilities::createStmtInfo(13, StmtType::Print);
 

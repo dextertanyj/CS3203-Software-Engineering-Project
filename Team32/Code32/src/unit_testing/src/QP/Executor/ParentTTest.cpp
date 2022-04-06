@@ -10,8 +10,8 @@ using namespace Types;
 TEST_CASE("StatementExecutor<ClauseType::ParentT>::execute") {
 	PKB::Storage pkb = PKB::Storage();
 	StorageAdapter store = StorageAdapter(pkb);
-	pkb.setStmtType(1, StmtType::WhileStmt);
-	pkb.setStmtType(2, StmtType::IfStmt);
+	pkb.setStmtType(1, StmtType::While);
+	pkb.setStmtType(2, StmtType::If);
 	pkb.setStmtType(3, StmtType::Read);
 	pkb.setStmtType(4, StmtType::Assign);
 	pkb.setParent(1, 2);

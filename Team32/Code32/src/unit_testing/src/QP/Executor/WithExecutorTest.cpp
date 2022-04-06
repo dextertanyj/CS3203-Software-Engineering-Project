@@ -19,7 +19,7 @@ TEST_CASE("WithExecutor::execute") {
 	StorageAdapter store = StorageAdapter(pkb);
 	pkb.setStmtType(1, StmtType::Print);
 	pkb.setStmtType(2, StmtType::Call);
-	pkb.setStmtType(3, StmtType::WhileStmt);
+	pkb.setStmtType(3, StmtType::While);
 	pkb.setStmtType(4, StmtType::Read);
 	pkb.setUses(1, "x");
 	pkb.setUses(3, "x");
@@ -29,7 +29,7 @@ TEST_CASE("WithExecutor::execute") {
 	pkb.setWhileControl(3, "x");
 	pkb.setProc("main", 1, 4);
 
-	pkb.setStmtType(5, StmtType::IfStmt);
+	pkb.setStmtType(5, StmtType::If);
 	pkb.setStmtType(6, StmtType::Assign);
 	pkb.setStmtType(7, StmtType::Print);
 	pkb.setUses(5, "y");

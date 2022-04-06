@@ -5,8 +5,8 @@
 
 TEST_CASE("PKB::ModifiesSRelation Test") {
 	PKB::SVRelationStore<PKB::ModifiesSRelation> store = PKB::SVRelationStore<PKB::ModifiesSRelation>();
-	shared_ptr<StmtInfo> s1 = TestUtilities::createStmtInfo(1, StmtType::WhileStmt);
-	shared_ptr<StmtInfo> s2 = TestUtilities::createStmtInfo(2, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s1 = TestUtilities::createStmtInfo(1, StmtType::While);
+	shared_ptr<StmtInfo> s2 = TestUtilities::createStmtInfo(2, StmtType::If);
 	shared_ptr<StmtInfo> s3 = TestUtilities::createStmtInfo(3, StmtType::Assign);
 	shared_ptr<StmtInfo> s4 = TestUtilities::createStmtInfo(4, StmtType::Call);
 	shared_ptr<StmtInfo> s5 = TestUtilities::createStmtInfo(5, StmtType::Read);
