@@ -10,7 +10,7 @@ TEST_CASE("PKB::SVRelationStore") {
 	PKB::SVRelationStore while_control_store = PKB::SVRelationStore<PKB::WhileControlRelation>();
 	shared_ptr<StmtInfo> s_1 = TestUtilities::createStmtInfo(5, StmtType::Print);
 	shared_ptr<StmtInfo> s_2 = TestUtilities::createStmtInfo(6, StmtType::Assign);
-	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(7, StmtType::IfStmt);
+	shared_ptr<StmtInfo> s_3 = TestUtilities::createStmtInfo(7, StmtType::If);
 	shared_ptr<StmtInfo> s_4 = TestUtilities::createStmtInfo(1, StmtType::Read);
 	shared_ptr<StmtInfo> s_5 = TestUtilities::createStmtInfo(8, StmtType::WhileStmt);
 
@@ -37,7 +37,7 @@ TEST_CASE("PKB::SVRelationStore") {
 		CHECK(uses_store.check(6, "a"));
 		CHECK(uses_store.check(7, "x"));
 
-		// Statements that are not of type IfStmt should throw an error
+		// Statements that are not of type If should throw an error
 		CHECK_THROWS(if_control_store.set(s_1, "x"));
 		CHECK_THROWS(if_control_store.set(s_2, "y"));
 		CHECK_NOTHROW(if_control_store.set(s_3, "x"));
@@ -63,7 +63,7 @@ TEST_CASE("PKB::SVRelationStore") {
 		CHECK(uses_store.check(6, "y"));
 		CHECK(uses_store.check(6, "z"));
 
-		// Statements that are not of type IfStmt should throw an error
+		// Statements that are not of type If should throw an error
 		CHECK_THROWS(if_control_store.set(s_1, v_5));
 		CHECK_THROWS(if_control_store.set(s_2, v_1));
 		CHECK_NOTHROW(if_control_store.set(s_3, v_2));

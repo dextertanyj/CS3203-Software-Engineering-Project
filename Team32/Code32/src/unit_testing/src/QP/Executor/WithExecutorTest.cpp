@@ -29,7 +29,7 @@ TEST_CASE("WithExecutor::execute") {
 	pkb.setWhileControl(3, "x");
 	pkb.setProc("main", 1, 4);
 
-	pkb.setStmtType(5, StmtType::IfStmt);
+	pkb.setStmtType(5, StmtType::If);
 	pkb.setStmtType(6, StmtType::Assign);
 	pkb.setStmtType(7, StmtType::Print);
 	pkb.setUses(5, "y");

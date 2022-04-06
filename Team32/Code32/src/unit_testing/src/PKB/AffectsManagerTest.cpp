@@ -72,7 +72,7 @@ TEST_CASE("PKB::AffectsManager::getAffects Test") {
 		 * 8. z = x;
 		 */
 		shared_ptr<StmtInfo> assign_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::Assign);
-		shared_ptr<StmtInfo> if_stmt_2 = TestUtilities::createStmtInfo(2, StmtType::IfStmt);
+		shared_ptr<StmtInfo> if_stmt_2 = TestUtilities::createStmtInfo(2, StmtType::If);
 		shared_ptr<StmtInfo> assign_stmt_3 = TestUtilities::createStmtInfo(3, StmtType::Assign);
 		shared_ptr<StmtInfo> assign_stmt_4 = TestUtilities::createStmtInfo(4, StmtType::Assign);
 		shared_ptr<StmtInfo> assign_stmt_5 = TestUtilities::createStmtInfo(5, StmtType::Assign);
@@ -289,7 +289,7 @@ TEST_CASE("PKB::AffectsManager::getAffected Test") {
 		shared_ptr<StmtInfo> call_stmt_2 = TestUtilities::createStmtInfo(2, StmtType::Call);
 		shared_ptr<StmtInfo> assign_stmt_3 = TestUtilities::createStmtInfo(3, StmtType::Assign);
 		shared_ptr<StmtInfo> assign_stmt_4 = TestUtilities::createStmtInfo(4, StmtType::Assign);
-		shared_ptr<StmtInfo> if_stmt_5 = TestUtilities::createStmtInfo(5, StmtType::IfStmt);
+		shared_ptr<StmtInfo> if_stmt_5 = TestUtilities::createStmtInfo(5, StmtType::If);
 		shared_ptr<StmtInfo> assign_stmt_6 = TestUtilities::createStmtInfo(6, StmtType::Assign);
 		shared_ptr<StmtInfo> assign_stmt_7 = TestUtilities::createStmtInfo(7, StmtType::Assign);
 		shared_ptr<StmtInfo> assign_stmt_8 = TestUtilities::createStmtInfo(8, StmtType::Assign);
@@ -715,7 +715,7 @@ TEST_CASE("PKB::AffectsManager::getAffectsStar Test") {
 	shared_ptr<StmtInfo> assign_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::Assign);
 	shared_ptr<StmtInfo> while_stmt_2 = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
 	shared_ptr<StmtInfo> assign_stmt_3 = TestUtilities::createStmtInfo(3, StmtType::Assign);
-	shared_ptr<StmtInfo> if_stmt_4 = TestUtilities::createStmtInfo(4, StmtType::IfStmt);
+	shared_ptr<StmtInfo> if_stmt_4 = TestUtilities::createStmtInfo(4, StmtType::If);
 	shared_ptr<StmtInfo> assign_stmt_5 = TestUtilities::createStmtInfo(5, StmtType::Assign);
 	shared_ptr<StmtInfo> assign_stmt_6 = TestUtilities::createStmtInfo(6, StmtType::Assign);
 	shared_ptr<StmtInfo> while_stmt_7 = TestUtilities::createStmtInfo(7, StmtType::WhileStmt);
@@ -878,7 +878,7 @@ TEST_CASE("PKB::AffectsManager::getAffectedStar Test") {
 	shared_ptr<StmtInfo> assign_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::Assign);
 	shared_ptr<StmtInfo> while_stmt_2 = TestUtilities::createStmtInfo(2, StmtType::WhileStmt);
 	shared_ptr<StmtInfo> assign_stmt_3 = TestUtilities::createStmtInfo(3, StmtType::Assign);
-	shared_ptr<StmtInfo> if_stmt_4 = TestUtilities::createStmtInfo(4, StmtType::IfStmt);
+	shared_ptr<StmtInfo> if_stmt_4 = TestUtilities::createStmtInfo(4, StmtType::If);
 	shared_ptr<StmtInfo> assign_stmt_5 = TestUtilities::createStmtInfo(5, StmtType::Assign);
 	shared_ptr<StmtInfo> assign_stmt_6 = TestUtilities::createStmtInfo(6, StmtType::Assign);
 	shared_ptr<StmtInfo> while_stmt_7 = TestUtilities::createStmtInfo(7, StmtType::WhileStmt);

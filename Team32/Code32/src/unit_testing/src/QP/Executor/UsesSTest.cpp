@@ -13,7 +13,7 @@ TEST_CASE("StatementVariableExecutor<ClauseType::UsesS>::execute") {
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Print);
 	pkb.setStmtType(3, StmtType::WhileStmt);
-	pkb.setStmtType(4, StmtType::IfStmt);
+	pkb.setStmtType(4, StmtType::If);
 	pkb.setUses(1, "x");
 	pkb.setUses(1, "z");
 	pkb.setUses(2, "x");

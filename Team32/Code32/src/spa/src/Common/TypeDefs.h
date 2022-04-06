@@ -21,7 +21,7 @@ using ConstVal = unsigned long long int;
 using VarRef = std::string;
 using ProcRef = std::string;
 
-enum class StmtType { Assign, Print, Call, Read, WhileStmt, IfStmt };
+enum class StmtType { Assign, Print, Call, Read, WhileStmt, If };
 enum class MathematicalOperator { Plus, Minus, Times, Divide, Modulo, EQ, NEQ, LT, LTE, GT, GTE, And, Or, Not };
 
 class StatementInfoInterface {

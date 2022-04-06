@@ -13,7 +13,7 @@ TEST_CASE("StatementExecutor<ClauseType::Follows>::execute") {
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::WhileStmt);
-	pkb.setStmtType(4, StmtType::IfStmt);
+	pkb.setStmtType(4, StmtType::If);
 	pkb.setFollows(1, 2);
 	pkb.setFollows(2, 3);
 	pkb.setFollows(3, 4);

@@ -18,7 +18,7 @@ TEST_CASE("QueryEvaluator::execute") {
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Read);
 	pkb.setStmtType(3, StmtType::Assign);
-	pkb.setStmtType(4, StmtType::IfStmt);
+	pkb.setStmtType(4, StmtType::If);
 	pkb.setFollows(1, 2);
 	pkb.setFollows(3, 4);
 	pkb.setModifies(1, "x");

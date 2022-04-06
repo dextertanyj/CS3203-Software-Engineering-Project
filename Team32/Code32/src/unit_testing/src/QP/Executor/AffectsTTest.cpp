@@ -39,7 +39,7 @@ TEST_CASE("StatementExecutor<ClauseType::AffectsT>::execute") {
 	 */
 	PKB::Storage pkb = PKB::Storage();
 	StorageAdapter store = StorageAdapter(pkb);
-	pkb.setStmtType(1, StmtType::IfStmt);
+	pkb.setStmtType(1, StmtType::If);
 	pkb.setStmtType(2, StmtType::Assign);
 	pkb.setStmtType(3, StmtType::Read);
 	pkb.setModifies(3, "x");
