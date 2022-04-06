@@ -1,0 +1,56 @@
+procedure y1 {
+	energy = 100;
+	cs1010 = energy * effort;
+	call y2;
+	energy = energy - 10;
+	while (energy > 1) {
+		print randomActivity;
+		energy = energy - 1;
+	}
+}
+
+procedure y2 {
+	cs1010 = pass;
+	cs2030 = cs1010;
+	cs2040 = cs1010;   
+	while(( !  (  b  < 2  ) )  ||( (  48  >= b ) ||(a <= 36 )  )){
+		while (cs2040 < a) {
+			while (cs2040 < b) {
+				while (cs2040 < c) {
+					while (cs2030 < a) {
+						while (cs2030 < b) {
+							while (cs2030 < c) {
+								read cs2030;
+							}
+							cs2030 = sad;
+						}
+						cs2030 = nubbad;   
+					}
+					read cs2040;
+				}
+				cs2040 = sad;
+			}
+			cs2040 = nubbad;
+		} 
+		randomCommitments = randomCommitments + 3;
+	}
+	cs2103 = cs2030 + cs2040;
+	if (cs2103 == fail) then {
+		cs2103 = cs2030 + cs2040 + cs2103;
+	} else {
+		call y3;
+	}
+	internship = cs2030 + cs2040 + cs2103;
+}
+
+procedure y3 {
+	energy = energy / 10;  
+	a = b;
+	b = c;
+	if (energy == got) then {
+		c = d;
+		d = a;
+	} else {
+		c = a;
+	}
+}

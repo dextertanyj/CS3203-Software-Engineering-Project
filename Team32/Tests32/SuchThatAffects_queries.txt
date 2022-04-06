@@ -1,0 +1,205 @@
+1 - affect syn-assign, syn-assign positive
+assign a, a1;
+Select a such that Affects(a, a1)
+1, 4, 7, 8, 9, 10, 20, 23, 24, 25, 27, 31
+5000
+2 - affect syn-assign, syn-assign same
+assign a;
+Select a such that Affects(a, a)
+7, 24
+5000
+3 - affect syn-assign, syn-stmt positive
+assign a; stmt s;
+Select s such that Affects(a, s)
+2, 7, 9, 10, 24, 25, 27, 29, 35, 36
+5000
+4 - affect syn-assign, stmtno positive
+assign a;
+Select a such that Affects(a, 7)
+4, 7
+5000
+5 - affect syn-assign, _ positive
+assign a;
+Select a such that Affects(a, _)
+1, 4, 7, 8, 9, 10, 20, 23, 24, 25, 27, 31
+5000
+6 - affect syn-stmt, syn-assign positive
+assign a; stmt s;
+Select a such that Affects(s, a)
+2, 7, 9, 10, 24, 25, 27, 29, 35, 36
+5000
+7 - affect syn-stmt, syn-stmt positive
+stmt s, s1;
+Select s such that Affects(s, s1)
+1, 4, 7, 8, 9, 10, 20, 23, 24, 25, 27, 31
+5000
+8 - affect syn-stmt, syn-stmt same
+stmt s;
+Select s such that Affects(s, s)
+7, 24
+5000
+9 - affect syn-stmt, stmtno positive
+stmt s;
+Select s such that Affects(s, 10)
+8
+5000
+10 - affect syn-stmt, _ positive
+stmt s;
+Select s such that Affects(s, _)
+1, 4, 7, 8, 9, 10, 20, 23, 24, 25, 27, 31
+5000
+11 - affect stmtno, syn-assign positive
+assign a;
+Select a such that Affects(8, a)
+9, 10
+5000
+12 - affect stmtno, syn-stmt positive
+stmt s;
+Select s such that Affects(8, s)
+9, 10
+5000
+13 - affect stmtno, stmtno positive
+
+Select BOOLEAN such that Affects(1, 4)
+FALSE
+5000
+14 - affect stmtno, stmtno same
+
+Select BOOLEAN such that Affects(4, 4)
+FALSE
+5000
+15 - affect stmtno, _ positive
+
+Select BOOLEAN such that Affects(1, _)
+TRUE
+5000
+16 - affect _, syn-assign positive
+assign a;
+Select a such that Affects(_, a)
+2, 7, 9, 10, 24, 25, 27, 29, 35, 36
+5000
+17 - affect _, syn-stmt positive
+stmt s;
+Select s such that Affects(_, s)
+2, 7, 9, 10, 24, 25, 27, 29, 35, 36
+5000
+18 - affect _, stmtno positive
+
+Select BOOLEAN such that Affects(_, 29)
+TRUE
+5000
+19 - affect _, _ positive
+
+Select BOOLEAN such that Affects(_, _)
+TRUE
+5000
+20 - affect invalid synonym (semantic error)
+procedure p; 
+Select BOOLEAN such that Affects(p, _)
+FALSE
+5000
+21 - affectsT syn-assign, syn-assign positive
+assign a, a1;
+Select <a, a1> such that Affects*(a, a1)
+1 2, 4 7, 7 7, 8 9, 8 10, 8 25, 8 27, 8 29, 9 25, 9 27, 9 29, 10 25, 10 27, 10 29, 20 25, 20 27, 20 29, 23 25, 23 27, 23 29, 24 24, 25 27, 25 29, 27 29, 31 35, 31 36
+5000
+22 - affectsT syn-assign, syn-assign same
+assign a;
+Select a such that Affects*(a, a)
+7, 24
+5000
+23 - affectsT syn-assign, syn-stmt positive
+assign a; stmt s;
+Select <a, s> such that Affects*(a, s)
+1 2, 4 7, 7 7, 8 9, 8 10, 8 25, 8 27, 8 29, 9 25, 9 27, 9 29, 10 25, 10 27, 10 29, 20 25, 20 27, 20 29, 23 25, 23 27, 23 29, 24 24, 25 27, 25 29, 27 29, 31 35, 31 36
+5000
+24 - affectsT syn-assign, stmtno positive
+assign a;
+Select a such that Affects*(a, 7)
+4, 7
+5000
+25 - affectsT syn-assign, _ positive
+assign a;
+Select a such that Affects*(a, _)
+1, 4, 7, 8, 9, 10, 20, 23, 24, 25, 27, 31
+5000
+26 - affectsT syn-stmt, syn-assign positive
+assign a; stmt s;
+Select a such that Affects*(s, a)
+2, 7, 9, 10, 24, 25, 27, 29, 35, 36
+5000
+27 - affectsT syn-stmt, syn-stmt positive
+stmt s, s1;
+Select s such that Affects*(s, s1)
+1, 4, 7, 8, 9, 10, 20, 23, 24, 25, 27, 31
+5000
+28 - affectsT syn-stmt, syn-stmt same
+stmt s;
+Select s such that Affects*(s, s)
+7, 24
+5000
+29 - affectsT syn-stmt, stmtno positive
+stmt s;
+Select s such that Affects*(s, 10)
+8
+5000
+30 - affectsT syn-stmt, _ positive
+stmt s;
+Select s such that Affects*(s, _)
+1, 4, 7, 8, 9, 10, 20, 23, 24, 25, 27, 31
+5000
+31 - affectsT stmtno, syn-assign positive
+assign a;
+Select a such that Affects*(8, a)
+9, 10, 25, 27, 29
+5000
+32 - affectsT stmtno, syn-stmt positive
+stmt s;
+Select s such that Affects*(8, s)
+9, 10, 25, 27, 29
+5000
+33 - affectsT stmtno, stmtno positive
+
+Select BOOLEAN such that Affects*(9, 29)
+TRUE
+5000
+34 - affectsT stmtno, stmtno same
+
+Select BOOLEAN such that Affects*(4, 4)
+FALSE
+5000
+35 - affectsT stmtno, _ positive
+
+Select BOOLEAN such that Affects*(8, _)
+TRUE
+5000
+36 - affectsT _, syn-assign positive
+assign a1;
+Select a1 such that Affects*(_, a1)
+2, 7, 9, 10, 24, 25, 27, 29, 35, 36
+5000
+37 - affectsT _, syn-stmt positive
+stmt s;
+Select s such that Affects*(_, s)
+2, 7, 9, 10, 24, 25, 27, 29, 35, 36
+5000
+38 - affectsT _, stmtno positive
+
+Select BOOLEAN such that Affects*(_, 29)
+TRUE
+5000
+39 - affectsT _, _ positive
+
+Select BOOLEAN such that Affects*(_, _)
+TRUE
+5000
+40 - affectsT OOB stmtno 1
+stmt s;
+Select s such that Affects*(_, 40)
+
+5000
+41 - affectsT OOB stmtno 2
+stmt s;
+Select s such that Affects*(0, _)
+
+5000
