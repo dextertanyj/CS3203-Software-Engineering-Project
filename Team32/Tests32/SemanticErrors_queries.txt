@@ -1,0 +1,230 @@
+1 - Syntax error
+procedure p q;
+Select BOOLEAN 
+
+5000
+2 - Semantic double declaration 1
+procedure p, p;
+Select BOOLEAN 
+FALSE
+5000
+3 - Semantic double declaration 2
+assign p; procedure p;
+Select BOOLEAN 
+FALSE
+5000
+4 - Semantic double declaration 3
+call p; call p; 
+Select BOOLEAN 
+FALSE
+5000
+5 - Semantic with int = name
+
+Select BOOLEAN with 1 = "cs1010"
+FALSE
+5000
+6 - Semantic with int attrib = name attrib
+assign a; read r;
+Select BOOLEAN with a.stmt# = r.varName
+FALSE
+5000
+7 - Semantic ambiguous wildcard
+
+Select BOOLEAN such that Uses(_, _)
+FALSE
+5000
+8 - Semantic ambiguous wildcard
+
+Select BOOLEAN such that Modifies(_, "energy")
+FALSE
+5000
+9 - Semantic wrong synonym type
+variable v;
+Select BOOLEAN such that Follows(v, _)
+FALSE
+5000
+10 - Semantic wrong synonym type
+variable v;
+Select BOOLEAN such that Follows*(_, v)
+FALSE
+5000
+11 - Semantic wrong synonym type
+constant c;
+Select BOOLEAN such that Follows*(c, _)
+FALSE
+5000
+12 - Semantic wrong synonym type
+procedure pc;
+Select BOOLEAN such that Follows(_, pc)
+FALSE
+5000
+13 - Semantic wrong synonym type
+variable v;
+Select BOOLEAN such that Parent(v, _)
+FALSE
+5000
+14 - Semantic wrong synonym type
+variable v;
+Select BOOLEAN such that Parent*(_, v)
+FALSE
+5000
+15 - Semantic wrong synonym type
+constant c; 
+Select BOOLEAN such that Parent*(c, _)
+FALSE
+5000
+16 - Semantic wrong synonym type
+procedure pc;
+Select BOOLEAN such that Parent(_, pc)
+FALSE
+5000
+17 - Semantic wrong synonym type
+stmt s;
+Select BOOLEAN such that Uses(s, s)
+FALSE
+5000
+18 - Semantic wrong synonym type
+stmt s; assign a;
+Select BOOLEAN such that Uses(s, a)
+FALSE
+5000
+19 - Semantic wrong synonym type
+constant c; stmt s;
+Select BOOLEAN such that Uses(s, c)
+FALSE
+5000
+20 - Semantic wrong synonym type
+constant c;
+Select BOOLEAN such that Uses(c, _)
+FALSE
+5000
+21 - Semantic wrong synonym type
+stmt s;
+Select BOOLEAN such that Modifies(1, s)
+FALSE
+5000
+22 - Semantic wrong synonym type
+stmt s; assign a;
+Select BOOLEAN such that Modifies(s, a)
+FALSE
+5000
+23 - Semantic wrong synonym type
+constant c; stmt s;
+Select BOOLEAN such that Modifies(s, c)
+FALSE
+5000
+24 - Semantic wrong synonym type
+constant c;
+Select BOOLEAN such that Modifies(c, _)
+FALSE
+5000
+25 - Semantic wrong synonym type
+procedure pc;
+Select BOOLEAN such that Next(pc, _)
+FALSE
+5000
+26 - Semantic wrong synonym type
+variable v;
+Select BOOLEAN such that Next*(v, _)
+FALSE
+5000
+27 - Semantic wrong synonym type
+constant c;
+Select BOOLEAN such that Next*(_, c)
+FALSE
+5000
+28 - Semantic wrong synonym type
+variable v;
+Select BOOLEAN such that Next(_, v)
+FALSE
+5000
+29 - Semantic wrong synonym type
+stmt s;
+Select BOOLEAN such that Calls(_, s)
+FALSE
+5000
+30 - Semantic wrong synonym type
+assign a;
+Select BOOLEAN such that Calls*(a, _)
+FALSE
+5000
+31 - Semantic wrong synonym type
+variable v;
+Select BOOLEAN such that Calls*(_, v)
+FALSE
+5000
+32 - Semantic wrong synonym type
+print p; procedure pc;
+Select BOOLEAN such that Calls(p, pc)
+FALSE
+5000
+33 - Semantic wrong synonym type
+assign a; while w;
+Select BOOLEAN such that Affects(a, w)
+FALSE
+5000
+34 - Semantic wrong synonym type
+if i; stmt s;
+Select BOOLEAN such that Affects*(i, s)
+FALSE
+5000
+35 - Semantic wrong synonym type
+procedure pc;
+Select BOOLEAN such that Affects*(10, pc)
+FALSE
+5000
+36 - Semantic wrong synonym type
+read r;
+Select BOOLEAN such that Affects(r, _)
+FALSE
+5000
+37 - Semantic pattern wrong synonym type 
+stmt s; assign a;
+Select BOOLEAN pattern a(s, _)
+FALSE
+5000
+38 - Semantic pattern wrong synonym type 
+read r; assign a;
+Select BOOLEAN pattern a(r, _"1"_)
+FALSE
+5000
+39 - Semantic pattern wrong synonym type 
+while w; assign a;
+Select BOOLEAN pattern a("cs2103", w)
+FALSE
+5000
+40 - Semantic pattern wrong synonym type 
+if i; while w;
+Select BOOLEAN pattern w(i, _)
+FALSE
+5000
+41 - Semantic pattern wrong synonym type 
+while w;
+Select BOOLEAN pattern w(w, _)
+FALSE
+5000
+42 - Semantic pattern wrong synonym type 
+if i; stmt s;
+Select BOOLEAN pattern i(s, _, _)
+FALSE
+5000
+43 - Semantic pattern wrong synonym type 
+if i; constant c;
+Select BOOLEAN pattern i(c, _, _)
+FALSE
+5000
+44 - Syntactic pattern wrong synonym type 1
+procedure pc; if i;
+Select BOOLEAN pattern i(pc, _, _)
+
+5000
+45 - Syntactic pattern wrong synonym type 2
+assign a;
+Select BOOLEAN pattern a("cs2103", _, _)
+
+5000
+46 - Syntactic pattern wrong synonym type 3
+while w;
+Select BOOLEAN pattern w("cs2103", _"cs2040"_)
+
+5000
