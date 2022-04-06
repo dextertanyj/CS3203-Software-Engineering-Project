@@ -1,5 +1,6 @@
 #include "ReferenceArgument.h"
 
+#include <cassert>
 #include <utility>
 
 using namespace std;
@@ -34,15 +35,15 @@ ReferenceType QP::ReferenceArgument::getType() const {
 
 Declaration QP::ReferenceArgument::getSynonym() const {
 	Declaration synonym;
-	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Synonym not stored."); }, [&](Declaration arg) { synonym = move(arg); },
-	              [&](Attribute arg) { synonym = move(arg.synonym); }},
+	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
+	              [&](Declaration arg) { synonym = move(arg); }, [&](Attribute arg) { synonym = move(arg.synonym); }},
 	      value);
 	return synonym;
 }
 
 string QP::ReferenceArgument::getSynonymSymbol() const {
 	string symbol;
-	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Synonym not stored."); },
+	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
 	              [&](const Declaration& arg) { symbol = arg.symbol; }, [&](const Attribute& arg) { symbol = arg.synonym.symbol; }},
 	      value);
 	return symbol;
@@ -50,7 +51,7 @@ string QP::ReferenceArgument::getSynonymSymbol() const {
 
 DesignEntity QP::ReferenceArgument::getSynonymType() const {
 	DesignEntity type;
-	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Synonym not stored."); },
+	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
 	              [&](const Declaration& arg) { type = arg.type; }, [&](const Attribute& arg) { type = arg.synonym.type; }},
 	      value);
 	return type;
@@ -58,15 +59,15 @@ DesignEntity QP::ReferenceArgument::getSynonymType() const {
 
 Attribute QP::ReferenceArgument::getAttribute() const {
 	Attribute attribute;
-	visit(
-		Visitor{[](auto) { throw QP::ReferenceArgumentException("Attribute not stored."); }, [&](Attribute arg) { attribute = move(arg); }},
-		value);
+	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
+	              [&](Attribute arg) { attribute = move(arg); }},
+	      value);
 	return attribute;
 }
 
 AttributeType QP::ReferenceArgument::getAttributeType() const {
 	AttributeType type;
-	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Attribute not stored."); },
+	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
 	              [&](const Attribute& arg) { type = arg.attribute; }},
 	      value);
 	return type;
@@ -74,20 +75,23 @@ AttributeType QP::ReferenceArgument::getAttributeType() const {
 
 string QP::ReferenceArgument::getName() const {
 	string name;
-	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Name not stored."); }, [&](string arg) { name = move(arg); }}, value);
+	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
+	              [&](string arg) { name = move(arg); }},
+	      value);
 	return name;
 }
 
 StmtRef QP::ReferenceArgument::getStatementIndex() const {
 	StmtRef index = 0;
-	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Statement index not stored."); }, [&](StmtRef arg) { index = arg; }},
+	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
+	              [&](StmtRef arg) { index = arg; }},
 	      value);
 	return index;
 }
 
 Common::ExpressionProcessor::Expression QP::ReferenceArgument::getExpression() const {
 	Common::ExpressionProcessor::Expression expr = Common::ExpressionProcessor::Expression(nullptr, {}, {});
-	visit(Visitor{[](auto) { throw QP::ReferenceArgumentException("Expression not stored."); },
+	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
 	              [&](pair<Common::ExpressionProcessor::Expression, bool> arg) { expr = move(arg.first); }},
 	      value);
 	return expr;
