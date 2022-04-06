@@ -1,6 +1,7 @@
 #include "PKB/CFG/StatementNode.h"
 
 #include <cassert>
+#include <utility>
 
 using namespace std;
 
@@ -8,7 +9,7 @@ PKB::StatementNode::StatementNode(const StmtInfoPtr& info) : NodeInterface(Types
 	assert(info->getType() != StmtType::While || info->getType() != StmtType::If);
 }
 
-PKB::StatementNode::StatementNode(Types::NodeType type, const StmtInfoPtr& info) : NodeInterface(type), stmt_info(info) {}
+PKB::StatementNode::StatementNode(Types::NodeType type, StmtInfoPtr info) : NodeInterface(type), stmt_info(move(info)) {}
 
 void PKB::StatementNode::setConnection(shared_ptr<NodeInterface> next) {
 	setNext(next);
