@@ -13,7 +13,7 @@ std::unordered_set<QP::Types::Number> QP::Executor::AttributeExecutor::extractNu
 };
 
 std::unordered_set<QP::Types::Number> QP::Executor::AttributeExecutor::selectStatements(const QP::StorageAdapter& store,
-                                                                                        const ReferenceArgument& argument) {
+                                                                                        const ClauseArgument& argument) {
 	Types::DesignEntity synonym = argument.getSynonymType();
 	StmtInfoPtrSet statements = store.getStatements();
 	std::unordered_set<Types::Number> result;
