@@ -1,0 +1,100 @@
+1 - ModifiesS(synonym, synonym) positive 1
+stmt s; variable v;
+Select s such that Modifies(s, v)
+1, 2, 3, 4, 6, 7, 8, 9, 10, 11
+5000
+2 - ModifiesS(synonym, synonym) positive 2
+stmt s; variable v;
+Select v such that Modifies(s, v)
+x, y, z
+5000
+3 - ModifiesS(synonym, synonym) negative 1
+print p; variable v;
+Select p such that Modifies(p, v)
+
+5000
+4 - ModifiesS(synonym, synonym) negative 2
+print p; variable v;
+Select v such that Modifies(p, v)
+
+5000
+5 - ModifiesS(synonym, synonym) trivial
+variable v; stmt s, s1;
+Select s such that Modifies(s1, v)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+5000
+6 - ModifiesS(synonym, _) positive
+read r;
+Select r such that Modifies(r, _)
+1, 2, 10
+5000
+7 - ModifiesS(synonym, varName) positive
+while w;
+Select w such that Modifies(w, "x")
+4
+5000
+8 - ModifiesS(synonym, varName) negative
+assign a;
+Select a such that Modifies(a, "z")
+
+5000
+9 - ModifiesS(stmtNo, synonym) positive
+variable v;
+Select v such that Modifies(6, v)
+x
+5000
+10 - ModifiesS(stmtNo, synonym) negative
+variable v;
+Select v such that Modifies(5, v)
+
+5000
+11 - ModifiesS(stmtNo, _) positive
+variable v;
+Select v such that Modifies(4, _)
+x, y, z
+5000
+12 - ModifiesS(stmtNo, _) negative
+variable v;
+Select v such that Modifies(5, _)
+
+5000
+13 - ModifiesS(stmtNo, varName) positive
+stmt ss;
+Select ss such that Modifies(7, "z")
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+5000
+14 - ModifiesS(stmtNo, varName) negative
+stmt ss;
+Select ss such that Modifies(7, "x")
+
+5000
+15 - ModifiesS invalid _
+variable v;
+Select v such that Modifies(_, v)
+
+5000
+16 - ModifiesS invalid synonym
+if i;
+Select i such that Modifies(6, i)
+
+5000
+17 - ModifiesS invalid varName
+stmt s;
+Select s such that Modifies(s, "0")
+
+5000
+18 - Special case: OOB stmtNo 1
+variable v;
+Select v such that Modifies(0, v)
+
+5000
+19 - Special case: empty varName
+stmt s;
+Select s such that Modifies(s, "")
+
+5000
+20 - Special case: OOB stmtNo 2
+variable v;
+Select v such that Modifies(2147483649, v)
+
+5000

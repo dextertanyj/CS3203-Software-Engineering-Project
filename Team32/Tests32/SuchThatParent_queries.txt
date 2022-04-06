@@ -1,0 +1,270 @@
+1 - Parent(synonym, stmtNo) positive
+stmt s;
+Select s such that Parent(s, 4)
+3
+5000
+2 - Parent(synonym, stmtNo) negative
+stmt s;
+Select s such that Parent(s, 1)
+
+5000
+3 - Parent(synonym, synonym) positive 1
+read r; stmt s1;
+Select s1 such that Parent(s1, r)
+9
+5000
+4 - Parent(synonym, synonym) positive 2
+read r; stmt s1;
+Select r such that Parent(s1, r)
+10
+5000
+5 - Parent(synonym, synonym) negative 1
+if if1; read r;
+Select if1 such that Parent(if1, r)
+
+5000
+6 - Parent(synonym, synonym) negative 2
+if if1; read r;
+Select r such that Parent(if1, r)
+
+5000
+7 - Parent(synonym, _) positive
+while w;
+Select w such that Parent(w, _)
+4, 7, 9
+5000
+8 - Parent(synonym, _) negative
+print r;
+Select r such that Parent(r, _)
+
+5000
+9 - Parent(stmtNo, synonym) positive
+while s;
+Select s such that Parent(4, s)
+7
+5000
+10 - Parent(stmtNo, synonym) negative
+while s;
+Select s such that Parent(9, s)
+
+5000
+11 - Parent(stmtNo, stmtNo) positive
+stmt ss;
+Select ss such that Parent(4, 5)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+5000
+12 - Parent(stmtNo, stmtNo) negative
+stmt ss;
+Select ss such that Parent(5, 4)
+
+5000
+13 - Parent(stmtNo, _) positive
+assign a;
+Select a such that Parent(7, _)
+6, 8, 11
+5000
+14 - Parent(stmtNo, _) negative
+assign a;
+Select a such that Parent(10, _)
+
+5000
+15 - Parent(_, synonym) positive
+assign rr;
+Select rr such that Parent(_, rr)
+6, 8, 11
+5000
+16 - Parent(_, synonym) negative
+if i;
+Select i such that Parent(_, i)
+
+5000
+17 - Parent(_, stmtNo) positive
+while w;
+Select w such that Parent(_, 5)
+4, 7, 9
+5000
+18 - Parent(_, stmtNo) negative
+while w;
+Select w such that Parent(_, 1)
+
+5000
+19 - Parent(_, _) positive
+print p;
+Select p such that Parent(_, _)
+5, 12, 13, 14
+5000
+20 - Parent trivial with synonym positive
+stmt s, s1;
+Select s such that Parent(s1, 4)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+5000
+21 - Parent trivial with synonym negative
+stmt s, s1;
+Select s such that Parent(s1, 1)
+
+5000
+22 - Parent undeclared synonym
+stmt s;
+Select s such that Parent(s1, 4)
+
+5000
+23 - Parent Invalid synonym type
+variable v;
+Select v such that Parent(v, 5)
+
+5000
+24 - Parent Invalid synonym type
+procedure pc;
+Select pc such that Parent(_, pc)
+
+5000
+25 - ParentT(synonym, stmtNo) positive
+stmt s;
+Select s such that Parent*(s, 5)
+3, 4
+5000
+26 - ParentT(synonym, stmtNo) negative
+stmt s;
+Select s such that Parent*(s, 1)
+
+5000
+27 - ParentT(synonym, synonym) positive 1
+read r; stmt s1;
+Select s1 such that Parent*(s1, r)
+3, 4, 7, 9
+5000
+28 - ParentT(synonym, synonym) positive 2
+read r; stmt s1;
+Select r such that Parent*(s1, r)
+10
+5000
+29 - ParentT(synonym, synonym) negative 1
+print p; read r;
+Select p such that Parent*(p, r)
+
+5000
+30 - ParentT(synonym, synonym) negative 2
+print p; read r;
+Select r such that Parent*(p, r)
+
+5000
+31 - ParentT(synonym, _) positive
+while w;
+Select w such that Parent*(w, _)
+4, 7, 9
+5000
+32 - ParentT(synonym, _) negative
+print r;
+Select r such that Parent*(r, _)
+
+5000
+33 - ParentT(stmtNo, synonym) positive
+while s;
+Select s such that Parent*(4, s)
+7, 9
+5000
+34 - ParentT(stmtNo, synonym) negative
+while s;
+Select s such that Parent*(9, s)
+
+5000
+35 - ParentT(stmtNo, stmtNo) positive
+stmt ss;
+Select ss such that Parent*(4, 5)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+5000
+36 - ParentT(stmtNo, stmtNo) negative
+stmt ss;
+Select ss such that Parent*(5, 4)
+
+5000
+37 - ParentT(stmtNo, _) positive
+assign a;
+Select a such that Parent*(7, _)
+6, 8, 11
+5000
+38 - ParentT(stmtNo, _) negative
+assign a;
+Select a such that Parent*(10, _)
+
+5000
+39 - ParentT(_, synonym) positive
+assign rr;
+Select rr such that Parent*(_, rr)
+6, 8, 11
+5000
+40 - ParentT(_, synonym) negative
+if i;
+Select i such that Parent*(_, i)
+
+5000
+41 - ParentT(_, stmtNo) positive
+while w;
+Select w such that Parent*(_, 5)
+4, 7, 9
+5000
+42 - ParentT(_, stmtNo) negative
+while w;
+Select w such that Parent*(_, 1)
+
+5000
+43 - ParentT(_, _) positive
+print p;
+Select p such that Parent*(_, _)
+5, 12, 13, 14
+5000
+44 - ParentT trivial with synonym positive
+stmt s, s1;
+Select s such that Parent*(s1, 9)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+5000
+45 - ParentT trivial with synonym negative
+stmt s, s1;
+Select s such that Parent*(s1, 1)
+
+5000
+46 - ParentT undeclared synonym
+stmt s;
+Select s such that Parent*(s1, 4)
+
+5000
+47 - ParentT Invalid synonym type
+variable v;
+Select v such that Parent*(v, 5)
+
+5000
+48 - ParentT Invalid synonym type
+procedure pc;
+Select pc such that Parent*(_, pc)
+
+5000
+49 - Special case: Parent(s, s) trivial
+stmt s;
+Select s such that Parent(s, s)
+
+5000
+50 - Special case: ParentT(s, s) trivial
+stmt s;
+Select s such that Parent*(s, s)
+
+5000
+51 - Special case: Parent(stmtNo, stmtNo) trivial
+stmt s;
+Select s such that Parent(1, 1)
+
+5000
+52 - Special case: OOB stmtNo 1
+stmt s;
+Select s such that Parent(0, s)
+
+5000
+53 - Special case: OOB stmtNo 2
+stmt s;
+Select s such that Parent(s, -1)
+
+5000
+54 - Special case: OOB stmtNo 3
+stmt s;
+Select s such that Parent*(s, 2147483649)
+
+5000
