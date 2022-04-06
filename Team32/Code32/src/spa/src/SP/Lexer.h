@@ -13,16 +13,17 @@ public:
 	void initialize(std::string raw_source);
 	std::string readToken() override;
 	std::string peekToken() override;
-	bool nextToken();
 	bool nextIf(const std::string& token);
 	bool nextIf(const std::initializer_list<std::string>& tokens);
 
 private:
-	std::string source;
-	std::sregex_iterator iterator;
-
 	static std::regex validation_regex;
 	static std::regex tokenization_regex;
+
+	bool nextToken();
+
+	std::string source;
+	std::sregex_iterator iterator;
 };
 
 #endif  // SPA_SRC_SP_LEXER_H
