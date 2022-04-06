@@ -53,27 +53,27 @@ class NextManager;
 class AffectsManager;
 
 struct IfControlRelation {
-	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const std::shared_ptr<StmtInfo>& statement, const VarRef& /*var*/) {
+	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const StmtInfoPtr& statement, const VarRef& /*var*/) {
 		return statement->getType() == StmtType::If;
 	}
-	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const std::shared_ptr<StmtInfo>& statement,
+	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const StmtInfoPtr& statement,
 	                     const VarRefSet& /*var_set*/) {
 		return statement->getType() == StmtType::If;
 	}
 };
 
 struct WhileControlRelation {
-	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const std::shared_ptr<StmtInfo>& statement, const VarRef& /*var*/) {
+	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const StmtInfoPtr& statement, const VarRef& /*var*/) {
 		return statement->getType() == StmtType::While;
 	}
-	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const std::shared_ptr<StmtInfo>& statement,
+	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const StmtInfoPtr& statement,
 	                     const VarRefSet& /*var_set*/) {
 		return statement->getType() == StmtType::While;
 	}
 };
 
 struct AssignRelation {
-	std::shared_ptr<StmtInfo> node;          // NOLINT(misc-non-private-member-variables-in-classes)
+	StmtInfoPtr node;                   // NOLINT(misc-non-private-member-variables-in-classes)
 	VarRef variable;                    // NOLINT(misc-non-private-member-variables-in-classes)
 	Common::EP::Expression expression;  // NOLINT(misc-non-private-member-variables-in-classes)
 	inline bool operator==(const AssignRelation& other) const {

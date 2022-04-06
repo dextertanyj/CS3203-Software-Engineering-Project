@@ -6,7 +6,7 @@
 
 class PKB::WhileNode : public PKB::StatementNode {
 public:
-	explicit WhileNode(const std::shared_ptr<StmtInfo>& info);
+	explicit WhileNode(const StmtInfoPtr& info);
 	void setNext(const std::shared_ptr<NodeInterface>& next) override;
 	void setPrevious(const std::shared_ptr<NodeInterface>& prev) override;
 };

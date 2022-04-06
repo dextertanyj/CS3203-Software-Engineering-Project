@@ -15,7 +15,7 @@
 class PKB::AssignStore {
 public:
 	AssignStore();
-	void setAssign(const std::shared_ptr<StmtInfo>& statement, const VarRef& variable, const Common::EP::Expression& expression);
+	void setAssign(const StmtInfoPtr& statement, const VarRef& variable, const Common::EP::Expression& expression);
 	bool patternExists(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPattern(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& var_name);

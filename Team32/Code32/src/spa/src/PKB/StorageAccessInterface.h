@@ -8,13 +8,13 @@ public:
 	// General get methods
 	virtual StmtInfoPtrSet getStatements() = 0;
 	virtual VarRefSet getVariables() = 0;
-	virtual std::unordered_set<ConstVal> getConstants() = 0;
-	virtual std::unordered_set<ProcRef> getProcedures() = 0;
+	virtual ConstValSet getConstants() = 0;
+	virtual ProcRefSet getProcedures() = 0;
 
 	// Parent get methods
 	virtual bool checkParent(StmtRef parent, StmtRef child) = 0;
 	virtual bool checkParentStar(StmtRef parent, StmtRef child) = 0;
-	virtual std::shared_ptr<StmtInfo> getParent(StmtRef index) = 0;
+	virtual StmtInfoPtr getParent(StmtRef index) = 0;
 	virtual StmtInfoPtrSet getParentStar(StmtRef index) = 0;
 	virtual StmtInfoPtrSet getChildren(StmtRef index) = 0;
 	virtual StmtInfoPtrSet getChildStar(StmtRef index) = 0;
@@ -22,9 +22,9 @@ public:
 	// Follow get methods
 	virtual bool checkFollows(StmtRef front, StmtRef back) = 0;
 	virtual bool checkFollowsStar(StmtRef front, StmtRef back) = 0;
-	virtual std::shared_ptr<StmtInfo> getFollower(StmtRef index) = 0;
+	virtual StmtInfoPtr getFollower(StmtRef index) = 0;
 	virtual StmtInfoPtrSet getFollowerStar(StmtRef index) = 0;
-	virtual std::shared_ptr<StmtInfo> getPreceding(StmtRef index) = 0;
+	virtual StmtInfoPtr getPreceding(StmtRef index) = 0;
 	virtual StmtInfoPtrSet getPrecedingStar(StmtRef index) = 0;
 
 	// Use get methods

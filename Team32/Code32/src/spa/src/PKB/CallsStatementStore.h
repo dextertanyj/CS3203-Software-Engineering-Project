@@ -13,15 +13,15 @@
 class PKB::CallsStatementStore {
 public:
 	CallsStatementStore();
-	void set(const std::shared_ptr<StmtInfo>& statement, ProcRef procedure);
-	[[nodiscard]] ProcRef getProcedure(const std::shared_ptr<StmtInfo>& statement) const;
+	void set(const StmtInfoPtr& statement, ProcRef procedure);
+	[[nodiscard]] ProcRef getProcedure(const StmtInfoPtr& statement) const;
 	[[nodiscard]] ProcRef getProcedure(StmtRef index) const;
 	void populateCallStore(const Types::ProcedureStore& procedures,
 	                       TransitiveRelationStore<ProcRef, ProcedureInfo, CallsRelation>& call_store) const;
 
 private:
 	std::unordered_map<StmtRef, ProcRef> map;
-	void populate(const std::shared_ptr<StmtInfo>& stmt, const PKB::Types::ProcedureStore& procedures,
+	void populate(const StmtInfoPtr& stmt, const PKB::Types::ProcedureStore& procedures,
 	              const std::shared_ptr<ProcedureInfo>& procedure,
 	              TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>& store) const;
 };

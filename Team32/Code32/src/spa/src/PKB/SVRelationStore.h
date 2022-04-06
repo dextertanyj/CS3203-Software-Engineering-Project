@@ -14,8 +14,8 @@ template <class T>
 class PKB::SVRelationStore {
 public:
 	SVRelationStore();
-	void set(std::shared_ptr<StmtInfo> statement, VarRef variable);
-	void set(std::shared_ptr<StmtInfo> statement, VarRefSet variables);
+	void set(StmtInfoPtr statement, VarRef variable);
+	void set(StmtInfoPtr statement, VarRefSet variables);
 	bool check(StmtRef index, const VarRef& variable);
 	VarRefSet getByStmt(StmtRef index);
 	StmtInfoPtrSet getByVar(const VarRef& variable);

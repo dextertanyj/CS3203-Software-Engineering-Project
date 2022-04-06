@@ -28,7 +28,7 @@ public:
 private:
 	struct DFSInfo {
 		VarRef variable;
-		std::stack<std::shared_ptr<StmtInfo>> node_stack;
+		std::stack<StmtInfoPtr> node_stack;
 		StmtInfoPtrSet visited_set;
 		StmtInfoPtrSet nodes;
 	};
@@ -54,9 +54,9 @@ private:
 	std::unordered_map<StmtRef, StmtInfoPtrSet> affected_star_cache;
 
 	[[nodiscard]] StmtInfoPtrSet getAffectedLoop(StmtRef node, VarRef variable) const;
-	void processDFSVisit(DFSInfo& info, void (AffectsManager::*processor)(DFSInfo&, const std::shared_ptr<StmtInfo>&) const) const;
-	void processNodeAffects(DFSInfo& info, const std::shared_ptr<StmtInfo>& current) const;
-	void processNodeAffected(DFSInfo& info, const std::shared_ptr<StmtInfo>& current) const;
+	void processDFSVisit(DFSInfo& info, void (AffectsManager::*processor)(DFSInfo&, const StmtInfoPtr&) const) const;
+	void processNodeAffects(DFSInfo& info, const StmtInfoPtr& current) const;
+	void processNodeAffected(DFSInfo& info, const StmtInfoPtr& current) const;
 
 	void buildCacheGraph(size_t graph_index);
 	void computeAllAffects(StmtRef start, StmtRef end);

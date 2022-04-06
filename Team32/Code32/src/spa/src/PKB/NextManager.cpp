@@ -13,7 +13,7 @@ bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
 		return false;
 	}
 	auto next_set = control_flow_graph.getNextNodes(first);
-	return any_of(next_set.begin(), next_set.end(), [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == second; });
+	return any_of(next_set.begin(), next_set.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == second; });
 }
 
 bool PKB::NextManager::checkNextStar(StmtRef first, StmtRef second) {
@@ -22,12 +22,12 @@ bool PKB::NextManager::checkNextStar(StmtRef first, StmtRef second) {
 	}
 	if (next_cache.find(first) != next_cache.end()) {
 		StmtInfoPtrSet next_set = next_cache.at(first);
-		return any_of(next_set.begin(), next_set.end(), [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == second; });
+		return any_of(next_set.begin(), next_set.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == second; });
 	}
 	if (previous_cache.find(second) != previous_cache.end()) {
 		StmtInfoPtrSet previous_set = previous_cache.at(second);
 		return any_of(previous_set.begin(), previous_set.end(),
-		              [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == first; });
+		              [&](const StmtInfoPtr& info) { return info->getIdentifier() == first; });
 	}
 	if (control_flow_graph.getGraphIndex(first) != control_flow_graph.getGraphIndex(second)) {
 		return false;
@@ -53,7 +53,7 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 	auto node = control_flow_graph.getStatementInfo(node_ref);
 	StmtInfoPQ<LessComparator> queue = constructQueue<LessComparator>(node, info);
 	while (!queue.empty()) {
-		shared_ptr<StmtInfo> current_node = queue.top();
+		StmtInfoPtr current_node = queue.top();
 		queue.pop();
 		processQueue(current_node, info);
 	}
@@ -78,7 +78,7 @@ StmtInfoPtrSet PKB::NextManager::getPreviousStar(StmtRef node_ref) {
 	auto node = control_flow_graph.getStatementInfo(node_ref);
 	StmtInfoPQ<GreaterComparator> queue = constructQueue<GreaterComparator>(node, info);
 	while (!queue.empty()) {
-		shared_ptr<StmtInfo> current_node = queue.top();
+		StmtInfoPtr current_node = queue.top();
 		queue.pop();
 		processQueue(current_node, info);
 	}
@@ -102,24 +102,24 @@ bool PKB::NextManager::checkNextStarOptimized(const StmtRef& first_node, const S
 	if (distance_to_end < distance_to_start) {
 		StmtInfoPtrSet next_set = getNextStar(first_node);
 		return any_of(next_set.begin(), next_set.end(),
-		              [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == second_node; });
+		              [&](const StmtInfoPtr& info) { return info->getIdentifier() == second_node; });
 	}
 	StmtInfoPtrSet previous_set = getPreviousStar(second_node);
 	return any_of(previous_set.begin(), previous_set.end(),
-	              [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == first_node; });
+	              [&](const StmtInfoPtr& info) { return info->getIdentifier() == first_node; });
 }
 
 template <class Comparator>
-PKB::NextManager::StmtInfoPQ<Comparator> PKB::NextManager::constructQueue(const shared_ptr<StmtInfo>& origin, TraversalInformation& info) {
+PKB::NextManager::StmtInfoPQ<Comparator> PKB::NextManager::constructQueue(const StmtInfoPtr& origin, TraversalInformation& info) {
 	// Perform a DFS on the CFG to construct the list of nodes that require computation for the final result.
 	StmtInfoPQ<Comparator> priority_queue;
-	queue<shared_ptr<StmtInfo>> queue;
+	queue<StmtInfoPtr> queue;
 	QueueConstructionInformation<Comparator> construction_info = {origin, priority_queue, queue, info};
 
 	queue.push(origin);
 	priority_queue.push(origin);
 	while (!queue.empty()) {
-		shared_ptr<StmtInfo> node = queue.front();
+		StmtInfoPtr node = queue.front();
 		queue.pop();
 		// If a cached entry is found, all subsequent nodes of the branch can be ignored since the cache is available for use.
 		if (info.cache.find(node->getIdentifier()) != info.cache.end()) {
@@ -132,7 +132,7 @@ PKB::NextManager::StmtInfoPQ<Comparator> PKB::NextManager::constructQueue(const 
 }
 
 template <class Comparator>
-void PKB::NextManager::constructQueueIteration(const shared_ptr<StmtInfo>& node, QueueConstructionInformation<Comparator>& info) {
+void PKB::NextManager::constructQueueIteration(const StmtInfoPtr& node, QueueConstructionInformation<Comparator>& info) {
 	// Loop nodes are a special case as internal nodes do not have to be computed explicitly since there is special handling during
 	// processing.
 	if (node->getType() == StmtType::While) {
@@ -146,7 +146,7 @@ void PKB::NextManager::constructQueueIteration(const shared_ptr<StmtInfo>& node,
 	}
 }
 
-void PKB::NextManager::processQueue(const shared_ptr<StmtInfo>& node, TraversalInformation& info) {
+void PKB::NextManager::processQueue(const StmtInfoPtr& node, TraversalInformation& info) {
 	if (node->getType() == StmtType::While) {
 		processLoopNode(node, info);
 		return;
@@ -162,7 +162,7 @@ void PKB::NextManager::processQueue(const shared_ptr<StmtInfo>& node, TraversalI
 }
 
 template <class Comparator>
-void PKB::NextManager::constructQueueLoopNode(const shared_ptr<StmtInfo>& node, QueueConstructionInformation<Comparator>& info) {
+void PKB::NextManager::constructQueueLoopNode(const StmtInfoPtr& node, QueueConstructionInformation<Comparator>& info) {
 	// If the origin is an internal node, then all nodes in the priority queue and queue are internal nodes.
 	// The existing nodes in the priority queue and nodes to be searched can be cleared and only the loop node must be added into the
 	// priority queue.
@@ -174,7 +174,7 @@ void PKB::NextManager::constructQueueLoopNode(const shared_ptr<StmtInfo>& node, 
 	if (after_entry && before_exit) {
 		info.priority_queue = StmtInfoPQ<Comparator>();
 		info.priority_queue.push(node);
-		info.queue = queue<shared_ptr<StmtInfo>>();
+		info.queue = queue<StmtInfoPtr>();
 	}
 	// External nodes of the loop node are set to continue the DFS traversal.
 	auto external = (control_flow_graph.*info.traversal_information.loop_continuation_handler)(node->getIdentifier());
@@ -184,7 +184,7 @@ void PKB::NextManager::constructQueueLoopNode(const shared_ptr<StmtInfo>& node, 
 	}
 }
 
-void PKB::NextManager::processLoopNode(const shared_ptr<StmtInfo>& node, TraversalInformation& info) {
+void PKB::NextManager::processLoopNode(const StmtInfoPtr& node, TraversalInformation& info) {
 	// All internal nodes of a loop node are next and previous star of each other.
 	auto loop_nodes = traverseLoop(node);
 	auto combined = loop_nodes;
@@ -201,24 +201,24 @@ void PKB::NextManager::processLoopNode(const shared_ptr<StmtInfo>& node, Travers
 	}
 }
 
-StmtInfoPtrSet PKB::NextManager::traverseLoop(const shared_ptr<StmtInfo>& node) {
+StmtInfoPtrSet PKB::NextManager::traverseLoop(const StmtInfoPtr& node) {
 	// Perform a DFS traversal on the loop node to collect all its internal nodes.
 	assert(node->getType() == StmtType::While);
 	StmtInfoPtrSet set;
-	queue<shared_ptr<StmtInfo>> queue;
+	queue<StmtInfoPtr> queue;
 	set.emplace(node);
 	auto next_internal_nodes = control_flow_graph.getLoopInternalNextNodes(node->getIdentifier());
 	assert(next_internal_nodes.size() == 1);
 	queue.push(*next_internal_nodes.begin());
 	while (!queue.empty()) {
-		shared_ptr<StmtInfo> current = queue.front();
+		StmtInfoPtr current = queue.front();
 		queue.pop();
 		handleTraverseLoopNode(queue, set, current);
 	}
 	return set;
 }
 
-void PKB::NextManager::handleTraverseLoopNode(queue<shared_ptr<StmtInfo>>& queue, StmtInfoPtrSet& set, const shared_ptr<StmtInfo>& node) {
+void PKB::NextManager::handleTraverseLoopNode(queue<StmtInfoPtr>& queue, StmtInfoPtrSet& set, const StmtInfoPtr& node) {
 	set.emplace(node);
 	auto next_set = control_flow_graph.getNextNodes(node->getIdentifier());
 	for (const auto& next : next_set) {

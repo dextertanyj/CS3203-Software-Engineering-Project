@@ -24,7 +24,7 @@ QueryResult executeTrivialSynonymName(const StorageAdapter& store, const ClauseA
 
 template <ClauseType T>
 QueryResult executeTrivialSynonymWildcardOrSynonym(const StorageAdapter& store) {
-	unordered_set<ProcRef> proc_set = store.getProcedures();
+	ProcRefSet proc_set = store.getProcedures();
 	for (const auto& proc : proc_set) {
 		VarRefSet var_set = store.getVariableByProcedure<T>(proc);
 		if (!var_set.empty()) {
@@ -59,7 +59,7 @@ QueryResult executeSynonymName(const StorageAdapter& store, const ClauseArgument
 template <ClauseType T>
 QueryResult executeSynonymWildcard(const StorageAdapter& store, const ClauseArgument& procedure) {
 	QueryResult result = QueryResult({procedure.getSynonymSymbol()});
-	unordered_set<ProcRef> proc_set = store.getProcedures();
+	ProcRefSet proc_set = store.getProcedures();
 	for (const auto& proc : proc_set) {
 		VarRefSet var_set = store.getVariableByProcedure<T>(proc);
 		if (!var_set.empty()) {
@@ -72,7 +72,7 @@ QueryResult executeSynonymWildcard(const StorageAdapter& store, const ClauseArgu
 template <ClauseType T>
 QueryResult executeSynonymSynonym(const StorageAdapter& store, const ClauseArgument& procedure, const ClauseArgument& variable) {
 	QueryResult result = QueryResult({procedure.getSynonymSymbol(), variable.getSynonymSymbol()});
-	unordered_set<ProcRef> proc_set = store.getProcedures();
+	ProcRefSet proc_set = store.getProcedures();
 	vector<string> proc_column;
 	vector<string> var_column;
 	for (const auto& proc : proc_set) {

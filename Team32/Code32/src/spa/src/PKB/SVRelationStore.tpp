@@ -13,7 +13,7 @@ template <class T>
 PKB::SVRelationStore<T>::SVRelationStore() = default;
 
 template <class T>
-void PKB::SVRelationStore<T>::set(std::shared_ptr<StmtInfo> statement, VarRef variable) {
+void PKB::SVRelationStore<T>::set(StmtInfoPtr statement, VarRef variable) {
 	StmtRef index = statement->getIdentifier();
 
 	assert(variable.length() != 0);
@@ -24,7 +24,7 @@ void PKB::SVRelationStore<T>::set(std::shared_ptr<StmtInfo> statement, VarRef va
 }
 
 template <class T>
-void PKB::SVRelationStore<T>::set(std::shared_ptr<StmtInfo> statement, VarRefSet variables) {
+void PKB::SVRelationStore<T>::set(StmtInfoPtr statement, VarRefSet variables) {
 	StmtRef index = statement->getIdentifier();
 	assert(all_of(variables.begin(), variables.end(), [](const VarRef& variable) { return variable.length() != 0; }));
 	assert(T::validate(this, statement, variables));
@@ -47,7 +47,7 @@ bool PKB::SVRelationStore<T>::check(StmtRef index, const VarRef& variable) {
 	}
 
 	return any_of(iter->second.begin(), iter->second.end(),
-	              [index](const std::shared_ptr<StmtInfo>& statement) { return statement->getIdentifier() == index; });
+	              [index](const StmtInfoPtr& statement) { return statement->getIdentifier() == index; });
 }
 
 template <class T>

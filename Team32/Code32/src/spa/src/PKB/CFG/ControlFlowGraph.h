@@ -11,7 +11,7 @@
 
 class PKB::ControlFlowGraph {
 public:
-	void createNode(const std::shared_ptr<StmtInfo>& stmt_info);
+	void createNode(const StmtInfoPtr& stmt_info);
 	void setNext(StmtRef previous, StmtRef next) const;
 	void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) const;
 	void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) const;
@@ -19,7 +19,7 @@ public:
 	[[nodiscard]] bool contains(StmtRef index) const;
 	[[nodiscard]] StmtInfoPtrSet getPreviousNodes(StmtRef index) const;
 	[[nodiscard]] StmtInfoPtrSet getNextNodes(StmtRef index) const;
-	[[nodiscard]] std::shared_ptr<StmtInfo> getStatementInfo(StmtRef index) const;
+	[[nodiscard]] StmtInfoPtr getStatementInfo(StmtRef index) const;
 	[[nodiscard]] StmtInfoPtrSet getLoopExternalNextNodes(StmtRef index) const;
 	[[nodiscard]] StmtInfoPtrSet getLoopExternalPreviousNodes(StmtRef index) const;
 	[[nodiscard]] StmtInfoPtrSet getLoopInternalNextNodes(StmtRef index) const;
@@ -30,7 +30,7 @@ public:
 	[[nodiscard]] size_t getGraphIndex(StmtRef ref) const;
 	[[nodiscard]] StmtRef getFirstIndex(size_t graph_index) const;
 	[[nodiscard]] StmtRef getLastIndex(size_t graph_index) const;
-	[[nodiscard]] std::shared_ptr<StmtInfo> getStart(size_t graph_index) const;
+	[[nodiscard]] StmtInfoPtr getStart(size_t graph_index) const;
 	[[nodiscard]] StmtInfoPtrSet getEnd(size_t graph_index) const;
 
 	void optimize();

@@ -15,8 +15,8 @@ public:
 private:
 	LexerInterface& lex;
 	ExpressionType type;
-	std::unordered_set<VarRef> variables;
-	std::unordered_set<ConstVal> constants;
+	VarRefSet variables;
+	ConstValSet constants;
 
 	ParenthesizedExpression construct(Acceptor acceptor, ParenthesizedExpression lhs, int precedence);
 	ParenthesizedExpression parseTerminal(Acceptor acceptor);

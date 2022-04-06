@@ -6,7 +6,7 @@
 
 class PKB::IfNode : public PKB::StatementNode {
 public:
-	explicit IfNode(const std::shared_ptr<StmtInfo>& info);
+	explicit IfNode(const StmtInfoPtr& info);
 	void setConnection(std::shared_ptr<PKB::NodeInterface> next) override;
 	void setNext(const std::shared_ptr<PKB::NodeInterface>& next) override;
 	void setPrevious(const std::shared_ptr<PKB::NodeInterface>& previous) override;

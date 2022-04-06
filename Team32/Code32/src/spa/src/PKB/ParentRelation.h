@@ -12,14 +12,14 @@
 class PKB::ParentRelation : public PKB::OrderedStatementTransitiveRelation {
 public:
 	using OrderedStatementTransitiveRelation::OrderedStatementTransitiveRelation;
-	void insertForward(const std::shared_ptr<StmtInfo>& parent_to_insert);
-	void insertReverse(const std::shared_ptr<StmtInfo>& child_to_insert);
+	void insertForward(const StmtInfoPtr& parent_to_insert);
+	void insertReverse(const StmtInfoPtr& child_to_insert);
 
 	[[nodiscard]] StmtInfoPtrSet getForward() const;
 	[[nodiscard]] StmtInfoPtrSet getReverse() const;
 
 private:
-	std::shared_ptr<StmtInfo> parent;
+	StmtInfoPtr parent;
 	StmtInfoPtrSet children;
 };
 

@@ -2,14 +2,14 @@
 
 using namespace std;
 
-void PKB::FollowsRelation::insertForward(const shared_ptr<StmtInfo>& following_to_insert) {
+void PKB::FollowsRelation::insertForward(const StmtInfoPtr& following_to_insert) {
 	assert(getSelf()->getIdentifier() > following_to_insert->getIdentifier());
 	assert(this->following == nullptr);
 
 	this->following = following_to_insert;
 }
 
-void PKB::FollowsRelation::insertReverse(const shared_ptr<StmtInfo>& follower_to_insert) {
+void PKB::FollowsRelation::insertReverse(const StmtInfoPtr& follower_to_insert) {
 	assert(getSelf()->getIdentifier() < follower_to_insert->getIdentifier());
 	assert(this->follower == nullptr);
 

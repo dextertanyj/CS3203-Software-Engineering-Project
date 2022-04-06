@@ -7,7 +7,7 @@
 
 using namespace std;
 
-bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store, const shared_ptr<StmtInfo>& statement,
+bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store, const StmtInfoPtr& statement,
                                       const VarRef& variable) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Print) {
@@ -25,7 +25,7 @@ bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store,
 	                [variable](const VarRef& existing_var) { return existing_var != variable; }));
 }
 
-bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store, const shared_ptr<StmtInfo>& statement,
+bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store, const StmtInfoPtr& statement,
                                       const VarRefSet& variables) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Print) {
@@ -51,17 +51,17 @@ void PKB::ModifiesSRelation::optimize(Types::ParentStore& parent_store, CallsSta
 	// Start optimization from the lowest level in the DAG.
 	vector<shared_ptr<ProcedureInfo>> order = topo_order.get();
 	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {
-		vector<shared_ptr<StmtInfo>> stmts_in_proc = proc_iterator->get()->getStatements();
+		vector<StmtInfoPtr> stmts_in_proc = proc_iterator->get()->getStatements();
 		// For any procedure, we must process the call statements first before propagating the conditional statements.
-		for_each(stmts_in_proc.begin(), stmts_in_proc.end(), [&call_store, &proc_store, &store](const shared_ptr<StmtInfo>& info) {
+		for_each(stmts_in_proc.begin(), stmts_in_proc.end(), [&call_store, &proc_store, &store](const StmtInfoPtr& info) {
 			optimizeCall(info, call_store, proc_store, store);
 		});
 		for_each(stmts_in_proc.begin(), stmts_in_proc.end(),
-		              [&parent_store, &store](const shared_ptr<StmtInfo>& info) { optimizeConditional(info, parent_store, store); });
+		              [&parent_store, &store](const StmtInfoPtr& info) { optimizeConditional(info, parent_store, store); });
 	}
 }
 
-void PKB::ModifiesSRelation::optimizeCall(const shared_ptr<StmtInfo>& statement, CallsStatementStore& call_store,
+void PKB::ModifiesSRelation::optimizeCall(const StmtInfoPtr& statement, CallsStatementStore& call_store,
                                           Types::ProcedureStore& proc_store, SVRelationStore<ModifiesSRelation>& store) {
 	// Need to access CallStatementStore to get the statements modified in the called procedure.
 	if (statement->getType() != StmtType::Call) {
@@ -69,12 +69,12 @@ void PKB::ModifiesSRelation::optimizeCall(const shared_ptr<StmtInfo>& statement,
 	}
 	ProcRef called_proc = call_store.getProcedure(statement);
 	shared_ptr<ProcedureInfo> proc_info = proc_store.get(called_proc);
-	vector<shared_ptr<StmtInfo>> stmts_in_called_proc = proc_info->getStatements();
+	vector<StmtInfoPtr> stmts_in_called_proc = proc_info->getStatements();
 	StmtInfoPtrSet stmts_set_in_proc(stmts_in_called_proc.begin(), stmts_in_called_proc.end());
 	storeModifiedVars(statement, stmts_set_in_proc, store);
 }
 
-void PKB::ModifiesSRelation::optimizeConditional(const shared_ptr<StmtInfo>& statement, Types::ParentStore& parent_store,
+void PKB::ModifiesSRelation::optimizeConditional(const StmtInfoPtr& statement, Types::ParentStore& parent_store,
                                                  SVRelationStore<ModifiesSRelation>& store) {
 	if (statement->getType() != StmtType::If && statement->getType() != StmtType::While) {
 		return;
@@ -84,7 +84,7 @@ void PKB::ModifiesSRelation::optimizeConditional(const shared_ptr<StmtInfo>& sta
 	storeModifiedVars(statement, children, store);
 }
 
-void PKB::ModifiesSRelation::storeModifiedVars(const shared_ptr<StmtInfo>& stmt_key, const StmtInfoPtrSet& stmt_list,
+void PKB::ModifiesSRelation::storeModifiedVars(const StmtInfoPtr& stmt_key, const StmtInfoPtrSet& stmt_list,
                                                PKB::SVRelationStore<PKB::ModifiesSRelation>& store) {
 	VarRefSet variables;
 	for (const auto& stmt : stmt_list) {
