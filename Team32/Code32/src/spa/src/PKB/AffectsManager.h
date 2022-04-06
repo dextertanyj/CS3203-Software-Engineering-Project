@@ -28,8 +28,8 @@ public:
 private:
 	struct DFSInfo {
 		VarRef variable;
-		stack<shared_ptr<PKB::NodeInterface>> node_stack;
-		unordered_set<shared_ptr<PKB::NodeInterface>> visited_set;
+		stack<shared_ptr<StmtInfo>> node_stack;
+		StmtInfoPtrSet visited_set;
 		StmtInfoPtrSet nodes;
 	};
 
@@ -53,19 +53,18 @@ private:
 	unordered_map<StmtRef, StmtInfoPtrSet> affects_star_cache;
 	unordered_map<StmtRef, StmtInfoPtrSet> affected_star_cache;
 
-	StmtInfoPtrSet getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode>& node, VarRef variable);
-	void processDFSVisit(DFSInfo& info, StmtInfoPtrSet (*collector)(const shared_ptr<NodeInterface>&),
-	                     void (AffectsManager::*processor)(DFSInfo&, const shared_ptr<PKB::StatementNode>&));
-	void processNodeAffects(DFSInfo& info, const shared_ptr<PKB::StatementNode>& curr_stmt_node);
-	void processNodeAffected(DFSInfo& info, const shared_ptr<PKB::StatementNode>& curr_stmt_node);
+	[[nodiscard]] StmtInfoPtrSet getAffectedLoop(StmtRef node, VarRef variable) const;
+	void processDFSVisit(DFSInfo& info, void (AffectsManager::*processor)(DFSInfo&, const shared_ptr<StmtInfo>&) const) const;
+	void processNodeAffects(DFSInfo& info, const shared_ptr<StmtInfo>& current) const;
+	void processNodeAffected(DFSInfo& info, const shared_ptr<StmtInfo>& current) const;
 
 	void buildCacheGraph(size_t graph_index);
 	void computeAllAffects(StmtRef start, StmtRef end);
 	void transposeAffects(StmtRef start, StmtRef end);
-	void buildCacheGraphForwardVisit(StmtRef index, StmtRefSet& visited, stack<StmtRef>& stack);
-	StmtInfoPtrSet buildCacheGraphReverseVisit(StmtRef index, StmtRefSet& visited);
-	void processComponent(const StmtRef& index, StmtInfoPtrSet component);
-	void connectRelevantComponents(const StmtRef& index);
+	void buildCacheGraphForwardVisit(StmtRef index, StmtRefSet& visited, stack<StmtRef>& stack) const;
+	[[nodiscard]] StmtInfoPtrSet buildCacheGraphReverseVisit(StmtRef index, StmtRefSet& visited) const;
+	void processComponent(StmtRef index, StmtInfoPtrSet component);
+	void connectRelevantComponents(StmtRef index);
 };
 
 #endif  // SPA_AFFECTSMANAGER_H

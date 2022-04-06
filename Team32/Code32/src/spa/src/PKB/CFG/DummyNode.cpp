@@ -1,8 +1,12 @@
-#include "DummyNode.h"
+#include "PKB/CFG/DummyNode.h"
 
-PKB::DummyNode::DummyNode(StmtRef ref) : PKB::NodeInterface(NodeType::Dummy), if_control_stmt_ref(ref) {}
+#include <cassert>
 
-size_t PKB::DummyNode::getNodeRef() const { return this->if_control_stmt_ref; }
+#include "PKB/Types.h"
+
+PKB::DummyNode::DummyNode(StmtRef ref) : PKB::NodeInterface(Types::NodeType::Dummy), if_control_stmt_ref(ref) {}
+
+size_t PKB::DummyNode::getNodeRef() const { return if_control_stmt_ref; }
 
 void PKB::DummyNode::setConnection(shared_ptr<PKB::NodeInterface> next) {
 	setNext(next);
@@ -10,15 +14,11 @@ void PKB::DummyNode::setConnection(shared_ptr<PKB::NodeInterface> next) {
 }
 
 void PKB::DummyNode::setNext(const shared_ptr<PKB::NodeInterface>& next) {
-	if (!getNextNodes().empty()) {
-		throw logic_error("Dummy node cannot have more than 1 next statement.");
-	}
+	assert(getNextNodes().empty());
 	insertNext(next);
 }
 
 void PKB::DummyNode::setPrevious(const shared_ptr<PKB::NodeInterface>& previous) {
-	if (getPreviousNodes().size() > 1) {
-		throw logic_error("Dummy node cannot have more than 1 next statement.");
-	}
+	assert(getPreviousNodes().size() < 2);
 	insertPrevious(previous);
 }

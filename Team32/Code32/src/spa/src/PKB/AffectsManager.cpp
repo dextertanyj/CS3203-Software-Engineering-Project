@@ -7,28 +7,34 @@ PKB::AffectsManager::AffectsManager(ControlFlowGraph& control_flow_graph, SVRela
 	: control_flow_graph(control_flow_graph), uses_store(uses_store), modifies_store(modifies_store) {}
 
 bool PKB::AffectsManager::checkAffects(StmtRef first, StmtRef second) {
+	if (!control_flow_graph.contains(first) || !control_flow_graph.contains(second)) {
+		return false;
+	}
 	StmtInfoPtrSet affected_nodes = getAffects(first);
 	return any_of(affected_nodes.begin(), affected_nodes.end(),
 	              [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == second; });
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
+	if (!control_flow_graph.contains(first)) {
+		return {};
+	}
+
 	if (affects_cache.find(first) != affects_cache.end()) {
 		return affects_cache.at(first);
 	}
 
-	shared_ptr<PKB::StatementNode> start_node = this->control_flow_graph.getNode(first);
-	if (start_node->getStmtInfo()->getType() != StmtType::Assign) {
+	if (control_flow_graph.getType(first) != StmtType::Assign) {
 		return {};
 	}
 
 	VarRef variable = *(modifies_store.getByStmt(first).begin());
 	DFSInfo info = {std::move(variable), {}, {}, {}};
-	for (const auto& neighbour : start_node->getNextNodes()) {
+	for (const auto& neighbour : control_flow_graph.getNextNodes(first)) {
 		info.node_stack.push(neighbour);
 	}
 	while (!info.node_stack.empty()) {
-		processDFSVisit(info, &ControlFlowGraph::collectNextOfDummy, &AffectsManager::processNodeAffects);
+		processDFSVisit(info, &AffectsManager::processNodeAffects);
 	}
 
 	affects_cache.insert({first, info.nodes});
@@ -36,18 +42,22 @@ StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
+	if (!control_flow_graph.contains(second)) {
+		return {};
+	}
+
 	if (affected_cache.find(second) != affected_cache.end()) {
 		return affected_cache.at(second);
 	}
 
-	shared_ptr<PKB::StatementNode> node = this->control_flow_graph.getNode(second);
-	if (node->getStmtInfo()->getType() != StmtType::Assign) {
+	if (control_flow_graph.getType(second) != StmtType::Assign) {
 		return {};
 	}
+
 	VarRefSet variables = uses_store.getByStmt(second);
 	StmtInfoPtrSet affected_set;
 	for (const string& variable : variables) {
-		StmtInfoPtrSet affected = getAffectedByNodeAndVar(node, variable);
+		StmtInfoPtrSet affected = getAffectedLoop(second, variable);
 		affected_set.insert(affected.begin(), affected.end());
 	}
 
@@ -55,74 +65,84 @@ StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
 	return affected_set;
 }
 
-StmtInfoPtrSet PKB::AffectsManager::getAffectedByNodeAndVar(const shared_ptr<PKB::StatementNode>& node, VarRef variable) {
+StmtInfoPtrSet PKB::AffectsManager::getAffectedLoop(StmtRef node, VarRef variable) const {
 	DFSInfo info = {std::move(variable), {}, {}, {}};
-	for (const auto& neighbour : node->getPreviousNodes()) {
+	for (const auto& neighbour : control_flow_graph.getPreviousNodes(node)) {
 		info.node_stack.push(neighbour);
 	}
 	while (!info.node_stack.empty()) {
-		processDFSVisit(info, &ControlFlowGraph::collectPreviousOfDummy, &AffectsManager::processNodeAffected);
+		processDFSVisit(info, &AffectsManager::processNodeAffected);
 	}
 	return info.nodes;
 }
 
-void PKB::AffectsManager::processDFSVisit(DFSInfo& info, StmtInfoPtrSet (*collector)(const shared_ptr<NodeInterface>&),
-                                          void (AffectsManager::*processor)(DFSInfo&, const shared_ptr<PKB::StatementNode>&)) {
-	shared_ptr<PKB::NodeInterface> curr_node = info.node_stack.top();
+void PKB::AffectsManager::processDFSVisit(DFSInfo& info,
+                                          void (AffectsManager::*processor)(DFSInfo&, const shared_ptr<StmtInfo>&) const) const {
+	shared_ptr<StmtInfo> current = info.node_stack.top();
 	info.node_stack.pop();
-	if (info.visited_set.find(curr_node) != info.visited_set.end()) {
+	if (info.visited_set.find(current) != info.visited_set.end()) {
 		return;
 	}
-	if (curr_node->getNodeType() == NodeType::Dummy) {
-		StmtInfoPtrSet real_nodes = (*collector)(curr_node);
-		for (const auto& real_node : real_nodes) {
-			info.node_stack.push(control_flow_graph.getNode(real_node->getIdentifier()));
-		}
+	info.visited_set.insert(current);
+	(this->*processor)(info, current);
+}
+
+void PKB::AffectsManager::processNodeAffects(DFSInfo& info, const shared_ptr<StmtInfo>& current) const {
+	auto current_idx = current->getIdentifier();
+	auto current_type = current->getType();
+	if (uses_store.check(current_idx, info.variable) && current_type == StmtType::Assign) {
+		info.nodes.insert(current);
+	}
+
+	// If the current statement is a container, its modifies consist only of the modifies of statements within it.
+	bool is_container = current_type == StmtType::WhileStmt || current_type == StmtType::IfStmt;
+	if (!is_container && modifies_store.check(current_idx, info.variable)) {
 		return;
 	}
-	info.visited_set.insert(curr_node);
-	shared_ptr<PKB::StatementNode> curr_stmt_node = dynamic_pointer_cast<PKB::StatementNode>(curr_node);
-	(this->*processor)(info, curr_stmt_node);
-}
-
-void PKB::AffectsManager::processNodeAffects(DFSInfo& info, const shared_ptr<PKB::StatementNode>& curr_stmt_node) {
-	if (uses_store.check(curr_stmt_node->getNodeRef(), info.variable) && curr_stmt_node->getStmtInfo()->getType() == StmtType::Assign) {
-		info.nodes.insert(curr_stmt_node->getStmtInfo());
-	}
-	if (!modifies_store.check(curr_stmt_node->getNodeRef(), info.variable)) {
-		for (const auto& neighbour : curr_stmt_node->getNextNodes()) {
-			info.node_stack.push(neighbour);
-		}
+	for (const auto& neighbour : control_flow_graph.getNextNodes(current_idx)) {
+		info.node_stack.push(neighbour);
 	}
 }
 
-void PKB::AffectsManager::processNodeAffected(DFSInfo& info, const shared_ptr<PKB::StatementNode>& curr_stmt_node) {
-	if (modifies_store.check(curr_stmt_node->getNodeRef(), info.variable)) {
-		if (curr_stmt_node->getStmtInfo()->getType() == StmtType::Assign) {
-			info.nodes.insert(curr_stmt_node->getStmtInfo());
+void PKB::AffectsManager::processNodeAffected(DFSInfo& info, const shared_ptr<StmtInfo>& current) const {
+	auto current_idx = current->getIdentifier();
+	auto current_type = current->getType();
+	bool is_container = current_type == StmtType::WhileStmt || current_type == StmtType::IfStmt;
+
+	// If the current statement is a container, its modifies consist only of the modifies of statements within it.
+	if (!is_container && modifies_store.check(current_idx, info.variable)) {
+		if (current->getType() == StmtType::Assign) {
+			info.nodes.insert(current);
 		}
 	} else {
-		for (const auto& neighbour : curr_stmt_node->getPreviousNodes()) {
+		for (const auto& neighbour : control_flow_graph.getPreviousNodes(current_idx)) {
 			info.node_stack.push(neighbour);
 		}
 	}
 }
 
 bool PKB::AffectsManager::checkAffectsStar(StmtRef first, StmtRef second) {
+	if (!control_flow_graph.contains(first) || !control_flow_graph.contains(second)) {
+		return false;
+	}
 	StmtInfoPtrSet affected_nodes = getAffectsStar(first);
 	return any_of(affected_nodes.begin(), affected_nodes.end(),
 	              [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == second; });
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
+	if (!control_flow_graph.contains(node_ref)) {
+		return {};
+	}
+
 	if (affects_star_cache.find(node_ref) != affects_star_cache.end()) {
 		return affects_star_cache.at(node_ref);
 	}
 	if (cache_graph_store.find(node_ref) == cache_graph_store.end()) {
-		auto node = control_flow_graph.getNode(node_ref);
-		buildCacheGraph(node->getGraphIndex());
+		auto graph_index = control_flow_graph.getGraphIndex(node_ref);
+		buildCacheGraph(graph_index);
 	}
-	if (control_flow_graph.getNode(node_ref)->getStmtInfo()->getType() != StmtType::Assign) {
+	if (control_flow_graph.getType(node_ref) != StmtType::Assign) {
 		return {};
 	}
 	assert(cache_graph_store.find(node_ref) != cache_graph_store.end());
@@ -143,14 +163,18 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
+	if (!control_flow_graph.contains(node_ref)) {
+		return {};
+	}
+
 	if (affected_star_cache.find(node_ref) != affected_star_cache.end()) {
 		return affected_star_cache.at(node_ref);
 	}
 	if (cache_graph_store.find(node_ref) == cache_graph_store.end()) {
-		auto node = control_flow_graph.getNode(node_ref);
-		buildCacheGraph(node->getGraphIndex());
+		auto graph_index = control_flow_graph.getGraphIndex(node_ref);
+		buildCacheGraph(graph_index);
 	}
-	if (control_flow_graph.getNode(node_ref)->getStmtInfo()->getType() != StmtType::Assign) {
+	if (control_flow_graph.getType(node_ref) != StmtType::Assign) {
 		return {};
 	}
 	assert(cache_graph_store.find(node_ref) != cache_graph_store.end());
@@ -218,7 +242,7 @@ void PKB::AffectsManager::transposeAffects(StmtRef start, StmtRef end) {
 		if (iter == affects_cache.end()) {
 			continue;
 		}
-		auto info = control_flow_graph.getNode(i)->getStmtInfo();
+		auto info = control_flow_graph.getStatementInfo(i);
 		auto affected_set = iter->second;
 		for (const auto& affected : affected_set) {
 			affected_cache[affected->getIdentifier()].insert(info);
@@ -226,7 +250,7 @@ void PKB::AffectsManager::transposeAffects(StmtRef start, StmtRef end) {
 	}
 }
 
-void PKB::AffectsManager::buildCacheGraphForwardVisit(StmtRef index, StmtRefSet& visited, stack<StmtRef>& stack) {
+void PKB::AffectsManager::buildCacheGraphForwardVisit(StmtRef index, StmtRefSet& visited, stack<StmtRef>& stack) const {
 	if (visited.find(index) != visited.end()) {
 		return;
 	}
@@ -242,7 +266,7 @@ void PKB::AffectsManager::buildCacheGraphForwardVisit(StmtRef index, StmtRefSet&
 	stack.push(index);
 }
 
-StmtInfoPtrSet PKB::AffectsManager::buildCacheGraphReverseVisit(StmtRef index, StmtRefSet& visited) {
+StmtInfoPtrSet PKB::AffectsManager::buildCacheGraphReverseVisit(StmtRef index, StmtRefSet& visited) const {
 	visited.insert(index);
 	auto iter = affected_cache.find(index);
 	if (iter == affected_cache.end()) {
@@ -266,8 +290,8 @@ StmtInfoPtrSet PKB::AffectsManager::buildCacheGraphReverseVisit(StmtRef index, S
 	return result_set;
 }
 
-void PKB::AffectsManager::processComponent(const StmtRef& index, StmtInfoPtrSet component) {
-	auto self = control_flow_graph.getNode(index)->getStmtInfo();
+void PKB::AffectsManager::processComponent(StmtRef index, StmtInfoPtrSet component) {
+	auto self = control_flow_graph.getStatementInfo(index);
 	if (component.empty()) {
 		auto node = make_shared<CacheGraphNode>(StmtInfoPtrSet{self}, false);
 		cache_graph_store.insert({self->getIdentifier(), node});
@@ -280,7 +304,7 @@ void PKB::AffectsManager::processComponent(const StmtRef& index, StmtInfoPtrSet 
 	}
 }
 
-void PKB::AffectsManager::connectRelevantComponents(const StmtRef& index) {
+void PKB::AffectsManager::connectRelevantComponents(StmtRef index) {
 	auto current_node = cache_graph_store.at(index);
 	auto affects = affects_cache.at(index);
 	for (const auto& affect : affects) {

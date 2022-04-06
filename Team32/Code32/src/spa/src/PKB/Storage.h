@@ -171,7 +171,7 @@ private:
 
 	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
 	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set);
-	void setNode(shared_ptr<StmtInfo> info);
+	void setNode(const shared_ptr<StmtInfo>& info);
 };
 
 #endif
