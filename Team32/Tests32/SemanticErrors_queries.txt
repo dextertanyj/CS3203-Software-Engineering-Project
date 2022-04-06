@@ -190,7 +190,7 @@ FALSE
 5000
 39 - Semantic pattern wrong synonym type 
 while w; assign a;
-Select BOOLEAN pattern a("cs2103", w)
+Select BOOLEAN pattern a(w, "cs2103")
 FALSE
 5000
 40 - Semantic pattern wrong synonym type 
