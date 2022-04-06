@@ -26,7 +26,7 @@ QP::ClauseArgument::ClauseArgument(Common::ExpressionProcessor::Expression expre
  */
 ArgumentType QP::ClauseArgument::getType() const {
 	ArgumentType type = ArgumentType::Wildcard;
-	visit(Visitor{[&](const StmtRef& /*unused*/) { type = ArgumentType::StatementIndex; },
+	visit(Visitor{[&](const StmtRef& /*unused*/) { type = ArgumentType::Number; },
 	              [&](const Declaration& /*unused*/) { type = ArgumentType::Synonym; },
 	              [&](const string& /*unused*/) { type = ArgumentType::Name; },
 	              [&](const pair<Common::ExpressionProcessor::Expression, bool>& arg) {

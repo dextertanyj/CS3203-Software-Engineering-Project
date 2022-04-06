@@ -11,9 +11,9 @@ TEST_CASE("QP::ClauseArgument Test") {
 		REQUIRE_EQUALS(arg.getType(), ArgumentType::Wildcard);
 	}
 
-	SECTION("Statement Index") {
+	SECTION("Number") {
 		ClauseArgument arg = ClauseArgument(1);
-		REQUIRE_EQUALS(arg.getType(), ArgumentType::StatementIndex);
+		REQUIRE_EQUALS(arg.getType(), ArgumentType::Number);
 		REQUIRE_EQUALS(arg.getStatementIndex(), 1);
 	}
 

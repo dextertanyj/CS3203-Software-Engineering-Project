@@ -11,7 +11,7 @@ using namespace QP::Types;
 
 static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>> argument_dispatch_map = {
 	{ArgumentType::Name, VariableDispatcher::getNameMap<ClauseType::UsesP>()},
-	{ArgumentType::StatementIndex, VariableDispatcher::getIndexMap<ClauseType::UsesS>()},
+	{ArgumentType::Number, VariableDispatcher::getIndexMap<ClauseType::UsesS>()},
 	{DesignEntity::Procedure, VariableDispatcher::getProcedureMap<ClauseType::UsesP>()},
 	{DesignEntity::Stmt, VariableDispatcher::getStatementMap<ClauseType::UsesS>()},
 	{DesignEntity::Call, VariableDispatcher::getStatementMap<ClauseType::UsesS>()},

@@ -25,7 +25,7 @@ ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ClauseArgumen
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>>& getArgumentDispatchMap() {
 	static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>> map = {
-		{ArgumentType::StatementIndex, StatementDispatcher::getIndexMap<T>()},
+		{ArgumentType::Number, StatementDispatcher::getIndexMap<T>()},
 		{ArgumentType::Wildcard, StatementDispatcher::getWildcardMap<T>()},
 		{DesignEntity::Stmt, StatementDispatcher::getSynonymMap<T>()},
 		{DesignEntity::While, StatementDispatcher::getSynonymMap<T>()},

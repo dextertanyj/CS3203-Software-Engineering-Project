@@ -26,7 +26,7 @@ ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ClauseArgumen
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>>& getArgumentDispatchMap() {
 	static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>> map = {
-		{ArgumentType::StatementIndex, getIndexMap<T>()},
+		{ArgumentType::Number, getIndexMap<T>()},
 		{ArgumentType::Wildcard, getWildcardMap<T>()},
 		{DesignEntity::Stmt, getSynonymMap<T>()},
 		{DesignEntity::Assign, getSynonymMap<T>()}};
@@ -36,7 +36,7 @@ const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, Exec
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getIndexMap() {
 	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
-		{ArgumentType::StatementIndex, StatementExecutor::executorFactoryIndexIndex<T>},
+		{ArgumentType::Number, StatementExecutor::executorFactoryIndexIndex<T>},
 		{ArgumentType::Wildcard, StatementExecutor::executorFactoryIndexWildcard<T>},
 		{DesignEntity::Stmt, StatementExecutor::executorFactoryIndexSynonym<T>},
 		{DesignEntity::Assign, StatementExecutor::executorFactoryIndexSynonym<T>},
@@ -47,7 +47,7 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getIndexMap() {
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getWildcardMap() {
 	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
-		{ArgumentType::StatementIndex, StatementExecutor::executorFactoryWildcardIndex<T>},
+		{ArgumentType::Number, StatementExecutor::executorFactoryWildcardIndex<T>},
 		{ArgumentType::Wildcard, StatementExecutor::executorFactoryWildcardWildcard<T>},
 		{DesignEntity::Stmt, StatementExecutor::executorFactoryWildcardSynonymOptimized<T>},
 		{DesignEntity::Assign, StatementExecutor::executorFactoryWildcardSynonymOptimized<T>},
@@ -58,7 +58,7 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getWildcardMap() {
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getSynonymMap() {
 	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
-		{ArgumentType::StatementIndex, StatementExecutor::executorFactorySynonymIndex<T>},
+		{ArgumentType::Number, StatementExecutor::executorFactorySynonymIndex<T>},
 		{ArgumentType::Wildcard, StatementExecutor::executorFactorySynonymWildcardOptimized<T>},
 		{DesignEntity::Stmt, StatementExecutor::executorFactorySynonymSynonymOptimized<T>},
 		{DesignEntity::Assign, StatementExecutor::executorFactorySynonymSynonymOptimized<T>},

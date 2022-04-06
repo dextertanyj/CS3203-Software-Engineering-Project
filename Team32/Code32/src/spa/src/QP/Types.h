@@ -42,7 +42,7 @@ enum class ClauseType {
 	With
 };
 
-enum class ArgumentType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression, Attribute };
+enum class ArgumentType { Number, Synonym, Wildcard, Name, ExactExpression, SubExpression, Attribute };
 enum class AttributeToken { StatementIndex, ProcedureName, VariableName, Value };
 enum class AttributeType { NumberIdentifier, NameIdentifier, ProcedureName, VariableName };
 

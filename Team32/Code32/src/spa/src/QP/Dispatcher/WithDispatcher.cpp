@@ -18,7 +18,7 @@ using namespace Types;
  */
 
 static const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Number, Number>> number_attribute_map = {
-	{ArgumentType::StatementIndex, {AttributeExecutor::extractNumber, AttributeExecutor::identity<Number>}},
+	{ArgumentType::Number, {AttributeExecutor::extractNumber, AttributeExecutor::identity<Number>}},
 	{DispatchAttributeKey{DesignEntity::Stmt, AttributeType::NumberIdentifier},
      {AttributeExecutor::selectStatements, AttributeExecutor::identity<Number>}},
 	{DispatchAttributeKey{DesignEntity::Assign, AttributeType::NumberIdentifier},
@@ -85,7 +85,7 @@ static const ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>& g
 		{ArgumentType::Name,
 	     ExecutorPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
 	                                             WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
-		{ArgumentType::StatementIndex,
+		{ArgumentType::Number,
 	     ExecutorPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
 	                                             WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
 		{ArgumentType::Attribute,
@@ -98,7 +98,7 @@ template <typename TAttribute, typename TLeft, typename TRight>
 static const ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>& getConstantExecutorMap() {
 	static const ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>> map = {
 		{ArgumentType::Name, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
-		{ArgumentType::StatementIndex, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
+		{ArgumentType::Number, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
 		{ArgumentType::Attribute,
 	     ExecutorPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialConstantAttribute<TAttribute, TLeft, TRight>,
 	                                             WithExecutor::executeConstantAttribute<TAttribute, TLeft, TRight>)}};
@@ -109,7 +109,7 @@ template <typename TAttribute, typename TLeft, typename TRight>
 static const ReferenceMap<ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>>& getExecutorMap() {
 	static const ReferenceMap<ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> map = {
 		{ArgumentType::Name, getConstantExecutorMap<TAttribute, TLeft, TRight>()},
-		{ArgumentType::StatementIndex, getConstantExecutorMap<TAttribute, TLeft, TRight>()},
+		{ArgumentType::Number, getConstantExecutorMap<TAttribute, TLeft, TRight>()},
 		{ArgumentType::Attribute, getAttributeExecutorMap<TAttribute, TLeft, TRight>()}};
 	return map;
 }
@@ -183,7 +183,7 @@ ExecutorSet dispatchHandler(const vector<ClauseArgument>& args) {
  */
 
 const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ClauseArgument>&)>> number_handler_map = {
-	{ArgumentType::StatementIndex, dispatchHandler<Number, Number, Number>},
+	{ArgumentType::Number, dispatchHandler<Number, Number, Number>},
 	{AttributeType::NumberIdentifier, dispatchHandler<Number, Number, Number>},
 	{AttributeType::NumberIdentifier, dispatchHandler<Number, Number, Number>}};
 
@@ -201,7 +201,7 @@ const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vecto
 
 const unordered_map<WithClauseBasicDispatchKey,
                     unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ClauseArgument>&)>>>
-	handler_map = {{ArgumentType::StatementIndex, number_handler_map},
+	handler_map = {{ArgumentType::Number, number_handler_map},
                    {AttributeType::NumberIdentifier, number_handler_map},
                    {ArgumentType::Name, name_handler_map},
                    {AttributeType::NameIdentifier, name_handler_map},
