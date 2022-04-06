@@ -30,16 +30,8 @@ struct QuerySyntaxException : public std::runtime_error {
 	using runtime_error::runtime_error;
 };
 
-struct QueryException : public std::runtime_error {
-	using runtime_error::runtime_error;
-};
-
 struct QueryTokenizationException : public std::runtime_error {
 	using runtime_error::runtime_error;
-};
-
-struct ReferenceArgumentException : public std::logic_error {
-	using logic_error::logic_error;
 };
 
 struct QuerySemanticException : public std::runtime_error {
