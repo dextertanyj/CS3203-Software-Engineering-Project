@@ -10,6 +10,8 @@
 #include "SP/Node/StatementListNode.h"
 #include "SP/SP.h"
 
+using namespace std;
+
 namespace SP::TestUtilities {
 inline Common::EP::Expression createArithmeticExpression(vector<string> str_list) {
 	MockLexer lex = MockLexer(move(str_list));

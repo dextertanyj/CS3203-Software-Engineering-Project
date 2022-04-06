@@ -10,22 +10,20 @@
 #include "PKB/PKB.h"
 #include "memory"
 
-using namespace std;
-
 template <class T>
 class PKB::SVRelationStore {
 public:
 	SVRelationStore();
-	void set(shared_ptr<StmtInfo> statement, VarRef variable);
-	void set(shared_ptr<StmtInfo> statement, VarRefSet variables);
+	void set(std::shared_ptr<StmtInfo> statement, VarRef variable);
+	void set(std::shared_ptr<StmtInfo> statement, VarRefSet variables);
 	bool check(StmtRef index, const VarRef& variable);
 	VarRefSet getByStmt(StmtRef index);
 	StmtInfoPtrSet getByVar(const VarRef& variable);
 	void clear();
 
 private:
-	unordered_map<StmtRef, VarRefSet> statement_key_map;
-	unordered_map<VarRef, StmtInfoPtrSet> variable_key_map;
+	std::unordered_map<StmtRef, VarRefSet> statement_key_map;
+	std::unordered_map<VarRef, StmtInfoPtrSet> variable_key_map;
 
 	friend class UsesSRelation;
 	friend class ModifiesSRelation;

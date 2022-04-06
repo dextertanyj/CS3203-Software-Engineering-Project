@@ -9,8 +9,9 @@ template <typename TIdent, typename TInfo, class TRelation>
 PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::TransitiveRelationStore() = default;
 
 template <typename TIdent, typename TInfo, class TRelation>
-void PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::set(shared_ptr<TInfo> front,
-                                                                 shared_ptr<TInfo> back) {  // NOLINT(bugprone-easily-swappable-parameters)
+void PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::set(
+	std::shared_ptr<TInfo> front,
+	std::shared_ptr<TInfo> back) {  // NOLINT(bugprone-easily-swappable-parameters)
 	TIdent front_ident = front->getIdentifier();
 	TIdent back_ident = back->getIdentifier();
 
@@ -45,7 +46,7 @@ bool PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::isRelated(TIdent fr
 	if (result.empty()) {
 		return false;
 	}
-	return (any_of(result.begin(), result.end(), [back](const shared_ptr<TInfo>& ptr) { return ptr->getIdentifier() == back; }));
+	return (any_of(result.begin(), result.end(), [back](const std::shared_ptr<TInfo>& ptr) { return ptr->getIdentifier() == back; }));
 }
 
 template <typename TIdent, typename TInfo, class TRelation>
@@ -58,11 +59,11 @@ bool PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::isTransitivelyRelat
 	if (result.empty()) {
 		return false;
 	}
-	return (any_of(result.begin(), result.end(), [back](const shared_ptr<TInfo>& ptr) { return ptr->getIdentifier() == back; }));
+	return (any_of(result.begin(), result.end(), [back](const std::shared_ptr<TInfo>& ptr) { return ptr->getIdentifier() == back; }));
 }
 
 template <typename TIdent, typename TInfo, class TRelation>
-unordered_set<shared_ptr<TInfo>> PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::getForward(TIdent ident) const {
+std::unordered_set<std::shared_ptr<TInfo>> PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::getForward(TIdent ident) const {
 	auto iter = map.find(ident);
 	if (iter == map.end()) {
 		return {};
@@ -71,7 +72,7 @@ unordered_set<shared_ptr<TInfo>> PKB::TransitiveRelationStore<TIdent, TInfo, TRe
 }
 
 template <typename TIdent, typename TInfo, class TRelation>
-unordered_set<shared_ptr<TInfo>> PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::getReverse(TIdent ident) const {
+std::unordered_set<std::shared_ptr<TInfo>> PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::getReverse(TIdent ident) const {
 	auto iter = map.find(ident);
 	if (iter == map.end()) {
 		return {};
@@ -80,7 +81,8 @@ unordered_set<shared_ptr<TInfo>> PKB::TransitiveRelationStore<TIdent, TInfo, TRe
 }
 
 template <typename TIdent, typename TInfo, class TRelation>
-unordered_set<shared_ptr<TInfo>> PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::getForwardTransitive(TIdent ident) const {
+std::unordered_set<std::shared_ptr<TInfo>> PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::getForwardTransitive(
+	TIdent ident) const {
 	auto iter = map.find(ident);
 	if (iter == map.end()) {
 		return {};
@@ -89,7 +91,8 @@ unordered_set<shared_ptr<TInfo>> PKB::TransitiveRelationStore<TIdent, TInfo, TRe
 }
 
 template <typename TIdent, typename TInfo, class TRelation>
-unordered_set<shared_ptr<TInfo>> PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::getReverseTransitive(TIdent ident) const {
+std::unordered_set<std::shared_ptr<TInfo>> PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::getReverseTransitive(
+	TIdent ident) const {
 	auto iter = map.find(ident);
 	if (iter == map.end()) {
 		return {};

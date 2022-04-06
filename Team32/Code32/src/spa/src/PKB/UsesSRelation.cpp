@@ -5,6 +5,8 @@
 #include "PKB/SVRelationStore.tpp"
 #include "PKB/TopologicalSort.tpp"
 
+using namespace std;
+
 bool PKB::UsesSRelation::validate(SVRelationStore<UsesSRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Read) {
@@ -51,10 +53,10 @@ void PKB::UsesSRelation::optimize(Types::ParentStore& parent_store, CallsStateme
 	for (auto proc_iterator = order.rbegin(); proc_iterator != order.rend(); ++proc_iterator) {
 		vector<shared_ptr<StmtInfo>> stmts_in_proc = proc_iterator->get()->getStatements();
 		// For any procedure, we must process the call statements first before propagating the conditional statements.
-		std::for_each(stmts_in_proc.begin(), stmts_in_proc.end(), [&call_store, &proc_store, &store](const shared_ptr<StmtInfo>& info) {
+		for_each(stmts_in_proc.begin(), stmts_in_proc.end(), [&call_store, &proc_store, &store](const shared_ptr<StmtInfo>& info) {
 			optimizeCall(info, call_store, proc_store, store);
 		});
-		std::for_each(stmts_in_proc.begin(), stmts_in_proc.end(),
+		for_each(stmts_in_proc.begin(), stmts_in_proc.end(),
 		              [&parent_store, &store](const shared_ptr<StmtInfo>& info) { optimizeConditional(info, parent_store, store); });
 	}
 }

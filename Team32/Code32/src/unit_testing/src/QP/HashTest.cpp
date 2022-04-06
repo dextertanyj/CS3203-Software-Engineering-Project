@@ -3,6 +3,7 @@
 #include "QP/QP.h"
 #include "catch_tools.h"
 
+using namespace std;
 using namespace QP;
 
 TEST_CASE("QP Hash Test") {

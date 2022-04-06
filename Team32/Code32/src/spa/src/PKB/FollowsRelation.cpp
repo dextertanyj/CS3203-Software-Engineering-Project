@@ -1,5 +1,7 @@
 #include "FollowsRelation.h"
 
+using namespace std;
+
 void PKB::FollowsRelation::insertForward(const shared_ptr<StmtInfo>& following_to_insert) {
 	assert(getSelf()->getIdentifier() > following_to_insert->getIdentifier());
 	assert(this->following == nullptr);

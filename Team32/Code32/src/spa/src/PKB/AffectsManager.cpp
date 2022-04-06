@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+using namespace std;
+
 PKB::AffectsManager::AffectsManager(ControlFlowGraph& control_flow_graph, SVRelationStore<PKB::ModifiesSRelation>& modifies_store,
                                     SVRelationStore<PKB::UsesSRelation>& uses_store)
 	: control_flow_graph(control_flow_graph), uses_store(uses_store), modifies_store(modifies_store) {}
@@ -29,7 +31,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
 	}
 
 	VarRef variable = *(modifies_store.getByStmt(first).begin());
-	DFSInfo info = {std::move(variable), {}, {}, {}};
+	DFSInfo info = {move(variable), {}, {}, {}};
 	for (const auto& neighbour : control_flow_graph.getNextNodes(first)) {
 		info.node_stack.push(neighbour);
 	}
@@ -66,7 +68,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectedLoop(StmtRef node, VarRef variable) const {
-	DFSInfo info = {std::move(variable), {}, {}, {}};
+	DFSInfo info = {move(variable), {}, {}, {}};
 	for (const auto& neighbour : control_flow_graph.getPreviousNodes(node)) {
 		info.node_stack.push(neighbour);
 	}

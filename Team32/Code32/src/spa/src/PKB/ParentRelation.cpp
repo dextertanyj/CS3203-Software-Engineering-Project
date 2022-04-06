@@ -1,5 +1,7 @@
 #include "PKB/ParentRelation.h"
 
+using namespace std;
+
 void PKB::ParentRelation::insertForward(const shared_ptr<StmtInfo>& parent_to_insert) {
 	assert(getSelf()->getIdentifier() > parent_to_insert->getIdentifier());
 	assert(this->parent == nullptr);

@@ -17,7 +17,7 @@
 #include "PKB/StatementInfo.h"
 
 namespace PKB::Types {
-using ProcedureStore = InfoStore<ProcRef, vector<shared_ptr<StmtInfo>>, ProcedureInfo>;
+using ProcedureStore = InfoStore<ProcRef, std::vector<std::shared_ptr<StmtInfo>>, ProcedureInfo>;
 using StatementStore = InfoStore<StmtRef, StmtType, StatementInfo>;
 using CallStore = TransitiveRelationStore<ProcRef, ProcedureInfo, CallsRelation>;
 using ParentStore = TransitiveRelationStore<StmtRef, StmtInfo, ParentRelation>;

@@ -5,6 +5,8 @@
 #include "PKB/CFG/DummyNode.h"
 #include "PKB/Types.h"
 
+using namespace std;
+
 PKB::IfNode::IfNode(const shared_ptr<StmtInfo>& info)
 	: PKB::StatementNode(Types::NodeType::If, info), dummy_node(make_shared<PKB::DummyNode>(info->getIdentifier())) {
 	assert(info->getType() == StmtType::If);

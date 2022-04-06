@@ -32,8 +32,6 @@
 #include "PKB/UsesPRelation.h"
 #include "PKB/UsesSRelation.h"
 
-using namespace std;
-
 class PKB::Storage : public PKB::StorageUpdateInterface, public PKB::StorageAccessInterface {
 public:
 	Storage();
@@ -44,7 +42,7 @@ public:
 	void setParent(StmtRef parent, StmtRef child) override;
 	void setStmtType(StmtRef index, StmtType type) override;
 	void setConstant(ConstVal value) override;
-	void setConstant(const unordered_set<ConstVal>& values) override;
+	void setConstant(const std::unordered_set<ConstVal>& values) override;
 	void setUses(StmtRef index, VarRef name) override;
 	void setModifies(StmtRef index, VarRef name) override;
 	void setUses(StmtRef index, VarRefSet names) override;
@@ -63,13 +61,13 @@ public:
 	// General get methods
 	StmtInfoPtrSet getStatements() override;
 	VarRefSet getVariables() override;
-	unordered_set<ConstVal> getConstants() override;
-	unordered_set<ProcRef> getProcedures() override;
+	std::unordered_set<ConstVal> getConstants() override;
+	std::unordered_set<ProcRef> getProcedures() override;
 
 	// Parent get methods
 	bool checkParent(StmtRef parent, StmtRef child) override;
 	bool checkParentStar(StmtRef parent, StmtRef child) override;
-	shared_ptr<StmtInfo> getParent(StmtRef index) override;
+	std::shared_ptr<StmtInfo> getParent(StmtRef index) override;
 	StmtInfoPtrSet getChildren(StmtRef index) override;
 	StmtInfoPtrSet getParentStar(StmtRef index) override;
 	StmtInfoPtrSet getChildStar(StmtRef index) override;
@@ -77,8 +75,8 @@ public:
 	// Follow get methods
 	bool checkFollows(StmtRef front, StmtRef back) override;
 	bool checkFollowsStar(StmtRef front, StmtRef back) override;
-	shared_ptr<StmtInfo> getPreceding(StmtRef index) override;
-	shared_ptr<StmtInfo> getFollower(StmtRef index) override;
+	std::shared_ptr<StmtInfo> getPreceding(StmtRef index) override;
+	std::shared_ptr<StmtInfo> getFollower(StmtRef index) override;
 	StmtInfoPtrSet getFollowerStar(StmtRef index) override;
 	StmtInfoPtrSet getPrecedingStar(StmtRef index) override;
 
@@ -145,7 +143,7 @@ public:
 	void clear();
 
 	// For testing
-	unordered_map<StmtRef, shared_ptr<StmtInfo>> getStmtInfoMap();
+	std::unordered_map<StmtRef, std::shared_ptr<StmtInfo>> getStmtInfoMap();
 
 private:
 	SetStore<ConstVal> constant_store;
@@ -168,9 +166,9 @@ private:
 	NextManager next_manager;
 	AffectsManager affects_manager;
 
-	static ProcRefSet procedureInfoToProcRef(const unordered_set<shared_ptr<ProcedureInfo>>& set);
-	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const unordered_set<shared_ptr<StatementInfo>>& set);
-	void setNode(const shared_ptr<StmtInfo>& info);
+	static ProcRefSet procedureInfoToProcRef(const std::unordered_set<std::shared_ptr<ProcedureInfo>>& set);
+	static StmtInfoPtrSet statementInfoPtrSetToInterfacePtrSet(const std::unordered_set<std::shared_ptr<StatementInfo>>& set);
+	void setNode(const std::shared_ptr<StmtInfo>& info);
 };
 
 #endif

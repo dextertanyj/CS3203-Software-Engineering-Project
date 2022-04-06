@@ -3,6 +3,8 @@
 #include "catch.hpp"
 #include "catch_tools.h"
 
+using namespace std;
+
 TEST_CASE("PKB::SetStore::insert Item Test") {
 	PKB::SetStore<string> store = PKB::SetStore<string>();
 

@@ -8,8 +8,6 @@
 #include "Common/ExpressionProcessor/Hash.h"
 #include "Common/TypeDefs.h"
 
-using namespace std;
-
 namespace PKB {
 class StorageUpdateInterface;
 class StorageAccessInterface;
@@ -55,42 +53,42 @@ class NextManager;
 class AffectsManager;
 
 struct IfControlRelation {
-	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const shared_ptr<StmtInfo>& statement, const VarRef& /*var*/) {
+	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const std::shared_ptr<StmtInfo>& statement, const VarRef& /*var*/) {
 		return statement->getType() == StmtType::If;
 	}
-	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const shared_ptr<StmtInfo>& statement,
+	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const std::shared_ptr<StmtInfo>& statement,
 	                     const VarRefSet& /*var_set*/) {
 		return statement->getType() == StmtType::If;
 	}
 };
 
 struct WhileControlRelation {
-	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const shared_ptr<StmtInfo>& statement, const VarRef& /*var*/) {
+	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const std::shared_ptr<StmtInfo>& statement, const VarRef& /*var*/) {
 		return statement->getType() == StmtType::While;
 	}
-	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const shared_ptr<StmtInfo>& statement,
+	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const std::shared_ptr<StmtInfo>& statement,
 	                     const VarRefSet& /*var_set*/) {
 		return statement->getType() == StmtType::While;
 	}
 };
 
 struct AssignRelation {
-	shared_ptr<StmtInfo> node;          // NOLINT(misc-non-private-member-variables-in-classes)
+	std::shared_ptr<StmtInfo> node;          // NOLINT(misc-non-private-member-variables-in-classes)
 	VarRef variable;                    // NOLINT(misc-non-private-member-variables-in-classes)
 	Common::EP::Expression expression;  // NOLINT(misc-non-private-member-variables-in-classes)
 	inline bool operator==(const AssignRelation& other) const {
 		return node == other.node && variable == other.variable && expression == other.expression;
 	}
 
-	friend hash<AssignRelation>;
+	friend std::hash<AssignRelation>;
 };
 
-struct CallGraphException : public runtime_error {
+struct CallGraphException : public std::runtime_error {
 	using runtime_error::runtime_error;
 };
 
-struct TopologicalSortException : public runtime_error {
-	using runtime_error::runtime_error;
+struct TopologicalSortException : public std::runtime_error {
+	using std::runtime_error::runtime_error;
 };
 
 namespace Types {};

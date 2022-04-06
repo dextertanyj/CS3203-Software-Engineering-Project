@@ -11,8 +11,8 @@ public:
 
 	[[nodiscard]] StmtInfoPtrSet getStatements() const { return pkb.getStatements(); };
 	[[nodiscard]] VarRefSet getVariables() const { return pkb.getVariables(); };
-	[[nodiscard]] unordered_set<ConstVal> getConstants() const { return pkb.getConstants(); };
-	[[nodiscard]] unordered_set<ProcRef> getProcedures() const { return pkb.getProcedures(); };
+	[[nodiscard]] std::unordered_set<ConstVal> getConstants() const { return pkb.getConstants(); };
+	[[nodiscard]] std::unordered_set<ProcRef> getProcedures() const { return pkb.getProcedures(); };
 	void resetCache() { pkb.resetCFGCache(); };
 
 	// Follows, Parent, Next, Affects

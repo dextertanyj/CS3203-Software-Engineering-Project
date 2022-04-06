@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+using namespace std;
+
 PKB::CallsStatementStore::CallsStatementStore() = default;
 
 void PKB::CallsStatementStore::set(const shared_ptr<StmtInfo>& statement, ProcRef procedure) {
@@ -12,7 +14,7 @@ void PKB::CallsStatementStore::set(const shared_ptr<StmtInfo>& statement, ProcRe
 	if (map.find(index) != map.end()) {
 		throw logic_error("Call statement already set.");
 	}
-	map.emplace(index, std::move(procedure));
+	map.emplace(index, move(procedure));
 }
 
 ProcRef PKB::CallsStatementStore::getProcedure(const shared_ptr<StmtInfo>& statement) const {

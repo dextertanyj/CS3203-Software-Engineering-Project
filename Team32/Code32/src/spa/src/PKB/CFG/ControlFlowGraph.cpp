@@ -8,6 +8,8 @@
 #include "PKB/CFG/WhileNode.h"
 #include "PKB/Types.h"
 
+using namespace std;
+
 void PKB::ControlFlowGraph::setNext(StmtRef previous, StmtRef next) const {
 	assert(previous != next);
 	auto prev_node = getNode(previous);

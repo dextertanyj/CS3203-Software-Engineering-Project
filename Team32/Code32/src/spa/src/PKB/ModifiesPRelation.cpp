@@ -1,5 +1,7 @@
 #include "PKB/ModifiesPRelation.h"
 
+using namespace std;
+
 void PKB::ModifiesPRelation::optimize(const Types::ProcedureStore& proc_store, PVRelationStore<ModifiesPRelation>& store,
                                       SVRelationStore<ModifiesSRelation>& modifies_s_store) {
 	for (const auto& proc_info : proc_store.getAll()) {

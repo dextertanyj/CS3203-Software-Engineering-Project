@@ -6,6 +6,7 @@
 #include "catch.hpp"
 #include "catch_tools.h"
 
+using namespace std;
 using namespace QP::Preprocessor;
 using namespace QP::Types;
 

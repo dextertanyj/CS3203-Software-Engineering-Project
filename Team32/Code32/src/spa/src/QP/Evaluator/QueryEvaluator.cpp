@@ -4,6 +4,7 @@
 
 #include "QP/QueryUtils.h"
 
+using namespace std;
 using namespace QP;
 using namespace Evaluator;
 using namespace Types;

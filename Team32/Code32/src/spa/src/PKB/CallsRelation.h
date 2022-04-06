@@ -13,17 +13,17 @@
 class PKB::CallsRelation : public PKB::TransitiveRelation<ProcedureInfo> {
 public:
 	using TransitiveRelation<ProcedureInfo>::TransitiveRelation;
-	void insertForward(const shared_ptr<ProcedureInfo>& caller);
-	void insertReverse(const shared_ptr<ProcedureInfo>& callee);
-	void appendForwardTransitive(const unordered_set<shared_ptr<ProcedureInfo>>& new_callers) override;
-	void appendReverseTransitive(const unordered_set<shared_ptr<ProcedureInfo>>& new_callees) override;
+	void insertForward(const std::shared_ptr<ProcedureInfo>& caller);
+	void insertReverse(const std::shared_ptr<ProcedureInfo>& callee);
+	void appendForwardTransitive(const std::unordered_set<std::shared_ptr<ProcedureInfo>>& new_callers) override;
+	void appendReverseTransitive(const std::unordered_set<std::shared_ptr<ProcedureInfo>>& new_callees) override;
 
-	[[nodiscard]] unordered_set<shared_ptr<ProcedureInfo>> getForward() const;
-	[[nodiscard]] unordered_set<shared_ptr<ProcedureInfo>> getReverse() const;
+	[[nodiscard]] std::unordered_set<std::shared_ptr<ProcedureInfo>> getForward() const;
+	[[nodiscard]] std::unordered_set<std::shared_ptr<ProcedureInfo>> getReverse() const;
 
 private:
-	unordered_set<shared_ptr<ProcedureInfo>> callers;
-	unordered_set<shared_ptr<ProcedureInfo>> callees;
+	std::unordered_set<std::shared_ptr<ProcedureInfo>> callers;
+	std::unordered_set<std::shared_ptr<ProcedureInfo>> callees;
 };
 
 // Template specializations for Call relationship.
@@ -32,8 +32,8 @@ template <>
 void PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>::optimize();
 
 template <>
-unordered_set<shared_ptr<PKB::ProcedureInfo>>
+std::unordered_set<std::shared_ptr<PKB::ProcedureInfo>>
 PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>::populateTransitive(
-	CallsRelation& current, unordered_set<shared_ptr<ProcedureInfo>> previous);
+	CallsRelation& current, std::unordered_set<std::shared_ptr<ProcedureInfo>> previous);
 
 #endif  // SPA_SRC_PKB_CALLRELATION_H

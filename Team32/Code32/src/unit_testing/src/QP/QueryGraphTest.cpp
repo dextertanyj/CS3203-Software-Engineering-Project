@@ -5,6 +5,7 @@
 #include "QP/Evaluator/Clause.h"
 #include "catch.hpp"
 
+using namespace std;
 using namespace QP;
 using namespace Evaluator;
 using namespace Optimizer;

@@ -6,6 +6,7 @@
 
 #define SINK_NODE_SYMBOL ""
 
+using namespace std;
 using namespace QP::Evaluator;
 using namespace QP::Optimizer;
 using namespace QP::Types;

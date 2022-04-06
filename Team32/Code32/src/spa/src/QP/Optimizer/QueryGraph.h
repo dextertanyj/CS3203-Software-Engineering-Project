@@ -14,44 +14,45 @@
 class QP::Optimizer::QueryGraph {
 public:
 	struct Edge {
-		string node_from_symbol;
-		string node_to_symbol;
-		shared_ptr<Evaluator::Clause> clause;
+		std::string node_from_symbol;
+		std::string node_to_symbol;
+		std::shared_ptr<Evaluator::Clause> clause;
 		size_t weight;
 	};
 
 	struct Node {
-		string declaration_symbol;
-		unordered_set<string> adjacent_symbols;
-		vector<Edge> outgoing_edges;
+		std::string declaration_symbol;
+		std::unordered_set<std::string> adjacent_symbols;
+		std::vector<Edge> outgoing_edges;
 		size_t weight;
 	};
 
 	explicit QueryGraph(const Types::DeclarationList& declarations, const Types::ClauseList& clauses,
 	                    const Types::DeclarationList& select_list);
 	[[nodiscard]] size_t getNumberOfGroups() const;
-	[[nodiscard]] vector<string> getGroupSynonyms(size_t group_number) const;
+	[[nodiscard]] std::vector<std::string> getGroupSynonyms(size_t group_number) const;
 	[[nodiscard]] Types::DeclarationList getGroupSelectedSynonyms(size_t group_number) const;
 	[[nodiscard]] Types::ClauseList getGroupClauses(size_t group_number) const;
-	[[nodiscard]] unordered_map<string, Node> getNodes() const;
+	[[nodiscard]] std::unordered_map<std::string, Node> getNodes() const;
 
 private:
 	struct EdgeComparator {
 		auto operator()(Edge& edge_one, Edge& edge_two) const -> bool { return edge_one.weight > edge_two.weight; };
 	};
 
-	unordered_map<string, Node> nodes;
+	std::unordered_map<std::string, Node> nodes;
 	ClauseGroups clause_groups;
 
 	void setEdges(const Types::ClauseList& clause_list);
-	void setEdge(const shared_ptr<Evaluator::Clause>& clause);
-	void addEdge(const pair<string, string>& symbols, const shared_ptr<Evaluator::Clause>& clause);
+	void setEdge(const std::shared_ptr<Evaluator::Clause>& clause);
+	void addEdge(const std::pair<std::string, std::string>& symbols, const std::shared_ptr<Evaluator::Clause>& clause);
 	void optimize(const Types::DeclarationList& select_list);
 
-	void insertEdgesToQueue(unordered_set<string>& visited_nodes, const string& node_symbol,
-	                        priority_queue<Edge, vector<Edge>, EdgeComparator>& pq) const;
-	[[nodiscard]] string getCheapestNodeInGroup(size_t group_number) const;
-	static void addNodeToQueue(const Node& node, queue<string>& queue, unordered_set<string>& unvisited_nodes, unsigned long long& cost);
+	void insertEdgesToQueue(std::unordered_set<std::string>& visited_nodes, const std::string& node_symbol,
+	                        std::priority_queue<Edge, std::vector<Edge>, EdgeComparator>& pq) const;
+	[[nodiscard]] std::string getCheapestNodeInGroup(size_t group_number) const;
+	static void addNodeToQueue(const Node& node, std::queue<std::string>& queue, std::unordered_set<std::string>& unvisited_nodes,
+	                           unsigned long long& cost);
 };
 
 #endif  // SPA_SRC_QP_QUERYGRAPH_H

@@ -5,6 +5,8 @@
 #include <string>
 #include <unordered_set>
 
+using namespace std;
+
 class MockInfo {
 public:
 	MockInfo(string ident) { this->ident = ident; };

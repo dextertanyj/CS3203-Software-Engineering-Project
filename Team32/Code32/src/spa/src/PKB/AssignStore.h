@@ -15,18 +15,18 @@
 class PKB::AssignStore {
 public:
 	AssignStore();
-	void setAssign(const shared_ptr<StmtInfo>& statement, const VarRef& variable, const Common::EP::Expression& expression);
+	void setAssign(const std::shared_ptr<StmtInfo>& statement, const VarRef& variable, const Common::EP::Expression& expression);
 	bool patternExists(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPattern(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& var_name);
 	StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match);
-	unordered_map<VarRef, unordered_set<AssignRelation>> getAssignMap();
+	std::unordered_map<VarRef, std::unordered_set<AssignRelation>> getAssignMap();
 	void clear();
 
 private:
 	static bool compareExpressions(const Common::EP::Expression& expression, const Common::EP::Expression& op_tree, bool is_exact_match);
-	unordered_map<VarRef, unordered_set<AssignRelation>> var_to_relation_store;
-	unordered_map<Common::EP::Expression, unordered_set<AssignRelation>> exp_to_relation_store;
+	std::unordered_map<VarRef, std::unordered_set<AssignRelation>> var_to_relation_store;
+	std::unordered_map<Common::EP::Expression, std::unordered_set<AssignRelation>> exp_to_relation_store;
 };
 
 #endif

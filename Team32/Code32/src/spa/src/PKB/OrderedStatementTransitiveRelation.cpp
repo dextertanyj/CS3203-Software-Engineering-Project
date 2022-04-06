@@ -1,5 +1,7 @@
 #include "OrderedStatementTransitiveRelation.h"
 
+using namespace std;
+
 void PKB::OrderedStatementTransitiveRelation::appendForwardTransitive(const StmtInfoPtrSet& new_forward) {
 	assert(all_of(new_forward.begin(), new_forward.end(),
 	              [&](const auto& forward) { return getSelf()->getIdentifier() > forward->getIdentifier(); }));

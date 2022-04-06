@@ -1,5 +1,7 @@
 #include "PKB/UsesPRelation.h"
 
+using namespace std;
+
 void PKB::UsesPRelation::optimize(const Types::ProcedureStore& proc_store, PVRelationStore<UsesPRelation>& store,
                                   SVRelationStore<UsesSRelation>& uses_s_store) {
 	for (const auto& proc_info : proc_store.getAll()) {

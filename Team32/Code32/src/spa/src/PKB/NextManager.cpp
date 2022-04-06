@@ -4,6 +4,8 @@
 #include <cassert>
 #include <queue>
 
+using namespace std;
+
 PKB::NextManager::NextManager(ControlFlowGraph& control_flow_graph) : control_flow_graph(control_flow_graph) {}
 
 bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
@@ -172,7 +174,7 @@ void PKB::NextManager::constructQueueLoopNode(const shared_ptr<StmtInfo>& node, 
 	if (after_entry && before_exit) {
 		info.priority_queue = StmtInfoPQ<Comparator>();
 		info.priority_queue.push(node);
-		info.queue = std::queue<shared_ptr<StmtInfo>>();
+		info.queue = queue<shared_ptr<StmtInfo>>();
 	}
 	// External nodes of the loop node are set to continue the DFS traversal.
 	auto external = (control_flow_graph.*info.traversal_information.loop_continuation_handler)(node->getIdentifier());

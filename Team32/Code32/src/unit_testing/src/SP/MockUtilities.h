@@ -7,6 +7,8 @@
 #include "Common/TypeDefs.h"
 #include "PKB/StorageUpdateInterface.h"
 
+using namespace std;
+
 class MockStorageUpdate : public PKB::StorageUpdateInterface {
 public:
 	MockStorageUpdate() = default;

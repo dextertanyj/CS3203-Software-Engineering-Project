@@ -11,14 +11,14 @@
 class PKB::ProcedureInfo {
 public:
 	[[nodiscard]] ProcRef getIdentifier() const;
-	[[nodiscard]] vector<shared_ptr<StmtInfo>> getStatements() const;
+	[[nodiscard]] std::vector<std::shared_ptr<StmtInfo>> getStatements() const;
 
 private:
-	ProcedureInfo(ProcRef name, vector<shared_ptr<StmtInfo>> statements);
+	ProcedureInfo(ProcRef name, std::vector<std::shared_ptr<StmtInfo>> statements);
 	ProcRef name;
-	vector<shared_ptr<StmtInfo>> statements;
+	std::vector<std::shared_ptr<StmtInfo>> statements;
 
-	friend class PKB::InfoStore<ProcRef, vector<shared_ptr<StmtInfo>>, ProcedureInfo>;
+	friend class PKB::InfoStore<ProcRef, std::vector<std::shared_ptr<StmtInfo>>, ProcedureInfo>;
 };
 
 #endif  // SPA_SRC_PKB_PROCEDUREINFO_H

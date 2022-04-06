@@ -12,15 +12,15 @@
 class PKB::FollowsRelation : public PKB::OrderedStatementTransitiveRelation {
 public:
 	using OrderedStatementTransitiveRelation::OrderedStatementTransitiveRelation;
-	void insertForward(const shared_ptr<StmtInfo>& following_to_insert);
-	void insertReverse(const shared_ptr<StmtInfo>& follower_to_insert);
+	void insertForward(const std::shared_ptr<StmtInfo>& following_to_insert);
+	void insertReverse(const std::shared_ptr<StmtInfo>& follower_to_insert);
 
 	[[nodiscard]] StmtInfoPtrSet getForward() const;
 	[[nodiscard]] StmtInfoPtrSet getReverse() const;
 
 private:
-	shared_ptr<StmtInfo> following;
-	shared_ptr<StmtInfo> follower;
+	std::shared_ptr<StmtInfo> following;
+	std::shared_ptr<StmtInfo> follower;
 };
 
 // Template specializations for Follows relationship.
