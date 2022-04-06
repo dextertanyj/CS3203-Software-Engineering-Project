@@ -25,7 +25,7 @@ QueryResult executeTrivialSynonymName(const StorageAdapter& store, const ClauseA
 template <ClauseType T>
 QueryResult executeTrivialSynonymWildcardOrSynonym(const StorageAdapter& store) {
 	unordered_set<ProcRef> proc_set = store.getProcedures();
-	for (auto const& proc : proc_set) {
+	for (const auto& proc : proc_set) {
 		VarRefSet var_set = store.getVariableByProcedure<T>(proc);
 		if (!var_set.empty()) {
 			return QueryResult(true);
@@ -38,7 +38,7 @@ template <ClauseType T>
 QueryResult executeNameSynonym(const StorageAdapter& store, const ClauseArgument& procedure, const ClauseArgument& variable) {
 	QueryResult result = QueryResult({variable.getSynonymSymbol()});
 	VarRefSet var_set = store.getVariableByProcedure<T>(procedure.getName());
-	for (auto const& var : var_set) {
+	for (const auto& var : var_set) {
 		result.addRow({var});
 	}
 
@@ -49,7 +49,7 @@ template <ClauseType T>
 QueryResult executeSynonymName(const StorageAdapter& store, const ClauseArgument& procedure, const ClauseArgument& variable) {
 	QueryResult result = QueryResult({procedure.getSynonymSymbol()});
 	ProcRefSet proc_set = store.getProcedureByVariable<T>(variable.getName());
-	for (auto const& proc : proc_set) {
+	for (const auto& proc : proc_set) {
 		result.addRow({proc});
 	}
 
@@ -60,7 +60,7 @@ template <ClauseType T>
 QueryResult executeSynonymWildcard(const StorageAdapter& store, const ClauseArgument& procedure) {
 	QueryResult result = QueryResult({procedure.getSynonymSymbol()});
 	unordered_set<ProcRef> proc_set = store.getProcedures();
-	for (auto const& proc : proc_set) {
+	for (const auto& proc : proc_set) {
 		VarRefSet var_set = store.getVariableByProcedure<T>(proc);
 		if (!var_set.empty()) {
 			result.addRow({proc});
@@ -75,9 +75,9 @@ QueryResult executeSynonymSynonym(const StorageAdapter& store, const ClauseArgum
 	unordered_set<ProcRef> proc_set = store.getProcedures();
 	vector<string> proc_column;
 	vector<string> var_column;
-	for (auto const& proc : proc_set) {
+	for (const auto& proc : proc_set) {
 		VarRefSet var_set = store.getVariableByProcedure<T>(proc);
-		for (auto const& var : var_set) {
+		for (const auto& var : var_set) {
 			result.addRow({proc, var});
 		}
 	}

@@ -30,7 +30,7 @@ QueryResult executeTrivialIndexSynonym(const StorageAdapter& store, const Clause
 		return QueryResult(!rhs_set.empty());
 	}
 
-	for (auto const& rhs_statement : rhs_set) {
+	for (const auto& rhs_statement : rhs_set) {
 		if (Utilities::checkStmtTypeMatch(rhs_statement, rhs.getSynonymType())) {
 			return QueryResult(true);
 		}
@@ -46,7 +46,7 @@ QueryResult executeTrivialWildcardIndex(const StorageAdapter& store, const Claus
 template <ClauseType T>
 QueryResult executeTrivialWildcardWildcard(const StorageAdapter& store) {
 	StmtInfoPtrSet statements = store.getStatements();
-	for (auto const& statement : statements) {
+	for (const auto& statement : statements) {
 		StmtInfoPtrSet rhs_set = store.getReverseStatements<T>(statement->getIdentifier());
 		if (!rhs_set.empty()) {
 			return QueryResult(true);
@@ -58,7 +58,7 @@ QueryResult executeTrivialWildcardWildcard(const StorageAdapter& store) {
 template <>
 inline QueryResult executeTrivialWildcardWildcard<ClauseType::Parent>(const StorageAdapter& store) {
 	StmtInfoPtrSet statements = store.getStatements();
-	for (auto const& statement : statements) {
+	for (const auto& statement : statements) {
 		// Avoid call to PKB unless statement can contain others.
 		if (statement->getType() != StmtType::If && statement->getType() != StmtType::While) {
 			continue;
@@ -79,7 +79,7 @@ inline QueryResult executeTrivialWildcardWildcard<ClauseType::ParentT>(const Sto
 template <ClauseType T>
 QueryResult executeTrivialWildcardSynonym(const StorageAdapter& store, const ClauseArgument& rhs) {
 	StmtInfoPtrSet statements = store.getStatements();
-	for (auto const& statement : statements) {
+	for (const auto& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, rhs.getSynonymType())) {
 			continue;
 		}
@@ -94,7 +94,7 @@ QueryResult executeTrivialWildcardSynonym(const StorageAdapter& store, const Cla
 template <ClauseType T>
 QueryResult executeTrivialSynonymIndex(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
 	StmtInfoPtrSet lhs_set = store.getForwardStatements<T>(rhs.getStatementIndex());
-	for (auto const& lhs_statement : lhs_set) {
+	for (const auto& lhs_statement : lhs_set) {
 		if (Utilities::checkStmtTypeMatch(lhs_statement, lhs.getSynonymType())) {
 			return QueryResult(true);
 		}
@@ -105,7 +105,7 @@ QueryResult executeTrivialSynonymIndex(const StorageAdapter& store, const Clause
 template <ClauseType T>
 QueryResult executeTrivialSynonymWildcard(const StorageAdapter& store, const ClauseArgument& lhs) {
 	StmtInfoPtrSet statements = store.getStatements();
-	for (auto const& statement : statements) {
+	for (const auto& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, lhs.getSynonymType())) {
 			continue;
 		}
@@ -122,7 +122,7 @@ template <ClauseType T>
 static QueryResult executeTrivialStatementSynonymSynonym(const StorageAdapter& store, const ClauseArgument& lhs,
                                                          const ClauseArgument& rhs) {
 	StmtInfoPtrSet statements = store.getStatements();
-	for (auto const& statement : statements) {
+	for (const auto& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, lhs.getSynonymType())) {
 			continue;
 		}
@@ -151,7 +151,7 @@ QueryResult executeTrivialSynonymSynonym(const StorageAdapter& store, const Clau
 template <ClauseType T>
 static QueryResult executeTrivialSameSynonymSynonym(const StorageAdapter& store, const ClauseArgument& synonym) {
 	StmtInfoPtrSet statements = store.getStatements();
-	for (auto const& statement : statements) {
+	for (const auto& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, synonym.getSynonymType())) {
 			continue;
 		}
@@ -198,7 +198,7 @@ QueryResult executeIndexSynonym(const StorageAdapter& store, const ClauseArgumen
 	QueryResult result = QueryResult({rhs.getSynonymSymbol()});
 
 	StmtInfoPtrSet statements = store.getReverseStatements<T>(lhs.getStatementIndex());
-	for (auto const& statement : statements) {
+	for (const auto& statement : statements) {
 		if (Utilities::checkStmtTypeMatch(statement, rhs.getSynonymType())) {
 			result.addRow({to_string(statement->getIdentifier())});
 		}
@@ -211,7 +211,7 @@ template <ClauseType T>
 QueryResult executeWildcardSynonym(const StorageAdapter& store, const ClauseArgument& rhs) {
 	QueryResult result = QueryResult({rhs.getSynonymSymbol()});
 	StmtInfoPtrSet statements = store.getStatements();
-	for (auto const& statement : statements) {
+	for (const auto& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, rhs.getSynonymType())) {
 			continue;
 		}
@@ -230,7 +230,7 @@ QueryResult executeSynonymIndex(const StorageAdapter& store, const ClauseArgumen
 	QueryResult result = QueryResult({lhs.getSynonymSymbol()});
 	StmtInfoPtrSet lhs_set = store.getForwardStatements<T>(rhs.getStatementIndex());
 	vector<string> column;
-	for (auto const& lhs_statement : lhs_set) {
+	for (const auto& lhs_statement : lhs_set) {
 		if (Utilities::checkStmtTypeMatch(lhs_statement, lhs.getSynonymType())) {
 			result.addRow({to_string(lhs_statement->getIdentifier())});
 		}
@@ -243,7 +243,7 @@ template <ClauseType T>
 QueryResult executeSynonymWildcard(const StorageAdapter& store, const ClauseArgument& lhs) {
 	QueryResult result = QueryResult({lhs.getSynonymSymbol()});
 	StmtInfoPtrSet statements = store.getStatements();
-	for (auto const& statement : statements) {
+	for (const auto& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, lhs.getSynonymType())) {
 			continue;
 		}
@@ -257,7 +257,7 @@ QueryResult executeSynonymWildcard(const StorageAdapter& store, const ClauseArgu
 }
 
 static void checkSet(StmtRef lhs, const ClauseArgument& rhs, const StmtInfoPtrSet& rhs_set, QueryResult& result) {
-	for (auto const& rhs_statement : rhs_set) {
+	for (const auto& rhs_statement : rhs_set) {
 		if (!Utilities::checkStmtTypeMatch(rhs_statement, rhs.getSynonymType())) {
 			continue;
 		}
@@ -269,7 +269,7 @@ template <ClauseType T>
 static QueryResult executeStatementSynonymSynonym(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
 	QueryResult result = QueryResult({lhs.getSynonymSymbol(), rhs.getSynonymSymbol()});
 	StmtInfoPtrSet statements = store.getStatements();
-	for (auto const& statement : statements) {
+	for (const auto& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, lhs.getSynonymType())) {
 			continue;
 		}
@@ -293,7 +293,7 @@ template <ClauseType T>
 static QueryResult executeSameSynonymSynonym(const StorageAdapter& store, const ClauseArgument& synonym) {
 	QueryResult result = QueryResult({synonym.getSynonymSymbol()});
 	StmtInfoPtrSet statements = store.getStatements();
-	for (auto const& statement : statements) {
+	for (const auto& statement : statements) {
 		if (!Utilities::checkStmtTypeMatch(statement, synonym.getSynonymType())) {
 			continue;
 		}
@@ -355,7 +355,7 @@ QueryResult executeWildcardSynonymOptimized(const StorageAdapter& store, const Q
 	QueryResult result = QueryResult({rhs.getSynonymSymbol()});
 	auto candidates = buildCandidates(existing_results);
 
-	for (auto const& candidate : candidates) {
+	for (const auto& candidate : candidates) {
 		StmtInfoPtrSet rhs_set = store.getForwardStatements<T>(candidate);
 		if (!rhs_set.empty()) {
 			result.addRow({to_string(candidate)});
@@ -375,7 +375,7 @@ QueryResult executeSynonymWildcardOptimized(const StorageAdapter& store, const Q
 	QueryResult result = QueryResult({lhs.getSynonymSymbol()});
 	auto candidates = buildCandidates(existing_results);
 
-	for (auto const& candidate : candidates) {
+	for (const auto& candidate : candidates) {
 		StmtInfoPtrSet rhs_set = store.getReverseStatements<T>(candidate);
 		if (!rhs_set.empty()) {
 			result.addRow({to_string(candidate)});
@@ -392,7 +392,7 @@ static QueryResult executeSameSynonymSynonymOptimized(const StorageAdapter& stor
 	QueryResult result = QueryResult({synonym.getSynonymSymbol()});
 	auto candidates = buildCandidates(existing_results);
 
-	for (auto const& candidate : candidates) {
+	for (const auto& candidate : candidates) {
 		StmtInfoPtrSet other_set = store.getReverseStatements<T>(candidate);
 		auto satisfied = any_of(other_set.begin(), other_set.end(), [&](const auto& info) { return info->getIdentifier() == candidate; });
 		if (satisfied) {

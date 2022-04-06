@@ -54,7 +54,7 @@ QP::ResultTable QP::ResultTable::filterBySelect(const QP::Types::DeclarationList
 
 	unordered_set<ResultRow> rows;
 	rows.reserve(getNumberOfRows());
-	for (auto const& row : table) {
+	for (const auto& row : table) {
 		ResultRow sub_row;
 		sub_row.reserve(select_list.size());
 		for (const auto& select : select_list) {
@@ -63,7 +63,7 @@ QP::ResultTable QP::ResultTable::filterBySelect(const QP::Types::DeclarationList
 		rows.emplace(sub_row);
 	}
 
-	for (auto const& row : rows) {
+	for (const auto& row : rows) {
 		filtered_table.insertRow(row);
 	}
 
@@ -71,14 +71,14 @@ QP::ResultTable QP::ResultTable::filterBySelect(const QP::Types::DeclarationList
 }
 
 bool QP::ResultTable::containsRow(const ResultRow& row) {
-	return any_of(table.begin(), table.end(), [row](auto const& row_stored) { return row_stored == row; });
+	return any_of(table.begin(), table.end(), [row](const auto& row_stored) { return row_stored == row; });
 }
 
 ResultRow QP::ResultTable::getRowWithOrder(const vector<string>& synonyms, size_t row_number) const {
 	ResultRow row_with_order;
 	row_with_order.reserve(synonyms.size());
 	ResultRow row = table.at(row_number);
-	for (string const& synonym : synonyms) {
+	for (const string& synonym : synonyms) {
 		row_with_order.push_back(row.at(synonyms_to_index_map.at(synonym)));
 	}
 	return row_with_order;
@@ -88,10 +88,10 @@ unordered_multimap<ResultRow, size_t> QP::ResultTable::buildHashTable(ResultTabl
 	unordered_multimap<ResultRow, size_t> map;
 	unordered_map<string, size_t> synonyms_to_index_map = table.getSynonymsStoredMap();
 	size_t row_number = 0;
-	for (ResultRow const& row : table.table) {
+	for (const ResultRow& row : table.table) {
 		ResultRow sub_row;
 		sub_row.reserve(key_synonyms.size());
-		for (string const& synonym : key_synonyms) {
+		for (const string& synonym : key_synonyms) {
 			sub_row.push_back(row.at(synonyms_to_index_map.at(synonym)));
 		}
 		map.emplace(sub_row, row_number);
@@ -122,7 +122,7 @@ QP::ResultTable QP::ResultTable::intersectTables(const ResultTable& superset_tab
 static ResultRow mergeRow(ResultRow current_row, const ResultRow& other_row, const vector<string>& synonym_order,
                           const unordered_map<string, size_t>& synonym_map) {
 	current_row.reserve(current_row.size() + synonym_order.size());
-	for (string const& synonym : synonym_order) {
+	for (const string& synonym : synonym_order) {
 		size_t index = synonym_map.at(synonym);
 		current_row.push_back(other_row.at(index));
 	}
@@ -143,7 +143,7 @@ QP::ResultTable QP::ResultTable::hashJoinTables(const ResultTable& table_one, co
 	vector<string> common_synonyms;
 	vector<string> new_synonyms;
 	unordered_map<string, size_t> current_synonyms = larger_table.getSynonymsStoredMap();
-	for (auto const& synonym : smaller_table.getSynonymsStored()) {
+	for (const auto& synonym : smaller_table.getSynonymsStored()) {
 		if (current_synonyms.find(synonym) != current_synonyms.end()) {
 			common_synonyms.push_back(synonym);
 		} else {
@@ -175,8 +175,8 @@ QP::ResultTable QP::ResultTable::loopJoinTables(const ResultTable& table_one, co
 	final_synonyms.insert(final_synonyms.end(), table_two.synonyms_stored.begin(), table_two.synonyms_stored.end());
 
 	ResultTable table = ResultTable(final_synonyms);
-	for (auto const& table_one_row : table_one.table) {
-		for (auto const& table_two_row : table_two.table) {
+	for (const auto& table_one_row : table_one.table) {
+		for (const auto& table_two_row : table_two.table) {
 			ResultRow row = table_one_row;
 			row.reserve(table_two_row.size());
 			row.insert(row.end(), table_two_row.begin(), table_two_row.end());
@@ -203,7 +203,7 @@ QP::ResultTable QP::ResultTable::joinTables(const ResultTable& table_one, const 
 	vector<string> subset_synonyms = subset_table.getSynonymsStored();
 
 	size_t number_of_match = count_if(subset_synonyms.begin(), subset_synonyms.end(),
-	                                  [&](auto const& synonym) { return superset_synonyms.find(synonym) != superset_synonyms.end(); });
+	                                  [&](const auto& synonym) { return superset_synonyms.find(synonym) != superset_synonyms.end(); });
 
 	if (number_of_match == subset_synonyms.size()) {
 		return intersectTables(superset_table, subset_table);

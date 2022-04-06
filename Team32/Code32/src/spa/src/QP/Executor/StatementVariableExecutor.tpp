@@ -22,7 +22,7 @@ QueryResult executeTrivialIndexWildcardOrSynonym(const StorageAdapter& store, co
 template <ClauseType T>
 QueryResult executeTrivialSynonymName(const StorageAdapter& store, const ClauseArgument& index, const ClauseArgument& variable) {
 	StmtInfoPtrSet index_set = store.getStatementByVariable<T>(variable.getName());
-	for (auto const& res_index : index_set) {
+	for (const auto& res_index : index_set) {
 		if (Utilities::checkStmtTypeMatch(res_index, index.getSynonymType())) {
 			return QueryResult(true);
 		}
@@ -33,7 +33,7 @@ QueryResult executeTrivialSynonymName(const StorageAdapter& store, const ClauseA
 template <ClauseType T>
 QueryResult executeTrivialSynonymWildcardOrSynonym(const StorageAdapter& store, const ClauseArgument& index) {
 	StmtInfoPtrSet index_set = store.getStatements();
-	for (auto const& res_index : index_set) {
+	for (const auto& res_index : index_set) {
 		if (!Utilities::checkStmtTypeMatch(res_index, index.getSynonymType())) {
 			continue;
 		}
@@ -51,7 +51,7 @@ QueryResult executeSynonymName(const StorageAdapter& store, const ClauseArgument
 	QueryResult result = QueryResult({index.getSynonymSymbol()});
 	StmtInfoPtrSet index_set = store.getStatementByVariable<T>(variable.getName());
 	vector<string> column;
-	for (auto const& res_index : index_set) {
+	for (const auto& res_index : index_set) {
 		if (Utilities::checkStmtTypeMatch(res_index, index.getSynonymType())) {
 			result.addRow({to_string(res_index->getIdentifier())});
 		}
@@ -63,7 +63,7 @@ template <ClauseType T>
 QueryResult executeSynonymWildcard(const StorageAdapter& store, const ClauseArgument& index) {
 	QueryResult result = QueryResult({index.getSynonymSymbol()});
 	StmtInfoPtrSet index_set = store.getStatements();
-	for (auto const& res_index : index_set) {
+	for (const auto& res_index : index_set) {
 		if (!Utilities::checkStmtTypeMatch(res_index, index.getSynonymType())) {
 			continue;
 		}
@@ -81,13 +81,13 @@ QueryResult executeSynonymSynonym(const StorageAdapter& store, const ClauseArgum
 	QueryResult result = QueryResult({index.getSynonymSymbol(), variable.getSynonymSymbol()});
 	StmtInfoPtrSet index_set = store.getStatements();
 	DesignEntity design_entity = index.getSynonymType();
-	for (auto const& res_index : index_set) {
+	for (const auto& res_index : index_set) {
 		if (!Utilities::checkStmtTypeMatch(res_index, design_entity)) {
 			continue;
 		}
 
 		VarRefSet var_set = store.getVariableByStatement<T>(res_index->getIdentifier());
-		for (auto const& var : var_set) {
+		for (const auto& var : var_set) {
 			result.addRow({to_string(res_index->getIdentifier()), var});
 		}
 	}
@@ -99,7 +99,7 @@ QueryResult executeIndexSynonym(const StorageAdapter& store, const ClauseArgumen
 	QueryResult result = QueryResult({variable.getSynonymSymbol()});
 	VarRefSet var_set = store.getVariableByStatement<T>(index.getStatementIndex());
 
-	for (auto const& var : var_set) {
+	for (const auto& var : var_set) {
 		result.addRow({var});
 	}
 

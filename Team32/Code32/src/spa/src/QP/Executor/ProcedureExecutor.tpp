@@ -23,7 +23,7 @@ QueryResult executeTrivialWildcardOrSynonymName(const StorageAdapter& store, con
 template <ClauseType T>
 QueryResult executeTrivialWildcardOrSynonymWildcardOrSynonym(const StorageAdapter& store) {
 	ProcRefSet proc_set = store.getProcedures();
-	for (auto const& proc : proc_set) {
+	for (const auto& proc : proc_set) {
 		ProcRefSet lhs_set = store.getForwardProcedures<T>(proc);
 		if (!lhs_set.empty()) {
 			return QueryResult(true);
@@ -45,7 +45,7 @@ template <ClauseType T>
 QueryResult executeNameSynonym(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
 	QueryResult result = QueryResult({rhs.getSynonymSymbol()});
 	ProcRefSet rhs_set = store.getReverseProcedures<T>(lhs.getName());
-	for (auto const& rhs_reference : rhs_set) {
+	for (const auto& rhs_reference : rhs_set) {
 		result.addRow({rhs_reference});
 	}
 
@@ -56,7 +56,7 @@ template <ClauseType T>
 QueryResult executeWildcardSynonym(const StorageAdapter& store, const ClauseArgument& rhs) {
 	QueryResult result = QueryResult({rhs.getSynonymSymbol()});
 	ProcRefSet procedures = store.getProcedures();
-	for (auto const& procedure : procedures) {
+	for (const auto& procedure : procedures) {
 		ProcRefSet lhss = store.getForwardProcedures<T>(procedure);
 		if (!lhss.empty()) {
 			result.addRow({procedure});
@@ -70,7 +70,7 @@ template <ClauseType T>
 QueryResult executeSynonymName(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
 	QueryResult result = QueryResult({lhs.getSynonymSymbol()});
 	ProcRefSet lhs_set = store.getForwardProcedures<T>(rhs.getName());
-	for (auto const& lhs_reference : lhs_set) {
+	for (const auto& lhs_reference : lhs_set) {
 		result.addRow({lhs_reference});
 	}
 	return result;
@@ -80,7 +80,7 @@ template <ClauseType T>
 QueryResult executeSynonymWildcard(const StorageAdapter& store, const ClauseArgument& lhs) {
 	QueryResult result = QueryResult({lhs.getSynonymSymbol()});
 	ProcRefSet procedures = store.getProcedures();
-	for (auto const& procedure : procedures) {
+	for (const auto& procedure : procedures) {
 		ProcRefSet rhs_set = store.getReverseProcedures<T>(procedure);
 		if (!rhs_set.empty()) {
 			result.addRow({procedure});
@@ -98,9 +98,9 @@ QueryResult executeSynonymSynonym(const StorageAdapter& store, const ClauseArgum
 	QueryResult result = QueryResult({lhs.getSynonymSymbol(), rhs.getSynonymSymbol()});
 
 	ProcRefSet procedures = store.getProcedures();
-	for (auto const& procedure : procedures) {
+	for (const auto& procedure : procedures) {
 		ProcRefSet rhs_set = store.getReverseProcedures<T>(procedure);
-		for (auto const& rhs_reference : rhs_set) {
+		for (const auto& rhs_reference : rhs_set) {
 			result.addRow({procedure, rhs_reference});
 		}
 	}

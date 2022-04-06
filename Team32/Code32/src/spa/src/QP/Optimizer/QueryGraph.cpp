@@ -38,7 +38,7 @@ ClauseList QueryGraph::getGroupClauses(size_t group_number) const {
 	unordered_set<string> visited_nodes;
 	const Node& cheapest_node = nodes.at(getCheapestNodeInGroup(group_number));
 	visited_nodes.emplace(cheapest_node.declaration_symbol);
-	for (auto const& edge : cheapest_node.outgoing_edges) {
+	for (const auto& edge : cheapest_node.outgoing_edges) {
 		priority_queue.push(edge);
 	}
 
@@ -164,7 +164,7 @@ void QueryGraph::insertEdgesToQueue(unordered_set<string>& visited_nodes, const 
                                     priority_queue<Edge, vector<Edge>, EdgeComparator>& pq) const {
 	visited_nodes.emplace(node_symbol);
 	const Node& node = nodes.at(node_symbol);
-	for (auto const& new_edge : node.outgoing_edges) {
+	for (const auto& new_edge : node.outgoing_edges) {
 		if (visited_nodes.find(new_edge.node_to_symbol) == visited_nodes.end()) {
 			pq.push(new_edge);
 		}
