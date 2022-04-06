@@ -76,7 +76,7 @@ typedef struct WhileControlRelation {
 typedef struct AssignRelation {
 	shared_ptr<StmtInfo> node;
 	VarRef variable;
-	Common::ExpressionProcessor::Expression expression;
+	Common::EP::Expression expression;
 } AssignRelation;
 
 namespace Types {};

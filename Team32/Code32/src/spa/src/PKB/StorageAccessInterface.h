@@ -44,11 +44,11 @@ public:
 	virtual VarRefSet getModifiesByProc(const ProcRef& name) = 0;
 
 	// Assign get methods
-	virtual bool patternExists(const VarRef& name, const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) = 0;
-	virtual StmtInfoPtrSet getStmtsWithPattern(const VarRef& name, const Common::ExpressionProcessor::Expression& expression,
+	virtual bool patternExists(const VarRef& name, const Common::EP::Expression& expression, bool is_exact_match) = 0;
+	virtual StmtInfoPtrSet getStmtsWithPattern(const VarRef& name, const Common::EP::Expression& expression,
 	                                           bool is_exact_match) = 0;
 	virtual StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& name) = 0;
-	virtual StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) = 0;
+	virtual StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match) = 0;
 
 	// Calls get methods
 	virtual bool checkCalls(const ProcRef& caller, const ProcRef& callee) = 0;

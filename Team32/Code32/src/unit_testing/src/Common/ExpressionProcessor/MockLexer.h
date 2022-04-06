@@ -8,7 +8,7 @@
 
 using namespace std;
 
-class MockLexer : public Common::ExpressionProcessor::LexerInterface {
+class MockLexer : public Common::EP::LexerInterface {
 public:
 	explicit MockLexer(vector<string> tokens);
 	string readToken() override;

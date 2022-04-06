@@ -7,7 +7,7 @@
 #include "Common/ExpressionProcessor/LexerInterface.h"
 #include "QP/Preprocessor/Preprocessor.h"
 
-class QP::Preprocessor::QueryExpressionLexer : public Common::ExpressionProcessor::LexerInterface {
+class QP::Preprocessor::QueryExpressionLexer : public Common::EP::LexerInterface {
 public:
 	explicit QueryExpressionLexer(std::vector<std::string> expression_tokens);
 	std::string readToken() override;

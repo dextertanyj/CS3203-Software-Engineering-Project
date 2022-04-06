@@ -16,7 +16,7 @@ public:
 	virtual void setModifies(StmtRef index, VarRef name) = 0;
 	virtual void setUses(StmtRef index, VarRefSet names) = 0;
 	virtual void setModifies(StmtRef index, VarRefSet names) = 0;
-	virtual void setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) = 0;
+	virtual void setAssign(StmtRef index, VarRef variable, Common::EP::Expression expression) = 0;
 	virtual void setIfControl(StmtRef index, VarRefSet names) = 0;
 	virtual void setWhileControl(StmtRef index, VarRefSet names) = 0;
 	virtual void setIfControl(StmtRef index, VarRef name) = 0;
