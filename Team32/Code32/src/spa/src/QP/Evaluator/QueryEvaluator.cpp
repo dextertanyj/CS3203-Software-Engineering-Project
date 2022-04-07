@@ -136,7 +136,7 @@ QueryResult QueryEvaluator::getSpecificStmtType(const Declaration& declaration) 
 	StmtInfoPtrSet stmt_set = store.getStatements();
 	QueryResult result = QueryResult({declaration.symbol});
 
-	for (auto const& stmt : stmt_set) {
+	for (const auto& stmt : stmt_set) {
 		if (Utilities::checkStmtTypeMatch(stmt, declaration.type)) {
 			result.addRow({to_string(stmt->getIdentifier())});
 		}
@@ -149,7 +149,7 @@ QueryResult QueryEvaluator::getConstants(const string& symbol) {
 	unordered_set<ConstVal> constants = store.getConstants();
 	QueryResult result = QueryResult({symbol});
 
-	for (auto const& constant : constants) {
+	for (const auto& constant : constants) {
 		result.addRow({to_string(constant)});
 	}
 	return result;
@@ -159,7 +159,7 @@ QueryResult QueryEvaluator::getVariables(const string& symbol) {
 	VarRefSet var_set = store.getVariables();
 	QueryResult result = QueryResult({symbol});
 
-	for (auto const& var : var_set) {
+	for (const auto& var : var_set) {
 		result.addRow({var});
 	}
 
@@ -170,7 +170,7 @@ QueryResult QueryEvaluator::getProcedures(const string& symbol) {
 	ProcRefSet proc_set = store.getProcedures();
 	QueryResult result = QueryResult({symbol});
 
-	for (auto const& proc : proc_set) {
+	for (const auto& proc : proc_set) {
 		result.addRow({proc});
 	}
 
