@@ -7,6 +7,7 @@
 #include "QP/Executor/AttributeExecutor.h"
 #include "QP/Types.h"
 
+using namespace std;
 #define TUPLE_SEPERATOR " "
 #define TRUE "TRUE"
 #define FALSE "FALSE"

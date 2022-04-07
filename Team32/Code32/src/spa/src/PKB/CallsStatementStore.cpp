@@ -2,9 +2,11 @@
 
 #include <stdexcept>
 
+using namespace std;
+
 PKB::CallsStatementStore::CallsStatementStore() = default;
 
-void PKB::CallsStatementStore::set(const shared_ptr<StmtInfo>& statement, ProcRef procedure) {
+void PKB::CallsStatementStore::set(const StmtInfoPtr& statement, ProcRef procedure) {
 	if (statement->getType() != StmtType::Call) {
 		throw logic_error("Invalid statement type for call store.");
 	}
@@ -12,10 +14,10 @@ void PKB::CallsStatementStore::set(const shared_ptr<StmtInfo>& statement, ProcRe
 	if (map.find(index) != map.end()) {
 		throw logic_error("Call statement already set.");
 	}
-	map.emplace(index, std::move(procedure));
+	map.emplace(index, move(procedure));
 }
 
-ProcRef PKB::CallsStatementStore::getProcedure(const shared_ptr<StmtInfo>& statement) const {
+ProcRef PKB::CallsStatementStore::getProcedure(const StmtInfoPtr& statement) const {
 	if (statement->getType() != StmtType::Call) {
 		throw logic_error("Invalid statement type for call store.");
 	}
@@ -39,13 +41,13 @@ void PKB::CallsStatementStore::populateCallStore(
 	const PKB::Types::ProcedureStore& procedures,
 	PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>& call_store) const {
 	for (const shared_ptr<ProcedureInfo>& procedure : procedures.getAll()) {
-		for (const shared_ptr<StmtInfo>& info : procedure->getStatements()) {
+		for (const StmtInfoPtr& info : procedure->getStatements()) {
 			populate(info, procedures, procedure, call_store);
 		}
 	}
 }
 
-void PKB::CallsStatementStore::populate(const shared_ptr<StmtInfo>& stmt, const PKB::Types::ProcedureStore& procedures,
+void PKB::CallsStatementStore::populate(const StmtInfoPtr& stmt, const PKB::Types::ProcedureStore& procedures,
                                         const shared_ptr<ProcedureInfo>& procedure,
                                         PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>& store) const {
 	if (stmt->getType() != StmtType::Call) {

@@ -8,6 +8,8 @@
 #include "PKB/CFG/WhileNode.h"
 #include "PKB/Types.h"
 
+using namespace std;
+
 void PKB::ControlFlowGraph::setNext(StmtRef previous, StmtRef next) const {
 	assert(previous != next);
 	auto prev_node = getNode(previous);
@@ -46,7 +48,7 @@ void PKB::ControlFlowGraph::setIfExit(StmtRef then_prev, StmtRef else_prev, Stmt
 	if_node->insertIfExit(then_prev_node, else_prev_node);
 }
 
-void PKB::ControlFlowGraph::createNode(const shared_ptr<StmtInfo>& stmt_info) {
+void PKB::ControlFlowGraph::createNode(const StmtInfoPtr& stmt_info) {
 	assert(statement_node_map.find(stmt_info->getIdentifier()) == statement_node_map.end());
 	// Check node type and create respective node.
 	if (stmt_info->getType() == StmtType::If) {
@@ -70,7 +72,7 @@ shared_ptr<PKB::StatementNode> PKB::ControlFlowGraph::getNode(StmtRef ref) const
 	return statement_node_map.find(ref)->second;
 }
 
-shared_ptr<StmtInfo> PKB::ControlFlowGraph::getStatementInfo(StmtRef index) const {
+StmtInfoPtr PKB::ControlFlowGraph::getStatementInfo(StmtRef index) const {
 	auto node = getNode(index);
 	assert(node != nullptr);
 	return node->getStmtInfo();
@@ -98,7 +100,7 @@ StmtRef PKB::ControlFlowGraph::getLastIndex(size_t graph_index) const {
 	return last_index_map.at(graph_index);
 }
 
-shared_ptr<StmtInfo> PKB::ControlFlowGraph::getStart(size_t graph_index) const {
+StmtInfoPtr PKB::ControlFlowGraph::getStart(size_t graph_index) const {
 	assert(start_map.find(graph_index) != start_map.end());
 	auto node = start_map.find(graph_index)->second;
 	return node->getStmtInfo();

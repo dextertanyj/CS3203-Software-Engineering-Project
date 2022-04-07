@@ -8,8 +8,6 @@
 #include "PKB/PKB.h"
 #include "PKB/Types.h"
 
-using namespace std;
-
 class PKB::NextManager {
 public:
 	explicit NextManager(ControlFlowGraph& control_flow_graph);
@@ -26,41 +24,41 @@ public:
 private:
 	// Type definitions
 	struct TraversalInformation {
-		unordered_map<StmtRef, StmtInfoPtrSet>& cache;
+		std::unordered_map<StmtRef, StmtInfoPtrSet>& cache;
 		StmtInfoPtrSet (ControlFlowGraph::*gatherer)(StmtRef) const;
 		StmtInfoPtrSet (ControlFlowGraph::*loop_continuation_handler)(StmtRef) const;
 	};
 
 	template <class Comparator>
-	using StmtInfoPQ = priority_queue<shared_ptr<StmtInfo>, vector<shared_ptr<StmtInfo>>, Comparator>;
+	using StmtInfoPQ = std::priority_queue<StmtInfoPtr, std::vector<StmtInfoPtr>, Comparator>;
 
 	template <class Comparator>
 	struct QueueConstructionInformation {
-		shared_ptr<StmtInfo> origin;
+		StmtInfoPtr origin;
 		StmtInfoPQ<Comparator>& priority_queue;
-		queue<shared_ptr<StmtInfo>>& queue;
+		std::queue<StmtInfoPtr>& queue;
 		TraversalInformation& traversal_information;
 	};
 
 	bool checkNextStarOptimized(const StmtRef& first_node, const StmtRef& second_node);
 
 	template <class Comparator>
-	StmtInfoPQ<Comparator> constructQueue(const shared_ptr<StmtInfo>& origin, TraversalInformation& info);
+	StmtInfoPQ<Comparator> constructQueue(const StmtInfoPtr& origin, TraversalInformation& info);
 	template <class Comparator>
-	void constructQueueIteration(const shared_ptr<StmtInfo>& node, QueueConstructionInformation<Comparator>& info);
-	void processQueue(const shared_ptr<StmtInfo>& node, TraversalInformation& info);
+	void constructQueueIteration(const StmtInfoPtr& node, QueueConstructionInformation<Comparator>& info);
+	void processQueue(const StmtInfoPtr& node, TraversalInformation& info);
 
 	// Loop node optimizations
 	template <class Comparator>
-	void constructQueueLoopNode(const shared_ptr<StmtInfo>& node, QueueConstructionInformation<Comparator>& info);
-	void processLoopNode(const shared_ptr<StmtInfo>& node, TraversalInformation& info);
-	StmtInfoPtrSet traverseLoop(const shared_ptr<StmtInfo>& node);
-	void handleTraverseLoopNode(queue<shared_ptr<StmtInfo>>& queue, StmtInfoPtrSet& set, const shared_ptr<StmtInfo>& node);
+	void constructQueueLoopNode(const StmtInfoPtr& node, QueueConstructionInformation<Comparator>& info);
+	void processLoopNode(const StmtInfoPtr& node, TraversalInformation& info);
+	StmtInfoPtrSet traverseLoop(const StmtInfoPtr& node);
+	void handleTraverseLoopNode(std::queue<StmtInfoPtr>& queue, StmtInfoPtrSet& set, const StmtInfoPtr& node);
 
 	// Members
 	ControlFlowGraph& control_flow_graph;
-	unordered_map<StmtRef, StmtInfoPtrSet> next_cache;
-	unordered_map<StmtRef, StmtInfoPtrSet> previous_cache;
+	std::unordered_map<StmtRef, StmtInfoPtrSet> next_cache;
+	std::unordered_map<StmtRef, StmtInfoPtrSet> previous_cache;
 };
 
 #endif  // SPA_NEXTMANAGER_H

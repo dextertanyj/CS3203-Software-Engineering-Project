@@ -11,13 +11,13 @@ void SP::Processor::process(std::string source) {
 		std::unique_ptr<Node::ProgramNode> ast = parser.parse(std::move(source));
 		extractor.extract(ast);
 	} catch (const TokenizationException& e) {
-		cout << e.what() << endl;
+		std::cout << e.what() << std::endl;
 		exit(1);
 	} catch (const ParseException& e) {
-		cout << e.what() << endl;
+		std::cout << e.what() << std::endl;
 		exit(2);
 	} catch (const ExtractionException& e) {
-		cout << e.what() << endl;
+		std::cout << e.what() << std::endl;
 		exit(3);
 	}
 }

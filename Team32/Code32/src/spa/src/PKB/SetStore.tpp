@@ -12,12 +12,12 @@ void PKB::SetStore<T>::insert(const T& item) {
 }
 
 template <typename T>
-void PKB::SetStore<T>::insert(const unordered_set<T>& items) {
+void PKB::SetStore<T>::insert(const std::unordered_set<T>& items) {
 	store.insert(items.begin(), items.end());
 }
 
 template <typename T>
-unordered_set<T> PKB::SetStore<T>::getAll() const {
+std::unordered_set<T> PKB::SetStore<T>::getAll() const {
 	return store;
 }
 

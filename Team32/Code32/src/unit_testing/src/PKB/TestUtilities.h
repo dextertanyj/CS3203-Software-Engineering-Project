@@ -5,6 +5,8 @@
 #include "PKB/Storage.h"
 #include "PKB/Types.h"
 
+using namespace std;
+
 namespace TestUtilities {
 inline shared_ptr<StmtInfo> createStmtInfo(StmtRef stmt_no, StmtType type) {
 	PKB::Types::StatementStore store;

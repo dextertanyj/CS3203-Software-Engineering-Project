@@ -13,7 +13,7 @@ class SP::Node::StatementListNode {
 public:
 	StatementListNode() = default;
 	void addStatementNode(std::unique_ptr<StatementNode> statement);
-	vector<StmtRef> extract(PKB::StorageUpdateInterface& pkb) const;
+	std::vector<StmtRef> extract(PKB::StorageUpdateInterface& pkb) const;
 	[[nodiscard]] bool equals(const std::shared_ptr<StatementListNode>& object) const;
 	[[nodiscard]] std::vector<std::shared_ptr<StatementNode>> getStatementList() const;
 

@@ -6,7 +6,7 @@ using namespace std;
 
 PKB::AssignStore::AssignStore() = default;
 
-void PKB::AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, const VarRef& variable, const Common::EP::Expression& expression) {
+void PKB::AssignStore::setAssign(const StmtInfoPtr& statement, const VarRef& variable, const Common::EP::Expression& expression) {
 	assert(statement->getType() == StmtType::Assign);
 	assert(!variable.empty());
 

@@ -1,5 +1,7 @@
 #include "PKB/CallsRelation.h"
 
+using namespace std;
+
 void PKB::CallsRelation::insertForward(const shared_ptr<ProcedureInfo>& caller) {
 	if (getSelf() == caller) {
 		throw CallGraphException("Recursive call detected.");

@@ -42,7 +42,7 @@ static std::unordered_map<Types::ClauseType, size_t> cost_map = {
 	{Types::ClauseType::With, WITH_COST},
 };
 
-inline bool checkStmtTypeMatch(const std::shared_ptr<StmtInfo>& stmt, Types::DesignEntity design_entity) {
+inline bool checkStmtTypeMatch(const StmtInfoPtr& stmt, Types::DesignEntity design_entity) {
 	if (stmt == nullptr) {
 		return false;
 	}

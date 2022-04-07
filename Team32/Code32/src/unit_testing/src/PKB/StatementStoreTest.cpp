@@ -4,6 +4,8 @@
 #include "PKB/Types.h"
 #include "catch_tools.h"
 
+using namespace std;
+
 TEST_CASE("PKB::Types::StatementStore Test") {
 	PKB::Types::StatementStore store;
 	StmtRef s_1 = 1, s_2 = 2, s_3 = 3, s_4 = 4, s_5 = 5, s_6 = 6;

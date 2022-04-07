@@ -10,18 +10,17 @@
 
 class PKB::ModifiesSRelation {
 public:
-	static bool validate(SVRelationStore<ModifiesSRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRef& variable);
-	static bool validate(SVRelationStore<ModifiesSRelation>* store, const shared_ptr<StmtInfo>& statement, const VarRefSet& variables);
+	static bool validate(SVRelationStore<ModifiesSRelation>* store, const StmtInfoPtr& statement, const VarRef& variable);
+	static bool validate(SVRelationStore<ModifiesSRelation>* store, const StmtInfoPtr& statement, const VarRefSet& variables);
 	static void optimize(Types::ParentStore& parent_store, CallsStatementStore& call_store, Types::ProcedureStore& proc_store,
 	                     TopologicalSort<ProcedureInfo>& topo_order, SVRelationStore<ModifiesSRelation>& store);
 
 private:
-	static void optimizeCall(const shared_ptr<StmtInfo>& statement, CallsStatementStore& call_store, Types::ProcedureStore& proc_store,
+	static void optimizeCall(const StmtInfoPtr& statement, CallsStatementStore& call_store, Types::ProcedureStore& proc_store,
 	                         SVRelationStore<ModifiesSRelation>& store);
-	static void optimizeConditional(const shared_ptr<StmtInfo>& statement, Types::ParentStore& parent_store,
+	static void optimizeConditional(const StmtInfoPtr& statement, Types::ParentStore& parent_store,
 	                                SVRelationStore<ModifiesSRelation>& store);
-	static void storeModifiedVars(const shared_ptr<StmtInfo>& stmt_key, const StmtInfoPtrSet& stmt_list,
-	                              SVRelationStore<ModifiesSRelation>& store);
+	static void storeModifiedVars(const StmtInfoPtr& stmt_key, const StmtInfoPtrSet& stmt_list, SVRelationStore<ModifiesSRelation>& store);
 };
 
 #endif  // SPA_SRC_PKB_MODIFIESSRELATION_H

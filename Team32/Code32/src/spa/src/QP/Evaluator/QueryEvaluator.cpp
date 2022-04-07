@@ -4,6 +4,7 @@
 
 #include "QP/QueryUtils.h"
 
+using namespace std;
 using namespace QP;
 using namespace Evaluator;
 using namespace Types;
@@ -146,7 +147,7 @@ QueryResult QueryEvaluator::getSpecificStmtType(const Declaration& declaration) 
 }
 
 QueryResult QueryEvaluator::getConstants(const string& symbol) {
-	unordered_set<ConstVal> constants = store.getConstants();
+	ConstValSet constants = store.getConstants();
 	QueryResult result = QueryResult({symbol});
 
 	for (const auto& constant : constants) {

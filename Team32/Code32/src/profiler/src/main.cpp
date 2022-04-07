@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 	std::ifstream query_file;
 	try {
 		query_file = std::ifstream(query_filename);
-	} catch (const exception& e) {
+	} catch (const std::exception& e) {
 		std::cout << e.what() << std::endl;
 		return 1;
 	}
@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 		std::stringstream time_string;
 		time_string << std::fixed << std::setprecision(3) << time_taken;
 		std::cout << "Time taken: " + time_string.str() + "ms." << std::endl;
-	} catch (exception& e) {
+	} catch (std::exception& e) {
 		std::cout << e.what() << std::endl;
 		return 2;
 	}
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 			std::getline(query_file, expected);
 			std::getline(query_file, time_limit);
 			if (declarations.empty() || query.empty()) {
-				throw invalid_argument("Test Error: Invalid query.");
+				throw std::invalid_argument("Test Error: Invalid query.");
 			}
 
 			std::cout << declarations << std::endl;
@@ -115,7 +115,7 @@ int main(int argc, char* argv[]) {
 				std::cout << "Time limit exceeded." << std::endl;
 			}
 		}
-	} catch (const exception& e) {
+	} catch (const std::exception& e) {
 		std::cout << e.what() << std::endl;
 		return 3;
 	}

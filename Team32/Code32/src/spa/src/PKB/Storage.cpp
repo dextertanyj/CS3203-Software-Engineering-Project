@@ -9,18 +9,18 @@ PKB::Storage::Storage() : next_manager(control_flow_graph), affects_manager(cont
 
 void PKB::Storage::setStmtType(StmtRef index, StmtType type) {
 	statement_store.insert(index, type);
-	shared_ptr<StmtInfo> info = statement_store.get(index);
+	StmtInfoPtr info = statement_store.get(index);
 	setNode(info);
 }
 
 void PKB::Storage::setConstant(ConstVal value) { constant_store.insert(value); }
 
-void PKB::Storage::setConstant(const unordered_set<ConstVal>& values) { constant_store.insert(values); }
+void PKB::Storage::setConstant(const ConstValSet& values) { constant_store.insert(values); }
 
 void PKB::Storage::setProc(ProcRef procedure, StmtRef start, StmtRef end) {
-	vector<shared_ptr<StmtInfo>> statements;
+	vector<StmtInfoPtr> statements;
 	for (StmtRef index = start; index <= end; index++) {
-		shared_ptr<StmtInfo> statement = statement_store.get(index);
+		StmtInfoPtr statement = statement_store.get(index);
 		assert(statement != nullptr);
 		statements.push_back(statement);
 	}
@@ -28,78 +28,78 @@ void PKB::Storage::setProc(ProcRef procedure, StmtRef start, StmtRef end) {
 }
 
 void PKB::Storage::setCall(StmtRef index, ProcRef name) {
-	shared_ptr<StmtInfo> info = statement_store.get(index);
+	StmtInfoPtr info = statement_store.get(index);
 	calls_statement_store.set(info, name);
 }
 
 void PKB::Storage::setParent(StmtRef parent, StmtRef child) {
-	shared_ptr<StmtInfo> parent_info = statement_store.get(parent);
-	shared_ptr<StmtInfo> child_info = statement_store.get(child);
+	StmtInfoPtr parent_info = statement_store.get(parent);
+	StmtInfoPtr child_info = statement_store.get(child);
 	assert(parent_info != nullptr && child_info != nullptr);
 	parent_store.set(parent_info, child_info);
 }
 
 void PKB::Storage::setFollows(StmtRef front, StmtRef back) {
-	shared_ptr<StmtInfo> following_info = statement_store.get(front);
-	shared_ptr<StmtInfo> follower_info = statement_store.get(back);
+	StmtInfoPtr following_info = statement_store.get(front);
+	StmtInfoPtr follower_info = statement_store.get(back);
 	assert(following_info != nullptr && follower_info != nullptr);
 	follows_store.set(following_info, follower_info);
 }
 
 void PKB::Storage::setModifies(StmtRef index, VarRef name) {
-	shared_ptr<StmtInfo> statement = statement_store.get(index);
+	StmtInfoPtr statement = statement_store.get(index);
 	assert(statement != nullptr);
 	variable_store.insert(name);
 	modifies_s_store.set(move(statement), move(name));
 }
 
 void PKB::Storage::setModifies(StmtRef index, VarRefSet names) {
-	shared_ptr<StmtInfo> statement = statement_store.get(index);
+	StmtInfoPtr statement = statement_store.get(index);
 	assert(statement != nullptr);
 	variable_store.insert(names);
 	modifies_s_store.set(move(statement), move(names));
 }
 
 void PKB::Storage::setUses(StmtRef index, VarRef name) {
-	shared_ptr<StmtInfo> statement = statement_store.get(index);
+	StmtInfoPtr statement = statement_store.get(index);
 	assert(statement != nullptr);
 	variable_store.insert(name);
 	uses_s_store.set(statement, move(name));
 }
 
 void PKB::Storage::setUses(StmtRef index, VarRefSet names) {
-	shared_ptr<StmtInfo> statement = statement_store.get(index);
+	StmtInfoPtr statement = statement_store.get(index);
 	assert(statement != nullptr);
 	variable_store.insert(names);
 	uses_s_store.set(statement, move(names));
 }
 
 void PKB::Storage::setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) {
-	shared_ptr<StmtInfo> statement = statement_store.get(index);
+	StmtInfoPtr statement = statement_store.get(index);
 	return assign_store.setAssign(statement, variable, expression);
 }
 
 void PKB::Storage::setIfControl(StmtRef index, VarRefSet names) {
-	shared_ptr<StmtInfo> info = statement_store.get(index);
+	StmtInfoPtr info = statement_store.get(index);
 	if_control_store.set(info, names);
 }
 
 void PKB::Storage::setIfControl(StmtRef index, VarRef name) {
-	shared_ptr<StmtInfo> info = statement_store.get(index);
+	StmtInfoPtr info = statement_store.get(index);
 	if_control_store.set(info, name);
 }
 
 void PKB::Storage::setWhileControl(StmtRef index, VarRefSet names) {
-	shared_ptr<StmtInfo> info = statement_store.get(index);
+	StmtInfoPtr info = statement_store.get(index);
 	while_control_store.set(info, names);
 }
 
 void PKB::Storage::setWhileControl(StmtRef index, VarRef name) {
-	shared_ptr<StmtInfo> info = statement_store.get(index);
+	StmtInfoPtr info = statement_store.get(index);
 	while_control_store.set(info, name);
 }
 
-void PKB::Storage::setNode(const shared_ptr<StmtInfo>& info) { control_flow_graph.createNode(info); }
+void PKB::Storage::setNode(const StmtInfoPtr& info) { control_flow_graph.createNode(info); }
 
 void PKB::Storage::setNext(StmtRef previous, StmtRef next) { control_flow_graph.setNext(previous, next); }
 
@@ -118,9 +118,9 @@ StmtInfoPtrSet PKB::Storage::getStatements() {
 
 VarRefSet PKB::Storage::getVariables() { return variable_store.getAll(); }
 
-unordered_set<ConstVal> PKB::Storage::getConstants() { return constant_store.getAll(); }
+ConstValSet PKB::Storage::getConstants() { return constant_store.getAll(); }
 
-unordered_set<ProcRef> PKB::Storage::getProcedures() {
+ProcRefSet PKB::Storage::getProcedures() {
 	unordered_set<shared_ptr<ProcedureInfo>> procedures = procedure_store.getAll();
 	return procedureInfoToProcRef(procedures);
 }
@@ -129,7 +129,7 @@ bool PKB::Storage::checkParent(StmtRef parent, StmtRef child) { return parent_st
 
 bool PKB::Storage::checkParentStar(StmtRef parent, StmtRef child) { return parent_store.isTransitivelyRelated(parent, child); }
 
-shared_ptr<StmtInfo> PKB::Storage::getParent(StmtRef index) {
+StmtInfoPtr PKB::Storage::getParent(StmtRef index) {
 	auto result = parent_store.getForward(index);
 	if (result.empty()) {
 		return nullptr;
@@ -147,7 +147,7 @@ bool PKB::Storage::checkFollows(StmtRef front, StmtRef back) { return follows_st
 
 bool PKB::Storage::checkFollowsStar(StmtRef front, StmtRef back) { return follows_store.isTransitivelyRelated(front, back); }
 
-shared_ptr<StmtInfo> PKB::Storage::getPreceding(StmtRef index) {
+StmtInfoPtr PKB::Storage::getPreceding(StmtRef index) {
 	auto result = follows_store.getForward(index);
 	if (result.empty()) {
 		return nullptr;
@@ -155,7 +155,7 @@ shared_ptr<StmtInfo> PKB::Storage::getPreceding(StmtRef index) {
 	return *result.begin();
 }
 
-shared_ptr<StmtInfo> PKB::Storage::getFollower(StmtRef index) {
+StmtInfoPtr PKB::Storage::getFollower(StmtRef index) {
 	auto result = follows_store.getReverse(index);
 	if (result.empty()) {
 		return nullptr;
@@ -318,9 +318,9 @@ StmtInfoPtrSet PKB::Storage::statementInfoPtrSetToInterfacePtrSet(const unordere
 	return result;
 }
 
-unordered_map<StmtRef, shared_ptr<StmtInfo>> PKB::Storage::getStmtInfoMap() {
+unordered_map<StmtRef, StmtInfoPtr> PKB::Storage::getStmtInfoMap() {
 	unordered_set<shared_ptr<StatementInfo>> set = statement_store.getAll();
-	unordered_map<StmtRef, shared_ptr<StmtInfo>> map;
+	unordered_map<StmtRef, StmtInfoPtr> map;
 	for (const auto& item : set) {
 		map.emplace(item->getIdentifier(), item);
 	}

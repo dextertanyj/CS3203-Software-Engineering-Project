@@ -5,6 +5,8 @@
 #include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "catch.hpp"
 
+using namespace std;
+
 using namespace QP;
 using namespace Preprocessor;
 using namespace Executor::PatternAssignExecutor;

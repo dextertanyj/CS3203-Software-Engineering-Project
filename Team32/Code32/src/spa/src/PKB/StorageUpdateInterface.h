@@ -11,7 +11,7 @@ public:
 	virtual void setParent(StmtRef parent, StmtRef child) = 0;
 	virtual void setStmtType(StmtRef index, StmtType type) = 0;
 	virtual void setConstant(ConstVal value) = 0;
-	virtual void setConstant(const unordered_set<ConstVal>& values) = 0;
+	virtual void setConstant(const ConstValSet& values) = 0;
 	virtual void setUses(StmtRef index, VarRef name) = 0;
 	virtual void setModifies(StmtRef index, VarRef name) = 0;
 	virtual void setUses(StmtRef index, VarRefSet names) = 0;

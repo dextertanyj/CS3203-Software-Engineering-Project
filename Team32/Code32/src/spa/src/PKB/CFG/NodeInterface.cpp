@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+using namespace std;
+
 PKB::NodeInterface::NodeInterface(Types::NodeType type) : node_type(type) {}
 
 void PKB::NodeInterface::setGraphIndex(size_t index) {

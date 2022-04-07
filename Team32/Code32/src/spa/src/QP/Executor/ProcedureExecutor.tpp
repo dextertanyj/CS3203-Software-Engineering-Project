@@ -5,6 +5,8 @@
 
 namespace QP::Executor::ProcedureExecutor {
 
+using namespace std;
+
 template <ClauseType T>
 QueryResult executeTrivialNameName(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
 	return QueryResult(store.checkProcedureRelation<T>(lhs.getName(), rhs.getName()));

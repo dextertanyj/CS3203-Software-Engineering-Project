@@ -4,7 +4,9 @@
 
 #include "PKB/Types.h"
 
-PKB::WhileNode::WhileNode(const shared_ptr<StmtInfo>& info) : PKB::StatementNode(Types::NodeType::While, info) {
+using namespace std;
+
+PKB::WhileNode::WhileNode(const StmtInfoPtr& info) : PKB::StatementNode(Types::NodeType::While, info) {
 	assert(info->getType() == StmtType::While);
 }
 

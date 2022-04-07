@@ -21,7 +21,7 @@ public:
 
 private:
 	Types::ClauseType type;
-	vector<ClauseArgument> arguments;
+	std::vector<ClauseArgument> arguments;
 	Types::ExecutorSet executor;
 };
 

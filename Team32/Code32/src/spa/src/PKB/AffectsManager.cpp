@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+using namespace std;
+
 PKB::AffectsManager::AffectsManager(ControlFlowGraph& control_flow_graph, SVRelationStore<PKB::ModifiesSRelation>& modifies_store,
                                     SVRelationStore<PKB::UsesSRelation>& uses_store)
 	: control_flow_graph(control_flow_graph), uses_store(uses_store), modifies_store(modifies_store) {}
@@ -11,8 +13,7 @@ bool PKB::AffectsManager::checkAffects(StmtRef first, StmtRef second) {
 		return false;
 	}
 	StmtInfoPtrSet affected_nodes = getAffects(first);
-	return any_of(affected_nodes.begin(), affected_nodes.end(),
-	              [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == second; });
+	return any_of(affected_nodes.begin(), affected_nodes.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == second; });
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
@@ -29,7 +30,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
 	}
 
 	VarRef variable = *(modifies_store.getByStmt(first).begin());
-	DFSInfo info = {std::move(variable), {}, {}, {}};
+	DFSInfo info = {move(variable), {}, {}, {}};
 	for (const auto& neighbour : control_flow_graph.getNextNodes(first)) {
 		info.node_stack.push(neighbour);
 	}
@@ -66,7 +67,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectedLoop(StmtRef node, VarRef variable) const {
-	DFSInfo info = {std::move(variable), {}, {}, {}};
+	DFSInfo info = {move(variable), {}, {}, {}};
 	for (const auto& neighbour : control_flow_graph.getPreviousNodes(node)) {
 		info.node_stack.push(neighbour);
 	}
@@ -76,9 +77,8 @@ StmtInfoPtrSet PKB::AffectsManager::getAffectedLoop(StmtRef node, VarRef variabl
 	return info.nodes;
 }
 
-void PKB::AffectsManager::processDFSVisit(DFSInfo& info,
-                                          void (AffectsManager::*processor)(DFSInfo&, const shared_ptr<StmtInfo>&) const) const {
-	shared_ptr<StmtInfo> current = info.node_stack.top();
+void PKB::AffectsManager::processDFSVisit(DFSInfo& info, void (AffectsManager::*processor)(DFSInfo&, const StmtInfoPtr&) const) const {
+	StmtInfoPtr current = info.node_stack.top();
 	info.node_stack.pop();
 	if (info.visited_set.find(current) != info.visited_set.end()) {
 		return;
@@ -87,7 +87,7 @@ void PKB::AffectsManager::processDFSVisit(DFSInfo& info,
 	(this->*processor)(info, current);
 }
 
-void PKB::AffectsManager::processNodeAffects(DFSInfo& info, const shared_ptr<StmtInfo>& current) const {
+void PKB::AffectsManager::processNodeAffects(DFSInfo& info, const StmtInfoPtr& current) const {
 	auto current_idx = current->getIdentifier();
 	auto current_type = current->getType();
 	if (uses_store.check(current_idx, info.variable) && current_type == StmtType::Assign) {
@@ -104,7 +104,7 @@ void PKB::AffectsManager::processNodeAffects(DFSInfo& info, const shared_ptr<Stm
 	}
 }
 
-void PKB::AffectsManager::processNodeAffected(DFSInfo& info, const shared_ptr<StmtInfo>& current) const {
+void PKB::AffectsManager::processNodeAffected(DFSInfo& info, const StmtInfoPtr& current) const {
 	auto current_idx = current->getIdentifier();
 	auto current_type = current->getType();
 	bool is_container = current_type == StmtType::While || current_type == StmtType::If;
@@ -126,8 +126,7 @@ bool PKB::AffectsManager::checkAffectsStar(StmtRef first, StmtRef second) {
 		return false;
 	}
 	StmtInfoPtrSet affected_nodes = getAffectsStar(first);
-	return any_of(affected_nodes.begin(), affected_nodes.end(),
-	              [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == second; });
+	return any_of(affected_nodes.begin(), affected_nodes.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == second; });
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {

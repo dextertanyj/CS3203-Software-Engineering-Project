@@ -11,9 +11,9 @@
 
 class Common::ExpressionProcessor::Expression {
 public:
-	Expression(std::shared_ptr<ExpressionNode> root, std::unordered_set<VarRef> variables, std::unordered_set<ConstVal> constants);
-	[[nodiscard]] std::unordered_set<ConstVal> getConstants() const;
-	[[nodiscard]] std::unordered_set<VarRef> getVariables() const;
+	Expression(std::shared_ptr<ExpressionNode> root, VarRefSet variables, ConstValSet constants);
+	[[nodiscard]] ConstValSet getConstants() const;
+	[[nodiscard]] VarRefSet getVariables() const;
 	[[nodiscard]] bool operator==(const Expression& other) const;
 	[[nodiscard]] bool contains(const Expression& other) const;
 
@@ -22,8 +22,8 @@ public:
 private:
 	std::shared_ptr<ExpressionNode> root;
 	std::string traversal;
-	std::unordered_set<VarRef> variables;
-	std::unordered_set<ConstVal> constants;
+	VarRefSet variables;
+	ConstValSet constants;
 };
 
 #endif  // SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSION_H
