@@ -101,7 +101,7 @@ QueryResult QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, Declarat
 		result_list.push_back(result);
 	}
 
-	QueryResult final_result = QueryResult::joinResults(result_list);
+	QueryResult final_result = QueryResult::joinIntraGroupResults(result_list);
 	final_result.filterBySelect(select_list);
 
 	return final_result;
