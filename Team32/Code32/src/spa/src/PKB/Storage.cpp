@@ -5,7 +5,7 @@
 
 using namespace std;
 
-PKB::Storage::Storage() : next_manager(control_flow_graph), affects_manager(control_flow_graph, modifies_s_store, uses_s_store){};
+PKB::Storage::Storage() : next_manager(control_flow_graph), affects_manager(control_flow_graph, modifies_s_store, uses_s_store) {}
 
 void PKB::Storage::setStmtType(StmtRef index, StmtType type) {
 	statement_store.insert(index, type);
@@ -76,7 +76,7 @@ void PKB::Storage::setUses(StmtRef index, VarRefSet names) {
 
 void PKB::Storage::setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) {
 	shared_ptr<StmtInfo> statement = statement_store.get(index);
-	return assign_store.setAssign(statement, move(variable), move(expression));
+	return assign_store.setAssign(statement, variable, expression);
 }
 
 void PKB::Storage::setIfControl(StmtRef index, VarRefSet names) {
@@ -273,7 +273,7 @@ VarRefSet PKB::Storage::getIfControlVar(StmtRef index) { return if_control_store
 
 VarRefSet PKB::Storage::getWhileControlVar(StmtRef index) { return while_control_store.getByStmt(index); }
 
-ProcRef PKB::Storage::getCalledProcedure(StmtRef index) { return calls_statement_store.getProcedure(index); };
+ProcRef PKB::Storage::getCalledProcedure(StmtRef index) { return calls_statement_store.getProcedure(index); }
 
 void PKB::Storage::populateComplexRelations() {
 	calls_statement_store.populateCallStore(procedure_store, calls_store);

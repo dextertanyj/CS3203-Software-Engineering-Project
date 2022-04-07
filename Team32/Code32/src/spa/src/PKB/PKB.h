@@ -49,7 +49,6 @@ class StatementNode;  // NOLINT(bugprone-forward-declaration-namespace)
 class IfNode;         // NOLINT(bugprone-forward-declaration-namespace)
 class WhileNode;      // NOLINT(bugprone-forward-declaration-namespace)
 class DummyNode;
-class NonConditionalNode;
 class ControlFlowGraph;
 class NextManager;
 class AffectsManager;
@@ -75,9 +74,12 @@ typedef struct WhileControlRelation {
 } WhileControlRelation;
 
 typedef struct AssignRelation {
-	shared_ptr<StmtInfo> node;
-	VarRef variable;
-	Common::EP::Expression expression;
+public:
+	AssignRelation(shared_ptr<StmtInfo> info, VarRef var, Common::EP::Expression expression)
+		: node(info), variable(var), expression(expression){};
+	shared_ptr<StmtInfo> getNode() const { return node; }
+	VarRef getVariable() const { return variable; }
+	Common::EP::Expression getExpression() const { return expression; }
 	inline bool operator==(const AssignRelation& other) const {
 		return node == other.node && variable == other.variable && expression == other.expression;
 	}
@@ -90,6 +92,11 @@ typedef struct AssignRelation {
 			return seed;
 		}
 	};
+
+private:
+	shared_ptr<StmtInfo> node;
+	VarRef variable;
+	Common::EP::Expression expression;
 } AssignRelation;
 
 namespace Types {};

@@ -35,7 +35,7 @@ TEST_CASE("PKB::AssignStore::setAssign Success Test") {
 	REQUIRE_EQUALS(map.size(), 1);
 	REQUIRE_EQUALS(obj->first, "x");
 	REQUIRE_EQUALS(obj->second.size(), 1);
-	REQUIRE(obj->second.begin()->expression == getBasicOpTree());
+	REQUIRE(obj->second.begin()->getExpression() == getBasicOpTree());
 }
 
 TEST_CASE("PKB::AssignStore::patternExists Exact Match Test") {
