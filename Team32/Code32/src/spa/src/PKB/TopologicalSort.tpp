@@ -35,7 +35,7 @@ void PKB::TopologicalSort<TInfo>::sort(const TStore& truth_store,
 		executeKahn(next, edges);
 	}
 	if (!edges.empty()) {
-		throw invalid_argument("Recursive call detected.");
+		throw PKB::TopologicalSortException("Recursive call detected.");
 	}
 }
 

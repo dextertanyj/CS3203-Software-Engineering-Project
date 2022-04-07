@@ -52,7 +52,7 @@ TEST_CASE("PKB::TopologicalSort::sort Test") {
 		store.set(info_2, info_3);
 		store.set(info_3, info_4);
 		store.set(info_4, info_2);
-		REQUIRE_THROWS_AS(topological_sort.sort(info_store, store), logic_error);
+		REQUIRE_THROWS_AS(topological_sort.sort(info_store, store), PKB::TopologicalSortException);
 	}
 
 	SECTION("Pure Cyclic graph") {
@@ -68,7 +68,7 @@ TEST_CASE("PKB::TopologicalSort::sort Test") {
 		store.set(info_2, info_3);
 		store.set(info_3, info_4);
 		store.set(info_4, info_1);
-		REQUIRE_THROWS_AS(topological_sort.sort(info_store, store), logic_error);
+		REQUIRE_THROWS_AS(topological_sort.sort(info_store, store), PKB::TopologicalSortException);
 	}
 
 	SECTION("Diamond graph") {

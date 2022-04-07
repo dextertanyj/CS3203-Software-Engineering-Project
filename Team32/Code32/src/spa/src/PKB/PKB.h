@@ -89,6 +89,10 @@ struct CallGraphException : public runtime_error {
 	using runtime_error::runtime_error;
 };
 
+struct TopologicalSortException : public runtime_error {
+	using runtime_error::runtime_error;
+};
+
 namespace Types {};
 }
 
