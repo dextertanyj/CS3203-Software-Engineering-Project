@@ -81,7 +81,7 @@ typedef struct AssignRelation {
 	inline bool operator==(const AssignRelation& other) const {
 		return node == other.node && variable == other.variable && expression == other.expression;
 	}
-	struct hasher {
+	struct Hasher {
 		inline size_t operator()(const PKB::AssignRelation& assign_relation) const {
 			std::size_t seed = 0;
 			combineHash(seed, assign_relation.node);

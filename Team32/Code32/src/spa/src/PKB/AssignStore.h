@@ -15,19 +15,19 @@ using namespace std;
 class PKB::AssignStore {
 public:
 	AssignStore();
-	void setAssign(const shared_ptr<StmtInfo>& statement, VarRef variable, Common::EP::Expression expression);
+	void setAssign(const shared_ptr<StmtInfo>& statement, const VarRef& variable, const Common::EP::Expression& expression);
 	bool patternExists(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPattern(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& var_name);
 	StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression, bool is_exact_match);
-	unordered_map<VarRef, unordered_set<PKB::AssignRelation, PKB::AssignRelation::hasher>> getAssignMap();
+	unordered_map<VarRef, unordered_set<PKB::AssignRelation, PKB::AssignRelation::Hasher>> getAssignMap();
 	void clear();
 
 private:
 	static bool compareExpressions(const Common::ExpressionProcessor::Expression& expression,
 	                               const Common::ExpressionProcessor::Expression& op_tree, bool is_exact_match);
-	unordered_map<VarRef, unordered_set<PKB::AssignRelation, PKB::AssignRelation::hasher>> var_to_relation_store;
-	unordered_map<Common::ExpressionProcessor::Expression, unordered_set<PKB::AssignRelation, PKB::AssignRelation::hasher>>
+	unordered_map<VarRef, unordered_set<PKB::AssignRelation, PKB::AssignRelation::Hasher>> var_to_relation_store;
+	unordered_map<Common::ExpressionProcessor::Expression, unordered_set<PKB::AssignRelation, PKB::AssignRelation::Hasher>>
 		exp_to_relation_store;
 };
 

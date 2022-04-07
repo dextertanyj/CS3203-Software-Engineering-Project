@@ -1,7 +1,7 @@
 #ifndef SPA_SRC_PKB_ORDEREDSTATEMENTTRANSITIVERELATION_H
 #define SPA_SRC_PKB_ORDEREDSTATEMENTTRANSITIVERELATION_H
 
-#include <assert.h>
+#include <cassert>
 
 #include "PKB/PKB.h"
 #include "PKB/TransitiveRelation.tpp"
