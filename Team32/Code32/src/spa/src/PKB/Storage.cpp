@@ -278,7 +278,11 @@ ProcRef PKB::Storage::getCalledProcedure(StmtRef index) { return calls_statement
 void PKB::Storage::populateComplexRelations() {
 	calls_statement_store.populateCallStore(procedure_store, calls_store);
 	calls_store.optimize();
-	calls_graph.sort(procedure_store, calls_store);
+	try {
+		calls_graph.sort(procedure_store, calls_store);
+	} catch (const TopologicalSortException& e) {
+		throw CallGraphException(e.what());
+	}
 	parent_store.optimize();
 	follows_store.optimize();
 	ModifiesSRelation::optimize(parent_store, calls_statement_store, procedure_store, calls_graph, modifies_s_store);
@@ -318,7 +322,7 @@ unordered_map<StmtRef, shared_ptr<StmtInfo>> PKB::Storage::getStmtInfoMap() {
 	unordered_set<shared_ptr<StatementInfo>> set = statement_store.getAll();
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> map;
 	for (const auto& item : set) {
-		map.insert({item->getIdentifier(), item});
+		map.emplace(item->getIdentifier(), item);
 	}
 	return map;
 }

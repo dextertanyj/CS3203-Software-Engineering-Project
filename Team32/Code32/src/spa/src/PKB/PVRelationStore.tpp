@@ -11,20 +11,8 @@ void PKB::PVRelationStore<T>::set(const ProcRef& proc, const VarRef& variable) {
 	assert(variable.length() != 0);
 	assert(proc.length() != 0);
 
-	auto variable_iter = variable_key_map.find(variable);
-	auto proc_iter = proc_key_map.find(proc);
-
-	if (proc_iter == proc_key_map.end()) {
-		proc_key_map.insert({proc, {variable}});
-	} else {
-		proc_iter->second.insert(variable);
-	}
-
-	if (variable_iter == variable_key_map.end()) {
-		variable_key_map.insert({variable, {proc}});
-	} else {
-		variable_iter->second.insert(proc);
-	}
+	proc_key_map[proc].emplace(variable);
+	variable_key_map[variable].emplace(proc);
 }
 
 template <class T>
@@ -32,20 +20,10 @@ void PKB::PVRelationStore<T>::set(const ProcRef& proc, const VarRefSet& variable
 	assert(all_of(variables.begin(), variables.end(), [](const VarRef& variable) { return variable.length() != 0; }));
 	assert(proc.length() != 0);
 
-	auto proc_iter = proc_key_map.find(proc);
-	if (proc_iter == proc_key_map.end()) {
-		proc_key_map.insert({proc, variables});
-	} else {
-		proc_iter->second.insert(variables.begin(), variables.end());
-	}
+	proc_key_map[proc].insert(variables.begin(), variables.end());
 
 	for (const VarRef& variable : variables) {
-		auto variable_iter = variable_key_map.find(variable);
-		if (variable_iter == variable_key_map.end()) {
-			variable_key_map.insert({variable, {proc}});
-		} else {
-			variable_iter->second.insert(proc);
-		}
+		variable_key_map[variable].emplace(proc);
 	}
 }
 

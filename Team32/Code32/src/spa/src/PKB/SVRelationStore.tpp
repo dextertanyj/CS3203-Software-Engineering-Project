@@ -19,20 +19,8 @@ void PKB::SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRef variabl
 	assert(variable.length() != 0);
 	assert(T::validate(this, statement, variable));
 
-	auto variable_iter = variable_key_map.find(variable);
-	auto statement_iter = statement_key_map.find(index);
-
-	if (statement_iter == statement_key_map.end()) {
-		statement_key_map.insert({index, {variable}});
-	} else {
-		statement_iter->second.insert(variable);
-	}
-
-	if (variable_iter == variable_key_map.end()) {
-		variable_key_map.insert({variable, {statement}});
-	} else {
-		variable_iter->second.insert(statement);
-	}
+	statement_key_map[index].emplace(variable);
+	variable_key_map[variable].emplace(statement);
 }
 
 template <class T>
@@ -41,20 +29,10 @@ void PKB::SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRefSet vari
 	assert(all_of(variables.begin(), variables.end(), [](const VarRef& variable) { return variable.length() != 0; }));
 	assert(T::validate(this, statement, variables));
 
-	auto statement_iter = statement_key_map.find(index);
-	if (statement_iter == statement_key_map.end()) {
-		statement_key_map.insert({index, variables});
-	} else {
-		statement_iter->second.insert(variables.begin(), variables.end());
-	}
+	statement_key_map[index].insert(variables.begin(), variables.end());
 
 	for (const VarRef& variable : variables) {
-		auto variable_iter = variable_key_map.find(variable);
-		if (variable_iter == variable_key_map.end()) {
-			variable_key_map.insert({variable, {statement}});
-		} else {
-			variable_iter->second.insert(statement);
-		}
+		variable_key_map[variable].emplace(statement);
 	}
 }
 

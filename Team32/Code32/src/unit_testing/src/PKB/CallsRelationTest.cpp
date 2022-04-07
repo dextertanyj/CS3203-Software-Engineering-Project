@@ -58,10 +58,10 @@ TEST_CASE("PKB::CallsRelation Tests") {
 	}
 
 	SECTION("Recursion Detection") {
-		REQUIRE_THROWS_AS(relation.insertForward(p_1_ptr), invalid_argument);
-		REQUIRE_THROWS_AS(relation.insertReverse(p_1_ptr), invalid_argument);
-		REQUIRE_THROWS_AS(relation.appendForwardTransitive({p_1_ptr, p_2_ptr}), invalid_argument);
-		REQUIRE_THROWS_AS(relation.appendReverseTransitive({p_1_ptr, p_2_ptr}), invalid_argument);
+		REQUIRE_THROWS_AS(relation.insertForward(p_1_ptr), PKB::CallGraphException);
+		REQUIRE_THROWS_AS(relation.insertReverse(p_1_ptr), PKB::CallGraphException);
+		REQUIRE_THROWS_AS(relation.appendForwardTransitive({p_1_ptr, p_2_ptr}), PKB::CallGraphException);
+		REQUIRE_THROWS_AS(relation.appendReverseTransitive({p_1_ptr, p_2_ptr}), PKB::CallGraphException);
 	}
 }
 
@@ -150,7 +150,7 @@ TEST_CASE("PKB::TransitiveRelationStore<...,...,Call...>::optimize Test") {
 		store.set(procedures.get(p_3), procedures.get(p_4));
 		store.set(procedures.get(p_4), procedures.get(p_2));
 
-		REQUIRE_THROWS_AS(store.optimize(), logic_error);
+		REQUIRE_THROWS_AS(store.optimize(), PKB::CallGraphException);
 	}
 
 	SECTION("Pure Loop Test") {
