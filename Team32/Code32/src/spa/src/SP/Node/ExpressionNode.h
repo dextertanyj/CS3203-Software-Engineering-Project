@@ -9,14 +9,14 @@
 
 class SP::Node::ExpressionNode {
 public:
-	explicit ExpressionNode(Common::ExpressionProcessor::Expression expression);
-	[[nodiscard]] Common::ExpressionProcessor::Expression extract() const;
+	explicit ExpressionNode(Common::EP::Expression expression);
+	[[nodiscard]] Common::EP::Expression extract() const;
 	[[nodiscard]] bool equals(const std::shared_ptr<ExpressionNode>& object) const;
 
-	static std::unique_ptr<ExpressionNode> parseExpression(Lexer& lex, Common::ExpressionProcessor::ExpressionType type);
+	static std::unique_ptr<ExpressionNode> parseExpression(Lexer& lex, Common::EP::ExpressionType type);
 
 private:
-	Common::ExpressionProcessor::Expression expression;
+	Common::EP::Expression expression;
 };
 
 #endif  // SPA_SRC_SP_NODE_EXPRESSIONNODE_H

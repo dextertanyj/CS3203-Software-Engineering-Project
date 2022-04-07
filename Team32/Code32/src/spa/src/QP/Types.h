@@ -59,8 +59,7 @@ struct Attribute {
 	bool operator==(const Attribute& other) const { return attribute == other.attribute && synonym == other.synonym; }
 };
 
-using ArgumentValue =
-	std::variant<std::monostate, Declaration, Attribute, std::string, StmtRef, std::pair<Common::ExpressionProcessor::Expression, bool>>;
+using ArgumentValue = std::variant<std::monostate, Declaration, Attribute, std::string, StmtRef, std::pair<Common::EP::Expression, bool>>;
 
 // Types for attribute selection
 using Name = std::string;

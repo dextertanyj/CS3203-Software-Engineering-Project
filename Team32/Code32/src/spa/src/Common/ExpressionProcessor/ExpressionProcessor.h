@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <variant>
 
+#include "Common/Common.h"
+
 namespace Common::ExpressionProcessor {
 struct ExpressionProcessorException : public std::runtime_error {
 	using runtime_error::runtime_error;

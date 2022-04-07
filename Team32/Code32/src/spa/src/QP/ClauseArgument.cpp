@@ -94,10 +94,10 @@ StmtRef QP::ClauseArgument::getStatementIndex() const {
 	return index;
 }
 
-Common::ExpressionProcessor::Expression QP::ClauseArgument::getExpression() const {
-	Common::ExpressionProcessor::Expression expr = Common::ExpressionProcessor::Expression(nullptr, {}, {});
+Common::EP::Expression QP::ClauseArgument::getExpression() const {
+	Common::EP::Expression expr = Common::EP::Expression(nullptr, {}, {});
 	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
-	              [&](pair<Common::ExpressionProcessor::Expression, bool> arg) { expr = move(arg.first); }},
+	              [&](pair<Common::EP::Expression, bool> arg) { expr = move(arg.first); }},
 	      value);
 	return expr;
 }

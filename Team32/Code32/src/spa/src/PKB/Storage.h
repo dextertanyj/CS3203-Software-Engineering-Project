@@ -49,7 +49,7 @@ public:
 	void setModifies(StmtRef index, VarRef name) override;
 	void setUses(StmtRef index, VarRefSet names) override;
 	void setModifies(StmtRef index, VarRefSet names) override;
-	void setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) override;
+	void setAssign(StmtRef index, VarRef variable, Common::EP::Expression expression) override;
 	void setIfControl(StmtRef index, VarRefSet names) override;
 	void setIfControl(StmtRef index, VarRef name) override;
 	void setWhileControl(StmtRef index, VarRefSet names) override;
@@ -99,11 +99,10 @@ public:
 	VarRefSet getModifiesByProc(const ProcRef& name) override;
 
 	// Assign get methods
-	bool patternExists(const VarRef& name, const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) override;
-	StmtInfoPtrSet getStmtsWithPattern(const VarRef& name, const Common::ExpressionProcessor::Expression& expression,
-	                                   bool is_exact_match) override;
+	bool patternExists(const VarRef& name, const Common::EP::Expression& expression, bool is_exact_match) override;
+	StmtInfoPtrSet getStmtsWithPattern(const VarRef& name, const Common::EP::Expression& expression, bool is_exact_match) override;
 	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& name) override;
-	StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) override;
+	StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match) override;
 
 	// Call get methods
 	bool checkCalls(const ProcRef& caller, const ProcRef& callee) override;

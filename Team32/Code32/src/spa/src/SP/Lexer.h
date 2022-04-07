@@ -7,7 +7,7 @@
 #include "Common/ExpressionProcessor/LexerInterface.h"
 #include "SP/SP.h"
 
-class SP::Lexer : public Common::ExpressionProcessor::LexerInterface {
+class SP::Lexer : public Common::EP::LexerInterface {
 public:
 	Lexer() = default;
 	void initialize(std::string raw_source);

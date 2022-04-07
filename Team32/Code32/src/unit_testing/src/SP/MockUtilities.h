@@ -54,7 +54,7 @@ public:
 		set_modifies_set_call_count++;
 		set_modifies_set_arguments.push_back({index, names});
 	};
-	void setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) {
+	void setAssign(StmtRef index, VarRef variable, Common::EP::Expression expression) {
 		set_assign_call_count++;
 		set_assign_arguments.push_back({index, variable, expression});
 	};
@@ -110,7 +110,7 @@ public:
 	int set_uses_set_call_count = 0;
 	vector<tuple<StmtRef, unordered_set<VarRef>>> set_modifies_set_arguments;
 	int set_modifies_set_call_count = 0;
-	vector<tuple<StmtRef, VarRef, Common::ExpressionProcessor::Expression>> set_assign_arguments;
+	vector<tuple<StmtRef, VarRef, Common::EP::Expression>> set_assign_arguments;
 	int set_assign_call_count = 0;
 	vector<tuple<StmtRef, VarRef>> set_if_control_arguments;
 	int set_if_control_call_count = 0;

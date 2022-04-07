@@ -40,11 +40,11 @@ public:
 	 */
 	explicit ClauseArgument(StmtRef statement_index);
 
-	explicit ClauseArgument(Common::ExpressionProcessor::Expression expression, bool exact);
+	explicit ClauseArgument(Common::EP::Expression expression, bool exact);
 
 	/**
-	 * Returns the type of reference stored.
-	 * @return the type of reference stored.
+	 * Returns the type of argument stored.
+	 * @return the type of argument stored.
 	 */
 	[[nodiscard]] Types::ArgumentType getType() const;
 
@@ -85,7 +85,7 @@ public:
 	 * @throws ClauseArgumentException if an expression is not stored.
 	 * @return the expression stored.
 	 */
-	[[nodiscard]] Common::ExpressionProcessor::Expression getExpression() const;
+	[[nodiscard]] Common::EP::Expression getExpression() const;
 
 	[[nodiscard]] bool operator==(const ClauseArgument& other) const;
 
