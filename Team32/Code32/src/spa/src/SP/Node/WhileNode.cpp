@@ -1,5 +1,8 @@
 #include "SP/Node/WhileNode.h"
 
+#include <utility>
+#include <vector>
+
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
 using namespace std;

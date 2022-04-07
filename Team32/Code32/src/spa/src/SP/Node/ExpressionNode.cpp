@@ -1,5 +1,7 @@
 #include "SP/Node/ExpressionNode.h"
 
+#include <utility>
+
 #include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 

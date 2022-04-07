@@ -14,7 +14,7 @@
 class SP::Parser {
 public:
 	Parser() = default;
-	std::unique_ptr<Node::ProgramNode> parse(string source);
+	std::unique_ptr<Node::ProgramNode> parse(std::string source);
 
 private:
 	SP::Lexer lex;

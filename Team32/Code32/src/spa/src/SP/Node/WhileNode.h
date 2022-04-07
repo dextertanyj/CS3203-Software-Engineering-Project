@@ -2,7 +2,6 @@
 #define SPA_SRC_SP_NODE_WHILENODE_H
 
 #include <memory>
-#include <string>
 
 #include "Common/TypeDefs.h"
 #include "PKB/StorageUpdateInterface.h"
