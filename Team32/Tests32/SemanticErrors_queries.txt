@@ -213,18 +213,18 @@ if i; constant c;
 Select BOOLEAN pattern i(c, _, _)
 FALSE
 5000
-44 - Syntactic pattern wrong synonym type 1
+44 - Semantic pattern wrong synonym type special case 1
 procedure pc; if i;
 Select BOOLEAN pattern i(pc, _, _)
-
+FALSE
 5000
-45 - Syntactic pattern wrong synonym type 2
+45 - Semantic pattern wrong synonym type special case 2
 assign a;
 Select BOOLEAN pattern a("cs2103", _, _)
-
+FALSE
 5000
-46 - Syntactic pattern wrong synonym type 3
+46 - Semantic pattern wrong synonym type special case 3
 while w;
 Select BOOLEAN pattern w("cs2103", _"cs2040"_)
-
+FALSE
 5000
