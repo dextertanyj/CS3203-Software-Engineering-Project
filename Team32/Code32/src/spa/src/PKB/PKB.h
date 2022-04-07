@@ -53,7 +53,7 @@ class ControlFlowGraph;
 class NextManager;
 class AffectsManager;
 
-typedef struct IfControlRelation {
+struct IfControlRelation {
 	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const shared_ptr<StmtInfo>& statement, const VarRef& /*var*/) {
 		return statement->getType() == StmtType::If;
 	}
@@ -61,9 +61,9 @@ typedef struct IfControlRelation {
 	                     const VarRefSet& /*var_set*/) {
 		return statement->getType() == StmtType::If;
 	}
-} IfControlRelation;
+};
 
-typedef struct WhileControlRelation {
+struct WhileControlRelation {
 	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const shared_ptr<StmtInfo>& statement, const VarRef& /*var*/) {
 		return statement->getType() == StmtType::While;
 	}
@@ -71,33 +71,7 @@ typedef struct WhileControlRelation {
 	                     const VarRefSet& /*var_set*/) {
 		return statement->getType() == StmtType::While;
 	}
-} WhileControlRelation;
-
-typedef struct AssignRelation {
-public:
-	AssignRelation(shared_ptr<StmtInfo> info, VarRef var, Common::EP::Expression expression)
-		: node(move(info)), variable(move(var)), expression(move(expression)){};
-	[[nodiscard]] shared_ptr<StmtInfo> getNode() const { return node; }
-	[[nodiscard]] VarRef getVariable() const { return variable; }
-	[[nodiscard]] Common::EP::Expression getExpression() const { return expression; }
-	inline bool operator==(const AssignRelation& other) const {
-		return node == other.node && variable == other.variable && expression == other.expression;
-	}
-	struct Hasher {
-		inline size_t operator()(const PKB::AssignRelation& assign_relation) const {
-			std::size_t seed = 0;
-			combineHash(seed, assign_relation.node);
-			combineHash(seed, assign_relation.variable);
-			combineHash(seed, assign_relation.expression);
-			return seed;
-		}
-	};
-
-private:
-	shared_ptr<StmtInfo> node;
-	VarRef variable;
-	Common::EP::Expression expression;
-} AssignRelation;
+};
 
 namespace Types {};
 }

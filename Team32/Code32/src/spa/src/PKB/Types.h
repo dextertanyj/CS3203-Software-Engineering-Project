@@ -17,11 +17,11 @@
 #include "PKB/StatementInfo.h"
 
 namespace PKB::Types {
-typedef InfoStore<ProcRef, vector<shared_ptr<StmtInfo>>, ProcedureInfo> ProcedureStore;
-typedef InfoStore<StmtRef, StmtType, StatementInfo> StatementStore;
-typedef TransitiveRelationStore<ProcRef, ProcedureInfo, CallsRelation> CallStore;
-typedef TransitiveRelationStore<StmtRef, StmtInfo, ParentRelation> ParentStore;
-typedef TransitiveRelationStore<StmtRef, StmtInfo, FollowsRelation> FollowsStore;
+using ProcedureStore = InfoStore<ProcRef, vector<shared_ptr<StmtInfo>>, ProcedureInfo>;
+using StatementStore = InfoStore<StmtRef, StmtType, StatementInfo>;
+using CallStore = TransitiveRelationStore<ProcRef, ProcedureInfo, CallsRelation>;
+using ParentStore = TransitiveRelationStore<StmtRef, StmtInfo, ParentRelation>;
+using FollowsStore = TransitiveRelationStore<StmtRef, StmtInfo, FollowsRelation>;
 enum class NodeType { Dummy, If, While, Statement };
 }
 

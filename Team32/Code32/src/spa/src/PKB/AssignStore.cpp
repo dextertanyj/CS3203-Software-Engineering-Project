@@ -33,7 +33,7 @@ bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::EP::E
 		return false;
 	}
 	return any_of(iter->second.begin(), iter->second.end(),
-	              [&](const AssignRelation& ar) { return compareExpressions(ar.getExpression(), expression, is_exact_match); });
+	              [&](const AssignRelation& ar) { return compareExpressions(ar.expression, expression, is_exact_match); });
 }
 
 StmtInfoPtrSet PKB::AssignStore::getStmtsWithPattern(const VarRef& variable, const Common::EP::Expression& expression,
@@ -44,8 +44,8 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPattern(const VarRef& variable, con
 	}
 	StmtInfoPtrSet result;
 	for (const AssignRelation& assign_relation : iter->second) {
-		if (compareExpressions(assign_relation.getExpression(), expression, is_exact_match)) {
-			result.emplace(assign_relation.getNode());
+		if (compareExpressions(assign_relation.expression, expression, is_exact_match)) {
+			result.emplace(assign_relation.node);
 		}
 	}
 	return result;
@@ -58,18 +58,18 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) 
 	}
 	StmtInfoPtrSet result;
 	for (const auto& assign_relation : iter->second) {
-		result.emplace(assign_relation.getNode());
+		result.emplace(assign_relation.node);
 	}
 	return result;
 }
 
 StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match) {
-	unordered_set<PKB::AssignRelation, PKB::AssignRelation::Hasher> assign_relations;
+	unordered_set<AssignRelation> assign_relations;
 	StmtInfoPtrVarRefSet result;
 	auto iter = exp_to_relation_store.find(expression);
 	if (is_exact_match && iter != exp_to_relation_store.end()) {
 		for_each(iter->second.begin(), iter->second.end(),
-		         [&](const AssignRelation& relation) { result.insert(make_pair(relation.getNode(), relation.getVariable())); });
+		         [&](const AssignRelation& relation) { result.insert(make_pair(relation.node, relation.variable)); });
 		return result;
 	}
 	for (const auto& expression_to_relation : exp_to_relation_store) {
@@ -78,7 +78,7 @@ StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::EP::
 		}
 	}
 	for (const auto& relation : assign_relations) {
-		pair<shared_ptr<StmtInfo>, VarRef> pair = make_pair(relation.getNode(), relation.getVariable());
+		pair<shared_ptr<StmtInfo>, VarRef> pair = make_pair(relation.node, relation.variable);
 		result.insert(pair);
 	}
 	return result;
@@ -97,6 +97,4 @@ void PKB::AssignStore::clear() {
 	exp_to_relation_store.clear();
 }
 
-unordered_map<VarRef, unordered_set<PKB::AssignRelation, PKB::AssignRelation::Hasher>> PKB::AssignStore::getAssignMap() {
-	return var_to_relation_store;
-}
+unordered_map<VarRef, unordered_set<PKB::AssignStore::AssignRelation>> PKB::AssignStore::getAssignMap() { return var_to_relation_store; }
