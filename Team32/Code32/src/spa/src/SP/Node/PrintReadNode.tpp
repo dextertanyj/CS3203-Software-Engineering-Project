@@ -44,6 +44,6 @@ bool SP::Node::PrintReadNode<T>::equals(const shared_ptr<StatementNode>& object)
 template <StmtType T>
 unique_ptr<SP::Node::PrintReadNode<T>> SP::Node::PrintReadNode<T>::parse(Lexer& lex, StmtRef& statement_count) {
 	unique_ptr<VariableNode> variable = VariableNode::parseVariable(lex);
-	lex.nextIf(";");
+	lex.nextIf(SEMICOLON);
 	return make_unique<PrintReadNode<T>>(statement_count++, move(variable));
 }

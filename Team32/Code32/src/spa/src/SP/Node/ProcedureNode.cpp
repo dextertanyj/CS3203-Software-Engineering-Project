@@ -4,6 +4,8 @@
 
 #include "Common/Validator.h"
 
+#define PROCEDURE "procedure"
+
 using namespace std;
 
 SP::Node::ProcedureNode::ProcedureNode(ProcRef name, unique_ptr<StatementListNode> statements, StmtRef start, StmtRef end)
@@ -20,7 +22,7 @@ bool SP::Node::ProcedureNode::equals(const shared_ptr<ProcedureNode>& object) co
 }
 
 unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parseProcedure(Lexer& lex, StmtRef& statement_count) {
-	lex.nextIf("procedure");
+	lex.nextIf(PROCEDURE);
 	ProcRef name = lex.readToken();
 	if (!Common::Validator::validateName(name)) {
 		throw SP::ParseException("Invalid procedure name.");
