@@ -1,6 +1,6 @@
 #include "AssignStore.h"
 
-#include <stdexcept>
+#include <algorithm>
 #include <utility>
 
 using namespace std;
@@ -34,8 +34,8 @@ bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::Expre
 	if (iter == var_to_relation_store.end()) {
 		return false;
 	}
-	return std::any_of(iter->second.begin(), iter->second.end(),
-	                   [&](const AssignRelation& ar) { return compareExpressions(ar.expression, expression, is_exact_match); });
+	return any_of(iter->second.begin(), iter->second.end(),
+	              [&](const AssignRelation& ar) { return compareExpressions(ar.expression, expression, is_exact_match); });
 }
 
 StmtInfoPtrSet PKB::AssignStore::getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
