@@ -57,7 +57,7 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) 
 		return {};
 	}
 	StmtInfoPtrSet result;
-	for (auto assign_relation : iter->second) {
+	for (const auto& assign_relation : iter->second) {
 		result.emplace(assign_relation.getNode());
 	}
 	return result;
@@ -77,7 +77,7 @@ StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::EP::
 			assign_relations.insert(expression_to_relation.second.begin(), expression_to_relation.second.end());
 		}
 	}
-	for (auto relation : assign_relations) {
+	for (const auto& relation : assign_relations) {
 		pair<shared_ptr<StmtInfo>, VarRef> pair = make_pair(relation.getNode(), relation.getVariable());
 		result.insert(pair);
 	}
