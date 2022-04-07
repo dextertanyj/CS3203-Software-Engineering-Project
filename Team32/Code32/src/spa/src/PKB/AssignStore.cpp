@@ -7,8 +7,7 @@ using namespace std;
 
 PKB::AssignStore::AssignStore() = default;
 
-void PKB::AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, const VarRef& variable,
-                                 const Common::ExpressionProcessor::Expression& expression) {
+void PKB::AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, const VarRef& variable, const Common::EP::Expression& expression) {
 	assert(statement->getType() == StmtType::Assign);
 	assert(!variable.empty());
 
@@ -28,8 +27,7 @@ void PKB::AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, const Va
 	}
 }
 
-bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
-                                     bool is_exact_match) {
+bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match) {
 	auto iter = var_to_relation_store.find(variable);
 	if (iter == var_to_relation_store.end()) {
 		return false;
@@ -38,7 +36,7 @@ bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::Expre
 	              [&](const AssignRelation& ar) { return compareExpressions(ar.expression, expression, is_exact_match); });
 }
 
-StmtInfoPtrSet PKB::AssignStore::getStmtsWithPattern(const VarRef& variable, const Common::ExpressionProcessor::Expression& expression,
+StmtInfoPtrSet PKB::AssignStore::getStmtsWithPattern(const VarRef& variable, const Common::EP::Expression& expression,
                                                      bool is_exact_match) {
 	auto iter = var_to_relation_store.find(variable);
 	if (iter == var_to_relation_store.end()) {
@@ -65,8 +63,7 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) 
 	return result;
 }
 
-StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
-                                                              bool is_exact_match) {
+StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match) {
 	unordered_set<PKB::AssignRelation, PKB::AssignRelation::Hasher> assign_relations;
 	for (const auto& expression_to_relation : exp_to_relation_store) {
 		if (compareExpressions(expression_to_relation.first, expression, is_exact_match)) {
@@ -81,8 +78,8 @@ StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::Expr
 	return result;
 }
 
-bool PKB::AssignStore::compareExpressions(const Common::ExpressionProcessor::Expression& expression,
-                                          const Common::ExpressionProcessor::Expression& op_tree, bool is_exact_match) {
+bool PKB::AssignStore::compareExpressions(const Common::EP::Expression& expression, const Common::EP::Expression& op_tree,
+                                          bool is_exact_match) {
 	if (is_exact_match) {
 		return expression == op_tree;
 	}

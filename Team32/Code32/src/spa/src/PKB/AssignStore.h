@@ -19,16 +19,14 @@ public:
 	bool patternExists(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPattern(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& var_name);
-	StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression, bool is_exact_match);
+	StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match);
 	unordered_map<VarRef, unordered_set<PKB::AssignRelation, PKB::AssignRelation::Hasher>> getAssignMap();
 	void clear();
 
 private:
-	static bool compareExpressions(const Common::ExpressionProcessor::Expression& expression,
-	                               const Common::ExpressionProcessor::Expression& op_tree, bool is_exact_match);
+	static bool compareExpressions(const Common::EP::Expression& expression, const Common::EP::Expression& op_tree, bool is_exact_match);
 	unordered_map<VarRef, unordered_set<PKB::AssignRelation, PKB::AssignRelation::Hasher>> var_to_relation_store;
-	unordered_map<Common::ExpressionProcessor::Expression, unordered_set<PKB::AssignRelation, PKB::AssignRelation::Hasher>>
-		exp_to_relation_store;
+	unordered_map<Common::EP::Expression, unordered_set<PKB::AssignRelation, PKB::AssignRelation::Hasher>> exp_to_relation_store;
 };
 
 #endif

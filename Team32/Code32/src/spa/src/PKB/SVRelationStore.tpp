@@ -38,10 +38,7 @@ void PKB::SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRef variabl
 template <class T>
 void PKB::SVRelationStore<T>::set(shared_ptr<StmtInfo> statement, VarRefSet variables) {
 	StmtRef index = statement->getIdentifier();
-	for (const VarRef& variable : variables) {
-		assert(variable.length() != 0);
-	}
-
+	assert(all_of(variables.begin(), variables.end(), [](const VarRef& variable) { return variable.length() != 0; }));
 	assert(T::validate(this, statement, variables));
 
 	auto statement_iter = statement_key_map.find(index);

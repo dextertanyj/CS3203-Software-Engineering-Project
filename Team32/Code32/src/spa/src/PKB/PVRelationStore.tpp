@@ -29,9 +29,7 @@ void PKB::PVRelationStore<T>::set(const ProcRef& proc, const VarRef& variable) {
 
 template <class T>
 void PKB::PVRelationStore<T>::set(const ProcRef& proc, const VarRefSet& variables) {
-	for (const VarRef& variable : variables) {
-		assert(variable.length() != 0);
-	}
+	assert(all_of(variables.begin(), variables.end(), [](const VarRef& variable) { return variable.length() != 0; }));
 	assert(proc.length() != 0);
 
 	auto proc_iter = proc_key_map.find(proc);
