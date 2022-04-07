@@ -6,8 +6,7 @@
 #include "../TestUtilities.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "SP/Node/CallNode.h"
-#include "SP/Node/PrintNode.h"
-#include "SP/Node/ReadNode.h"
+#include "SP/Node/PrintReadNode.tpp"
 #include "SP/SP.h"
 #include "catch_tools.h"
 
@@ -159,8 +158,8 @@ TEST_CASE("SP::Node::WhileNode::extract Test") {
 			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "<", "y"})));
 		unique_ptr<StatementListNode> body = make_unique<StatementListNode>();
 		body->addStatementNode(make_unique<CallNode>(first_inner_statement, "Procedure"));
-		body->addStatementNode(make_unique<ReadNode>(second_inner_statement, make_unique<VariableNode>("A")));
-		body->addStatementNode(make_unique<PrintNode>(third_inner_statement, make_unique<VariableNode>("B")));
+		body->addStatementNode(make_unique<PrintReadNode<StmtType::Read>>(second_inner_statement, make_unique<VariableNode>("A")));
+		body->addStatementNode(make_unique<PrintReadNode<StmtType::Print>>(third_inner_statement, make_unique<VariableNode>("B")));
 		WhileNode node = WhileNode(statement_number, std::move(condition), std::move(body));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
@@ -181,8 +180,8 @@ TEST_CASE("SP::Node::WhileNode::extract Test") {
 		// Next relationship
 		REQUIRE_EQUALS(pkb.set_next_call_count, 4);
 		REQUIRE_EQUALS(pkb.set_next_arguments, vector<tuple<StmtRef, StmtRef>>({{first_inner_statement, second_inner_statement},
-		                                                                           {second_inner_statement, third_inner_statement},
-		                                                                           {statement_number, first_inner_statement},
-		                                                                           {third_inner_statement, statement_number}}));
+		                                                                        {second_inner_statement, third_inner_statement},
+		                                                                        {statement_number, first_inner_statement},
+		                                                                        {third_inner_statement, statement_number}}));
 	}
 }

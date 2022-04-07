@@ -1,6 +1,7 @@
 #ifndef SPA_SRC_SP_NODE_NODE_H
 #define SPA_SRC_SP_NODE_NODE_H
 
+#include "Common/TypeDefs.h"
 #include "SP/SP.h"
 
 #define EQUALS "="
@@ -15,10 +16,10 @@ class ExpressionNode;
 class AssignmentNode;
 class CallNode;
 class IfNode;
-class PrintNode;
+template <StmtType T>
+class PrintReadNode;
 class ProcedureNode;
 class ProgramNode;
-class ReadNode;
 class StatementListNode;
 class StatementNode;
 class VariableNode;

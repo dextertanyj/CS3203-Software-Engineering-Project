@@ -3,7 +3,7 @@
 #include "../MockUtilities.h"
 #include "../TestUtilities.h"
 #include "SP/Node/CallNode.h"
-#include "SP/Node/ReadNode.h"
+#include "SP/Node/PrintReadNode.h"
 #include "SP/SP.h"
 #include "catch_tools.h"
 
@@ -100,7 +100,7 @@ TEST_CASE("SP::Node::ProgramNode::extract Test") {
 		ProgramNode node = ProgramNode();
 		StmtRef statement_number = 1;
 		unique_ptr<StatementListNode> first_procedure = make_unique<StatementListNode>();
-		first_procedure->addStatementNode(make_unique<ReadNode>(statement_number, make_unique<VariableNode>("A")));
+		first_procedure->addStatementNode(make_unique<PrintReadNode<StmtType::Read>>(statement_number, make_unique<VariableNode>("A")));
 		node.addProcedureNode(make_unique<ProcedureNode>("First", move(first_procedure), statement_number, statement_number));
 		node.extract(pkb);
 		REQUIRE_EQUALS(pkb.set_modifies_call_count, 1);
@@ -111,11 +111,13 @@ TEST_CASE("SP::Node::ProgramNode::extract Test") {
 		ProgramNode node = ProgramNode();
 		StmtRef first_statement_number = 1;
 		unique_ptr<StatementListNode> first_procedure = make_unique<StatementListNode>();
-		first_procedure->addStatementNode(make_unique<ReadNode>(first_statement_number, make_unique<VariableNode>("A")));
+		first_procedure->addStatementNode(
+			make_unique<PrintReadNode<StmtType::Read>>(first_statement_number, make_unique<VariableNode>("A")));
 		node.addProcedureNode(make_unique<ProcedureNode>("First", move(first_procedure), first_statement_number, first_statement_number));
 		StmtRef second_statement_number = 2;
 		unique_ptr<StatementListNode> second_procedure = make_unique<StatementListNode>();
-		second_procedure->addStatementNode(make_unique<ReadNode>(second_statement_number, make_unique<VariableNode>("B")));
+		second_procedure->addStatementNode(
+			make_unique<PrintReadNode<StmtType::Read>>(second_statement_number, make_unique<VariableNode>("B")));
 		node.addProcedureNode(
 			make_unique<ProcedureNode>("Second", move(second_procedure), second_statement_number, second_statement_number));
 		node.extract(pkb);
