@@ -1,0 +1,19 @@
+procedure all {
+    read x;
+    read y;
+    call b;
+
+    if (x == y) then {
+        while (x > 0) {
+            print x;
+            x = x - 1;
+        }
+    } else {
+        print x; print y;
+    }
+    z = 3000000000 * 5;
+}
+
+procedure b {
+    b = 2;
+}

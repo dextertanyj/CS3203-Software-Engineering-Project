@@ -1,0 +1,21 @@
+procedure main {
+    read x;
+    read y;
+    if (x == y) then {
+        while (x > 0) {
+            print x;
+            x = x - 1;
+            while (y != 0) {
+                y = x + 1;
+                while (y <= 2) {
+                    read z;
+                    y = z;
+                }
+            }
+        }
+    } else {
+        print x; 
+        print y;
+    }
+    print y;
+}

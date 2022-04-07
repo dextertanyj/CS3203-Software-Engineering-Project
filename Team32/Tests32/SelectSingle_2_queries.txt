@@ -43,3 +43,8 @@ procedure pc;
 Select pc
 none,
 5000
+9 - call list
+call c;
+Select c
+
+5000

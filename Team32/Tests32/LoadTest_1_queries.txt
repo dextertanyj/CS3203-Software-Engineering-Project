@@ -1,0 +1,500 @@
+0 - Query 0
+assign ass3, ass5; call cal7; if if7; while whi5, whi8, whi3; read rea7; stmt stm8; procedure pro2; variable var10; 
+Select BOOLEAN with pro2.procName=cal7.procName  pattern ass3(y, _)  pattern whi3(_, _)  such that Affects*(2, _)  pattern ass5(_, _)  pattern whi5(_, _)  pattern if7(var10, _, _)  such that Parent(stm8, _)  pattern whi8(_, _) with rea7.stmt#=10 
+FALSE
+5000
+1 - Query 1
+assign ass9, ass1; stmt stm6; if if6, if8; read rea6; variable var5, var10; procedure pro2; call cal9, cal5; while whi5; 
+Select BOOLEAN with stm6.stmt#=8  such that Follows(cal5, rea6)  such that Calls(pro2, _)  such that Calls*(_, "x") with ass1.stmt#=if8.stmt#  such that Follows*(_, if6)  pattern whi5(var10, _)  pattern ass9(var5, _)  such that Modifies(1, "y")  such that Parent(cal9, _) 
+FALSE
+5000
+2 - Query 2
+while whi7, whi6; stmt stm10, stm1; call cal9, cal1; assign ass1; 
+Select BOOLEAN with stm10.stmt#=ass1.stmt#  pattern whi7(_, _) with "z"=cal9.procName  such that Next(10, _) with "x"="y"  pattern whi6(_, _) with 4=cal1.stmt#  such that Affects(stm1, _)  such that Next(10, 9)  such that Next*(_, 1) 
+FALSE
+5000
+3 - Query 3
+if if2; while whi4, whi5; call cal10; print pri2, pri8, pri1; procedure pro10; assign ass10; 
+Select BOOLEAN  such that Affects(1, 7) with 8=pri1.stmt#  pattern ass10(_, _)  such that Uses(whi5, _)  such that Calls(_, pro10) with "z"=cal10.procName  pattern if2(_, _, _)  such that Next(pri8, _) with "z"=pri2.varName  pattern whi4(x, _) 
+FALSE
+5000
+4 - Query 4
+stmt stm10, stm2; read rea3; if if10; procedure pro9, pro7, pro3, pro5; variable var5; while whi8; call cal3, cal5; 
+Select BOOLEAN with stm10.stmt#=whi8.stmt#  pattern if10(x, _, _)  such that Calls("z", _)  such that Calls(pro5, pro7)  such that Calls(_, pro9)  such that Affects(stm2, _) with pro3.procName=cal5.procName with 6=2 with rea3.varName=cal3.procName with var5.varName=pro7.procName 
+FALSE
+5000
+5 - Query 5
+assign ass9, ass5, ass4; while whi2, whi9; variable var4; procedure pro7; stmt stm9; call cal1; print pri8; 
+Select BOOLEAN  pattern ass5(z, _)  pattern ass4(var4, _)  such that Next(4, _)  such that Affects(_, 9) with stm9.stmt#=8 with pro7.procName="x" with pri8.stmt#=cal1.stmt# with whi9.stmt#=10  such that Uses(whi2, _)  pattern ass9(x, _) 
+FALSE
+5000
+6 - Query 6
+while whi2, whi7, whi4, whi9; assign ass7, ass6, ass10; call cal8; variable var1, var10, var7, var3; read rea4; 
+Select BOOLEAN  pattern whi9(var1, _)  such that Affects*(ass10, _)  pattern whi2(var10, _)  pattern ass7(var7, "(z-8)*x") with 10=4 with 2=10  pattern whi4(var3, _)  pattern ass6(x, _) with cal8.procName=rea4.varName  such that Next*(_, whi7) 
+FALSE
+5000
+7 - Query 7
+assign ass3, ass4; procedure pro4; read rea6, rea8; variable var2; if if4; 
+Select BOOLEAN with "y"=rea6.varName  such that Follows*(9, rea8)  pattern ass4(_, _) with 10=6  such that Calls*(pro4, "x")  such that Follows*(6, _)  such that Next(6, ass3)  pattern if4(var2, _, _)  such that Calls*(_, "y")  pattern if4(var2, _, _) 
+FALSE
+5000
+8 - Query 8
+stmt stm4, stm7; if if6; call cal4; while whi7, whi1; procedure pro2, pro3; variable var10, var7; 
+Select BOOLEAN with "z"="z"  such that Follows(7, stm7)  such that Calls(pro3, pro2)  such that Parent*(6, if6)  such that Next(_, cal4) with 6=4  pattern whi7(var10, _)  such that Parent*(_, stm4)  pattern whi1(var7, _) with 8=8 
+FALSE
+5000
+9 - Query 9
+variable var10, var8, var7, var6; if if10, if4; read rea5; call cal3; assign ass10; while whi5; print pri6; 
+Select BOOLEAN  pattern whi5(var7, _)  such that Modifies(_, "y") with cal3.procName=var8.varName with "z"=var10.varName  pattern if4(var10, _, _)  such that Parent(rea5, 3)  such that Uses(pri6, var6)  pattern if10(y, _, _)  such that Calls*("z", "x")  pattern ass10(_, _"2/2"_) 
+FALSE
+5000
+10 - Query 10
+if if7, if1; constant con10; assign ass2, ass1, ass10; procedure pro6; while whi6; 
+Select BOOLEAN  pattern whi6(x, _) with con10.value=2  such that Follows*(_, 10)  pattern if7(y, _, _)  such that Follows*(4, ass1)  pattern ass2(_, _)  such that Calls(pro6, "z")  pattern if1(_, _, _)  pattern ass10(z, _)  pattern ass10(_, _) 
+FALSE
+5000
+11 - Query 11
+assign ass9, ass1; if if3; read rea6, rea9; while whi8; procedure pro9, pro2, pro5; 
+Select BOOLEAN  pattern if3(z, _, _) with "x"="z"  pattern ass1(z, _"x*2"_) with "x"=pro2.procName  such that Parent(_, rea6)  such that Calls(pro9, pro5) with 6=6  pattern ass9(x, "2-8")  such that Parent*(_, _)  such that Follows*(rea9, whi8) 
+FALSE
+5000
+12 - Query 12
+print pri7, pri5; variable var4; if if6; procedure pro1, pro6; read rea5; call cal2; assign ass3; stmt stm5; 
+Select BOOLEAN with pri7.varName=pri5.varName  pattern if6(_, _, _)  such that Calls*(pro1, _) with rea5.varName="x" with "y"=pro6.procName  such that Affects(_, 2)  such that Follows(6, _)  such that Follows(stm5, cal2)  pattern if6(_, _, _)  pattern ass3(var4, _"4/z"_) 
+FALSE
+5000
+13 - Query 13
+while whi5, whi9; read rea1, rea3; if if3; stmt stm6; call cal8; variable var5; procedure pro10, pro6; assign ass10; 
+Select BOOLEAN  pattern whi9(x, _) with "y"=cal8.procName  such that Parent*(10, _)  such that Uses(rea3, var5)  such that Affects(_, ass10)  such that Calls*("x", pro10)  such that Calls(pro6, _)  such that Next*(_, rea1) with if3.stmt#=stm6.stmt#  pattern whi5(y, _) 
+FALSE
+5000
+14 - Query 14
+variable var8; while whi2, whi5; assign ass3; if if1; call cal7; print pri6; 
+Select BOOLEAN  pattern whi2(x, _) with pri6.varName=cal7.procName with 2=whi5.stmt#  such that Parent(_, 7) with "z"="y"  such that Modifies(_, _) with 8=ass3.stmt#  such that Calls(_, _)  such that Next(10, 5)  pattern if1(var8, _, _) 
+FALSE
+5000
+15 - Query 15
+if if9; read rea10, rea1; print pri9, pri4; assign ass5; call cal7, cal10; variable var5; while whi5; 
+Select BOOLEAN  such that Follows(_, 5) with "y"=cal10.procName with cal7.procName=pri4.varName  such that Next(9, pri9)  such that Next(_, if9)  such that Follows(1, 1)  pattern ass5(y, _"z+2"_) with pri9.varName="z" with rea1.stmt#=whi5.stmt# with rea10.varName=var5.varName 
+FALSE
+5000
+16 - Query 16
+while whi7, whi8; assign ass10, ass1; stmt stm9; variable var5; if if7; 
+Select BOOLEAN  pattern whi8(y, _)  such that Modifies(_, "x") with stm9.stmt#=4  pattern ass1(var5, _) with "z"="y"  such that Follows*(6, _)  pattern if7(_, _, _)  such that Parent*(_, 7) with whi7.stmt#=4  pattern ass10(_, _) 
+FALSE
+5000
+17 - Query 17
+if if4, if5, if8; assign ass3, ass5; call cal7, cal5, cal1; while whi1; print pri1; read rea9; 
+Select BOOLEAN  such that Parent*(cal7, rea9) with 2=pri1.stmt#  pattern if4(_, _, _)  pattern whi1(_, _)  pattern if8(_, _, _)  such that Parent(cal5, if5)  pattern ass3(_, "10-10")  such that Next(_, 10) with "z"=cal1.procName  pattern ass5(_, "6-2") 
+FALSE
+5000
+18 - Query 18
+constant con2; if if9, if3; read rea2; assign ass9, ass2, ass1; print pri6, pri9; while whi8; procedure pro3; stmt stm5; 
+Select BOOLEAN with "x"=pro3.procName with ass1.stmt#=con2.value  such that Parent(stm5, _) with rea2.stmt#=if9.stmt# with pri9.stmt#=whi8.stmt#  pattern ass9(_, "4+x")  such that Parent*(_, 10)  such that Next(pri6, 6) with if3.stmt#=2  such that Follows(_, ass2) 
+FALSE
+5000
+19 - Query 19
+read rea2; if if6, if10; assign ass2, ass5; variable var1; procedure pro3, pro5; stmt stm1; 
+Select BOOLEAN with "y"="x"  pattern if6(_, _, _) with "z"="z"  pattern ass2(_, _)  pattern if10(var1, _, _)  such that Modifies(pro3, "y")  such that Calls(_, "z") with pro5.procName=rea2.varName  such that Follows(stm1, _)  pattern ass5(z, "(8/z)+x") 
+FALSE
+5000
+20 - Query 20
+assign ass9, ass8, ass4; procedure pro7; while whi4, whi3; variable var10, var7, var3; call cal2; stmt stm1; 
+Select BOOLEAN  pattern whi3(_, _)  pattern ass8(var7, "4/10") with pro7.procName=var3.varName  such that Next(1, _) with cal2.stmt#=6 with 2=ass4.stmt#  pattern whi4(var10, _)  such that Next(stm1, _) with 6=4  pattern ass9(z, _) 
+FALSE
+5000
+21 - Query 21
+constant con8; assign ass9, ass7; stmt stm10; call cal7, cal4; if if6; while whi7; variable var10; 
+Select BOOLEAN  pattern if6(_, _, _) with con8.value=10  such that Follows*(6, stm10) with 8=ass7.stmt#  pattern whi7(x, _) with 2=cal7.stmt# with "x"=cal4.procName  pattern ass9(var10, "y*z")  such that Follows*(6, _)  such that Calls(_, _) 
+FALSE
+5000
+22 - Query 22
+while whi1, whi9; read rea2; assign ass3, ass6; if if7; variable var5, var7, var6; procedure pro1; constant con1; call cal4; 
+Select BOOLEAN  pattern ass6(var7, _"8*4"_)  such that Next(cal4, 8)  pattern whi9(var5, _)  such that Parent(6, rea2)  pattern if7(var6, _, _) with 8=con1.value  such that Calls(_, pro1)  such that Parent*(whi1, 7)  such that Parent(3, if7)  such that Affects*(_, ass3) 
+FALSE
+5000
+23 - Query 23
+read rea9, rea10; print pri2, pri9; if if8; variable var2; call cal7; procedure pro5; 
+Select BOOLEAN  pattern if8(var2, _, _) with 6=4  such that Calls*("y", _) with cal7.procName=rea10.varName with "y"=pri9.varName with 10=rea9.stmt# with pro5.procName=pri2.varName  such that Uses("x", _)  such that Parent*(_, 5)  such that Parent*(7, _) 
+FALSE
+5000
+24 - Query 24
+while whi2; call cal2, cal8; constant con7, con1; procedure pro9; print pri8; 
+Select BOOLEAN  such that Next*(cal2, 10)  such that Parent*(_, _) with con1.value=4 with cal8.procName="z"  such that Next*(10, 5)  such that Parent*(whi2, _) with pro9.procName="y"  such that Next(8, _) with con7.value=pri8.stmt#  such that Modifies("z", "x") 
+FALSE
+5000
+25 - Query 25
+variable var4, var3; while whi2, whi4, whi10, whi6; assign ass1; stmt stm8; if if4; print pri4; 
+Select BOOLEAN  pattern whi4(y, _)  such that Uses(_, _) with 8=stm8.stmt#  pattern whi2(var3, _)  such that Parent*(10, 5)  pattern if4(var4, _, _)  pattern whi6(y, _)  pattern whi10(var4, _)  such that Parent(pri4, _) with 4=ass1.stmt# 
+FALSE
+5000
+26 - Query 26
+variable var1; print pri1; if if6, if4, if1, if7; call cal10; 
+Select BOOLEAN with 8=6  pattern if6(x, _, _) with 2=if4.stmt# with if7.stmt#=pri1.stmt#  such that Follows(_, 3)  such that Parent*(6, cal10)  pattern if1(x, _, _)  such that Follows*(_, _) with "y"=var1.varName  such that Parent*(10, _) 
+FALSE
+5000
+27 - Query 27
+if if6, if5, if9; while whi8; procedure pro2; stmt stm9; call cal1; assign ass2; 
+Select BOOLEAN  such that Parent*(stm9, 10)  pattern if5(y, _, _)  such that Next(if9, 7)  such that Affects(10, ass2)  pattern if6(_, _, _)  such that Follows(3, 5) with cal1.procName=pro2.procName with 8=10 with 6=8  pattern whi8(z, _) 
+FALSE
+5000
+28 - Query 28
+read rea7, rea10, rea1; variable var8, var6; while whi4, whi9, whi3; assign ass8, ass6; if if8; call cal7; procedure pro5; 
+Select BOOLEAN with cal7.procName="x"  pattern whi3(z, _) with rea10.stmt#=if8.stmt#  pattern ass8(_, _"10/z"_)  pattern whi4(var8, _) with rea1.stmt#=10 with rea7.varName="y" with var6.varName=pro5.procName  such that Modifies(whi9, "z")  pattern ass6(_, "10/y") 
+FALSE
+5000
+29 - Query 29
+assign ass9; if if10; stmt stm3, stm7; print pri3; read rea6; while whi5, whi3; call cal8; procedure pro10, pro5; 
+Select BOOLEAN with pri3.stmt#=ass9.stmt#  pattern if10(y, _, _) with "x"="x" with 6=stm3.stmt# with rea6.varName=cal8.procName  pattern whi3(_, _)  such that Calls(pro10, pro5)  such that Modifies(_, "x") with 8=whi5.stmt#  such that Uses(stm7, "x") 
+FALSE
+5000
+30 - Query 30
+variable var4; procedure pro6, pro7, pro5; if if7; while whi8; stmt stm1; assign ass3; 
+Select BOOLEAN  such that Affects*(9, _)  such that Next(stm1, _)  pattern if7(var4, _, _)  such that Calls(_, pro6)  such that Calls*("x", pro5)  pattern if7(_, _, _) with pro7.procName="z"  such that Follows(whi8, _)  pattern ass3(z, "2-10")  such that Calls("z", _) 
+FALSE
+5000
+31 - Query 31
+if if5; assign ass7, ass5, ass10; while whi2, whi1; variable var10, var7, var3; 
+Select BOOLEAN with "y"="y"  pattern ass10(var7, "y+4") with 10=ass5.stmt# with var10.varName="z"  pattern ass7(_, "y-2")  pattern whi1(z, _)  pattern if5(var3, _, _)  such that Modifies("x", _)  pattern whi2(x, _) with 8=6 
+FALSE
+5000
+32 - Query 32
+variable var5, var8, var10, var6; read rea10; while whi2; assign ass5, ass1; call cal7, cal10; procedure pro9; print pri4; 
+Select BOOLEAN  such that Follows*(_, _) with 8=6 with cal7.procName=rea10.varName with pri4.varName=var8.varName  such that Modifies(cal10, var5)  pattern whi2(var10, _)  pattern ass5(_, _"4*2"_)  such that Calls(pro9, "y")  such that Parent*(ass1, 10) with var6.varName="x" 
+FALSE
+5000
+33 - Query 33
+while whi2, whi6; if if7, if10; call cal6, cal3; assign ass3, ass1; variable var3; 
+Select BOOLEAN  pattern if7(y, _, _)  pattern if10(_, _, _)  pattern whi2(var3, _) with 4=cal3.stmt#  such that Parent*(8, _)  pattern whi6(_, _)  pattern ass1(z, _)  such that Follows*(10, cal6)  such that Follows(1, 4)  such that Affects*(2, ass3) 
+FALSE
+5000
+34 - Query 34
+if if9; procedure pro4; assign ass10, ass6; variable var5, var10; call cal8; read rea4; while whi6; 
+Select BOOLEAN  pattern whi6(_, _)  such that Calls(pro4, _)  pattern ass6(_, "8*10")  such that Follows(6, whi6) with rea4.varName=var5.varName  pattern if9(_, _, _)  such that Affects*(2, 6)  pattern whi6(var10, _)  such that Affects(ass10, _) with cal8.procName="x" 
+FALSE
+5000
+35 - Query 35
+read rea4, rea3; variable var4; if if6, if10; call cal7, cal10, cal6; assign ass3; 
+Select BOOLEAN  such that Next(rea3, 6) with "x"=cal7.procName  pattern if6(x, _, _)  pattern ass3(z, _) with cal6.procName="x"  pattern if10(z, _, _)  such that Next(_, 9) with cal10.stmt#=6 with cal7.procName=var4.varName with rea4.varName="x" 
+FALSE
+5000
+36 - Query 36
+assign ass9, ass10; if if1, if8; variable var1, var5, var2; constant con10; while whi7; 
+Select BOOLEAN  such that Parent(_, whi7)  such that Next(_, _)  such that Next(if1, _) with var2.varName="z"  such that Follows(ass10, _) with "x"="x" with 8=con10.value  pattern if8(var5, _, _) with "y"="y"  pattern ass9(var1, _"10*y"_) 
+FALSE
+5000
+37 - Query 37
+if if10, if5, if8, if2; call cal10, cal6, cal1; while whi1, whi6; read rea4; variable var10; 
+Select BOOLEAN  pattern whi6(_, _)  such that Next*(whi1, _) with 8=10 with cal1.stmt#=cal6.stmt#  pattern if10(_, _, _) with cal10.procName=rea4.varName  pattern if5(var10, _, _)  pattern if8(y, _, _) with "y"="z"  pattern if2(x, _, _) 
+FALSE
+5000
+38 - Query 38
+while whi9; read rea2; stmt stm5; if if6; call cal3, cal5; procedure pro10, pro5; assign ass3; variable var10; 
+Select BOOLEAN with rea2.varName=var10.varName  such that Affects*(_, ass3) with "x"="x"  such that Parent*(9, stm5)  pattern if6(y, _, _)  pattern whi9(z, _)  such that Parent*(cal5, 5)  such that Next(8, cal3) with "z"=pro5.procName with "z"=pro10.procName 
+FALSE
+5000
+39 - Query 39
+read rea2; assign ass7; while whi7; call cal3; variable var3, var6; procedure pro2, pro8; print pri6; 
+Select BOOLEAN  pattern whi7(y, _)  such that Next*(_, 7) with cal3.procName="z" with "y"="x" with pro8.procName=var6.varName with pro2.procName=rea2.varName  such that Next*(_, _)  pattern ass7(var3, _)  such that Parent(_, _) with pri6.stmt#=2 
+FALSE
+5000
+40 - Query 40
+if if5, if8, if2; stmt stm9; print pri1; variable var3; call cal7; while whi3; 
+Select BOOLEAN  such that Parent(_, stm9) with cal7.procName="z"  such that Calls*(_, "z")  such that Next(if2, _)  pattern if8(x, _, _)  pattern whi3(_, _)  such that Parent*(pri1, _)  such that Follows(3, _) with 6=2  pattern if5(var3, _, _) 
+FALSE
+5000
+41 - Query 41
+while whi9; assign ass9, ass3; stmt stm10, stm8; if if10; variable var5, var7, var3; call cal4; read rea8; 
+Select BOOLEAN  such that Next(4, _)  pattern ass3(var3, _)  pattern if10(var3, _, _)  such that Next(cal4, rea8)  pattern whi9(var5, _) with 8=ass3.stmt# with 6=6  such that Follows(6, 10)  pattern ass9(var7, "10/4")  such that Affects*(stm8, stm10) 
+FALSE
+5000
+42 - Query 42
+variable var1, var10; assign ass8, ass7, ass5; read rea4; call cal2; stmt stm4; 
+Select BOOLEAN with 6=cal2.stmt#  pattern ass7(_, "2+8")  pattern ass8(var10, "x-4") with var1.varName="x"  such that Modifies("y", _)  pattern ass5(x, _)  such that Uses(_, "y")  such that Affects*(stm4, 3) with "z"="z" with rea4.varName="z" 
+FALSE
+5000
+43 - Query 43
+stmt stm8, stm2, stm6; assign ass7, ass1; constant con7; while whi4; if if4; print pri6; 
+Select BOOLEAN  pattern if4(x, _, _) with 4=8  such that Next(stm8, 9)  such that Uses(stm6, "z")  pattern whi4(y, _)  such that Affects(6, stm2) with con7.value=pri6.stmt#  pattern ass1(_, _"x+10"_)  pattern ass7(_, _"y+2"_) with 2=6 
+FALSE
+5000
+44 - Query 44
+if if4; while whi2, whi1; call cal5; variable var5, var10; 
+Select BOOLEAN  such that Modifies("z", var5)  pattern if4(z, _, _)  pattern whi1(var10, _)  pattern whi2(_, _) with 10=6  such that Parent(2, _) with 6=cal5.stmt#  such that Parent(7, _) with 10=6  such that Affects(8, 2) 
+FALSE
+5000
+45 - Query 45
+while whi2, whi7; if if2; variable var9, var4; assign ass7; call cal9; stmt stm5; 
+Select BOOLEAN  such that Next(4, _) with "z"=var9.varName  such that Affects*(_, _)  pattern if2(_, _, _)  such that Follows(6, _) with cal9.procName="x"  pattern whi7(var4, _) with stm5.stmt#=ass7.stmt#  pattern if2(y, _, _)  pattern whi2(z, _) 
+FALSE
+5000
+46 - Query 46
+if if1, if2; variable var9, var10, var8, var6; while whi8, whi3; assign ass8, ass3, ass10; constant con1; 
+Select BOOLEAN  pattern ass3(var9, _)  pattern whi3(var6, _) with ass8.stmt#=6  such that Calls(_, _) with 2=con1.value  pattern whi8(var8, _)  pattern ass3(var8, "y-2")  such that Follows*(if1, _)  pattern if2(var10, _, _)  pattern ass10(x, _) 
+FALSE
+5000
+47 - Query 47
+if if1, if5; while whi2, whi5, whi9; variable var5, var8; stmt stm6; constant con10; assign ass3, ass10; call cal1; 
+Select BOOLEAN  pattern ass10(_, _"x*y"_)  pattern if1(_, _, _)  such that Uses("x", "x")  pattern if1(var5, _, _)  such that Parent*(7, ass3) with whi9.stmt#=con10.value  pattern whi2(_, _)  pattern if5(y, _, _) with stm6.stmt#=cal1.stmt#  pattern whi5(var8, _) 
+FALSE
+5000
+48 - Query 48
+read rea9, rea1; if if8; variable var5; assign ass3, ass2; constant con1; print pri8; 
+Select BOOLEAN with ass2.stmt#=pri8.stmt#  pattern ass3(var5, _) with con1.value=6  pattern if8(_, _, _) with "z"=rea9.varName  pattern ass2(z, _"6+y"_) with rea9.varName="x"  such that Follows(6, 3) with "x"=rea1.varName  such that Calls(_, _) 
+FALSE
+5000
+49 - Query 49
+variable var8, var3; while whi5, whi8, whi3; assign ass5; print pri3, pri8; if if1; procedure pro10, pro2; 
+Select BOOLEAN  such that Uses(5, var8)  such that Calls*("z", pro2)  pattern whi5(x, _)  such that Next(whi3, pri8)  such that Calls(pro10, "z")  such that Next*(10, ass5)  pattern if1(_, _, _) with 8=8  pattern whi8(var3, _) with "x"=pri3.varName 
+FALSE
+5000
+50 - Query 50
+if if10, if2, if3; variable var5, var3; assign ass2; while whi7, whi8; print pri1; 
+Select BOOLEAN with var5.varName="z"  pattern whi8(_, _)  pattern ass2(_, "6*6")  such that Calls(_, _)  pattern if2(var3, _, _)  pattern if10(var5, _, _)  pattern if3(_, _, _) with "x"=pri1.varName  pattern whi7(_, _)  such that Parent*(_, _) 
+FALSE
+5000
+51 - Query 51
+if if7, if2; print pri9, pri4; variable var2; assign ass1; call cal8; procedure pro6; read rea8; 
+Select BOOLEAN with var2.varName=pri4.varName  such that Parent(if7, _)  such that Calls(_, pro6)  such that Follows(2, pri9)  such that Affects(ass1, _) with "z"=rea8.varName  such that Follows(1, _)  pattern if2(_, _, _)  such that Uses(cal8, _)  pattern if7(_, _, _) 
+FALSE
+5000
+52 - Query 52
+if if5; variable var9, var8, var7; assign ass5; while whi2, whi6, whi5, whi3; 
+Select BOOLEAN  such that Parent(5, whi5)  such that Modifies(1, var8)  such that Follows*(9, ass5)  pattern whi6(var9, _)  pattern if5(_, _, _)  pattern whi3(_, _) with var7.varName="z"  such that Next(9, 8)  such that Parent(5, whi2)  pattern whi5(x, _) 
+FALSE
+5000
+53 - Query 53
+read rea5, rea1; if if8, if3; while whi2; variable var9, var1, var10; assign ass8; stmt stm1; 
+Select BOOLEAN with rea1.varName="z"  such that Follows(_, _)  such that Uses(_, var10)  such that Affects*(_, stm1)  pattern if8(var1, _, _)  pattern ass8(_, _)  such that Calls("y", "y")  pattern if3(y, _, _) with 6=rea5.stmt#  pattern whi2(var9, _) 
+FALSE
+5000
+54 - Query 54
+if if9, if3; assign ass7, ass10, ass4; stmt stm10; while whi2, whi5, whi8; variable var5, var10; constant con5, con1; 
+Select BOOLEAN  such that Affects(5, stm10)  pattern if9(var10, _, _) with whi8.stmt#=con1.value  such that Modifies(_, "z")  pattern whi2(z, _)  pattern if3(_, _, _) with con5.value=2  pattern whi5(var5, _)  pattern ass4(z, _"y-x"_)  such that Affects*(ass7, ass10) 
+FALSE
+5000
+55 - Query 55
+if if5; read rea10; variable var9, var5, var3; while whi7; assign ass8; print pri8, pri1, pri4; procedure pro2; 
+Select BOOLEAN  such that Affects*(ass8, 9) with 8=pri1.stmt#  such that Modifies("x", var3) with var5.varName=pri8.varName with ass8.stmt#=8  pattern if5(var9, _, _) with pri4.varName=pro2.procName with pri4.varName=rea10.varName  pattern whi7(z, _) with 8=pri8.stmt# 
+FALSE
+5000
+56 - Query 56
+read rea6, rea3; variable var4; while whi3; assign ass3, ass1; procedure pro1; call cal4, cal1; 
+Select BOOLEAN  pattern ass1(var4, _)  such that Follows(4, 8) with cal1.procName="z"  pattern ass3(_, "8*2") with rea6.stmt#=6  such that Parent(7, rea3)  pattern whi3(x, _)  such that Calls*("y", _)  such that Next(5, 5) with cal4.procName=pro1.procName 
+FALSE
+5000
+57 - Query 57
+if if1, if5; assign ass2, ass6; stmt stm7; while whi7; variable var6; read rea5; print pri6; 
+Select BOOLEAN  such that Affects(7, 6)  such that Affects(4, _)  pattern whi7(_, _)  pattern if5(var6, _, _)  such that Affects(ass6, _)  such that Parent*(_, 2) with pri6.stmt#=rea5.stmt#  pattern if1(x, _, _)  such that Affects*(stm7, 2)  pattern ass2(_, _) 
+FALSE
+5000
+58 - Query 58
+if if7, if9, if8; assign ass9, ass8; call cal4, cal6; variable var10, var2; print pri4; read rea4, rea7; procedure pro10; while whi4; 
+Select BOOLEAN  pattern if8(_, _, _)  pattern ass9(var10, "6-x")  pattern whi4(_, _)  pattern ass8(y, _)  pattern if7(var2, _, _) with cal6.stmt#=2 with pri4.varName=pro10.procName with if9.stmt#=10 with cal4.stmt#=rea7.stmt#  such that Uses(rea4, _) 
+FALSE
+5000
+59 - Query 59
+read rea4, rea3; assign ass9; if if10, if1, if8, if3; variable var1, var6; while whi8; print pri6; 
+Select BOOLEAN with pri6.varName=rea3.varName  pattern if10(_, _, _)  pattern if1(var1, _, _) with if3.stmt#=2  pattern ass9(var6, _)  pattern if8(z, _, _) with "x"=rea4.varName with 4=4 with 10=2  pattern whi8(_, _) 
+FALSE
+5000
+60 - Query 60
+if if7, if10, if9; variable var1, var8; while whi10, whi8, whi5; call cal6; stmt stm9; print pri1; 
+Select BOOLEAN  pattern whi10(var8, _) with 8=8  pattern if7(var1, _, _) with pri1.stmt#=if9.stmt#  pattern whi5(_, _)  such that Affects(5, stm9)  pattern whi8(y, _) with 6=8  such that Next*(cal6, _)  pattern if10(x, _, _) 
+FALSE
+5000
+61 - Query 61
+assign ass9, ass2; stmt stm10, stm4, stm6, stm5; if if3; print pri7, pri9, pri10; constant con3, con7; while whi2; variable var1; 
+Select BOOLEAN  such that Affects*(stm10, 1)  such that Affects(stm4, ass9)  pattern if3(var1, _, _)  such that Next(6, _) with con7.value=stm5.stmt# with pri7.stmt#=con7.value with stm6.stmt#=con3.value  pattern ass2(_, _) with pri9.stmt#=pri10.stmt#  pattern whi2(_, _) 
+FALSE
+5000
+62 - Query 62
+constant con2, con7; if if6, if3; call cal10; print pri2; variable var1, var6; assign ass8; while whi7, whi1, whi5; 
+Select BOOLEAN  pattern if3(x, _, _) with var6.varName="y" with var1.varName=cal10.procName with pri2.stmt#=whi5.stmt#  such that Next(whi5, _) with ass8.stmt#=con2.value  pattern whi7(x, _)  pattern whi1(var6, _) with if6.stmt#=con7.value  such that Affects*(6, 6) 
+FALSE
+5000
+63 - Query 63
+assign ass7, ass6, ass10; print pri5; variable var1, var5; procedure pro3; while whi6, whi5; 
+Select BOOLEAN with whi6.stmt#=pri5.stmt#  pattern ass10(_, _)  such that Follows(_, 9)  pattern ass7(z, "z-8")  such that Follows(_, _) with "y"=var5.varName  such that Calls(pro3, pro3)  pattern whi5(var1, _)  pattern whi6(_, _)  pattern ass6(x, _"(x-y)/y"_) 
+FALSE
+5000
+64 - Query 64
+assign ass9, ass10; variable var5; procedure pro5; while whi4, whi5; call cal1, cal5; 
+Select BOOLEAN  such that Modifies(_, "y")  pattern ass9(_, "(2/x)+2") with cal5.procName=pro5.procName  pattern whi4(var5, _) with 4=cal1.stmt#  such that Next(_, _)  such that Affects(_, 5)  pattern whi5(x, _)  pattern ass10(y, _)  such that Affects(8, _) 
+FALSE
+5000
+65 - Query 65
+print pri3; constant con7, con10; variable var9, var2; assign ass3, ass2; procedure pro2; while whi1; 
+Select BOOLEAN  pattern ass2(x, _)  such that Calls*(_, "x") with 8=2 with 4=con7.value  such that Calls*(pro2, _)  pattern ass3(var9, "z*8")  pattern whi1(x, _) with 4=con10.value with pri3.varName="z"  such that Modifies(_, var2) 
+FALSE
+5000
+66 - Query 66
+call cal2, cal7; while whi7, whi4; assign ass8, ass3; variable var7, var3; if if4; procedure pro2; 
+Select BOOLEAN  pattern if4(_, _, _)  pattern ass8(var7, _)  pattern whi4(_, _) with cal2.stmt#=cal7.stmt#  such that Modifies("y", var3)  such that Follows(_, whi7)  such that Modifies(_, var3)  pattern ass3(var3, _)  such that Calls*(pro2, _)  such that Modifies(_, "y") 
+FALSE
+5000
+67 - Query 67
+if if5, if8, if3; variable var9, var8, var7; stmt stm10, stm9; procedure pro9; print pri10; 
+Select BOOLEAN  such that Parent(_, _)  such that Calls(pro9, "y") with stm9.stmt#=if8.stmt# with stm10.stmt#=4 with 6=2 with var8.varName=var7.varName with pri10.stmt#=if5.stmt#  such that Affects*(_, _)  pattern if3(var9, _, _)  such that Affects(stm10, _) 
+FALSE
+5000
+68 - Query 68
+assign ass9; variable var4; if if10; while whi4, whi10, whi3; print pri3, pri8; read rea5; 
+Select BOOLEAN  pattern whi4(x, _) with 4=2 with pri8.stmt#=pri3.stmt#  pattern whi3(var4, _)  such that Next*(rea5, _)  such that Follows*(_, ass9)  such that Affects*(1, _)  pattern if10(_, _, _)  such that Follows*(2, whi10)  such that Modifies("y", "z") 
+FALSE
+5000
+69 - Query 69
+variable var4, var6; while whi2; if if1, if8; procedure pro1, pro7; call cal8, cal7; assign ass1; 
+Select BOOLEAN  such that Parent(_, _)  such that Calls(pro1, "x")  such that Affects(_, ass1) with if8.stmt#=10  pattern whi2(var4, _) with cal8.procName="z" with cal7.procName=pro1.procName  pattern if1(var6, _, _)  such that Modifies(pro1, var4) with "z"=pro7.procName 
+FALSE
+5000
+70 - Query 70
+while whi8, whi9; assign ass9, ass3; procedure pro10, pro4, pro6; if if10, if8, if3; variable var4; stmt stm4; 
+Select BOOLEAN with stm4.stmt#=2  pattern if3(_, _, _)  pattern if8(z, _, _)  such that Calls*(pro10, pro4)  pattern whi9(_, _)  pattern whi8(x, _)  such that Calls(pro6, "x")  pattern ass9(y, "(z/10)-4")  pattern if10(var4, _, _)  such that Affects*(3, ass3) 
+FALSE
+5000
+71 - Query 71
+while whi10, whi9; if if6, if2; print pri3; variable var9, var6; assign ass10; procedure pro8; 
+Select BOOLEAN  pattern ass10(var9, _)  such that Follows(4, _)  such that Calls*(pro8, "x")  pattern if6(_, _, _) with "y"="y"  pattern whi9(var6, _) with "z"="z"  pattern if2(y, _, _)  pattern whi10(x, _) with pri3.stmt#=2 
+FALSE
+5000
+72 - Query 72
+assign ass8, ass10; constant con9; stmt stm10; while whi2; if if1; call cal5; variable var5; 
+Select BOOLEAN  pattern whi2(y, _)  such that Calls*("x", _)  pattern ass8(y, "x/2")  pattern if1(var5, _, _) with "y"="z" with con9.value=2  such that Affects(ass10, 7)  such that Parent(_, 8) with cal5.stmt#=6 with stm10.stmt#=4 
+FALSE
+5000
+73 - Query 73
+if if10, if5, if4, if8; variable var9, var2; print pri1; assign ass10; while whi5; 
+Select BOOLEAN  pattern if8(_, _, _) with pri1.stmt#=6  such that Uses(2, _) with 10=10  such that Uses(_, "x")  pattern if5(var9, _, _)  such that Parent*(_, if4)  pattern if10(x, _, _)  such that Follows(1, ass10)  pattern whi5(var2, _) 
+FALSE
+5000
+74 - Query 74
+if if10, if9; while whi2; call cal8, cal6; variable var7, var3, var2; assign ass2; read rea4; procedure pro9; 
+Select BOOLEAN  pattern whi2(var2, _)  pattern ass2(var3, _) with cal8.procName=cal6.procName  pattern if9(var7, _, _)  such that Affects(9, _) with "y"=rea4.varName  pattern whi2(y, _)  such that Parent(4, _)  pattern if10(_, _, _)  such that Calls(pro9, "y") 
+FALSE
+5000
+75 - Query 75
+if if10, if5, if8; assign ass9, ass7, ass2; while whi2, whi1, whi8; variable var2; 
+Select BOOLEAN  pattern whi8(x, _)  pattern ass7(x, _)  pattern ass9(_, _"z+z"_)  pattern whi2(var2, _)  pattern if8(y, _, _)  pattern if5(_, _, _)  such that Next(_, if5)  pattern if10(z, _, _)  pattern whi1(y, _)  pattern ass2(_, _"y+6"_) 
+FALSE
+5000
+76 - Query 76
+assign ass4; if if2; print pri2, pri4; constant con3; variable var1, var5; stmt stm1; procedure pro8; 
+Select BOOLEAN with con3.value=10  pattern if2(_, _, _)  such that Parent*(pri2, _) with pri4.varName="x" with 8=stm1.stmt#  such that Uses(pro8, var5) with "y"="y" with 4=6  pattern ass4(var1, _)  such that Affects*(6, _) 
+FALSE
+5000
+77 - Query 77
+stmt stm2, stm9; procedure pro7, pro4; while whi10, whi8; variable var6; assign ass3, ass10; 
+Select BOOLEAN  pattern ass3(z, _)  pattern whi10(z, _)  such that Calls(pro4, pro7)  pattern whi8(var6, _)  such that Follows*(ass10, _)  such that Follows*(_, _) with whi8.stmt#=stm2.stmt#  such that Calls(_, pro4)  such that Affects*(9, 1) with 2=stm9.stmt# 
+FALSE
+5000
+78 - Query 78
+if if6, if9, if3; assign ass9; variable var4, var3; procedure pro1, pro5; while whi4; 
+Select BOOLEAN  pattern ass9(var4, _"8-8"_)  such that Follows*(if6, if3) with 2=8 with "y"="z"  pattern if9(var3, _, _)  such that Parent*(2, _) with whi4.stmt#=10  such that Calls(pro5, "x") with "z"=pro1.procName  pattern whi4(_, _) 
+FALSE
+5000
+79 - Query 79
+if if9, if2; variable var8; read rea6, rea8, rea10; assign ass3, ass6, ass5; print pri9; constant con4; 
+Select BOOLEAN  pattern if9(_, _, _)  pattern if2(_, _, _)  pattern ass3(var8, _"x+10"_) with rea10.stmt#=con4.value with 6=rea8.stmt#  pattern ass5(z, _"4*2"_) with rea6.varName="y" with "z"=var8.varName with ass6.stmt#=pri9.stmt# with "x"="y" 
+FALSE
+5000
+80 - Query 80
+assign ass9; variable var8; constant con8; read rea5, rea10; while whi4, whi6, whi3; if if8; stmt stm4; call cal9; 
+Select BOOLEAN  such that Next(_, rea10)  pattern ass9(var8, "8*2")  pattern whi3(_, _) with 4=6  pattern whi6(_, _) with "x"=rea5.varName with con8.value=cal9.stmt#  pattern whi4(var8, _)  pattern if8(x, _, _)  such that Next*(stm4, 10) 
+FALSE
+5000
+81 - Query 81
+assign ass4; print pri2, pri9; variable var3; while whi5, whi3; constant con4; 
+Select BOOLEAN  such that Parent(whi5, _) with "z"="x"  such that Affects*(_, ass4) with 10=pri9.stmt#  such that Parent*(6, _) with 6=whi3.stmt# with con4.value=10 with var3.varName=pri2.varName with "z"="y" with "z"="x" 
+FALSE
+5000
+82 - Query 82
+variable var7, var4; print pri5; call cal10; read rea4, rea9; while whi7; assign ass10; 
+Select BOOLEAN  such that Follows*(pri5, _) with "y"=var7.varName with "x"=cal10.procName with rea4.stmt#=rea9.stmt# with whi7.stmt#=10  such that Parent*(7, _) with "x"="z"  such that Modifies(_, _)  pattern ass10(y, _"8/z"_)  pattern whi7(var4, _) 
+FALSE
+5000
+83 - Query 83
+read rea6, rea2, rea7; if if3; assign ass2; while whi8; stmt stm8; print pri10; call cal9; 
+Select BOOLEAN  pattern if3(_, _, _)  such that Affects*(_, _)  such that Next(_, cal9)  pattern whi8(_, _)  pattern whi8(_, _)  pattern if3(_, _, _)  such that Affects(stm8, ass2)  such that Parent*(_, rea2) with cal9.stmt#=rea6.stmt# with rea7.varName=pri10.varName 
+FALSE
+5000
+84 - Query 84
+assign ass3, ass5, ass6, ass1, ass8, ass4; while whi6, whi9; read rea10; stmt stm4; 
+Select BOOLEAN  pattern ass6(z, "x+8")  such that Next*(_, _)  pattern ass1(y, _"z/4"_)  pattern ass8(x, _"y+x"_) with 4=ass3.stmt#  such that Affects(1, ass4) with 4=rea10.stmt#  pattern whi6(y, _) with whi9.stmt#=4  such that Affects*(ass5, stm4) 
+FALSE
+5000
+85 - Query 85
+read rea2; assign ass6; stmt stm8, stm6; while whi6, whi10, whi8; variable var1; if if4; procedure pro2; 
+Select BOOLEAN  such that Parent(_, stm6)  such that Affects(_, stm8)  pattern if4(var1, _, _)  such that Follows*(whi10, _)  such that Calls*(pro2, _)  pattern whi6(x, _)  such that Next(_, _) with 2=rea2.stmt#  pattern whi8(z, _)  pattern ass6(y, "z-x") 
+FALSE
+5000
+86 - Query 86
+if if9, if8; assign ass1, ass4; variable var10, var8, var6; while whi10, whi3; print pri10; 
+Select BOOLEAN  such that Uses("x", _)  pattern whi10(var6, _)  pattern if9(_, _, _)  such that Calls*(_, "y")  pattern ass4(_, "y/x")  such that Modifies(_, _)  pattern whi3(var10, _)  pattern if8(var6, _, _)  such that Follows(if9, pri10)  pattern ass1(var8, _) 
+FALSE
+5000
+87 - Query 87
+assign ass8, ass6; print pri7, pri5; constant con6; if if7; variable var7; 
+Select BOOLEAN  such that Affects*(10, 4)  pattern ass8(_, "2+6") with "x"=pri7.varName with 8=con6.value with "x"="y"  such that Parent*(_, pri5)  pattern ass6(z, _)  such that Modifies(_, var7)  pattern if7(_, _, _)  such that Affects*(8, 2) 
+FALSE
+5000
+88 - Query 88
+read rea4, rea2; assign ass8, ass6, ass1; while whi6, whi10, whi5; if if8; variable var3; 
+Select BOOLEAN  pattern whi10(_, _)  such that Next*(rea4, whi6)  pattern ass1(_, _) with "z"=var3.varName  pattern whi5(z, _)  such that Affects*(_, 6)  such that Affects(ass8, 3)  such that Follows(ass6, _)  pattern if8(z, _, _)  such that Next*(rea2, 8) 
+FALSE
+5000
+89 - Query 89
+while whi2, whi5; assign ass5; variable var10, var2; constant con10; read rea4; call cal9, cal4; 
+Select BOOLEAN  such that Affects*(_, 10)  pattern whi2(y, _) with "z"="x"  such that Parent(rea4, 7)  pattern whi5(z, _) with var10.varName="x" with "y"=cal4.procName with cal9.stmt#=con10.value  pattern ass5(var2, _"4-z"_) with 10=4 
+FALSE
+5000
+90 - Query 90
+if if4, if3; stmt stm10, stm1; assign ass7, ass6, ass1; read rea6; call cal8, cal5; variable var6; print pri8; 
+Select BOOLEAN  pattern ass1(var6, _"6-x"_) with pri8.varName="z" with cal8.procName="y" with "y"=rea6.varName  pattern ass7(z, _"10+4"_)  such that Follows*(_, if3) with cal5.stmt#=8 with stm1.stmt#=4  such that Next*(stm10, 4) with ass6.stmt#=if4.stmt# 
+FALSE
+5000
+91 - Query 91
+read rea5, rea9, rea3; if if10, if1; call cal7; stmt stm4; while whi1; variable var7; 
+Select BOOLEAN with rea3.varName="x"  such that Parent(6, if10)  pattern whi1(x, _)  such that Affects(3, 1) with rea5.varName=rea9.varName  such that Follows*(3, 1)  such that Affects*(stm4, 2)  pattern if1(z, _, _)  pattern if1(var7, _, _) with cal7.procName="z" 
+FALSE
+5000
+92 - Query 92
+read rea8, rea10, rea1; print pri2, pri9, pri1; if if7, if10; procedure pro1, pro6; variable var7; 
+Select BOOLEAN with pro6.procName=pri1.varName with 8=10 with 6=rea1.stmt#  such that Follows*(_, 6)  such that Follows(_, 8) with "y"=pri9.varName  such that Parent*(rea8, pri2) with rea10.stmt#=if10.stmt#  such that Calls("x", pro1)  pattern if7(var7, _, _) 
+FALSE
+5000
+93 - Query 93
+assign ass9, ass3, ass1, ass4; if if8; read rea7; variable var7; print pri4; 
+Select BOOLEAN  pattern ass9(x, "y+6")  pattern ass4(_, "4-z")  such that Follows(_, _)  pattern ass3(var7, _)  such that Calls*("y", _)  pattern if8(z, _, _) with pri4.varName="y"  pattern ass1(z, "2+10") with "z"=rea7.varName  such that Modifies(_, "z") 
+FALSE
+5000
+94 - Query 94
+procedure pro1, pro7, pro4, pro9, pro2; read rea10; assign ass7; constant con3; while whi4, whi8; print pri10; 
+Select BOOLEAN  such that Calls("y", "y")  such that Follows(_, _)  such that Next*(_, whi4)  such that Modifies(_, "z") with pro1.procName=pri10.varName  pattern ass7(_, _)  such that Follows*(whi8, _)  such that Calls(pro2, pro4) with con3.value=rea10.stmt# with pro9.procName=pro7.procName 
+FALSE
+5000
+95 - Query 95
+if if5; stmt stm7; assign ass7; while whi1; call cal1; 
+Select BOOLEAN  such that Follows(_, 3)  such that Parent*(1, 8)  such that Affects(_, ass7)  pattern whi1(_, _)  such that Modifies("y", "z")  such that Affects*(_, stm7)  pattern if5(_, _, _) with cal1.procName="x" with 8=2  such that Affects(_, _) 
+FALSE
+5000
+96 - Query 96
+assign ass10, ass4; while whi9; call cal2, cal7; print pri2, pri1; constant con3; variable var9, var1, var3; 
+Select BOOLEAN  pattern ass10(var1, "4/z")  such that Parent(1, cal2)  pattern whi9(var3, _) with pri2.stmt#=con3.value  pattern ass4(y, _) with var1.varName="z"  pattern ass10(var9, _"z-10"_)  pattern ass10(var9, "8/8") with pri1.stmt#=10 with "z"=cal7.procName 
+FALSE
+5000
+97 - Query 97
+assign ass8, ass3, ass7, ass2; variable var9; if if6, if3; procedure pro7; 
+Select BOOLEAN  pattern if3(_, _, _) with ass2.stmt#=10  such that Calls(pro7, pro7)  pattern ass8(x, _"10+x"_)  pattern if6(_, _, _)  pattern ass3(_, _"4*y"_)  pattern ass3(var9, _"x/y"_)  pattern if6(_, _, _) with ass2.stmt#=8  such that Modifies(ass7, _) 
+FALSE
+5000
+98 - Query 98
+print pri10; variable var8; stmt stm6; assign ass10; 
+Select BOOLEAN  such that Next*(_, 10)  pattern ass10(_, _)  such that Next(stm6, _)  such that Affects(_, ass10)  such that Follows(3, pri10)  such that Modifies(_, var8) with 4=2  such that Follows*(9, _)  such that Affects*(_, _)  such that Follows*(6, _) 
+FALSE
+5000
+99 - Query 99
+assign ass9, ass10, ass4; print pri1; if if6, if3; procedure pro2, pro4; 
+Select BOOLEAN  such that Calls("x", "z")  such that Parent(2, ass10) with if3.stmt#=2 with "z"=pri1.varName  pattern ass4(z, "(x-6)*4")  pattern ass9(y, _)  such that Parent*(7, 9) with "z"=pro2.procName  pattern if6(_, _, _)  such that Calls(_, pro4) 
+FALSE
+5000

@@ -1,0 +1,235 @@
+1 - procedure.procName 1
+procedure p;
+Select p with p.procName = "y3"
+y3
+5000
+2 - procedure.procName 1 rev
+procedure p;
+Select p with "y3" = p.procName
+y3
+5000
+3 - call.procName 1
+call c;
+Select c with c.procName = "y2"
+3
+5000
+4 - call.procName 1 rev
+call c;
+Select c with  "y2" = c.procName
+3
+5000
+5 - variable.varName 1
+variable v;
+Select v with v.varName = "cs1010"
+cs1010
+5000
+6 - variable.varName 1 rev
+variable v;
+Select v with "cs1010" = v.varName
+cs1010
+5000
+7 - read.varName 1
+read r;
+Select r with r.varName="cs2030"
+19
+5000
+8 - read.varName 1 rev
+read r;
+Select r with "cs2030"=r.varName
+19
+5000
+9 - print.varName 1
+print p;
+Select p with p.varName="cs3230"
+39
+5000
+10 - print.varName 1 rev
+print p;
+Select p with "cs3230"=p.varName
+39
+5000
+11 - constant.value 1
+constant c;
+Select c with c.value = 3
+3
+5000
+12 - constant.value 1 rev
+constant c;
+Select c with 3 = c.value
+3
+5000
+13 - stmt.stmt# 1
+stmt s;
+Select s with s.stmt# = 3
+3
+5000
+14 - stmt.stmt# 1 rev
+stmt s;
+Select s with 3 = s.stmt#
+3
+5000
+15 - read.stmt# 1
+read r;
+Select r with r.stmt# = 19
+19
+5000
+16 - read.stmt# 1 rev
+read r;
+Select r with 19 = r.stmt#
+19
+5000
+17 - print.stmt# 1
+print p;
+Select p with p.stmt# = 6
+6
+5000
+18 - print.stmt# 1 rev
+print p;
+Select p with 6 = p.stmt#
+6
+5000
+19 - call.stmt# 1
+call call;
+Select call with call.stmt# = 3
+3
+5000
+20 - call.stmt# 1 rev
+call call;
+Select call with 3 = call.stmt#
+3
+5000
+21 - while.stmt# 1
+while w;
+Select w with w.stmt# = 14
+14
+5000
+22 - while.stmt# 1 rev
+while w;
+Select w with 14 = w.stmt#
+14
+5000
+23 - if.stmt# 1
+if if;
+Select if with if.stmt# = 35
+35
+5000
+24 - if.stmt# 1 rev
+if if;
+Select if with 35 = if.stmt#
+35
+5000
+25 - assign.stmt# 1
+assign a; 
+Select a with a.stmt# = 1
+1
+5000
+26 - assign.stmt# 1 rev
+assign a; 
+Select a with 1= a.stmt#
+1
+5000
+27 - with int = int
+assign a; 
+Select a with 1 = 1
+1, 2, 4, 7, 9, 10, 11, 20, 21, 23, 24, 25, 26, 28, 30, 32, 33, 34, 36, 37, 38
+5000
+28 - with int = int
+read r; 
+Select r.varName with 1 = 2
+
+5000
+29 - with int = varname
+assign a; 
+Select BOOLEAN with 1 = "cs1010"
+FALSE
+5000
+30 - with varname = varname
+read r; 
+Select r.varName with "unk" = "unk"
+cs2030, cs2040
+5000
+31 - procedure.procName 2
+procedure pc; print p;
+Select pc.procName with pc.procName = p.varName
+y2
+5000
+32 - call.procName 2
+call c, c1;
+Select <c, c1> with c.procName = c1.procName
+3 3, 29 29
+5000
+33 - variable.varName 2
+variable v; read r;
+Select v with v.varName = r.varName
+cs2030, cs2040
+5000
+34 - read.varName 2
+read r;
+Select r with r.varName=r.stmt#
+
+5000
+35 - print.varName 2
+print p; read r;
+Select p with p.varName=r.varName
+
+5000
+36 - constant.value 2
+constant c;stmt s;
+Select c with c.value = s.stmt#
+1, 2, 3, 8, 10, 36
+5000
+37 - stmt.stmt# 2
+stmt s; constant c;
+Select s with s.stmt# = c.value
+1, 2, 3, 8, 10, 36
+5000
+38 - read.stmt# 2
+read r;
+Select r with r.stmt# = p.stmt#
+
+5000
+39 - print.stmt# 2
+print p;
+Select p with p.stmt# = c.stmt#
+
+5000
+40 - call.stmt# 2
+call call;
+Select call with call.stmt# = "cs1010"
+
+5000
+41 - while.stmt# 2
+while w;
+Select w with w.stmt# = 0
+
+5000
+42 - if.stmt# 2
+if if; variable v;
+Select if with if.stmt# = v.stmt#
+
+5000
+43 - assign.stmt# 2
+assign a; constant c;
+Select a with a.stmt# = c.value
+1, 2, 10, 36
+5000
+44 - syntax error 1
+stmt s;
+Select s with 3 = s.stmt# = 3
+
+5000
+45 - syntax error 2
+stmt s;
+Select s with 3 == 3
+
+5000
+44 - explicit and
+procedure pc; print p; stmt s;
+Select <pc.procName, p.stmt#> with pc.procName = p.varName and p.stmt# = s.stmt#
+y2 8
+5000
+45 - 2 with clauses
+procedure pc; print p; stmt s;
+Select <p, p, pc> with pc.procName = p.varName with p.stmt# = s.stmt#
+8 8 y2
+5000
