@@ -1,5 +1,7 @@
 #include "SP/Node/StatementNode.h"
 
+#include <string>
+
 #include "Common/Validator.h"
 #include "SP/Node/AssignmentNode.h"
 #include "SP/Node/CallNode.h"
@@ -19,8 +21,7 @@ unique_ptr<SP::Node::StatementNode> SP::Node::StatementNode::parseStatement(Lexe
 	string token = lex.readToken();
 	string lookahead = lex.peekToken();
 	if (lookahead == "=") {
-		unique_ptr<AssignmentNode> node = AssignmentNode::parseAssignmentStatement(lex, statement_count, token);
-		return node;
+		return AssignmentNode::parseAssignmentStatement(lex, statement_count, token);
 	}
 	if (token == "read") {
 		return ReadNode::parseReadStatement(lex, statement_count);

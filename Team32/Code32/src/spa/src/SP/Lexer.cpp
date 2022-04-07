@@ -42,7 +42,7 @@ bool SP::Lexer::nextIf(const std::string& token) {
 }
 
 bool SP::Lexer::nextIf(const std::initializer_list<std::string>& tokens) {
-	bool last;
+	bool last = false;
 	for (const std::string& token : tokens) {
 		last = nextIf(token);
 	}

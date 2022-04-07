@@ -1,5 +1,8 @@
 #include "SP/Node/IfNode.h"
 
+#include <utility>
+#include <vector>
+
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
 
 using namespace std;
