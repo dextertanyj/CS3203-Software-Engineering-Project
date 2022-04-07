@@ -1,6 +1,7 @@
 #ifndef SPA_SRC_PKB_ASSIGNSTORE_H
 #define SPA_SRC_PKB_ASSIGNSTORE_H
 
+#include <cassert>
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
@@ -19,14 +20,15 @@ public:
 	StmtInfoPtrSet getStmtsWithPattern(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match);
 	StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& var_name);
 	StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression, bool is_exact_match);
-	unordered_map<VarRef, unordered_set<PKB::AssignRelation>> getAssignMap();
+	unordered_map<VarRef, unordered_set<PKB::AssignRelation, PKB::AssignRelation::hasher>> getAssignMap();
 	void clear();
 
 private:
 	static bool compareExpressions(const Common::ExpressionProcessor::Expression& expression,
 	                               const Common::ExpressionProcessor::Expression& op_tree, bool is_exact_match);
-	unordered_map<VarRef, unordered_set<PKB::AssignRelation>> var_to_relation_store;
-	unordered_map<Common::ExpressionProcessor::Expression, unordered_set<PKB::AssignRelation>> exp_to_relation_store;
+	unordered_map<VarRef, unordered_set<PKB::AssignRelation, PKB::AssignRelation::hasher>> var_to_relation_store;
+	unordered_map<Common::ExpressionProcessor::Expression, unordered_set<PKB::AssignRelation, PKB::AssignRelation::hasher>>
+		exp_to_relation_store;
 };
 
 #endif

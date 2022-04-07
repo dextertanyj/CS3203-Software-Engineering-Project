@@ -77,6 +77,18 @@ typedef struct AssignRelation {
 	shared_ptr<StmtInfo> node;
 	VarRef variable;
 	Common::EP::Expression expression;
+	inline bool operator==(const AssignRelation& other) const {
+		return node == other.node && variable == other.variable && expression == other.expression;
+	}
+	struct hasher {
+		inline size_t operator()(const PKB::AssignRelation& assign_relation) const {
+			std::size_t seed = 0;
+			combineHash(seed, assign_relation.node);
+			combineHash(seed, assign_relation.variable);
+			combineHash(seed, assign_relation.expression);
+			return seed;
+		}
+	};
 } AssignRelation;
 
 namespace Types {};

@@ -72,7 +72,7 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) 
 
 StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression,
                                                               bool is_exact_match) {
-	unordered_set<PKB::AssignRelation> assign_relations;
+	unordered_set<PKB::AssignRelation, PKB::AssignRelation::hasher> assign_relations;
 	for (auto& expression_to_relation : exp_to_relation_store) {
 		if (compareExpressions(expression_to_relation.first, expression, is_exact_match)) {
 			assign_relations.insert(expression_to_relation.second.begin(), expression_to_relation.second.end());
@@ -99,4 +99,6 @@ void PKB::AssignStore::clear() {
 	exp_to_relation_store.clear();
 }
 
-unordered_map<VarRef, unordered_set<PKB::AssignRelation>> PKB::AssignStore::getAssignMap() { return var_to_relation_store; }
+unordered_map<VarRef, unordered_set<PKB::AssignRelation, PKB::AssignRelation::hasher>> PKB::AssignStore::getAssignMap() {
+	return var_to_relation_store;
+}
