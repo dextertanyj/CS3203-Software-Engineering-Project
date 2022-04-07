@@ -41,7 +41,7 @@ x 1, y 2
 9 - print.varName 1
 print p;
 Select p.varName
-x y
+x, y
 5000
 10 - print.varName 2
 print p;
