@@ -13,7 +13,7 @@ public:
 	[[nodiscard]] Common::EP::Expression extract() const;
 	[[nodiscard]] bool equals(const std::shared_ptr<ExpressionNode>& object) const;
 
-	static std::unique_ptr<ExpressionNode> parseExpression(Lexer& lex, Common::EP::ExpressionType type);
+	static std::unique_ptr<ExpressionNode> parse(Lexer& lex, Common::EP::ExpressionType type);
 
 private:
 	Common::EP::Expression expression;

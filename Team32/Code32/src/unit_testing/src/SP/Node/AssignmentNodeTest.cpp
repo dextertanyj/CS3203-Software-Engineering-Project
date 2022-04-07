@@ -51,13 +51,13 @@ TEST_CASE("SP::Node::AssignmentNode::equals") {
 	}
 }
 
-TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement") {
+TEST_CASE("SP::Node::AssignmentNode::parse") {
 	StmtRef statement_count = 1;
 	SP::Lexer lex;
 
 	SECTION("Valid Token Test") {
 		lex.initialize("= (x + 6);");
-		unique_ptr<AssignmentNode> node = AssignmentNode::parseAssignmentStatement(lex, statement_count, "count");
+		unique_ptr<AssignmentNode> node = AssignmentNode::parse(lex, statement_count, "count");
 		unique_ptr<VariableNode> assignee = make_unique<VariableNode>("count");
 		unique_ptr<ExpressionNode> expression =
 			make_unique<ExpressionNode>(SP::TestUtilities::createArithmeticExpression(vector<string>({"(", "x", "+", "6", ")", ";"})));
@@ -69,7 +69,7 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement") {
 
 	SECTION("Complex Valid Token Test") {
 		lex.initialize("= (((x + 6) * (3 - (8))));");
-		unique_ptr<AssignmentNode> node = AssignmentNode::parseAssignmentStatement(lex, statement_count, "count");
+		unique_ptr<AssignmentNode> node = AssignmentNode::parse(lex, statement_count, "count");
 		unique_ptr<VariableNode> assignee = make_unique<VariableNode>("count");
 		unique_ptr<ExpressionNode> expression = make_unique<ExpressionNode>(
 			SP::TestUtilities::createArithmeticExpression(vector<string>({"(", "x", "+", "6", ")", "*", "(", "3", "-", "8", ")", ";"})));
@@ -81,28 +81,28 @@ TEST_CASE("SP::Node::AssignmentNode::parseAssignmentStatement") {
 
 	SECTION("Missing Token Test") {
 		lex.initialize("(x + 6);");
-		REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count"), SP::TokenizationException);
+		REQUIRE_THROWS_AS(AssignmentNode::parse(lex, statement_count, "count"), SP::TokenizationException);
 		REQUIRE_EQUALS(statement_count, 1);
 		REQUIRE_EQUALS(lex.peekToken(), "(");
 	}
 
 	SECTION("Missing Terminal Token Test") {
 		lex.initialize("= (x + 6)");
-		REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count"), SP::TokenizationException);
+		REQUIRE_THROWS_AS(AssignmentNode::parse(lex, statement_count, "count"), SP::TokenizationException);
 		REQUIRE_EQUALS(statement_count, 1);
 		REQUIRE_EQUALS(lex.peekToken(), "");
 	}
 
 	SECTION("Invalid Format Test") {
 		lex.initialize("== (x + 6);");
-		REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count"), SP::TokenizationException);
+		REQUIRE_THROWS_AS(AssignmentNode::parse(lex, statement_count, "count"), SP::TokenizationException);
 		REQUIRE_EQUALS(statement_count, 1);
 		REQUIRE_EQUALS(lex.peekToken(), "==");
 	}
 
 	SECTION("Incomplete Brackets Test") {
 		lex.initialize("= ((x + 6);");
-		REQUIRE_THROWS_AS(AssignmentNode::parseAssignmentStatement(lex, statement_count, "count"),
+		REQUIRE_THROWS_AS(AssignmentNode::parse(lex, statement_count, "count"),
 		                  SP::ParseException);
 		REQUIRE_EQUALS(statement_count, 1);
 		REQUIRE_EQUALS(lex.peekToken(), "");
@@ -117,7 +117,7 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		lex.initialize("1;");
 		StmtRef statement_number = 1;
 		unique_ptr<ExpressionNode> expression =
-			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+			ExpressionNode::parse(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
@@ -137,7 +137,7 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		lex.initialize("B;");
 		StmtRef statement_number = 2;
 		unique_ptr<ExpressionNode> expression =
-			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+			ExpressionNode::parse(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
@@ -155,7 +155,7 @@ TEST_CASE("SP::Node::AssignmentNode::extract Test") {
 		lex.initialize("1 + B * 2 / C;");
 		StmtRef statement_number = 3;
 		unique_ptr<ExpressionNode> expression =
-			ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+			ExpressionNode::parse(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
 		AssignmentNode node = AssignmentNode(statement_number, make_unique<VariableNode>("A"), std::move(expression));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);

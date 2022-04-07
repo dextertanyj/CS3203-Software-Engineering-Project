@@ -43,18 +43,18 @@ bool SP::Node::IfNode::equals(const shared_ptr<StatementNode>& object) const {
 	       this->if_stmt_list->equals(other->if_stmt_list) && this->else_stmt_list->equals(other->else_stmt_list);
 }
 
-unique_ptr<SP::Node::IfNode> SP::Node::IfNode::parseIfStatement(Lexer& lex, StmtRef& statement_count) {
+unique_ptr<SP::Node::IfNode> SP::Node::IfNode::parse(Lexer& lex, StmtRef& statement_count) {
 	StmtRef statement_index = statement_count++;
 	lex.nextIf(OPEN_PARENTHESES);
-	unique_ptr<ExpressionNode> condition = ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Logical);
+	unique_ptr<ExpressionNode> condition = ExpressionNode::parse(lex, Common::ExpressionProcessor::ExpressionType::Logical);
 	lex.nextIf(CLOSE_PARENTHESES);
 	lex.nextIf(THEN);
 	lex.nextIf(OPEN_BRACES);
-	unique_ptr<StatementListNode> then_statements = StatementListNode::parseStatementList(lex, statement_count);
+	unique_ptr<StatementListNode> then_statements = StatementListNode::parse(lex, statement_count);
 	lex.nextIf(CLOSE_BRACES);
 	lex.nextIf(ELSE);
 	lex.nextIf(OPEN_BRACES);
-	unique_ptr<StatementListNode> else_statements = StatementListNode::parseStatementList(lex, statement_count);
+	unique_ptr<StatementListNode> else_statements = StatementListNode::parse(lex, statement_count);
 	lex.nextIf(CLOSE_BRACES);
 	return make_unique<IfNode>(statement_index, move(condition), move(then_statements), move(else_statements));
 }

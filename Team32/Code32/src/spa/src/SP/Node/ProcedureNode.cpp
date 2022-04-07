@@ -21,7 +21,7 @@ bool SP::Node::ProcedureNode::equals(const shared_ptr<ProcedureNode>& object) co
 	       this->end == object->end;
 }
 
-unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parseProcedure(Lexer& lex, StmtRef& statement_count) {
+unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parse(Lexer& lex, StmtRef& statement_count) {
 	lex.nextIf(PROCEDURE);
 	ProcRef name = lex.readToken();
 	if (!Common::Validator::validateName(name)) {
@@ -29,7 +29,7 @@ unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parseProcedure(Lexe
 	}
 	lex.nextIf(OPEN_BRACES);
 	StmtRef start = statement_count;
-	unique_ptr<StatementListNode> statement_list = StatementListNode::parseStatementList(lex, statement_count);
+	unique_ptr<StatementListNode> statement_list = StatementListNode::parse(lex, statement_count);
 	StmtRef end = statement_count - 1;
 	lex.nextIf(CLOSE_BRACES);
 	return make_unique<ProcedureNode>(name, move(statement_list), start, end);

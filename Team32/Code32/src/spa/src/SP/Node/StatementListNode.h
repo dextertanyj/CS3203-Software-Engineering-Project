@@ -17,7 +17,7 @@ public:
 	[[nodiscard]] bool equals(const std::shared_ptr<StatementListNode>& object) const;
 	[[nodiscard]] std::vector<std::shared_ptr<StatementNode>> getStatementList() const;
 
-	static std::unique_ptr<StatementListNode> parseStatementList(Lexer& lex, StmtRef& statement_count);
+	static std::unique_ptr<StatementListNode> parse(Lexer& lex, StmtRef& statement_count);
 
 private:
 	std::vector<std::shared_ptr<StatementNode>> stmt_list;

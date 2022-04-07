@@ -24,6 +24,8 @@ class StatementListNode;
 class StatementNode;
 class VariableNode;
 class WhileNode;
+template <StmtType T>
+class PrintReadNode;
 }
 
 #endif  // SPA_SRC_SP_NODE_NODE_H

@@ -14,8 +14,8 @@ public:
 	[[nodiscard]] bool equals(const std::shared_ptr<VariableNode>& other) const;
 	[[nodiscard]] VarRef extract() const;
 
-	static std::unique_ptr<VariableNode> parseVariable(Lexer& lex);
-	static std::unique_ptr<VariableNode> parseVariable(std::string token);
+	static std::unique_ptr<VariableNode> parse(Lexer& lex);
+	static std::unique_ptr<VariableNode> parse(std::string token);
 
 private:
 	VarRef name;

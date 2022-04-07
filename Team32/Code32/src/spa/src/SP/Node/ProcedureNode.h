@@ -14,7 +14,7 @@ public:
 	void extract(PKB::StorageUpdateInterface& pkb) const;
 	[[nodiscard]] bool equals(const std::shared_ptr<ProcedureNode>& object) const;
 
-	static std::unique_ptr<ProcedureNode> parseProcedure(Lexer& lex, StmtRef& statement_count);
+	static std::unique_ptr<ProcedureNode> parse(Lexer& lex, StmtRef& statement_count);
 
 private:
 	ProcRef name;

@@ -17,7 +17,7 @@ public:
 	[[nodiscard]] bool equals(const std::shared_ptr<ProgramNode>& object) const;
 	[[nodiscard]] std::vector<std::shared_ptr<ProcedureNode>> getProcedures() const;
 
-	static std::unique_ptr<ProgramNode> parseProgram(Lexer& lex, StmtRef& statement_count);
+	static std::unique_ptr<ProgramNode> parse(Lexer& lex, StmtRef& statement_count);
 
 private:
 	std::vector<std::shared_ptr<ProcedureNode>> procedures;
