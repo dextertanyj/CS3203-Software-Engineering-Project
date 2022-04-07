@@ -2,6 +2,7 @@
 #define SPA_SRC_PKB_CFG_NODEINTERFACE_H
 
 #include <algorithm>
+#include <cassert>
 #include <unordered_set>
 
 #include "PKB/PKB.h"

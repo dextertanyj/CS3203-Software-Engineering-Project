@@ -1,6 +1,8 @@
 #ifndef SPA_SRC_PKB_STATEMENTINFO_H
 #define SPA_SRC_PKB_STATEMENTINFO_H
 
+#include <cassert>
+
 #include "Common/TypeDefs.h"
 #include "PKB/PKB.h"
 
