@@ -338,23 +338,51 @@ inline QueryResult executeSynonymSynonym<ClauseType::AffectsT>(const StorageAdap
 
 // Optimized Executors
 
-inline set<StmtRef, greater<>> buildCandidates(const vector<string>& existing_results) {
-	set<StmtRef, greater<>> candidates;
+template <class Comparator>
+inline set<StmtRef, Comparator> getAndSortCandidates(const StorageAdapter& store, const ClauseArgument& arg) {
+	StmtInfoPtrSet statements = store.getStatements();
+	set<StmtRef, Comparator> result;
+	for (const auto& statement : statements) {
+		if (!Utilities::checkStmtTypeMatch(statement, arg.getSynonymType())) {
+			continue;
+		}
+		result.emplace(statement->getIdentifier());
+	}
+	return result;
+}
+
+template <class Comparator>
+inline set<StmtRef, Comparator> sortCandidates(const vector<string>& existing_results) {
+	set<StmtRef, Comparator> candidates;
 	transform(existing_results.begin(), existing_results.end(), inserter(candidates, candidates.end()),
 	          [](const auto& result) { return (stoull(result)); });
 	return candidates;
 }
 
-template <ClauseType T>
-QueryResult executeWildcardSynonymOptimized(const StorageAdapter& store, const QueryResult& existing_result, const ClauseArgument& rhs) {
-	if (!existing_result.containsSynonym(rhs.getSynonymSymbol())) {
-		return executeWildcardSynonym<T>(store, rhs);
+/**
+ * If existing intermediate results contain the synonym in the argument, convert the existing results and sort them.
+ * Otherwise, query the store for new candidates and sort them.
+ */
+template <class Comparator>
+inline set<StmtRef, Comparator> buildCandidates(const StorageAdapter& store, const QueryResult& existing_result,
+                                                const ClauseArgument& arg) {
+	set<StmtRef, Comparator> candidates;
+
+	if (!existing_result.containsSynonym(arg.getSynonymSymbol())) {
+		candidates = getAndSortCandidates<Comparator>(store, arg);
+	} else {
+		auto existing_results = existing_result.getSynonymResult(arg.getSynonymSymbol());
+		candidates = sortCandidates<Comparator>(existing_results);
 	}
 
-	auto existing_results = existing_result.getSynonymResult(rhs.getSynonymSymbol());
-	QueryResult result = QueryResult({rhs.getSynonymSymbol()});
-	auto candidates = buildCandidates(existing_results);
+	return candidates;
+}
 
+template <ClauseType T>
+QueryResult executeWildcardSynonymOptimized(const StorageAdapter& store, const QueryResult& existing_result, const ClauseArgument& rhs) {
+	set<StmtRef, less<>> candidates = buildCandidates<less<>>(store, existing_result, rhs);
+
+	QueryResult result = QueryResult({rhs.getSynonymSymbol()});
 	for (const auto& candidate : candidates) {
 		StmtInfoPtrSet rhs_set = store.getForwardStatements<T>(candidate);
 		if (!rhs_set.empty()) {
@@ -367,14 +395,9 @@ QueryResult executeWildcardSynonymOptimized(const StorageAdapter& store, const Q
 
 template <ClauseType T>
 QueryResult executeSynonymWildcardOptimized(const StorageAdapter& store, const QueryResult& existing_result, const ClauseArgument& lhs) {
-	if (!existing_result.containsSynonym(lhs.getSynonymSymbol())) {
-		return executeSynonymWildcard<T>(store, lhs);
-	}
+	set<StmtRef, greater<>> candidates = buildCandidates<greater<>>(store, existing_result, lhs);
 
-	auto existing_results = existing_result.getSynonymResult(lhs.getSynonymSymbol());
 	QueryResult result = QueryResult({lhs.getSynonymSymbol()});
-	auto candidates = buildCandidates(existing_results);
-
 	for (const auto& candidate : candidates) {
 		StmtInfoPtrSet rhs_set = store.getReverseStatements<T>(candidate);
 		if (!rhs_set.empty()) {
@@ -388,10 +411,9 @@ QueryResult executeSynonymWildcardOptimized(const StorageAdapter& store, const Q
 template <ClauseType T>
 static QueryResult executeSameSynonymSynonymOptimized(const StorageAdapter& store, const QueryResult& existing_result,
                                                       const ClauseArgument& synonym) {
-	auto existing_results = existing_result.getSynonymResult(synonym.getSynonymSymbol());
-	QueryResult result = QueryResult({synonym.getSynonymSymbol()});
-	auto candidates = buildCandidates(existing_results);
+	set<StmtRef, greater<>> candidates = buildCandidates<greater<>>(store, existing_result, synonym);
 
+	QueryResult result = QueryResult({synonym.getSynonymSymbol()});
 	for (const auto& candidate : candidates) {
 		StmtInfoPtrSet other_set = store.getReverseStatements<T>(candidate);
 		auto satisfied = any_of(other_set.begin(), other_set.end(), [&](const auto& info) { return info->getIdentifier() == candidate; });
@@ -406,40 +428,32 @@ static QueryResult executeSameSynonymSynonymOptimized(const StorageAdapter& stor
 template <ClauseType T>
 QueryResult executeSynonymSynonymOptimized(const StorageAdapter& store, const QueryResult& existing_result, const ClauseArgument& lhs,
                                            const ClauseArgument& rhs) {
-	bool has_left = existing_result.containsSynonym(lhs.getSynonymSymbol());
-	bool has_right = existing_result.containsSynonym(rhs.getSynonymSymbol());
-	if (!has_left && !has_right) {
-		return executeSynonymSynonym<T>(store, lhs, rhs);
-	}
-
 	if (lhs.getSynonymSymbol() == rhs.getSynonymSymbol()) {
 		return executeSameSynonymSynonymOptimized<T>(store, existing_result, lhs);
 	}
 
-	vector<string> existing_results;
-	QueryResult result;
-	ClauseArgument other;
-	StmtInfoPtrSet (StorageAdapter::*getter)(StmtRef) const;
+	bool has_left = existing_result.containsSynonym(lhs.getSynonymSymbol());
+	bool has_right = existing_result.containsSynonym(rhs.getSynonymSymbol());
 
-	if (has_left) {
-		other = rhs;
-		result = QueryResult({lhs.getSynonymSymbol(), rhs.getSynonymSymbol()});
-		existing_results = existing_result.getSynonymResult(lhs.getSynonymSymbol());
-		getter = &StorageAdapter::getReverseStatements<T>;
-	} else {
-		other = lhs;
-		result = QueryResult({rhs.getSynonymSymbol(), lhs.getSynonymSymbol()});
-		existing_results = existing_result.getSynonymResult(rhs.getSynonymSymbol());
-		getter = &StorageAdapter::getForwardStatements<T>;
+	// If the intermediate result contains the left synonym or does not contain the right synonym,
+	// we attempt to use the reverse direction query. This provides preferential use of the cache
+	// of the reverse direction query in the store.
+	if (has_left || !has_right) {
+		auto result = QueryResult({lhs.getSynonymSymbol(), rhs.getSynonymSymbol()});
+		auto candidates = buildCandidates<greater<>>(store, existing_result, lhs);
+		for (const auto& candidate : candidates) {
+			StmtInfoPtrSet rhs_set = store.getReverseStatements<T>(candidate);
+			checkSet(candidate, rhs, rhs_set, result);
+		}
+		return result;
 	}
 
-	set<StmtRef, greater<>> candidates = buildCandidates(existing_results);
-
+	auto result = QueryResult({rhs.getSynonymSymbol(), lhs.getSynonymSymbol()});
+	auto candidates = buildCandidates<less<>>(store, existing_result, rhs);
 	for (const auto& candidate : candidates) {
-		StmtInfoPtrSet other_set = (&store->*getter)(candidate);
-		checkSet(candidate, other, other_set, result);
+		StmtInfoPtrSet lhs_set = store.getForwardStatements<T>(candidate);
+		checkSet(candidate, lhs, lhs_set, result);
 	}
-
 	return result;
 }
 
