@@ -17,7 +17,7 @@ void SP::Processor::process(std::string source) {
 		std::cout << e.what() << std::endl;
 		exit(2);
 	} catch (const ExtractionException& e) {
-		cout << e.what() << endl;
+		std::cout << e.what() << std::endl;
 		exit(3);
 	}
 }
