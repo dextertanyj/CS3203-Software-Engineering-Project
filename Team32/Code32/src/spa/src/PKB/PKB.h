@@ -76,10 +76,10 @@ typedef struct WhileControlRelation {
 typedef struct AssignRelation {
 public:
 	AssignRelation(shared_ptr<StmtInfo> info, VarRef var, Common::EP::Expression expression)
-		: node(info), variable(var), expression(expression){};
-	shared_ptr<StmtInfo> getNode() const { return node; }
-	VarRef getVariable() const { return variable; }
-	Common::EP::Expression getExpression() const { return expression; }
+		: node(move(info)), variable(move(var)), expression(move(expression)){};
+	[[nodiscard]] shared_ptr<StmtInfo> getNode() const { return node; }
+	[[nodiscard]] VarRef getVariable() const { return variable; }
+	[[nodiscard]] Common::EP::Expression getExpression() const { return expression; }
 	inline bool operator==(const AssignRelation& other) const {
 		return node == other.node && variable == other.variable && expression == other.expression;
 	}
