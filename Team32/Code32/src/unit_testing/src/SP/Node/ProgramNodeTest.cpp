@@ -67,13 +67,13 @@ TEST_CASE("SP::Node::ProgramNode::addProcedureNode") {
 	}
 }
 
-TEST_CASE("SP::Node::ProgramNode::parseProgram") {
+TEST_CASE("SP::Node::ProgramNode::parse") {
 	SP::Lexer lex;
 	StmtRef statement_count = 1;
 
 	SECTION("Valid Token Test") {
 		lex.initialize("procedure A { read x; } procedure B { read y; }");
-		unique_ptr<ProgramNode> node = ProgramNode::parseProgram(lex, statement_count);
+		unique_ptr<ProgramNode> node = ProgramNode::parse(lex, statement_count);
 		shared_ptr<ProgramNode> expected = make_shared<ProgramNode>();
 		unique_ptr<StatementListNode> stmt_lst = SP::TestUtilities::createStatementList("read x; }", 1);
 		unique_ptr<ProcedureNode> procedure = make_unique<ProcedureNode>("A", move(stmt_lst), 1, 1);
@@ -88,7 +88,7 @@ TEST_CASE("SP::Node::ProgramNode::parseProgram") {
 
 	SECTION("0 procedure Test") {
 		lex.initialize(" ");
-		REQUIRE_THROWS_AS(ProgramNode::parseProgram(lex, statement_count), SP::TokenizationException);
+		REQUIRE_THROWS_AS(ProgramNode::parse(lex, statement_count), SP::TokenizationException);
 		REQUIRE_EQUALS(lex.peekToken(), "");
 	}
 }

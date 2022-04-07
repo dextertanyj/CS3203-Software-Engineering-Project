@@ -36,10 +36,10 @@ bool SP::Node::StatementListNode::equals(const shared_ptr<StatementListNode>& ob
 
 vector<shared_ptr<SP::Node::StatementNode>> SP::Node::StatementListNode::getStatementList() const { return this->stmt_list; }
 
-unique_ptr<SP::Node::StatementListNode> SP::Node::StatementListNode::parseStatementList(Lexer& lex, StmtRef& statement_count) {
+unique_ptr<SP::Node::StatementListNode> SP::Node::StatementListNode::parse(Lexer& lex, StmtRef& statement_count) {
 	unique_ptr<StatementListNode> statement_list = make_unique<StatementListNode>();
 	do {
-		statement_list->addStatementNode(StatementNode::parseStatement(lex, statement_count));
+		statement_list->addStatementNode(StatementNode::parse(lex, statement_count));
 	} while (lex.peekToken() != CLOSE_BRACES);
 	return statement_list;
 }

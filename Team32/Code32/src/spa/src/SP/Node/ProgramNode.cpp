@@ -26,10 +26,10 @@ bool SP::Node::ProgramNode::equals(const shared_ptr<ProgramNode>& object) const 
 
 vector<shared_ptr<SP::Node::ProcedureNode>> SP::Node::ProgramNode::getProcedures() const { return this->procedures; }
 
-unique_ptr<SP::Node::ProgramNode> SP::Node::ProgramNode::parseProgram(Lexer& lex, StmtRef& statement_count) {
+unique_ptr<SP::Node::ProgramNode> SP::Node::ProgramNode::parse(Lexer& lex, StmtRef& statement_count) {
 	unique_ptr<ProgramNode> program = make_unique<ProgramNode>();
 	do {
-		program->addProcedureNode(ProcedureNode::parseProcedure(lex, statement_count));
+		program->addProcedureNode(ProcedureNode::parse(lex, statement_count));
 	} while (!lex.peekToken().empty());
 	return program;
 }

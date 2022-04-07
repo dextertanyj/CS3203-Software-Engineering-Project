@@ -35,7 +35,7 @@ inline Common::EP::Expression createConditionalExpression(vector<string> str_lis
 inline unique_ptr<SP::Node::StatementListNode> createStatementList(string str, StmtRef statement_count) {
 	SP::Lexer lex;
 	lex.initialize(move(str));
-	unique_ptr<SP::Node::StatementListNode> node = SP::Node::StatementListNode::parseStatementList(lex, statement_count);
+	unique_ptr<SP::Node::StatementListNode> node = SP::Node::StatementListNode::parse(lex, statement_count);
 	return node;
 };
 }  // namespace SP::TestUtilities

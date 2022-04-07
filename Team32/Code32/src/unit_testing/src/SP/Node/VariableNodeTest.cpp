@@ -28,12 +28,12 @@ TEST_CASE("SP::Node::VariableNode::equals") {
 	}
 }
 
-TEST_CASE("SP::Node::VariableNode::parseVariable") {
+TEST_CASE("SP::Node::VariableNode::parse") {
 	SP::Lexer lex;
 
 	SECTION("Parse Valid Only Letters Name Token") {
 		lex.initialize("test");
-		shared_ptr<VariableNode> node = VariableNode::parseVariable(lex);
+		shared_ptr<VariableNode> node = VariableNode::parse(lex);
 		shared_ptr<VariableNode> other = make_shared<VariableNode>(VariableNode("test"));
 		REQUIRE(node->equals(other));
 		REQUIRE_EQUALS(lex.peekToken(), "");
@@ -41,11 +41,11 @@ TEST_CASE("SP::Node::VariableNode::parseVariable") {
 
 	SECTION("Parse Valid Name Token") {
 		lex.initialize("test123 t1est23");
-		shared_ptr<VariableNode> node = VariableNode::parseVariable(lex);
+		shared_ptr<VariableNode> node = VariableNode::parse(lex);
 		shared_ptr<VariableNode> other = make_shared<VariableNode>(VariableNode("test123"));
 		REQUIRE(node->equals(other));
 		REQUIRE_EQUALS(lex.peekToken(), "t1est23");
-		node = VariableNode::parseVariable(lex);
+		node = VariableNode::parse(lex);
 		other = make_shared<VariableNode>(VariableNode("t1est23"));
 		REQUIRE(node->equals(other));
 		REQUIRE_EQUALS(lex.peekToken(), "");
@@ -53,28 +53,28 @@ TEST_CASE("SP::Node::VariableNode::parseVariable") {
 
 	SECTION("Parse Invalid Name Token") {
 		lex.initialize("123test");
-		REQUIRE_THROWS_AS(VariableNode::parseVariable(lex), SP::ParseException);
+		REQUIRE_THROWS_AS(VariableNode::parse(lex), SP::ParseException);
 		REQUIRE_EQUALS(lex.peekToken(), "test");
 	}
 
 	SECTION("Parse Valid Only Letters Name String") {
-		shared_ptr<VariableNode> node = VariableNode::parseVariable("test");
+		shared_ptr<VariableNode> node = VariableNode::parse("test");
 		shared_ptr<VariableNode> other = make_shared<VariableNode>(VariableNode("test"));
 		REQUIRE(node->equals(other));
 	}
 
 	SECTION("Parse Valid Name String") {
-		shared_ptr<VariableNode> node = VariableNode::parseVariable("test123");
+		shared_ptr<VariableNode> node = VariableNode::parse("test123");
 		shared_ptr<VariableNode> other = make_shared<VariableNode>(VariableNode("test123"));
 		REQUIRE(node->equals(other));
-		node = VariableNode::parseVariable("t1est23");
+		node = VariableNode::parse("t1est23");
 		other = make_shared<VariableNode>(VariableNode("t1est23"));
 		REQUIRE(node->equals(other));
 	}
 
 	SECTION("Parse Invalid Name String") {
-		REQUIRE_THROWS_AS(VariableNode::parseVariable("123test"), SP::ParseException);
-		REQUIRE_THROWS_AS(VariableNode::parseVariable("test_123"), SP::ParseException);
+		REQUIRE_THROWS_AS(VariableNode::parse("123test"), SP::ParseException);
+		REQUIRE_THROWS_AS(VariableNode::parse("test_123"), SP::ParseException);
 	}
 }
 

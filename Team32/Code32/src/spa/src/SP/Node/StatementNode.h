@@ -15,7 +15,7 @@ public:
 	[[nodiscard]] virtual bool equals(const std::shared_ptr<StatementNode>& object) const = 0;
 	virtual ~StatementNode() = default;
 
-	static std::unique_ptr<StatementNode> parseStatement(Lexer& lex, StmtRef& statement_count);
+	static std::unique_ptr<StatementNode> parse(Lexer& lex, StmtRef& statement_count);
 
 protected:
 	[[nodiscard]] StmtRef getStmtRef() const;

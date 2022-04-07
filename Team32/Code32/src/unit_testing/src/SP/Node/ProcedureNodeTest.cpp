@@ -51,13 +51,13 @@ TEST_CASE("SP::Node::ProcedureNode::equals") {
 	}
 }
 
-TEST_CASE("SP::Node::ProcedureNode::parseProcedure") {
+TEST_CASE("SP::Node::ProcedureNode::parse") {
 	SP::Lexer lex;
 	StmtRef statement_count = 1;
 
 	SECTION("Valid Token Test") {
 		lex.initialize("procedure testName { count = 0; }");
-		unique_ptr<ProcedureNode> node = ProcedureNode::parseProcedure(lex, statement_count);
+		unique_ptr<ProcedureNode> node = ProcedureNode::parse(lex, statement_count);
 		unique_ptr<StatementListNode> stmt_lst_2 = SP::TestUtilities::createStatementList("count = 0; }", 1);
 		shared_ptr<ProcedureNode> expected = make_shared<ProcedureNode>("testName", move(stmt_lst_2), 1, 1);
 		REQUIRE(node->equals(expected));
@@ -67,7 +67,7 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure") {
 
 	SECTION("Keyword As Name Test") {
 		lex.initialize("procedure procedure { count = 0; }");
-		unique_ptr<ProcedureNode> node = ProcedureNode::parseProcedure(lex, statement_count);
+		unique_ptr<ProcedureNode> node = ProcedureNode::parse(lex, statement_count);
 		unique_ptr<StatementListNode> stmt_lst_2 = SP::TestUtilities::createStatementList("count = 0; }", 1);
 		shared_ptr<ProcedureNode> expected = make_shared<ProcedureNode>("procedure", move(stmt_lst_2), 1, 1);
 		REQUIRE(node->equals(expected));
@@ -77,7 +77,7 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure") {
 
 	SECTION("Valid Complex Token Test") {
 		lex.initialize("procedure testName { while ((x != 0) && (y != 0)) { cenX = cenX + 1; call readPoint; }}");
-		unique_ptr<ProcedureNode> node = ProcedureNode::parseProcedure(lex, statement_count);
+		unique_ptr<ProcedureNode> node = ProcedureNode::parse(lex, statement_count);
 		unique_ptr<StatementListNode> stmt_lst_2 =
 			SP::TestUtilities::createStatementList("while ((x != 0) && (y != 0)) { cenX = cenX + 1; call readPoint; }}", 1);
 		shared_ptr<ProcedureNode> expected = make_shared<ProcedureNode>("testName", move(stmt_lst_2), 1, 3);
@@ -88,49 +88,49 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure") {
 
 	SECTION("Invalid Grammar Test") {
 		lex.initialize("procedures testName { cenX = 0; }");
-		REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::TokenizationException);
+		REQUIRE_THROWS_AS(ProcedureNode::parse(lex, statement_count), SP::TokenizationException);
 		REQUIRE_EQUALS(statement_count, 1);
 		REQUIRE_EQUALS(lex.peekToken(), "procedures");
 	}
 
 	SECTION("Invalid Name Test") {
 		lex.initialize("procedure 1testName { cenX = 0; }");
-		REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::ParseException);
+		REQUIRE_THROWS_AS(ProcedureNode::parse(lex, statement_count), SP::ParseException);
 		REQUIRE_EQUALS(statement_count, 1);
 		REQUIRE_EQUALS(lex.peekToken(), "testName");
 	}
 
 	SECTION("Missing Opening Brackets Token Test") {
 		lex.initialize("procedure testName cenX = 0; }");
-		REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::TokenizationException);
+		REQUIRE_THROWS_AS(ProcedureNode::parse(lex, statement_count), SP::TokenizationException);
 		REQUIRE_EQUALS(statement_count, 1);
 		REQUIRE_EQUALS(lex.peekToken(), "cenX");
 	}
 
 	SECTION("Missing Closing Brackets Token Test") {
 		lex.initialize("procedure testName { cenX = 0; ");
-		REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::ParseException);
+		REQUIRE_THROWS_AS(ProcedureNode::parse(lex, statement_count), SP::ParseException);
 		REQUIRE_EQUALS(statement_count, 2);
 		REQUIRE_EQUALS(lex.peekToken(), "");
 	}
 
 	SECTION("0 StmtLst Test") {
 		lex.initialize("procedure testName {    } ");
-		REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::ParseException);
+		REQUIRE_THROWS_AS(ProcedureNode::parse(lex, statement_count), SP::ParseException);
 		REQUIRE_EQUALS(statement_count, 1);
 		REQUIRE(lex.peekToken().empty());
 	}
 
 	SECTION("Wrong Brackets Type Test") {
 		lex.initialize("procedure testName ( cenX = 0; ) ");
-		REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::TokenizationException);
+		REQUIRE_THROWS_AS(ProcedureNode::parse(lex, statement_count), SP::TokenizationException);
 		REQUIRE_EQUALS(statement_count, 1);
 		REQUIRE_EQUALS(lex.peekToken(), "(");
 	}
 
 	SECTION("Invalid Brackets Test") {
 		lex.initialize("procedure testName { (cenX = 0;) } ");
-		REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::ParseException);
+		REQUIRE_THROWS_AS(ProcedureNode::parse(lex, statement_count), SP::ParseException);
 		REQUIRE_EQUALS(statement_count, 1);
 		REQUIRE_EQUALS(lex.peekToken(), "cenX");
 	}

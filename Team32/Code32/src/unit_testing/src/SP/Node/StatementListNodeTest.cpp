@@ -102,12 +102,12 @@ TEST_CASE("SP::Node::StatementListNode::addStatementNode") {
 	}
 }
 
-TEST_CASE("SP::Node::StatementListNode::parseStatementList") {
+TEST_CASE("SP::Node::StatementListNode::parse") {
 	SP::Lexer lex;
 	StmtRef statement_count = 1;
 	SECTION("Valid Token Test") {
 		lex.initialize("print flag; read x; }");
-		unique_ptr<StatementListNode> statement_list_node = StatementListNode::parseStatementList(lex, statement_count);
+		unique_ptr<StatementListNode> statement_list_node = StatementListNode::parse(lex, statement_count);
 		shared_ptr<StatementListNode> other = make_shared<StatementListNode>();
 		unique_ptr<PrintReadNode<StmtType::Print>> print_node =
 			make_unique<PrintReadNode<StmtType::Print>>(1, make_unique<VariableNode>("flag"));
@@ -121,7 +121,7 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList") {
 
 	SECTION("Different Statement Number Test") {
 		lex.initialize("print flag; read x; }");
-		unique_ptr<StatementListNode> statement_list_node = StatementListNode::parseStatementList(lex, statement_count);
+		unique_ptr<StatementListNode> statement_list_node = StatementListNode::parse(lex, statement_count);
 		shared_ptr<StatementListNode> other = make_shared<StatementListNode>();
 		unique_ptr<PrintReadNode<StmtType::Print>> print_node =
 			make_unique<PrintReadNode<StmtType::Print>>(1, make_unique<VariableNode>("flag"));
@@ -135,21 +135,21 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList") {
 
 	SECTION("Missing Token Test") {
 		lex.initialize("print x read y; }");
-		REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::TokenizationException);
+		REQUIRE_THROWS_AS(StatementListNode::parse(lex, statement_count), SP::TokenizationException);
 		REQUIRE_EQUALS(statement_count, 1);
 		REQUIRE_EQUALS(lex.peekToken(), "read");
 	}
 
 	SECTION("Extra Token Test") {
 		lex.initialize("print x ;; print y; }");
-		REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::ParseException);
+		REQUIRE_THROWS_AS(StatementListNode::parse(lex, statement_count), SP::ParseException);
 		REQUIRE_EQUALS(statement_count, 2);
 		REQUIRE_EQUALS(lex.peekToken(), "print");
 	}
 
 	SECTION("Invalid Keyword Test") {
 		lex.initialize("prints x ; }");
-		REQUIRE_THROWS_AS(StatementListNode::parseStatementList(lex, statement_count), SP::ParseException);
+		REQUIRE_THROWS_AS(StatementListNode::parse(lex, statement_count), SP::ParseException);
 		REQUIRE_EQUALS(statement_count, 1);
 		REQUIRE_EQUALS(lex.peekToken(), "x");
 	}

@@ -35,13 +35,13 @@ bool SP::Node::WhileNode::equals(const shared_ptr<StatementNode>& object) const 
 	       this->stmt_list->equals(other->stmt_list);
 }
 
-unique_ptr<SP::Node::WhileNode> SP::Node::WhileNode::parseWhileStatement(Lexer& lex, StmtRef& statement_count) {
+unique_ptr<SP::Node::WhileNode> SP::Node::WhileNode::parse(Lexer& lex, StmtRef& statement_count) {
 	StmtRef statement_index = statement_count++;
 	lex.nextIf(OPEN_PARENTHESES);
-	unique_ptr<ExpressionNode> condition = ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Logical);
+	unique_ptr<ExpressionNode> condition = ExpressionNode::parse(lex, Common::ExpressionProcessor::ExpressionType::Logical);
 	lex.nextIf(CLOSE_PARENTHESES);
 	lex.nextIf(OPEN_BRACES);
-	unique_ptr<StatementListNode> statements = StatementListNode::parseStatementList(lex, statement_count);
+	unique_ptr<StatementListNode> statements = StatementListNode::parse(lex, statement_count);
 	lex.nextIf(CLOSE_BRACES);
 	return make_unique<WhileNode>(statement_index, move(condition), move(statements));
 }

@@ -21,11 +21,11 @@ SP::Node::StatementNode::StatementNode(StmtRef stmt_no) : stmt_no(stmt_no) {}
 
 StmtRef SP::Node::StatementNode::getStmtRef() const { return stmt_no; }
 
-unique_ptr<SP::Node::StatementNode> SP::Node::StatementNode::parseStatement(Lexer& lex, StmtRef& statement_count) {
+unique_ptr<SP::Node::StatementNode> SP::Node::StatementNode::parse(Lexer& lex, StmtRef& statement_count) {
 	string token = lex.readToken();
 	string lookahead = lex.peekToken();
 	if (lookahead == EQUALS) {
-		return AssignmentNode::parseAssignmentStatement(lex, statement_count, token);
+		return AssignmentNode::parse(lex, statement_count, token);
 	}
 	if (token == READ) {
 		return PrintReadNode<StmtType::Read>::parse(lex, statement_count);
@@ -34,13 +34,13 @@ unique_ptr<SP::Node::StatementNode> SP::Node::StatementNode::parseStatement(Lexe
 		return PrintReadNode<StmtType::Print>::parse(lex, statement_count);
 	}
 	if (token == CALL) {
-		return CallNode::parseCallStatement(lex, statement_count);
+		return CallNode::parse(lex, statement_count);
 	}
 	if (token == WHILE) {
-		return WhileNode::parseWhileStatement(lex, statement_count);
+		return WhileNode::parse(lex, statement_count);
 	}
 	if (token == IF) {
-		return IfNode::parseIfStatement(lex, statement_count);
+		return IfNode::parse(lex, statement_count);
 	}
 	throw SP::ParseException("Unknown statement type encountered: " + token + ".");
 }

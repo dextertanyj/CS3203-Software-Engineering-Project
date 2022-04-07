@@ -13,8 +13,7 @@ Common::ExpressionProcessor::Expression SP::Node::ExpressionNode::extract() cons
 
 bool SP::Node::ExpressionNode::equals(const shared_ptr<ExpressionNode>& object) const { return this->expression == object->expression; }
 
-unique_ptr<SP::Node::ExpressionNode> SP::Node::ExpressionNode::parseExpression(Lexer& lex,
-                                                                               Common::ExpressionProcessor::ExpressionType type) {
+unique_ptr<SP::Node::ExpressionNode> SP::Node::ExpressionNode::parse(Lexer& lex, Common::ExpressionProcessor::ExpressionType type) {
 	auto parser = Common::ExpressionProcessor::ExpressionParser{lex, type};
 	try {
 		auto expression = parser.parse();

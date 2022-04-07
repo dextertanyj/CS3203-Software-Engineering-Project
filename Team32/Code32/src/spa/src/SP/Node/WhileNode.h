@@ -15,7 +15,7 @@ public:
 	StmtRef extract(PKB::StorageUpdateInterface& pkb) const override;
 	[[nodiscard]] bool equals(const std::shared_ptr<StatementNode>& object) const override;
 
-	static std::unique_ptr<WhileNode> parseWhileStatement(Lexer& lex, StmtRef& statement_count);
+	static std::unique_ptr<WhileNode> parse(Lexer& lex, StmtRef& statement_count);
 
 private:
 	std::shared_ptr<ExpressionNode> cond_expr;
