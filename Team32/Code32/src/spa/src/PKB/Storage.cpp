@@ -318,7 +318,7 @@ unordered_map<StmtRef, shared_ptr<StmtInfo>> PKB::Storage::getStmtInfoMap() {
 	unordered_set<shared_ptr<StatementInfo>> set = statement_store.getAll();
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> map;
 	for (const auto& item : set) {
-		map.insert({item->getIdentifier(), item});
+		map.emplace(item->getIdentifier(), item);
 	}
 	return map;
 }

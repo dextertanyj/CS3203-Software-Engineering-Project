@@ -22,7 +22,7 @@ void PKB::TopologicalSort<TInfo>::sort(const TStore& truth_store,
 		TIdent ident = info->getIdentifier();
 		unordered_set<shared_ptr<TInfo>> incoming_edges = transitive_store.getForward(ident);
 		unordered_set<shared_ptr<TInfo>> outgoing_edges = transitive_store.getReverse(ident);
-		edges.insert({info, {incoming_edges, outgoing_edges}});
+		edges.emplace(info, pair{incoming_edges, outgoing_edges});
 	}
 	// Topological sort using Kahn's Algorithm.
 	queue<shared_ptr<TInfo>> next;

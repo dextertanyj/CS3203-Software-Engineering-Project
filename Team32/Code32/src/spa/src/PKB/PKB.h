@@ -2,6 +2,7 @@
 #define SPA_SRC_PKB_PKB_H
 
 #include <memory>
+#include <stdexcept>
 
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/ExpressionProcessor/Hash.h"
@@ -71,6 +72,21 @@ struct WhileControlRelation {
 	                     const VarRefSet& /*var_set*/) {
 		return statement->getType() == StmtType::While;
 	}
+};
+
+struct AssignRelation {
+	shared_ptr<StmtInfo> node;          // NOLINT(misc-non-private-member-variables-in-classes)
+	VarRef variable;                    // NOLINT(misc-non-private-member-variables-in-classes)
+	Common::EP::Expression expression;  // NOLINT(misc-non-private-member-variables-in-classes)
+	inline bool operator==(const AssignRelation& other) const {
+		return node == other.node && variable == other.variable && expression == other.expression;
+	}
+
+	friend hash<AssignRelation>;
+};
+
+struct CallGraphException : public runtime_error {
+	using runtime_error::runtime_error;
 };
 
 namespace Types {};

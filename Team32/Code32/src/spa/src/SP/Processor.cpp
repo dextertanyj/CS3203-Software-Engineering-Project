@@ -16,5 +16,8 @@ void SP::Processor::process(std::string source) {
 	} catch (const ParseException& e) {
 		cout << e.what() << endl;
 		exit(2);
+	} catch (const ExtractionException& e) {
+		cout << e.what() << endl;
+		exit(3);
 	}
 }

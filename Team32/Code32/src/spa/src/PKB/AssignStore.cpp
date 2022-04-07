@@ -1,7 +1,6 @@
 #include "AssignStore.h"
 
 #include <algorithm>
-#include <utility>
 
 using namespace std;
 
@@ -11,20 +10,9 @@ void PKB::AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, const Va
 	assert(statement->getType() == StmtType::Assign);
 	assert(!variable.empty());
 
-	auto var_to_relation_iter = var_to_relation_store.find(variable);
-	const AssignRelation& relation = {statement, variable, expression};
-	if (var_to_relation_iter == var_to_relation_store.end()) {
-		var_to_relation_store.insert({variable, {relation}});
-	} else {
-		var_to_relation_iter->second.emplace(relation);
-	}
-
-	auto exp_to_relation_iter = exp_to_relation_store.find(expression);
-	if (exp_to_relation_iter == exp_to_relation_store.end()) {
-		exp_to_relation_store.insert({expression, {relation}});
-	} else {
-		exp_to_relation_iter->second.emplace(relation);
-	}
+	AssignRelation relation = {statement, variable, expression};
+	var_to_relation_store[variable].emplace(relation);
+	exp_to_relation_store[expression].emplace(relation);
 }
 
 bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match) {
@@ -33,7 +21,7 @@ bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::EP::E
 		return false;
 	}
 	return any_of(iter->second.begin(), iter->second.end(),
-	              [&](const AssignRelation& ar) { return compareExpressions(ar.expression, expression, is_exact_match); });
+	              [&](const AssignRelation& rel) { return compareExpressions(rel.expression, expression, is_exact_match); });
 }
 
 StmtInfoPtrSet PKB::AssignStore::getStmtsWithPattern(const VarRef& variable, const Common::EP::Expression& expression,
@@ -66,20 +54,23 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) 
 StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match) {
 	unordered_set<AssignRelation> assign_relations;
 	StmtInfoPtrVarRefSet result;
+
 	auto iter = exp_to_relation_store.find(expression);
 	if (is_exact_match && iter != exp_to_relation_store.end()) {
-		for_each(iter->second.begin(), iter->second.end(),
-		         [&](const AssignRelation& relation) { result.insert(make_pair(relation.node, relation.variable)); });
+		for_each(iter->second.begin(), iter->second.end(), [&](const AssignRelation& rel) { result.emplace(rel.node, rel.variable); });
 		return result;
 	}
+	if (is_exact_match) {  // Exact match and expression does not exist.
+		return {};
+	}
+
 	for (const auto& expression_to_relation : exp_to_relation_store) {
 		if (compareExpressions(expression_to_relation.first, expression, is_exact_match)) {
 			assign_relations.insert(expression_to_relation.second.begin(), expression_to_relation.second.end());
 		}
 	}
 	for (const auto& relation : assign_relations) {
-		pair<shared_ptr<StmtInfo>, VarRef> pair = make_pair(relation.node, relation.variable);
-		result.insert(pair);
+		result.emplace(relation.node, relation.variable);
 	}
 	return result;
 }
@@ -97,4 +88,4 @@ void PKB::AssignStore::clear() {
 	exp_to_relation_store.clear();
 }
 
-unordered_map<VarRef, unordered_set<PKB::AssignStore::AssignRelation>> PKB::AssignStore::getAssignMap() { return var_to_relation_store; }
+unordered_map<VarRef, unordered_set<PKB::AssignRelation>> PKB::AssignStore::getAssignMap() { return var_to_relation_store; }

@@ -112,7 +112,7 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getEnd(size_t graph_index) const {
 		return collectPreviousOfDummy(node);
 	}
 	assert(dynamic_pointer_cast<StatementNode>(node) != nullptr);
-	results.insert(dynamic_pointer_cast<StatementNode>(node)->getStmtInfo());
+	results.emplace(dynamic_pointer_cast<StatementNode>(node)->getStmtInfo());
 	return results;
 }
 
@@ -203,7 +203,7 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef index) const {
 			continue;
 		}
 		assert(dynamic_pointer_cast<StatementNode>(previous) != nullptr);
-		result_set.insert(dynamic_pointer_cast<StatementNode>(previous)->getStmtInfo());
+		result_set.emplace(dynamic_pointer_cast<StatementNode>(previous)->getStmtInfo());
 	}
 	return result_set;
 }
@@ -220,7 +220,7 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getNextNodes(StmtRef index) const {
 			continue;
 		}
 		assert(dynamic_pointer_cast<StatementNode>(next) != nullptr);
-		result_set.insert(dynamic_pointer_cast<StatementNode>(next)->getStmtInfo());
+		result_set.emplace(dynamic_pointer_cast<StatementNode>(next)->getStmtInfo());
 	}
 	return result_set;
 }
@@ -269,7 +269,7 @@ PKB::ControlFlowGraph::LoopNodePair PKB::ControlFlowGraph::groupLoopNeighbouring
 			return {result, {}};
 		}
 		assert(dynamic_pointer_cast<StatementNode>(node) != nullptr);
-		result.insert(dynamic_pointer_cast<StatementNode>(node)->getStmtInfo());
+		result.emplace(dynamic_pointer_cast<StatementNode>(node)->getStmtInfo());
 		return {result, {}};
 	}
 
@@ -309,7 +309,7 @@ StmtInfoPtrSet PKB::ControlFlowGraph::collectLoopNeighbours(const shared_ptr<Nod
 		return set;
 	}
 	assert(dynamic_pointer_cast<PKB::StatementNode>(node) != nullptr);
-	set.insert(dynamic_pointer_cast<StatementNode>(node)->getStmtInfo());
+	set.emplace(dynamic_pointer_cast<StatementNode>(node)->getStmtInfo());
 	return set;
 }
 

@@ -1,31 +1,29 @@
 #include "PKB/CallsRelation.h"
 
-#include <stdexcept>
-
 void PKB::CallsRelation::insertForward(const shared_ptr<ProcedureInfo>& caller) {
 	if (getSelf() == caller) {
-		throw invalid_argument("Recursive call detected.");
+		throw CallGraphException("Recursive call detected.");
 	}
 	this->callers.emplace(caller);
 }
 
 void PKB::CallsRelation::insertReverse(const shared_ptr<ProcedureInfo>& callee) {
 	if (getSelf() == callee) {
-		throw invalid_argument("Recursive call detected.");
+		throw CallGraphException("Recursive call detected.");
 	}
 	this->callees.emplace(callee);
 }
 
 void PKB::CallsRelation::appendForwardTransitive(const unordered_set<shared_ptr<ProcedureInfo>>& new_callers) {
 	if (new_callers.find(getSelf()) != new_callers.end()) {
-		throw invalid_argument("Recursive call detected.");
+		throw CallGraphException("Recursive call detected.");
 	}
 	TransitiveRelation<ProcedureInfo>::appendForwardTransitive(new_callers);
 }
 
 void PKB::CallsRelation::appendReverseTransitive(const unordered_set<shared_ptr<ProcedureInfo>>& new_callees) {
 	if (new_callees.find(getSelf()) != new_callees.end()) {
-		throw invalid_argument("Recursive call detected.");
+		throw CallGraphException("Recursive call detected.");
 	}
 	TransitiveRelation<ProcedureInfo>::appendReverseTransitive(new_callees);
 }
@@ -56,7 +54,7 @@ PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>::p
 	unordered_set<shared_ptr<ProcedureInfo>> callers = current.getForwardTransitive();
 	for (const shared_ptr<ProcedureInfo>& callee : current.getReverse()) {
 		if (callers.find(callee) != callers.end()) {
-			throw logic_error("Recursive call detected.");
+			throw CallGraphException("Recursive call detected.");
 		}
 		auto relation = map.find(callee->getIdentifier());
 		unordered_set<shared_ptr<ProcedureInfo>> transitive_callees = populateTransitive(relation->second, previous);
