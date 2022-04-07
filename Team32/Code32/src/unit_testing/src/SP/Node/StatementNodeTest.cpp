@@ -5,8 +5,7 @@
 #include "SP/Node/CallNode.h"
 #include "SP/Node/ExpressionNode.h"
 #include "SP/Node/IfNode.h"
-#include "SP/Node/PrintNode.h"
-#include "SP/Node/ReadNode.h"
+#include "SP/Node/PrintReadNode.tpp"
 #include "SP/Node/VariableNode.h"
 #include "SP/Node/WhileNode.h"
 #include "SP/SP.h"
@@ -43,13 +42,14 @@ TEST_CASE("SP::Node::StatementNode::parseStatement") {
 	SECTION("Read Valid Token Test") {
 		lex.initialize("read x; ");
 		unique_ptr<StatementNode> node = StatementNode::parseStatement(lex, statement_count);
-		shared_ptr<ReadNode> expected = make_shared<ReadNode>(1, make_unique<VariableNode>("x"));
+		shared_ptr<PrintReadNode<StmtType::Read>> expected = make_shared<PrintReadNode<StmtType::Read>>(1, make_unique<VariableNode>("x"));
 		REQUIRE(node->equals(move(expected)));
 		REQUIRE_EQUALS(statement_count, 2);
 		REQUIRE_EQUALS(lex.peekToken(), "");
 		lex_2.initialize("read print; ");
 		unique_ptr<StatementNode> node_2 = StatementNode::parseStatement(lex_2, statement_count);
-		shared_ptr<ReadNode> expected_2 = make_shared<ReadNode>(2, make_unique<VariableNode>("print"));
+		shared_ptr<PrintReadNode<StmtType::Read>> expected_2 =
+			make_shared<PrintReadNode<StmtType::Read>>(2, make_unique<VariableNode>("print"));
 		REQUIRE(node_2->equals(move(expected_2)));
 		REQUIRE_EQUALS(statement_count, 3);
 		REQUIRE_EQUALS(lex_2.peekToken(), "");
@@ -58,13 +58,15 @@ TEST_CASE("SP::Node::StatementNode::parseStatement") {
 	SECTION("Print Valid Token Test") {
 		lex.initialize("print x;");
 		unique_ptr<StatementNode> node = StatementNode::parseStatement(lex, statement_count);
-		shared_ptr<PrintNode> expected = make_shared<PrintNode>(1, make_unique<VariableNode>("x"));
+		shared_ptr<PrintReadNode<StmtType::Print>> expected =
+			make_shared<PrintReadNode<StmtType::Print>>(1, make_unique<VariableNode>("x"));
 		REQUIRE(node->equals(move(expected)));
 		REQUIRE_EQUALS(statement_count, 2);
 		REQUIRE_EQUALS(lex.peekToken(), "");
 		lex_2.initialize("print if;");
 		unique_ptr<StatementNode> node_2 = StatementNode::parseStatement(lex_2, statement_count);
-		shared_ptr<PrintNode> expected_2 = make_shared<PrintNode>(2, make_unique<VariableNode>("if"));
+		shared_ptr<PrintReadNode<StmtType::Print>> expected_2 =
+			make_shared<PrintReadNode<StmtType::Print>>(2, make_unique<VariableNode>("if"));
 		REQUIRE(node_2->equals(move(expected_2)));
 		REQUIRE_EQUALS(statement_count, 3);
 		REQUIRE_EQUALS(lex.peekToken(), "");

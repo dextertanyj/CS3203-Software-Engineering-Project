@@ -2,12 +2,10 @@
 
 #include <string>
 
-#include "Common/Validator.h"
 #include "SP/Node/AssignmentNode.h"
 #include "SP/Node/CallNode.h"
 #include "SP/Node/IfNode.h"
-#include "SP/Node/PrintNode.h"
-#include "SP/Node/ReadNode.h"
+#include "SP/Node/PrintReadNode.tpp"
 #include "SP/Node/WhileNode.h"
 #include "SP/SP.h"
 
@@ -24,10 +22,10 @@ unique_ptr<SP::Node::StatementNode> SP::Node::StatementNode::parseStatement(Lexe
 		return AssignmentNode::parseAssignmentStatement(lex, statement_count, token);
 	}
 	if (token == "read") {
-		return ReadNode::parseReadStatement(lex, statement_count);
+		return PrintReadNode<StmtType::Read>::parse(lex, statement_count);
 	}
 	if (token == "print") {
-		return PrintNode::parsePrintStatement(lex, statement_count);
+		return PrintReadNode<StmtType::Print>::parse(lex, statement_count);
 	}
 	if (token == "call") {
 		return CallNode::parseCallStatement(lex, statement_count);
