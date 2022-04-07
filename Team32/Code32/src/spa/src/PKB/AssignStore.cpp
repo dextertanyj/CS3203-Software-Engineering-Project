@@ -66,8 +66,8 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) 
 StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match) {
 	unordered_set<PKB::AssignRelation, PKB::AssignRelation::Hasher> assign_relations;
 	StmtInfoPtrVarRefSet result;
-	if (is_exact_match) {
-		auto iter = exp_to_relation_store.find(expression);
+	auto iter = exp_to_relation_store.find(expression);
+	if (is_exact_match && iter != exp_to_relation_store.end()) {
 		for_each(iter->second.begin(), iter->second.end(),
 		         [&](const AssignRelation& relation) { result.insert(make_pair(relation.node, relation.variable)); });
 		return result;
