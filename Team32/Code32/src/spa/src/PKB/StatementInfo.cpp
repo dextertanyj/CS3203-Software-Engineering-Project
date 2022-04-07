@@ -1,8 +1,6 @@
 #include "StatementInfo.h"
 
-PKB::StatementInfo::StatementInfo(StmtRef index, StmtType type) : index(index), type(type) {
-	assert(this->index > 0);
-}
+PKB::StatementInfo::StatementInfo(StmtRef index, StmtType type) : index(index), type(type) { assert(this->index > 0); }
 
 StmtRef PKB::StatementInfo::getIdentifier() const { return index; }
 
