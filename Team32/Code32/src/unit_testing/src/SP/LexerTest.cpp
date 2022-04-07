@@ -33,7 +33,7 @@ TEST_CASE("SP::Lexer::readToken Arithmetic Token Test") {
 	REQUIRE_EQUALS(lex.readToken(), "/");
 	REQUIRE_EQUALS(lex.readToken(), "%");
 	REQUIRE_EQUALS(lex.readToken(), "=");
-	REQUIRE_FALSE(lex.nextToken());
+	REQUIRE(lex.peekToken().empty());
 }
 
 TEST_CASE("SP::Lexer::readToken Relational Token Test") {
@@ -45,7 +45,7 @@ TEST_CASE("SP::Lexer::readToken Relational Token Test") {
 	REQUIRE_EQUALS(lex.readToken(), "<=");
 	REQUIRE_EQUALS(lex.readToken(), "<");
 	REQUIRE_EQUALS(lex.readToken(), ">");
-	REQUIRE_FALSE(lex.nextToken());
+	REQUIRE(lex.peekToken().empty());
 }
 
 TEST_CASE("SP::Lexer::readToken Name Test") {
@@ -55,7 +55,7 @@ TEST_CASE("SP::Lexer::readToken Name Test") {
 	REQUIRE_EQUALS(lex.readToken(), "mixed0");
 	REQUIRE_EQUALS(lex.readToken(), "0");
 	REQUIRE_EQUALS(lex.readToken(), "mixed");
-	REQUIRE_FALSE(lex.nextToken());
+	REQUIRE(lex.peekToken().empty());
 }
 
 TEST_CASE("SP::Lexer::readToken Integer Test") {
@@ -64,7 +64,7 @@ TEST_CASE("SP::Lexer::readToken Integer Test") {
 	REQUIRE_EQUALS(lex.readToken(), "1");
 	REQUIRE_EQUALS(lex.readToken(), "12");
 	REQUIRE_EQUALS(lex.readToken(), "123");
-	REQUIRE_FALSE(lex.nextToken());
+	REQUIRE(lex.peekToken().empty());
 }
 
 TEST_CASE("SP::Lexer::readToken Whitespace Test") {
@@ -74,16 +74,16 @@ TEST_CASE("SP::Lexer::readToken Whitespace Test") {
 	REQUIRE_EQUALS(lex.readToken(), "Two");
 	REQUIRE_EQUALS(lex.readToken(), "Three");
 	REQUIRE_EQUALS(lex.readToken(), "Four");
-	REQUIRE_FALSE(lex.nextToken());
+	REQUIRE(lex.peekToken().empty());
 }
 
 TEST_CASE("SP::Lexer::nextToken Repeat Empty Test") {
 	SP::Lexer lex;
 	lex.initialize("One");
 	REQUIRE_EQUALS(lex.readToken(), "One");
-	REQUIRE_FALSE(lex.nextToken());
-	REQUIRE_FALSE(lex.nextToken());
-	REQUIRE_FALSE(lex.nextToken());
+	REQUIRE(lex.peekToken().empty());
+	REQUIRE(lex.peekToken().empty());
+	REQUIRE(lex.peekToken().empty());
 }
 
 TEST_CASE("SP::Lexer::peekToken Repeat Test") {

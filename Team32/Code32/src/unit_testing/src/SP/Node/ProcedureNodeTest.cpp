@@ -119,7 +119,7 @@ TEST_CASE("SP::Node::ProcedureNode::parseProcedure") {
 		lex.initialize("procedure testName {    } ");
 		REQUIRE_THROWS_AS(ProcedureNode::parseProcedure(lex, statement_count), SP::ParseException);
 		REQUIRE_EQUALS(statement_count, 1);
-		REQUIRE_FALSE(lex.nextToken());
+		REQUIRE(lex.peekToken().empty());
 	}
 
 	SECTION("Wrong Brackets Type Test") {

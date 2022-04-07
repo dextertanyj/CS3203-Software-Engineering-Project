@@ -31,19 +31,6 @@ std::string SP::Lexer::peekToken() {
 	return this->iterator->str();
 }
 
-bool SP::Lexer::nextToken() {
-	if (this->iterator != std::sregex_iterator()) {
-		this->iterator++;
-	}
-	while (this->iterator != std::sregex_iterator()) {
-		if (!this->iterator->str().empty()) {
-			return true;
-		}
-		this->iterator++;
-	}
-	return false;
-}
-
 bool SP::Lexer::nextIf(const std::string& token) {
 	if (this->iterator == std::sregex_iterator()) {
 		throw TokenizationException("Unexpected end of sequence.");
@@ -60,4 +47,17 @@ bool SP::Lexer::nextIf(const std::initializer_list<std::string>& tokens) {
 		last = nextIf(token);
 	}
 	return last;
+}
+
+bool SP::Lexer::nextToken() {
+	if (this->iterator != std::sregex_iterator()) {
+		this->iterator++;
+	}
+	while (this->iterator != std::sregex_iterator()) {
+		if (!this->iterator->str().empty()) {
+			return true;
+		}
+		this->iterator++;
+	}
+	return false;
 }
