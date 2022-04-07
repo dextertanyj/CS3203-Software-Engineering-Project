@@ -2,8 +2,7 @@
 
 using namespace std;
 
-PKB::ProcedureInfo::ProcedureInfo(ProcRef name, vector<StmtInfoPtr> statements)
-	: name(move(name)), statements(move(statements)) {
+PKB::ProcedureInfo::ProcedureInfo(ProcRef name, vector<StmtInfoPtr> statements) : name(move(name)), statements(move(statements)) {
 	assert(!this->name.empty());
 }
 
