@@ -1,5 +1,6 @@
 #include "Common/ExpressionProcessor/ExpressionNode.h"
 
+#include <memory>
 #include <utility>
 
 #include "Common/Converter.h"

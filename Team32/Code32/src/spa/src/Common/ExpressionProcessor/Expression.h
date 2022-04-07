@@ -4,7 +4,6 @@
 #include <memory>
 #include <string>
 #include <unordered_set>
-#include <variant>
 
 #include "Common/ExpressionProcessor/ExpressionNode.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"

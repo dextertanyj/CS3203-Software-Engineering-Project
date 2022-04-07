@@ -1,5 +1,7 @@
 #include "Common/ExpressionProcessor/Expression.h"
 
+#include <utility>
+
 using namespace Common::ExpressionProcessor;
 
 Expression::Expression(std::shared_ptr<ExpressionNode> root, std::unordered_set<VarRef> variables, std::unordered_set<ConstVal> constants)

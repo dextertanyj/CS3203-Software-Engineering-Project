@@ -1,5 +1,7 @@
 #include "Common/ExpressionProcessor/ParenthesesWrapper.h"
 
+#include "Common/ExpressionProcessor/LogicalNode.h"
+
 using namespace std;
 
 /**
