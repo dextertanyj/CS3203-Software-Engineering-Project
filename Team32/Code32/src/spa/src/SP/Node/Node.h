@@ -4,6 +4,13 @@
 #include "Common/TypeDefs.h"
 #include "SP/SP.h"
 
+#define EQUALS "="
+#define SEMICOLON ";"
+#define OPEN_PARENTHESES "("
+#define CLOSE_PARENTHESES ")"
+#define OPEN_BRACES "{"
+#define CLOSE_BRACES "}"
+
 namespace SP::Node {
 class ExpressionNode;
 class AssignmentNode;

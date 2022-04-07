@@ -33,8 +33,8 @@ bool SP::Node::AssignmentNode::equals(const shared_ptr<StatementNode>& object) c
 unique_ptr<SP::Node::AssignmentNode> SP::Node::AssignmentNode::parseAssignmentStatement(Lexer& lex, StmtRef& statement_count,
                                                                                         string token) {
 	unique_ptr<VariableNode> variable = VariableNode::parseVariable(move(token));
-	lex.nextIf("=");
+	lex.nextIf(EQUALS);
 	unique_ptr<ExpressionNode> expression = ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
-	lex.nextIf(";");
+	lex.nextIf(SEMICOLON);
 	return make_unique<AssignmentNode>(statement_count++, move(variable), move(expression));
 }
