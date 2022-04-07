@@ -10,9 +10,9 @@ using namespace Types;
 TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternWhile>::execute") {
 	PKB::Storage pkb = PKB::Storage();
 	StorageAdapter store = StorageAdapter(pkb);
-	pkb.setStmtType(1, StmtType::WhileStmt);
-	pkb.setStmtType(2, StmtType::WhileStmt);
-	pkb.setStmtType(3, StmtType::WhileStmt);
+	pkb.setStmtType(1, StmtType::While);
+	pkb.setStmtType(2, StmtType::While);
+	pkb.setStmtType(3, StmtType::While);
 	pkb.setStmtType(4, StmtType::Assign);
 	pkb.setWhileControl(1, "x");
 	pkb.setWhileControl(1, "y");
@@ -23,12 +23,12 @@ TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternWhile>::execute"
 	pkb.setUses(4, "a");
 	pkb.populateComplexRelations();
 
-	ReferenceArgument syn_while = ReferenceArgument(Declaration{Types::DesignEntity::While, "w"});
-	ReferenceArgument syn_var = ReferenceArgument(Declaration{Types::DesignEntity::Variable, "v"});
-	ReferenceArgument a = ReferenceArgument("a");
-	ReferenceArgument x = ReferenceArgument("x");
-	ReferenceArgument y = ReferenceArgument("y");
-	ReferenceArgument z = ReferenceArgument("z");
+	ClauseArgument syn_while = ClauseArgument(Declaration{Types::DesignEntity::While, "w"});
+	ClauseArgument syn_var = ClauseArgument(Declaration{Types::DesignEntity::Variable, "v"});
+	ClauseArgument a = ClauseArgument("a");
+	ClauseArgument x = ClauseArgument("x");
+	ClauseArgument y = ClauseArgument("y");
+	ClauseArgument z = ClauseArgument("z");
 
 	SECTION("Trivial: Name") {
 		QueryResult result1 = executeTrivialName<ClauseType::PatternWhile>(store, x);

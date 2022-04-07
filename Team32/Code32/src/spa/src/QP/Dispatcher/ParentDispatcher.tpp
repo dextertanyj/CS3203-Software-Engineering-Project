@@ -12,12 +12,12 @@ using namespace std;
 using namespace QP::Executor;
 
 template <ClauseType T>
-ExecutorSetBundle dispatcher(const vector<ReferenceArgument>& args) {
+ExecutorSetBundle dispatcher(const vector<ClauseArgument>& args) {
 	return argumentDispatcher<T>(T, args);
 }
 
 template <ClauseType T>
-ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ReferenceArgument>& args) {
+ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ClauseArgument>& args) {
 	static const auto map = getArgumentDispatchMap<T>();
 	return DispatchProcessors::processArgument(type, map, args);
 }
@@ -25,8 +25,8 @@ ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ReferenceArgu
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>>& getArgumentDispatchMap() {
 	static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>> map = {
-		{ReferenceType::StatementIndex, StatementDispatcher::getIndexMap<T>()},
-		{ReferenceType::Wildcard, StatementDispatcher::getWildcardMap<T>()},
+		{ArgumentType::Number, StatementDispatcher::getIndexMap<T>()},
+		{ArgumentType::Wildcard, StatementDispatcher::getWildcardMap<T>()},
 		{DesignEntity::Stmt, StatementDispatcher::getSynonymMap<T>()},
 		{DesignEntity::While, StatementDispatcher::getSynonymMap<T>()},
 		{DesignEntity::If, StatementDispatcher::getSynonymMap<T>()}};

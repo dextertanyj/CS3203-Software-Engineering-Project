@@ -10,10 +10,10 @@ using namespace Types;
 TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternIf>::execute") {
 	PKB::Storage pkb = PKB::Storage();
 	StorageAdapter store = StorageAdapter(pkb);
-	pkb.setStmtType(1, StmtType::IfStmt);
-	pkb.setStmtType(2, StmtType::IfStmt);
-	pkb.setStmtType(3, StmtType::IfStmt);
-	pkb.setStmtType(4, StmtType::WhileStmt);
+	pkb.setStmtType(1, StmtType::If);
+	pkb.setStmtType(2, StmtType::If);
+	pkb.setStmtType(3, StmtType::If);
+	pkb.setStmtType(4, StmtType::While);
 	pkb.setIfControl(1, "x");
 	pkb.setIfControl(1, "y");
 	pkb.setIfControl(2, "z");
@@ -26,12 +26,12 @@ TEST_CASE("PatternContainerStatementExecutor<ClauseType::PatternIf>::execute") {
 	pkb.setUses(4, "w");
 	pkb.populateComplexRelations();
 
-	ReferenceArgument syn_if = ReferenceArgument(Declaration{Types::DesignEntity::If, "i"});
-	ReferenceArgument syn_var = ReferenceArgument(Declaration{Types::DesignEntity::Variable, "v"});
-	ReferenceArgument a = ReferenceArgument("a");
-	ReferenceArgument x = ReferenceArgument("x");
-	ReferenceArgument y = ReferenceArgument("y");
-	ReferenceArgument z = ReferenceArgument("z");
+	ClauseArgument syn_if = ClauseArgument(Declaration{Types::DesignEntity::If, "i"});
+	ClauseArgument syn_var = ClauseArgument(Declaration{Types::DesignEntity::Variable, "v"});
+	ClauseArgument a = ClauseArgument("a");
+	ClauseArgument x = ClauseArgument("x");
+	ClauseArgument y = ClauseArgument("y");
+	ClauseArgument z = ClauseArgument("z");
 
 	SECTION("Trivial: Name") {
 		QueryResult result1 = executeTrivialName<ClauseType::PatternIf>(store, x);

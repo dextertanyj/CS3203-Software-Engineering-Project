@@ -95,7 +95,7 @@ void PKB::AffectsManager::processNodeAffects(DFSInfo& info, const shared_ptr<Stm
 	}
 
 	// If the current statement is a container, its modifies consist only of the modifies of statements within it.
-	bool is_container = current_type == StmtType::WhileStmt || current_type == StmtType::IfStmt;
+	bool is_container = current_type == StmtType::While || current_type == StmtType::If;
 	if (!is_container && modifies_store.check(current_idx, info.variable)) {
 		return;
 	}
@@ -107,7 +107,7 @@ void PKB::AffectsManager::processNodeAffects(DFSInfo& info, const shared_ptr<Stm
 void PKB::AffectsManager::processNodeAffected(DFSInfo& info, const shared_ptr<StmtInfo>& current) const {
 	auto current_idx = current->getIdentifier();
 	auto current_type = current->getType();
-	bool is_container = current_type == StmtType::WhileStmt || current_type == StmtType::IfStmt;
+	bool is_container = current_type == StmtType::While || current_type == StmtType::If;
 
 	// If the current statement is a container, its modifies consist only of the modifies of statements within it.
 	if (!is_container && modifies_store.check(current_idx, info.variable)) {

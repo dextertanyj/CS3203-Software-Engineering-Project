@@ -8,13 +8,13 @@ using namespace std;
 using namespace QP::Evaluator;
 using namespace QP::Types;
 
-QP::Evaluator::Clause::Clause(ClauseType type, vector<ReferenceArgument> arguments, ExecutorSet executor)
+QP::Evaluator::Clause::Clause(ClauseType type, vector<ClauseArgument> arguments, ExecutorSet executor)
 	: type(type), arguments(move(arguments)), executor(move(executor)) {}
 
 vector<string> QP::Evaluator::Clause::getDeclarationSymbols() const {
 	vector<string> symbols;
-	for (const ReferenceArgument& arg : arguments) {
-		if (arg.getType() == ReferenceType::Synonym || arg.getType() == ReferenceType::Attribute) {
+	for (const ClauseArgument& arg : arguments) {
+		if (arg.getType() == ArgumentType::Synonym || arg.getType() == ArgumentType::Attribute) {
 			symbols.push_back(arg.getSynonymSymbol());
 		}
 	}
@@ -63,7 +63,7 @@ bool QP::Evaluator::Clause::operator==(const Clause& other) const {
 		return false;
 	}
 
-	vector<ReferenceArgument> other_arguments = other.arguments;
+	vector<ClauseArgument> other_arguments = other.arguments;
 	for (size_t i = 0; i < arguments.size(); i++) {
 		if (arguments[i] == other_arguments[i]) {
 			continue;

@@ -5,7 +5,7 @@
 #include "PKB/Types.h"
 
 PKB::WhileNode::WhileNode(const shared_ptr<StmtInfo>& info) : PKB::StatementNode(Types::NodeType::While, info) {
-	assert(info->getType() == StmtType::WhileStmt);
+	assert(info->getType() == StmtType::While);
 }
 
 void PKB::WhileNode::setNext(const shared_ptr<NodeInterface>& next) {

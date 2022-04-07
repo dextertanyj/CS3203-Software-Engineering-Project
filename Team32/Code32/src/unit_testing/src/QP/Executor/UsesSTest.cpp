@@ -12,23 +12,23 @@ TEST_CASE("StatementVariableExecutor<ClauseType::UsesS>::execute") {
 	StorageAdapter store = StorageAdapter(pkb);
 	pkb.setStmtType(1, StmtType::Assign);
 	pkb.setStmtType(2, StmtType::Print);
-	pkb.setStmtType(3, StmtType::WhileStmt);
-	pkb.setStmtType(4, StmtType::IfStmt);
+	pkb.setStmtType(3, StmtType::While);
+	pkb.setStmtType(4, StmtType::If);
 	pkb.setUses(1, "x");
 	pkb.setUses(1, "z");
 	pkb.setUses(2, "x");
 	pkb.setUses(3, "y");
 
-	ReferenceArgument stmt_no1 = ReferenceArgument(1);
-	ReferenceArgument stmt_no2 = ReferenceArgument(2);
-	ReferenceArgument stmt_no3 = ReferenceArgument(3);
-	ReferenceArgument stmt_no4 = ReferenceArgument(4);
-	ReferenceArgument stmt_synonym = ReferenceArgument(Declaration{DesignEntity::Stmt, "s"});
-	ReferenceArgument assign_synonym = ReferenceArgument(Declaration{DesignEntity::Assign, "a"});
-	ReferenceArgument if_synonym = ReferenceArgument(Declaration{DesignEntity::If, "if"});
-	ReferenceArgument x = ReferenceArgument("x");
-	ReferenceArgument y = ReferenceArgument("y");
-	ReferenceArgument var = ReferenceArgument(Declaration{DesignEntity::Variable, "var"});
+	ClauseArgument stmt_no1 = ClauseArgument(1);
+	ClauseArgument stmt_no2 = ClauseArgument(2);
+	ClauseArgument stmt_no3 = ClauseArgument(3);
+	ClauseArgument stmt_no4 = ClauseArgument(4);
+	ClauseArgument stmt_synonym = ClauseArgument(Declaration{DesignEntity::Stmt, "s"});
+	ClauseArgument assign_synonym = ClauseArgument(Declaration{DesignEntity::Assign, "a"});
+	ClauseArgument if_synonym = ClauseArgument(Declaration{DesignEntity::If, "if"});
+	ClauseArgument x = ClauseArgument("x");
+	ClauseArgument y = ClauseArgument("y");
+	ClauseArgument var = ClauseArgument(Declaration{DesignEntity::Variable, "var"});
 
 	SECTION("Trivial: Index & Name") {
 		QueryResult result1 = executeTrivialIndexName<ClauseType::UsesS>(store, stmt_no1, x);

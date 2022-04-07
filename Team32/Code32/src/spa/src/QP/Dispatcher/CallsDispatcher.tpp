@@ -13,12 +13,12 @@ using namespace std;
 using namespace QP::Executor;
 
 template <ClauseType T>
-ExecutorSetBundle dispatcher(const vector<ReferenceArgument>& args) {
+ExecutorSetBundle dispatcher(const vector<ClauseArgument>& args) {
 	return argumentDispatcher<T>(T, args);
 }
 
 template <ClauseType T>
-ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ReferenceArgument>& args) {
+ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ClauseArgument>& args) {
 	static const auto map = getArgumentDispatchMap<T>();
 	return DispatchProcessors::processArgument(type, map, args);
 }
@@ -26,8 +26,8 @@ ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ReferenceArgu
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>>& getArgumentDispatchMap() {
 	static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>> map = {
-		{ReferenceType::Name, getNameMap<T>()},
-		{ReferenceType::Wildcard, getWildcardMap<T>()},
+		{ArgumentType::Name, getNameMap<T>()},
+		{ArgumentType::Wildcard, getWildcardMap<T>()},
 		{DesignEntity::Procedure, getSynonymMap<T>()}};
 	return map;
 };
@@ -35,8 +35,8 @@ const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, Exec
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getNameMap() {
 	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
-		{ReferenceType::Name, ProcedureExecutor::executorFactoryNameName<T>},
-		{ReferenceType::Wildcard, ProcedureExecutor::executorFactoryNameWildcard<T>},
+		{ArgumentType::Name, ProcedureExecutor::executorFactoryNameName<T>},
+		{ArgumentType::Wildcard, ProcedureExecutor::executorFactoryNameWildcard<T>},
 		{DesignEntity::Procedure, ProcedureExecutor::executorFactoryNameSynonym<T>},
 	};
 	return map;
@@ -45,8 +45,8 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getNameMap() {
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getWildcardMap() {
 	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
-		{ReferenceType::Name, ProcedureExecutor::executorFactoryWildcardName<T>},
-		{ReferenceType::Wildcard, ProcedureExecutor::executorFactoryWildcardWildcard<T>},
+		{ArgumentType::Name, ProcedureExecutor::executorFactoryWildcardName<T>},
+		{ArgumentType::Wildcard, ProcedureExecutor::executorFactoryWildcardWildcard<T>},
 		{DesignEntity::Procedure, ProcedureExecutor::executorFactoryWildcardSynonym<T>},
 	};
 	return map;
@@ -55,8 +55,8 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getWildcardMap() {
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getSynonymMap() {
 	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
-		{ReferenceType::Name, ProcedureExecutor::executorFactorySynonymName<T>},
-		{ReferenceType::Wildcard, ProcedureExecutor::executorFactorySynonymWildcard<T>},
+		{ArgumentType::Name, ProcedureExecutor::executorFactorySynonymName<T>},
+		{ArgumentType::Wildcard, ProcedureExecutor::executorFactorySynonymWildcard<T>},
 		{DesignEntity::Procedure, ProcedureExecutor::executorFactorySynonymSynonym<T>},
 	};
 	return map;

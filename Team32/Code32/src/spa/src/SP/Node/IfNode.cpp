@@ -10,7 +10,7 @@ SP::Node::IfNode::IfNode(StmtRef stmt_no, unique_ptr<ExpressionNode> cond_expr, 
 
 StmtRef SP::Node::IfNode::extract(PKB::StorageUpdateInterface& pkb) const {
 	StmtRef stmt_ref = getStmtRef();
-	pkb.setStmtType(stmt_ref, StmtType::IfStmt);
+	pkb.setStmtType(stmt_ref, StmtType::If);
 	Common::ExpressionProcessor::Expression expression = cond_expr->extract();
 	pkb.setConstant(expression.getConstants());
 	pkb.setUses(stmt_ref, expression.getVariables());

@@ -21,7 +21,7 @@ inline shared_ptr<PKB::ProcedureInfo> createProcedureInfo(ProcRef name) {
 inline PKB::Storage generateFollowsTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
-	pkb.setStmtType(2, StmtType::IfStmt);
+	pkb.setStmtType(2, StmtType::If);
 	pkb.setStmtType(3, StmtType::Print);
 	pkb.setStmtType(4, StmtType::Print);
 	pkb.setStmtType(5, StmtType::Assign);
@@ -31,14 +31,14 @@ inline PKB::Storage generateFollowsTestPKB() {
 
 inline PKB::Storage generateParentTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
-	pkb.setStmtType(1, StmtType::WhileStmt);
-	pkb.setStmtType(2, StmtType::IfStmt);
+	pkb.setStmtType(1, StmtType::While);
+	pkb.setStmtType(2, StmtType::If);
 	pkb.setStmtType(3, StmtType::Call);
 	pkb.setStmtType(4, StmtType::Print);
-	pkb.setStmtType(5, StmtType::IfStmt);
+	pkb.setStmtType(5, StmtType::If);
 	pkb.setStmtType(6, StmtType::Assign);
-	pkb.setStmtType(7, StmtType::IfStmt);
-	pkb.setStmtType(8, StmtType::IfStmt);
+	pkb.setStmtType(7, StmtType::If);
+	pkb.setStmtType(8, StmtType::If);
 	pkb.setStmtType(9, StmtType::Read);
 	return pkb;
 };
@@ -46,11 +46,11 @@ inline PKB::Storage generateParentTestPKB() {
 inline PKB::Storage generateUsesTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
-	pkb.setStmtType(2, StmtType::IfStmt);
+	pkb.setStmtType(2, StmtType::If);
 	pkb.setStmtType(3, StmtType::Print);
 	pkb.setStmtType(4, StmtType::Call);
 	pkb.setStmtType(5, StmtType::Call);
-	pkb.setStmtType(6, StmtType::WhileStmt);
+	pkb.setStmtType(6, StmtType::While);
 	return pkb;
 };
 
@@ -88,15 +88,15 @@ inline PKB::Storage generateCallsTestPKB() {
 inline PKB::Storage generateNextTestPKB() {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::Assign);
-	pkb.setStmtType(2, StmtType::IfStmt);
+	pkb.setStmtType(2, StmtType::If);
 	pkb.setStmtType(3, StmtType::Assign);
-	pkb.setStmtType(4, StmtType::IfStmt);
+	pkb.setStmtType(4, StmtType::If);
 	pkb.setStmtType(5, StmtType::Read);
-	pkb.setStmtType(6, StmtType::IfStmt);
+	pkb.setStmtType(6, StmtType::If);
 	pkb.setStmtType(7, StmtType::Read);
 	pkb.setStmtType(8, StmtType::Assign);
 	pkb.setStmtType(9, StmtType::Print);
-	pkb.setStmtType(10, StmtType::IfStmt);
+	pkb.setStmtType(10, StmtType::If);
 	pkb.setStmtType(11, StmtType::Assign);
 	pkb.setStmtType(12, StmtType::Print);
 	pkb.setStmtType(13, StmtType::Assign);
@@ -108,8 +108,8 @@ inline PKB::Storage generateNextTestPKB() {
 
 inline PKB::Types::StatementStore generateStatementStore() {
 	PKB::Types::StatementStore statement_store = PKB::Types::StatementStore();
-	statement_store.insert(1, StmtType::WhileStmt);
-	statement_store.insert(2, StmtType::IfStmt);
+	statement_store.insert(1, StmtType::While);
+	statement_store.insert(2, StmtType::If);
 	statement_store.insert(3, StmtType::Assign);
 	statement_store.insert(4, StmtType::Call);
 	statement_store.insert(5, StmtType::Print);

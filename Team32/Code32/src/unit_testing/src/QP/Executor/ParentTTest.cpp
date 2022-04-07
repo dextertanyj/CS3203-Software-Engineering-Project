@@ -10,8 +10,8 @@ using namespace Types;
 TEST_CASE("StatementExecutor<ClauseType::ParentT>::execute") {
 	PKB::Storage pkb = PKB::Storage();
 	StorageAdapter store = StorageAdapter(pkb);
-	pkb.setStmtType(1, StmtType::WhileStmt);
-	pkb.setStmtType(2, StmtType::IfStmt);
+	pkb.setStmtType(1, StmtType::While);
+	pkb.setStmtType(2, StmtType::If);
 	pkb.setStmtType(3, StmtType::Read);
 	pkb.setStmtType(4, StmtType::Assign);
 	pkb.setParent(1, 2);
@@ -19,15 +19,15 @@ TEST_CASE("StatementExecutor<ClauseType::ParentT>::execute") {
 	pkb.setParent(2, 4);
 	pkb.populateComplexRelations();
 
-	ReferenceArgument stmt_no1 = ReferenceArgument(1);
-	ReferenceArgument stmt_no2 = ReferenceArgument(2);
-	ReferenceArgument stmt_no3 = ReferenceArgument(3);
-	ReferenceArgument stmt_no4 = ReferenceArgument(4);
-	ReferenceArgument stmt_synonym = ReferenceArgument(Declaration{DesignEntity::Stmt, "s"});
-	ReferenceArgument assign_synonym = ReferenceArgument(Declaration{DesignEntity::Assign, "a"});
-	ReferenceArgument while_synonym = ReferenceArgument(Declaration{DesignEntity::While, "w"});
-	ReferenceArgument if_synonym = ReferenceArgument(Declaration{DesignEntity::If, "if"});
-	ReferenceArgument wildcard = ReferenceArgument();
+	ClauseArgument stmt_no1 = ClauseArgument(1);
+	ClauseArgument stmt_no2 = ClauseArgument(2);
+	ClauseArgument stmt_no3 = ClauseArgument(3);
+	ClauseArgument stmt_no4 = ClauseArgument(4);
+	ClauseArgument stmt_synonym = ClauseArgument(Declaration{DesignEntity::Stmt, "s"});
+	ClauseArgument assign_synonym = ClauseArgument(Declaration{DesignEntity::Assign, "a"});
+	ClauseArgument while_synonym = ClauseArgument(Declaration{DesignEntity::While, "w"});
+	ClauseArgument if_synonym = ClauseArgument(Declaration{DesignEntity::If, "if"});
+	ClauseArgument wildcard = ClauseArgument();
 
 	SECTION("Trivial: Index & Index") {
 		QueryResult result1 = executeTrivialIndexIndex<ClauseType::ParentT>(store, stmt_no1, stmt_no3);

@@ -6,24 +6,24 @@
 namespace QP::Executor::ProcedureExecutor {
 
 template <ClauseType T>
-QueryResult executeTrivialNameName(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs) {
+QueryResult executeTrivialNameName(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
 	return QueryResult(store.checkProcedureRelation<T>(lhs.getName(), rhs.getName()));
 }
 
 template <ClauseType T>
-QueryResult executeTrivialNameWildcardOrSynonym(const StorageAdapter& store, const ReferenceArgument& lhs) {
+QueryResult executeTrivialNameWildcardOrSynonym(const StorageAdapter& store, const ClauseArgument& lhs) {
 	return QueryResult(!store.getReverseProcedures<T>(lhs.getName()).empty());
 }
 
 template <ClauseType T>
-QueryResult executeTrivialWildcardOrSynonymName(const StorageAdapter& store, const ReferenceArgument& rhs) {
+QueryResult executeTrivialWildcardOrSynonymName(const StorageAdapter& store, const ClauseArgument& rhs) {
 	return QueryResult(!store.template getForwardProcedures<T>(rhs.getName()).empty());
 }
 
 template <ClauseType T>
 QueryResult executeTrivialWildcardOrSynonymWildcardOrSynonym(const StorageAdapter& store) {
 	ProcRefSet proc_set = store.getProcedures();
-	for (auto const& proc : proc_set) {
+	for (const auto& proc : proc_set) {
 		ProcRefSet lhs_set = store.getForwardProcedures<T>(proc);
 		if (!lhs_set.empty()) {
 			return QueryResult(true);
@@ -33,7 +33,7 @@ QueryResult executeTrivialWildcardOrSynonymWildcardOrSynonym(const StorageAdapte
 }
 
 template <ClauseType T>
-QueryResult executeTrivialSynonymSynonym(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs) {
+QueryResult executeTrivialSynonymSynonym(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
 	if (lhs.getSynonymSymbol() == rhs.getSynonymSymbol()) {
 		return {};
 	}
@@ -42,10 +42,10 @@ QueryResult executeTrivialSynonymSynonym(const StorageAdapter& store, const Refe
 
 // Executors
 template <ClauseType T>
-QueryResult executeNameSynonym(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs) {
+QueryResult executeNameSynonym(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
 	QueryResult result = QueryResult({rhs.getSynonymSymbol()});
 	ProcRefSet rhs_set = store.getReverseProcedures<T>(lhs.getName());
-	for (auto const& rhs_reference : rhs_set) {
+	for (const auto& rhs_reference : rhs_set) {
 		result.addRow({rhs_reference});
 	}
 
@@ -53,10 +53,10 @@ QueryResult executeNameSynonym(const StorageAdapter& store, const ReferenceArgum
 }
 
 template <ClauseType T>
-QueryResult executeWildcardSynonym(const StorageAdapter& store, const ReferenceArgument& rhs) {
+QueryResult executeWildcardSynonym(const StorageAdapter& store, const ClauseArgument& rhs) {
 	QueryResult result = QueryResult({rhs.getSynonymSymbol()});
 	ProcRefSet procedures = store.getProcedures();
-	for (auto const& procedure : procedures) {
+	for (const auto& procedure : procedures) {
 		ProcRefSet lhss = store.getForwardProcedures<T>(procedure);
 		if (!lhss.empty()) {
 			result.addRow({procedure});
@@ -67,20 +67,20 @@ QueryResult executeWildcardSynonym(const StorageAdapter& store, const ReferenceA
 }
 
 template <ClauseType T>
-QueryResult executeSynonymName(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs) {
+QueryResult executeSynonymName(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
 	QueryResult result = QueryResult({lhs.getSynonymSymbol()});
 	ProcRefSet lhs_set = store.getForwardProcedures<T>(rhs.getName());
-	for (auto const& lhs_reference : lhs_set) {
+	for (const auto& lhs_reference : lhs_set) {
 		result.addRow({lhs_reference});
 	}
 	return result;
 }
 
 template <ClauseType T>
-QueryResult executeSynonymWildcard(const StorageAdapter& store, const ReferenceArgument& lhs) {
+QueryResult executeSynonymWildcard(const StorageAdapter& store, const ClauseArgument& lhs) {
 	QueryResult result = QueryResult({lhs.getSynonymSymbol()});
 	ProcRefSet procedures = store.getProcedures();
-	for (auto const& procedure : procedures) {
+	for (const auto& procedure : procedures) {
 		ProcRefSet rhs_set = store.getReverseProcedures<T>(procedure);
 		if (!rhs_set.empty()) {
 			result.addRow({procedure});
@@ -90,7 +90,7 @@ QueryResult executeSynonymWildcard(const StorageAdapter& store, const ReferenceA
 }
 
 template <ClauseType T>
-QueryResult executeSynonymSynonym(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs) {
+QueryResult executeSynonymSynonym(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
 	if (lhs.getSynonymSymbol() == rhs.getSynonymSymbol()) {
 		return {};
 	}
@@ -98,9 +98,9 @@ QueryResult executeSynonymSynonym(const StorageAdapter& store, const ReferenceAr
 	QueryResult result = QueryResult({lhs.getSynonymSymbol(), rhs.getSynonymSymbol()});
 
 	ProcRefSet procedures = store.getProcedures();
-	for (auto const& procedure : procedures) {
+	for (const auto& procedure : procedures) {
 		ProcRefSet rhs_set = store.getReverseProcedures<T>(procedure);
-		for (auto const& rhs_reference : rhs_set) {
+		for (const auto& rhs_reference : rhs_set) {
 			result.addRow({procedure, rhs_reference});
 		}
 	}
@@ -110,17 +110,17 @@ QueryResult executeSynonymSynonym(const StorageAdapter& store, const ReferenceAr
 // Executor Set Factories
 
 template <ClauseType T>
-ExecutorSet executorFactoryNameName(const vector<ReferenceArgument>& args) {
+ExecutorSet executorFactoryNameName(const vector<ClauseArgument>& args) {
 	return [caller = args.at(0), callee = args.at(1)](const StorageAdapter& pkb) { return executeTrivialNameName<T>(pkb, caller, callee); };
 }
 
 template <ClauseType T>
-ExecutorSet executorFactoryNameWildcard(const vector<ReferenceArgument>& args) {
+ExecutorSet executorFactoryNameWildcard(const vector<ClauseArgument>& args) {
 	return [caller = args.at(0)](const StorageAdapter& pkb) { return executeTrivialNameWildcardOrSynonym<T>(pkb, caller); };
 }
 
 template <ClauseType T>
-ExecutorSet executorFactoryNameSynonym(const vector<ReferenceArgument>& args) {
+ExecutorSet executorFactoryNameSynonym(const vector<ClauseArgument>& args) {
 	Types::Executor trivial_executor = [caller = args.at(0)](const StorageAdapter& pkb) {
 		return executeTrivialNameWildcardOrSynonym<T>(pkb, caller);
 	};
@@ -131,17 +131,17 @@ ExecutorSet executorFactoryNameSynonym(const vector<ReferenceArgument>& args) {
 }
 
 template <ClauseType T>
-ExecutorSet executorFactoryWildcardName(const vector<ReferenceArgument>& args) {
+ExecutorSet executorFactoryWildcardName(const vector<ClauseArgument>& args) {
 	return [callee = args.at(1)](const StorageAdapter& pkb) { return executeTrivialWildcardOrSynonymName<T>(pkb, callee); };
 }
 
 template <ClauseType T>
-ExecutorSet executorFactoryWildcardWildcard(const vector<ReferenceArgument>& /*args*/) {
+ExecutorSet executorFactoryWildcardWildcard(const vector<ClauseArgument>& /*args*/) {
 	return [](const StorageAdapter& pkb) { return executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(pkb); };
 }
 
 template <ClauseType T>
-ExecutorSet executorFactoryWildcardSynonym(const vector<ReferenceArgument>& args) {
+ExecutorSet executorFactoryWildcardSynonym(const vector<ClauseArgument>& args) {
 	Types::Executor trivial_executor = [](const StorageAdapter& pkb) { return executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(pkb); };
 	Types::Executor executor = [caller = args.at(0), callee = args.at(1)](const StorageAdapter& pkb) {
 		return executeWildcardSynonym<T>(pkb, callee);
@@ -150,7 +150,7 @@ ExecutorSet executorFactoryWildcardSynonym(const vector<ReferenceArgument>& args
 }
 
 template <ClauseType T>
-ExecutorSet executorFactorySynonymName(const vector<ReferenceArgument>& args) {
+ExecutorSet executorFactorySynonymName(const vector<ClauseArgument>& args) {
 	Types::Executor trivial_executor = [callee = args.at(1)](const StorageAdapter& pkb) {
 		return executeTrivialWildcardOrSynonymName<T>(pkb, callee);
 	};
@@ -161,14 +161,14 @@ ExecutorSet executorFactorySynonymName(const vector<ReferenceArgument>& args) {
 }
 
 template <ClauseType T>
-ExecutorSet executorFactorySynonymWildcard(const vector<ReferenceArgument>& args) {
+ExecutorSet executorFactorySynonymWildcard(const vector<ClauseArgument>& args) {
 	Types::Executor trivial_executor = [](const StorageAdapter& pkb) { return executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(pkb); };
 	Types::Executor executor = [caller = args.at(0)](const StorageAdapter& pkb) { return executeSynonymWildcard<T>(pkb, caller); };
 	return pair{trivial_executor, executor};
 }
 
 template <ClauseType T>
-ExecutorSet executorFactorySynonymSynonym(const vector<ReferenceArgument>& args) {
+ExecutorSet executorFactorySynonymSynonym(const vector<ClauseArgument>& args) {
 	Types::Executor trivial_executor = [caller = args.at(0), callee = args.at(1)](const StorageAdapter& pkb) {
 		return executeTrivialSynonymSynonym<T>(pkb, caller, callee);
 	};

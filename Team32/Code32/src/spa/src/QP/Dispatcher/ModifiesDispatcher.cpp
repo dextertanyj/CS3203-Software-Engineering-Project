@@ -10,8 +10,8 @@ using namespace QP::Dispatcher;
 using namespace QP::Types;
 
 static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>> argument_dispatch_map = {
-	{ReferenceType::Name, VariableDispatcher::getNameMap<ClauseType::ModifiesP>()},
-	{ReferenceType::StatementIndex, VariableDispatcher::getIndexMap<ClauseType::ModifiesS>()},
+	{ArgumentType::Name, VariableDispatcher::getNameMap<ClauseType::ModifiesP>()},
+	{ArgumentType::Number, VariableDispatcher::getIndexMap<ClauseType::ModifiesS>()},
 	{DesignEntity::Procedure, VariableDispatcher::getProcedureMap<ClauseType::ModifiesP>()},
 	{DesignEntity::Stmt, VariableDispatcher::getStatementMap<ClauseType::ModifiesS>()},
 	{DesignEntity::Call, VariableDispatcher::getStatementMap<ClauseType::ModifiesS>()},
@@ -20,6 +20,6 @@ static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKe
 	{DesignEntity::While, VariableDispatcher::getStatementMap<ClauseType::ModifiesS>()},
 	{DesignEntity::If, VariableDispatcher::getStatementMap<ClauseType::ModifiesS>()}};
 
-ExecutorSetBundle QP::Dispatcher::ModifiesDispatcher::dispatcher(const vector<ReferenceArgument>& args) {
+ExecutorSetBundle QP::Dispatcher::ModifiesDispatcher::dispatcher(const vector<ClauseArgument>& args) {
 	return QP::Dispatcher::DispatchProcessors::processArgument(argument_dispatch_map, args);
 }

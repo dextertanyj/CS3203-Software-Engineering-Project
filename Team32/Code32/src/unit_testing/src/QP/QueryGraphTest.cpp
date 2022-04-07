@@ -1,7 +1,7 @@
 #include "QP/Optimizer/QueryGraph.h"
 
 #include "QP/Optimizer/ClauseGroups.h"
-#include "QP/ReferenceArgument.h"
+#include "QP/ClauseArgument.h"
 #include "QP/Evaluator/Clause.h"
 #include "catch.hpp"
 
@@ -22,13 +22,13 @@ TEST_CASE("QueryGraph::setEdges Should set edges") {
 	Declaration declaration_v = {DesignEntity::Variable, "v"};
 	Declaration declaration_a = {DesignEntity::Assign, "a"};
 	DeclarationList list = {declaration_s, declaration_v, declaration_a};
-	ReferenceArgument s = ReferenceArgument(declaration_s);
-	ReferenceArgument a = ReferenceArgument(declaration_a);
-	ReferenceArgument v = ReferenceArgument(declaration_v);
+	ClauseArgument s = ClauseArgument(declaration_s);
+	ClauseArgument a = ClauseArgument(declaration_a);
+	ClauseArgument v = ClauseArgument(declaration_v);
 	ClauseList clause_list = {
-		{make_unique<Clause>(ClauseType::Parent, vector<ReferenceArgument>({s, a}),
+		{make_unique<Clause>(ClauseType::Parent, vector<ClauseArgument>({s, a}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
-		{make_unique<Clause>(ClauseType::UsesS, vector<ReferenceArgument>({a, v}),
+		{make_unique<Clause>(ClauseType::UsesS, vector<ClauseArgument>({a, v}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
 	};
 
@@ -55,21 +55,21 @@ TEST_CASE("QueryGraph::getSynonymsInGroup Should split synonyms into connected c
 		declaration_b,
 		declaration_e,
 	};
-	ReferenceArgument a = ReferenceArgument(declaration_a);
-	ReferenceArgument b = ReferenceArgument(declaration_b);
-	ReferenceArgument c = ReferenceArgument(declaration_c);
-	ReferenceArgument d = ReferenceArgument(declaration_d);
-	ReferenceArgument e = ReferenceArgument(declaration_e);
-	ReferenceArgument f = ReferenceArgument(declaration_f);
-	ReferenceArgument wildcard = ReferenceArgument();
+	ClauseArgument a = ClauseArgument(declaration_a);
+	ClauseArgument b = ClauseArgument(declaration_b);
+	ClauseArgument c = ClauseArgument(declaration_c);
+	ClauseArgument d = ClauseArgument(declaration_d);
+	ClauseArgument e = ClauseArgument(declaration_e);
+	ClauseArgument f = ClauseArgument(declaration_f);
+	ClauseArgument wildcard = ClauseArgument();
 	ClauseList clause_list = {
-		{make_unique<Clause>(ClauseType::Parent, vector<ReferenceArgument>({a, b}),
+		{make_unique<Clause>(ClauseType::Parent, vector<ClauseArgument>({a, b}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
-		{make_unique<Clause>(ClauseType::Parent, vector<ReferenceArgument>({a, c}),
+		{make_unique<Clause>(ClauseType::Parent, vector<ClauseArgument>({a, c}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
-		{make_unique<Clause>(ClauseType::UsesS, vector<ReferenceArgument>({d, e}),
+		{make_unique<Clause>(ClauseType::UsesS, vector<ClauseArgument>({d, e}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
-		{make_unique<Clause>(ClauseType::UsesS, vector<ReferenceArgument>({d, wildcard}),
+		{make_unique<Clause>(ClauseType::UsesS, vector<ClauseArgument>({d, wildcard}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
 	};
 	QueryGraph graph = QueryGraph(declaration_list, clause_list, select_list);
@@ -96,27 +96,27 @@ TEST_CASE("QueryGraph::getGroupClauses Should sort clauses in group") {
 	Declaration declaration_v = {DesignEntity::Variable, "v"};
 	Declaration declaration_a = {DesignEntity::Assign, "a"};
 	Declaration declaration_s1 = {DesignEntity::Stmt, "s1"};
-	ReferenceArgument s = ReferenceArgument(declaration_s);
-	ReferenceArgument a = ReferenceArgument(declaration_a);
-	ReferenceArgument v = ReferenceArgument(declaration_v);
-	ReferenceArgument s1 = ReferenceArgument(declaration_s1);
-	ReferenceArgument wildcard = ReferenceArgument();
-	ReferenceArgument stmt_no1 = ReferenceArgument(1);
+	ClauseArgument s = ClauseArgument(declaration_s);
+	ClauseArgument a = ClauseArgument(declaration_a);
+	ClauseArgument v = ClauseArgument(declaration_v);
+	ClauseArgument s1 = ClauseArgument(declaration_s1);
+	ClauseArgument wildcard = ClauseArgument();
+	ClauseArgument stmt_no1 = ClauseArgument(1);
 	DeclarationList list = {declaration_s, declaration_v, declaration_a, declaration_s1};
 	ClauseList clause_list = {
-		{make_unique<Clause>(ClauseType::Affects, vector<ReferenceArgument>({s, a}),
+		{make_unique<Clause>(ClauseType::Affects, vector<ClauseArgument>({s, a}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
-		{make_unique<Clause>(ClauseType::UsesS, vector<ReferenceArgument>({a, v}),
+		{make_unique<Clause>(ClauseType::UsesS, vector<ClauseArgument>({a, v}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
-		{make_unique<Clause>(ClauseType::Parent, vector<ReferenceArgument>({a, wildcard}),
+		{make_unique<Clause>(ClauseType::Parent, vector<ClauseArgument>({a, wildcard}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
-		{make_unique<Clause>(ClauseType::Next, vector<ReferenceArgument>({stmt_no1, a}),
+		{make_unique<Clause>(ClauseType::Next, vector<ClauseArgument>({stmt_no1, a}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
-		{make_unique<Clause>(ClauseType::AffectsT, vector<ReferenceArgument>({s1, s}),
+		{make_unique<Clause>(ClauseType::AffectsT, vector<ClauseArgument>({s1, s}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
-		{make_unique<Clause>(ClauseType::NextT, vector<ReferenceArgument>({s1, s}),
+		{make_unique<Clause>(ClauseType::NextT, vector<ClauseArgument>({s1, s}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
-		{make_unique<Clause>(ClauseType::NextT, vector<ReferenceArgument>({s1, s1}),
+		{make_unique<Clause>(ClauseType::NextT, vector<ClauseArgument>({s1, s1}),
 	                                             [](const QP::StorageAdapter& store) { return QP::QueryResult(); })},
 	};
 

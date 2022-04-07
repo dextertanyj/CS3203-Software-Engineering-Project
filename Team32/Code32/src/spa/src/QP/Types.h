@@ -42,7 +42,7 @@ enum class ClauseType {
 	With
 };
 
-enum class ReferenceType { StatementIndex, Synonym, Wildcard, Name, ExactExpression, SubExpression, Attribute };
+enum class ArgumentType { Number, Synonym, Wildcard, Name, ExactExpression, SubExpression, Attribute };
 enum class AttributeToken { StatementIndex, ProcedureName, VariableName, Value };
 enum class AttributeType { NumberIdentifier, NameIdentifier, ProcedureName, VariableName };
 
@@ -66,7 +66,7 @@ using ArgumentValue =
 using Name = std::string;
 using Number = unsigned long long;
 template <typename TSynonym>
-using SelectExecutor = std::function<std::unordered_set<TSynonym>(const StorageAdapter&, const ReferenceArgument&)>;
+using SelectExecutor = std::function<std::unordered_set<TSynonym>(const StorageAdapter&, const ClauseArgument&)>;
 template <typename TAttribute, typename TSynonym>
 using AttributeMapper = std::function<TAttribute(const StorageAdapter&, const TSynonym&)>;
 
@@ -78,22 +78,22 @@ using Types::Executor;
 using OptimizedExecutor = std::function<QueryResult(const StorageAdapter&, const QueryResult&)>;
 using ExecutorSet =
 	std::variant<Types::Executor, std::pair<Types::Executor, Types::Executor>, std::pair<Types::Executor, OptimizedExecutor>>;
-using ExecutorSetFactory = std::function<ExecutorSet(const std::vector<ReferenceArgument>&)>;
+using ExecutorSetFactory = std::function<ExecutorSet(const std::vector<ClauseArgument>&)>;
 using ExecutorSetFactoryBundle = std::pair<ClauseType, ExecutorSetFactory>;
-using ArgumentDispatchKey = std::variant<ReferenceType, DesignEntity>;
+using ArgumentDispatchKey = std::variant<ArgumentType, DesignEntity>;
 using ExecutorSetBundle = std::pair<ClauseType, ExecutorSet>;
-using ArgumentDispatcher = std::function<ExecutorSetBundle(std::vector<ReferenceArgument>&)>;
+using ArgumentDispatcher = std::function<ExecutorSetBundle(std::vector<ClauseArgument>&)>;
 using ArgumentDispatchMap = std::unordered_map<ClauseType, ArgumentDispatcher>;
 
 // Types for with clause execution
 template <typename TAttribute, typename TSynonym>
 using WithInternalExecutors = std::pair<SelectExecutor<TSynonym>, AttributeMapper<TAttribute, TSynonym>>;
 using DispatchAttributeKey = std::pair<DesignEntity, AttributeType>;
-using WithClauseArgumentDispatchKey = std::variant<ReferenceType, DispatchAttributeKey>;
-using WithClauseBasicDispatchKey = std::variant<ReferenceType, AttributeType>;
+using WithClauseArgumentDispatchKey = std::variant<ArgumentType, DispatchAttributeKey>;
+using WithClauseBasicDispatchKey = std::variant<ArgumentType, AttributeType>;
 template <typename TAttribute, typename TLeft, typename TRight>
 using WithExecutorFunction =
-	std::function<QueryResult(const StorageAdapter& store, const ReferenceArgument& lhs, const ReferenceArgument& rhs,
+	std::function<QueryResult(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs,
                               Types::WithInternalExecutors<TAttribute, TLeft>, Types::WithInternalExecutors<TAttribute, TRight>)>;
 template <typename TAttribute, typename TLeft, typename TRight>
 using WithExecutorFunctionSet =
@@ -101,7 +101,7 @@ using WithExecutorFunctionSet =
                  std::pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>>;
 
 using DeclarationList = std::vector<Declaration>;
-using SelectList = std::vector<ReferenceArgument>;
+using SelectList = std::vector<ClauseArgument>;
 using ClauseList = std::vector<std::shared_ptr<Evaluator::Clause>>;
 
 using ResultRow = std::vector<std::string>;

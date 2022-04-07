@@ -135,7 +135,7 @@ template <class Comparator>
 void PKB::NextManager::constructQueueIteration(const shared_ptr<StmtInfo>& node, QueueConstructionInformation<Comparator>& info) {
 	// Loop nodes are a special case as internal nodes do not have to be computed explicitly since there is special handling during
 	// processing.
-	if (node->getType() == StmtType::WhileStmt) {
+	if (node->getType() == StmtType::While) {
 		constructQueueLoopNode(node, info);
 		return;
 	}
@@ -147,7 +147,7 @@ void PKB::NextManager::constructQueueIteration(const shared_ptr<StmtInfo>& node,
 }
 
 void PKB::NextManager::processQueue(const shared_ptr<StmtInfo>& node, TraversalInformation& info) {
-	if (node->getType() == StmtType::WhileStmt) {
+	if (node->getType() == StmtType::While) {
 		processLoopNode(node, info);
 		return;
 	}
@@ -203,7 +203,7 @@ void PKB::NextManager::processLoopNode(const shared_ptr<StmtInfo>& node, Travers
 
 StmtInfoPtrSet PKB::NextManager::traverseLoop(const shared_ptr<StmtInfo>& node) {
 	// Perform a DFS traversal on the loop node to collect all its internal nodes.
-	assert(node->getType() == StmtType::WhileStmt);
+	assert(node->getType() == StmtType::While);
 	StmtInfoPtrSet set;
 	queue<shared_ptr<StmtInfo>> queue;
 	set.emplace(node);

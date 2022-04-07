@@ -34,8 +34,8 @@ private:
 	void parseClauses();
 	void parseClauseLoop(void (QueryPreprocessor::*parser)());
 	void parseClause(Types::ClauseType type);
-	void parseClause(Types::ClauseType type, std::vector<ReferenceArgument> prefixes);
-	void createClause(Types::ClauseType type, std::vector<ReferenceArgument> arguments);
+	void parseClause(Types::ClauseType type, std::vector<ClauseArgument> prefixes);
+	void createClause(Types::ClauseType type, std::vector<ClauseArgument> arguments);
 
 	void parseSuchThat();
 	void parseWith();
@@ -43,14 +43,14 @@ private:
 
 	std::optional<Types::DesignEntity> parseDesignEntity();
 	Types::Declaration parseClauseSynonym();
-	std::vector<ReferenceArgument> parseArgumentList(ReferenceArgument (QueryPreprocessor::*parser)());
-	ReferenceArgument parseAnyArgument();
-	ReferenceArgument parseReferenceArgument();
-	ReferenceArgument parseArgument(std::optional<ReferenceArgument> (QueryPreprocessor::*parser)());
-	std::optional<ReferenceArgument> tryParseReferenceArgument();
-	std::optional<ReferenceArgument> tryParseSelectArgument();
-	std::optional<ReferenceArgument> tryParseExpressionArgument();
-	ReferenceArgument parseAttribute();
+	std::vector<ClauseArgument> parseArgumentList(ClauseArgument (QueryPreprocessor::*parser)());
+	ClauseArgument parseAnyArgument();
+	ClauseArgument parseClauseArgument();
+	ClauseArgument parseArgument(std::optional<ClauseArgument> (QueryPreprocessor::*parser)());
+	std::optional<ClauseArgument> tryParseClauseArgument();
+	std::optional<ClauseArgument> tryParseSelectArgument();
+	std::optional<ClauseArgument> tryParseExpressionArgument();
+	ClauseArgument parseAttribute();
 
 	bool match(const std::string& token);
 	void reset();

@@ -11,7 +11,7 @@ bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store,
 	if (statement->getType() == StmtType::Print) {
 		throw invalid_argument("Print statements cannot modify a variable");
 	}
-	if (statement->getType() == StmtType::WhileStmt || statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::Call) {
+	if (statement->getType() == StmtType::While || statement->getType() == StmtType::If || statement->getType() == StmtType::Call) {
 		return true;
 	}
 	auto statement_iter = store->statement_key_map.find(idx);
@@ -29,7 +29,7 @@ bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store,
 	if (statement->getType() == StmtType::Print) {
 		throw invalid_argument("Print statements cannot modify a variable");
 	}
-	if (statement->getType() == StmtType::WhileStmt || statement->getType() == StmtType::IfStmt || statement->getType() == StmtType::Call) {
+	if (statement->getType() == StmtType::While || statement->getType() == StmtType::If || statement->getType() == StmtType::Call) {
 		return true;
 	}
 	if (variables.size() > 1) {
@@ -74,7 +74,7 @@ void PKB::ModifiesSRelation::optimizeCall(const shared_ptr<StmtInfo>& statement,
 
 void PKB::ModifiesSRelation::optimizeConditional(const shared_ptr<StmtInfo>& statement, Types::ParentStore& parent_store,
                                                  SVRelationStore<ModifiesSRelation>& store) {
-	if (statement->getType() != StmtType::IfStmt && statement->getType() != StmtType::WhileStmt) {
+	if (statement->getType() != StmtType::If && statement->getType() != StmtType::While) {
 		return;
 	}
 	// For conditional statements, need to look at the child* statements for modify statements.

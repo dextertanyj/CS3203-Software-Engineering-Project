@@ -51,7 +51,7 @@ TEST_CASE("SP::Node::IfNode::equals") {
 		REQUIRE_FALSE(node->equals(other));
 	}
 
-	SECTION("Different IfStmtLst Test") {
+	SECTION("Different IfLst Test") {
 		unique_ptr<ExpressionNode> cond_expr_2 =
 			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "!=", "0", ")"})));
 		unique_ptr<StatementListNode> if_stmt_lst_2 = SP::TestUtilities::createStatementList(stmt_3, 2);

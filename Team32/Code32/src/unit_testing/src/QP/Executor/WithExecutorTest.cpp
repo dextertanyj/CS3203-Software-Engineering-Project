@@ -19,7 +19,7 @@ TEST_CASE("WithExecutor::execute") {
 	StorageAdapter store = StorageAdapter(pkb);
 	pkb.setStmtType(1, StmtType::Print);
 	pkb.setStmtType(2, StmtType::Call);
-	pkb.setStmtType(3, StmtType::WhileStmt);
+	pkb.setStmtType(3, StmtType::While);
 	pkb.setStmtType(4, StmtType::Read);
 	pkb.setUses(1, "x");
 	pkb.setUses(3, "x");
@@ -29,7 +29,7 @@ TEST_CASE("WithExecutor::execute") {
 	pkb.setWhileControl(3, "x");
 	pkb.setProc("main", 1, 4);
 
-	pkb.setStmtType(5, StmtType::IfStmt);
+	pkb.setStmtType(5, StmtType::If);
 	pkb.setStmtType(6, StmtType::Assign);
 	pkb.setStmtType(7, StmtType::Print);
 	pkb.setUses(5, "y");
@@ -44,44 +44,44 @@ TEST_CASE("WithExecutor::execute") {
 	pkb.setAssign(6, "y", expression1);
 	pkb.setProc("mars", 5, 7);
 
-	ReferenceArgument proc = ReferenceArgument(Attribute{AttributeType::NameIdentifier, Declaration{DesignEntity::Procedure, "p"}});
+	ClauseArgument proc = ClauseArgument(Attribute{AttributeType::NameIdentifier, Declaration{DesignEntity::Procedure, "p"}});
 	WithInternalExecutors<Name, Name> proc_internal_executor({AttributeExecutor::selectProcedures, AttributeExecutor::identity<Name>});
-	ReferenceArgument call = ReferenceArgument(Attribute{AttributeType::ProcedureName, Declaration{DesignEntity::Call, "c"}});
+	ClauseArgument call = ClauseArgument(Attribute{AttributeType::ProcedureName, Declaration{DesignEntity::Call, "c"}});
 	WithInternalExecutors<Name, Number> call_internal_executor({AttributeExecutor::selectStatements, AttributeExecutor::callToProcedure});
-	ReferenceArgument variable = ReferenceArgument(Attribute{AttributeType::NameIdentifier, Declaration{DesignEntity::Variable, "v"}});
+	ClauseArgument variable = ClauseArgument(Attribute{AttributeType::NameIdentifier, Declaration{DesignEntity::Variable, "v"}});
 	WithInternalExecutors<Name, Name> variable_internal_executor({AttributeExecutor::selectVariables, AttributeExecutor::identity<Name>});
-	ReferenceArgument read = ReferenceArgument(Attribute{AttributeType::VariableName, Declaration{DesignEntity::Read, "r"}});
+	ClauseArgument read = ClauseArgument(Attribute{AttributeType::VariableName, Declaration{DesignEntity::Read, "r"}});
 	WithInternalExecutors<Name, Number> read_internal_executor(
 		{AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<Types::ClauseType::ModifiesS>});
-	ReferenceArgument print = ReferenceArgument(Attribute{AttributeType::VariableName, Declaration{DesignEntity::Print, "pr"}});
+	ClauseArgument print = ClauseArgument(Attribute{AttributeType::VariableName, Declaration{DesignEntity::Print, "pr"}});
 	WithInternalExecutors<Name, Number> print_internal_executor(
 		{AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<Types::ClauseType::UsesS>});
-	ReferenceArgument constant =
-		ReferenceArgument(Attribute{AttributeType::NumberIdentifier, Declaration{DesignEntity::Constant, "const"}});
+	ClauseArgument constant =
+		ClauseArgument(Attribute{AttributeType::NumberIdentifier, Declaration{DesignEntity::Constant, "const"}});
 	WithInternalExecutors<Number, Number> constant_internal_executor(
 		{AttributeExecutor::selectConstants, AttributeExecutor::identity<Number>});
-	ReferenceArgument stmt = ReferenceArgument(Attribute{AttributeType::NumberIdentifier, Declaration{DesignEntity::Stmt, "s"}});
+	ClauseArgument stmt = ClauseArgument(Attribute{AttributeType::NumberIdentifier, Declaration{DesignEntity::Stmt, "s"}});
 	WithInternalExecutors<Number, Number> stmt_internal_executor(
 		{AttributeExecutor::selectStatements, AttributeExecutor::identity<Number>});
-	ReferenceArgument if_stmt = ReferenceArgument(Attribute{AttributeType::NumberIdentifier, Declaration{DesignEntity::If, "if"}});
+	ClauseArgument if_stmt = ClauseArgument(Attribute{AttributeType::NumberIdentifier, Declaration{DesignEntity::If, "if"}});
 	WithInternalExecutors<Number, Number> if_stmt_internal_executor(
 		{AttributeExecutor::selectStatements, AttributeExecutor::identity<Number>});
-	ReferenceArgument while_stmt = ReferenceArgument(Attribute{AttributeType::NumberIdentifier, Declaration{DesignEntity::While, "while"}});
+	ClauseArgument while_stmt = ClauseArgument(Attribute{AttributeType::NumberIdentifier, Declaration{DesignEntity::While, "while"}});
 	WithInternalExecutors<Number, Number> while_stmt_internal_executor(
 		{AttributeExecutor::selectStatements, AttributeExecutor::identity<Number>});
-	ReferenceArgument assign_stmt = ReferenceArgument(Attribute{AttributeType::NumberIdentifier, Declaration{DesignEntity::Assign, "a"}});
+	ClauseArgument assign_stmt = ClauseArgument(Attribute{AttributeType::NumberIdentifier, Declaration{DesignEntity::Assign, "a"}});
 	WithInternalExecutors<Number, Number> assign_stmt_internal_executor(
 		{AttributeExecutor::selectStatements, AttributeExecutor::identity<Number>});
 
-	ReferenceArgument main = ReferenceArgument("main");
-	ReferenceArgument mars = ReferenceArgument("mars");
-	ReferenceArgument x = ReferenceArgument("x");
-	ReferenceArgument y = ReferenceArgument("y");
-	ReferenceArgument invalid_name = ReferenceArgument("b");
-	ReferenceArgument index_3 = ReferenceArgument(3);
-	ReferenceArgument index_5 = ReferenceArgument(5);
-	ReferenceArgument index_6 = ReferenceArgument(6);
-	ReferenceArgument invalid_index = ReferenceArgument(11);
+	ClauseArgument main = ClauseArgument("main");
+	ClauseArgument mars = ClauseArgument("mars");
+	ClauseArgument x = ClauseArgument("x");
+	ClauseArgument y = ClauseArgument("y");
+	ClauseArgument invalid_name = ClauseArgument("b");
+	ClauseArgument index_3 = ClauseArgument(3);
+	ClauseArgument index_5 = ClauseArgument(5);
+	ClauseArgument index_6 = ClauseArgument(6);
+	ClauseArgument invalid_index = ClauseArgument(11);
 	WithInternalExecutors<Name, Name> name_internal_executor({AttributeExecutor::extractName, AttributeExecutor::identity<Name>});
 	WithInternalExecutors<Number, Number> index_internal_executor({AttributeExecutor::extractNumber, AttributeExecutor::identity<Number>});
 

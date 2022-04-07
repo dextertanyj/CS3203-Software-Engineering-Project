@@ -18,7 +18,7 @@ using namespace Types;
  */
 
 static const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Number, Number>> number_attribute_map = {
-	{ReferenceType::StatementIndex, {AttributeExecutor::extractNumber, AttributeExecutor::identity<Number>}},
+	{ArgumentType::Number, {AttributeExecutor::extractNumber, AttributeExecutor::identity<Number>}},
 	{DispatchAttributeKey{DesignEntity::Stmt, AttributeType::NumberIdentifier},
      {AttributeExecutor::selectStatements, AttributeExecutor::identity<Number>}},
 	{DispatchAttributeKey{DesignEntity::Assign, AttributeType::NumberIdentifier},
@@ -45,7 +45,7 @@ static const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<
      {AttributeExecutor::selectStatements, AttributeExecutor::statementToVariable<ClauseType::UsesS>}}};
 
 static const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<Name, Name>> name_attribute_name_map = {
-	{ReferenceType::Name, {AttributeExecutor::extractName, AttributeExecutor::identity<Name>}},
+	{ArgumentType::Name, {AttributeExecutor::extractName, AttributeExecutor::identity<Name>}},
 	{DispatchAttributeKey{DesignEntity::Variable, AttributeType::NameIdentifier},
      {AttributeExecutor::selectVariables, AttributeExecutor::identity<Name>}},
 	{DispatchAttributeKey{DesignEntity::Procedure, AttributeType::NameIdentifier},
@@ -74,7 +74,7 @@ inline const unordered_map<WithClauseArgumentDispatchKey, WithInternalExecutors<
  */
 
 template <typename T>
-using ReferenceMap = unordered_map<ReferenceType, T>;
+using ReferenceMap = unordered_map<ArgumentType, T>;
 
 template <typename TAttribute, typename TLeft, typename TRight>
 using ExecutorPair = pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithExecutorFunction<TAttribute, TLeft, TRight>>;
@@ -82,13 +82,13 @@ using ExecutorPair = pair<WithExecutorFunction<TAttribute, TLeft, TRight>, WithE
 template <typename TAttribute, typename TLeft, typename TRight>
 static const ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>& getAttributeExecutorMap() {
 	static const ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>> map = {
-		{ReferenceType::Name,
+		{ArgumentType::Name,
 	     ExecutorPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
 	                                             WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
-		{ReferenceType::StatementIndex,
+		{ArgumentType::Number,
 	     ExecutorPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeConstant<TAttribute, TLeft, TRight>,
 	                                             WithExecutor::executeAttributeConstant<TAttribute, TLeft, TRight>)},
-		{ReferenceType::Attribute,
+		{ArgumentType::Attribute,
 	     ExecutorPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialAttributeAttribute<TAttribute, TLeft, TRight>,
 	                                             WithExecutor::executeAttributeAttribute<TAttribute, TLeft, TRight>)}};
 	return map;
@@ -97,9 +97,9 @@ static const ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>& g
 template <typename TAttribute, typename TLeft, typename TRight>
 static const ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>& getConstantExecutorMap() {
 	static const ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>> map = {
-		{ReferenceType::Name, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
-		{ReferenceType::StatementIndex, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
-		{ReferenceType::Attribute,
+		{ArgumentType::Name, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
+		{ArgumentType::Number, WithExecutor::executeTrivialConstantConstant<TAttribute, TLeft, TRight>},
+		{ArgumentType::Attribute,
 	     ExecutorPair<TAttribute, TLeft, TRight>(WithExecutor::executeTrivialConstantAttribute<TAttribute, TLeft, TRight>,
 	                                             WithExecutor::executeConstantAttribute<TAttribute, TLeft, TRight>)}};
 	return map;
@@ -108,19 +108,19 @@ static const ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>& g
 template <typename TAttribute, typename TLeft, typename TRight>
 static const ReferenceMap<ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>>& getExecutorMap() {
 	static const ReferenceMap<ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> map = {
-		{ReferenceType::Name, getConstantExecutorMap<TAttribute, TLeft, TRight>()},
-		{ReferenceType::StatementIndex, getConstantExecutorMap<TAttribute, TLeft, TRight>()},
-		{ReferenceType::Attribute, getAttributeExecutorMap<TAttribute, TLeft, TRight>()}};
+		{ArgumentType::Name, getConstantExecutorMap<TAttribute, TLeft, TRight>()},
+		{ArgumentType::Number, getConstantExecutorMap<TAttribute, TLeft, TRight>()},
+		{ArgumentType::Attribute, getAttributeExecutorMap<TAttribute, TLeft, TRight>()}};
 	return map;
 }
 
 template <typename TAttribute, typename TLeft, typename TRight>
-WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<ReferenceArgument>& args) {
+WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<ClauseArgument>& args) {
 	static const ReferenceMap<ReferenceMap<WithExecutorFunctionSet<TAttribute, TLeft, TRight>>> map =
 		getExecutorMap<TAttribute, TLeft, TRight>();
-	ReferenceType lhs = args.at(0).getType();
-	ReferenceType rhs = args.at(1).getType();
-	unordered_map<ReferenceType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> inner_map = map.at(lhs);
+	ArgumentType lhs = args.at(0).getType();
+	ArgumentType rhs = args.at(1).getType();
+	unordered_map<ArgumentType, WithExecutorFunctionSet<TAttribute, TLeft, TRight>> inner_map = map.at(lhs);
 	auto executor = inner_map.at(rhs);
 	return executor;
 }
@@ -138,15 +138,15 @@ WithExecutorFunctionSet<TAttribute, TLeft, TRight> getExecutor(const vector<Refe
  * @return the corresponding executor set.
  */
 template <typename TAttribute, typename TLeft, typename TRight>
-ExecutorSet dispatchHandler(const vector<ReferenceArgument>& args) {
+ExecutorSet dispatchHandler(const vector<ClauseArgument>& args) {
 	static const auto left_attribute_map = getAttributeMap<TAttribute, TLeft>();
 	static const auto right_attribute_map = getAttributeMap<TAttribute, TRight>();
 	WithClauseArgumentDispatchKey lhs_key = args.at(0).getType();
-	if (args.at(0).getType() == ReferenceType::Attribute) {
+	if (args.at(0).getType() == ArgumentType::Attribute) {
 		lhs_key = pair{args.at(0).getSynonymType(), args.at(0).getAttributeType()};
 	}
 	WithClauseArgumentDispatchKey rhs_key = args.at(1).getType();
-	if (args.at(1).getType() == ReferenceType::Attribute) {
+	if (args.at(1).getType() == ArgumentType::Attribute) {
 		rhs_key = pair{args.at(1).getSynonymType(), args.at(1).getAttributeType()};
 	}
 	auto lhs_executors_iter = left_attribute_map.find(lhs_key);
@@ -182,42 +182,42 @@ ExecutorSet dispatchHandler(const vector<ReferenceArgument>& args) {
  * These maps select the appropriate dispatch handler to use based on the attribute type, left synonym type and right synonym type.
  */
 
-const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>> number_handler_map = {
-	{ReferenceType::StatementIndex, dispatchHandler<Number, Number, Number>},
+const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ClauseArgument>&)>> number_handler_map = {
+	{ArgumentType::Number, dispatchHandler<Number, Number, Number>},
 	{AttributeType::NumberIdentifier, dispatchHandler<Number, Number, Number>},
 	{AttributeType::NumberIdentifier, dispatchHandler<Number, Number, Number>}};
 
-const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>> name_handler_map = {
-	{ReferenceType::Name, dispatchHandler<Name, Name, Name>},
+const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ClauseArgument>&)>> name_handler_map = {
+	{ArgumentType::Name, dispatchHandler<Name, Name, Name>},
 	{AttributeType::NameIdentifier, dispatchHandler<Name, Name, Name>},
 	{AttributeType::VariableName, dispatchHandler<Name, Name, Number>},
 	{AttributeType::ProcedureName, dispatchHandler<Name, Name, Number>}};
 
-const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>> variable_handler_map = {
-	{ReferenceType::Name, dispatchHandler<Name, Number, Name>},
+const unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ClauseArgument>&)>> variable_handler_map = {
+	{ArgumentType::Name, dispatchHandler<Name, Number, Name>},
 	{AttributeType::NameIdentifier, dispatchHandler<Name, Number, Name>},
 	{AttributeType::VariableName, dispatchHandler<Name, Number, Number>},
 	{AttributeType::ProcedureName, dispatchHandler<Name, Number, Number>}};
 
 const unordered_map<WithClauseBasicDispatchKey,
-                    unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ReferenceArgument>&)>>>
-	handler_map = {{ReferenceType::StatementIndex, number_handler_map},
+                    unordered_map<WithClauseBasicDispatchKey, function<ExecutorSet(const vector<ClauseArgument>&)>>>
+	handler_map = {{ArgumentType::Number, number_handler_map},
                    {AttributeType::NumberIdentifier, number_handler_map},
-                   {ReferenceType::Name, name_handler_map},
+                   {ArgumentType::Name, name_handler_map},
                    {AttributeType::NameIdentifier, name_handler_map},
                    {AttributeType::ProcedureName, variable_handler_map},
                    {AttributeType::VariableName, variable_handler_map}};
 
-ExecutorSetBundle Dispatcher::WithDispatcher::dispatcher(const vector<ReferenceArgument>& args) {
+ExecutorSetBundle Dispatcher::WithDispatcher::dispatcher(const vector<ClauseArgument>& args) {
 	if (args.size() != 2) {
 		throw QueryDispatchException("Incorrect argument count.");
 	}
 	WithClauseBasicDispatchKey lhs = args.at(0).getType();
-	if (args.at(0).getType() == ReferenceType::Attribute) {
+	if (args.at(0).getType() == ArgumentType::Attribute) {
 		lhs = args.at(0).getAttributeType();
 	}
 	WithClauseBasicDispatchKey rhs = args.at(1).getType();
-	if (args.at(1).getType() == ReferenceType::Attribute) {
+	if (args.at(1).getType() == ArgumentType::Attribute) {
 		rhs = args.at(1).getAttributeType();
 	}
 	auto handler_iter = handler_map.find(lhs);

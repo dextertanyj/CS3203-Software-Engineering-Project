@@ -9,7 +9,7 @@ SP::Node::WhileNode::WhileNode(StmtRef stmt_no, unique_ptr<ExpressionNode> cond_
 
 StmtRef SP::Node::WhileNode::extract(PKB::StorageUpdateInterface& pkb) const {
 	StmtRef stmt_ref = getStmtRef();
-	pkb.setStmtType(stmt_ref, StmtType::WhileStmt);
+	pkb.setStmtType(stmt_ref, StmtType::While);
 	Common::ExpressionProcessor::Expression expression = cond_expr->extract();
 	pkb.setConstant(expression.getConstants());
 	pkb.setUses(stmt_ref, expression.getVariables());
