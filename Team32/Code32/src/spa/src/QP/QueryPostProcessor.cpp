@@ -1,6 +1,7 @@
 #include "QP/QueryPostProcessor.h"
 
 #include <algorithm>
+#include <iterator>
 #include <string>
 
 #include "QP/Executor/AttributeExecutor.h"
@@ -24,15 +25,15 @@ vector<string> QP::QueryPostProcessor::processResult(QueryProperties& query_prop
 }
 
 template <QP::Types::ClauseType T>
-string statementToVariable(const QP::StorageAdapter& store, const string& value) {
+static string statementToVariable(const QP::StorageAdapter& store, const string& value) {
 	return QP::Executor::AttributeExecutor::statementToVariable<T>(store, stoul(value));
 }
 
-string callToProcedure(const QP::StorageAdapter& store, const string& value) {
+static string callToProcedure(const QP::StorageAdapter& store, const string& value) {
 	return QP::Executor::AttributeExecutor::callToProcedure(store, stoul(value));
 }
 
-const unordered_map<QP::Types::DispatchAttributeKey, function<string(const QP::StorageAdapter&, const string&)>> transform_map = {
+static const unordered_map<QP::Types::DispatchAttributeKey, function<string(const QP::StorageAdapter&, const string&)>> transform_map = {
 	{{QP::Types::DesignEntity::Read, QP::Types::AttributeType::VariableName}, statementToVariable<QP::Types::ClauseType::ModifiesS>},
 	{{QP::Types::DesignEntity::Call, QP::Types::AttributeType::ProcedureName}, callToProcedure},
 	{{QP::Types::DesignEntity::Print, QP::Types::AttributeType::VariableName}, statementToVariable<QP::Types::ClauseType::UsesS>}};
@@ -53,13 +54,14 @@ vector<string> QP::QueryPostProcessor::processStandardResult(QueryProperties& qu
 		return {};
 	}
 
-	size_t table_size = query_result.getNumberOfRows();
-	vector<string> result(table_size);
 	Types::SelectList select_list = query_properties.getSelectList();
-	vector<string> synonyms(select_list.size());
-	transform(select_list.begin(), select_list.end(), synonyms.begin(),
+	vector<string> synonyms;
+	synonyms.reserve(select_list.size());
+	transform(select_list.begin(), select_list.end(), back_inserter(synonyms),
 	          [](const ClauseArgument& argument) { return argument.getSynonymSymbol(); });
 
+	unordered_set<string> result_set;
+	size_t table_size = query_result.getNumberOfRows();
 	for (size_t i = 0; i < table_size; i++) {
 		ResultRow row = query_result.getRowWithOrder(synonyms, i);
 		string row_string;
@@ -69,11 +71,18 @@ vector<string> QP::QueryPostProcessor::processStandardResult(QueryProperties& qu
 			row_string.append(value);
 			row_string.append(TUPLE_SEPERATOR);
 		}
+
+		// Remove additional separator.
 		row_string.pop_back();
-		result[i] = row_string;
+
+		result_set.emplace(row_string);
 	}
 
-	return result;
+	vector<string> results;
+	results.reserve(result_set.size());
+	results.insert(results.end(), result_set.begin(), result_set.end());
+
+	return results;
 }
 
 vector<string> QP::QueryPostProcessor::processBooleanResult(QueryResult& query_result) {
