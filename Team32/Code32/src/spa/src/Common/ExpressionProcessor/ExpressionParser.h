@@ -1,6 +1,9 @@
 #ifndef SPA_EXPRESSIONPARSER_H
 #define SPA_EXPRESSIONPARSER_H
 
+#include <memory>
+#include <unordered_set>
+
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/ExpressionProcessor/LexerInterface.h"

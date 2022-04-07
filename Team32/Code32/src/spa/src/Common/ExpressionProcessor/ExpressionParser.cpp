@@ -1,17 +1,13 @@
 #include "Common/ExpressionProcessor/ExpressionParser.h"
 
-#include <utility>
-
 #include "Common/Converter.h"
 #include "Common/ExpressionProcessor/ArithmeticNode.h"
 #include "Common/ExpressionProcessor/BinaryLogicalNode.h"
 #include "Common/ExpressionProcessor/LogicalNode.h"
-#include "Common/ExpressionProcessor/OperatorAcceptor.h"
 #include "Common/ExpressionProcessor/ParenthesesWrapper.h"
 #include "Common/ExpressionProcessor/RelationalNode.h"
 #include "Common/ExpressionProcessor/TerminalNode.tpp"
 #include "Common/ExpressionProcessor/UnaryLogicalNode.h"
-#include "Common/TypeDefs.h"
 #include "Common/Validator.h"
 
 #define LOGICAL_PRECEDENCE (-1)
@@ -19,6 +15,8 @@
 #define RELATIONAL_PRECEDENCE 1
 #define ADD_SUBTRACT_PRECEDENCE 2
 #define MULTIPLY_DIVIDE_MODULUS_PRECEDENCE 3
+#define OPEN_PARENTHESES "("
+#define CLOSE_PARENTHESES ")"
 
 using namespace std;
 using namespace Common::ExpressionProcessor;
@@ -81,12 +79,12 @@ ParenthesizedExpression ExpressionParser::parseTerminal(Acceptor acceptor) {
 		}
 		return parseUnaryLogical();
 	}
-	if (token == "(") {
+	if (token == OPEN_PARENTHESES) {
 		// We only have to check for disallowed nested parentheses when parseTerminal is called sequentially without any actual
 		// construction.
 		ParenthesizedExpression lhs = parseTerminal(acceptor);
-		ParenthesizedExpression expression = construct(acceptor, lhs, 0);
-		lex.match(")");
+		ParenthesizedExpression expression = construct(acceptor, lhs, START_PRECEDENCE);
+		lex.match(CLOSE_PARENTHESES);
 		return ParenthesesWrapper(expression);
 	}
 	if (Validator::validateName(token)) {
@@ -107,7 +105,7 @@ shared_ptr<ExpressionNode> ExpressionParser::parseTerminalSafe(Acceptor acceptor
 }
 
 shared_ptr<UnaryLogicalNode> ExpressionParser::parseUnaryLogical() {
-	lex.check("(");
+	lex.check(OPEN_PARENTHESES);
 	shared_ptr<ExpressionNode> expression = parseTerminalSafe(OperatorAcceptor::acceptLogical);
 
 	shared_ptr<LogicalNode> logical_expression = dynamic_pointer_cast<LogicalNode>(expression);

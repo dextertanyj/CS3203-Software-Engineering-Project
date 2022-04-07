@@ -7,6 +7,6 @@
 Common::ExpressionProcessor::UnaryLogicalNode::UnaryLogicalNode(MathematicalOperator opr, std::shared_ptr<LogicalNode> expression)
 	: LogicalNode({std::move(expression), opr}) {
 	if (!OperatorAcceptor::acceptUnaryLogical(opr)) {
-		throw ExpressionProcessorException("Expected unary logical operator");
+		throw ExpressionProcessorException("Expected unary logical operator.");
 	}
 }
