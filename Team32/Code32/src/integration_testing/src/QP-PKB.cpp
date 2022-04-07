@@ -87,14 +87,27 @@ TEST_CASE("Basic select") {
 		string query1 = "Select BOOLEAN";
 		string query2 = "Select BOOLEAN such that Uses(3, \"x\")";
 		string query3 = "Select BOOLEAN such that Uses(1, \"x\")";
+		string query4 = "stmt s; variable s; Select BOOLEAN";
 
 		vector<string> result1 = processor.processQuery(query1);
 		vector<string> result2 = processor.processQuery(query2);
 		vector<string> result3 = processor.processQuery(query3);
+		vector<string> result4 = processor.processQuery(query4);
 
 		REQUIRE(result1 == vector<string>{"TRUE"});
 		REQUIRE(result2 == vector<string>{"TRUE"});
 		REQUIRE(result3 == vector<string>{"FALSE"});
+		REQUIRE(result4 == vector<string>{"FALSE"});
+	}
+
+	SECTION("Select attribute") {
+		string query = "stmt s; Select s.stmt#";
+
+		vector<string> result = processor.processQuery(query);
+
+		vector<string> expected_result = {"1", "2", "3", "4"};
+		sort(result.begin(), result.end());
+		REQUIRE(result == expected_result);
 	}
 };
 
@@ -366,6 +379,143 @@ TEST_CASE("Next clause") {
 	}
 };
 
+TEST_CASE("Affects clause") {
+	PKB::Storage pkb = PKB::Storage();
+
+	vector<string> assign_token1 = {"1"};
+	Preprocessor::QueryExpressionLexer lexer1 = Preprocessor::QueryExpressionLexer(assign_token1);
+	auto expression1 =
+		Common::ExpressionProcessor::ExpressionParser{lexer1, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
+	vector<string> assign_token2 = {"x", "+", "10", "*", "3"};
+	Preprocessor::QueryExpressionLexer lexer2 = Preprocessor::QueryExpressionLexer(assign_token2);
+	auto expression2 =
+		Common::ExpressionProcessor::ExpressionParser{lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
+	vector<string> assign_token3 = {"y"};
+	Preprocessor::QueryExpressionLexer lexer3 = Preprocessor::QueryExpressionLexer(assign_token1);
+	auto expression3 =
+		Common::ExpressionProcessor::ExpressionParser{lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
+	vector<string> assign_token4 = {"y", "+", "x"};
+	Preprocessor::QueryExpressionLexer lexer4 = Preprocessor::QueryExpressionLexer(assign_token2);
+	auto expression4 =
+		Common::ExpressionProcessor::ExpressionParser{lexer4, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
+
+	pkb.setStmtType(1, StmtType::Assign);
+	pkb.setStmtType(2, StmtType::Assign);
+	pkb.setStmtType(3, StmtType::Assign);
+	pkb.setStmtType(4, StmtType::Assign);
+
+	pkb.setAssign(1, "x", expression1);
+	pkb.setModifies(1, "x");
+	pkb.setAssign(2, "y", expression2);
+	pkb.setModifies(2, "y");
+	pkb.setUses(2, "x");
+	pkb.setAssign(3, "x", expression3);
+	pkb.setModifies(3, "x");
+	pkb.setUses(3, "y");
+	pkb.setAssign(4, "z", expression4);
+	pkb.setModifies(4, "z");
+	pkb.setUses(4, "x");
+	pkb.setUses(4, "y");
+
+	pkb.setNext(1, 2);
+	pkb.setNext(2, 3);
+	pkb.setNext(3, 4);
+
+	pkb.populateComplexRelations();
+
+	QP::QueryProcessor processor = QP::QueryProcessor(pkb);
+
+	SECTION("Affects") {
+		string query1 = "Select BOOLEAN such that Affects(1, 2)";
+		string query2 = "Select BOOLEAN such that Affects(1, _)";
+		string query3 = "Select BOOLEAN such that Affects(_, 2)";
+		string query4 = "Select BOOLEAN such that Affects(_, _)";
+		string query5 = "stmt s; Select s such that Affects(_, s)";
+		string query6 = "stmt s; Select s such that Affects(1, s)";
+		string query7 = "stmt s; Select s such that Affects(s, _)";
+		string query8 = "stmt s; Select s such that Affects(s, 3)";
+		string query9 = "stmt s, s1; Select <s, s1> such that Affects(s, s1)";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+		vector<string> result3 = processor.processQuery(query3);
+		vector<string> result4 = processor.processQuery(query4);
+		vector<string> result5 = processor.processQuery(query5);
+		vector<string> result6 = processor.processQuery(query6);
+		vector<string> result7 = processor.processQuery(query7);
+		vector<string> result8 = processor.processQuery(query8);
+		vector<string> result9 = processor.processQuery(query9);
+
+		vector<string> expected_result1 = {"TRUE"};
+		vector<string> expected_result2 = {"TRUE"};
+		vector<string> expected_result3 = {"TRUE"};
+		vector<string> expected_result4 = {"TRUE"};
+		vector<string> expected_result5 = {"2", "3", "4"};
+		vector<string> expected_result6 = {"2"};
+		vector<string> expected_result7 = {"1", "2", "3"};
+		vector<string> expected_result8 = {"2"};
+		vector<string> expected_result9 = {"1 2", "2 3", "2 4", "3 4"};
+		sort(result5.begin(), result5.end());
+		sort(result7.begin(), result7.end());
+		sort(result9.begin(), result9.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
+		REQUIRE(result3 == expected_result3);
+		REQUIRE(result4 == expected_result4);
+		REQUIRE(result5 == expected_result5);
+		REQUIRE(result6 == expected_result6);
+		REQUIRE(result7 == expected_result7);
+		REQUIRE(result8 == expected_result8);
+		REQUIRE(result9 == expected_result9);
+	}
+
+	SECTION("Affects*") {
+		string query1 = "Select BOOLEAN such that Affects*(2, 3)";
+		string query2 = "Select BOOLEAN such that Affects*(2, _)";
+		string query3 = "Select BOOLEAN such that Affects*(_, 3)";
+		string query4 = "Select BOOLEAN such that Affects*(_, _)";
+		string query5 = "stmt s; Select s such that Affects*(_, s)";
+		string query6 = "stmt s; Select s such that Affects*(2, s)";
+		string query7 = "stmt s; Select s such that Affects*(s, _)";
+		string query8 = "stmt s; Select s such that Affects*(s, 3)";
+		string query9 = "stmt s, s1; Select <s, s1> such that Affects*(s, s1)";
+		
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+		vector<string> result3 = processor.processQuery(query3);
+		vector<string> result4 = processor.processQuery(query4);
+		vector<string> result5 = processor.processQuery(query5);
+		vector<string> result6 = processor.processQuery(query6);
+		vector<string> result7 = processor.processQuery(query7);
+		vector<string> result8 = processor.processQuery(query8);
+		vector<string> result9 = processor.processQuery(query9);
+
+		vector<string> expected_result1 = {"TRUE"};
+		vector<string> expected_result2 = {"TRUE"};
+		vector<string> expected_result3 = {"TRUE"};
+		vector<string> expected_result4 = {"TRUE"};
+		vector<string> expected_result5 = {"2", "3", "4"};
+		vector<string> expected_result6 = {"3", "4"};
+		vector<string> expected_result7 = {"1", "2", "3"};
+		vector<string> expected_result8 = {"1", "2"};
+		vector<string> expected_result9 = {"1 2", "1 3", "1 4", "2 3", "2 4", "3 4"};
+		sort(result5.begin(), result5.end());
+		sort(result6.begin(), result6.end());
+		sort(result7.begin(), result7.end());
+		sort(result8.begin(), result8.end());
+		sort(result9.begin(), result9.end());
+		REQUIRE(result1 == expected_result1);
+		REQUIRE(result2 == expected_result2);
+		REQUIRE(result3 == expected_result3);
+		REQUIRE(result4 == expected_result4);
+		REQUIRE(result5 == expected_result5);
+		REQUIRE(result6 == expected_result6);
+		REQUIRE(result7 == expected_result7);
+		REQUIRE(result8 == expected_result8);
+		REQUIRE(result9 == expected_result9);
+	}
+};
+
 TEST_CASE("Pattern clause") {
 	PKB::Storage pkb = PKB::Storage();
 	pkb.setStmtType(1, StmtType::If);
@@ -376,16 +526,16 @@ TEST_CASE("Pattern clause") {
 	pkb.setStmtType(6, StmtType::While);
 
 	// Assign statements
-	vector<string> assign_token2 = {"x", "+", "1", "*", "9"};
+	vector<string> assign_token1 = {"x", "+", "1", "*", "9"};
+	Preprocessor::QueryExpressionLexer lexer1 = Preprocessor::QueryExpressionLexer(assign_token1);
+	auto expression1 =
+		Common::ExpressionProcessor::ExpressionParser{lexer1, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
+	pkb.setAssign(3, "y", expression1);
+	vector<string> assign_token2 = {"x", "+", "y"};
 	Preprocessor::QueryExpressionLexer lexer2 = Preprocessor::QueryExpressionLexer(assign_token2);
 	auto expression2 =
 		Common::ExpressionProcessor::ExpressionParser{lexer2, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
-	pkb.setAssign(3, "y", expression2);
-	vector<string> assign_token3 = {"x", "+", "y"};
-	Preprocessor::QueryExpressionLexer lexer3 = Preprocessor::QueryExpressionLexer(assign_token3);
-	auto expression3 =
-		Common::ExpressionProcessor::ExpressionParser{lexer3, Common::ExpressionProcessor::ExpressionType::Arithmetic}.parse();
-	pkb.setAssign(5, "y", expression3);
+	pkb.setAssign(5, "y", expression2);
 
 	// While statements
 	pkb.setWhileControl(2, "x");
@@ -644,6 +794,115 @@ TEST_CASE("One such that and one pattern") {
 
 		vector<string> expected_result = {"5"};
 		REQUIRE(result == expected_result);
+	}
+}
+
+TEST_CASE("With clauses") {
+	PKB::Storage pkb = PKB::Storage();
+	pkb.setStmtType(1, StmtType::Read);
+	pkb.setStmtType(2, StmtType::Print);
+	pkb.setStmtType(3, StmtType::Call);
+	pkb.setStmtType(4, StmtType::Assign);
+
+	pkb.setModifies(1, "y");
+	pkb.setUses(2, "y");
+	pkb.setModifies(4, "x");
+	pkb.setProc("proc1", 1, 3);
+	pkb.setProc("proc2", 4, 4);
+	pkb.setCall(3, "proc2");
+	pkb.populateComplexRelations();
+
+	QP::QueryProcessor processor = QP::QueryProcessor(pkb);
+
+	SECTION("Trivial clauses") {
+		string query1 = "stmt s, s1; Select s.stmt# with 1 = s1.stmt#";
+		string query2 = "stmt s, s1; Select s.stmt# with 10 = s1.stmt#";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		sort(result1.begin(), result1.end());
+		REQUIRE(result1 == vector<string>({"1", "2", "3", "4"}));
+		REQUIRE(result2 == vector<string>({}));
+	}
+
+	SECTION("int & int") {
+		string query1 = "Select BOOLEAN with 1 = 1";
+		string query2 = "Select BOOLEAN with 2 = 1";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		REQUIRE(result1 == vector<string>({"TRUE"}));
+		REQUIRE(result2 == vector<string>({"FALSE"}));
+	}
+
+	SECTION("synonym & int") {
+		string query1 = "stmt s; Select s with s.stmt# = 1";
+		string query2 = "assign a; Select a with a.stmt# = 1";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		REQUIRE(result1 == vector<string>({"1"}));
+		REQUIRE(result2 == vector<string>({}));
+	}
+
+	SECTION("int & synonynm") {
+		string query1 = "stmt s; Select s with 1 = s.stmt#";
+		string query2 = "assign a; Select a with 1 = a.stmt#";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		REQUIRE(result1 == vector<string>({"1"}));
+		REQUIRE(result2 == vector<string>({}));
+	}
+
+	SECTION("string & string") {
+		string query1 = "stmt s; Select s.stmt# with \"a\" = \"a\"";
+		string query2 = "stmt s; Select s.stmt# with \"a\" = \"b\"";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		sort(result1.begin(), result1.end());
+		REQUIRE(result1 == vector<string>({"1", "2", "3", "4"}));
+		REQUIRE(result2 == vector<string>({}));
+	}
+
+	SECTION("synonym & string") {
+		string query1 = "variable v; Select v.varName with v.varName = \"x\"";
+		string query2 = "variable v; Select v with v.varName = \"b\"";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		REQUIRE(result1 == vector<string>({"x"}));
+		REQUIRE(result2 == vector<string>({}));
+	}
+
+	SECTION("string & synonym") {
+		string query1 = "variable v; Select v.varName with  \"x\" = v.varName";
+		string query2 = "variable v; Select v with  \"b\" = v.varName";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		REQUIRE(result1 == vector<string>({"x"}));
+		REQUIRE(result2 == vector<string>({}));
+	}
+
+	SECTION("synonym & synonym") {
+		string query1 = "stmt s, s1; Select s.stmt# with s.stmt# = s1.stmt#";
+		string query2 = "print p; read r; Select p with p.varName = r.varName";
+
+		vector<string> result1 = processor.processQuery(query1);
+		vector<string> result2 = processor.processQuery(query2);
+
+		sort(result1.begin(), result1.end());
+		REQUIRE(result1 == vector<string>({"1", "2", "3", "4"}));
+		REQUIRE(result2 == vector<string>({"2"}));
 	}
 }
 
