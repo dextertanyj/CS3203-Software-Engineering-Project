@@ -159,5 +159,7 @@ bool ExpressionParser::checkExpressionType(const shared_ptr<ExpressionNode>& exp
 			return dynamic_pointer_cast<RelationalNode>(expression) != nullptr;
 		case ExpressionType::Logical:
 			return dynamic_pointer_cast<LogicalNode>(expression) != nullptr;
+		default:
+			return false;
 	}
 }

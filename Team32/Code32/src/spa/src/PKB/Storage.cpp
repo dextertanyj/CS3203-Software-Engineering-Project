@@ -5,10 +5,8 @@
 
 using namespace std;
 
-PKB::Storage::Storage() : next_manager(control_flow_graph), affects_manager(control_flow_graph, modifies_s_store, uses_s_store){};
+PKB::Storage::Storage() : next_manager(control_flow_graph), affects_manager(control_flow_graph, modifies_s_store, uses_s_store) {}
 
-// This method will store information about a statement into PKB's statement map.
-// Source Processor is guaranteed to call this method before storing relationships and variables.
 void PKB::Storage::setStmtType(StmtRef index, StmtType type) {
 	statement_store.insert(index, type);
 	shared_ptr<StmtInfo> info = statement_store.get(index);
@@ -23,9 +21,7 @@ void PKB::Storage::setProc(ProcRef procedure, StmtRef start, StmtRef end) {
 	vector<shared_ptr<StmtInfo>> statements;
 	for (StmtRef index = start; index <= end; index++) {
 		shared_ptr<StmtInfo> statement = statement_store.get(index);
-		if (statement == nullptr) {
-			throw invalid_argument("Statement not found.");
-		}
+		assert(statement != nullptr);
 		statements.push_back(statement);
 	}
 	procedure_store.insert(procedure, statements);
@@ -39,60 +35,48 @@ void PKB::Storage::setCall(StmtRef index, ProcRef name) {
 void PKB::Storage::setParent(StmtRef parent, StmtRef child) {
 	shared_ptr<StmtInfo> parent_info = statement_store.get(parent);
 	shared_ptr<StmtInfo> child_info = statement_store.get(child);
-	if (parent_info == nullptr || child_info == nullptr) {
-		throw invalid_argument("Statement does not exist.");
-	}
+	assert(parent_info != nullptr && child_info != nullptr);
 	parent_store.set(parent_info, child_info);
 }
 
 void PKB::Storage::setFollows(StmtRef front, StmtRef back) {
 	shared_ptr<StmtInfo> following_info = statement_store.get(front);
 	shared_ptr<StmtInfo> follower_info = statement_store.get(back);
-	if (following_info == nullptr || follower_info == nullptr) {
-		throw invalid_argument("Statement does not exist.");
-	}
+	assert(following_info != nullptr && follower_info != nullptr);
 	follows_store.set(following_info, follower_info);
 }
 
 void PKB::Storage::setModifies(StmtRef index, VarRef name) {
 	shared_ptr<StmtInfo> statement = statement_store.get(index);
-	if (statement == nullptr) {
-		throw invalid_argument("Statement does not exist.");
-	}
+	assert(statement != nullptr);
 	variable_store.insert(name);
 	modifies_s_store.set(move(statement), move(name));
 }
 
 void PKB::Storage::setModifies(StmtRef index, VarRefSet names) {
 	shared_ptr<StmtInfo> statement = statement_store.get(index);
-	if (statement == nullptr) {
-		throw invalid_argument("Statement does not exist.");
-	}
+	assert(statement != nullptr);
 	variable_store.insert(names);
 	modifies_s_store.set(move(statement), move(names));
 }
 
 void PKB::Storage::setUses(StmtRef index, VarRef name) {
 	shared_ptr<StmtInfo> statement = statement_store.get(index);
-	if (statement == nullptr) {
-		throw invalid_argument("Statement does not exist.");
-	}
+	assert(statement != nullptr);
 	variable_store.insert(name);
 	uses_s_store.set(statement, move(name));
 }
 
 void PKB::Storage::setUses(StmtRef index, VarRefSet names) {
 	shared_ptr<StmtInfo> statement = statement_store.get(index);
-	if (statement == nullptr) {
-		throw invalid_argument("Statement does not exist.");
-	}
+	assert(statement != nullptr);
 	variable_store.insert(names);
 	uses_s_store.set(statement, move(names));
 }
 
 void PKB::Storage::setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) {
 	shared_ptr<StmtInfo> statement = statement_store.get(index);
-	return assign_store.setAssign(statement, move(variable), move(expression));
+	return assign_store.setAssign(statement, variable, expression);
 }
 
 void PKB::Storage::setIfControl(StmtRef index, VarRefSet names) {
@@ -289,12 +273,16 @@ VarRefSet PKB::Storage::getIfControlVar(StmtRef index) { return if_control_store
 
 VarRefSet PKB::Storage::getWhileControlVar(StmtRef index) { return while_control_store.getByStmt(index); }
 
-ProcRef PKB::Storage::getCalledProcedure(StmtRef index) { return calls_statement_store.getProcedure(index); };
+ProcRef PKB::Storage::getCalledProcedure(StmtRef index) { return calls_statement_store.getProcedure(index); }
 
 void PKB::Storage::populateComplexRelations() {
 	calls_statement_store.populateCallStore(procedure_store, calls_store);
 	calls_store.optimize();
-	calls_graph.sort(procedure_store, calls_store);
+	try {
+		calls_graph.sort(procedure_store, calls_store);
+	} catch (const TopologicalSortException& e) {
+		throw CallGraphException(e.what());
+	}
 	parent_store.optimize();
 	follows_store.optimize();
 	ModifiesSRelation::optimize(parent_store, calls_statement_store, procedure_store, calls_graph, modifies_s_store);
@@ -334,7 +322,7 @@ unordered_map<StmtRef, shared_ptr<StmtInfo>> PKB::Storage::getStmtInfoMap() {
 	unordered_set<shared_ptr<StatementInfo>> set = statement_store.getAll();
 	unordered_map<StmtRef, shared_ptr<StmtInfo>> map;
 	for (const auto& item : set) {
-		map.insert({item->getIdentifier(), item});
+		map.emplace(item->getIdentifier(), item);
 	}
 	return map;
 }

@@ -9,7 +9,7 @@ bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store,
                                       const VarRef& variable) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Print) {
-		throw invalid_argument("Print statements cannot modify a variable");
+		return false;
 	}
 	if (statement->getType() == StmtType::While || statement->getType() == StmtType::If || statement->getType() == StmtType::Call) {
 		return true;
@@ -27,7 +27,7 @@ bool PKB::ModifiesSRelation::validate(SVRelationStore<ModifiesSRelation>* store,
                                       const VarRefSet& variables) {
 	StmtRef idx = statement->getIdentifier();
 	if (statement->getType() == StmtType::Print) {
-		throw invalid_argument("Print statements cannot modify a variable");
+		return false;
 	}
 	if (statement->getType() == StmtType::While || statement->getType() == StmtType::If || statement->getType() == StmtType::Call) {
 		return true;

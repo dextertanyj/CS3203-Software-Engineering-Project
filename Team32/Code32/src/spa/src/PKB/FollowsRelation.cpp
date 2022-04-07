@@ -1,22 +1,16 @@
 #include "FollowsRelation.h"
 
 void PKB::FollowsRelation::insertForward(const shared_ptr<StmtInfo>& following_to_insert) {
-	if (getSelf()->getIdentifier() <= following_to_insert->getIdentifier()) {
-		throw invalid_argument("Statement out of order");
-	}
-	if (this->following != nullptr) {
-		throw invalid_argument("This statement is already following_to_insert a statement");
-	}
+	assert(getSelf()->getIdentifier() > following_to_insert->getIdentifier());
+	assert(this->following == nullptr);
+
 	this->following = following_to_insert;
 }
 
 void PKB::FollowsRelation::insertReverse(const shared_ptr<StmtInfo>& follower_to_insert) {
-	if (getSelf()->getIdentifier() >= follower_to_insert->getIdentifier()) {
-		throw invalid_argument("Statement out of order");
-	}
-	if (this->follower != nullptr) {
-		throw invalid_argument("This statement already has a follower statement");
-	}
+	assert(getSelf()->getIdentifier() < follower_to_insert->getIdentifier());
+	assert(this->follower == nullptr);
+
 	this->follower = follower_to_insert;
 }
 

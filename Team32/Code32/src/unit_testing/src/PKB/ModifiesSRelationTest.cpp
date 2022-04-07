@@ -23,9 +23,6 @@ TEST_CASE("PKB::ModifiesSRelation Test") {
 		REQUIRE(PKB::ModifiesSRelation::validate(&store, s5, "x"));
 		REQUIRE(PKB::ModifiesSRelation::validate(&store, s6, "x"));
 
-		// Print statements cannot modify a variable.
-		REQUIRE_THROWS_AS(PKB::ModifiesSRelation::validate(&store, s9, "x"), invalid_argument);
-
 		store.set(s1, "x");
 		store.set(s2, "x");
 		store.set(s3, "x");
@@ -46,7 +43,6 @@ TEST_CASE("PKB::ModifiesSRelation Test") {
 		REQUIRE(PKB::ModifiesSRelation::validate(&store, s4, var_refs));
 		REQUIRE_FALSE(PKB::ModifiesSRelation::validate(&store, s5, var_refs));
 		REQUIRE_FALSE(PKB::ModifiesSRelation::validate(&store, s6, var_refs));
-		REQUIRE_THROWS_AS(PKB::ModifiesSRelation::validate(&store, s9, var_refs), invalid_argument);
 	}
 
 	SECTION("PKB::ModifiesSRelation::optimize Test") {

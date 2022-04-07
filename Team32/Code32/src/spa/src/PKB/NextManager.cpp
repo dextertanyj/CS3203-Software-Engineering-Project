@@ -11,9 +11,7 @@ bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
 		return false;
 	}
 	auto next_set = control_flow_graph.getNextNodes(first);
-	auto found =
-		any_of(next_set.begin(), next_set.end(), [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == second; });
-	return found;
+	return any_of(next_set.begin(), next_set.end(), [&](const shared_ptr<StmtInfo>& info) { return info->getIdentifier() == second; });
 }
 
 bool PKB::NextManager::checkNextStar(StmtRef first, StmtRef second) {
@@ -154,7 +152,7 @@ void PKB::NextManager::processQueue(const shared_ptr<StmtInfo>& node, TraversalI
 	StmtInfoPtrSet star;
 	StmtInfoPtrSet set = (control_flow_graph.*info.gatherer)(node->getIdentifier());
 	for (const auto& current : set) {
-		star.insert(current);
+		star.emplace(current);
 		auto cached_set = info.cache.find(current->getIdentifier())->second;
 		star.insert(cached_set.begin(), cached_set.end());
 	}

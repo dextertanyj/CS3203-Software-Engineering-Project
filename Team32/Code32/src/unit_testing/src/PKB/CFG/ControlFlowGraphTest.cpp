@@ -14,7 +14,6 @@ TEST_CASE("PKB::ControlFlowGraph::createNode Test") {
 	CHECK_NOTHROW(cfg.createNode(print_stmt));
 }
 
-
 TEST_CASE("PKB::ControlFlowGraph::setNext Test") {
 	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
@@ -61,6 +60,3 @@ TEST_CASE("PKB::ControlFlowGraph::setIfExit Test") {
 
 	CHECK_NOTHROW(cfg.setIfExit(print_stmt->getIdentifier(), read_stmt->getIdentifier(), if_stmt_1->getIdentifier()));
 }
-
-// TODO
-// TEST_CASE("PKB::ControlFlowGraph::optimize Test") {}

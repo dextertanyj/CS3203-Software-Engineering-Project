@@ -4,5 +4,9 @@ SP::DesignExtractor::DesignExtractor(PKB::StorageUpdateInterface& pkb) : pkb(pkb
 
 void SP::DesignExtractor::extract(const std::unique_ptr<Node::ProgramNode>& ast) {
 	ast->extract(pkb);
-	pkb.populateComplexRelations();
+	try {
+		pkb.populateComplexRelations();
+	} catch (const PKB::CallGraphException& e) {
+		throw ExtractionException(e.what());
+	}
 }

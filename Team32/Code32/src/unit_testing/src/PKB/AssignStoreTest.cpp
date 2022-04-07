@@ -1,8 +1,8 @@
 #include "PKB/AssignStore.h"
 
 #include "Common/ExpressionProcessor/ArithmeticNode.h"
-#include "Common/ExpressionProcessor/TerminalNode.tpp"
 #include "Common/ExpressionProcessor/Expression.h"
+#include "Common/ExpressionProcessor/TerminalNode.tpp"
 #include "TestUtilities.h"
 #include "catch.hpp"
 #include "catch_tools.h"
@@ -11,8 +11,8 @@ using namespace std;
 using namespace Common::ExpressionProcessor;
 
 Expression getBasicOpTree() {
-	shared_ptr<ExpressionNode> root =
-		make_shared<ArithmeticNode>(MathematicalOperator::Plus, make_shared<TerminalNode<ConstVal>>(1), make_shared<TerminalNode<ConstVal>>(2));
+	shared_ptr<ExpressionNode> root = make_shared<ArithmeticNode>(MathematicalOperator::Plus, make_shared<TerminalNode<ConstVal>>(1),
+	                                                              make_shared<TerminalNode<ConstVal>>(2));
 	unordered_set<VarRef> variables = unordered_set<VarRef>();
 	unordered_set<ConstVal> constants = unordered_set<ConstVal>({1, 2});
 	Expression node = Expression(root, variables, constants);
@@ -30,28 +30,12 @@ Expression getPartialOpTree() {
 TEST_CASE("PKB::AssignStore::setAssign Success Test") {
 	PKB::AssignStore store = PKB::AssignStore();
 	store.setAssign(TestUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree());
-	unordered_map<StmtRef, PKB::AssignRelation> map = store.getAssignMap();
-	auto obj = map.find(1);
+	unordered_map<VarRef, unordered_set<PKB::AssignRelation>> map = store.getAssignMap();
+	auto obj = map.find("x");
 	REQUIRE_EQUALS(map.size(), 1);
-	REQUIRE_EQUALS(obj->first, 1);
-	REQUIRE_EQUALS(obj->second.variable, "x");
-	REQUIRE(obj->second.expression == getBasicOpTree());
-}
-
-TEST_CASE("PKB::AssignStore::setAssign Duplicate StmtNo Test") {
-	PKB::AssignStore store = PKB::AssignStore();
-	store.setAssign(TestUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree());
-	REQUIRE_THROWS_AS(store.setAssign(TestUtilities::createStmtInfo(1, StmtType::Assign), "x", getBasicOpTree()), invalid_argument);
-}
-
-TEST_CASE("PKB::AssignStore::setAssign Invalid VarRef Test") {
-	PKB::AssignStore store = PKB::AssignStore();
-	REQUIRE_THROWS_AS(store.setAssign(TestUtilities::createStmtInfo(2, StmtType::Assign), "", getBasicOpTree()), invalid_argument);
-}
-
-TEST_CASE("PKB::AssignStore::setAssign Invalid Statement Type Test") {
-	PKB::AssignStore store = PKB::AssignStore();
-	REQUIRE_THROWS_AS(store.setAssign(TestUtilities::createStmtInfo(3, StmtType::Print), "", getBasicOpTree()), invalid_argument);
+	REQUIRE_EQUALS(obj->first, "x");
+	REQUIRE_EQUALS(obj->second.size(), 1);
+	REQUIRE(obj->second.begin()->expression == getBasicOpTree());
 }
 
 TEST_CASE("PKB::AssignStore::patternExists Exact Match Test") {
@@ -86,8 +70,9 @@ TEST_CASE("PKB::AssignStore::getStmtsWithPattern Test") {
 	store.setAssign(s_1, "x", getPartialOpTree());
 	store.setAssign(s_3, "x", getBasicOpTree());
 	store.setAssign(s_4, "x", getPartialOpTree());
-	unordered_map<StmtRef, PKB::AssignRelation> map = store.getAssignMap();
-	REQUIRE_EQUALS(map.size(), 3);
+	unordered_map<VarRef, unordered_set<PKB::AssignRelation>> map = store.getAssignMap();
+	REQUIRE_EQUALS(map.size(), 1);
+	REQUIRE_EQUALS(map.at("x").size(), 3);
 
 	// Requesting exact match should return 2 results.
 	StmtInfoPtrSet lst = store.getStmtsWithPattern("x", getPartialOpTree(), true);
@@ -112,8 +97,10 @@ TEST_CASE("PKB::AssignStore::getStmtsWithPattern Variable LHS Test") {
 	store.setAssign(s_1, "x", getPartialOpTree());
 	store.setAssign(s_4, "y", getPartialOpTree());
 	store.setAssign(s_3, "x", getBasicOpTree());
-	unordered_map<StmtRef, PKB::AssignRelation> map = store.getAssignMap();
-	REQUIRE_EQUALS(map.size(), 3);
+	unordered_map<VarRef, unordered_set<PKB::AssignRelation>> map = store.getAssignMap();
+	REQUIRE_EQUALS(map.size(), 2);
+	REQUIRE_EQUALS(map.at("x").size(), 2);
+	REQUIRE_EQUALS(map.at("y").size(), 1);
 
 	// Requesting exact match should return only 1 result.
 	StmtInfoPtrSet lst = store.getStmtsWithPattern("x", getPartialOpTree(), true);
@@ -138,8 +125,8 @@ TEST_CASE("PKB::AssignStore::getStmtsWithPatternLHS Test") {
 	store.setAssign(s_1, "x", getBasicOpTree());
 	store.setAssign(s_4, "y", getBasicOpTree());
 	store.setAssign(s_3, "x", getPartialOpTree());
-	unordered_map<StmtRef, PKB::AssignRelation> map = store.getAssignMap();
-	REQUIRE_EQUALS(map.size(), 3);
+	unordered_map<VarRef, unordered_set<PKB::AssignRelation>> map = store.getAssignMap();
+	REQUIRE_EQUALS(map.size(), 2);
 	StmtInfoPtrSet lst = store.getStmtsWithPatternLHS("x");
 	REQUIRE_EQUALS(lst.size(), 2);
 	REQUIRE(find(lst.begin(), lst.end(), s_1) != lst.end());
@@ -158,7 +145,7 @@ TEST_CASE("PKB::AssignStore::getStmtsWithPatternRHS Exact Match Test") {
 	store.setAssign(s_1, "x", getBasicOpTree());
 	store.setAssign(s_4, "y", getBasicOpTree());
 	store.setAssign(s_3, "z", getPartialOpTree());
-	unordered_map<StmtRef, PKB::AssignRelation> map = store.getAssignMap();
+	unordered_map<VarRef, unordered_set<PKB::AssignRelation>> map = store.getAssignMap();
 	REQUIRE_EQUALS(map.size(), 3);
 
 	// Exact match of partialOpTree- only statement 3 should be in the list
@@ -193,6 +180,6 @@ TEST_CASE("PKB::AssignStore::getStmtsWithPatternRHS Partial Match Test") {
 	store.setAssign(s_1, "x", getBasicOpTree());
 	store.setAssign(s_4, "y", getBasicOpTree());
 	store.setAssign(s_3, "z", getPartialOpTree());
-	unordered_map<StmtRef, PKB::AssignRelation> map = store.getAssignMap();
+	unordered_map<VarRef, unordered_set<PKB::AssignRelation>> map = store.getAssignMap();
 	REQUIRE_EQUALS(map.size(), 3);
 }

@@ -2,8 +2,10 @@
 #define SPA_SRC_PKB_PKB_H
 
 #include <memory>
+#include <stdexcept>
 
 #include "Common/ExpressionProcessor/Expression.h"
+#include "Common/ExpressionProcessor/Hash.h"
 #include "Common/TypeDefs.h"
 
 using namespace std;
@@ -48,12 +50,11 @@ class StatementNode;  // NOLINT(bugprone-forward-declaration-namespace)
 class IfNode;         // NOLINT(bugprone-forward-declaration-namespace)
 class WhileNode;      // NOLINT(bugprone-forward-declaration-namespace)
 class DummyNode;
-class NonConditionalNode;
 class ControlFlowGraph;
 class NextManager;
 class AffectsManager;
 
-typedef struct IfControlRelation {
+struct IfControlRelation {
 	static bool validate(SVRelationStore<IfControlRelation>* /*store*/, const shared_ptr<StmtInfo>& statement, const VarRef& /*var*/) {
 		return statement->getType() == StmtType::If;
 	}
@@ -61,9 +62,9 @@ typedef struct IfControlRelation {
 	                     const VarRefSet& /*var_set*/) {
 		return statement->getType() == StmtType::If;
 	}
-} IfControlRelation;
+};
 
-typedef struct WhileControlRelation {
+struct WhileControlRelation {
 	static bool validate(SVRelationStore<WhileControlRelation>* /*store*/, const shared_ptr<StmtInfo>& statement, const VarRef& /*var*/) {
 		return statement->getType() == StmtType::While;
 	}
@@ -71,13 +72,26 @@ typedef struct WhileControlRelation {
 	                     const VarRefSet& /*var_set*/) {
 		return statement->getType() == StmtType::While;
 	}
-} WhileControlRelation;
+};
 
-typedef struct AssignRelation {
-	shared_ptr<StmtInfo> node;
-	VarRef variable;
-	Common::EP::Expression expression;
-} AssignRelation;
+struct AssignRelation {
+	shared_ptr<StmtInfo> node;          // NOLINT(misc-non-private-member-variables-in-classes)
+	VarRef variable;                    // NOLINT(misc-non-private-member-variables-in-classes)
+	Common::EP::Expression expression;  // NOLINT(misc-non-private-member-variables-in-classes)
+	inline bool operator==(const AssignRelation& other) const {
+		return node == other.node && variable == other.variable && expression == other.expression;
+	}
+
+	friend hash<AssignRelation>;
+};
+
+struct CallGraphException : public runtime_error {
+	using runtime_error::runtime_error;
+};
+
+struct TopologicalSortException : public runtime_error {
+	using runtime_error::runtime_error;
+};
 
 namespace Types {};
 }
