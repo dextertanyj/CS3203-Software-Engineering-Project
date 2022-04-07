@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iterator>
 #include <unordered_set>
 
 using namespace std;
@@ -46,8 +47,9 @@ void QP::ResultTable::insertRow(const ResultRow& row) {
 }
 
 QP::ResultTable QP::ResultTable::filterBySelect(const QP::Types::DeclarationList& select_list) {
-	vector<string> synonyms(select_list.size());
-	transform(select_list.begin(), select_list.end(), synonyms.begin(),
+	vector<string> synonyms;
+	synonyms.reserve(select_list.size());
+	transform(select_list.begin(), select_list.end(), back_inserter(synonyms),
 	          [](const Types::Declaration& declaration) { return declaration.symbol; });
 
 	ResultTable filtered_table = ResultTable(synonyms);
