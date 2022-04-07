@@ -1,0 +1,33 @@
+procedure a  {
+call c;
+b4  =  a4  %  b3;
+b1  =  b3 *(92 ) ;
+read y3  ;
+  z1  = y1-  41-26;
+  }
+
+procedure b{
+print y4 ;
+if(  (  z3 < x3  )  &&  (( z3  >=52 ) &&( z1  <=  a3 )  ))then{
+a0 = 97 *100  ;
+ } else {
+ c2 =38 %73;
+  read x2;
+  } z1  =  91 ;
+ call c;
+ while( ( (  41 ==  c0)  ||  ( 90<= 97  )  )  || (!(94  <  b2) ) )  {
+ if ( 49  < c1  ) then{
+a4 = 84  + y3 ;
+  } else  {
+z0= 43%  (  69 ) ;
+}  read y3 ;
+} }
+
+procedure c  {
+print b4 ;
+  b0 = 9/ (13 ) ;
+ read c0;
+  c1= b3+  c1+ 12/  96;
+  x1  = c2 ;
+ }
+
