@@ -74,7 +74,7 @@ QP::QueryResult QP::QueryResult::joinIntraGroupResults(vector<QP::QueryResult>& 
 	priority_queue<size_t, vector<size_t>, greater<>> queue;
 	findNeighbours(results[0], synonym_to_index_map, queue, completed);
 	while (!queue.empty()) {
-		QP::QueryResult curr = results.at(queue.top());
+		QP::QueryResult curr = results[queue.top()];
 		queue.pop();
 		ResultTable to_add = curr.getTable();
 		table = ResultTable::joinTables(table, to_add);

@@ -38,11 +38,13 @@ ResultColumn QP::ResultTable::getColumn(const string& synonym) const {
 	return column;
 }
 
-ResultRow QP::ResultTable::getRow(size_t row_number) const { return table.at(row_number); }
+ResultRow QP::ResultTable::getRow(size_t row_number) const {
+	assert(row_number < table.size());
+	return table[row_number];
+}
 
 void QP::ResultTable::insertRow(const ResultRow& row) {
 	assert(row.size() == getNumberOfColumns());
-
 	table.push_back(row);
 }
 
@@ -60,7 +62,7 @@ QP::ResultTable QP::ResultTable::filterBySelect(const QP::Types::DeclarationList
 		ResultRow sub_row;
 		sub_row.reserve(select_list.size());
 		for (const auto& select : select_list) {
-			sub_row.push_back(row.at(synonyms_to_index_map.at(select.symbol)));
+			sub_row.push_back(row[synonyms_to_index_map.at(select.symbol)]);
 		}
 		rows.emplace(sub_row);
 	}
@@ -81,7 +83,7 @@ ResultRow QP::ResultTable::getRowWithOrder(const vector<string>& synonyms, size_
 	row_with_order.reserve(synonyms.size());
 	ResultRow row = table.at(row_number);
 	for (const string& synonym : synonyms) {
-		row_with_order.push_back(row.at(synonyms_to_index_map.at(synonym)));
+		row_with_order.push_back(row[synonyms_to_index_map.at(synonym)]);
 	}
 	return row_with_order;
 }
@@ -94,7 +96,7 @@ unordered_multimap<ResultRow, size_t> QP::ResultTable::buildHashTable(ResultTabl
 		ResultRow sub_row;
 		sub_row.reserve(key_synonyms.size());
 		for (const string& synonym : key_synonyms) {
-			sub_row.push_back(row.at(synonyms_to_index_map.at(synonym)));
+			sub_row.push_back(row[synonyms_to_index_map.at(synonym)]);
 		}
 		map.emplace(sub_row, row_number);
 		row_number++;
@@ -126,7 +128,7 @@ static ResultRow mergeRow(ResultRow current_row, const ResultRow& other_row, con
 	current_row.reserve(current_row.size() + synonym_order.size());
 	for (const string& synonym : synonym_order) {
 		size_t index = synonym_map.at(synonym);
-		current_row.push_back(other_row.at(index));
+		current_row.push_back(other_row[index]);
 	}
 	return current_row;
 }
@@ -162,7 +164,7 @@ QP::ResultTable QP::ResultTable::hashJoinTables(const ResultTable& table_one, co
 		auto range = map.equal_range(larger_table.getRowWithOrder(common_synonyms, i));
 		for (auto it = range.first; it != range.second; it++) {
 			ResultRow row =
-				mergeRow(larger_table.table.at(i), smaller_table.table.at(it->second), new_synonyms, smaller_table.synonyms_to_index_map);
+				mergeRow(larger_table.table[i], smaller_table.table[it->second], new_synonyms, smaller_table.synonyms_to_index_map);
 			final_table.insertRow(row);
 		}
 	}

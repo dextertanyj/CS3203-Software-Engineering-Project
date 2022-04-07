@@ -108,22 +108,21 @@ QueryResult executeIndexSynonym(const StorageAdapter& store, const ClauseArgumen
 
 template <ClauseType T>
 ExecutorSet executorFactoryIndexName(const vector<ClauseArgument>& args) {
-	return [index = args.at(0), variable = args.at(1)](const StorageAdapter& store) {
-		return executeTrivialIndexName<T>(store, index, variable);
-	};
+	return
+		[index = args[0], variable = args[1]](const StorageAdapter& store) { return executeTrivialIndexName<T>(store, index, variable); };
 }
 
 template <ClauseType T>
 ExecutorSet executorFactoryIndexWildcard(const vector<ClauseArgument>& args) {
-	return [index = args.at(0)](const StorageAdapter& store) { return executeTrivialIndexWildcardOrSynonym<T>(store, index); };
+	return [index = args[0]](const StorageAdapter& store) { return executeTrivialIndexWildcardOrSynonym<T>(store, index); };
 }
 
 template <ClauseType T>
 ExecutorSet executorFactoryIndexSynonym(const vector<ClauseArgument>& args) {
-	Types::Executor trivial_executor = [index = args.at(0)](const StorageAdapter& store) {
+	Types::Executor trivial_executor = [index = args[0]](const StorageAdapter& store) {
 		return executeTrivialIndexWildcardOrSynonym<T>(store, index);
 	};
-	Types::Executor executor = [index = args.at(0), variable = args.at(1)](const StorageAdapter& store) {
+	Types::Executor executor = [index = args[0], variable = args[1]](const StorageAdapter& store) {
 		return executeIndexSynonym<T>(store, index, variable);
 	};
 	return pair{trivial_executor, executor};
@@ -131,10 +130,10 @@ ExecutorSet executorFactoryIndexSynonym(const vector<ClauseArgument>& args) {
 
 template <ClauseType T>
 ExecutorSet executorFactorySynonymName(const vector<ClauseArgument>& args) {
-	Types::Executor trivial_executor = [statement = args.at(0), variable = args.at(1)](const StorageAdapter& store) {
+	Types::Executor trivial_executor = [statement = args[0], variable = args[1]](const StorageAdapter& store) {
 		return executeTrivialSynonymName<T>(store, statement, variable);
 	};
-	Types::Executor executor = [statement = args.at(0), variable = args.at(1)](const StorageAdapter& store) {
+	Types::Executor executor = [statement = args[0], variable = args[1]](const StorageAdapter& store) {
 		return executeSynonymName<T>(store, statement, variable);
 	};
 	return pair{trivial_executor, executor};
@@ -142,21 +141,19 @@ ExecutorSet executorFactorySynonymName(const vector<ClauseArgument>& args) {
 
 template <ClauseType T>
 ExecutorSet executorFactorySynonymWildcard(const vector<ClauseArgument>& args) {
-	Types::Executor trivial_executor = [statement = args.at(0)](const StorageAdapter& store) {
+	Types::Executor trivial_executor = [statement = args[0]](const StorageAdapter& store) {
 		return executeTrivialSynonymWildcardOrSynonym<T>(store, statement);
 	};
-	Types::Executor executor = [statement = args.at(0)](const StorageAdapter& store) {
-		return executeSynonymWildcard<T>(store, statement);
-	};
+	Types::Executor executor = [statement = args[0]](const StorageAdapter& store) { return executeSynonymWildcard<T>(store, statement); };
 	return pair{trivial_executor, executor};
 }
 
 template <ClauseType T>
 ExecutorSet executorFactorySynonymSynonym(const vector<ClauseArgument>& args) {
-	Types::Executor trivial_executor = [statement = args.at(0)](const StorageAdapter& store) {
+	Types::Executor trivial_executor = [statement = args[0]](const StorageAdapter& store) {
 		return executeTrivialSynonymWildcardOrSynonym<T>(store, statement);
 	};
-	Types::Executor executor = [statement = args.at(0), variable = args.at(1)](const StorageAdapter& store) {
+	Types::Executor executor = [statement = args[0], variable = args[1]](const StorageAdapter& store) {
 		return executeSynonymSynonym<T>(store, statement, variable);
 	};
 	return pair{trivial_executor, executor};
