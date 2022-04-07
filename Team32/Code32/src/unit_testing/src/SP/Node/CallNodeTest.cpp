@@ -1,8 +1,8 @@
 #include "SP/Node/CallNode.h"
 
-#include "SP/Node/PrintNode.h"
-#include "catch_tools.h"
 #include "../MockUtilities.h"
+#include "SP/Node/PrintReadNode.tpp"
+#include "catch_tools.h"
 
 using namespace std;
 using namespace SP::Node;
@@ -34,7 +34,7 @@ TEST_CASE("SP::Node::CallNode::equals") {
 	}
 
 	SECTION("Different Node Type Test") {
-		shared_ptr<PrintNode> other = make_shared<PrintNode>(1, make_unique<VariableNode>("a"));
+		shared_ptr<PrintReadNode<StmtType::Print>> other = make_shared<PrintReadNode<StmtType::Print>>(1, make_unique<VariableNode>("a"));
 		REQUIRE_FALSE(node->equals(other));
 	}
 }

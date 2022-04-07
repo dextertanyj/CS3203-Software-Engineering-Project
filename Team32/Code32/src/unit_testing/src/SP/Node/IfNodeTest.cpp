@@ -4,8 +4,7 @@
 #include "../TestUtilities.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "SP/Node/CallNode.h"
-#include "SP/Node/PrintNode.h"
-#include "SP/Node/ReadNode.h"
+#include "SP/Node/PrintReadNode.tpp"
 #include "SP/SP.h"
 #include "catch_tools.h"
 
@@ -168,7 +167,7 @@ TEST_CASE("SP::Node::IfNode::extract Test") {
 		unique_ptr<StatementListNode> then_body = make_unique<StatementListNode>();
 		then_body->addStatementNode(make_unique<CallNode>(then_statement, "Procedure"));
 		unique_ptr<StatementListNode> else_body = make_unique<StatementListNode>();
-		else_body->addStatementNode(make_unique<ReadNode>(else_statement, make_unique<VariableNode>("A")));
+		else_body->addStatementNode(make_unique<PrintReadNode<StmtType::Read>>(else_statement, make_unique<VariableNode>("A")));
 		IfNode node = IfNode(statement_number, std::move(condition), std::move(then_body), std::move(else_body));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);
@@ -205,12 +204,12 @@ TEST_CASE("SP::Node::IfNode::extract Test") {
 			make_unique<ExpressionNode>(SP::TestUtilities::createConditionalExpression(vector<string>({"x", "<", "y"})));
 		unique_ptr<StatementListNode> then_body = make_unique<StatementListNode>();
 		then_body->addStatementNode(make_unique<CallNode>(first_then_statement, "Procedure"));
-		then_body->addStatementNode(make_unique<ReadNode>(second_then_statement, make_unique<VariableNode>("A")));
-		then_body->addStatementNode(make_unique<PrintNode>(third_then_statement, make_unique<VariableNode>("B")));
+		then_body->addStatementNode(make_unique<PrintReadNode<StmtType::Read>>(second_then_statement, make_unique<VariableNode>("A")));
+		then_body->addStatementNode(make_unique<PrintReadNode<StmtType::Print>>(third_then_statement, make_unique<VariableNode>("B")));
 		unique_ptr<StatementListNode> else_body = make_unique<StatementListNode>();
 		else_body->addStatementNode(make_unique<CallNode>(first_else_statement, "Other"));
-		else_body->addStatementNode(make_unique<ReadNode>(second_else_statement, make_unique<VariableNode>("Y")));
-		else_body->addStatementNode(make_unique<PrintNode>(third_else_statement, make_unique<VariableNode>("Z")));
+		else_body->addStatementNode(make_unique<PrintReadNode<StmtType::Read>>(second_else_statement, make_unique<VariableNode>("Y")));
+		else_body->addStatementNode(make_unique<PrintReadNode<StmtType::Print>>(third_else_statement, make_unique<VariableNode>("Z")));
 		IfNode node = IfNode(statement_number, std::move(condition), std::move(then_body), std::move(else_body));
 		StmtRef result = node.extract(pkb);
 		REQUIRE_EQUALS(result, statement_number);

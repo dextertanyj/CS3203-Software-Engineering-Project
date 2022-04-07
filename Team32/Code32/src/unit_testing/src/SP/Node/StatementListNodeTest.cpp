@@ -5,8 +5,7 @@
 #include "../MockUtilities.h"
 #include "SP/Lexer.h"
 #include "SP/Node/CallNode.h"
-#include "SP/Node/PrintNode.h"
-#include "SP/Node/ReadNode.h"
+#include "SP/Node/PrintReadNode.tpp"
 #include "SP/SP.h"
 #include "catch_tools.h"
 
@@ -15,20 +14,22 @@ using namespace SP::Node;
 
 TEST_CASE("SP::Node::StatementListNode::equals") {
 	shared_ptr<StatementListNode> statement_list_node = make_shared<StatementListNode>();
-	unique_ptr<PrintNode> print_node = make_unique<PrintNode>(1, make_unique<VariableNode>("a"));
+	unique_ptr<PrintReadNode<StmtType::Print>> print_node = make_unique<PrintReadNode<StmtType::Print>>(1, make_unique<VariableNode>("a"));
 	statement_list_node->addStatementNode(move(print_node));
 
 	SECTION("Same Object Test") { REQUIRE(statement_list_node->equals(statement_list_node)); }
 
 	SECTION("Same Node Test") {
 		shared_ptr<StatementListNode> other = make_shared<StatementListNode>();
-		unique_ptr<PrintNode> print_node_2 = make_unique<PrintNode>(1, make_unique<VariableNode>("a"));
+		unique_ptr<PrintReadNode<StmtType::Print>> print_node_2 =
+			make_unique<PrintReadNode<StmtType::Print>>(1, make_unique<VariableNode>("a"));
 		other->addStatementNode(move(print_node_2));
 		REQUIRE(statement_list_node->equals(other));
 	}
 
 	SECTION("Different Length Test") {
-		unique_ptr<PrintNode> print_node_2 = make_unique<PrintNode>(2, make_unique<VariableNode>("b"));
+		unique_ptr<PrintReadNode<StmtType::Print>> print_node_2 =
+			make_unique<PrintReadNode<StmtType::Print>>(2, make_unique<VariableNode>("b"));
 		statement_list_node->addStatementNode(move(print_node_2));
 		shared_ptr<StatementListNode> other = make_shared<StatementListNode>();
 		REQUIRE_FALSE(statement_list_node->equals(other));
@@ -38,7 +39,8 @@ TEST_CASE("SP::Node::StatementListNode::equals") {
 		unique_ptr<CallNode> call_node = make_unique<CallNode>(2, "test");
 		statement_list_node->addStatementNode(move(call_node));
 		shared_ptr<StatementListNode> other = make_shared<StatementListNode>();
-		unique_ptr<PrintNode> print_node_2 = make_unique<PrintNode>(1, make_unique<VariableNode>("b"));
+		unique_ptr<PrintReadNode<StmtType::Print>> print_node_2 =
+			make_unique<PrintReadNode<StmtType::Print>>(1, make_unique<VariableNode>("b"));
 		unique_ptr<CallNode> call_node_2 = make_unique<CallNode>(2, "test2");
 		other->addStatementNode(move(print_node_2));
 		other->addStatementNode(move(call_node_2));
@@ -61,33 +63,38 @@ TEST_CASE("SP::Node::StatementListNode::addStatementNode") {
 	}
 
 	SECTION("PrintNode Test") {
-		unique_ptr<PrintNode> print_node = make_unique<PrintNode>(1, make_unique<VariableNode>("a"));
+		unique_ptr<PrintReadNode<StmtType::Print>> print_node =
+			make_unique<PrintReadNode<StmtType::Print>>(1, make_unique<VariableNode>("a"));
 		statement_list_node->addStatementNode(move(print_node));
 		REQUIRE_EQUALS(statement_list_node->getStatementList().size(), 1);
 		vector<shared_ptr<StatementNode>> stmt_list = statement_list_node->getStatementList();
-		shared_ptr<PrintNode> print_node_shared = make_shared<PrintNode>(1, make_unique<VariableNode>("a"));
+		shared_ptr<PrintReadNode<StmtType::Print>> print_node_shared =
+			make_shared<PrintReadNode<StmtType::Print>>(1, make_unique<VariableNode>("a"));
 		REQUIRE(stmt_list[0]->equals(print_node_shared));
 		REQUIRE_EQUALS(stmt_list.size(), 1);
 	}
 
 	SECTION("ReadNode Test") {
-		unique_ptr<ReadNode> read_node = make_unique<ReadNode>(1, make_unique<VariableNode>("x"));
+		unique_ptr<PrintReadNode<StmtType::Read>> read_node = make_unique<PrintReadNode<StmtType::Read>>(1, make_unique<VariableNode>("x"));
 		statement_list_node->addStatementNode(move(read_node));
 		REQUIRE_EQUALS(statement_list_node->getStatementList().size(), 1);
 		vector<shared_ptr<StatementNode>> stmt_list = statement_list_node->getStatementList();
-		shared_ptr<ReadNode> read_node_shared = make_shared<ReadNode>(1, make_unique<VariableNode>("x"));
+		shared_ptr<PrintReadNode<StmtType::Read>> read_node_shared =
+			make_shared<PrintReadNode<StmtType::Read>>(1, make_unique<VariableNode>("x"));
 		REQUIRE(stmt_list[0]->equals(read_node_shared));
 		REQUIRE_EQUALS(stmt_list.size(), 1);
 	}
 
 	SECTION("Multiple Nodes Test") {
-		unique_ptr<PrintNode> print_node = make_unique<PrintNode>(1, make_unique<VariableNode>("a"));
+		unique_ptr<PrintReadNode<StmtType::Print>> print_node =
+			make_unique<PrintReadNode<StmtType::Print>>(1, make_unique<VariableNode>("a"));
 		unique_ptr<CallNode> call_node = make_unique<CallNode>(2, "test");
 		statement_list_node->addStatementNode(move(print_node));
 		statement_list_node->addStatementNode(move(call_node));
 		REQUIRE_EQUALS(statement_list_node->getStatementList().size(), 2);
 		vector<shared_ptr<StatementNode>> stmt_list = statement_list_node->getStatementList();
-		shared_ptr<PrintNode> print_node_shared = make_unique<PrintNode>(1, make_unique<VariableNode>("a"));
+		shared_ptr<PrintReadNode<StmtType::Print>> print_node_shared =
+			make_unique<PrintReadNode<StmtType::Print>>(1, make_unique<VariableNode>("a"));
 		shared_ptr<CallNode> call_node_shared = make_shared<CallNode>(2, "test");
 		REQUIRE(stmt_list[0]->equals(print_node_shared));
 		REQUIRE(stmt_list[1]->equals(call_node_shared));
@@ -102,8 +109,9 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList") {
 		lex.initialize("print flag; read x; }");
 		unique_ptr<StatementListNode> statement_list_node = StatementListNode::parseStatementList(lex, statement_count);
 		shared_ptr<StatementListNode> other = make_shared<StatementListNode>();
-		unique_ptr<PrintNode> print_node = make_unique<PrintNode>(1, make_unique<VariableNode>("flag"));
-		unique_ptr<ReadNode> read_node = make_unique<ReadNode>(2, make_unique<VariableNode>("x"));
+		unique_ptr<PrintReadNode<StmtType::Print>> print_node =
+			make_unique<PrintReadNode<StmtType::Print>>(1, make_unique<VariableNode>("flag"));
+		unique_ptr<PrintReadNode<StmtType::Read>> read_node = make_unique<PrintReadNode<StmtType::Read>>(2, make_unique<VariableNode>("x"));
 		other->addStatementNode(move(print_node));
 		other->addStatementNode(move(read_node));
 		REQUIRE(statement_list_node->equals(other));
@@ -115,8 +123,9 @@ TEST_CASE("SP::Node::StatementListNode::parseStatementList") {
 		lex.initialize("print flag; read x; }");
 		unique_ptr<StatementListNode> statement_list_node = StatementListNode::parseStatementList(lex, statement_count);
 		shared_ptr<StatementListNode> other = make_shared<StatementListNode>();
-		unique_ptr<PrintNode> print_node = make_unique<PrintNode>(1, make_unique<VariableNode>("flag"));
-		unique_ptr<ReadNode> read_node = make_unique<ReadNode>(3, make_unique<VariableNode>("x"));
+		unique_ptr<PrintReadNode<StmtType::Print>> print_node =
+			make_unique<PrintReadNode<StmtType::Print>>(1, make_unique<VariableNode>("flag"));
+		unique_ptr<PrintReadNode<StmtType::Read>> read_node = make_unique<PrintReadNode<StmtType::Read>>(3, make_unique<VariableNode>("x"));
 		other->addStatementNode(move(print_node));
 		other->addStatementNode(move(read_node));
 		REQUIRE_FALSE(statement_list_node->equals(other));
@@ -152,7 +161,7 @@ TEST_CASE("SP::Node::StatementListNode::extract Test") {
 	SECTION("Single enclosed statement") {
 		StmtRef statement_number = 2;
 		StatementListNode node = StatementListNode();
-		node.addStatementNode(make_unique<PrintNode>(statement_number, make_unique<VariableNode>("A")));
+		node.addStatementNode(make_unique<PrintReadNode<StmtType::Print>>(statement_number, make_unique<VariableNode>("A")));
 		vector<StmtRef> result = node.extract(pkb);
 		vector<StmtRef> expected = vector<StmtRef>({statement_number});
 		REQUIRE_EQUALS(expected, result);
@@ -168,9 +177,9 @@ TEST_CASE("SP::Node::StatementListNode::extract Test") {
 		StmtRef second_statement = 4;
 		StmtRef third_statement = 6;
 		StatementListNode node = StatementListNode();
-		node.addStatementNode(make_unique<PrintNode>(first_statement, make_unique<VariableNode>("A")));
+		node.addStatementNode(make_unique<PrintReadNode<StmtType::Print>>(first_statement, make_unique<VariableNode>("A")));
 		node.addStatementNode(make_unique<CallNode>(second_statement, "Procedure"));
-		node.addStatementNode(make_unique<ReadNode>(third_statement, make_unique<VariableNode>("B")));
+		node.addStatementNode(make_unique<PrintReadNode<StmtType::Read>>(third_statement, make_unique<VariableNode>("B")));
 		vector<StmtRef> result = node.extract(pkb);
 		vector<StmtRef> expected = vector<StmtRef>({first_statement, second_statement, third_statement});
 		REQUIRE_EQUALS(expected, result);

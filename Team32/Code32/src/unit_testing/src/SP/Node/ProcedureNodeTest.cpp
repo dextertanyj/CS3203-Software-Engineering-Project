@@ -3,8 +3,7 @@
 #include "../MockUtilities.h"
 #include "../TestUtilities.h"
 #include "SP/Node/CallNode.h"
-#include "SP/Node/PrintNode.h"
-#include "SP/Node/ReadNode.h"
+#include "SP/Node/PrintReadNode.tpp"
 #include "SP/SP.h"
 #include "catch_tools.h"
 
@@ -143,7 +142,7 @@ TEST_CASE("SP::Node::ProcedureNode::extract Test") {
 	SECTION("Single statement") {
 		StmtRef statement_number = 1;
 		unique_ptr<StatementListNode> statements = make_unique<StatementListNode>();
-		statements->addStatementNode(make_unique<ReadNode>(statement_number, make_unique<VariableNode>("A")));
+		statements->addStatementNode(make_unique<PrintReadNode<StmtType::Read>>(statement_number, make_unique<VariableNode>("A")));
 		ProcedureNode node = ProcedureNode("Procedure", move(statements), statement_number, statement_number);
 		node.extract(pkb);
 		REQUIRE_EQUALS(pkb.set_proc_arguments, vector<tuple<ProcRef, StmtRef, StmtRef>>({{"Procedure", 1, 1}}));
@@ -156,8 +155,8 @@ TEST_CASE("SP::Node::ProcedureNode::extract Test") {
 		StmtRef third_statement_number = 3;
 		unique_ptr<StatementListNode> statements = make_unique<StatementListNode>();
 		statements->addStatementNode(make_unique<CallNode>(first_statement_number, "Procedure"));
-		statements->addStatementNode(make_unique<ReadNode>(second_statement_number, make_unique<VariableNode>("A")));
-		statements->addStatementNode(make_unique<PrintNode>(third_statement_number, make_unique<VariableNode>("B")));
+		statements->addStatementNode(make_unique<PrintReadNode<StmtType::Read>>(second_statement_number, make_unique<VariableNode>("A")));
+		statements->addStatementNode(make_unique<PrintReadNode<StmtType::Print>>(third_statement_number, make_unique<VariableNode>("B")));
 		ProcedureNode node = ProcedureNode("Procedure", move(statements), first_statement_number, third_statement_number);
 		node.extract(pkb);
 		REQUIRE_EQUALS(pkb.set_proc_arguments, vector<tuple<ProcRef, StmtRef, StmtRef>>({{"Procedure", 1, 3}}));
