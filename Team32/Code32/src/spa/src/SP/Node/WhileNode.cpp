@@ -37,11 +37,11 @@ bool SP::Node::WhileNode::equals(const shared_ptr<StatementNode>& object) const 
 
 unique_ptr<SP::Node::WhileNode> SP::Node::WhileNode::parseWhileStatement(Lexer& lex, StmtRef& statement_count) {
 	StmtRef statement_index = statement_count++;
-	lex.nextIf("(");
+	lex.nextIf(OPEN_PARENTHESES);
 	unique_ptr<ExpressionNode> condition = ExpressionNode::parseExpression(lex, Common::ExpressionProcessor::ExpressionType::Logical);
-	lex.nextIf(")");
-	lex.nextIf("{");
+	lex.nextIf(CLOSE_PARENTHESES);
+	lex.nextIf(OPEN_BRACES);
 	unique_ptr<StatementListNode> statements = StatementListNode::parseStatementList(lex, statement_count);
-	lex.nextIf("}");
+	lex.nextIf(CLOSE_BRACES);
 	return make_unique<WhileNode>(statement_index, move(condition), move(statements));
 }

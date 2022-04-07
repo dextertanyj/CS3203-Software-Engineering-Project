@@ -25,10 +25,10 @@ unique_ptr<SP::Node::ProcedureNode> SP::Node::ProcedureNode::parseProcedure(Lexe
 	if (!Common::Validator::validateName(name)) {
 		throw SP::ParseException("Invalid procedure name.");
 	}
-	lex.nextIf("{");
+	lex.nextIf(OPEN_BRACES);
 	StmtRef start = statement_count;
 	unique_ptr<StatementListNode> statement_list = StatementListNode::parseStatementList(lex, statement_count);
 	StmtRef end = statement_count - 1;
-	lex.nextIf("}");
+	lex.nextIf(CLOSE_BRACES);
 	return make_unique<ProcedureNode>(name, move(statement_list), start, end);
 }

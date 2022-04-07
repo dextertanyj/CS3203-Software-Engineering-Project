@@ -23,6 +23,6 @@ bool SP::Node::ReadNode::equals(const shared_ptr<StatementNode>& object) const {
 
 unique_ptr<SP::Node::ReadNode> SP::Node::ReadNode::parseReadStatement(Lexer& lex, StmtRef& statement_count) {
 	unique_ptr<VariableNode> variable = VariableNode::parseVariable(lex);
-	lex.nextIf(";");
+	lex.nextIf(SEMICOLON);
 	return make_unique<ReadNode>(statement_count++, move(variable));
 }

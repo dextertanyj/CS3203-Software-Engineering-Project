@@ -40,6 +40,6 @@ unique_ptr<SP::Node::StatementListNode> SP::Node::StatementListNode::parseStatem
 	unique_ptr<StatementListNode> statement_list = make_unique<StatementListNode>();
 	do {
 		statement_list->addStatementNode(StatementNode::parseStatement(lex, statement_count));
-	} while (lex.peekToken() != "}");
+	} while (lex.peekToken() != CLOSE_BRACES);
 	return statement_list;
 }

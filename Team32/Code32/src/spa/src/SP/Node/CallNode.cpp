@@ -28,6 +28,6 @@ unique_ptr<SP::Node::CallNode> SP::Node::CallNode::parseCallStatement(Lexer& lex
 	if (!Common::Validator::validateName(name)) {
 		throw ParseException("Invalid procedure name.");
 	}
-	lex.nextIf(";");
+	lex.nextIf(SEMICOLON);
 	return make_unique<CallNode>(statement_count++, name);
 }
