@@ -13,8 +13,7 @@ void PKB::AssignStore::setAssign(const shared_ptr<StmtInfo>& statement, VarRef v
 	assert(!variable.empty());
 
 	auto var_to_relation_iter = var_to_relation_store.find(variable);
-	AssignRelation relation = {statement, move(variable), move(expression)};
-
+	AssignRelation relation = {statement, variable, expression};
 	if (var_to_relation_iter == var_to_relation_store.end()) {
 		var_to_relation_store.insert({variable, {relation}});
 	} else {
