@@ -9,6 +9,7 @@
 
 namespace QP::Executor::StatementVariableExecutor {
 
+using namespace std;
 using namespace QP::Types;
 
 // Trivial Executors
@@ -33,17 +34,17 @@ QueryResult executeIndexSynonym(const StorageAdapter& store, const ClauseArgumen
 
 // Executor Set Factories
 template <ClauseType T>
-ExecutorSet executorFactoryIndexName(const std::vector<ClauseArgument>& args);
+ExecutorSet executorFactoryIndexName(const vector<ClauseArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryIndexWildcard(const std::vector<ClauseArgument>& args);
+ExecutorSet executorFactoryIndexWildcard(const vector<ClauseArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryIndexSynonym(const std::vector<ClauseArgument>& args);
+ExecutorSet executorFactoryIndexSynonym(const vector<ClauseArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonymName(const std::vector<ClauseArgument>& args);
+ExecutorSet executorFactorySynonymName(const vector<ClauseArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonymWildcard(const std::vector<ClauseArgument>& args);
+ExecutorSet executorFactorySynonymWildcard(const vector<ClauseArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonymSynonym(const std::vector<ClauseArgument>& args);
+ExecutorSet executorFactorySynonymSynonym(const vector<ClauseArgument>& args);
 }
 
 #endif  // SPA_SRC_QP_EXECUTOR_STATEMENTVARIABLEEXECUTOR_H

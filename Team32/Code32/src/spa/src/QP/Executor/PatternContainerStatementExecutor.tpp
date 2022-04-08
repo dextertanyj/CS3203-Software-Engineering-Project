@@ -12,7 +12,8 @@ using namespace std;
 // Trivial Executors
 template <ClauseType T>
 QueryResult executeTrivialName(const StorageAdapter& store, const ClauseArgument& var) {
-	return QueryResult(!store.getControlStmt<T>(var.getName()).empty());
+	unordered_set result = store.getControlStmt<T>(var.getName());
+	return QueryResult(!result.empty());
 }
 
 template <ClauseType T>

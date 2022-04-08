@@ -8,6 +8,7 @@
 
 namespace QP::Executor::PatternAssignExecutor {
 
+using namespace std;
 using namespace QP::Types;
 
 // Trivial Executors
@@ -27,12 +28,12 @@ QueryResult executeSynonymExpression(const StorageAdapter& store, const ClauseAr
                                      const ClauseArgument& expression);
 
 // Executor Set Factories
-ExecutorSet executorFactoryNameWildcard(const std::vector<ClauseArgument>& args);
-ExecutorSet executorFactoryNameExpression(const std::vector<ClauseArgument>& args);
-ExecutorSet executorFactoryWildcardWildcard(const std::vector<ClauseArgument>& args);
-ExecutorSet executorFactoryWildcardExpression(const std::vector<ClauseArgument>& args);
-ExecutorSet executorFactorySynonymWildcard(const std::vector<ClauseArgument>& args);
-ExecutorSet executorFactorySynonymExpression(const std::vector<ClauseArgument>& args);
-};
+ExecutorSet executorFactoryNameWildcard(const vector<ClauseArgument>& args);
+ExecutorSet executorFactoryNameExpression(const vector<ClauseArgument>& args);
+ExecutorSet executorFactoryWildcardWildcard(const vector<ClauseArgument>& args);
+ExecutorSet executorFactoryWildcardExpression(const vector<ClauseArgument>& args);
+ExecutorSet executorFactorySynonymWildcard(const vector<ClauseArgument>& args);
+ExecutorSet executorFactorySynonymExpression(const vector<ClauseArgument>& args);
+}
 
 #endif  // SPA_SRC_QP_EXECUTOR_PATTERNASSIGNEXECUTOR_H

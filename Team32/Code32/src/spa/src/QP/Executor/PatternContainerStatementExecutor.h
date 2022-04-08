@@ -9,6 +9,7 @@
 
 namespace QP::Executor::PatternContainerStatementExecutor {
 
+using namespace std;
 using namespace QP::Types;
 
 // Trivial Executors
@@ -27,11 +28,11 @@ QueryResult executeSynonym(const StorageAdapter& store, const ClauseArgument& st
 
 // Executor Set Factories
 template <ClauseType T>
-ExecutorSet executorFactoryName(const std::vector<ClauseArgument>& args);
+ExecutorSet executorFactoryName(const vector<ClauseArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactoryWildcard(const std::vector<ClauseArgument>& args);
+ExecutorSet executorFactoryWildcard(const vector<ClauseArgument>& args);
 template <ClauseType T>
-ExecutorSet executorFactorySynonym(const std::vector<ClauseArgument>& args);
-};
+ExecutorSet executorFactorySynonym(const vector<ClauseArgument>& args);
+}
 
 #endif  // SPA_SRC_QP_EXECUTOR_PATTERNCONTAINERSTATEMENTEXECUTOR_H
