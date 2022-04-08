@@ -16,17 +16,20 @@ class QP::ResultTable {
 public:
 	ResultTable();
 	explicit ResultTable(std::vector<std::string> synonyms_stored);
-	[[nodiscard]] size_t getNumberOfRows() const;
-	[[nodiscard]] size_t getNumberOfColumns() const;
-	[[nodiscard]] std::vector<ResultRow> getTable() const;
-	[[nodiscard]] std::vector<std::string> getSynonymsStored() const;
-	[[nodiscard]] std::unordered_map<std::string, size_t> getSynonymsStoredMap() const;
-	[[nodiscard]] ResultColumn getColumn(const std::string& synonym) const;
-	[[nodiscard]] ResultRow getRow(size_t row_number) const;
-	[[nodiscard]] ResultRow getRowWithOrder(const std::vector<std::string>& synonyms, size_t row_number) const;
+
 	void insertRow(const ResultRow& row);
 	ResultTable filterBySelect(const QP::Types::DeclarationList& select_list);
-	bool containsRow(const ResultRow& row);
+
+	[[nodiscard]] size_t getNumberOfRows() const;
+	[[nodiscard]] size_t getNumberOfColumns() const;
+	[[nodiscard]] std::vector<std::string> getSynonymsStored() const;
+	[[nodiscard]] std::unordered_map<std::string, size_t> getSynonymsStoredMap() const;
+	[[nodiscard]] bool containsRow(const ResultRow& row) const;
+	[[nodiscard]] ResultRow getRow(size_t row_number) const;
+	[[nodiscard]] ResultRow getRowWithOrder(const std::vector<std::string>& synonyms, size_t row_number) const;
+	[[nodiscard]] ResultColumn getColumn(const std::string& synonym) const;
+	[[nodiscard]] std::vector<ResultRow> getTable() const;
+
 	static ResultTable joinTables(const ResultTable& table_one, const ResultTable& table_two);
 
 private:

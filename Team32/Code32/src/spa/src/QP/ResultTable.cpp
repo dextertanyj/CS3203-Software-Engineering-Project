@@ -16,33 +16,6 @@ QP::ResultTable::ResultTable(vector<string> synonyms_stored) : synonyms_stored(s
 	}
 }
 
-size_t QP::ResultTable::getNumberOfRows() const { return table.size(); }
-
-size_t QP::ResultTable::getNumberOfColumns() const { return synonyms_stored.size(); }
-
-vector<ResultRow> QP::ResultTable::getTable() const { return table; }
-
-vector<string> QP::ResultTable::getSynonymsStored() const { return synonyms_stored; }
-
-unordered_map<string, size_t> QP::ResultTable::getSynonymsStoredMap() const { return synonyms_to_index_map; }
-
-ResultColumn QP::ResultTable::getColumn(const string& synonym) const {
-	assert(synonyms_to_index_map.find(synonym) != synonyms_to_index_map.end());
-
-	size_t col_pos = synonyms_to_index_map.at(synonym);
-	size_t number_of_rows = getNumberOfRows();
-	ResultColumn column(number_of_rows);
-	for (int i = 0; i < number_of_rows; i++) {
-		column[i] = getRow(i)[col_pos];
-	}
-	return column;
-}
-
-ResultRow QP::ResultTable::getRow(size_t row_number) const {
-	assert(row_number < table.size());
-	return table[row_number];
-}
-
 void QP::ResultTable::insertRow(const ResultRow& row) {
 	assert(row.size() == getNumberOfColumns());
 	table.push_back(row);
@@ -74,35 +47,71 @@ QP::ResultTable QP::ResultTable::filterBySelect(const QP::Types::DeclarationList
 	return filtered_table;
 }
 
-bool QP::ResultTable::containsRow(const ResultRow& row) {
-	return any_of(table.begin(), table.end(), [row](const auto& row_stored) { return row_stored == row; });
+size_t QP::ResultTable::getNumberOfRows() const { return table.size(); }
+
+size_t QP::ResultTable::getNumberOfColumns() const { return synonyms_stored.size(); }
+
+vector<string> QP::ResultTable::getSynonymsStored() const { return synonyms_stored; }
+
+unordered_map<string, size_t> QP::ResultTable::getSynonymsStoredMap() const { return synonyms_to_index_map; }
+
+bool QP::ResultTable::containsRow(const ResultRow& row) const {
+	return any_of(table.begin(), table.end(), [&](const auto& row_stored) { return row_stored == row; });
 }
+
+ResultRow QP::ResultTable::getRow(size_t row_number) const { return table.at(row_number); }
 
 ResultRow QP::ResultTable::getRowWithOrder(const vector<string>& synonyms, size_t row_number) const {
 	ResultRow row_with_order;
 	row_with_order.reserve(synonyms.size());
 	ResultRow row = table.at(row_number);
-	for (const string& synonym : synonyms) {
+	for (const auto& synonym : synonyms) {
 		row_with_order.push_back(row[synonyms_to_index_map.at(synonym)]);
 	}
 	return row_with_order;
 }
 
-unordered_multimap<ResultRow, size_t> QP::ResultTable::buildHashTable(ResultTable& table, const vector<string>& key_synonyms) {
-	unordered_multimap<ResultRow, size_t> map;
-	unordered_map<string, size_t> synonyms_to_index_map = table.getSynonymsStoredMap();
-	size_t row_number = 0;
-	for (const ResultRow& row : table.table) {
-		ResultRow sub_row;
-		sub_row.reserve(key_synonyms.size());
-		for (const string& synonym : key_synonyms) {
-			sub_row.push_back(row[synonyms_to_index_map.at(synonym)]);
-		}
-		map.emplace(sub_row, row_number);
-		row_number++;
+ResultColumn QP::ResultTable::getColumn(const string& synonym) const {
+	assert(synonyms_to_index_map.find(synonym) != synonyms_to_index_map.end());
+
+	size_t col_pos = synonyms_to_index_map.at(synonym);
+	size_t number_of_rows = getNumberOfRows();
+	ResultColumn column(number_of_rows);
+	for (int i = 0; i < number_of_rows; i++) {
+		column[i] = getRow(i)[col_pos];
+	}
+	return column;
+}
+
+vector<ResultRow> QP::ResultTable::getTable() const { return table; }
+
+QP::ResultTable QP::ResultTable::joinTables(const ResultTable& table_one, const ResultTable& table_two) {
+	ResultTable superset_table;
+	ResultTable subset_table;
+
+	if (table_one.getNumberOfColumns() >= table_two.getNumberOfColumns()) {
+		superset_table = table_one;
+		subset_table = table_two;
+	} else {
+		superset_table = table_two;
+		subset_table = table_one;
 	}
 
-	return map;
+	unordered_map<string, size_t> superset_synonyms = superset_table.getSynonymsStoredMap();
+	vector<string> subset_synonyms = subset_table.getSynonymsStored();
+
+	size_t number_of_match = count_if(subset_synonyms.begin(), subset_synonyms.end(),
+	                                  [&](const auto& synonym) { return superset_synonyms.find(synonym) != superset_synonyms.end(); });
+
+	if (number_of_match == subset_synonyms.size()) {
+		return intersectTables(superset_table, subset_table);
+	}
+
+	if (number_of_match > 0) {
+		return hashJoinTables(superset_table, subset_table);
+	}
+
+	return loopJoinTables(superset_table, subset_table);
 }
 
 QP::ResultTable QP::ResultTable::intersectTables(const ResultTable& superset_table, const ResultTable& subset_table) {
@@ -114,7 +123,8 @@ QP::ResultTable QP::ResultTable::intersectTables(const ResultTable& superset_tab
 
 	size_t number_of_rows = superset_table.getNumberOfRows();
 	for (size_t i = 0; i < number_of_rows; i++) {
-		if (record_set.find(superset_table.getRowWithOrder(common_synonyms, i)) == record_set.end()) {
+		auto probe_row = superset_table.getRowWithOrder(common_synonyms, i);
+		if (record_set.find(probe_row) == record_set.end()) {
 			continue;
 		}
 		result.insertRow(superset_table.getRow(i));
@@ -126,7 +136,7 @@ QP::ResultTable QP::ResultTable::intersectTables(const ResultTable& superset_tab
 static ResultRow mergeRow(ResultRow current_row, const ResultRow& other_row, const vector<string>& synonym_order,
                           const unordered_map<string, size_t>& synonym_map) {
 	current_row.reserve(current_row.size() + synonym_order.size());
-	for (const string& synonym : synonym_order) {
+	for (const auto& synonym : synonym_order) {
 		size_t index = synonym_map.at(synonym);
 		current_row.push_back(other_row[index]);
 	}
@@ -163,8 +173,9 @@ QP::ResultTable QP::ResultTable::hashJoinTables(const ResultTable& table_one, co
 	for (size_t i = 0; i < larger_table.getNumberOfRows(); i++) {
 		auto range = map.equal_range(larger_table.getRowWithOrder(common_synonyms, i));
 		for (auto it = range.first; it != range.second; it++) {
-			ResultRow row =
-				mergeRow(larger_table.table[i], smaller_table.table[it->second], new_synonyms, smaller_table.synonyms_to_index_map);
+			auto outer_row = larger_table.table[i];
+			auto inner_row = smaller_table.table[it->second];
+			ResultRow row = mergeRow(outer_row, inner_row, new_synonyms, smaller_table.synonyms_to_index_map);
 			final_table.insertRow(row);
 		}
 	}
@@ -191,31 +202,19 @@ QP::ResultTable QP::ResultTable::loopJoinTables(const ResultTable& table_one, co
 	return table;
 }
 
-QP::ResultTable QP::ResultTable::joinTables(const ResultTable& table_one, const ResultTable& table_two) {
-	ResultTable superset_table;
-	ResultTable subset_table;
-
-	if (table_one.getNumberOfColumns() >= table_two.getNumberOfColumns()) {
-		superset_table = table_one;
-		subset_table = table_two;
-	} else {
-		superset_table = table_two;
-		subset_table = table_one;
+unordered_multimap<ResultRow, size_t> QP::ResultTable::buildHashTable(ResultTable& table, const vector<string>& key_synonyms) {
+	unordered_multimap<ResultRow, size_t> map;
+	unordered_map<string, size_t> synonyms_to_index_map = table.getSynonymsStoredMap();
+	size_t row_number = 0;
+	for (const auto& row : table.table) {
+		ResultRow sub_row;
+		sub_row.reserve(key_synonyms.size());
+		for (const auto& synonym : key_synonyms) {
+			sub_row.push_back(row.at(synonyms_to_index_map.at(synonym)));
+		}
+		map.emplace(sub_row, row_number);
+		row_number++;
 	}
 
-	unordered_map<string, size_t> superset_synonyms = superset_table.getSynonymsStoredMap();
-	vector<string> subset_synonyms = subset_table.getSynonymsStored();
-
-	size_t number_of_match = count_if(subset_synonyms.begin(), subset_synonyms.end(),
-	                                  [&](const auto& synonym) { return superset_synonyms.find(synonym) != superset_synonyms.end(); });
-
-	if (number_of_match == subset_synonyms.size()) {
-		return intersectTables(superset_table, subset_table);
-	}
-
-	if (number_of_match > 0) {
-		return hashJoinTables(superset_table, subset_table);
-	}
-
-	return loopJoinTables(superset_table, subset_table);
+	return map;
 }
