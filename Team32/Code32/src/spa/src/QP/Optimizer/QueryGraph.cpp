@@ -102,7 +102,7 @@ void QueryGraph::optimize(const DeclarationList& select_list) {
 	unvisited_nodes.reserve(nodes.size());
 	selected_nodes.reserve(select_list.size());
 
-	for (auto& node : nodes) {
+	for (const auto& node : nodes) {
 		unvisited_nodes.emplace(node.first);
 	}
 
