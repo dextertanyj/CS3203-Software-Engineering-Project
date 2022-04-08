@@ -9,6 +9,22 @@
 
 using namespace std;
 
+void PKB::ControlFlowGraph::createNode(const StmtInfoPtr& stmt_info) {
+	assert(statement_node_map.find(stmt_info->getIdentifier()) == statement_node_map.end());
+	// Check node type and create respective node.
+	if (stmt_info->getType() == StmtType::If) {
+		shared_ptr<PKB::IfNode> to_insert = make_shared<PKB::IfNode>(stmt_info);
+		statement_node_map.emplace(stmt_info->getIdentifier(), to_insert);
+
+	} else if (stmt_info->getType() == StmtType::While) {
+		shared_ptr<PKB::WhileNode> to_insert = make_shared<PKB::WhileNode>(stmt_info);
+		statement_node_map.emplace(stmt_info->getIdentifier(), to_insert);
+	} else {
+		shared_ptr<PKB::StatementNode> to_insert = make_shared<PKB::StatementNode>(stmt_info);
+		statement_node_map.emplace(stmt_info->getIdentifier(), to_insert);
+	}
+}
+
 void PKB::ControlFlowGraph::setNext(StmtRef previous, StmtRef next) const {
 	assert(previous != next);
 	auto prev_node = getNode(previous);
@@ -47,35 +63,7 @@ void PKB::ControlFlowGraph::setIfExit(StmtRef then_prev, StmtRef else_prev, Stmt
 	if_node->insertIfExit(then_prev_node, else_prev_node);
 }
 
-void PKB::ControlFlowGraph::createNode(const StmtInfoPtr& stmt_info) {
-	assert(statement_node_map.find(stmt_info->getIdentifier()) == statement_node_map.end());
-	// Check node type and create respective node.
-	if (stmt_info->getType() == StmtType::If) {
-		shared_ptr<PKB::IfNode> to_insert = make_shared<PKB::IfNode>(stmt_info);
-		statement_node_map.emplace(stmt_info->getIdentifier(), to_insert);
-
-	} else if (stmt_info->getType() == StmtType::While) {
-		shared_ptr<PKB::WhileNode> to_insert = make_shared<PKB::WhileNode>(stmt_info);
-		statement_node_map.emplace(stmt_info->getIdentifier(), to_insert);
-	} else {
-		shared_ptr<PKB::StatementNode> to_insert = make_shared<PKB::StatementNode>(stmt_info);
-		statement_node_map.emplace(stmt_info->getIdentifier(), to_insert);
-	}
-}
-
 bool PKB::ControlFlowGraph::contains(StmtRef index) const { return statement_node_map.find(index) != statement_node_map.end(); }
-
-shared_ptr<PKB::StatementNode> PKB::ControlFlowGraph::getNode(StmtRef ref) const {
-	auto iter = statement_node_map.find(ref);
-	assert(iter != statement_node_map.end());
-	return statement_node_map.find(ref)->second;
-}
-
-StmtInfoPtr PKB::ControlFlowGraph::getStatementInfo(StmtRef index) const {
-	auto node = getNode(index);
-	assert(node != nullptr);
-	return node->getStmtInfo();
-}
 
 StmtType PKB::ControlFlowGraph::getType(StmtRef ref) const {
 	auto node = getNode(ref);
@@ -83,113 +71,10 @@ StmtType PKB::ControlFlowGraph::getType(StmtRef ref) const {
 	return node->getStmtInfo()->getType();
 }
 
-size_t PKB::ControlFlowGraph::getGraphIndex(StmtRef ref) const {
-	auto node = getNode(ref);
+StmtInfoPtr PKB::ControlFlowGraph::getStatementInfo(StmtRef index) const {
+	auto node = getNode(index);
 	assert(node != nullptr);
-	return node->getGraphIndex();
-}
-
-StmtRef PKB::ControlFlowGraph::getFirstIndex(size_t graph_index) const {
-	assert(start_map.find(graph_index) != start_map.end());
-	return first_index_map.at(graph_index);
-}
-
-StmtRef PKB::ControlFlowGraph::getLastIndex(size_t graph_index) const {
-	assert(start_map.find(graph_index) != start_map.end());
-	return last_index_map.at(graph_index);
-}
-
-StmtInfoPtr PKB::ControlFlowGraph::getStart(size_t graph_index) const {
-	assert(start_map.find(graph_index) != start_map.end());
-	auto node = start_map.find(graph_index)->second;
 	return node->getStmtInfo();
-}
-
-StmtInfoPtrSet PKB::ControlFlowGraph::getEnd(size_t graph_index) const {
-	assert(end_map.find(graph_index) != end_map.end());
-	auto node = end_map.find(graph_index)->second;
-	StmtInfoPtrSet results;
-	if (node->getNodeType() == Types::NodeType::Dummy) {
-		return collectPreviousOfDummy(node);
-	}
-	assert(dynamic_pointer_cast<StatementNode>(node) != nullptr);
-	results.emplace(dynamic_pointer_cast<StatementNode>(node)->getStmtInfo());
-	return results;
-}
-
-StmtInfoPtrSet PKB::ControlFlowGraph::collectNextOfDummy(const shared_ptr<PKB::NodeInterface>& dummy_node) {
-	shared_ptr<PKB::NodeInterface> result = dummy_node;
-	while (result->getNodeType() == Types::NodeType::Dummy && !(result->getNextNodes().empty())) {
-		assert(result->getNextNodes().size() == 1);
-		result = *result->getNextNodes().begin();
-	}
-
-	if (result->getNodeType() == Types::NodeType::Dummy) {
-		return {};
-	}
-
-	shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(result);
-	assert(stmt_node != nullptr);
-
-	return {stmt_node->getStmtInfo()};
-}
-
-StmtInfoPtrSet PKB::ControlFlowGraph::collectPreviousOfDummy(const shared_ptr<PKB::NodeInterface>& dummy_node) {
-	StmtInfoPtrSet collection;
-	for (const auto& prev_node : dummy_node->getPreviousNodes()) {
-		if (prev_node->getNodeType() == Types::NodeType::Dummy) {
-			StmtInfoPtrSet sub_collection = collectPreviousOfDummy(prev_node);
-			collection.insert(sub_collection.begin(), sub_collection.end());
-		} else {
-			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(prev_node);
-			assert(stmt_node != nullptr);
-			collection.emplace(stmt_node->getStmtInfo());
-		}
-	}
-	return collection;
-}
-
-void PKB::ControlFlowGraph::optimize() {
-	size_t graph_index = 0;
-	for (const auto& node : statement_node_map) {
-		// Starting while nodes have only a single previous node since internal nodes always exist.
-		if (node.second->getPreviousNodes().empty() ||
-		    (node.second->getNodeType() == Types::NodeType::While && node.second->getPreviousNodes().size() == 1)) {
-			StmtRef last = node.second->getNodeRef();
-			start_map.emplace(graph_index, node.second);
-			unordered_set<shared_ptr<NodeInterface>> visited;
-			processGraphNode(node.second, graph_index, last, visited);
-			first_index_map.emplace(graph_index, node.second->getNodeRef());
-			last_index_map.emplace(graph_index, last);
-			graph_index++;
-		}
-	}
-}
-
-void PKB::ControlFlowGraph::processGraphNode(const shared_ptr<NodeInterface>& node, size_t graph_index, StmtRef& last,
-                                             unordered_set<shared_ptr<NodeInterface>>& visited) {
-	node->setGraphIndex(graph_index);
-	visited.emplace(node);
-	last = max(last, node->getNodeRef());
-	// While nodes that are exit nodes have only a single next node since internal nodes always exist.
-	if (node->getNextNodes().empty() || (node->getNodeType() == Types::NodeType::While && node->getNextNodes().size() == 1)) {
-		end_map.emplace(graph_index, node);
-		if (node->getNextNodes().empty()) {
-			return;
-		}
-	}
-	for (const auto& next : node->getNextNodes()) {
-		if (visited.find(next) != visited.end()) {
-			continue;
-		}
-		processGraphNode(next, graph_index, last, visited);
-	}
-}
-
-void PKB::ControlFlowGraph::clear() {
-	statement_node_map.clear();
-	start_map.clear();
-	end_map.clear();
 }
 
 StmtInfoPtrSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef index) const {
@@ -232,12 +117,6 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getLoopExternalNextNodes(StmtRef index) co
 	return pair.second;
 }
 
-StmtInfoPtrSet PKB::ControlFlowGraph::getLoopInternalNextNodes(StmtRef index) const {
-	assert(getNode(index)->getNodeType() == Types::NodeType::While);
-	auto pair = groupLoopNeighbouringNodes<LessComparator>(index, &NodeInterface::getNextNodes, &ControlFlowGraph::collectNextOfDummy);
-	return pair.first;
-}
-
 StmtInfoPtrSet PKB::ControlFlowGraph::getLoopExternalPreviousNodes(StmtRef index) const {
 	assert(getNode(index)->getNodeType() == Types::NodeType::While);
 	auto pair =
@@ -245,11 +124,106 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getLoopExternalPreviousNodes(StmtRef index
 	return pair.second;
 }
 
+StmtInfoPtrSet PKB::ControlFlowGraph::getLoopInternalNextNodes(StmtRef index) const {
+	assert(getNode(index)->getNodeType() == Types::NodeType::While);
+	auto pair = groupLoopNeighbouringNodes<LessComparator>(index, &NodeInterface::getNextNodes, &ControlFlowGraph::collectNextOfDummy);
+	return pair.first;
+}
+
 StmtInfoPtrSet PKB::ControlFlowGraph::getLoopInternalPreviousNodes(StmtRef index) const {
 	assert(getNode(index)->getNodeType() == Types::NodeType::While);
 	auto pair =
 		groupLoopNeighbouringNodes<GreaterComparator>(index, &NodeInterface::getPreviousNodes, &ControlFlowGraph::collectPreviousOfDummy);
 	return pair.first;
+}
+
+size_t PKB::ControlFlowGraph::getGraphIndex(StmtRef ref) const {
+	auto node = getNode(ref);
+	assert(node != nullptr);
+	return node->getGraphIndex();
+}
+
+StmtRef PKB::ControlFlowGraph::getFirstIndex(size_t graph_index) const {
+	assert(first_index_map.find(graph_index) != first_index_map.end());
+	return first_index_map.at(graph_index);
+}
+
+StmtRef PKB::ControlFlowGraph::getLastIndex(size_t graph_index) const {
+	assert(last_index_map.find(graph_index) != last_index_map.end());
+	return last_index_map.at(graph_index);
+}
+
+void PKB::ControlFlowGraph::optimize() {
+	size_t graph_index = 0;
+	for (const auto& node : statement_node_map) {
+		// Starting while nodes have only a single previous node since internal nodes always exist.
+		if (node.second->getPreviousNodes().empty() ||
+		    (node.second->getNodeType() == Types::NodeType::While && node.second->getPreviousNodes().size() == 1)) {
+			StmtRef last = node.second->getNodeRef();
+			unordered_set<shared_ptr<NodeInterface>> visited;
+			processGraphNode(node.second, graph_index, last, visited);
+			first_index_map.emplace(graph_index, node.second->getNodeRef());
+			last_index_map.emplace(graph_index, last);
+			graph_index++;
+		}
+	}
+}
+
+void PKB::ControlFlowGraph::clear() {
+	statement_node_map.clear();
+	first_index_map.clear();
+	last_index_map.clear();
+}
+
+StmtInfoPtrSet PKB::ControlFlowGraph::collectNextOfDummy(const shared_ptr<PKB::NodeInterface>& dummy_node) {
+	shared_ptr<PKB::NodeInterface> result = dummy_node;
+	while (result->getNodeType() == Types::NodeType::Dummy && !(result->getNextNodes().empty())) {
+		assert(result->getNextNodes().size() == 1);
+		result = *result->getNextNodes().begin();
+	}
+
+	if (result->getNodeType() == Types::NodeType::Dummy) {
+		return {};
+	}
+
+	shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(result);
+	assert(stmt_node != nullptr);
+
+	return {stmt_node->getStmtInfo()};
+}
+
+StmtInfoPtrSet PKB::ControlFlowGraph::collectPreviousOfDummy(const shared_ptr<PKB::NodeInterface>& dummy_node) {
+	StmtInfoPtrSet collection;
+	for (const auto& prev_node : dummy_node->getPreviousNodes()) {
+		if (prev_node->getNodeType() == Types::NodeType::Dummy) {
+			StmtInfoPtrSet sub_collection = collectPreviousOfDummy(prev_node);
+			collection.insert(sub_collection.begin(), sub_collection.end());
+		} else {
+			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(prev_node);
+			assert(stmt_node != nullptr);
+			collection.emplace(stmt_node->getStmtInfo());
+		}
+	}
+	return collection;
+}
+
+shared_ptr<PKB::StatementNode> PKB::ControlFlowGraph::getNode(StmtRef ref) const {
+	auto iter = statement_node_map.find(ref);
+	assert(iter != statement_node_map.end());
+	return statement_node_map.find(ref)->second;
+}
+
+void PKB::ControlFlowGraph::processGraphNode(const shared_ptr<NodeInterface>& node, size_t graph_index, StmtRef& last,
+                                             unordered_set<shared_ptr<NodeInterface>>& visited) {
+	node->setGraphIndex(graph_index);
+	visited.emplace(node);
+	last = max(last, node->getNodeRef());
+	for (const auto& next : node->getNextNodes()) {
+		if (visited.find(next) != visited.end()) {
+			continue;
+		}
+		processGraphNode(next, graph_index, last, visited);
+	}
 }
 
 template <typename Comparator>
