@@ -174,7 +174,7 @@ void QP::Preprocessor::QueryPreprocessor::parseClause(ClauseType type, vector<Cl
 }
 
 void QP::Preprocessor::QueryPreprocessor::createClause(ClauseType type, vector<ClauseArgument> arguments) {
-	if (!SyntaxValidator::validateArgumentsSyntax(type, arguments)) {
+	if (!SyntaxValidator::validateArgumentsSyntaxDispatch(type, arguments)) {
 		throw QuerySyntaxException("Invalid arguments.");
 	}
 

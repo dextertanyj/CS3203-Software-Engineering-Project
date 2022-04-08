@@ -5,8 +5,8 @@
 #include "QP/Types.h"
 
 namespace QP::Preprocessor::SyntaxValidator {
+bool validateArgumentsSyntaxDispatch(Types::ClauseType type, const std::vector<ClauseArgument>& arguments);
 bool validateArgumentsSyntax(Types::ClauseType type, const std::vector<ClauseArgument>& arguments);
-bool validateStandardArgumentsSyntax(Types::ClauseType type, const std::vector<ClauseArgument>& arguments);
 bool validatePatternArgumentsSyntax(const std::vector<ClauseArgument>& arguments);
 };
 
