@@ -9,7 +9,7 @@
 namespace QP::Dispatcher::FollowsNextDispatcher {
 
 using namespace std;
-using namespace QP::Executor;
+using namespace QP::Dispatcher::StatementDispatcher;
 
 template <ClauseType T>
 ExecutorSetBundle dispatcher(const vector<ClauseArgument>& args) {
@@ -25,11 +25,9 @@ ExecutorSetBundle argumentDispatcher(ClauseType type, const vector<ClauseArgumen
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>>& getArgumentDispatchMap() {
 	static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>> map = {
-		{ArgumentType::Number, StatementDispatcher::getIndexMap<T>()},   {ArgumentType::Wildcard, StatementDispatcher::getWildcardMap<T>()},
-		{DesignEntity::Stmt, StatementDispatcher::getSynonymMap<T>()},   {DesignEntity::Call, StatementDispatcher::getSynonymMap<T>()},
-		{DesignEntity::Assign, StatementDispatcher::getSynonymMap<T>()}, {DesignEntity::Print, StatementDispatcher::getSynonymMap<T>()},
-		{DesignEntity::Read, StatementDispatcher::getSynonymMap<T>()},   {DesignEntity::While, StatementDispatcher::getSynonymMap<T>()},
-		{DesignEntity::If, StatementDispatcher::getSynonymMap<T>()}};
+		{ArgumentType::Number, getIndexMap<T>()}, {ArgumentType::Wildcard, getWildcardMap<T>()}, {DesignEntity::Stmt, getSynonymMap<T>()},
+		{DesignEntity::Call, getSynonymMap<T>()}, {DesignEntity::Assign, getSynonymMap<T>()},    {DesignEntity::Print, getSynonymMap<T>()},
+		{DesignEntity::Read, getSynonymMap<T>()}, {DesignEntity::While, getSynonymMap<T>()},     {DesignEntity::If, getSynonymMap<T>()}};
 	return map;
 }
 

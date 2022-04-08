@@ -9,9 +9,7 @@
 
 namespace QP::Dispatcher::PatternAssignDispatcher {
 
-using namespace QP::Types;
-
-ExecutorSetBundle dispatcher(std::vector<ClauseArgument>& args);
-};
+Types::ExecutorSetBundle dispatcher(std::vector<ClauseArgument>& args);
+}
 
 #endif  // SPA_SRC_QP_DISPATCHER_PATTERNASSIGNDISPATCHER_H
