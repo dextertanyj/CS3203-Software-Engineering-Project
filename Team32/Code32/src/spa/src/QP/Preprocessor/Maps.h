@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <utility>
 
-#include "QP/QP.h"
+#include "QP/Preprocessor/Preprocessor.h"
 #include "QP/Types.h"
 
 namespace QP::Preprocessor::Maps {

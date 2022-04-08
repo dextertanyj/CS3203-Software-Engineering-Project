@@ -1,7 +1,6 @@
 #include "QP/Evaluator/Clause.h"
 
 #include <cassert>
-#include <unordered_map>
 #include <utility>
 #include <variant>
 
