@@ -68,7 +68,7 @@ vector<string> QP::QueryPostProcessor::processStandardResult(QueryProperties& qu
 		string row_string;
 
 		for (size_t j = 0; j < select_list.size(); j++) {
-			string value = applyTransform(store, select_list.at(j), row.at(j));
+			string value = applyTransform(store, select_list[j], row[j]);
 			row_string.append(value);
 			row_string.append(TUPLE_SEPERATOR);
 		}

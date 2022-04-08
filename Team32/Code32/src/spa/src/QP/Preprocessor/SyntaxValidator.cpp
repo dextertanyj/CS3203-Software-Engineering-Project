@@ -59,8 +59,8 @@ bool QP::Preprocessor::SyntaxValidator::validateStandardArgumentsSyntax(ClauseTy
 		return false;
 	}
 	for (int i = 0; i < arguments.size(); i++) {
-		auto expected = expected_types.at(i);
-		if (expected.find(arguments.at(i).getType()) == expected.end()) {
+		auto expected = expected_types[i];
+		if (expected.find(arguments[i].getType()) == expected.end()) {
 			return false;
 		}
 	}
@@ -74,8 +74,8 @@ bool QP::Preprocessor::SyntaxValidator::validatePatternArgumentsSyntax(const vec
 	}
 	auto expected_types = iter->second;
 	for (int i = 0; i < arguments.size(); i++) {
-		auto expected = expected_types.at(i);
-		if (expected.find(arguments.at(i).getType()) == expected.end()) {
+		auto expected = expected_types[i];
+		if (expected.find(arguments[i].getType()) == expected.end()) {
 			return false;
 		}
 	}

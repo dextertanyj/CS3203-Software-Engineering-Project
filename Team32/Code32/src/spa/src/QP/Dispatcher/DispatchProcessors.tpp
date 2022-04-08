@@ -8,13 +8,15 @@
 namespace QP::Dispatcher::DispatchProcessors {
 
 using namespace std;
-using namespace QP::Types;
 
 template <typename T>
-ExecutorSetFactory processArgumentRecurse(T map, const vector<ClauseArgument>& args) {
-	ArgumentDispatchKey key = args.at(0).getType();
-	if (args.at(0).getType() == ArgumentType::Synonym) {
-		key = args.at(0).getSynonymType();
+Types::ExecutorSetFactory processArgumentRecurse(T map, const vector<ClauseArgument>& args) {
+	if (args.empty()) {
+		throw QueryDispatchException("Incorrect argument count.");
+	}
+	Types::ArgumentDispatchKey key = args[0].getType();
+	if (args[0].getType() == Types::ArgumentType::Synonym) {
+		key = args[0].getSynonymType();
 	}
 	auto iter = map.find(key);
 	if (iter == map.end()) {
@@ -25,14 +27,14 @@ ExecutorSetFactory processArgumentRecurse(T map, const vector<ClauseArgument>& a
 }
 
 template <>
-inline ExecutorSetFactory processArgumentRecurse(unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map,
-                                                 const vector<ClauseArgument>& args) {
+inline Types::ExecutorSetFactory processArgumentRecurse(unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactory> map,
+                                                        const vector<ClauseArgument>& args) {
 	if (args.size() != 1) {
 		throw QueryDispatchException("Incorrect argument count.");
 	}
-	ArgumentDispatchKey key = args.at(0).getType();
-	if (args.at(0).getType() == ArgumentType::Synonym) {
-		key = args.at(0).getSynonymType();
+	Types::ArgumentDispatchKey key = args[0].getType();
+	if (args[0].getType() == Types::ArgumentType::Synonym) {
+		key = args[0].getSynonymType();
 	}
 	auto iter = map.find(key);
 	if (iter == map.end()) {
@@ -42,10 +44,13 @@ inline ExecutorSetFactory processArgumentRecurse(unordered_map<ArgumentDispatchK
 }
 
 template <typename T>
-ExecutorSetFactoryBundle processArgumentBundleRecurse(T map, const vector<ClauseArgument>& args) {
-	ArgumentDispatchKey key = args.at(0).getType();
-	if (args.at(0).getType() == ArgumentType::Synonym) {
-		key = args.at(0).getSynonymType();
+Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(T map, const vector<ClauseArgument>& args) {
+	if (args.empty()) {
+		throw QueryDispatchException("Incorrect argument count.");
+	}
+	Types::ArgumentDispatchKey key = args[0].getType();
+	if (args[0].getType() == Types::ArgumentType::Synonym) {
+		key = args[0].getSynonymType();
 	}
 	auto iter = map.find(key);
 	if (iter == map.end()) {
@@ -56,14 +61,14 @@ ExecutorSetFactoryBundle processArgumentBundleRecurse(T map, const vector<Clause
 }
 
 template <>
-inline ExecutorSetFactoryBundle processArgumentBundleRecurse(unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle> map,
-                                                             const vector<ClauseArgument>& args) {
+inline Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(
+	unordered_map<Types::ArgumentDispatchKey, Types::ExecutorSetFactoryBundle> map, const vector<ClauseArgument>& args) {
 	if (args.size() != 1) {
 		throw QueryDispatchException("Incorrect argument count.");
 	}
-	ArgumentDispatchKey key = args.at(0).getType();
-	if (args.at(0).getType() == ArgumentType::Synonym) {
-		key = args.at(0).getSynonymType();
+	Types::ArgumentDispatchKey key = args[0].getType();
+	if (args[0].getType() == Types::ArgumentType::Synonym) {
+		key = args[0].getSynonymType();
 	}
 	auto iter = map.find(key);
 	if (iter == map.end()) {
@@ -73,12 +78,12 @@ inline ExecutorSetFactoryBundle processArgumentBundleRecurse(unordered_map<Argum
 }
 
 template <typename T>
-ExecutorSetBundle processArgument(ClauseType type, T map, const vector<ClauseArgument>& args) {
+Types::ExecutorSetBundle processArgument(Types::ClauseType type, T map, const vector<ClauseArgument>& args) {
 	return {type, processArgumentRecurse(map, args)(args)};
 }
 
 template <typename T>
-ExecutorSetBundle processArgument(T map, const vector<ClauseArgument>& args) {
+Types::ExecutorSetBundle processArgument(T map, const vector<ClauseArgument>& args) {
 	auto result = processArgumentBundleRecurse(map, args);
 	return {result.first, result.second(args)};
 }

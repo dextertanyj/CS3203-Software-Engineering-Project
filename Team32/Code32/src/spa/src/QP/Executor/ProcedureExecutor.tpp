@@ -116,20 +116,20 @@ QueryResult executeSynonymSynonym(const StorageAdapter& store, const ClauseArgum
 
 template <ClauseType T>
 ExecutorSet executorFactoryNameName(const vector<ClauseArgument>& args) {
-	return [caller = args.at(0), callee = args.at(1)](const StorageAdapter& pkb) { return executeTrivialNameName<T>(pkb, caller, callee); };
+	return [caller = args[0], callee = args[1]](const StorageAdapter& pkb) { return executeTrivialNameName<T>(pkb, caller, callee); };
 }
 
 template <ClauseType T>
 ExecutorSet executorFactoryNameWildcard(const vector<ClauseArgument>& args) {
-	return [caller = args.at(0)](const StorageAdapter& pkb) { return executeTrivialNameWildcardOrSynonym<T>(pkb, caller); };
+	return [caller = args[0]](const StorageAdapter& pkb) { return executeTrivialNameWildcardOrSynonym<T>(pkb, caller); };
 }
 
 template <ClauseType T>
 ExecutorSet executorFactoryNameSynonym(const vector<ClauseArgument>& args) {
-	Types::Executor trivial_executor = [caller = args.at(0)](const StorageAdapter& pkb) {
+	Types::Executor trivial_executor = [caller = args[0]](const StorageAdapter& pkb) {
 		return executeTrivialNameWildcardOrSynonym<T>(pkb, caller);
 	};
-	Types::Executor executor = [caller = args.at(0), callee = args.at(1)](const StorageAdapter& pkb) {
+	Types::Executor executor = [caller = args[0], callee = args[1]](const StorageAdapter& pkb) {
 		return executeNameSynonym<T>(pkb, caller, callee);
 	};
 	return pair{trivial_executor, executor};
@@ -137,7 +137,7 @@ ExecutorSet executorFactoryNameSynonym(const vector<ClauseArgument>& args) {
 
 template <ClauseType T>
 ExecutorSet executorFactoryWildcardName(const vector<ClauseArgument>& args) {
-	return [callee = args.at(1)](const StorageAdapter& pkb) { return executeTrivialWildcardOrSynonymName<T>(pkb, callee); };
+	return [callee = args[1]](const StorageAdapter& pkb) { return executeTrivialWildcardOrSynonymName<T>(pkb, callee); };
 }
 
 template <ClauseType T>
@@ -148,7 +148,7 @@ ExecutorSet executorFactoryWildcardWildcard(const vector<ClauseArgument>& /*args
 template <ClauseType T>
 ExecutorSet executorFactoryWildcardSynonym(const vector<ClauseArgument>& args) {
 	Types::Executor trivial_executor = [](const StorageAdapter& pkb) { return executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(pkb); };
-	Types::Executor executor = [caller = args.at(0), callee = args.at(1)](const StorageAdapter& pkb) {
+	Types::Executor executor = [caller = args[0], callee = args[1]](const StorageAdapter& pkb) {
 		return executeWildcardSynonym<T>(pkb, callee);
 	};
 	return pair{trivial_executor, executor};
@@ -156,10 +156,10 @@ ExecutorSet executorFactoryWildcardSynonym(const vector<ClauseArgument>& args) {
 
 template <ClauseType T>
 ExecutorSet executorFactorySynonymName(const vector<ClauseArgument>& args) {
-	Types::Executor trivial_executor = [callee = args.at(1)](const StorageAdapter& pkb) {
+	Types::Executor trivial_executor = [callee = args[1]](const StorageAdapter& pkb) {
 		return executeTrivialWildcardOrSynonymName<T>(pkb, callee);
 	};
-	Types::Executor executor = [caller = args.at(0), callee = args.at(1)](const StorageAdapter& pkb) {
+	Types::Executor executor = [caller = args[0], callee = args[1]](const StorageAdapter& pkb) {
 		return executeSynonymName<T>(pkb, caller, callee);
 	};
 	return pair{trivial_executor, executor};
@@ -168,16 +168,16 @@ ExecutorSet executorFactorySynonymName(const vector<ClauseArgument>& args) {
 template <ClauseType T>
 ExecutorSet executorFactorySynonymWildcard(const vector<ClauseArgument>& args) {
 	Types::Executor trivial_executor = [](const StorageAdapter& pkb) { return executeTrivialWildcardOrSynonymWildcardOrSynonym<T>(pkb); };
-	Types::Executor executor = [caller = args.at(0)](const StorageAdapter& pkb) { return executeSynonymWildcard<T>(pkb, caller); };
+	Types::Executor executor = [caller = args[0]](const StorageAdapter& pkb) { return executeSynonymWildcard<T>(pkb, caller); };
 	return pair{trivial_executor, executor};
 }
 
 template <ClauseType T>
 ExecutorSet executorFactorySynonymSynonym(const vector<ClauseArgument>& args) {
-	Types::Executor trivial_executor = [caller = args.at(0), callee = args.at(1)](const StorageAdapter& pkb) {
+	Types::Executor trivial_executor = [caller = args[0], callee = args[1]](const StorageAdapter& pkb) {
 		return executeTrivialSynonymSynonym<T>(pkb, caller, callee);
 	};
-	Types::Executor executor = [caller = args.at(0), callee = args.at(1)](const StorageAdapter& pkb) {
+	Types::Executor executor = [caller = args[0], callee = args[1]](const StorageAdapter& pkb) {
 		return executeSynonymSynonym<T>(pkb, caller, callee);
 	};
 	return pair{trivial_executor, executor};

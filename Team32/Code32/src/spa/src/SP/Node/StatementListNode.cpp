@@ -13,7 +13,7 @@ vector<StmtRef> SP::Node::StatementListNode::extract(PKB::StorageUpdateInterface
 		children.push_back(iter->get()->extract(pkb));
 	}
 	assert(!children.empty());
-	StmtRef previous = children.at(0);
+	StmtRef previous = children[0];
 	for (auto iter = ++children.begin(); iter < children.end(); ++iter) {
 		pkb.setFollows(previous, *iter);
 		pkb.setNext(previous, *iter);
