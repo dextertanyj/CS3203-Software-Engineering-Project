@@ -4,6 +4,10 @@
 #include "QP/Executor/WithExecutor.h"
 
 #include <algorithm>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
 
 template <typename TAttribute, typename TValues>
 struct HashInfo {

@@ -1,6 +1,7 @@
 #ifndef SPA_SRC_SP_LEXER_H
 #define SPA_SRC_SP_LEXER_H
 
+#include <initializer_list>
 #include <regex>
 #include <string>
 

@@ -1,6 +1,9 @@
 #ifndef SPA_SRC_QP_DISPATCHER_VARIABLEDISPATCHER_H
 #define SPA_SRC_QP_DISPATCHER_VARIABLEDISPATCHER_H
 
+#include <unordered_map>
+
+#include "QP/Dispatcher/Dispatcher.h"
 #include "QP/Types.h"
 
 namespace QP::Dispatcher::VariableDispatcher {

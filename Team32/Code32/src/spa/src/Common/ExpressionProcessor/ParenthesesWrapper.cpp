@@ -1,6 +1,9 @@
 #include "Common/ExpressionProcessor/ParenthesesWrapper.h"
 
+#include <variant>
+
 #include "Common/ExpressionProcessor/LogicalNode.h"
+#include "Common/TypeDefs.h"
 
 using namespace std;
 

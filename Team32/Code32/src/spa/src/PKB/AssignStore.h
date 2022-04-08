@@ -1,13 +1,10 @@
 #ifndef SPA_SRC_PKB_ASSIGNSTORE_H
 #define SPA_SRC_PKB_ASSIGNSTORE_H
 
-#include <cassert>
-#include <memory>
 #include <unordered_map>
 #include <unordered_set>
 
 #include "Common/ExpressionProcessor/Expression.h"
-#include "Common/ExpressionProcessor/Hash.h"
 #include "Common/TypeDefs.h"
 #include "PKB/Hash.h"
 #include "PKB/PKB.h"

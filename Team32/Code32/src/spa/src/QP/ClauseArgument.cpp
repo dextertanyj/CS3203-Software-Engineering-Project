@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <utility>
+#include <variant>
 
 using namespace std;
 using namespace QP::Types;

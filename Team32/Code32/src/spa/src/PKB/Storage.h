@@ -2,33 +2,28 @@
 #define SPA_SRC_PKB_STORAGE_H
 
 #include <memory>
-#include <string>
 #include <unordered_map>
-#include <utility>
-#include <vector>
+#include <unordered_set>
 
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"
 #include "PKB/AffectsManager.h"
 #include "PKB/AssignStore.h"
 #include "PKB/CFG/ControlFlowGraph.h"
-#include "PKB/CallsRelation.h"
 #include "PKB/CallsStatementStore.h"
-#include "PKB/FollowsRelation.h"
-#include "PKB/InfoStore.h"
 #include "PKB/ModifiesPRelation.h"
 #include "PKB/ModifiesSRelation.h"
 #include "PKB/NextManager.h"
 #include "PKB/PKB.h"
 #include "PKB/PVRelationStore.tpp"
-#include "PKB/ParentRelation.h"
+#include "PKB/ProcedureInfo.h"
 #include "PKB/SVRelationStore.tpp"
 #include "PKB/SetStore.tpp"
 #include "PKB/StatementInfo.h"
 #include "PKB/StorageAccessInterface.h"
 #include "PKB/StorageUpdateInterface.h"
 #include "PKB/TopologicalSort.tpp"
-#include "PKB/TransitiveRelationStore.tpp"
+#include "PKB/Types.h"
 #include "PKB/UsesPRelation.h"
 #include "PKB/UsesSRelation.h"
 

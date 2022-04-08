@@ -1,4 +1,4 @@
-#include "ResultTable.h"
+#include "QP/ResultTable.h"
 
 #include <algorithm>
 #include <cassert>

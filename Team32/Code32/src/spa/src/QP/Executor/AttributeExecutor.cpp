@@ -1,5 +1,6 @@
 #include "QP/Executor/AttributeExecutor.h"
 
+#include "Common/TypeDefs.h"
 #include "QP/QueryUtils.h"
 
 using namespace std;

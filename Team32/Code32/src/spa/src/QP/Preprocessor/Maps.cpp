@@ -1,5 +1,6 @@
 #include "QP/Preprocessor/Maps.h"
 
+#include "Common/Hash.h"
 #include "QP/Dispatcher/AffectsDispatcher.tpp"
 #include "QP/Dispatcher/CallsDispatcher.tpp"
 #include "QP/Dispatcher/FollowsNextDispatcher.tpp"

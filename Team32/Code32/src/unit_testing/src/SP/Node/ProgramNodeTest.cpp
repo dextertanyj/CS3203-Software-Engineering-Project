@@ -3,7 +3,7 @@
 #include "../MockUtilities.h"
 #include "../TestUtilities.h"
 #include "SP/Node/CallNode.h"
-#include "SP/Node/PrintReadNode.h"
+#include "SP/Node/PrintReadNode.tpp"
 #include "SP/SP.h"
 #include "catch_tools.h"
 

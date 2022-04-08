@@ -1,5 +1,9 @@
 #include "PKB/ParentRelation.h"
 
+#include <cassert>
+#include <unordered_map>
+#include <utility>
+
 void PKB::ParentRelation::insertForward(const StmtInfoPtr& parent_to_insert) {
 	assert(getSelf()->getIdentifier() > parent_to_insert->getIdentifier());
 	assert(this->parent == nullptr);

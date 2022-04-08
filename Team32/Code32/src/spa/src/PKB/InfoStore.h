@@ -1,7 +1,9 @@
 #ifndef SPA_SRC_PKB_INFOSTORE_H
 #define SPA_SRC_PKB_INFOSTORE_H
 
+#include <memory>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "PKB/PKB.h"
 

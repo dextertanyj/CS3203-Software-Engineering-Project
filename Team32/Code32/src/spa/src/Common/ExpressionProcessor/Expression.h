@@ -3,7 +3,6 @@
 
 #include <memory>
 #include <string>
-#include <unordered_set>
 
 #include "Common/ExpressionProcessor/ExpressionNode.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"

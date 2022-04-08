@@ -2,12 +2,14 @@
 #define SPA_EXPRESSIONPARSER_H
 
 #include <memory>
-#include <unordered_set>
 
+#include "Common/ExpressionProcessor/BinaryLogicalNode.h"
 #include "Common/ExpressionProcessor/Expression.h"
+#include "Common/ExpressionProcessor/ExpressionNode.h"
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/ExpressionProcessor/LexerInterface.h"
 #include "Common/ExpressionProcessor/OperatorAcceptor.h"
+#include "Common/ExpressionProcessor/UnaryLogicalNode.h"
 #include "Common/TypeDefs.h"
 
 class Common::ExpressionProcessor::ExpressionParser {

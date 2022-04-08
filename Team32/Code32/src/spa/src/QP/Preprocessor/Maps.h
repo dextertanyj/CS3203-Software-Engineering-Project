@@ -1,7 +1,11 @@
 #ifndef SPA_SRC_QP_DISPATCHER_DISPATCHMAP_H
 #define SPA_SRC_QP_DISPATCHER_DISPATCHMAP_H
 
-#include "QP/QP.h"
+#include <string>
+#include <unordered_map>
+#include <utility>
+
+#include "QP/Preprocessor/Preprocessor.h"
 #include "QP/Types.h"
 
 namespace QP::Preprocessor::Maps {

@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "PKB/StorageUpdateInterface.h"
 #include "SP/DesignExtractor.h"
 #include "SP/Parser.h"
 #include "SP/SP.h"

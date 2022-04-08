@@ -1,8 +1,7 @@
 #include "QP/Optimizer/QueryGraph.h"
 
 #include <cassert>
-#include <queue>
-#include <vector>
+#include <climits>
 
 #define SINK_NODE_SYMBOL ""
 

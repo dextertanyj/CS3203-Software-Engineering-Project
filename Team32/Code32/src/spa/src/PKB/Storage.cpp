@@ -1,7 +1,10 @@
 #include "PKB/Storage.h"
 
 #include <algorithm>
+#include <cassert>
 #include <iterator>
+#include <utility>
+#include <vector>
 
 using namespace std;
 

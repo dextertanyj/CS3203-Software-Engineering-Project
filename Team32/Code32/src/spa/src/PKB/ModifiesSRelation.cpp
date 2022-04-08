@@ -1,9 +1,8 @@
 #include "PKB/ModifiesSRelation.h"
 
 #include <algorithm>
-
-#include "PKB/SVRelationStore.tpp"
-#include "PKB/TopologicalSort.tpp"
+#include <unordered_set>
+#include <vector>
 
 using namespace std;
 

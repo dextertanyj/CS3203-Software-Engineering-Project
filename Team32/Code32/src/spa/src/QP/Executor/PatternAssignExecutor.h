@@ -1,10 +1,13 @@
 #ifndef SPA_SRC_QP_EXECUTOR_PATTERNASSIGNEXECUTOR_H
 #define SPA_SRC_QP_EXECUTOR_PATTERNASSIGNEXECUTOR_H
 
+#include <vector>
+
 #include "QP/ClauseArgument.h"
 #include "QP/Executor/Executor.h"
 #include "QP/QueryResult.h"
 #include "QP/StorageAdapter.h"
+#include "QP/Types.h"
 
 namespace QP::Executor::PatternAssignExecutor {
 

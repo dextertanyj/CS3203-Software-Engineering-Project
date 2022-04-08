@@ -1,10 +1,11 @@
 #ifndef SPA_SRC_QP_CLAUSEGROUPS_H
 #define SPA_SRC_QP_CLAUSEGROUPS_H
 
+#include <string>
+#include <utility>
 #include <vector>
 
 #include "QP/Optimizer/Optimizer.h"
-#include "QP/QP.h"
 #include "QP/Types.h"
 
 class QP::Optimizer::ClauseGroups {

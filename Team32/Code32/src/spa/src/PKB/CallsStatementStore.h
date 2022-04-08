@@ -7,6 +7,7 @@
 #include "Common/TypeDefs.h"
 #include "PKB/CallsRelation.h"
 #include "PKB/PKB.h"
+#include "PKB/ProcedureInfo.h"
 #include "PKB/TransitiveRelationStore.tpp"
 #include "PKB/Types.h"
 

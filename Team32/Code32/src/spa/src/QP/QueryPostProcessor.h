@@ -2,11 +2,12 @@
 #define SPA_SRC_QP_QUERYFORMATTER_H
 
 #include <string>
+#include <vector>
 
 #include "QP/QP.h"
 #include "QP/QueryProperties.h"
+#include "QP/QueryResult.h"
 #include "QP/StorageAdapter.h"
-#include "QueryResult.h"
 
 class QP::QueryPostProcessor {
 public:

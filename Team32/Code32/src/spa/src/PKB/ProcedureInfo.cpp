@@ -1,5 +1,8 @@
 #include "PKB/ProcedureInfo.h"
 
+#include <cassert>
+#include <utility>
+
 using namespace std;
 
 PKB::ProcedureInfo::ProcedureInfo(ProcRef name, vector<StmtInfoPtr> statements) : name(move(name)), statements(move(statements)) {

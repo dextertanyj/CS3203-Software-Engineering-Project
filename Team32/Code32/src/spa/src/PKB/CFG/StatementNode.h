@@ -1,11 +1,12 @@
 #ifndef SPA_SRC_PKB_CFG_STATEMENTNODE_H
 #define SPA_SRC_PKB_CFG_STATEMENTNODE_H
 
-#include <cassert>
-#include <utility>
+#include <memory>
 
+#include "Common/TypeDefs.h"
 #include "PKB/CFG/NodeInterface.h"
 #include "PKB/PKB.h"
+#include "PKB/Types.h"
 
 class PKB::StatementNode : public PKB::NodeInterface, public std::enable_shared_from_this<StatementNode> {
 public:

@@ -1,10 +1,9 @@
 #include "PKB/CFG/ControlFlowGraph.h"
 
+#include <algorithm>
 #include <cassert>
 
-#include "PKB/CFG/DummyNode.h"
 #include "PKB/CFG/IfNode.h"
-#include "PKB/CFG/StatementNode.h"
 #include "PKB/CFG/WhileNode.h"
 #include "PKB/Types.h"
 

@@ -3,6 +3,10 @@
 
 #include "QP/Executor/ProcedureExecutor.h"
 
+#include <utility>
+
+#include "Common/TypeDefs.h"
+
 namespace QP::Executor::ProcedureExecutor {
 
 using namespace std;

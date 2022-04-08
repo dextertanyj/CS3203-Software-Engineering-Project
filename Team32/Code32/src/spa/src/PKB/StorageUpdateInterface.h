@@ -1,6 +1,7 @@
 #ifndef SPA_SRC_PKB_STORAGEUPDATEINTERFACE_H
 #define SPA_SRC_PKB_STORAGEUPDATEINTERFACE_H
 
+#include "Common/TypeDefs.h"
 #include "PKB/PKB.h"
 
 class PKB::StorageUpdateInterface {

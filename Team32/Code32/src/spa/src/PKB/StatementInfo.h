@@ -1,8 +1,6 @@
 #ifndef SPA_SRC_PKB_STATEMENTINFO_H
 #define SPA_SRC_PKB_STATEMENTINFO_H
 
-#include <cassert>
-
 #include "Common/TypeDefs.h"
 #include "PKB/PKB.h"
 
@@ -15,6 +13,7 @@ private:
 	StatementInfo(StmtRef index, StmtType type);
 	StmtRef index;
 	StmtType type;
+
 	friend class PKB::InfoStore<StmtRef, StmtType, StatementInfo>;
 };
 

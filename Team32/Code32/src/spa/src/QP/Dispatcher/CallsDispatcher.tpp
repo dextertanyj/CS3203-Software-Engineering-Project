@@ -5,7 +5,6 @@
 
 #include "QP/Dispatcher/DispatchProcessors.tpp"
 #include "QP/Executor/ProcedureExecutor.tpp"
-#include "QP/StorageAdapter.h"
 
 namespace QP::Dispatcher::CallsDispatcher {
 

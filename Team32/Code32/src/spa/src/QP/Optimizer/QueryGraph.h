@@ -5,11 +5,15 @@
 #include <queue>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <vector>
 
 #include "QP/Evaluator/Clause.h"
 #include "QP/Optimizer/ClauseGroups.h"
 #include "QP/Optimizer/Optimizer.h"
 #include "QP/QueryProperties.h"
+#include "QP/Types.h"
 
 class QP::Optimizer::QueryGraph {
 public:

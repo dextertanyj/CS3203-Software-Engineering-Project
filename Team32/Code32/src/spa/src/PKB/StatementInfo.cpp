@@ -1,4 +1,6 @@
-#include "StatementInfo.h"
+#include "PKB/StatementInfo.h"
+
+#include <cassert>
 
 PKB::StatementInfo::StatementInfo(StmtRef index, StmtType type) : index(index), type(type) { assert(this->index > 0); }
 

@@ -2,7 +2,6 @@
 #define SPA_SRC_QP_CLAUSEARGUMENT_H
 
 #include <string>
-#include <variant>
 
 #include "Common/ExpressionProcessor/Expression.h"
 #include "Common/TypeDefs.h"

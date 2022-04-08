@@ -3,7 +3,8 @@
 #include <utility>
 #include <vector>
 
-#include "Common/ExpressionProcessor/OperatorAcceptor.h"
+#include "Common/ExpressionProcessor/Expression.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 
 #define THEN "then"
 #define ELSE "else"

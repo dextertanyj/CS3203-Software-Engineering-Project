@@ -1,6 +1,8 @@
 #ifndef SPA_SRC_PKB_STORAGEACCESSINTERFACE_H
 #define SPA_SRC_PKB_STORAGEACCESSINTERFACE_H
 
+#include "Common/ExpressionProcessor/Expression.h"
+#include "Common/TypeDefs.h"
 #include "PKB/PKB.h"
 
 class PKB::StorageAccessInterface {

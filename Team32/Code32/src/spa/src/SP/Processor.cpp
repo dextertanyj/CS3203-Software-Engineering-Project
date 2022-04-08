@@ -1,8 +1,11 @@
 #include "SP/Processor.h"
 
+#include <cstdlib>
 #include <iostream>
 #include <memory>
 #include <utility>
+
+#include "SP/Node/ProgramNode.h"
 
 SP::Processor::Processor(PKB::StorageUpdateInterface& pkb) : extractor(pkb) {}
 

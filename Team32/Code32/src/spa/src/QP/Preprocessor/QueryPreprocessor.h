@@ -5,8 +5,10 @@
 #include <regex>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
+#include "QP/ClauseArgument.h"
 #include "QP/Evaluator/Clause.h"
 #include "QP/Hash.h"
 #include "QP/Preprocessor/Preprocessor.h"

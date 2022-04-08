@@ -1,6 +1,11 @@
 #ifndef SPA_SRC_PKB_CFG_IFNODE_H
 #define SPA_SRC_PKB_CFG_IFNODE_H
 
+#include <memory>
+
+#include "Common/TypeDefs.h"
+#include "PKB/CFG/DummyNode.h"
+#include "PKB/CFG/NodeInterface.h"
 #include "PKB/CFG/StatementNode.h"
 #include "PKB/PKB.h"
 

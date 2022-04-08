@@ -1,10 +1,15 @@
 #include "QP/QueryPostProcessor.h"
 
 #include <algorithm>
+#include <functional>
 #include <iterator>
-#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
 
-#include "QP/Executor/AttributeExecutor.h"
+#include "Common/Hash.h"
+#include "QP/ClauseArgument.h"
+#include "QP/Executor/AttributeExecutor.tpp"
 #include "QP/Types.h"
 
 using namespace std;

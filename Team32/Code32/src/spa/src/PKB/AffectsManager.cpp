@@ -1,5 +1,6 @@
 #include "PKB/AffectsManager.h"
 
+#include <algorithm>
 #include <cassert>
 
 using namespace std;
@@ -57,7 +58,7 @@ StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
 
 	VarRefSet variables = uses_store.getByStmt(second);
 	StmtInfoPtrSet affected_set;
-	for (const string& variable : variables) {
+	for (const VarRef& variable : variables) {
 		StmtInfoPtrSet affected = getAffectedLoop(second, variable);
 		affected_set.insert(affected.begin(), affected.end());
 	}

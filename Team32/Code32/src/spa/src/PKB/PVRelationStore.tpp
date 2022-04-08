@@ -3,6 +3,8 @@
 
 #include "PKB/PVRelationStore.h"
 
+#include <cassert>
+
 template <class T>
 PKB::PVRelationStore<T>::PVRelationStore() = default;
 

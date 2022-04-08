@@ -5,6 +5,8 @@
 
 #include <cassert>
 
+#include "Common/TypeDefs.h"
+
 template <typename T>
 T QP::Executor::AttributeExecutor::identity(const StorageAdapter& /*store*/, const T& value) {
 	return value;

@@ -1,8 +1,6 @@
 #ifndef SPA_SRC_PKB_PROCEDUREINFO_H
 #define SPA_SRC_PKB_PROCEDUREINFO_H
 
-#include <cassert>
-#include <memory>
 #include <vector>
 
 #include "Common/TypeDefs.h"

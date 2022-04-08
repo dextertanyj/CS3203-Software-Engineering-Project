@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "Common/ExpressionProcessor/AtomicNode.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/ExpressionProcessor/LogicalNode.h"
 #include "Common/TypeDefs.h"
 
