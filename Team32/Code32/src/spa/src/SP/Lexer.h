@@ -17,13 +17,13 @@ public:
 	bool nextIf(const std::initializer_list<std::string>& tokens);
 
 private:
-	static std::regex validation_regex;
-	static std::regex tokenization_regex;
+	std::string source;
+	std::sregex_iterator iterator;
 
 	bool nextToken();
 
-	std::string source;
-	std::sregex_iterator iterator;
+	static std::regex validation_regex;
+	static std::regex tokenization_regex;
 };
 
 #endif  // SPA_SRC_SP_LEXER_H

@@ -136,6 +136,19 @@ shared_ptr<ExpressionNode> ExpressionParser::getExpression(const ParenthesizedEx
 	return result;
 }
 
+bool ExpressionParser::checkExpressionType(const shared_ptr<ExpressionNode>& expression, ExpressionType type) {
+	switch (type) {
+		case ExpressionType::Arithmetic:
+			return dynamic_pointer_cast<AtomicNode>(expression) != nullptr;
+		case ExpressionType::Relational:
+			return dynamic_pointer_cast<RelationalNode>(expression) != nullptr;
+		case ExpressionType::Logical:
+			return dynamic_pointer_cast<LogicalNode>(expression) != nullptr;
+		default:
+			return false;
+	}
+}
+
 int ExpressionParser::getPrecedence(MathematicalOperator opr) {
 	// Logical operators are expected to be fully parenthesized and so should never be chained.
 	if (opr == MathematicalOperator::And || opr == MathematicalOperator::Or) {
@@ -149,17 +162,4 @@ int ExpressionParser::getPrecedence(MathematicalOperator opr) {
 		return ADD_SUBTRACT_PRECEDENCE;
 	}
 	return MULTIPLY_DIVIDE_MODULUS_PRECEDENCE;
-}
-
-bool ExpressionParser::checkExpressionType(const shared_ptr<ExpressionNode>& expression, ExpressionType type) {
-	switch (type) {
-		case ExpressionType::Arithmetic:
-			return dynamic_pointer_cast<AtomicNode>(expression) != nullptr;
-		case ExpressionType::Relational:
-			return dynamic_pointer_cast<RelationalNode>(expression) != nullptr;
-		case ExpressionType::Logical:
-			return dynamic_pointer_cast<LogicalNode>(expression) != nullptr;
-		default:
-			return false;
-	}
 }
