@@ -1,5 +1,9 @@
 #include "FollowsRelation.h"
 
+#include <cassert>
+#include <unordered_map>
+#include <utility>
+
 using namespace std;
 
 void PKB::FollowsRelation::insertForward(const StmtInfoPtr& following_to_insert) {

@@ -1,6 +1,10 @@
 #ifndef SPA_SRC_PKB_CFG_WHILENODE_H
 #define SPA_SRC_PKB_CFG_WHILENODE_H
 
+#include <memory>
+
+#include "Common/TypeDefs.h"
+#include "PKB/CFG/NodeInterface.h"
 #include "PKB/CFG/StatementNode.h"
 #include "PKB/PKB.h"
 

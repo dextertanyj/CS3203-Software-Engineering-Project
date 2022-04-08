@@ -1,6 +1,8 @@
 #include "PKB/CFG/NodeInterface.h"
 
+#include <algorithm>
 #include <cassert>
+#include <cstddef>
 
 using namespace std;
 

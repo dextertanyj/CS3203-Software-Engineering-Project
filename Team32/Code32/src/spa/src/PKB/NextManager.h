@@ -1,12 +1,13 @@
 #ifndef SPA_NEXTMANAGER_H
 #define SPA_NEXTMANAGER_H
 
+#include <queue>
+#include <unordered_map>
+#include <vector>
+
+#include "Common/TypeDefs.h"
 #include "PKB/CFG/ControlFlowGraph.h"
-#include "PKB/CFG/IfNode.h"
-#include "PKB/CFG/NodeInterface.h"
-#include "PKB/CFG/StatementNode.h"
 #include "PKB/PKB.h"
-#include "PKB/Types.h"
 
 class PKB::NextManager {
 public:

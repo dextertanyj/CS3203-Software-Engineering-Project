@@ -1,13 +1,15 @@
 #ifndef SPA_SRC_PKB_CFG_CONTROLFLOWGRAPH_H
 #define SPA_SRC_PKB_CFG_CONTROLFLOWGRAPH_H
 
-#include <queue>
-#include <set>
+#include <memory>
 #include <unordered_map>
+#include <unordered_set>
+#include <utility>
 
-#include "NodeInterface.h"
+#include "Common/TypeDefs.h"
+#include "PKB/CFG/NodeInterface.h"
+#include "PKB/CFG/StatementNode.h"
 #include "PKB/PKB.h"
-#include "PKB/Types.h"
 
 class PKB::ControlFlowGraph {
 public:

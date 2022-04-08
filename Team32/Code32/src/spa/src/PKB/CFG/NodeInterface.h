@@ -1,9 +1,9 @@
 #ifndef SPA_SRC_PKB_CFG_NODEINTERFACE_H
 #define SPA_SRC_PKB_CFG_NODEINTERFACE_H
 
-#include <algorithm>
-#include <cassert>
+#include <memory>
 #include <unordered_set>
+#include <vector>
 
 #include "PKB/PKB.h"
 #include "PKB/Types.h"

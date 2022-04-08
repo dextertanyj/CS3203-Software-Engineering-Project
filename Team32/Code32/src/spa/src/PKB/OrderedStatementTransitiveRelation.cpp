@@ -1,5 +1,7 @@
 #include "OrderedStatementTransitiveRelation.h"
 
+#include <cassert>
+
 using namespace std;
 
 void PKB::OrderedStatementTransitiveRelation::appendForwardTransitive(const StmtInfoPtrSet& new_forward) {

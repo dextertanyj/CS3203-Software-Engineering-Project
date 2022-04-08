@@ -1,16 +1,17 @@
 #ifndef SPA_AFFECTSMANAGER_H
 #define SPA_AFFECTSMANAGER_H
 
+#include <memory>
+#include <stack>
 #include <unordered_map>
+#include <unordered_set>
+#include <utility>
 
+#include "Common/TypeDefs.h"
 #include "PKB/CFG/ControlFlowGraph.h"
-#include "PKB/CFG/StatementNode.h"
-#include "PKB/InfoStore.h"
 #include "PKB/ModifiesSRelation.h"
-#include "PKB/NextManager.h"
 #include "PKB/PKB.h"
 #include "PKB/SVRelationStore.tpp"
-#include "PKB/Types.h"
 #include "PKB/UsesSRelation.h"
 
 class PKB::AffectsManager {

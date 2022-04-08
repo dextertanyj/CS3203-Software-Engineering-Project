@@ -3,6 +3,8 @@
 
 #include "PKB/InfoStore.h"
 
+#include <cassert>
+
 template <typename TIdent, typename TContent, class TInfo>
 PKB::InfoStore<TIdent, TContent, TInfo>::InfoStore() = default;
 

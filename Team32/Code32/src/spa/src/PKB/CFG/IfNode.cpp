@@ -2,7 +2,6 @@
 
 #include <cassert>
 
-#include "PKB/CFG/DummyNode.h"
 #include "PKB/Types.h"
 
 using namespace std;

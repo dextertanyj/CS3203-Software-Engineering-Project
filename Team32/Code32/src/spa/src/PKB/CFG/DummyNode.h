@@ -1,7 +1,10 @@
 #ifndef SPA_SRC_PKB_CFG_DUMMYNODE_H
 #define SPA_SRC_PKB_CFG_DUMMYNODE_H
 
-#include "NodeInterface.h"
+#include <memory>
+
+#include "Common/TypeDefs.h"
+#include "PKB/CFG/NodeInterface.h"
 #include "PKB/PKB.h"
 
 class PKB::DummyNode : public PKB::NodeInterface, public std::enable_shared_from_this<DummyNode> {

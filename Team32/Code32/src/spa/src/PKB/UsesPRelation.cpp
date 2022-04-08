@@ -1,5 +1,10 @@
 #include "PKB/UsesPRelation.h"
 
+#include <vector>
+
+#include "Common/TypeDefs.h"
+#include "PKB/ProcedureInfo.h"
+
 using namespace std;
 
 void PKB::UsesPRelation::optimize(const Types::ProcedureStore& proc_store, PVRelationStore<UsesPRelation>& store,

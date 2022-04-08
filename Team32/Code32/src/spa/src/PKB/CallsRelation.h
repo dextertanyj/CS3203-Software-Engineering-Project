@@ -8,7 +8,7 @@
 #include "PKB/PKB.h"
 #include "PKB/ProcedureInfo.h"
 #include "PKB/TransitiveRelation.tpp"
-#include "PKB/TransitiveRelationStore.h"
+#include "PKB/TransitiveRelationStore.tpp"
 
 class PKB::CallsRelation : public PKB::TransitiveRelation<ProcedureInfo> {
 public:

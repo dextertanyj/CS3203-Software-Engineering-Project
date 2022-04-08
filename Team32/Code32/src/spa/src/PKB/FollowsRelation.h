@@ -1,13 +1,10 @@
 #ifndef SPA_SRC_PKB_FOLLOWSRELATION_H
 #define SPA_SRC_PKB_FOLLOWSRELATION_H
 
-#include <unordered_set>
-
 #include "Common/TypeDefs.h"
 #include "PKB/OrderedStatementTransitiveRelation.h"
 #include "PKB/PKB.h"
-#include "PKB/StatementInfo.h"
-#include "PKB/TransitiveRelationStore.h"
+#include "PKB/TransitiveRelationStore.tpp"
 
 class PKB::FollowsRelation : public PKB::OrderedStatementTransitiveRelation {
 public:

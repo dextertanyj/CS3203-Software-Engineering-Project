@@ -1,9 +1,8 @@
 #include "PKB/UsesSRelation.h"
 
 #include <algorithm>
-
-#include "PKB/SVRelationStore.tpp"
-#include "PKB/TopologicalSort.tpp"
+#include <memory>
+#include <vector>
 
 using namespace std;
 

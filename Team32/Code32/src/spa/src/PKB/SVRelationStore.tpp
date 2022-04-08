@@ -4,6 +4,7 @@
 #include "PKB/SVRelationStore.h"
 
 #include <algorithm>
+#include <cassert>
 #include <stdexcept>
 
 #include "PKB/ModifiesSRelation.h"

@@ -1,11 +1,12 @@
 #ifndef SPA_SRC_PKB_MODIFIESSRELATION_H
 #define SPA_SRC_PKB_MODIFIESSRELATION_H
 
+#include "Common/TypeDefs.h"
 #include "PKB/CallsStatementStore.h"
 #include "PKB/PKB.h"
+#include "PKB/ProcedureInfo.h"
 #include "PKB/SVRelationStore.h"
-#include "PKB/TopologicalSort.h"
-#include "PKB/TransitiveRelationStore.tpp"
+#include "PKB/TopologicalSort.tpp"
 #include "PKB/Types.h"
 
 class PKB::ModifiesSRelation {
