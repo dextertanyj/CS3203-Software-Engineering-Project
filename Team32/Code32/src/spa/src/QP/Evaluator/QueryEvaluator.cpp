@@ -1,4 +1,4 @@
-#include "QueryEvaluator.h"
+#include "QP/Evaluator/QueryEvaluator.h"
 
 #include "Common/TypeDefs.h"
 #include "QP/Evaluator/Clause.h"

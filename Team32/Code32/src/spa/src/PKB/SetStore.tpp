@@ -1,7 +1,7 @@
 #ifndef SPA_SRC_PKB_SETSTORE_TPP
 #define SPA_SRC_PKB_SETSTORE_TPP
 
-#include "SetStore.h"
+#include "PKB/SetStore.h"
 
 template <typename T>
 PKB::SetStore<T>::SetStore() = default;

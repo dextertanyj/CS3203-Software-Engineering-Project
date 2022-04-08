@@ -1,4 +1,4 @@
-#include "OrderedStatementTransitiveRelation.h"
+#include "PKB/OrderedStatementTransitiveRelation.h"
 
 #include <cassert>
 
