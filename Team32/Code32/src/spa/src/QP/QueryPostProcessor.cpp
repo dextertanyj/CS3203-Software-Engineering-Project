@@ -9,7 +9,7 @@
 
 #include "Common/Hash.h"
 #include "QP/ClauseArgument.h"
-#include "QP/Executor/AttributeExecutor.h"
+#include "QP/Executor/AttributeExecutor.tpp"
 #include "QP/Types.h"
 
 using namespace std;

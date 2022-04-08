@@ -3,7 +3,7 @@
 #include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
-#include "QP/Executor/AttributeExecutor.h"
+#include "QP/Executor/AttributeExecutor.tpp"
 #include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "QP/StorageAdapter.h"
 #include "catch.hpp"

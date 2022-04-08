@@ -6,7 +6,6 @@
 #include <variant>
 
 #include "Common/TypeDefs.h"
-#include "QP/Executor/AttributeExecutor.h"
 #include "QP/Executor/AttributeExecutor.tpp"
 #include "QP/Executor/WithExecutor.tpp"
 #include "QP/StorageAdapter.h"

@@ -5,7 +5,7 @@
 #include "PKB/CallsStatementStore.h"
 #include "PKB/PKB.h"
 #include "PKB/ProcedureInfo.h"
-#include "PKB/SVRelationStore.h"
+#include "PKB/SVRelationStore.tpp"
 #include "PKB/TopologicalSort.tpp"
 #include "PKB/Types.h"
 
