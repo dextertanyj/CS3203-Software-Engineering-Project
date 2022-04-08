@@ -8,7 +8,7 @@
 #include "PKB/CFG/StatementNode.h"
 #include "PKB/PKB.h"
 
-class PKB::WhileNode : public PKB::StatementNode {
+class PKB::WhileNode : public StatementNode {
 public:
 	explicit WhileNode(const StmtInfoPtr& info);
 	void setNext(const std::shared_ptr<NodeInterface>& next) override;

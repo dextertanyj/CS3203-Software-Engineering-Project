@@ -41,7 +41,7 @@ public:
 
 private:
 	using LoopNodePair = std::pair<StmtInfoPtrSet, StmtInfoPtrSet>;
-	using NodeGatherer = std::unordered_set<std::shared_ptr<PKB::NodeInterface>> (NodeInterface::*)() const;
+	using NodeGatherer = std::unordered_set<std::shared_ptr<NodeInterface>> (NodeInterface::*)() const;
 	using Collector = StmtInfoPtrSet (*)(const std::shared_ptr<NodeInterface>&);
 
 	std::unordered_map<StmtRef, std::shared_ptr<StatementNode>> statement_node_map;

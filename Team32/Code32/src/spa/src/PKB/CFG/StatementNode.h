@@ -8,7 +8,7 @@
 #include "PKB/PKB.h"
 #include "PKB/Types.h"
 
-class PKB::StatementNode : public PKB::NodeInterface, public std::enable_shared_from_this<StatementNode> {
+class PKB::StatementNode : public NodeInterface, public std::enable_shared_from_this<StatementNode> {
 public:
 	explicit StatementNode(const StmtInfoPtr& info);
 	StatementNode(Types::NodeType type, StmtInfoPtr info);

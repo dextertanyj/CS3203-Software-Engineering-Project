@@ -13,14 +13,14 @@ void PKB::ControlFlowGraph::createNode(const StmtInfoPtr& stmt_info) {
 	assert(statement_node_map.find(stmt_info->getIdentifier()) == statement_node_map.end());
 	// Check node type and create respective node.
 	if (stmt_info->getType() == StmtType::If) {
-		shared_ptr<PKB::IfNode> to_insert = make_shared<PKB::IfNode>(stmt_info);
+		shared_ptr<IfNode> to_insert = make_shared<IfNode>(stmt_info);
 		statement_node_map.emplace(stmt_info->getIdentifier(), to_insert);
 
 	} else if (stmt_info->getType() == StmtType::While) {
-		shared_ptr<PKB::WhileNode> to_insert = make_shared<PKB::WhileNode>(stmt_info);
+		shared_ptr<WhileNode> to_insert = make_shared<WhileNode>(stmt_info);
 		statement_node_map.emplace(stmt_info->getIdentifier(), to_insert);
 	} else {
-		shared_ptr<PKB::StatementNode> to_insert = make_shared<PKB::StatementNode>(stmt_info);
+		shared_ptr<StatementNode> to_insert = make_shared<StatementNode>(stmt_info);
 		statement_node_map.emplace(stmt_info->getIdentifier(), to_insert);
 	}
 }
@@ -44,7 +44,7 @@ void PKB::ControlFlowGraph::setIfNext(StmtRef prev, StmtRef then_next, StmtRef e
 	auto then_next_node = getNode(then_next);
 	auto else_next_node = getNode(else_next);
 
-	shared_ptr<PKB::IfNode> if_ctrl_node = dynamic_pointer_cast<PKB::IfNode>(prev_node);
+	shared_ptr<IfNode> if_ctrl_node = dynamic_pointer_cast<IfNode>(prev_node);
 	if_ctrl_node->insertIfNext(then_next_node, else_next_node);
 }
 
@@ -59,7 +59,7 @@ void PKB::ControlFlowGraph::setIfExit(StmtRef then_prev, StmtRef else_prev, Stmt
 	auto then_prev_node = getNode(then_prev);
 	auto else_prev_node = getNode(else_prev);
 
-	shared_ptr<PKB::IfNode> if_node = dynamic_pointer_cast<PKB::IfNode>(if_ctrl_node);
+	shared_ptr<IfNode> if_node = dynamic_pointer_cast<IfNode>(if_ctrl_node);
 	if_node->insertIfExit(then_prev_node, else_prev_node);
 }
 
@@ -186,7 +186,7 @@ StmtInfoPtrSet PKB::ControlFlowGraph::collectNextOfDummy(const shared_ptr<PKB::N
 		return {};
 	}
 
-	shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(result);
+	shared_ptr<StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(result);
 	assert(stmt_node != nullptr);
 
 	return {stmt_node->getStmtInfo()};
@@ -199,7 +199,7 @@ StmtInfoPtrSet PKB::ControlFlowGraph::collectPreviousOfDummy(const shared_ptr<PK
 			StmtInfoPtrSet sub_collection = collectPreviousOfDummy(prev_node);
 			collection.insert(sub_collection.begin(), sub_collection.end());
 		} else {
-			shared_ptr<PKB::StatementNode> stmt_node = dynamic_pointer_cast<PKB::StatementNode>(prev_node);
+			shared_ptr<StatementNode> stmt_node = dynamic_pointer_cast<StatementNode>(prev_node);
 			assert(stmt_node != nullptr);
 			collection.emplace(stmt_node->getStmtInfo());
 		}
@@ -233,7 +233,7 @@ PKB::ControlFlowGraph::LoopNodePair PKB::ControlFlowGraph::groupLoopNeighbouring
 
 	assert(getNode(index)->getNodeType() == Types::NodeType::While);
 
-	unordered_set<shared_ptr<PKB::NodeInterface>> node_set = (*node.*gatherer)();
+	unordered_set<shared_ptr<NodeInterface>> node_set = (*node.*gatherer)();
 	// Internal nodes always exist.
 	assert(!node_set.empty());
 	if (node_set.size() == 1) {  // No external nodes.
@@ -283,7 +283,7 @@ StmtInfoPtrSet PKB::ControlFlowGraph::collectLoopNeighbours(const shared_ptr<Nod
 		handleDummyNodeSearch(set, node, collector);
 		return set;
 	}
-	assert(dynamic_pointer_cast<PKB::StatementNode>(node) != nullptr);
+	assert(dynamic_pointer_cast<StatementNode>(node) != nullptr);
 	set.emplace(dynamic_pointer_cast<StatementNode>(node)->getStmtInfo());
 	return set;
 }
