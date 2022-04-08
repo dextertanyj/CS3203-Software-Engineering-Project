@@ -224,8 +224,7 @@ bool PKB::Storage::patternExists(const VarRef& name, const Common::EP::Expressio
 	return assign_store.patternExists(name, exp, is_exact_match);
 }
 
-StmtInfoPtrSet PKB::Storage::getStmtsWithPattern(const VarRef& name, const Common::EP::Expression& expression,
-                                                 bool is_exact_match) {
+StmtInfoPtrSet PKB::Storage::getStmtsWithPattern(const VarRef& name, const Common::EP::Expression& expression, bool is_exact_match) {
 	return assign_store.getStmtsWithPattern(name, expression, is_exact_match);
 }
 
