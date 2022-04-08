@@ -31,7 +31,8 @@ public:
 
 	[[nodiscard]] size_t getGraphIndex(StmtRef ref) const;
 	[[nodiscard]] StmtRef getFirstIndex(size_t graph_index) const;
-	[[nodiscard]] StmtRef getLastIndex(size_t graph_index) const;;
+	[[nodiscard]] StmtRef getLastIndex(size_t graph_index) const;
+	;
 
 	void optimize();
 	void clear();
