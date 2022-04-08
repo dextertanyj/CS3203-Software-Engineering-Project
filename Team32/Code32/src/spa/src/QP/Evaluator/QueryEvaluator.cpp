@@ -13,6 +13,11 @@ using namespace Types;
 QueryEvaluator::QueryEvaluator(StorageAdapter& store) : store(store) {}
 
 QueryResult QueryEvaluator::executeQuery(QueryProperties& query_properties) {
+	ClauseList clauses_without_synonyms = getClausesWithoutSynonyms(query_properties);
+	if (!executeTrivialGroup(clauses_without_synonyms).getResult()) {
+		return {};
+	}
+
 	auto declarations = query_properties.getDeclarationList();
 	auto clauses = query_properties.getClauseList();
 	auto select_list = query_properties.getSelectSynonymList();
@@ -20,29 +25,19 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 	size_t number_of_groups = graph.getNumberOfGroups();
 
 	vector<QueryResult> results;
-
-	ClauseList clauses_without_synonyms = getClausesWithoutSynonyms(query_properties);
-	if (!executeTrivialGroup(clauses_without_synonyms).getResult()) {
-		return {};
-	}
-
 	for (size_t i = 0; i < number_of_groups; i++) {
 		ClauseList group_clauses = graph.getGroupClauses(i);
 		DeclarationList group_select_list = graph.getGroupSelectedSynonyms(i);
-
-		bool has_result = executeGroup(group_clauses, group_select_list, results);
-
-		if (!has_result) {
+		bool result = executeGroup(group_clauses, group_select_list, results);
+		if (!result) {
 			return {};
 		}
 	}
 
 	QueryResult final_result = QueryResult::joinResults(results);
-
 	if (select_list.empty()) {
 		return QueryResult(true);
 	}
-
 	return final_result;
 }
 

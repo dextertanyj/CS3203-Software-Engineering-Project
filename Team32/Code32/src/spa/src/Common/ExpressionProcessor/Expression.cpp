@@ -18,3 +18,5 @@ VarRefSet Expression::getVariables() const { return variables; }
 bool Expression::contains(const Expression& other) const { return traversal.find(other.traversal) != std::string::npos; }
 
 bool Expression::operator==(const Expression& other) const { return traversal == other.traversal; }
+
+bool Expression::operator!=(const Expression& other) const { return traversal != other.traversal; }

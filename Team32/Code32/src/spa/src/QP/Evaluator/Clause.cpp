@@ -68,10 +68,9 @@ bool QP::Evaluator::Clause::operator==(const Clause& other) const {
 
 	vector<ClauseArgument> other_arguments = other.arguments;
 	for (size_t i = 0; i < arguments.size(); i++) {
-		if (arguments[i] == other_arguments[i]) {
-			continue;
+		if (arguments[i] != other_arguments[i]) {
+			return false;
 		}
-		return false;
 	}
 
 	return true;

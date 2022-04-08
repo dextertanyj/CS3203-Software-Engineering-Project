@@ -27,6 +27,7 @@ public:
 	[[nodiscard]] Types::Number getNumber() const;
 	[[nodiscard]] Common::EP::Expression getExpression() const;
 	[[nodiscard]] bool operator==(const ClauseArgument& other) const;
+	[[nodiscard]] bool operator!=(const ClauseArgument& other) const;
 
 	friend std::hash<ClauseArgument>;
 

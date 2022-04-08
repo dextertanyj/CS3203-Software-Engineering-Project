@@ -21,6 +21,7 @@ public:
 
 private:
 	const QP::StorageAdapter& store;
+
 	bool executeGroup(ClauseList& clauses, DeclarationList& select_list, std::vector<QueryResult>& results);
 	QueryResult executeGroupWithSelected(ClauseList& clauses, DeclarationList& select_list);
 	QueryResult executeGroupWithoutSelected(ClauseList& clauses, DeclarationList& select_list);
@@ -31,6 +32,7 @@ private:
 	QueryResult getConstants(const std::string& symbol);
 	QueryResult getVariables(const std::string& symbol);
 	QueryResult getProcedures(const std::string& symbol);
+
 	static ClauseList getClausesWithoutSynonyms(QueryProperties& query_properties);
 };
 

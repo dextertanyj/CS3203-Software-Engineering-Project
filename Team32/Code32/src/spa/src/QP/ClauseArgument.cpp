@@ -104,3 +104,5 @@ Common::EP::Expression QP::ClauseArgument::getExpression() const {
 }
 
 bool QP::ClauseArgument::operator==(const ClauseArgument& other) const { return value == other.value; }
+
+bool QP::ClauseArgument::operator!=(const ClauseArgument& other) const { return value != other.value; }

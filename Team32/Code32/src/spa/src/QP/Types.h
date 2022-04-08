@@ -50,14 +50,16 @@ enum class AttributeType { NumberIdentifier, NameIdentifier, ProcedureName, Vari
 struct Declaration {
 	DesignEntity type;   // NOLINT(misc-non-private-member-variables-in-classes)
 	std::string symbol;  // NOLINT(misc-non-private-member-variables-in-classes)
-	bool operator==(const Declaration& other) const { return type == other.type && symbol == other.symbol; }
+	[[nodiscard]] bool operator==(const Declaration& other) const { return type == other.type && symbol == other.symbol; }
+	[[nodiscard]] bool operator!=(const Declaration& other) const { return type != other.type || symbol != other.symbol; }
 };
 
 struct Attribute {
 	// We cast 0 rather than use a concrete enum value to prevent favouring a particular value if the enum is updated.
 	AttributeType attribute = static_cast<AttributeType>(0);  // NOLINT(misc-non-private-member-variables-in-classes)
 	Declaration synonym;                                      // NOLINT(misc-non-private-member-variables-in-classes)
-	bool operator==(const Attribute& other) const { return attribute == other.attribute && synonym == other.synonym; }
+	[[nodiscard]] bool operator==(const Attribute& other) const { return attribute == other.attribute && synonym == other.synonym; }
+	[[nodiscard]] bool operator!=(const Attribute& other) const { return attribute != other.attribute || synonym != other.synonym; }
 };
 
 using Name = std::string;
