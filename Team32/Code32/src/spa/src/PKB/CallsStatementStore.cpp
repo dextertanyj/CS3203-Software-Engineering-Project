@@ -8,34 +8,23 @@ using namespace std;
 PKB::CallsStatementStore::CallsStatementStore() = default;
 
 void PKB::CallsStatementStore::set(const StmtInfoPtr& statement, ProcRef procedure) {
-	if (statement->getType() != StmtType::Call) {
-		throw logic_error("Invalid statement type for call store.");
-	}
-	StmtRef index = statement->getIdentifier();
-	if (map.find(index) != map.end()) {
-		throw logic_error("Call statement already set.");
-	}
-	map.emplace(index, move(procedure));
+	assert(statement->getType() == StmtType::Call);
+	assert(map.find(statement->getIdentifier()) == map.end());
+
+	map.emplace(statement->getIdentifier(), move(procedure));
 }
 
 ProcRef PKB::CallsStatementStore::getProcedure(const StmtInfoPtr& statement) const {
-	if (statement->getType() != StmtType::Call) {
-		throw logic_error("Invalid statement type for call store.");
-	}
-	StmtRef index = statement->getIdentifier();
-	auto iter = map.find(index);
-	if (iter == map.end()) {
-		throw logic_error("Call statement not set.");
-	}
-	return iter->second;
+	assert(statement->getType() == StmtType::Call);
+	assert(map.find(statement->getIdentifier()) != map.end());
+
+	return map.at(statement->getIdentifier());
 }
 
 ProcRef PKB::CallsStatementStore::getProcedure(StmtRef index) const {
-	auto iter = map.find(index);
-	if (iter == map.end()) {
-		throw logic_error("Statement not found.");
-	}
-	return iter->second;
+	// Bounds check not required since procedure name attribute is only defined on Call statement synonyms.
+	assert(map.find(index) != map.end());
+	return map.at(index);
 }
 
 void PKB::CallsStatementStore::populateCallStore(
@@ -56,8 +45,8 @@ void PKB::CallsStatementStore::populate(const StmtInfoPtr& stmt, const PKB::Type
 	}
 	ProcRef callee_name = getProcedure(stmt);
 	shared_ptr<ProcedureInfo> callee = procedures.get(callee_name);
-	if (callee == nullptr) {
-		throw logic_error("Procedure does not exist.");
-	}
+
+	assert(callee != nullptr);
+
 	store.set(procedure, callee);
 }
