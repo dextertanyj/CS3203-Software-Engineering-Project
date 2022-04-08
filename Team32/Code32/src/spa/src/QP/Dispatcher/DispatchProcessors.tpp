@@ -29,7 +29,7 @@ ExecutorSetFactory processArgumentRecurse(T map, const vector<ClauseArgument>& a
 
 template <>
 inline ExecutorSetFactory processArgumentRecurse(unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map,
-                                                        const vector<ClauseArgument>& args) {
+                                                 const vector<ClauseArgument>& args) {
 	if (args.size() != 1) {
 		throw QueryDispatchException("Incorrect argument count.");
 	}
@@ -62,8 +62,8 @@ ExecutorSetFactoryBundle processArgumentBundleRecurse(T map, const vector<Clause
 }
 
 template <>
-inline ExecutorSetFactoryBundle processArgumentBundleRecurse(
-	unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle> map, const vector<ClauseArgument>& args) {
+inline ExecutorSetFactoryBundle processArgumentBundleRecurse(unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle> map,
+                                                             const vector<ClauseArgument>& args) {
 	if (args.size() != 1) {
 		throw QueryDispatchException("Incorrect argument count.");
 	}
