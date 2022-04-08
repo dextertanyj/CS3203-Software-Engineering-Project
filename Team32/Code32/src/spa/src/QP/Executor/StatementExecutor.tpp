@@ -15,12 +15,14 @@ using namespace std;
 // Trivial Executors
 template <ClauseType T>
 QueryResult executeTrivialIndexIndex(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
-	return QueryResult(store.checkStatementRelation<T>(lhs.getStatementIndex(), rhs.getStatementIndex()));
+	bool result = store.checkStatementRelation<T>(lhs.getStatementIndex(), rhs.getStatementIndex());
+	return QueryResult(result);
 }
 
 template <ClauseType T>
 QueryResult executeTrivialIndexWildcard(const StorageAdapter& store, const ClauseArgument& lhs) {
-	return QueryResult(!store.getReverseStatements<T>(lhs.getStatementIndex()).empty());
+	unordered_set result = store.getReverseStatements<T>(lhs.getStatementIndex());
+	return QueryResult(!result.empty());
 }
 
 template <ClauseType T>
@@ -40,7 +42,8 @@ QueryResult executeTrivialIndexSynonym(const StorageAdapter& store, const Clause
 
 template <ClauseType T>
 QueryResult executeTrivialWildcardIndex(const StorageAdapter& store, const ClauseArgument& rhs) {
-	return QueryResult(!store.getForwardStatements<T>(rhs.getStatementIndex()).empty());
+	unordered_set result = store.getForwardStatements<T>(rhs.getStatementIndex());
+	return QueryResult(!result.empty());
 }
 
 template <ClauseType T>

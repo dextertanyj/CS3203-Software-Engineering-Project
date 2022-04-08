@@ -9,17 +9,20 @@ using namespace std;
 
 template <ClauseType T>
 QueryResult executeTrivialNameName(const StorageAdapter& store, const ClauseArgument& procedure, const ClauseArgument& variable) {
-	return QueryResult(store.checkProcedureVariableRelation<T>(procedure.getName(), variable.getName()));
+	bool result = store.checkProcedureVariableRelation<T>(procedure.getName(), variable.getName());
+	return QueryResult(result);
 }
 
 template <ClauseType T>
 QueryResult executeTrivialNameWildcardOrSynonym(const StorageAdapter& store, const ClauseArgument& procedure) {
-	return QueryResult(!store.getVariableByProcedure<T>(procedure.getName()).empty());
+	unordered_set result = store.getVariableByProcedure<T>(procedure.getName());
+	return QueryResult(!result.empty());
 }
 
 template <ClauseType T>
 QueryResult executeTrivialSynonymName(const StorageAdapter& store, const ClauseArgument& variable) {
-	return QueryResult(!store.getProcedureByVariable<T>(variable.getName()).empty());
+	unordered_set result = store.getProcedureByVariable<T>(variable.getName());
+	return QueryResult(!result.empty());
 }
 
 template <ClauseType T>

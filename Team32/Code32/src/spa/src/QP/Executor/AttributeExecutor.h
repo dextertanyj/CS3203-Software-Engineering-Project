@@ -8,24 +8,26 @@
 #include "QP/StorageAdapter.h"
 
 namespace QP::Executor::AttributeExecutor {
+
+using namespace std;
 // Constant extractors
-std::unordered_set<Types::Name> extractName(const QP::StorageAdapter& store, const ClauseArgument& argument);
-std::unordered_set<Types::Number> extractNumber(const QP::StorageAdapter& store, const ClauseArgument& argument);
+unordered_set<Types::Name> extractName(const StorageAdapter& store, const ClauseArgument& argument);
+unordered_set<Types::Number> extractNumber(const StorageAdapter& store, const ClauseArgument& argument);
 
 // Select executors
-std::unordered_set<Types::Number> selectStatements(const QP::StorageAdapter& store, const ClauseArgument& argument);
-std::unordered_set<Types::Number> selectConstants(const QP::StorageAdapter& store, const ClauseArgument& argument);
-std::unordered_set<Types::Name> selectProcedures(const QP::StorageAdapter& store, const ClauseArgument& argument);
-std::unordered_set<Types::Name> selectVariables(const QP::StorageAdapter& store, const ClauseArgument& argument);
+unordered_set<Types::Number> selectStatements(const StorageAdapter& store, const ClauseArgument& argument);
+unordered_set<Types::Number> selectConstants(const StorageAdapter& store, const ClauseArgument& argument);
+unordered_set<Types::Name> selectProcedures(const StorageAdapter& store, const ClauseArgument& argument);
+unordered_set<Types::Name> selectVariables(const StorageAdapter& store, const ClauseArgument& argument);
 
 // Attribute mappers
 template <typename T>
-T identity(const QP::StorageAdapter& /*store*/, const T& value);
+T identity(const StorageAdapter& /*store*/, const T& value);
 
-Types::Name callToProcedure(const QP::StorageAdapter& store, const Types::Number& value);
+Types::Name callToProcedure(const StorageAdapter& store, const Types::Number& value);
 
 template <QP::Types::ClauseType T>
-Types::Name statementToVariable(const QP::StorageAdapter& store, const Types::Number& value);
+Types::Name statementToVariable(const StorageAdapter& store, const Types::Number& value);
 }
 
 #endif  // SPA_SRC_QP_EXECUTOR_ATTRIBUTEEXECUTOR_H

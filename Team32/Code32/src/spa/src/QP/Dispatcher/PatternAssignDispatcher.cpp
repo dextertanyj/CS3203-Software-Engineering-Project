@@ -12,25 +12,25 @@
 #define EXACT_MATCH true
 
 using namespace std;
-using namespace QP::Executor;
+using namespace QP::Executor::PatternAssignExecutor;
 using namespace QP::Types;
 
 static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> name_map = {
-	{ArgumentType::Wildcard, PatternAssignExecutor::executorFactoryNameWildcard},
-	{ArgumentType::ExactExpression, PatternAssignExecutor::executorFactoryNameExpression},
-	{ArgumentType::SubExpression, PatternAssignExecutor::executorFactoryNameExpression},
+	{ArgumentType::Wildcard, executorFactoryNameWildcard},
+	{ArgumentType::ExactExpression, executorFactoryNameExpression},
+	{ArgumentType::SubExpression, executorFactoryNameExpression},
 };
 
 static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> wildcard_map = {
-	{ArgumentType::Wildcard, PatternAssignExecutor::executorFactoryWildcardWildcard},
-	{ArgumentType::ExactExpression, PatternAssignExecutor::executorFactoryWildcardExpression},
-	{ArgumentType::SubExpression, PatternAssignExecutor::executorFactoryWildcardExpression},
+	{ArgumentType::Wildcard, executorFactoryWildcardWildcard},
+	{ArgumentType::ExactExpression, executorFactoryWildcardExpression},
+	{ArgumentType::SubExpression, executorFactoryWildcardExpression},
 };
 
 static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> variable_synonym_map = {
-	{ArgumentType::Wildcard, PatternAssignExecutor::executorFactorySynonymWildcard},
-	{ArgumentType::ExactExpression, PatternAssignExecutor::executorFactorySynonymExpression},
-	{ArgumentType::SubExpression, PatternAssignExecutor::executorFactorySynonymExpression},
+	{ArgumentType::Wildcard, executorFactorySynonymWildcard},
+	{ArgumentType::ExactExpression, executorFactorySynonymExpression},
+	{ArgumentType::SubExpression, executorFactorySynonymExpression},
 };
 
 static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>> synonym_map = {
@@ -47,7 +47,7 @@ static Common::ExpressionProcessor::Expression convertNameToExpression(const str
 
 ExecutorSetBundle QP::Dispatcher::PatternAssignDispatcher::dispatcher(vector<ClauseArgument>& args) {
 	// Single token exact match expressions are parsed as a name and require conversion.
-	if (args.size() == PATTERN_ARGUMENT_COUNT && args[EXPRESSION_ARGUMENT_INDEX].getType() == Types::ArgumentType::Name) {
+	if (args.size() == PATTERN_ARGUMENT_COUNT && args[EXPRESSION_ARGUMENT_INDEX].getType() == ArgumentType::Name) {
 		auto name = args[EXPRESSION_ARGUMENT_INDEX].getName();
 		auto expression = convertNameToExpression(name);
 		args[EXPRESSION_ARGUMENT_INDEX] = ClauseArgument{move(expression), EXACT_MATCH};

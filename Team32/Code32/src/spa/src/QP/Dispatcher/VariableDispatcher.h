@@ -5,16 +5,17 @@
 
 namespace QP::Dispatcher::VariableDispatcher {
 
+using namespace std;
 using namespace QP::Types;
 
 template <ClauseType T>
-const std::unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>& getNameMap();
+const unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>& getNameMap();
 template <ClauseType T>
-const std::unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>& getIndexMap();
+const unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>& getIndexMap();
 template <ClauseType T>
-const std::unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>& getProcedureMap();
+const unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>& getProcedureMap();
 template <ClauseType T>
-const std::unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>& getStatementMap();
+const unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>& getStatementMap();
 }
 
 #endif  // SPA_SRC_QP_DISPATCHER_VARIABLEDISPATCHER_H

@@ -8,20 +8,16 @@
 namespace QP::Dispatcher::StatementDispatcher {
 
 using namespace std;
-using namespace QP::Executor;
+using namespace QP::Executor::StatementExecutor;
 
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getIndexMap() {
 	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
-		{ArgumentType::Number, StatementExecutor::executorFactoryIndexIndex<T>},
-		{ArgumentType::Wildcard, StatementExecutor::executorFactoryIndexWildcard<T>},
-		{DesignEntity::Stmt, StatementExecutor::executorFactoryIndexSynonym<T>},
-		{DesignEntity::Call, StatementExecutor::executorFactoryIndexSynonym<T>},
-		{DesignEntity::Assign, StatementExecutor::executorFactoryIndexSynonym<T>},
-		{DesignEntity::Print, StatementExecutor::executorFactoryIndexSynonym<T>},
-		{DesignEntity::Read, StatementExecutor::executorFactoryIndexSynonym<T>},
-		{DesignEntity::While, StatementExecutor::executorFactoryIndexSynonym<T>},
-		{DesignEntity::If, StatementExecutor::executorFactoryIndexSynonym<T>},
+		{ArgumentType::Number, executorFactoryIndexIndex<T>},   {ArgumentType::Wildcard, executorFactoryIndexWildcard<T>},
+		{DesignEntity::Stmt, executorFactoryIndexSynonym<T>},   {DesignEntity::Call, executorFactoryIndexSynonym<T>},
+		{DesignEntity::Assign, executorFactoryIndexSynonym<T>}, {DesignEntity::Print, executorFactoryIndexSynonym<T>},
+		{DesignEntity::Read, executorFactoryIndexSynonym<T>},   {DesignEntity::While, executorFactoryIndexSynonym<T>},
+		{DesignEntity::If, executorFactoryIndexSynonym<T>},
 	};
 	return map;
 }
@@ -29,15 +25,11 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getIndexMap() {
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getWildcardMap() {
 	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
-		{ArgumentType::Number, StatementExecutor::executorFactoryWildcardIndex<T>},
-		{ArgumentType::Wildcard, StatementExecutor::executorFactoryWildcardWildcard<T>},
-		{DesignEntity::Stmt, StatementExecutor::executorFactoryWildcardSynonym<T>},
-		{DesignEntity::Call, StatementExecutor::executorFactoryWildcardSynonym<T>},
-		{DesignEntity::Assign, StatementExecutor::executorFactoryWildcardSynonym<T>},
-		{DesignEntity::Print, StatementExecutor::executorFactoryWildcardSynonym<T>},
-		{DesignEntity::Read, StatementExecutor::executorFactoryWildcardSynonym<T>},
-		{DesignEntity::While, StatementExecutor::executorFactoryWildcardSynonym<T>},
-		{DesignEntity::If, StatementExecutor::executorFactoryWildcardSynonym<T>},
+		{ArgumentType::Number, executorFactoryWildcardIndex<T>},   {ArgumentType::Wildcard, executorFactoryWildcardWildcard<T>},
+		{DesignEntity::Stmt, executorFactoryWildcardSynonym<T>},   {DesignEntity::Call, executorFactoryWildcardSynonym<T>},
+		{DesignEntity::Assign, executorFactoryWildcardSynonym<T>}, {DesignEntity::Print, executorFactoryWildcardSynonym<T>},
+		{DesignEntity::Read, executorFactoryWildcardSynonym<T>},   {DesignEntity::While, executorFactoryWildcardSynonym<T>},
+		{DesignEntity::If, executorFactoryWildcardSynonym<T>},
 	};
 	return map;
 }
@@ -45,15 +37,11 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getWildcardMap() {
 template <ClauseType T>
 const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getSynonymMap() {
 	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
-		{ArgumentType::Number, StatementExecutor::executorFactorySynonymIndex<T>},
-		{ArgumentType::Wildcard, StatementExecutor::executorFactorySynonymWildcard<T>},
-		{DesignEntity::Stmt, StatementExecutor::executorFactorySynonymSynonym<T>},
-		{DesignEntity::Call, StatementExecutor::executorFactorySynonymSynonym<T>},
-		{DesignEntity::Assign, StatementExecutor::executorFactorySynonymSynonym<T>},
-		{DesignEntity::Print, StatementExecutor::executorFactorySynonymSynonym<T>},
-		{DesignEntity::Read, StatementExecutor::executorFactorySynonymSynonym<T>},
-		{DesignEntity::While, StatementExecutor::executorFactorySynonymSynonym<T>},
-		{DesignEntity::If, StatementExecutor::executorFactorySynonymSynonym<T>},
+		{ArgumentType::Number, executorFactorySynonymIndex<T>},   {ArgumentType::Wildcard, executorFactorySynonymWildcard<T>},
+		{DesignEntity::Stmt, executorFactorySynonymSynonym<T>},   {DesignEntity::Call, executorFactorySynonymSynonym<T>},
+		{DesignEntity::Assign, executorFactorySynonymSynonym<T>}, {DesignEntity::Print, executorFactorySynonymSynonym<T>},
+		{DesignEntity::Read, executorFactorySynonymSynonym<T>},   {DesignEntity::While, executorFactorySynonymSynonym<T>},
+		{DesignEntity::If, executorFactorySynonymSynonym<T>},
 	};
 	return map;
 }
@@ -61,15 +49,15 @@ const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getSynonymMap() {
 template <>
 inline const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getWildcardMap<ClauseType::NextT>() {
 	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
-		{ArgumentType::Number, StatementExecutor::executorFactoryWildcardIndex<ClauseType::NextT>},
-		{ArgumentType::Wildcard, StatementExecutor::executorFactoryWildcardWildcard<ClauseType::NextT>},
-		{DesignEntity::Stmt, StatementExecutor::executorFactoryWildcardSynonymOptimized<ClauseType::NextT>},
-		{DesignEntity::Call, StatementExecutor::executorFactoryWildcardSynonymOptimized<ClauseType::NextT>},
-		{DesignEntity::Assign, StatementExecutor::executorFactoryWildcardSynonymOptimized<ClauseType::NextT>},
-		{DesignEntity::Print, StatementExecutor::executorFactoryWildcardSynonymOptimized<ClauseType::NextT>},
-		{DesignEntity::Read, StatementExecutor::executorFactoryWildcardSynonymOptimized<ClauseType::NextT>},
-		{DesignEntity::While, StatementExecutor::executorFactoryWildcardSynonymOptimized<ClauseType::NextT>},
-		{DesignEntity::If, StatementExecutor::executorFactoryWildcardSynonymOptimized<ClauseType::NextT>},
+		{ArgumentType::Number, executorFactoryWildcardIndex<ClauseType::NextT>},
+		{ArgumentType::Wildcard, executorFactoryWildcardWildcard<ClauseType::NextT>},
+		{DesignEntity::Stmt, executorFactoryWildcardSynonymOptimized<ClauseType::NextT>},
+		{DesignEntity::Call, executorFactoryWildcardSynonymOptimized<ClauseType::NextT>},
+		{DesignEntity::Assign, executorFactoryWildcardSynonymOptimized<ClauseType::NextT>},
+		{DesignEntity::Print, executorFactoryWildcardSynonymOptimized<ClauseType::NextT>},
+		{DesignEntity::Read, executorFactoryWildcardSynonymOptimized<ClauseType::NextT>},
+		{DesignEntity::While, executorFactoryWildcardSynonymOptimized<ClauseType::NextT>},
+		{DesignEntity::If, executorFactoryWildcardSynonymOptimized<ClauseType::NextT>},
 	};
 	return map;
 }
@@ -77,15 +65,15 @@ inline const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getWildcard
 template <>
 inline const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& getSynonymMap<ClauseType::NextT>() {
 	static const unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map = {
-		{ArgumentType::Number, StatementExecutor::executorFactorySynonymIndex<ClauseType::NextT>},
-		{ArgumentType::Wildcard, StatementExecutor::executorFactorySynonymWildcardOptimized<ClauseType::NextT>},
-		{DesignEntity::Stmt, StatementExecutor::executorFactorySynonymSynonymOptimized<ClauseType::NextT>},
-		{DesignEntity::Call, StatementExecutor::executorFactorySynonymSynonymOptimized<ClauseType::NextT>},
-		{DesignEntity::Assign, StatementExecutor::executorFactorySynonymSynonymOptimized<ClauseType::NextT>},
-		{DesignEntity::Print, StatementExecutor::executorFactorySynonymSynonymOptimized<ClauseType::NextT>},
-		{DesignEntity::Read, StatementExecutor::executorFactorySynonymSynonymOptimized<ClauseType::NextT>},
-		{DesignEntity::While, StatementExecutor::executorFactorySynonymSynonymOptimized<ClauseType::NextT>},
-		{DesignEntity::If, StatementExecutor::executorFactorySynonymSynonymOptimized<ClauseType::NextT>},
+		{ArgumentType::Number, executorFactorySynonymIndex<ClauseType::NextT>},
+		{ArgumentType::Wildcard, executorFactorySynonymWildcardOptimized<ClauseType::NextT>},
+		{DesignEntity::Stmt, executorFactorySynonymSynonymOptimized<ClauseType::NextT>},
+		{DesignEntity::Call, executorFactorySynonymSynonymOptimized<ClauseType::NextT>},
+		{DesignEntity::Assign, executorFactorySynonymSynonymOptimized<ClauseType::NextT>},
+		{DesignEntity::Print, executorFactorySynonymSynonymOptimized<ClauseType::NextT>},
+		{DesignEntity::Read, executorFactorySynonymSynonymOptimized<ClauseType::NextT>},
+		{DesignEntity::While, executorFactorySynonymSynonymOptimized<ClauseType::NextT>},
+		{DesignEntity::If, executorFactorySynonymSynonymOptimized<ClauseType::NextT>},
 	};
 	return map;
 }

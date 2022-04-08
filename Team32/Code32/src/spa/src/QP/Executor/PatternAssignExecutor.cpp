@@ -8,7 +8,8 @@ using namespace std;
 
 // Trivial Executors
 QueryResult executeTrivialNameWildcard(const StorageAdapter& store, const ClauseArgument& name) {
-	return QueryResult(!store.getStmtsWithPatternLHS(name.getName()).empty());
+	unordered_set result = store.getStmtsWithPatternLHS(name.getName());
+	return QueryResult(!result.empty());
 }
 
 QueryResult executeTrivialSynonymOrWildcardWildcard(const StorageAdapter& store) {
@@ -22,13 +23,13 @@ QueryResult executeTrivialSynonymOrWildcardWildcard(const StorageAdapter& store)
 }
 
 QueryResult executeTrivialNameExpression(const StorageAdapter& store, const ClauseArgument& name, const ClauseArgument& expression) {
-	return QueryResult(
-		store.patternExists(name.getName(), expression.getExpression(), expression.getType() == ArgumentType::ExactExpression));
+	bool result = store.patternExists(name.getName(), expression.getExpression(), expression.getType() == ArgumentType::ExactExpression);
+	return QueryResult(result);
 }
 
 QueryResult executeTrivialSynonymOrWildcardExpression(const StorageAdapter& store, const ClauseArgument& expression) {
-	return QueryResult(
-		!store.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ArgumentType::ExactExpression).empty());
+	unordered_set result = store.getStmtsWithPatternRHS(expression.getExpression(), expression.getType() == ArgumentType::ExactExpression);
+	return QueryResult(!result.empty());
 }
 
 // Executors

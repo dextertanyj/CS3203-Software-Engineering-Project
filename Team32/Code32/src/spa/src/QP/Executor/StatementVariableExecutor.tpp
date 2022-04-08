@@ -11,12 +11,14 @@ using namespace std;
 
 template <ClauseType T>
 QueryResult executeTrivialIndexName(const StorageAdapter& store, const ClauseArgument& index, const ClauseArgument& variable) {
-	return QueryResult(store.checkStatementVariableRelation<T>(index.getStatementIndex(), variable.getName()));
+	bool result = store.checkStatementVariableRelation<T>(index.getStatementIndex(), variable.getName());
+	return QueryResult(result);
 }
 
 template <ClauseType T>
 QueryResult executeTrivialIndexWildcardOrSynonym(const StorageAdapter& store, const ClauseArgument& index) {
-	return QueryResult(!store.getVariableByStatement<T>(index.getStatementIndex()).empty());
+	unordered_set result = store.getVariableByStatement<T>(index.getStatementIndex());
+	return QueryResult(!result.empty());
 }
 
 template <ClauseType T>

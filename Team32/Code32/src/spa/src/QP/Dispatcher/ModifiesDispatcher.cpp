@@ -6,19 +6,15 @@
 #include "QP/Dispatcher/VariableDispatcher.tpp"
 
 using namespace std;
-using namespace QP::Dispatcher;
+using namespace QP::Dispatcher::VariableDispatcher;
 using namespace QP::Types;
 
 static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>> argument_dispatch_map = {
-	{ArgumentType::Name, VariableDispatcher::getNameMap<ClauseType::ModifiesP>()},
-	{ArgumentType::Number, VariableDispatcher::getIndexMap<ClauseType::ModifiesS>()},
-	{DesignEntity::Procedure, VariableDispatcher::getProcedureMap<ClauseType::ModifiesP>()},
-	{DesignEntity::Stmt, VariableDispatcher::getStatementMap<ClauseType::ModifiesS>()},
-	{DesignEntity::Call, VariableDispatcher::getStatementMap<ClauseType::ModifiesS>()},
-	{DesignEntity::Assign, VariableDispatcher::getStatementMap<ClauseType::ModifiesS>()},
-	{DesignEntity::Read, VariableDispatcher::getStatementMap<ClauseType::ModifiesS>()},
-	{DesignEntity::While, VariableDispatcher::getStatementMap<ClauseType::ModifiesS>()},
-	{DesignEntity::If, VariableDispatcher::getStatementMap<ClauseType::ModifiesS>()}};
+	{ArgumentType::Name, getNameMap<ClauseType::ModifiesP>()},           {ArgumentType::Number, getIndexMap<ClauseType::ModifiesS>()},
+	{DesignEntity::Procedure, getProcedureMap<ClauseType::ModifiesP>()}, {DesignEntity::Stmt, getStatementMap<ClauseType::ModifiesS>()},
+	{DesignEntity::Call, getStatementMap<ClauseType::ModifiesS>()},      {DesignEntity::Assign, getStatementMap<ClauseType::ModifiesS>()},
+	{DesignEntity::Read, getStatementMap<ClauseType::ModifiesS>()},      {DesignEntity::While, getStatementMap<ClauseType::ModifiesS>()},
+	{DesignEntity::If, getStatementMap<ClauseType::ModifiesS>()}};
 
 ExecutorSetBundle QP::Dispatcher::ModifiesDispatcher::dispatcher(const vector<ClauseArgument>& args) {
 	return QP::Dispatcher::DispatchProcessors::processArgument(argument_dispatch_map, args);

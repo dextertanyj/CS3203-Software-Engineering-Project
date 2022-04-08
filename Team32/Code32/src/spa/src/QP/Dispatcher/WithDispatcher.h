@@ -9,9 +9,7 @@
 
 namespace QP::Dispatcher::WithDispatcher {
 
-using namespace QP::Types;
-
-ExecutorSetBundle dispatcher(const std::vector<ClauseArgument>& args);
+Types::ExecutorSetBundle dispatcher(const std::vector<ClauseArgument>& args);
 }
 
 #endif  // SPA_SRC_DISPATCHER_WITHDISPATCHER_H
