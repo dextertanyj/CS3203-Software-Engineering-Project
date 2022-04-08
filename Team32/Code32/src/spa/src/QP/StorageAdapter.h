@@ -252,23 +252,23 @@ public:
 
 	// Pattern If and While
 	template <Types::ClauseType T>
-	[[nodiscard]] inline bool checkControl(const StmtRef& stmt, const VarRef& var) const = delete;
+	[[nodiscard]] inline bool checkControl(StmtRef stmt, const VarRef& var) const = delete;
 	template <>
-	[[nodiscard]] inline bool checkControl<Types::ClauseType::PatternIf>(const StmtRef& stmt, const VarRef& var) const {
+	[[nodiscard]] inline bool checkControl<Types::ClauseType::PatternIf>(StmtRef stmt, const VarRef& var) const {
 		return pkb.checkIfControl(stmt, var);
 	}
 	template <>
-	[[nodiscard]] inline bool checkControl<Types::ClauseType::PatternWhile>(const StmtRef& stmt, const VarRef& var) const {
+	[[nodiscard]] inline bool checkControl<Types::ClauseType::PatternWhile>(StmtRef stmt, const VarRef& var) const {
 		return pkb.checkWhileControl(stmt, var);
 	}
 	template <Types::ClauseType T>
-	[[nodiscard]] inline VarRefSet getControlVar(const StmtRef& stmt) const = delete;
+	[[nodiscard]] inline VarRefSet getControlVar(StmtRef stmt) const = delete;
 	template <>
-	[[nodiscard]] inline VarRefSet getControlVar<Types::ClauseType::PatternIf>(const StmtRef& stmt) const {
+	[[nodiscard]] inline VarRefSet getControlVar<Types::ClauseType::PatternIf>(StmtRef stmt) const {
 		return pkb.getIfControlVar(stmt);
 	}
 	template <>
-	[[nodiscard]] inline VarRefSet getControlVar<Types::ClauseType::PatternWhile>(const StmtRef& stmt) const {
+	[[nodiscard]] inline VarRefSet getControlVar<Types::ClauseType::PatternWhile>(StmtRef stmt) const {
 		return pkb.getWhileControlVar(stmt);
 	}
 	template <Types::ClauseType T>
@@ -283,7 +283,7 @@ public:
 	}
 
 	// With
-	[[nodiscard]] inline ProcRef getCalledProcedure(const StmtRef& stmt) const { return pkb.getCalledProcedure(stmt); };
+	[[nodiscard]] inline ProcRef getCalledProcedure(StmtRef stmt) const { return pkb.getCalledProcedure(stmt); };
 
 private:
 	PKB::StorageAccessInterface& pkb;
