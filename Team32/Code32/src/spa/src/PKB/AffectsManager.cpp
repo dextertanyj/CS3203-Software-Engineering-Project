@@ -5,8 +5,8 @@
 
 using namespace std;
 
-PKB::AffectsManager::AffectsManager(ControlFlowGraph& control_flow_graph, SVRelationStore<PKB::ModifiesSRelation>& modifies_store,
-                                    SVRelationStore<PKB::UsesSRelation>& uses_store)
+PKB::AffectsManager::AffectsManager(ControlFlowGraph& control_flow_graph, SVRelationStore<ModifiesSRelation>& modifies_store,
+                                    SVRelationStore<UsesSRelation>& uses_store)
 	: control_flow_graph(control_flow_graph), uses_store(uses_store), modifies_store(modifies_store) {}
 
 bool PKB::AffectsManager::checkAffects(StmtRef first, StmtRef second) {

@@ -9,7 +9,7 @@ PKB::TopologicalSort<TInfo>::TopologicalSort() = default;
 template <class TInfo>
 template <class TStore, typename TIdent, class TRelation>
 void PKB::TopologicalSort<TInfo>::sort(const TStore& truth_store,
-                                       const PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>& transitive_store) {
+                                       const TransitiveRelationStore<TIdent, TInfo, TRelation>& transitive_store) {
 	order = std::vector<TInfoPtr>();
 	std::unordered_map<TInfoPtr, edge_set> edges;
 	std::unordered_set<TInfoPtr> all = truth_store.getAll();

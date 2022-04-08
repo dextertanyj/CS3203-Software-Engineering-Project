@@ -17,9 +17,6 @@ void PKB::InfoStore<TIdent, TContent, TInfo>::insert(const TIdent& identifier, T
 
 template <typename TIdent, typename TContent, class TInfo>
 std::shared_ptr<TInfo> PKB::InfoStore<TIdent, TContent, TInfo>::get(const TIdent& identifier) const {
-	// Test the identifier by constructing a new TInfo object.
-	TInfo test = TInfo(identifier, TContent());
-
 	auto iter = store.find(identifier);
 	if (iter == store.end()) {
 		return nullptr;

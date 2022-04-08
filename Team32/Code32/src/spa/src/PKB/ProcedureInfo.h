@@ -17,7 +17,7 @@ private:
 
 	ProcedureInfo(ProcRef name, std::vector<StmtInfoPtr> statements);
 
-	friend class PKB::InfoStore<ProcRef, std::vector<StmtInfoPtr>, ProcedureInfo>;
+	friend class InfoStore<ProcRef, std::vector<StmtInfoPtr>, ProcedureInfo>;
 };
 
 #endif  // SPA_SRC_PKB_PROCEDUREINFO_H

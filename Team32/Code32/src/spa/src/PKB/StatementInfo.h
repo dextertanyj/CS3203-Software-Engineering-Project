@@ -15,7 +15,7 @@ private:
 
 	StatementInfo(StmtRef index, StmtType type);
 
-	friend class PKB::InfoStore<StmtRef, StmtType, StatementInfo>;
+	friend class InfoStore<StmtRef, StmtType, StatementInfo>;
 };
 
 #endif  // SPA_SRC_PKB_STATEMENTINFO_H

@@ -16,8 +16,8 @@
 
 class PKB::AffectsManager {
 public:
-	explicit AffectsManager(ControlFlowGraph& control_flow_graph, SVRelationStore<PKB::ModifiesSRelation>& modifies_store,
-	                        SVRelationStore<PKB::UsesSRelation>& uses_store);
+	explicit AffectsManager(ControlFlowGraph& control_flow_graph, SVRelationStore<ModifiesSRelation>& modifies_store,
+	                        SVRelationStore<UsesSRelation>& uses_store);
 	bool checkAffects(StmtRef first, StmtRef second);
 	bool checkAffectsStar(StmtRef first, StmtRef second);
 	StmtInfoPtrSet getAffects(StmtRef first);
@@ -45,8 +45,8 @@ private:
 	};
 
 	ControlFlowGraph& control_flow_graph;
-	SVRelationStore<PKB::UsesSRelation>& uses_store;
-	SVRelationStore<PKB::ModifiesSRelation>& modifies_store;
+	SVRelationStore<UsesSRelation>& uses_store;
+	SVRelationStore<ModifiesSRelation>& modifies_store;
 
 	std::unordered_map<StmtRef, std::shared_ptr<CacheGraphNode>> cache_graph_store;
 	std::unordered_map<StmtRef, StmtInfoPtrSet> affects_cache;

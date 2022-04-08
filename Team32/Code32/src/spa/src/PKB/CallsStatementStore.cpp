@@ -27,7 +27,7 @@ ProcRef PKB::CallsStatementStore::getProcedure(StmtRef index) const {
 	return map.at(index);
 }
 
-void PKB::CallsStatementStore::populateCallStore(const PKB::Types::ProcedureStore& procedures, Types::CallStore& call_store) const {
+void PKB::CallsStatementStore::populateCallStore(const Types::ProcedureStore& procedures, Types::CallStore& call_store) const {
 	for (const shared_ptr<ProcedureInfo>& procedure : procedures.getAll()) {
 		for (const StmtInfoPtr& info : procedure->getStatements()) {
 			populate(info, procedures, procedure, call_store);
@@ -35,7 +35,7 @@ void PKB::CallsStatementStore::populateCallStore(const PKB::Types::ProcedureStor
 	}
 }
 
-void PKB::CallsStatementStore::populate(const StmtInfoPtr& stmt, const PKB::Types::ProcedureStore& procedures,
+void PKB::CallsStatementStore::populate(const StmtInfoPtr& stmt, const Types::ProcedureStore& procedures,
                                         const shared_ptr<ProcedureInfo>& procedure, Types::CallStore& store) const {
 	if (stmt->getType() != StmtType::Call) {
 		return;
