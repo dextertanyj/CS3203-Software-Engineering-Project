@@ -79,12 +79,12 @@ inline ExecutorSetFactoryBundle processArgumentBundleRecurse(unordered_map<Argum
 }
 
 template <typename T>
-ExecutorSetBundle processArgument(ClauseType type, T map, const vector<ClauseArgument>& args) {
+ExecutorSetBundle processArgument(ClauseType type, const T& map, const vector<ClauseArgument>& args) {
 	return {type, processArgumentRecurse(map, args)(args)};
 }
 
 template <typename T>
-ExecutorSetBundle processArgument(T map, const vector<ClauseArgument>& args) {
+ExecutorSetBundle processArgument(const T& map, const vector<ClauseArgument>& args) {
 	auto result = processArgumentBundleRecurse(map, args);
 	return {result.first, result.second(args)};
 }
