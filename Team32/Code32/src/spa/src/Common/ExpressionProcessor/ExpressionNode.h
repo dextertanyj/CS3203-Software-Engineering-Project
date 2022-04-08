@@ -2,6 +2,7 @@
 #define SPA_SRC_COMMON_EXPRESSIONPROCESSOR_EXPRESSIONNODE_H
 
 #include <memory>
+#include <string>
 #include <variant>
 #include <vector>
 

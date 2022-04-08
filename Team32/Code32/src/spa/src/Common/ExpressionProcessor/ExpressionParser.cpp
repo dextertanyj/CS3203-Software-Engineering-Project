@@ -1,13 +1,16 @@
 #include "Common/ExpressionProcessor/ExpressionParser.h"
 
+#include <string>
+#include <variant>
+
 #include "Common/Converter.h"
 #include "Common/ExpressionProcessor/ArithmeticNode.h"
-#include "Common/ExpressionProcessor/BinaryLogicalNode.h"
+#include "Common/ExpressionProcessor/AtomicNode.h"
 #include "Common/ExpressionProcessor/LogicalNode.h"
 #include "Common/ExpressionProcessor/ParenthesesWrapper.h"
 #include "Common/ExpressionProcessor/RelationalNode.h"
+#include "Common/ExpressionProcessor/TerminalNode.h"
 #include "Common/ExpressionProcessor/TerminalNode.tpp"
-#include "Common/ExpressionProcessor/UnaryLogicalNode.h"
 #include "Common/Validator.h"
 
 #define LOGICAL_PRECEDENCE (-1)

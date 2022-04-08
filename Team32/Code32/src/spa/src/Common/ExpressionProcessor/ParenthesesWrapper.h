@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "Common/ExpressionProcessor/ExpressionNode.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 
 class Common::ExpressionProcessor::ParenthesesWrapper {
 public:
