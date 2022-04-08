@@ -100,20 +100,20 @@ QueryResult executeSynonymExpression(const StorageAdapter& store, const ClauseAr
 }
 
 ExecutorSet executorFactoryNameWildcard(const vector<ClauseArgument>& args) {
-	Types::Executor trivial_executor = [variable = args.at(1)](const StorageAdapter& store) {
+	Types::Executor trivial_executor = [variable = args[1]](const StorageAdapter& store) {
 		return executeTrivialNameWildcard(store, variable);
 	};
-	Types::Executor executor = [assign = args.at(0), variable = args.at(1)](const StorageAdapter& store) {
+	Types::Executor executor = [assign = args[0], variable = args[1]](const StorageAdapter& store) {
 		return executeNameWildcard(store, assign, variable);
 	};
 	return pair{trivial_executor, executor};
 }
 
 ExecutorSet executorFactoryNameExpression(const vector<ClauseArgument>& args) {
-	Types::Executor trivial_executor = [variable = args.at(1), expression = args.at(2)](const StorageAdapter& store) {
+	Types::Executor trivial_executor = [variable = args[1], expression = args[2]](const StorageAdapter& store) {
 		return executeTrivialNameExpression(store, variable, expression);
 	};
-	Types::Executor executor = [assign = args.at(0), variable = args.at(1), expression = args.at(2)](const StorageAdapter& store) {
+	Types::Executor executor = [assign = args[0], variable = args[1], expression = args[2]](const StorageAdapter& store) {
 		return executeNameExpression(store, assign, variable, expression);
 	};
 	return pair{trivial_executor, executor};
@@ -121,15 +121,15 @@ ExecutorSet executorFactoryNameExpression(const vector<ClauseArgument>& args) {
 
 ExecutorSet executorFactoryWildcardWildcard(const vector<ClauseArgument>& args) {
 	Types::Executor trivial_executor = [](const StorageAdapter& store) { return executeTrivialSynonymOrWildcardWildcard(store); };
-	Types::Executor executor = [assign = args.at(0)](const StorageAdapter& store) { return executeWildcardWildcard(store, assign); };
+	Types::Executor executor = [assign = args[0]](const StorageAdapter& store) { return executeWildcardWildcard(store, assign); };
 	return pair{trivial_executor, executor};
 }
 
 ExecutorSet executorFactoryWildcardExpression(const vector<ClauseArgument>& args) {
-	Types::Executor trivial_executor = [expression = args.at(2)](const StorageAdapter& store) {
+	Types::Executor trivial_executor = [expression = args[2]](const StorageAdapter& store) {
 		return executeTrivialSynonymOrWildcardExpression(store, expression);
 	};
-	Types::Executor executor = [assign = args.at(0), expression = args.at(2)](const StorageAdapter& store) {
+	Types::Executor executor = [assign = args[0], expression = args[2]](const StorageAdapter& store) {
 		return executeWildcardExpression(store, assign, expression);
 	};
 	return pair{trivial_executor, executor};
@@ -137,17 +137,17 @@ ExecutorSet executorFactoryWildcardExpression(const vector<ClauseArgument>& args
 
 ExecutorSet executorFactorySynonymWildcard(const vector<ClauseArgument>& args) {
 	Types::Executor trivial_executor = [](const StorageAdapter& store) { return executeTrivialSynonymOrWildcardWildcard(store); };
-	Types::Executor executor = [assign = args.at(0), variable = args.at(1)](const StorageAdapter& store) {
+	Types::Executor executor = [assign = args[0], variable = args[1]](const StorageAdapter& store) {
 		return executeSynonymWildcard(store, assign, variable);
 	};
 	return pair{trivial_executor, executor};
 }
 
 ExecutorSet executorFactorySynonymExpression(const vector<ClauseArgument>& args) {
-	Types::Executor trivial_executor = [expression = args.at(2)](const StorageAdapter& store) {
+	Types::Executor trivial_executor = [expression = args[2]](const StorageAdapter& store) {
 		return executeTrivialSynonymOrWildcardExpression(store, expression);
 	};
-	Types::Executor executor = [assign = args.at(0), variable = args.at(1), expression = args.at(2)](const StorageAdapter& store) {
+	Types::Executor executor = [assign = args[0], variable = args[1], expression = args[2]](const StorageAdapter& store) {
 		return executeSynonymExpression(store, assign, variable, expression);
 	};
 	return pair{trivial_executor, executor};

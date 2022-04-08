@@ -17,12 +17,12 @@ void QP::Optimizer::ClauseGroups::sort() { std::sort(groups.begin(), groups.end(
 
 DeclarationList QP::Optimizer::ClauseGroups::getGroupSelectedSynonyms(size_t group_number) const {
 	assert(group_number < groups.size());
-	GroupInformation info = groups.at(group_number);
+	GroupInformation info = groups[group_number];
 	return info.selected_synonyms;
 }
 
 vector<string> QP::Optimizer::ClauseGroups::getGroupSynonyms(size_t group_number) const {
 	assert(group_number < groups.size());
-	GroupInformation info = groups.at(group_number);
+	GroupInformation info = groups[group_number];
 	return info.synonyms;
 }
