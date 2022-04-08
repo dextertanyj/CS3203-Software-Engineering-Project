@@ -10,7 +10,7 @@
 
 class QP::ClauseArgument {
 public:
-	explicit ClauseArgument();
+	explicit ClauseArgument() = default;
 	explicit ClauseArgument(Types::Declaration synonym);
 	explicit ClauseArgument(Types::Attribute attribute);
 	explicit ClauseArgument(Types::Name name);

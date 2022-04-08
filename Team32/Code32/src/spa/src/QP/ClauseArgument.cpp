@@ -7,8 +7,6 @@
 using namespace std;
 using namespace QP::Types;
 
-QP::ClauseArgument::ClauseArgument() = default;
-
 QP::ClauseArgument::ClauseArgument(Declaration synonym) : value(synonym) {}
 
 QP::ClauseArgument::ClauseArgument(Attribute attribute) : value(attribute) {}
@@ -17,20 +15,21 @@ QP::ClauseArgument::ClauseArgument(Types::Name name) : value(name) {}
 
 QP::ClauseArgument::ClauseArgument(Types::Number number) : value(number) {}
 
-QP::ClauseArgument::ClauseArgument(Common::ExpressionProcessor::Expression expression, bool exact)
-	: value(pair<Common::ExpressionProcessor::Expression, bool>({move(expression), exact})) {}
+QP::ClauseArgument::ClauseArgument(Common::EP::Expression expression, bool exact)
+	: value(pair<Common::EP::Expression, bool>({move(expression), exact})) {}
 
 /**
  * Returns the type of argument stored.
  *
- * The type is determined through the use of exhaustive overloaded visitor functions that capture the argument type to an external variable.
+ * The type is determined through the use of exhaustive overloaded visitor functions
+ * that capture the argument type to an external variable.
  */
 ArgumentType QP::ClauseArgument::getType() const {
 	ArgumentType type = ArgumentType::Wildcard;
 	visit(Visitor{[&](const StmtRef& /*unused*/) { type = ArgumentType::Number; },
 	              [&](const Declaration& /*unused*/) { type = ArgumentType::Synonym; },
 	              [&](const string& /*unused*/) { type = ArgumentType::Name; },
-	              [&](const pair<Common::ExpressionProcessor::Expression, bool>& arg) {
+	              [&](const pair<Common::EP::Expression, bool>& arg) {
 					  type = arg.second ? ArgumentType::ExactExpression : ArgumentType::SubExpression;
 				  },
 	              [&](const Attribute& /*unused*/) { type = ArgumentType::Attribute; },
