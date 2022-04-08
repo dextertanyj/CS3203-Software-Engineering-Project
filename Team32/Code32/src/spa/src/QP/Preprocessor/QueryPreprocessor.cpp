@@ -16,7 +16,7 @@
 #define TUPLE_CLOSE_BRACKET ">"
 #define OPEN_PARENTHESIS "("
 #define CLOSE_PARENTHESIS ")"
-#define NAME_WRAPPER "\""
+#define QUOTE "\""
 #define WILDCARD "_"
 #define ATTRIBUTE_SELECTOR "."
 #define BOOLEAN_KEYWORD "BOOLEAN"
@@ -278,7 +278,7 @@ QP::ClauseArgument QP::Preprocessor::QueryPreprocessor::parseArgument(optional<C
 }
 
 optional<QP::ClauseArgument> QP::Preprocessor::QueryPreprocessor::tryParseClauseArgument() {
-	if (this->query_tokens.at(token_index) == WILDCARD && this->query_tokens.at(token_index + 1) != NAME_WRAPPER) {
+	if (this->query_tokens.at(token_index) == WILDCARD && this->query_tokens.at(token_index + 1) != QUOTE) {
 		token_index++;
 		return ClauseArgument();
 	}
@@ -286,10 +286,10 @@ optional<QP::ClauseArgument> QP::Preprocessor::QueryPreprocessor::tryParseClause
 		token_index++;
 		return ClauseArgument(stoul(this->query_tokens.at(token_index - 1)));
 	}
-	if (this->query_tokens.at(token_index) == NAME_WRAPPER && Common::Validator::validateName(this->query_tokens.at(token_index + 1)) &&
-	    this->query_tokens.at(token_index + 2) == NAME_WRAPPER) {
+	if (this->query_tokens.at(token_index) == QUOTE && Common::Validator::validateName(this->query_tokens.at(token_index + 1)) &&
+	    this->query_tokens.at(token_index + 2) == QUOTE) {
 		token_index += 2;
-		match(NAME_WRAPPER);
+		match(QUOTE);
 		return ClauseArgument(this->query_tokens.at(token_index - 2));
 	}
 	return {};
@@ -327,13 +327,13 @@ optional<QP::ClauseArgument> QP::Preprocessor::QueryPreprocessor::tryParseExpres
 		is_contains = true;
 		token_index++;
 	}
-	match(NAME_WRAPPER);
+	match(QUOTE);
 	vector<string> expression_tokens;
-	while (this->query_tokens.at(token_index) != NAME_WRAPPER) {
+	while (this->query_tokens.at(token_index) != QUOTE) {
 		expression_tokens.push_back(this->query_tokens.at(token_index));
 		token_index++;
 	}
-	match(NAME_WRAPPER);
+	match(QUOTE);
 	if (is_contains) {
 		match(WILDCARD);
 	}
