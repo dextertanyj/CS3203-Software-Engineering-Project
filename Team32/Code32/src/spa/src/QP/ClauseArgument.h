@@ -13,8 +13,8 @@ public:
 	explicit ClauseArgument();
 	explicit ClauseArgument(Types::Declaration synonym);
 	explicit ClauseArgument(Types::Attribute attribute);
-	explicit ClauseArgument(std::string name);
-	explicit ClauseArgument(StmtRef statement_index);
+	explicit ClauseArgument(Types::Name name);
+	explicit ClauseArgument(Types::Number number);
 	explicit ClauseArgument(Common::EP::Expression expression, bool exact);
 
 	[[nodiscard]] Types::ArgumentType getType() const;
@@ -23,8 +23,8 @@ public:
 	[[nodiscard]] Types::DesignEntity getSynonymType() const;
 	[[nodiscard]] Types::Attribute getAttribute() const;
 	[[nodiscard]] Types::AttributeType getAttributeType() const;
-	[[nodiscard]] std::string getName() const;
-	[[nodiscard]] StmtRef getStatementIndex() const;
+	[[nodiscard]] Types::Name getName() const;
+	[[nodiscard]] Types::Number getNumber() const;
 	[[nodiscard]] Common::EP::Expression getExpression() const;
 	[[nodiscard]] bool operator==(const ClauseArgument& other) const;
 

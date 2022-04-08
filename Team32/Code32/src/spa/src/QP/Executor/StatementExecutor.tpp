@@ -19,19 +19,19 @@ using namespace std;
 // Trivial Executors
 template <ClauseType T>
 QueryResult executeTrivialIndexIndex(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
-	bool result = store.checkStatementRelation<T>(lhs.getStatementIndex(), rhs.getStatementIndex());
+	bool result = store.checkStatementRelation<T>(lhs.getNumber(), rhs.getNumber());
 	return QueryResult(result);
 }
 
 template <ClauseType T>
 QueryResult executeTrivialIndexWildcard(const StorageAdapter& store, const ClauseArgument& lhs) {
-	unordered_set result = store.getReverseStatements<T>(lhs.getStatementIndex());
+	unordered_set result = store.getReverseStatements<T>(lhs.getNumber());
 	return QueryResult(!result.empty());
 }
 
 template <ClauseType T>
 QueryResult executeTrivialIndexSynonym(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
-	StmtInfoPtrSet rhs_set = store.getReverseStatements<T>(lhs.getStatementIndex());
+	StmtInfoPtrSet rhs_set = store.getReverseStatements<T>(lhs.getNumber());
 	if (rhs.getSynonymType() == DesignEntity::Stmt) {
 		return QueryResult(!rhs_set.empty());
 	}
@@ -46,7 +46,7 @@ QueryResult executeTrivialIndexSynonym(const StorageAdapter& store, const Clause
 
 template <ClauseType T>
 QueryResult executeTrivialWildcardIndex(const StorageAdapter& store, const ClauseArgument& rhs) {
-	unordered_set result = store.getForwardStatements<T>(rhs.getStatementIndex());
+	unordered_set result = store.getForwardStatements<T>(rhs.getNumber());
 	return QueryResult(!result.empty());
 }
 
@@ -100,7 +100,7 @@ QueryResult executeTrivialWildcardSynonym(const StorageAdapter& store, const Cla
 
 template <ClauseType T>
 QueryResult executeTrivialSynonymIndex(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
-	StmtInfoPtrSet lhs_set = store.getForwardStatements<T>(rhs.getStatementIndex());
+	StmtInfoPtrSet lhs_set = store.getForwardStatements<T>(rhs.getNumber());
 	for (const auto& lhs_statement : lhs_set) {
 		if (Utilities::checkStmtTypeMatch(lhs_statement, lhs.getSynonymType())) {
 			return QueryResult(true);
@@ -204,7 +204,7 @@ template <ClauseType T>
 QueryResult executeIndexSynonym(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
 	QueryResult result = QueryResult({rhs.getSynonymSymbol()});
 
-	StmtInfoPtrSet statements = store.getReverseStatements<T>(lhs.getStatementIndex());
+	StmtInfoPtrSet statements = store.getReverseStatements<T>(lhs.getNumber());
 	for (const auto& statement : statements) {
 		if (Utilities::checkStmtTypeMatch(statement, rhs.getSynonymType())) {
 			result.addRow({to_string(statement->getIdentifier())});
@@ -235,7 +235,7 @@ QueryResult executeWildcardSynonym(const StorageAdapter& store, const ClauseArgu
 template <ClauseType T>
 QueryResult executeSynonymIndex(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {
 	QueryResult result = QueryResult({lhs.getSynonymSymbol()});
-	StmtInfoPtrSet lhs_set = store.getForwardStatements<T>(rhs.getStatementIndex());
+	StmtInfoPtrSet lhs_set = store.getForwardStatements<T>(rhs.getNumber());
 	vector<string> column;
 	for (const auto& lhs_statement : lhs_set) {
 		if (Utilities::checkStmtTypeMatch(lhs_statement, lhs.getSynonymType())) {

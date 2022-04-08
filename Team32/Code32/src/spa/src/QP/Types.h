@@ -60,11 +60,12 @@ struct Attribute {
 	bool operator==(const Attribute& other) const { return attribute == other.attribute && synonym == other.synonym; }
 };
 
-using ArgumentValue = std::variant<std::monostate, Declaration, Attribute, std::string, StmtRef, std::pair<Common::EP::Expression, bool>>;
-
-// Types for attribute selection
 using Name = std::string;
 using Number = unsigned long long;
+
+using ArgumentValue = std::variant<std::monostate, Declaration, Attribute, Name, Number, std::pair<Common::EP::Expression, bool>>;
+
+// Types for attribute selection
 template <typename TSynonym>
 using SelectExecutor = std::function<std::unordered_set<TSynonym>(const StorageAdapter&, const ClauseArgument&)>;
 template <typename TAttribute, typename TSynonym>

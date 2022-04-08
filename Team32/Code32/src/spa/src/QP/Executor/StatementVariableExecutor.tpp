@@ -15,13 +15,13 @@ using namespace std;
 
 template <ClauseType T>
 QueryResult executeTrivialIndexName(const StorageAdapter& store, const ClauseArgument& index, const ClauseArgument& variable) {
-	bool result = store.checkStatementVariableRelation<T>(index.getStatementIndex(), variable.getName());
+	bool result = store.checkStatementVariableRelation<T>(index.getNumber(), variable.getName());
 	return QueryResult(result);
 }
 
 template <ClauseType T>
 QueryResult executeTrivialIndexWildcardOrSynonym(const StorageAdapter& store, const ClauseArgument& index) {
-	unordered_set result = store.getVariableByStatement<T>(index.getStatementIndex());
+	unordered_set result = store.getVariableByStatement<T>(index.getNumber());
 	return QueryResult(!result.empty());
 }
 
@@ -103,7 +103,7 @@ QueryResult executeSynonymSynonym(const StorageAdapter& store, const ClauseArgum
 template <ClauseType T>
 QueryResult executeIndexSynonym(const StorageAdapter& store, const ClauseArgument& index, const ClauseArgument& variable) {
 	QueryResult result = QueryResult({variable.getSynonymSymbol()});
-	VarRefSet var_set = store.getVariableByStatement<T>(index.getStatementIndex());
+	VarRefSet var_set = store.getVariableByStatement<T>(index.getNumber());
 
 	for (const auto& var : var_set) {
 		result.addRow({var});

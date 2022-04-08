@@ -13,9 +13,9 @@ QP::ClauseArgument::ClauseArgument(Declaration synonym) : value(synonym) {}
 
 QP::ClauseArgument::ClauseArgument(Attribute attribute) : value(attribute) {}
 
-QP::ClauseArgument::ClauseArgument(string name) : value(name) {}
+QP::ClauseArgument::ClauseArgument(Types::Name name) : value(name) {}
 
-QP::ClauseArgument::ClauseArgument(StmtRef statement_index) : value(statement_index) {}
+QP::ClauseArgument::ClauseArgument(Types::Number statement_index) : value(statement_index) {}
 
 QP::ClauseArgument::ClauseArgument(Common::ExpressionProcessor::Expression expression, bool exact)
 	: value(pair<Common::ExpressionProcessor::Expression, bool>({move(expression), exact})) {}
@@ -79,18 +79,18 @@ AttributeType QP::ClauseArgument::getAttributeType() const {
 	return type;
 }
 
-string QP::ClauseArgument::getName() const {
-	string name;
+QP::Types::Name QP::ClauseArgument::getName() const {
+	Types::Name name;
 	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
-	              [&](string arg) { name = move(arg); }},
+	              [&](Types::Name arg) { name = move(arg); }},
 	      value);
 	return name;
 }
 
-StmtRef QP::ClauseArgument::getStatementIndex() const {
-	StmtRef index = 0;
+QP::Types::Number QP::ClauseArgument::getNumber() const {
+	Types::Number index = 0;
 	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
-	              [&](StmtRef arg) { index = arg; }},
+	              [&](Types::Number arg) { index = arg; }},
 	      value);
 	return index;
 }

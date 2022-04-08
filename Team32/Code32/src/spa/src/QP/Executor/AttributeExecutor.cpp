@@ -12,7 +12,7 @@ unordered_set<QP::Types::Name> QP::Executor::AttributeExecutor::extractName(cons
 
 unordered_set<QP::Types::Number> QP::Executor::AttributeExecutor::extractNumber(const StorageAdapter& /*store*/,
                                                                                 const ClauseArgument& argument) {
-	return {argument.getStatementIndex()};
+	return {argument.getNumber()};
 }
 
 unordered_set<QP::Types::Number> QP::Executor::AttributeExecutor::selectStatements(const StorageAdapter& store,
