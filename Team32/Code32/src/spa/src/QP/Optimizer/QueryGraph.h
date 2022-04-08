@@ -51,6 +51,8 @@ private:
 	void setEdge(const std::shared_ptr<Evaluator::Clause>& clause);
 	void addEdge(const std::pair<std::string, std::string>& symbols, const std::shared_ptr<Evaluator::Clause>& clause);
 	void optimize(const Types::DeclarationList& select_list);
+	void traverseGraph(std::unordered_set<std::string>& unvisited_nodes,
+	                   std::unordered_map<std::string, Types::Declaration>& selected_nodes);
 
 	void insertEdgesToQueue(std::unordered_set<std::string>& visited_nodes, const std::string& node_symbol,
 	                        std::priority_queue<Edge, std::vector<Edge>, EdgeComparator>& pq) const;

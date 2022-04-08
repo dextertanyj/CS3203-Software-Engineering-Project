@@ -98,13 +98,10 @@ void QueryGraph::optimize(const DeclarationList& select_list) {
 
 	unordered_set<string> unvisited_nodes;
 	unordered_map<string, Declaration> selected_nodes;
-	unsigned long long current_cost = 0;
-	vector<string> current_synonyms;
-	DeclarationList current_selected;
 	unvisited_nodes.reserve(nodes.size());
 	selected_nodes.reserve(select_list.size());
 
-	for (auto& node : nodes) {
+	for (const auto& node : nodes) {
 		unvisited_nodes.emplace(node.first);
 	}
 
@@ -112,15 +109,22 @@ void QueryGraph::optimize(const DeclarationList& select_list) {
 		selected_nodes.emplace(declaration.symbol, declaration);
 	}
 
+	traverseGraph(unvisited_nodes, selected_nodes);
+
+	clause_groups.sort();
+}
+
+void QueryGraph::traverseGraph(unordered_set<string>& unvisited_nodes, unordered_map<string, Declaration>& selected_nodes) {
 	queue<string> queue;
-	auto start = *unvisited_nodes.begin();
-	queue.push(start);
-	unvisited_nodes.erase(start);
+	vector<string> current_synonyms;
+	DeclarationList current_selected;
+	unsigned long long current_cost = 0;
+	queue.push(*unvisited_nodes.begin());
 
 	while (!queue.empty()) {
 		string symbol = queue.front();
 		queue.pop();
-
+		unvisited_nodes.erase(symbol);
 		current_synonyms.push_back(symbol);
 
 		if (selected_nodes.find(symbol) != selected_nodes.end()) {
@@ -140,12 +144,9 @@ void QueryGraph::optimize(const DeclarationList& select_list) {
 		}
 
 		if (queue.empty() && !unvisited_nodes.empty()) {
-			start = *unvisited_nodes.begin();
-			queue.push(start);
-			unvisited_nodes.erase(start);
+			queue.push(*unvisited_nodes.begin());
 		}
 	}
-	clause_groups.sort();
 }
 
 void QueryGraph::addNodeToQueue(const Node& node, queue<string>& queue, unordered_set<string>& unvisited_nodes, unsigned long long& cost) {
