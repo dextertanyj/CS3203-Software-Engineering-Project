@@ -88,8 +88,9 @@ QP::QueryResult QP::QueryResult::joinIntraGroupResults(vector<QP::QueryResult>& 
 		if (table.getNumberOfRows() == 0) {
 			return {};
 		}
+		// All results are either in the queue or have been joined into the current result.
 		if (completed.size() == results.size()) {
-			break;
+			continue;
 		}
 		findNeighbours(curr, synonym_to_index_map, queue, completed);
 	}
