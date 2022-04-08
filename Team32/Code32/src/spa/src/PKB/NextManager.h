@@ -57,7 +57,6 @@ private:
 	void processLoopNode(const StmtInfoPtr& node, TraversalInformation& info);
 	StmtInfoPtrSet traverseLoop(const StmtInfoPtr& node);
 	void handleTraverseLoopNode(std::queue<StmtInfoPtr>& queue, StmtInfoPtrSet& set, const StmtInfoPtr& node);
-
 };
 
 #endif  // SPA_NEXTMANAGER_H
