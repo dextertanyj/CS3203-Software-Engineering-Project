@@ -142,11 +142,11 @@ ExecutorSet dispatchHandler(const vector<ClauseArgument>& args) {
 	static const auto left_attribute_map = getAttributeMap<TAttribute, TLeft>();
 	static const auto right_attribute_map = getAttributeMap<TAttribute, TRight>();
 	WithClauseArgumentDispatchKey lhs_key = args[0].getType();
-	if (args[0].getType() == ArgumentType::Attribute) {
+	if (lhs == ArgumentType::Attribute) {
 		lhs_key = pair{args[0].getSynonymType(), args[0].getAttributeType()};
 	}
 	WithClauseArgumentDispatchKey rhs_key = args[1].getType();
-	if (args[1].getType() == ArgumentType::Attribute) {
+	if (rhs == ArgumentType::Attribute) {
 		rhs_key = pair{args[1].getSynonymType(), args[1].getAttributeType()};
 	}
 	auto lhs_executors_iter = left_attribute_map.find(lhs_key);

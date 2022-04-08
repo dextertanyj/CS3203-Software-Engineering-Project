@@ -15,7 +15,7 @@ Types::ExecutorSetFactory processArgumentRecurse(T map, const vector<ClauseArgum
 		throw QueryDispatchException("Incorrect argument count.");
 	}
 	Types::ArgumentDispatchKey key = args[0].getType();
-	if (args[0].getType() == Types::ArgumentType::Synonym) {
+	if (key == Types::ArgumentType::Synonym) {
 		key = args[0].getSynonymType();
 	}
 	auto iter = map.find(key);
@@ -33,7 +33,7 @@ inline Types::ExecutorSetFactory processArgumentRecurse(unordered_map<Types::Arg
 		throw QueryDispatchException("Incorrect argument count.");
 	}
 	Types::ArgumentDispatchKey key = args[0].getType();
-	if (args[0].getType() == Types::ArgumentType::Synonym) {
+	if (key == Types::ArgumentType::Synonym) {
 		key = args[0].getSynonymType();
 	}
 	auto iter = map.find(key);
@@ -49,7 +49,7 @@ Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(T map, const vector
 		throw QueryDispatchException("Incorrect argument count.");
 	}
 	Types::ArgumentDispatchKey key = args[0].getType();
-	if (args[0].getType() == Types::ArgumentType::Synonym) {
+	if (key == Types::ArgumentType::Synonym) {
 		key = args[0].getSynonymType();
 	}
 	auto iter = map.find(key);
@@ -67,7 +67,7 @@ inline Types::ExecutorSetFactoryBundle processArgumentBundleRecurse(
 		throw QueryDispatchException("Incorrect argument count.");
 	}
 	Types::ArgumentDispatchKey key = args[0].getType();
-	if (args[0].getType() == Types::ArgumentType::Synonym) {
+	if (key == Types::ArgumentType::Synonym) {
 		key = args[0].getSynonymType();
 	}
 	auto iter = map.find(key);
