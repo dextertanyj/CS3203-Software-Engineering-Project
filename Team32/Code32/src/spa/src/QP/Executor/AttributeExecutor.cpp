@@ -1,5 +1,6 @@
 #include "QP/Executor/AttributeExecutor.h"
 
+#include "Common/TypeDefs.h"
 #include "QP/QueryUtils.h"
 
 std::unordered_set<QP::Types::Name> QP::Executor::AttributeExecutor::extractName(const QP::StorageAdapter& /*store*/,

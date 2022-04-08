@@ -2,14 +2,13 @@
 #define SPA_SRC_QP_QUERYEVALUATOR_H
 
 #include <string>
-#include <unordered_map>
-#include <utility>
 #include <vector>
 
 #include "QP/Evaluator/Evaluator.h"
-#include "QP/Optimizer/QueryGraph.h"
-#include "QP/QP.h"
 #include "QP/QueryProperties.h"
+#include "QP/QueryResult.h"
+#include "QP/StorageAdapter.h"
+#include "QP/Types.h"
 
 using QP::Types::ClauseList;
 using QP::Types::Declaration;

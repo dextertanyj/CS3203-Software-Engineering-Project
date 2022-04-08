@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 
+#include "Common/TypeDefs.h"
 #include "QP/Dispatcher/DispatchProcessors.tpp"
 #include "QP/Dispatcher/VariableDispatcher.tpp"
 

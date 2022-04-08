@@ -1,8 +1,12 @@
 #include "QP/Dispatcher/PatternAssignDispatcher.h"
 
+#include <string>
 #include <unordered_map>
+#include <utility>
 
+#include "Common/ExpressionProcessor/Expression.h"
 #include "Common/ExpressionProcessor/ExpressionParser.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "QP/Dispatcher/DispatchProcessors.tpp"
 #include "QP/Executor/PatternAssignExecutor.h"
 #include "QP/Preprocessor/QueryExpressionLexer.h"

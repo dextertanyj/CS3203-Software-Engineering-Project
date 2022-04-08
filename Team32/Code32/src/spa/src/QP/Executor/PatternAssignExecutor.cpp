@@ -1,5 +1,8 @@
 #include "PatternAssignExecutor.h"
 
+#include <string>
+
+#include "Common/TypeDefs.h"
 #include "QP/QueryUtils.h"
 
 namespace QP::Executor::PatternAssignExecutor {

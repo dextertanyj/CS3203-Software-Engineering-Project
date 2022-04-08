@@ -1,6 +1,10 @@
 #ifndef SPA_SRC_QP_DISPATCHER_DISPATCHMAP_H
 #define SPA_SRC_QP_DISPATCHER_DISPATCHMAP_H
 
+#include <string>
+#include <unordered_map>
+#include <utility>
+
 #include "QP/QP.h"
 #include "QP/Types.h"
 

@@ -1,9 +1,15 @@
 #include "QP/Dispatcher/WithDispatcher.h"
 
+#include <functional>
 #include <unordered_map>
+#include <utility>
+#include <variant>
 
+#include "Common/TypeDefs.h"
+#include "QP/Executor/AttributeExecutor.h"
 #include "QP/Executor/AttributeExecutor.tpp"
 #include "QP/Executor/WithExecutor.tpp"
+#include "QP/StorageAdapter.h"
 
 using namespace std;
 using namespace QP;

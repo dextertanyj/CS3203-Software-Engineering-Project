@@ -3,7 +3,6 @@
 
 #include <string>
 #include <unordered_map>
-#include <utility>
 #include <vector>
 
 #include "Common/Hash.h"

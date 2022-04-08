@@ -1,6 +1,7 @@
 #include "QueryResult.h"
 
-#include <queue>
+#include <algorithm>
+#include <utility>
 
 using namespace std;
 

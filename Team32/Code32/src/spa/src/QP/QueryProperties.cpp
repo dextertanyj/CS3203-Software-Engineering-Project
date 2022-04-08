@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <unordered_set>
 #include <utility>
 
 #include "QP/Hash.h"

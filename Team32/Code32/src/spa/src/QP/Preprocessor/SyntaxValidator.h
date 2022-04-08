@@ -1,6 +1,9 @@
 #ifndef SPA_SRC_QP_PREPROCESSOR_SYNTAXVALIDATOR_H
 #define SPA_SRC_QP_PREPROCESSOR_SYNTAXVALIDATOR_H
 
+#include <vector>
+
+#include "QP/ClauseArgument.h"
 #include "QP/Preprocessor/Preprocessor.h"
 #include "QP/Types.h"
 

@@ -4,8 +4,10 @@
 #include <string>
 #include <vector>
 
+#include "PKB/StorageAccessInterface.h"
 #include "QP/Evaluator/QueryEvaluator.h"
 #include "QP/Preprocessor/QueryPreprocessor.h"
+#include "QP/QP.h"
 #include "QP/QueryPostProcessor.h"
 #include "QP/StorageAdapter.h"
 

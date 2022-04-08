@@ -6,6 +6,7 @@
 #include "QP/ClauseArgument.h"
 #include "QP/Executor/Executor.h"
 #include "QP/StorageAdapter.h"
+#include "QP/Types.h"
 
 namespace QP::Executor::AttributeExecutor {
 // Constant extractors

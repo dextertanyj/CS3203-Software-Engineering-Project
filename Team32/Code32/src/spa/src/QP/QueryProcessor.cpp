@@ -1,9 +1,10 @@
 #include "QP/QueryProcessor.h"
 
-#include <exception>
+#include <stdexcept>
 #include <utility>
 
-#include "QP/Preprocessor/QueryPreprocessor.h"
+#include "QP/QueryProperties.h"
+#include "QP/QueryResult.h"
 
 QP::QueryProcessor::QueryProcessor(PKB::StorageAccessInterface& pkb) : store(pkb), evaluator(store), post_processor(store) {}
 

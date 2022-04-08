@@ -1,7 +1,11 @@
 #include "QP/Evaluator/Clause.h"
 
 #include <cassert>
+#include <unordered_map>
+#include <utility>
+#include <variant>
 
+#include "Common/TypeDefs.h"
 #include "QP/QueryUtils.h"
 
 using namespace std;

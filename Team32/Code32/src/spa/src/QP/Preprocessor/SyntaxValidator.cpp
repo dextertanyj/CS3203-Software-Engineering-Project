@@ -1,10 +1,9 @@
 #include "QP/Preprocessor/SyntaxValidator.h"
 
 #include <cassert>
+#include <unordered_map>
 #include <unordered_set>
-
-#include "QP/ClauseArgument.h"
-#include "QP/Types.h"
+#include <utility>
 
 #define ASSIGN_WHILE_PATTERN_ARGUMENT_COUNT (3)
 #define IF_PATTERN_ARGUMENT_COUNT (4)

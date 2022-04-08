@@ -1,7 +1,8 @@
 #include "QueryEvaluator.h"
 
-#include <utility>
-
+#include "Common/TypeDefs.h"
+#include "QP/Evaluator/Clause.h"
+#include "QP/Optimizer/QueryGraph.h"
 #include "QP/QueryUtils.h"
 
 using namespace std;

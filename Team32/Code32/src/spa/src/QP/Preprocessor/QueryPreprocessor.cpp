@@ -1,13 +1,18 @@
 #include "QP/Preprocessor/QueryPreprocessor.h"
 
+#include <algorithm>
+#include <iterator>
+#include <memory>
+#include <stdexcept>
 #include <utility>
 
 #include "Common/ExpressionProcessor/ExpressionParser.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "Common/Validator.h"
 #include "QP/Preprocessor/Maps.h"
 #include "QP/Preprocessor/QueryExpressionLexer.h"
 #include "QP/Preprocessor/SyntaxValidator.h"
-#include "QP/Types.h"
+#include "QP/QP.h"
 
 using namespace std;
 using namespace QP::Types;
