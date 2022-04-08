@@ -3,8 +3,8 @@
 
 #include "PKB/ModifiesSRelation.h"
 #include "PKB/PKB.h"
-#include "PKB/PVRelationStore.h"
-#include "PKB/SVRelationStore.h"
+#include "PKB/PVRelationStore.tpp"
+#include "PKB/SVRelationStore.tpp"
 #include "PKB/Types.h"
 
 class PKB::ModifiesPRelation {

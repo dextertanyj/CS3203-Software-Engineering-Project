@@ -1,4 +1,4 @@
-#include "PKB/SVRelationStore.h"
+#include "PKB/SVRelationStore.tpp"
 
 #include "PKB/Storage.h"
 #include "TestUtilities.h"

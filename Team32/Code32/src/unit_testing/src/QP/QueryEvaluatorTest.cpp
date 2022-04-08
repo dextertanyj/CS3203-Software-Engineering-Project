@@ -3,9 +3,10 @@
 #include "Common/ExpressionProcessor/ExpressionParser.h"
 #include "Common/TypeDefs.h"
 #include "PKB/Storage.h"
+#include "QP/ClauseArgument.h"
+#include "QP/Evaluator/Clause.h"
 #include "QP/Preprocessor/Maps.h"
 #include "QP/Preprocessor/QueryExpressionLexer.h"
-#include "QP/ClauseArgument.h"
 #include "catch.hpp"
 
 using namespace std;
