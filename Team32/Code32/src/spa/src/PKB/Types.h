@@ -1,10 +1,6 @@
 #ifndef SPA_SRC_PKB_TYPES_H
 #define SPA_SRC_PKB_TYPES_H
 
-#include <memory>
-#include <queue>
-#include <stack>
-#include <unordered_set>
 #include <vector>
 
 #include "Common/TypeDefs.h"

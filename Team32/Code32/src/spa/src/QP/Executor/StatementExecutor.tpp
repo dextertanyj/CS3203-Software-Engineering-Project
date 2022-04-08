@@ -5,7 +5,11 @@
 
 #include <algorithm>
 #include <iterator>
+#include <set>
+#include <string>
+#include <utility>
 
+#include "Common/TypeDefs.h"
 #include "QP/QueryUtils.h"
 
 namespace QP::Executor::StatementExecutor {

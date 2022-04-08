@@ -1,6 +1,7 @@
 #ifndef SPA_SRC_QP_TYPES_H
 #define SPA_SRC_QP_TYPES_H
 
+#include <functional>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -9,7 +10,7 @@
 #include <variant>
 #include <vector>
 
-#include "Common/ExpressionProcessor/ExpressionProcessor.h"
+#include "Common/ExpressionProcessor/Expression.h"
 #include "Common/Hash.h"
 #include "Common/TypeDefs.h"
 #include "QP/Evaluator/Evaluator.h"

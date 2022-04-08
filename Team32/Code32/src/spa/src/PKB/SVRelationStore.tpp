@@ -5,10 +5,6 @@
 
 #include <algorithm>
 #include <cassert>
-#include <stdexcept>
-
-#include "PKB/ModifiesSRelation.h"
-#include "PKB/UsesSRelation.h"
 
 template <class T>
 PKB::SVRelationStore<T>::SVRelationStore() = default;

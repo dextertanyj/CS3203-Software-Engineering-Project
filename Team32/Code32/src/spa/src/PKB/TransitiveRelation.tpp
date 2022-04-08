@@ -3,6 +3,8 @@
 
 #include "PKB/TransitiveRelation.h"
 
+#include <utility>
+
 template <typename T>
 PKB::TransitiveRelation<T>::TransitiveRelation(std::shared_ptr<T> self) : self(move(self)) {}
 

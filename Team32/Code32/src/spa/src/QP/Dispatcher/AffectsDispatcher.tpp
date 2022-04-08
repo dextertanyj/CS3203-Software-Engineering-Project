@@ -5,7 +5,6 @@
 
 #include "QP/Dispatcher/DispatchProcessors.tpp"
 #include "QP/Executor/StatementExecutor.tpp"
-#include "QP/StorageAdapter.h"
 
 namespace QP::Dispatcher::AffectsDispatcher {
 

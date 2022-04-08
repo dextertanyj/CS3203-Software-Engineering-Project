@@ -3,6 +3,11 @@
 
 #include "QP/Executor/ProcedureVariableExecutor.h"
 
+#include <string>
+#include <utility>
+
+#include "Common/TypeDefs.h"
+
 namespace QP::Executor::ProcedureVariableExecutor {
 
 using namespace std;

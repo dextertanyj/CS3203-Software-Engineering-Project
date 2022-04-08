@@ -3,6 +3,10 @@
 
 #include "QP/Executor/StatementVariableExecutor.h"
 
+#include <string>
+#include <utility>
+
+#include "Common/TypeDefs.h"
 #include "QP/QueryUtils.h"
 
 namespace QP::Executor::StatementVariableExecutor {

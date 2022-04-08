@@ -1,6 +1,8 @@
 #ifndef SPA_SRC_QP_EXECUTOR_PROCEDUREEXECUTOR_H
 #define SPA_SRC_QP_EXECUTOR_PROCEDUREEXECUTOR_H
 
+#include <vector>
+
 #include "QP/ClauseArgument.h"
 #include "QP/Executor/Executor.h"
 #include "QP/QueryResult.h"

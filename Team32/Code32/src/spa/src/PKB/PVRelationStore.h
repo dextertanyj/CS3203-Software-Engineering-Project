@@ -1,13 +1,10 @@
 #ifndef SPA_SRC_PKB_PVRELATIONSTORE_H
 #define SPA_SRC_PKB_PVRELATIONSTORE_H
 
-#include <string>
 #include <unordered_map>
-#include <unordered_set>
 
 #include "Common/TypeDefs.h"
 #include "PKB/PKB.h"
-#include "memory"
 
 template <class T>
 class PKB::PVRelationStore {

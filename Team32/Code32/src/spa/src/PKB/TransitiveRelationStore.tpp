@@ -3,8 +3,6 @@
 
 #include "PKB/TransitiveRelationStore.h"
 
-#include <stdexcept>
-
 template <typename TIdent, typename TInfo, class TRelation>
 PKB::TransitiveRelationStore<TIdent, TInfo, TRelation>::TransitiveRelationStore() = default;
 
