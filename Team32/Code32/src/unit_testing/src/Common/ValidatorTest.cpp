@@ -2,16 +2,6 @@
 
 #include "catch_tools.h"
 
-TEST_CASE("Common::Validator::validateArithmeticOperator Test") {
-	REQUIRE(Common::Validator::validateArithmeticOperator("+"));
-	REQUIRE(Common::Validator::validateArithmeticOperator("-"));
-	REQUIRE(Common::Validator::validateArithmeticOperator("*"));
-	REQUIRE(Common::Validator::validateArithmeticOperator("/"));
-	REQUIRE(Common::Validator::validateArithmeticOperator("%"));
-	REQUIRE_FALSE(Common::Validator::validateArithmeticOperator("^"));
-	REQUIRE_FALSE(Common::Validator::validateArithmeticOperator("++"));
-}
-
 TEST_CASE("Common::Validator::validateInteger Test") {
 	REQUIRE(Common::Validator::validateInteger("0"));
 	REQUIRE(Common::Validator::validateInteger("2147483649"));
