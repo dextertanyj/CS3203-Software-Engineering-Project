@@ -14,8 +14,6 @@
 
 namespace QP::Executor::StatementExecutor {
 
-using namespace std;
-
 // Trivial Executors
 template <ClauseType T>
 QueryResult executeTrivialIndexIndex(const StorageAdapter& store, const ClauseArgument& lhs, const ClauseArgument& rhs) {

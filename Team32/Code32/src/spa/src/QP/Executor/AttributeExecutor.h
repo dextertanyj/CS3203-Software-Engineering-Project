@@ -11,6 +11,7 @@
 namespace QP::Executor::AttributeExecutor {
 
 using namespace std;
+
 // Constant extractors
 unordered_set<Types::Name> extractName(const StorageAdapter& store, const ClauseArgument& argument);
 unordered_set<Types::Number> extractNumber(const StorageAdapter& store, const ClauseArgument& argument);
@@ -27,7 +28,7 @@ T identity(const StorageAdapter& /*store*/, const T& value);
 
 Types::Name callToProcedure(const StorageAdapter& store, const Types::Number& value);
 
-template <QP::Types::ClauseType T>
+template <Types::ClauseType T>
 Types::Name statementToVariable(const StorageAdapter& store, const Types::Number& value);
 }
 

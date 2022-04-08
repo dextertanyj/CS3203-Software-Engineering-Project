@@ -8,7 +8,6 @@
 
 namespace QP::Dispatcher::ParentDispatcher {
 
-using namespace std;
 using namespace QP::Dispatcher::StatementDispatcher;
 
 template <ClauseType T>

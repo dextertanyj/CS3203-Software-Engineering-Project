@@ -11,8 +11,6 @@
 
 namespace QP::Executor::PatternContainerStatementExecutor {
 
-using namespace std;
-
 // Trivial Executors
 template <ClauseType T>
 QueryResult executeTrivialName(const StorageAdapter& store, const ClauseArgument& var) {

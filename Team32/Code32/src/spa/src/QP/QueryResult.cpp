@@ -4,6 +4,7 @@
 #include <utility>
 
 using namespace std;
+using namespace QP::Types;
 
 QP::QueryResult::QueryResult() : result(false) {}
 
@@ -18,7 +19,7 @@ void QP::QueryResult::addRow(const ResultRow& row) {
 	table.insertRow(row);
 }
 
-void QP::QueryResult::filterBySelect(const QP::Types::DeclarationList& select_list) {
+void QP::QueryResult::filterBySelect(const DeclarationList& select_list) {
 	if (select_list.empty()) {
 		table = ResultTable();
 		return;
@@ -31,7 +32,7 @@ bool QP::QueryResult::getResult() const { return result; }
 
 size_t QP::QueryResult::getNumberOfRows() const { return table.getNumberOfRows(); }
 
-ResultTable QP::QueryResult::getTable() const { return table; }
+QP::ResultTable QP::QueryResult::getTable() const { return table; }
 
 bool QP::QueryResult::containsSynonym(const string& synonym) const {
 	auto synonyms = table.getSynonymsStoredMap();

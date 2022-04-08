@@ -6,6 +6,7 @@
 #include <unordered_set>
 
 using namespace std;
+using namespace QP::Types;
 
 QP::ResultTable::ResultTable() = default;
 
@@ -21,11 +22,11 @@ void QP::ResultTable::insertRow(const ResultRow& row) {
 	table.push_back(row);
 }
 
-QP::ResultTable QP::ResultTable::filterBySelect(const QP::Types::DeclarationList& select_list) {
+QP::ResultTable QP::ResultTable::filterBySelect(const DeclarationList& select_list) {
 	vector<string> synonyms;
 	synonyms.reserve(select_list.size());
 	transform(select_list.begin(), select_list.end(), back_inserter(synonyms),
-	          [](const Types::Declaration& declaration) { return declaration.symbol; });
+	          [](const Declaration& declaration) { return declaration.symbol; });
 
 	ResultTable filtered_table = ResultTable(synonyms);
 

@@ -58,7 +58,7 @@ ClauseType QP::Evaluator::Clause::getType() const { return type; }
 
 size_t QP::Evaluator::Clause::getCost() const {
 	size_t number_of_declarations = getDeclarationSymbols().size();
-	return QP::Utilities::cost_map[type] * number_of_declarations;
+	return Utilities::cost_map[type] * number_of_declarations;
 }
 
 bool QP::Evaluator::Clause::operator==(const Clause& other) const {

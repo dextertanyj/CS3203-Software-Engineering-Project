@@ -22,7 +22,7 @@ public:
 	[[nodiscard]] size_t getCost() const;
 	[[nodiscard]] bool operator==(const Clause& other) const;
 
-	friend std::hash<QP::Evaluator::Clause>;
+	friend std::hash<Clause>;
 
 private:
 	Types::ClauseType type;

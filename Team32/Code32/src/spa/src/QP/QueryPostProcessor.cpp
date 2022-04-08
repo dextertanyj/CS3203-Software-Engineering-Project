@@ -20,7 +20,7 @@ using namespace Types;
 #define TRUE "TRUE"
 #define FALSE "FALSE"
 
-using QP::Types::DeclarationList;
+using namespace QP::Types;
 
 QP::QueryPostProcessor::QueryPostProcessor(const StorageAdapter& store) : store(store) {}
 
@@ -64,7 +64,7 @@ vector<string> QP::QueryPostProcessor::processStandardResult(const QueryProperti
 		return {};
 	}
 
-	Types::SelectList select_list = query_properties.getSelectList();
+	SelectList select_list = query_properties.getSelectList();
 	vector<string> synonyms;
 	synonyms.reserve(select_list.size());
 	transform(select_list.begin(), select_list.end(), back_inserter(synonyms),

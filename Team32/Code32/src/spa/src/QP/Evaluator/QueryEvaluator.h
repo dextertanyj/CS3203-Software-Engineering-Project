@@ -10,10 +10,6 @@
 #include "QP/StorageAdapter.h"
 #include "QP/Types.h"
 
-using QP::Types::ClauseList;
-using QP::Types::Declaration;
-using QP::Types::DeclarationList;
-
 class QP::Evaluator::QueryEvaluator {
 public:
 	explicit QueryEvaluator(QP::StorageAdapter& store);
@@ -22,18 +18,20 @@ public:
 private:
 	const QP::StorageAdapter& store;
 
-	[[nodiscard]] bool executeGroup(const ClauseList& clauses, const DeclarationList& select_list, std::vector<QueryResult>& results) const;
-	[[nodiscard]] QueryResult executeGroupWithSelected(const ClauseList& clauses, const DeclarationList& select_list) const;
-	[[nodiscard]] QueryResult executeGroupWithoutSelected(const ClauseList& clauses, const DeclarationList& select_list) const;
-	[[nodiscard]] QueryResult executeTrivialGroup(const ClauseList& clauses) const;
-	[[nodiscard]] QueryResult executeNonTrivialGroup(const ClauseList& clauses, const DeclarationList& select_list) const;
-	[[nodiscard]] QueryResult executeNoClauses(const Declaration& select) const;
-	[[nodiscard]] QueryResult getSpecificStmtType(const Declaration& declaration) const;
+	[[nodiscard]] bool executeGroup(const Types::ClauseList& clauses, const Types::DeclarationList& select_list,
+	                                std::vector<QueryResult>& results) const;
+	[[nodiscard]] QueryResult executeGroupWithSelected(const Types::ClauseList& clauses, const Types::DeclarationList& select_list) const;
+	[[nodiscard]] QueryResult executeGroupWithoutSelected(const Types::ClauseList& clauses,
+	                                                      const Types::DeclarationList& select_list) const;
+	[[nodiscard]] QueryResult executeTrivialGroup(const Types::ClauseList& clauses) const;
+	[[nodiscard]] QueryResult executeNonTrivialGroup(const Types::ClauseList& clauses, const Types::DeclarationList& select_list) const;
+	[[nodiscard]] QueryResult executeNoClauses(const Types::Declaration& select) const;
+	[[nodiscard]] QueryResult getSpecificStmtType(const Types::Declaration& declaration) const;
 	[[nodiscard]] QueryResult getConstants(const std::string& symbol) const;
 	[[nodiscard]] QueryResult getVariables(const std::string& symbol) const;
 	[[nodiscard]] QueryResult getProcedures(const std::string& symbol) const;
 
-	[[nodiscard]] static ClauseList getClausesWithoutSynonyms(const QueryProperties& query_properties);
+	[[nodiscard]] static Types::ClauseList getClausesWithoutSynonyms(const QueryProperties& query_properties);
 };
 
 #endif  // SPA_SRC_QP_QUERYEVALUATOR_H

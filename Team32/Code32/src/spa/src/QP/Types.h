@@ -76,8 +76,6 @@ using AttributeMapper = std::function<TAttribute(const StorageAdapter&, const TS
 // Types for such-that and pattern clause execution
 using Executor = std::function<QueryResult(const StorageAdapter&)>;
 
-using Types::Executor;
-
 using OptimizedExecutor = std::function<QueryResult(const StorageAdapter&, const QueryResult&)>;
 using ExecutorSet =
 	std::variant<Types::Executor, std::pair<Types::Executor, Types::Executor>, std::pair<Types::Executor, OptimizedExecutor>>;
