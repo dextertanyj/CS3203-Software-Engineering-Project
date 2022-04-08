@@ -49,10 +49,10 @@ bool QP::Preprocessor::SyntaxValidator::validateArgumentsSyntax(ClauseType type,
 	if (pattern_clauses.find(type) != pattern_clauses.end()) {
 		return validatePatternArgumentsSyntax(arguments);
 	}
-	return validateStandardArgumentsSyntax(type, arguments);
+	return validateNonPatternArgumentsSyntax(type, arguments);
 }
 
-bool QP::Preprocessor::SyntaxValidator::validateStandardArgumentsSyntax(ClauseType type, const vector<ClauseArgument>& arguments) {
+bool QP::Preprocessor::SyntaxValidator::validateNonPatternArgumentsSyntax(ClauseType type, const vector<ClauseArgument>& arguments) {
 	assert(syntax_argument_map.find(type) != syntax_argument_map.end());
 	auto expected_types = syntax_argument_map.at(type);
 	if (expected_types.size() != arguments.size()) {

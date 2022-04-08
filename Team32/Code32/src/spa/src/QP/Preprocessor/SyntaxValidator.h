@@ -6,7 +6,7 @@
 
 namespace QP::Preprocessor::SyntaxValidator {
 bool validateArgumentsSyntax(Types::ClauseType type, const std::vector<ClauseArgument>& arguments);
-bool validateStandardArgumentsSyntax(Types::ClauseType type, const std::vector<ClauseArgument>& arguments);
+bool validateNonPatternArgumentsSyntax(Types::ClauseType type, const std::vector<ClauseArgument>& arguments);
 bool validatePatternArgumentsSyntax(const std::vector<ClauseArgument>& arguments);
 };
 
