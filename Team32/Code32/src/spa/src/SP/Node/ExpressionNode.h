@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "Common/ExpressionProcessor/Expression.h"
+#include "Common/ExpressionProcessor/ExpressionProcessor.h"
 #include "SP/Lexer.h"
 #include "SP/Node/Node.h"
 

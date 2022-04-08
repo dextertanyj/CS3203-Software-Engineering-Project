@@ -5,7 +5,9 @@
 
 #include "Common/TypeDefs.h"
 #include "PKB/StorageUpdateInterface.h"
+#include "SP/Lexer.h"
 #include "SP/Node/ExpressionNode.h"
+#include "SP/Node/Node.h"
 #include "SP/Node/StatementListNode.h"
 #include "SP/Node/StatementNode.h"
 

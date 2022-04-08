@@ -1,6 +1,8 @@
 #ifndef SPA_PRINTREADNODE_H
 #define SPA_PRINTREADNODE_H
 
+#include <memory>
+
 #include "Common/TypeDefs.h"
 #include "PKB/StorageUpdateInterface.h"
 #include "SP/Lexer.h"

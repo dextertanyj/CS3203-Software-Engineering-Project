@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include "PKB/StorageUpdateInterface.h"
 #include "SP/Node/ProgramNode.h"
 #include "SP/SP.h"
 

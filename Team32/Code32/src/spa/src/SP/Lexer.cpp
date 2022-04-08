@@ -1,6 +1,6 @@
 #include "SP/Lexer.h"
 
-#include "SP/SP.h"
+#include <utility>
 
 std::regex SP::Lexer::tokenization_regex =  // NOLINT
 	std::regex(R"(([a-zA-Z][0-9a-zA-Z]*|0|[1-9][0-9]*|\{|\}|\(|\)|;|!={0,1}|={1,2}|&{1,2}|\|{1,2}|>={0,1}|<={0,1}|\+|\-|\*|\/|%))");

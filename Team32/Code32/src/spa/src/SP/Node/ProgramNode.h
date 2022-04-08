@@ -7,6 +7,7 @@
 #include "Common/TypeDefs.h"
 #include "PKB/StorageUpdateInterface.h"
 #include "SP/Lexer.h"
+#include "SP/Node/Node.h"
 #include "SP/Node/ProcedureNode.h"
 
 class SP::Node::ProgramNode {

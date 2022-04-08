@@ -6,6 +6,7 @@
 #include "SP/DesignExtractor.h"
 #include "SP/Parser.h"
 #include "SP/SP.h"
+#include "PKB/StorageUpdateInterface.h"
 
 class SP::Processor {
 public:
