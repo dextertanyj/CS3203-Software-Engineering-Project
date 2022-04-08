@@ -15,7 +15,7 @@ QP::ClauseArgument::ClauseArgument(Attribute attribute) : value(attribute) {}
 
 QP::ClauseArgument::ClauseArgument(Types::Name name) : value(name) {}
 
-QP::ClauseArgument::ClauseArgument(Types::Number statement_index) : value(statement_index) {}
+QP::ClauseArgument::ClauseArgument(Types::Number number) : value(number) {}
 
 QP::ClauseArgument::ClauseArgument(Common::ExpressionProcessor::Expression expression, bool exact)
 	: value(pair<Common::ExpressionProcessor::Expression, bool>({move(expression), exact})) {}
