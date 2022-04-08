@@ -9,6 +9,7 @@
 #include "catch.hpp"
 
 using namespace QP;
+using namespace std;
 
 TEST_CASE("Basic select") {
 	PKB::Storage pkb = PKB::Storage();

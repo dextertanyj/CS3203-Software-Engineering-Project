@@ -7,30 +7,29 @@
 using namespace std;
 using namespace QP::Types;
 
-QP::ClauseArgument::ClauseArgument() = default;
-
 QP::ClauseArgument::ClauseArgument(Declaration synonym) : value(synonym) {}
 
 QP::ClauseArgument::ClauseArgument(Attribute attribute) : value(attribute) {}
 
-QP::ClauseArgument::ClauseArgument(string name) : value(name) {}
+QP::ClauseArgument::ClauseArgument(Types::Name name) : value(name) {}
 
-QP::ClauseArgument::ClauseArgument(StmtRef statement_index) : value(statement_index) {}
+QP::ClauseArgument::ClauseArgument(Types::Number number) : value(number) {}
 
-QP::ClauseArgument::ClauseArgument(Common::ExpressionProcessor::Expression expression, bool exact)
-	: value(pair<Common::ExpressionProcessor::Expression, bool>({move(expression), exact})) {}
+QP::ClauseArgument::ClauseArgument(Common::EP::Expression expression, bool exact)
+	: value(pair<Common::EP::Expression, bool>({move(expression), exact})) {}
 
 /**
  * Returns the type of argument stored.
  *
- * The type is determined through the use of exhaustive overloaded visitor functions that capture the argument type to an external variable.
+ * The type is determined through the use of exhaustive overloaded visitor functions
+ * that capture the argument type to an external variable.
  */
 ArgumentType QP::ClauseArgument::getType() const {
 	ArgumentType type = ArgumentType::Wildcard;
 	visit(Visitor{[&](const StmtRef& /*unused*/) { type = ArgumentType::Number; },
 	              [&](const Declaration& /*unused*/) { type = ArgumentType::Synonym; },
 	              [&](const string& /*unused*/) { type = ArgumentType::Name; },
-	              [&](const pair<Common::ExpressionProcessor::Expression, bool>& arg) {
+	              [&](const pair<Common::EP::Expression, bool>& arg) {
 					  type = arg.second ? ArgumentType::ExactExpression : ArgumentType::SubExpression;
 				  },
 	              [&](const Attribute& /*unused*/) { type = ArgumentType::Attribute; },
@@ -79,18 +78,18 @@ AttributeType QP::ClauseArgument::getAttributeType() const {
 	return type;
 }
 
-string QP::ClauseArgument::getName() const {
-	string name;
+QP::Types::Name QP::ClauseArgument::getName() const {
+	Types::Name name;
 	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
-	              [&](string arg) { name = move(arg); }},
+	              [&](Types::Name arg) { name = move(arg); }},
 	      value);
 	return name;
 }
 
-StmtRef QP::ClauseArgument::getStatementIndex() const {
-	StmtRef index = 0;
+QP::Types::Number QP::ClauseArgument::getNumber() const {
+	Types::Number index = 0;
 	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
-	              [&](StmtRef arg) { index = arg; }},
+	              [&](Types::Number arg) { index = arg; }},
 	      value);
 	return index;
 }
@@ -104,3 +103,5 @@ Common::EP::Expression QP::ClauseArgument::getExpression() const {
 }
 
 bool QP::ClauseArgument::operator==(const ClauseArgument& other) const { return value == other.value; }
+
+bool QP::ClauseArgument::operator!=(const ClauseArgument& other) const { return value != other.value; }

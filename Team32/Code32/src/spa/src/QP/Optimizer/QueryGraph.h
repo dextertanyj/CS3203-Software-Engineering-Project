@@ -41,7 +41,7 @@ public:
 
 private:
 	struct EdgeComparator {
-		auto operator()(Edge& edge_one, Edge& edge_two) const -> bool { return edge_one.weight > edge_two.weight; };
+		[[nodiscard]] bool operator()(Edge& edge_one, Edge& edge_two) const { return edge_one.weight > edge_two.weight; };
 	};
 
 	std::unordered_map<std::string, Node> nodes;

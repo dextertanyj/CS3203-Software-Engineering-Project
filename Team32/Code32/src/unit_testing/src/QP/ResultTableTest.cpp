@@ -122,7 +122,7 @@ TEST_CASE("QP::ResultTable::getRowWithOrder Should get row in speecific order") 
 	table.insertRow({"1", "d", "2"});
 	table.insertRow({"7", "e", "8"});
 
-	ResultRow row = table.getRowWithOrder({"c", "b"}, 2);
+	Types::ResultRow row = table.getRowWithOrder({"c", "b"}, 2);
 
 	REQUIRE(row == vector<string>({"6", "c"}));
 }

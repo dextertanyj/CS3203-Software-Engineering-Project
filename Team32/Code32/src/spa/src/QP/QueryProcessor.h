@@ -11,13 +11,10 @@
 #include "QP/QueryPostProcessor.h"
 #include "QP/StorageAdapter.h"
 
-using std::string;
-using std::vector;
-
 class QP::QueryProcessor {
 public:
 	explicit QueryProcessor(PKB::StorageAccessInterface& pkb);
-	vector<string> processQuery(string query);
+	std::vector<std::string> processQuery(std::string query);
 
 private:
 	StorageAdapter store;

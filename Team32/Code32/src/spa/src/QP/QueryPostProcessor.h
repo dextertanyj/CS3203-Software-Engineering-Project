@@ -12,12 +12,13 @@
 class QP::QueryPostProcessor {
 public:
 	explicit QueryPostProcessor(const StorageAdapter& store);
-	std::vector<std::string> processResult(QueryProperties& query_properties, QueryResult& query_result) const;
+	[[nodiscard]] std::vector<std::string> processResult(const QueryProperties& query_properties, const QueryResult& query_result) const;
 
 private:
 	const StorageAdapter& store;
-	std::vector<std::string> processStandardResult(QueryProperties& query_properties, QueryResult& query_result) const;
-	static std::vector<std::string> processBooleanResult(QueryResult& query_result);
+	[[nodiscard]] std::vector<std::string> processStandardResult(const QueryProperties& query_properties,
+	                                                             const QueryResult& query_result) const;
+	[[nodiscard]] static std::vector<std::string> processBooleanResult(const QueryResult& query_result);
 };
 
 #endif  // SPA_SRC_QP_QUERYFORMATTER_H

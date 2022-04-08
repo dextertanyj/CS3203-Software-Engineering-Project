@@ -14,6 +14,7 @@ public:
 	[[nodiscard]] ConstValSet getConstants() const;
 	[[nodiscard]] VarRefSet getVariables() const;
 	[[nodiscard]] bool operator==(const Expression& other) const;
+	[[nodiscard]] bool operator!=(const Expression& other) const;
 	[[nodiscard]] bool contains(const Expression& other) const;
 
 	friend std::hash<Expression>;

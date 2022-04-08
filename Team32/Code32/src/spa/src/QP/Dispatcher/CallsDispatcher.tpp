@@ -8,7 +8,6 @@
 
 namespace QP::Dispatcher::CallsDispatcher {
 
-using namespace std;
 using namespace QP::Executor::ProcedureExecutor;
 
 template <ClauseType T>

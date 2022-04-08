@@ -7,8 +7,6 @@
 
 namespace QP::Executor::PatternAssignExecutor {
 
-using namespace std;
-
 // Trivial Executors
 QueryResult executeTrivialNameWildcard(const StorageAdapter& store, const ClauseArgument& name) {
 	unordered_set result = store.getStmtsWithPatternLHS(name.getName());

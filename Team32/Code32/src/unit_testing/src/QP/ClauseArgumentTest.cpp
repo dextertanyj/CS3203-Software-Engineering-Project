@@ -14,7 +14,7 @@ TEST_CASE("QP::ClauseArgument Test") {
 	SECTION("Number") {
 		ClauseArgument arg = ClauseArgument(1);
 		REQUIRE_EQUALS(arg.getType(), ArgumentType::Number);
-		REQUIRE_EQUALS(arg.getStatementIndex(), 1);
+		REQUIRE_EQUALS(arg.getNumber(), 1);
 	}
 
 	SECTION("Name") {

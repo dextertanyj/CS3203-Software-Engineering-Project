@@ -9,10 +9,10 @@ class QP::QueryProperties {
 public:
 	QueryProperties(Types::DeclarationList declaration_list, Types::SelectList select_list, Types::ClauseList clause_list);
 
-	Types::DeclarationList getDeclarationList();
-	Types::DeclarationList getSelectSynonymList();
-	Types::SelectList getSelectList();
-	Types::ClauseList getClauseList();
+	[[nodiscard]] Types::DeclarationList getDeclarationList() const;
+	[[nodiscard]] Types::DeclarationList getSelectSynonymList() const;
+	[[nodiscard]] Types::SelectList getSelectList() const;
+	[[nodiscard]] Types::ClauseList getClauseList() const;
 
 private:
 	Types::DeclarationList declaration_list;

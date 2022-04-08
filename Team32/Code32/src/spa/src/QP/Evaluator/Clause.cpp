@@ -14,18 +14,6 @@ using namespace QP::Types;
 QP::Evaluator::Clause::Clause(ClauseType type, vector<ClauseArgument> arguments, ExecutorSet executor)
 	: type(type), arguments(move(arguments)), executor(move(executor)) {}
 
-vector<string> QP::Evaluator::Clause::getDeclarationSymbols() const {
-	vector<string> symbols;
-	for (const ClauseArgument& arg : arguments) {
-		if (arg.getType() == ArgumentType::Synonym || arg.getType() == ArgumentType::Attribute) {
-			symbols.push_back(arg.getSynonymSymbol());
-		}
-	}
-	return symbols;
-}
-
-ClauseType QP::Evaluator::Clause::getType() const { return type; }
-
 QP::QueryResult QP::Evaluator::Clause::executeTrivial(const QP::StorageAdapter& pkb) const {
 	QueryResult result;
 	visit(Visitor{[&](const Types::Executor& exec) { result = exec(pkb); },
@@ -56,9 +44,21 @@ QP::QueryResult QP::Evaluator::Clause::execute(const QP::StorageAdapter& pkb, ve
 	return result;
 }
 
+vector<string> QP::Evaluator::Clause::getDeclarationSymbols() const {
+	vector<string> symbols;
+	for (const ClauseArgument& arg : arguments) {
+		if (arg.getType() == ArgumentType::Synonym || arg.getType() == ArgumentType::Attribute) {
+			symbols.push_back(arg.getSynonymSymbol());
+		}
+	}
+	return symbols;
+}
+
+ClauseType QP::Evaluator::Clause::getType() const { return type; }
+
 size_t QP::Evaluator::Clause::getCost() const {
 	size_t number_of_declarations = getDeclarationSymbols().size();
-	return QP::Utilities::cost_map[type] * number_of_declarations;
+	return Utilities::cost_map[type] * number_of_declarations;
 }
 
 bool QP::Evaluator::Clause::operator==(const Clause& other) const {
@@ -68,10 +68,9 @@ bool QP::Evaluator::Clause::operator==(const Clause& other) const {
 
 	vector<ClauseArgument> other_arguments = other.arguments;
 	for (size_t i = 0; i < arguments.size(); i++) {
-		if (arguments[i] == other_arguments[i]) {
-			continue;
+		if (arguments[i] != other_arguments[i]) {
+			return false;
 		}
-		return false;
 	}
 
 	return true;

@@ -8,7 +8,6 @@
 
 namespace QP::Dispatcher::FollowsNextDispatcher {
 
-using namespace std;
 using namespace QP::Dispatcher::StatementDispatcher;
 
 template <ClauseType T>

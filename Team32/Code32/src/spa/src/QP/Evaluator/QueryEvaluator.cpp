@@ -12,7 +12,12 @@ using namespace Types;
 
 QueryEvaluator::QueryEvaluator(StorageAdapter& store) : store(store) {}
 
-QueryResult QueryEvaluator::executeQuery(QueryProperties& query_properties) {
+QueryResult QueryEvaluator::executeQuery(const QueryProperties& query_properties) const {
+	ClauseList clauses_without_synonyms = getClausesWithoutSynonyms(query_properties);
+	if (!executeTrivialGroup(clauses_without_synonyms).getResult()) {
+		return {};
+	}
+
 	auto declarations = query_properties.getDeclarationList();
 	auto clauses = query_properties.getClauseList();
 	auto select_list = query_properties.getSelectSynonymList();
@@ -20,33 +25,23 @@ QueryResult QueryEvaluator::executeQuery(QueryProperties& query_properties) {
 	size_t number_of_groups = graph.getNumberOfGroups();
 
 	vector<QueryResult> results;
-
-	ClauseList clauses_without_synonyms = getClausesWithoutSynonyms(query_properties);
-	if (!executeTrivialGroup(clauses_without_synonyms).getResult()) {
-		return {};
-	}
-
 	for (size_t i = 0; i < number_of_groups; i++) {
 		ClauseList group_clauses = graph.getGroupClauses(i);
 		DeclarationList group_select_list = graph.getGroupSelectedSynonyms(i);
-
-		bool has_result = executeGroup(group_clauses, group_select_list, results);
-
-		if (!has_result) {
+		bool result = executeGroup(group_clauses, group_select_list, results);
+		if (!result) {
 			return {};
 		}
 	}
 
 	QueryResult final_result = QueryResult::joinResults(results);
-
 	if (select_list.empty()) {
 		return QueryResult(true);
 	}
-
 	return final_result;
 }
 
-bool QueryEvaluator::executeGroup(ClauseList& clauses, DeclarationList& select_list, vector<QueryResult>& results) {
+bool QueryEvaluator::executeGroup(const ClauseList& clauses, const DeclarationList& select_list, vector<QueryResult>& results) const {
 	if (select_list.empty()) {
 		return executeGroupWithoutSelected(clauses, select_list).getResult();
 	}
@@ -60,7 +55,7 @@ bool QueryEvaluator::executeGroup(ClauseList& clauses, DeclarationList& select_l
 	return false;
 }
 
-QueryResult QueryEvaluator::executeGroupWithSelected(ClauseList& clauses, DeclarationList& select_list) {
+QueryResult QueryEvaluator::executeGroupWithSelected(const ClauseList& clauses, const DeclarationList& select_list) const {
 	if (clauses.empty()) {
 		return executeNoClauses(select_list[0]);
 	}
@@ -68,7 +63,7 @@ QueryResult QueryEvaluator::executeGroupWithSelected(ClauseList& clauses, Declar
 	return executeNonTrivialGroup(clauses, select_list);
 }
 
-QueryResult QueryEvaluator::executeGroupWithoutSelected(ClauseList& clauses, DeclarationList& select_list) {
+QueryResult QueryEvaluator::executeGroupWithoutSelected(const ClauseList& clauses, const DeclarationList& select_list) const {
 	if (clauses.empty()) {
 		return QueryResult(true);
 	}
@@ -80,7 +75,7 @@ QueryResult QueryEvaluator::executeGroupWithoutSelected(ClauseList& clauses, Dec
 	return executeNonTrivialGroup(clauses, select_list);
 }
 
-QueryResult QueryEvaluator::executeTrivialGroup(ClauseList& clauses) {
+QueryResult QueryEvaluator::executeTrivialGroup(const ClauseList& clauses) const {
 	for (const auto& clause : clauses) {
 		QueryResult result = clause->executeTrivial(store);
 		if (!result.getResult()) {
@@ -91,7 +86,7 @@ QueryResult QueryEvaluator::executeTrivialGroup(ClauseList& clauses) {
 	return QueryResult(true);
 }
 
-QueryResult QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, DeclarationList& select_list) {
+QueryResult QueryEvaluator::executeNonTrivialGroup(const ClauseList& clauses, const DeclarationList& select_list) const {
 	vector<QueryResult> result_list;
 	result_list.reserve(clauses.size());
 
@@ -109,7 +104,7 @@ QueryResult QueryEvaluator::executeNonTrivialGroup(ClauseList& clauses, Declarat
 	return final_result;
 }
 
-QueryResult QueryEvaluator::executeNoClauses(const Declaration& select) {
+QueryResult QueryEvaluator::executeNoClauses(const Declaration& select) const {
 	switch (select.type) {
 		case DesignEntity::Stmt:
 		case DesignEntity::Read:
@@ -134,7 +129,7 @@ QueryResult QueryEvaluator::executeNoClauses(const Declaration& select) {
 	}
 }
 
-QueryResult QueryEvaluator::getSpecificStmtType(const Declaration& declaration) {
+QueryResult QueryEvaluator::getSpecificStmtType(const Declaration& declaration) const {
 	StmtInfoPtrSet stmt_set = store.getStatements();
 	QueryResult result = QueryResult({declaration.symbol});
 
@@ -147,7 +142,7 @@ QueryResult QueryEvaluator::getSpecificStmtType(const Declaration& declaration) 
 	return result;
 }
 
-QueryResult QueryEvaluator::getConstants(const string& symbol) {
+QueryResult QueryEvaluator::getConstants(const string& symbol) const {
 	ConstValSet constants = store.getConstants();
 	QueryResult result = QueryResult({symbol});
 
@@ -157,7 +152,7 @@ QueryResult QueryEvaluator::getConstants(const string& symbol) {
 	return result;
 }
 
-QueryResult QueryEvaluator::getVariables(const string& symbol) {
+QueryResult QueryEvaluator::getVariables(const string& symbol) const {
 	VarRefSet var_set = store.getVariables();
 	QueryResult result = QueryResult({symbol});
 
@@ -168,7 +163,7 @@ QueryResult QueryEvaluator::getVariables(const string& symbol) {
 	return result;
 }
 
-QueryResult QueryEvaluator::getProcedures(const string& symbol) {
+QueryResult QueryEvaluator::getProcedures(const string& symbol) const {
 	ProcRefSet proc_set = store.getProcedures();
 	QueryResult result = QueryResult({symbol});
 
@@ -179,7 +174,7 @@ QueryResult QueryEvaluator::getProcedures(const string& symbol) {
 	return result;
 }
 
-ClauseList QueryEvaluator::getClausesWithoutSynonyms(QueryProperties& query_properties) {
+ClauseList QueryEvaluator::getClausesWithoutSynonyms(const QueryProperties& query_properties) {
 	ClauseList clauses;
 	for (const auto& clause : query_properties.getClauseList()) {
 		if (clause->getDeclarationSymbols().empty()) {

@@ -8,7 +8,6 @@
 
 namespace QP::Dispatcher::AffectsDispatcher {
 
-using namespace std;
 using namespace QP::Executor::StatementExecutor;
 
 template <ClauseType T>

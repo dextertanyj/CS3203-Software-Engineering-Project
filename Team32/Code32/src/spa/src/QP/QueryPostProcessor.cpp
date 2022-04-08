@@ -20,11 +20,11 @@ using namespace Types;
 #define TRUE "TRUE"
 #define FALSE "FALSE"
 
-using QP::Types::DeclarationList;
+using namespace QP::Types;
 
 QP::QueryPostProcessor::QueryPostProcessor(const StorageAdapter& store) : store(store) {}
 
-vector<string> QP::QueryPostProcessor::processResult(QueryProperties& query_properties, QueryResult& query_result) const {
+vector<string> QP::QueryPostProcessor::processResult(const QueryProperties& query_properties, const QueryResult& query_result) const {
 	DeclarationList select_list = query_properties.getSelectSynonymList();
 	if (select_list.empty()) {
 		return processBooleanResult(query_result);
@@ -58,12 +58,13 @@ static inline string applyTransform(const StorageAdapter& store, const ClauseArg
 	return iter->second(store, result);
 }
 
-vector<string> QP::QueryPostProcessor::processStandardResult(QueryProperties& query_properties, QueryResult& query_result) const {
+vector<string> QP::QueryPostProcessor::processStandardResult(const QueryProperties& query_properties,
+                                                             const QueryResult& query_result) const {
 	if (!query_result.getResult()) {
 		return {};
 	}
 
-	Types::SelectList select_list = query_properties.getSelectList();
+	SelectList select_list = query_properties.getSelectList();
 	vector<string> synonyms;
 	synonyms.reserve(select_list.size());
 	transform(select_list.begin(), select_list.end(), back_inserter(synonyms),
@@ -94,7 +95,7 @@ vector<string> QP::QueryPostProcessor::processStandardResult(QueryProperties& qu
 	return results;
 }
 
-vector<string> QP::QueryPostProcessor::processBooleanResult(QueryResult& query_result) {
+vector<string> QP::QueryPostProcessor::processBooleanResult(const QueryResult& query_result) {
 	string result = query_result.getResult() ? TRUE : FALSE;
 	return {result};
 }
