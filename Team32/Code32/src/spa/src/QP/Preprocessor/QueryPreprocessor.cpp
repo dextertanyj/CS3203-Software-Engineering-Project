@@ -343,14 +343,14 @@ optional<QP::ClauseArgument> QP::Preprocessor::QueryPreprocessor::tryParseExpres
 		match(WILDCARD);
 	}
 	QueryExpressionLexer lexer = QueryExpressionLexer(expression_tokens);
-	auto parser = Common::ExpressionProcessor::ExpressionParser{lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic};
+	auto parser = Common::EP::ExpressionParser{lexer, Common::EP::ExpressionType::Arithmetic};
 	try {
 		auto expression = parser.parse();
 		if (!lexer.readToken().empty()) {
 			return {};
 		}
 		return ClauseArgument(expression, !is_contains);
-	} catch (const Common::ExpressionProcessor::ExpressionProcessorException& e) {
+	} catch (const Common::EP::ExpressionProcessorException& e) {
 		throw QuerySyntaxException(e.what());
 	}
 }

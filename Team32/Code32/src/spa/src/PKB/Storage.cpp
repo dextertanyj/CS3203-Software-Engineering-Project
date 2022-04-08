@@ -77,7 +77,7 @@ void PKB::Storage::setUses(StmtRef index, VarRefSet names) {
 	uses_s_store.set(statement, move(names));
 }
 
-void PKB::Storage::setAssign(StmtRef index, VarRef variable, Common::ExpressionProcessor::Expression expression) {
+void PKB::Storage::setAssign(StmtRef index, VarRef variable, Common::EP::Expression expression) {
 	StmtInfoPtr statement = statement_store.get(index);
 	return assign_store.setAssign(statement, variable, expression);
 }
@@ -220,18 +220,18 @@ VarRefSet PKB::Storage::getUsesByStmt(StmtRef index) { return uses_s_store.getBy
 
 VarRefSet PKB::Storage::getUsesByProc(const ProcRef& name) { return uses_p_store.getByProc(name); }
 
-bool PKB::Storage::patternExists(const VarRef& name, const Common::ExpressionProcessor::Expression& exp, bool is_exact_match) {
+bool PKB::Storage::patternExists(const VarRef& name, const Common::EP::Expression& exp, bool is_exact_match) {
 	return assign_store.patternExists(name, exp, is_exact_match);
 }
 
-StmtInfoPtrSet PKB::Storage::getStmtsWithPattern(const VarRef& name, const Common::ExpressionProcessor::Expression& expression,
+StmtInfoPtrSet PKB::Storage::getStmtsWithPattern(const VarRef& name, const Common::EP::Expression& expression,
                                                  bool is_exact_match) {
 	return assign_store.getStmtsWithPattern(name, expression, is_exact_match);
 }
 
 StmtInfoPtrSet PKB::Storage::getStmtsWithPatternLHS(const VarRef& name) { return assign_store.getStmtsWithPatternLHS(name); }
 
-StmtInfoPtrVarRefSet PKB::Storage::getStmtsWithPatternRHS(const Common::ExpressionProcessor::Expression& expression, bool is_exact_match) {
+StmtInfoPtrVarRefSet PKB::Storage::getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match) {
 	return assign_store.getStmtsWithPatternRHS(expression, is_exact_match);
 }
 

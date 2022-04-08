@@ -17,8 +17,8 @@ QP::ClauseArgument::ClauseArgument(string name) : value(name) {}
 
 QP::ClauseArgument::ClauseArgument(StmtRef statement_index) : value(statement_index) {}
 
-QP::ClauseArgument::ClauseArgument(Common::ExpressionProcessor::Expression expression, bool exact)
-	: value(pair<Common::ExpressionProcessor::Expression, bool>({move(expression), exact})) {}
+QP::ClauseArgument::ClauseArgument(Common::EP::Expression expression, bool exact)
+	: value(pair<Common::EP::Expression, bool>({move(expression), exact})) {}
 
 /**
  * Returns the type of argument stored.
@@ -30,7 +30,7 @@ ArgumentType QP::ClauseArgument::getType() const {
 	visit(Visitor{[&](StmtRef /*unused*/) { type = ArgumentType::Number; },
 	              [&](const Declaration& /*unused*/) { type = ArgumentType::Synonym; },
 	              [&](const string& /*unused*/) { type = ArgumentType::Name; },
-	              [&](const pair<Common::ExpressionProcessor::Expression, bool>& arg) {
+	              [&](const pair<Common::EP::Expression, bool>& arg) {
 					  type = arg.second ? ArgumentType::ExactExpression : ArgumentType::SubExpression;
 				  },
 	              [&](const Attribute& /*unused*/) { type = ArgumentType::Attribute; },

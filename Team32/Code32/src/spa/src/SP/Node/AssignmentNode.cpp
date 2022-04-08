@@ -15,7 +15,7 @@ StmtRef SP::Node::AssignmentNode::extract(PKB::StorageUpdateInterface& pkb) cons
 	pkb.setStmtType(stmt_ref, StmtType::Assign);
 	VarRef lhs = assignee->extract();
 	pkb.setModifies(stmt_ref, lhs);
-	Common::ExpressionProcessor::Expression rhs = expression->extract();
+	Common::EP::Expression rhs = expression->extract();
 	pkb.setConstant(rhs.getConstants());
 	pkb.setUses(stmt_ref, rhs.getVariables());
 	pkb.setAssign(stmt_ref, lhs, rhs);
@@ -34,7 +34,7 @@ bool SP::Node::AssignmentNode::equals(const shared_ptr<StatementNode>& object) c
 unique_ptr<SP::Node::AssignmentNode> SP::Node::AssignmentNode::parse(Lexer& lex, StmtRef& statement_count, string token) {
 	unique_ptr<VariableNode> variable = VariableNode::parse(move(token));
 	lex.nextIf(EQUALS);
-	unique_ptr<ExpressionNode> expression = ExpressionNode::parse(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+	unique_ptr<ExpressionNode> expression = ExpressionNode::parse(lex, Common::EP::ExpressionType::Arithmetic);
 	lex.nextIf(SEMICOLON);
 	return make_unique<AssignmentNode>(statement_count++, move(variable), move(expression));
 }

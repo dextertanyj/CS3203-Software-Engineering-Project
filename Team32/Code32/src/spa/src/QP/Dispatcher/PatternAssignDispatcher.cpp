@@ -43,9 +43,9 @@ static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKe
 static const unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, unordered_map<ArgumentDispatchKey, ExecutorSetFactory>>>
 	argument_dispatch_map = {{DesignEntity::Assign, synonym_map}};
 
-static Common::ExpressionProcessor::Expression convertNameToExpression(const string& name) {
+static Common::EP::Expression convertNameToExpression(const string& name) {
 	auto lex = QP::Preprocessor::QueryExpressionLexer({name});
-	auto parser = Common::ExpressionProcessor::ExpressionParser(lex, Common::ExpressionProcessor::ExpressionType::Arithmetic);
+	auto parser = Common::EP::ExpressionParser(lex, Common::EP::ExpressionType::Arithmetic);
 	return parser.parse();
 }
 
