@@ -142,11 +142,11 @@ ExecutorSet dispatchHandler(const vector<ClauseArgument>& args) {
 	static const auto left_attribute_map = getAttributeMap<TAttribute, TLeft>();
 	static const auto right_attribute_map = getAttributeMap<TAttribute, TRight>();
 	WithClauseArgumentDispatchKey lhs_key = args[0].getType();
-	if (lhs == ArgumentType::Attribute) {
+	if (lhs_key == ArgumentType::Attribute) {
 		lhs_key = pair{args[0].getSynonymType(), args[0].getAttributeType()};
 	}
 	WithClauseArgumentDispatchKey rhs_key = args[1].getType();
-	if (rhs == ArgumentType::Attribute) {
+	if (rhs_key == ArgumentType::Attribute) {
 		rhs_key = pair{args[1].getSynonymType(), args[1].getAttributeType()};
 	}
 	auto lhs_executors_iter = left_attribute_map.find(lhs_key);
@@ -212,20 +212,20 @@ ExecutorSetBundle Dispatcher::WithDispatcher::dispatcher(const vector<ClauseArgu
 	if (args.size() != 2) {
 		throw QueryDispatchException("Incorrect argument count.");
 	}
-	WithClauseBasicDispatchKey lhs = args[0].getType();
-	if (args[0].getType() == ArgumentType::Attribute) {
-		lhs = args[0].getAttributeType();
+	WithClauseBasicDispatchKey lhs_key = args[0].getType();
+	if (lhs_key == ArgumentType::Attribute) {
+		lhs_key = args[0].getAttributeType();
 	}
-	WithClauseBasicDispatchKey rhs = args[1].getType();
-	if (args[1].getType() == ArgumentType::Attribute) {
-		rhs = args[1].getAttributeType();
+	WithClauseBasicDispatchKey rhs_key = args[1].getType();
+	if (rhs_key == ArgumentType::Attribute) {
+		rhs_key = args[1].getAttributeType();
 	}
-	auto handler_iter = handler_map.find(lhs);
+	auto handler_iter = handler_map.find(lhs_key);
 	if (handler_iter == handler_map.end()) {
 		throw QueryDispatchException("Incorrect argument type.");
 	}
 	auto inner_map = handler_iter->second;
-	auto inner_handler_iter = inner_map.find(rhs);
+	auto inner_handler_iter = inner_map.find(rhs_key);
 	if (inner_handler_iter == inner_map.end()) {
 		throw QueryDispatchException("Incorrect argument type.");
 	}
