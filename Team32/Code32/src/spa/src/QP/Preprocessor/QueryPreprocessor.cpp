@@ -9,6 +9,25 @@
 #include "QP/Preprocessor/SyntaxValidator.h"
 #include "QP/Types.h"
 
+#define EQUALS "="
+#define COMMA ","
+#define SEMICOLON ";"
+#define TUPLE_OPEN_BRACKET "<"
+#define TUPLE_CLOSE_BRACKET ">"
+#define OPEN_PARENTHESIS "("
+#define CLOSE_PARENTHESIS ")"
+#define QUOTE "\""
+#define WILDCARD "_"
+#define ATTRIBUTE_SELECTOR "."
+#define BOOLEAN_KEYWORD "BOOLEAN"
+#define SUCH_KEYWORD "such"
+#define THAT_KEYWORD "that"
+#define PATTERN_KEYWORD "pattern"
+#define WITH_KEYWORD "with"
+#define SELECT_KEYWORD "Select"
+#define CLAUSE_CONNECTOR "and"
+#define BOOLEAN_SEMANTIC_ERROR "FALSE"
+
 using namespace std;
 using namespace QP::Types;
 
@@ -52,7 +71,7 @@ QP::QueryProperties QP::Preprocessor::QueryPreprocessor::parseQuery() {
 	}
 	if (semantic_exception_message.has_value()) {
 		if (this->select_list.empty()) {
-			throw QuerySemanticException({"FALSE"}, semantic_exception_message.value());
+			throw QuerySemanticException({BOOLEAN_SEMANTIC_ERROR}, semantic_exception_message.value());
 		}
 		throw QuerySemanticException({}, semantic_exception_message.value());
 	}
@@ -81,8 +100,8 @@ void QP::Preprocessor::QueryPreprocessor::parseDeclarationGroup(const DesignEnti
 	}
 	do {
 		parseDeclaration(type);
-	} while (this->query_tokens.at(token_index) != ";" && match(","));
-	match(";");
+	} while (this->query_tokens.at(token_index) != SEMICOLON && match(COMMA));
+	match(SEMICOLON);
 }
 
 void QP::Preprocessor::QueryPreprocessor::parseDeclaration(const DesignEntity& type) {
@@ -97,9 +116,9 @@ void QP::Preprocessor::QueryPreprocessor::parseDeclaration(const DesignEntity& t
 // Select
 
 void QP::Preprocessor::QueryPreprocessor::parseSelect() {
-	match("Select");
+	match(SELECT_KEYWORD);
 	string current_token = query_tokens.at(token_index);
-	if (current_token == "BOOLEAN" && existing_declarations.find("BOOLEAN") == existing_declarations.end()) {
+	if (current_token == BOOLEAN_KEYWORD && existing_declarations.find(BOOLEAN_KEYWORD) == existing_declarations.end()) {
 		token_index++;
 	} else {
 		parseSelectList();
@@ -107,12 +126,12 @@ void QP::Preprocessor::QueryPreprocessor::parseSelect() {
 }
 
 void QP::Preprocessor::QueryPreprocessor::parseSelectList() {
-	if (query_tokens.at(token_index) == "<") {
-		match("<");
+	if (query_tokens.at(token_index) == TUPLE_OPEN_BRACKET) {
+		match(TUPLE_OPEN_BRACKET);
 		do {
 			select_list.push_back(parseArgument(&QueryPreprocessor::tryParseSelectArgument));
-		} while (query_tokens.at(token_index) == "," && match(","));
-		match(">");
+		} while (query_tokens.at(token_index) == COMMA && match(COMMA));
+		match(TUPLE_CLOSE_BRACKET);
 	} else {
 		select_list.push_back(parseArgument(&QueryPreprocessor::tryParseSelectArgument));
 	}
@@ -121,18 +140,18 @@ void QP::Preprocessor::QueryPreprocessor::parseSelectList() {
 // Clause - General
 
 void QP::Preprocessor::QueryPreprocessor::parseClauses() {
-	if (this->query_tokens.at(token_index) == "such") {
+	if (this->query_tokens.at(token_index) == SUCH_KEYWORD) {
 		++token_index;
-		match("that");
+		match(THAT_KEYWORD);
 		parseClauseLoop(&QueryPreprocessor::parseSuchThat);
 		return;
 	}
-	if (this->query_tokens.at(token_index) == "with") {
+	if (this->query_tokens.at(token_index) == WITH_KEYWORD) {
 		++token_index;
 		parseClauseLoop(&QueryPreprocessor::parseWith);
 		return;
 	}
-	if (this->query_tokens.at(token_index) == "pattern") {
+	if (this->query_tokens.at(token_index) == PATTERN_KEYWORD) {
 		++token_index;
 		parseClauseLoop(&QueryPreprocessor::parsePattern);
 		return;
@@ -143,7 +162,7 @@ void QP::Preprocessor::QueryPreprocessor::parseClauses() {
 void QP::Preprocessor::QueryPreprocessor::parseClauseLoop(void (QueryPreprocessor::*parser)()) {
 	do {
 		(this->*parser)();
-	} while (token_index < this->query_tokens.size() && this->query_tokens.at(token_index) == "and" && match("and"));
+	} while (token_index < this->query_tokens.size() && this->query_tokens.at(token_index) == CLAUSE_CONNECTOR && match(CLAUSE_CONNECTOR));
 }
 
 void QP::Preprocessor::QueryPreprocessor::parseClause(ClauseType type) { parseClause(type, {}); }
@@ -155,7 +174,7 @@ void QP::Preprocessor::QueryPreprocessor::parseClause(ClauseType type, vector<Cl
 }
 
 void QP::Preprocessor::QueryPreprocessor::createClause(ClauseType type, vector<ClauseArgument> arguments) {
-	if (!SyntaxValidator::validateArgumentsSyntax(type, arguments)) {
+	if (!SyntaxValidator::validateArgumentsSyntaxDispatch(type, arguments)) {
 		throw QuerySyntaxException("Invalid arguments.");
 	}
 
@@ -185,7 +204,7 @@ void QP::Preprocessor::QueryPreprocessor::parseSuchThat() {
 void QP::Preprocessor::QueryPreprocessor::parseWith() {
 	vector<ClauseArgument> arguments;
 	arguments.push_back(parseClauseArgument());
-	match("=");
+	match(EQUALS);
 	arguments.push_back(parseClauseArgument());
 	createClause(ClauseType::With, move(arguments));
 }
@@ -217,11 +236,11 @@ optional<DesignEntity> QP::Preprocessor::QueryPreprocessor::parseDesignEntity() 
 
 vector<QP::ClauseArgument> QP::Preprocessor::QueryPreprocessor::parseArgumentList(ClauseArgument (QueryPreprocessor::*parser)()) {
 	vector<ClauseArgument> arguments;
-	match("(");
+	match(OPEN_PARENTHESIS);
 	do {
 		arguments.push_back((this->*parser)());
-	} while (this->query_tokens.at(token_index) == "," && ((token_index++) != 0));
-	match(")");
+	} while (this->query_tokens.at(token_index) == COMMA && ((token_index++) != 0));
+	match(CLOSE_PARENTHESIS);
 	return arguments;
 }
 
@@ -259,7 +278,7 @@ QP::ClauseArgument QP::Preprocessor::QueryPreprocessor::parseArgument(optional<C
 }
 
 optional<QP::ClauseArgument> QP::Preprocessor::QueryPreprocessor::tryParseClauseArgument() {
-	if (this->query_tokens.at(token_index) == "_" && this->query_tokens.at(token_index + 1) != "\"") {
+	if (this->query_tokens.at(token_index) == WILDCARD && this->query_tokens.at(token_index + 1) != QUOTE) {
 		token_index++;
 		return ClauseArgument();
 	}
@@ -267,17 +286,17 @@ optional<QP::ClauseArgument> QP::Preprocessor::QueryPreprocessor::tryParseClause
 		token_index++;
 		return ClauseArgument(stoul(this->query_tokens.at(token_index - 1)));
 	}
-	if (this->query_tokens.at(token_index) == "\"" && Common::Validator::validateName(this->query_tokens.at(token_index + 1)) &&
-	    this->query_tokens.at(token_index + 2) == "\"") {
+	if (this->query_tokens.at(token_index) == QUOTE && Common::Validator::validateName(this->query_tokens.at(token_index + 1)) &&
+	    this->query_tokens.at(token_index + 2) == QUOTE) {
 		token_index += 2;
-		match("\"");
+		match(QUOTE);
 		return ClauseArgument(this->query_tokens.at(token_index - 2));
 	}
 	return {};
 }
 
 optional<QP::ClauseArgument> QP::Preprocessor::QueryPreprocessor::tryParseSelectArgument() {
-	if (token_index + 1 < query_tokens.size() && this->query_tokens.at(token_index + 1) == ".") {
+	if (token_index + 1 < query_tokens.size() && this->query_tokens.at(token_index + 1) == ATTRIBUTE_SELECTOR) {
 		return parseAttribute();
 	}
 	if (Common::Validator::validateName(this->query_tokens.at(token_index))) {
@@ -288,7 +307,7 @@ optional<QP::ClauseArgument> QP::Preprocessor::QueryPreprocessor::tryParseSelect
 
 QP::ClauseArgument QP::Preprocessor::QueryPreprocessor::parseAttribute() {
 	Declaration synonym = parseClauseSynonym();
-	match(".");
+	match(ATTRIBUTE_SELECTOR);
 	auto token_iter = Maps::attribute_token_map.find(query_tokens.at(token_index));
 	if (token_iter == Maps::attribute_token_map.end()) {
 		throw QuerySyntaxException("Invalid attribute type.");
@@ -304,19 +323,19 @@ QP::ClauseArgument QP::Preprocessor::QueryPreprocessor::parseAttribute() {
 
 optional<QP::ClauseArgument> QP::Preprocessor::QueryPreprocessor::tryParseExpressionArgument() {
 	bool is_contains = false;
-	if (query_tokens.at(token_index) == "_") {
+	if (query_tokens.at(token_index) == WILDCARD) {
 		is_contains = true;
 		token_index++;
 	}
-	match("\"");
+	match(QUOTE);
 	vector<string> expression_tokens;
-	while (this->query_tokens.at(token_index) != "\"") {
+	while (this->query_tokens.at(token_index) != QUOTE) {
 		expression_tokens.push_back(this->query_tokens.at(token_index));
 		token_index++;
 	}
-	match("\"");
+	match(QUOTE);
 	if (is_contains) {
-		match("_");
+		match(WILDCARD);
 	}
 	QueryExpressionLexer lexer = QueryExpressionLexer(expression_tokens);
 	auto parser = Common::ExpressionProcessor::ExpressionParser{lexer, Common::ExpressionProcessor::ExpressionType::Arithmetic};

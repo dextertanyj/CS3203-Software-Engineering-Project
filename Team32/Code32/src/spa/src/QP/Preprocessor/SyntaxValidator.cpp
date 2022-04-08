@@ -45,14 +45,14 @@ const unordered_map<size_t, vector<unordered_set<ArgumentType>>> pattern_syntax_
 	{IF_PATTERN_ARGUMENT_COUNT, {synonym, entity, wildcard, wildcard}},
 };
 
-bool QP::Preprocessor::SyntaxValidator::validateArgumentsSyntax(ClauseType type, const vector<ClauseArgument>& arguments) {
+bool QP::Preprocessor::SyntaxValidator::validateArgumentsSyntaxDispatch(ClauseType type, const vector<ClauseArgument>& arguments) {
 	if (pattern_clauses.find(type) != pattern_clauses.end()) {
 		return validatePatternArgumentsSyntax(arguments);
 	}
-	return validateStandardArgumentsSyntax(type, arguments);
+	return validateArgumentsSyntax(type, arguments);
 }
 
-bool QP::Preprocessor::SyntaxValidator::validateStandardArgumentsSyntax(ClauseType type, const vector<ClauseArgument>& arguments) {
+bool QP::Preprocessor::SyntaxValidator::validateArgumentsSyntax(ClauseType type, const vector<ClauseArgument>& arguments) {
 	assert(syntax_argument_map.find(type) != syntax_argument_map.end());
 	auto expected_types = syntax_argument_map.at(type);
 	if (expected_types.size() != arguments.size()) {
