@@ -20,7 +20,7 @@ public:
 	[[nodiscard]] StmtInfoPtrSet getStmtsWithPatternLHS(const VarRef& var_name) const;
 	[[nodiscard]] StmtInfoPtrVarRefSet getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match) const;
 
-	std::unordered_map<VarRef, std::unordered_set<AssignRelation>> getAssignMap() const;
+	[[nodiscard]] std::unordered_map<VarRef, std::unordered_set<AssignRelation>> getAssignMap() const;
 
 	void clear();
 
