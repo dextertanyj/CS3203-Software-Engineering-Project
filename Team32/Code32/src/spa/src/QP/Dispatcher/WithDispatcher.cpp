@@ -142,11 +142,11 @@ ExecutorSet dispatchHandler(const vector<ClauseArgument>& args) {
 	static const auto left_attribute_map = getAttributeMap<TAttribute, TLeft>();
 	static const auto right_attribute_map = getAttributeMap<TAttribute, TRight>();
 	WithClauseArgumentDispatchKey lhs_key = args[0].getType();
-	if (lhs_key == ArgumentType::Attribute) {
+	if (args[0].getType() == ArgumentType::Attribute) {
 		lhs_key = pair{args[0].getSynonymType(), args[0].getAttributeType()};
 	}
 	WithClauseArgumentDispatchKey rhs_key = args[1].getType();
-	if (rhs_key == ArgumentType::Attribute) {
+	if (args[1].getType() == ArgumentType::Attribute) {
 		rhs_key = pair{args[1].getSynonymType(), args[1].getAttributeType()};
 	}
 	auto lhs_executors_iter = left_attribute_map.find(lhs_key);
@@ -213,11 +213,11 @@ ExecutorSetBundle Dispatcher::WithDispatcher::dispatcher(const vector<ClauseArgu
 		throw QueryDispatchException("Incorrect argument count.");
 	}
 	WithClauseBasicDispatchKey lhs_key = args[0].getType();
-	if (lhs_key == ArgumentType::Attribute) {
+	if (args[0].getType() == ArgumentType::Attribute) {
 		lhs_key = args[0].getAttributeType();
 	}
 	WithClauseBasicDispatchKey rhs_key = args[1].getType();
-	if (rhs_key == ArgumentType::Attribute) {
+	if (args[1].getType() == ArgumentType::Attribute) {
 		rhs_key = args[1].getAttributeType();
 	}
 	auto handler_iter = handler_map.find(lhs_key);
