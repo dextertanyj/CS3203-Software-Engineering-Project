@@ -8,6 +8,9 @@
 #include "QP/Types.h"
 
 using namespace std;
+using namespace QP;
+using namespace Types;
+
 #define TUPLE_SEPERATOR " "
 #define TRUE "TRUE"
 #define FALSE "FALSE"
@@ -25,22 +28,22 @@ vector<string> QP::QueryPostProcessor::processResult(QueryProperties& query_prop
 	return processStandardResult(query_properties, query_result);
 }
 
-template <QP::Types::ClauseType T>
-static string statementToVariable(const QP::StorageAdapter& store, const string& value) {
+template <ClauseType T>
+static string statementToVariable(const StorageAdapter& store, const string& value) {
 	return QP::Executor::AttributeExecutor::statementToVariable<T>(store, stoul(value));
 }
 
-static string callToProcedure(const QP::StorageAdapter& store, const string& value) {
+static string callToProcedure(const StorageAdapter& store, const string& value) {
 	return QP::Executor::AttributeExecutor::callToProcedure(store, stoul(value));
 }
 
-static const unordered_map<QP::Types::DispatchAttributeKey, function<string(const QP::StorageAdapter&, const string&)>> transform_map = {
-	{{QP::Types::DesignEntity::Read, QP::Types::AttributeType::VariableName}, statementToVariable<QP::Types::ClauseType::ModifiesS>},
-	{{QP::Types::DesignEntity::Call, QP::Types::AttributeType::ProcedureName}, callToProcedure},
-	{{QP::Types::DesignEntity::Print, QP::Types::AttributeType::VariableName}, statementToVariable<QP::Types::ClauseType::UsesS>}};
+static const unordered_map<DispatchAttributeKey, function<string(const StorageAdapter&, const string&)>> transform_map = {
+	{{DesignEntity::Read, AttributeType::VariableName}, statementToVariable<ClauseType::ModifiesS>},
+	{{DesignEntity::Call, AttributeType::ProcedureName}, callToProcedure},
+	{{DesignEntity::Print, AttributeType::VariableName}, statementToVariable<ClauseType::UsesS>}};
 
-static inline string applyTransform(const QP::StorageAdapter& store, const QP::ClauseArgument& argument, string result) {
-	if (argument.getType() == QP::Types::ArgumentType::Synonym) {
+static inline string applyTransform(const StorageAdapter& store, const ClauseArgument& argument, string result) {
+	if (argument.getType() == ArgumentType::Synonym) {
 		return result;
 	}
 	auto iter = transform_map.find({argument.getSynonymType(), argument.getAttributeType()});
