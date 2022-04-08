@@ -11,7 +11,7 @@ using namespace std;
 using namespace QP::Types;
 
 template <typename T>
-ExecutorSetFactory processArgumentRecurse(T map, const vector<ClauseArgument>& args) {
+ExecutorSetFactory processArgumentRecurse(const T& map, const vector<ClauseArgument>& args) {
 	if (args.empty()) {
 		throw QueryDispatchException("Incorrect argument count.");
 	}
@@ -28,7 +28,7 @@ ExecutorSetFactory processArgumentRecurse(T map, const vector<ClauseArgument>& a
 }
 
 template <>
-inline ExecutorSetFactory processArgumentRecurse(unordered_map<ArgumentDispatchKey, ExecutorSetFactory> map,
+inline ExecutorSetFactory processArgumentRecurse(const unordered_map<ArgumentDispatchKey, ExecutorSetFactory>& map,
                                                  const vector<ClauseArgument>& args) {
 	if (args.size() != 1) {
 		throw QueryDispatchException("Incorrect argument count.");
@@ -45,7 +45,7 @@ inline ExecutorSetFactory processArgumentRecurse(unordered_map<ArgumentDispatchK
 }
 
 template <typename T>
-ExecutorSetFactoryBundle processArgumentBundleRecurse(T map, const vector<ClauseArgument>& args) {
+ExecutorSetFactoryBundle processArgumentBundleRecurse(const T& map, const vector<ClauseArgument>& args) {
 	if (args.empty()) {
 		throw QueryDispatchException("Incorrect argument count.");
 	}
@@ -62,7 +62,7 @@ ExecutorSetFactoryBundle processArgumentBundleRecurse(T map, const vector<Clause
 }
 
 template <>
-inline ExecutorSetFactoryBundle processArgumentBundleRecurse(unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle> map,
+inline ExecutorSetFactoryBundle processArgumentBundleRecurse(const unordered_map<ArgumentDispatchKey, ExecutorSetFactoryBundle>& map,
                                                              const vector<ClauseArgument>& args) {
 	if (args.size() != 1) {
 		throw QueryDispatchException("Incorrect argument count.");
