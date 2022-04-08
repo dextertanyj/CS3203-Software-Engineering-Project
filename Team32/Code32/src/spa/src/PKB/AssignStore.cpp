@@ -16,7 +16,7 @@ void PKB::AssignStore::setAssign(const StmtInfoPtr& statement, const VarRef& var
 	exp_to_relation_store[expression].emplace(relation);
 }
 
-bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match) {
+bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::EP::Expression& expression, bool is_exact_match) const {
 	auto iter = var_to_relation_store.find(variable);
 	if (iter == var_to_relation_store.end()) {
 		return false;
@@ -26,7 +26,7 @@ bool PKB::AssignStore::patternExists(const VarRef& variable, const Common::EP::E
 }
 
 StmtInfoPtrSet PKB::AssignStore::getStmtsWithPattern(const VarRef& variable, const Common::EP::Expression& expression,
-                                                     bool is_exact_match) {
+                                                     bool is_exact_match) const {
 	auto iter = var_to_relation_store.find(variable);
 	if (iter == var_to_relation_store.end()) {
 		return {};
@@ -40,7 +40,7 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPattern(const VarRef& variable, con
 	return result;
 }
 
-StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) {
+StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) const {
 	auto iter = var_to_relation_store.find(var_name);
 	if (iter == var_to_relation_store.end()) {
 		return {};
@@ -52,7 +52,7 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) 
 	return result;
 }
 
-StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match) {
+StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::EP::Expression& expression, bool is_exact_match) const {
 	unordered_set<AssignRelation> assign_relations;
 	StmtInfoPtrVarRefSet result;
 
@@ -76,6 +76,13 @@ StmtInfoPtrVarRefSet PKB::AssignStore::getStmtsWithPatternRHS(const Common::EP::
 	return result;
 }
 
+unordered_map<VarRef, unordered_set<PKB::AssignRelation>> PKB::AssignStore::getAssignMap() const { return var_to_relation_store; }
+
+void PKB::AssignStore::clear() {
+	var_to_relation_store.clear();
+	exp_to_relation_store.clear();
+}
+
 bool PKB::AssignStore::compareExpressions(const Common::EP::Expression& expression, const Common::EP::Expression& op_tree,
                                           bool is_exact_match) {
 	if (is_exact_match) {
@@ -83,10 +90,3 @@ bool PKB::AssignStore::compareExpressions(const Common::EP::Expression& expressi
 	}
 	return expression.contains(op_tree);
 }
-
-void PKB::AssignStore::clear() {
-	var_to_relation_store.clear();
-	exp_to_relation_store.clear();
-}
-
-unordered_map<VarRef, unordered_set<PKB::AssignRelation>> PKB::AssignStore::getAssignMap() { return var_to_relation_store; }

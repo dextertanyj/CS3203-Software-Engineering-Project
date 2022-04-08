@@ -21,8 +21,8 @@ public:
 	bool checkAffects(StmtRef first, StmtRef second);
 	bool checkAffectsStar(StmtRef first, StmtRef second);
 	StmtInfoPtrSet getAffects(StmtRef first);
-	StmtInfoPtrSet getAffected(StmtRef second);
 	StmtInfoPtrSet getAffectsStar(StmtRef node_ref);
+	StmtInfoPtrSet getAffected(StmtRef second);
 	StmtInfoPtrSet getAffectedStar(StmtRef node_ref);
 	void resetCache();
 
