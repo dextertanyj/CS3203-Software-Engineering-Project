@@ -7,11 +7,11 @@
 #include <utility>
 
 #include "Common/TypeDefs.h"
+#include "PKB/CFG/CFG.h"
 #include "PKB/CFG/NodeInterface.h"
 #include "PKB/CFG/StatementNode.h"
-#include "PKB/PKB.h"
 
-class PKB::ControlFlowGraph {
+class PKB::CFG::ControlFlowGraph {
 public:
 	void createNode(const StmtInfoPtr& stmt_info);
 	void setNext(StmtRef prev, StmtRef next) const;

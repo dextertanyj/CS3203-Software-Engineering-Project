@@ -4,11 +4,11 @@
 #include <memory>
 
 #include "Common/TypeDefs.h"
+#include "PKB/CFG/CFG.h"
 #include "PKB/CFG/NodeInterface.h"
 #include "PKB/CFG/StatementNode.h"
-#include "PKB/PKB.h"
 
-class PKB::WhileNode : public StatementNode {
+class PKB::CFG::WhileNode : public StatementNode {
 public:
 	explicit WhileNode(const StmtInfoPtr& info);
 	void setNext(const std::shared_ptr<NodeInterface>& next) override;

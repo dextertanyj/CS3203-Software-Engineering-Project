@@ -11,7 +11,7 @@
 
 class PKB::NextManager {
 public:
-	explicit NextManager(ControlFlowGraph& control_flow_graph);
+	explicit NextManager(CFG::ControlFlowGraph& control_flow_graph);
 
 	bool checkNext(StmtRef first, StmtRef second);
 	bool checkNextStar(StmtRef first, StmtRef second);
@@ -25,8 +25,8 @@ public:
 private:
 	struct TraversalInformation {
 		std::unordered_map<StmtRef, StmtInfoPtrSet>& cache;
-		StmtInfoPtrSet (ControlFlowGraph::*gatherer)(StmtRef) const;
-		StmtInfoPtrSet (ControlFlowGraph::*loop_continuation_handler)(StmtRef) const;
+		StmtInfoPtrSet (CFG::ControlFlowGraph::*gatherer)(StmtRef) const;
+		StmtInfoPtrSet (CFG::ControlFlowGraph::*loop_continuation_handler)(StmtRef) const;
 	};
 
 	template <class Comparator>
@@ -40,7 +40,7 @@ private:
 		TraversalInformation& traversal_information;
 	};
 
-	ControlFlowGraph& control_flow_graph;
+	CFG::ControlFlowGraph& control_flow_graph;
 	std::unordered_map<StmtRef, StmtInfoPtrSet> next_cache;
 	std::unordered_map<StmtRef, StmtInfoPtrSet> previous_cache;
 

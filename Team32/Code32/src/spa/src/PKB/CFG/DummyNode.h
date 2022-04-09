@@ -4,10 +4,10 @@
 #include <memory>
 
 #include "Common/TypeDefs.h"
+#include "PKB/CFG/CFG.h"
 #include "PKB/CFG/NodeInterface.h"
-#include "PKB/PKB.h"
 
-class PKB::DummyNode : public NodeInterface, public std::enable_shared_from_this<DummyNode> {
+class PKB::CFG::DummyNode : public NodeInterface, public std::enable_shared_from_this<DummyNode> {
 public:
 	explicit DummyNode(StmtRef index);
 	void setConnection(std::shared_ptr<NodeInterface> next) override;

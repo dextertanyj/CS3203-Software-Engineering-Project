@@ -6,16 +6,16 @@
 
 using namespace std;
 
-PKB::WhileNode::WhileNode(const StmtInfoPtr& info) : PKB::StatementNode(Types::NodeType::While, info) {
+PKB::CFG::WhileNode::WhileNode(const StmtInfoPtr& info) : StatementNode(Types::NodeType::While, info) {
 	assert(info->getType() == StmtType::While);
 }
 
-void PKB::WhileNode::setNext(const shared_ptr<NodeInterface>& next) {
+void PKB::CFG::WhileNode::setNext(const shared_ptr<NodeInterface>& next) {
 	assert(getNextNodes().size() < 2);
 	insertNext(next);
 }
 
-void PKB::WhileNode::setPrevious(const shared_ptr<NodeInterface>& prev) {
+void PKB::CFG::WhileNode::setPrevious(const shared_ptr<NodeInterface>& prev) {
 	assert(getPreviousNodes().size() < 2);
 	insertPrevious(prev);
 }

@@ -4,12 +4,12 @@
 #include <memory>
 
 #include "Common/TypeDefs.h"
+#include "PKB/CFG/CFG.h"
 #include "PKB/CFG/DummyNode.h"
 #include "PKB/CFG/NodeInterface.h"
 #include "PKB/CFG/StatementNode.h"
-#include "PKB/PKB.h"
 
-class PKB::IfNode : public StatementNode {
+class PKB::CFG::IfNode : public StatementNode {
 public:
 	explicit IfNode(const StmtInfoPtr& info);
 	void setConnection(std::shared_ptr<NodeInterface> next) override;

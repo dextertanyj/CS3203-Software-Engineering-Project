@@ -157,7 +157,7 @@ private:
 	AssignStore assign_store;
 	SVRelationStore<IfControlRelation> if_control_store;
 	SVRelationStore<WhileControlRelation> while_control_store;
-	ControlFlowGraph control_flow_graph;
+	CFG::ControlFlowGraph control_flow_graph;
 	NextManager next_manager;
 	AffectsManager affects_manager;
 

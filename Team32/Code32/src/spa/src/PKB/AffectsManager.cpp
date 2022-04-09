@@ -5,7 +5,7 @@
 
 using namespace std;
 
-PKB::AffectsManager::AffectsManager(ControlFlowGraph& control_flow_graph, SVRelationStore<ModifiesSRelation>& modifies_store,
+PKB::AffectsManager::AffectsManager(CFG::ControlFlowGraph& control_flow_graph, SVRelationStore<ModifiesSRelation>& modifies_store,
                                     SVRelationStore<UsesSRelation>& uses_store)
 	: control_flow_graph(control_flow_graph), uses_store(uses_store), modifies_store(modifies_store) {}
 

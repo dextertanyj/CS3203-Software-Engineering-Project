@@ -6,7 +6,7 @@
 
 using namespace std;
 
-PKB::NextManager::NextManager(ControlFlowGraph& control_flow_graph) : control_flow_graph(control_flow_graph) {}
+PKB::NextManager::NextManager(CFG::ControlFlowGraph& control_flow_graph) : control_flow_graph(control_flow_graph) {}
 
 bool PKB::NextManager::checkNext(StmtRef first, StmtRef second) {
 	if (!control_flow_graph.contains(first) || !control_flow_graph.contains(second)) {
@@ -48,7 +48,7 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef index) {
 	if (next_cache.find(index) != next_cache.end()) {
 		return next_cache.find(index)->second;
 	}
-	TraversalInformation info = {next_cache, &ControlFlowGraph::getNextNodes, &ControlFlowGraph::getLoopExternalNextNodes};
+	TraversalInformation info = {next_cache, &CFG::ControlFlowGraph::getNextNodes, &CFG::ControlFlowGraph::getLoopExternalNextNodes};
 	auto node = control_flow_graph.getStmtInfo(index);
 	StmtInfoPQ<LessComparator> queue = constructQueue<LessComparator>(node, info);
 	while (!queue.empty()) {
@@ -73,7 +73,8 @@ StmtInfoPtrSet PKB::NextManager::getPreviousStar(StmtRef index) {
 	if (previous_cache.find(index) != previous_cache.end()) {
 		return previous_cache.find(index)->second;
 	}
-	TraversalInformation info = {previous_cache, &ControlFlowGraph::getPreviousNodes, &ControlFlowGraph::getLoopExternalPreviousNodes};
+	TraversalInformation info = {previous_cache, &CFG::ControlFlowGraph::getPreviousNodes,
+	                             &CFG::ControlFlowGraph::getLoopExternalPreviousNodes};
 	auto node = control_flow_graph.getStmtInfo(index);
 	StmtInfoPQ<GreaterComparator> queue = constructQueue<GreaterComparator>(node, info);
 	while (!queue.empty()) {

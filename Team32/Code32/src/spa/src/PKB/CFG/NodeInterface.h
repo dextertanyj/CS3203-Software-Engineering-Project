@@ -5,10 +5,10 @@
 #include <unordered_set>
 #include <vector>
 
-#include "PKB/PKB.h"
+#include "PKB/CFG/CFG.h"
 #include "PKB/Types.h"
 
-class PKB::NodeInterface {
+class PKB::CFG::NodeInterface {
 public:
 	explicit NodeInterface(Types::NodeType type);
 	void setGraphIndex(size_t index);

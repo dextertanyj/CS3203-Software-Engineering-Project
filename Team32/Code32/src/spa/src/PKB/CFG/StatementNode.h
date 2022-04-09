@@ -4,11 +4,11 @@
 #include <memory>
 
 #include "Common/TypeDefs.h"
+#include "PKB/CFG/CFG.h"
 #include "PKB/CFG/NodeInterface.h"
-#include "PKB/PKB.h"
 #include "PKB/Types.h"
 
-class PKB::StatementNode : public NodeInterface, public std::enable_shared_from_this<StatementNode> {
+class PKB::CFG::StatementNode : public NodeInterface, public std::enable_shared_from_this<StatementNode> {
 public:
 	explicit StatementNode(const StmtInfoPtr& info);
 	StatementNode(Types::NodeType type, StmtInfoPtr info);
