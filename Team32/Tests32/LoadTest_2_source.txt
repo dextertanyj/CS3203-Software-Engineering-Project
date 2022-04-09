@@ -1,0 +1,1137 @@
+procedure while {
+if  ( (35!=while  )&&(  67 <= procedure) ) then {
+if  = procedure  +  while  ;
+  print= 1300;
+ constant=5300 +  7800  ;
+if (assign >constant)then{
+read constant  ;
+ } else {
+ if((  26  <  then  )  ||  (  63== 8900 )  ) then{
+read then  ;
+  else= 8400-8800  ;
+  if  (  ! (  36  >  call  )  )  then {
+constant  = then - 6700;
+call else;
+  print assign  ;
+  print variable;
+ constant =  5000 + 800  ;
+  }else  {
+ variable  = 9400 -constant;
+  else= print+  7500  ;
+if  ((  call  !=  3300 )||  (procedure>=  constant ))then  {
+while( (  8800 >=  28 )||(90 >5200))  {
+  if( 37>=  read)  then {
+call procedure;
+  then =5300  ;
+ } else{
+  call procedure;
+ procedure=  variable-  6400 ;
+  print while;
+  }  call read;
+ }read call ;
+  while  =  procedure-6500 ;
+}  else {
+ read constant  ;
+ variable =  procedure  +  3500 ;
+while  (  (  else  <=2300 )&&  (85 >= 9400 )) {
+else  =8400 ;
+  if = read;
+  print = 5900 + if;
+ while( ! ( 7700==8100  )) {
+assign= variable  +1500;
+ }while( !(  call<=  52 ))  {
+  then = assign;
+ else=100 - read;
+if  ( !  ( while <= variable) )  then  {
+then  = 2900  ;
+}  else{
+ constant = then-procedure  ;
+ } then=  5100+3100 ;
+ print variable  ;
+  }} }  if (  2500 !=procedure  )then{
+then=procedure  -  8600 ;
+} else{
+print variable;
+  call call;
+ } call call;
+ }  }  else  {
+variable= then  ;
+  read then ;
+ print then ;
+  if=  assign ;
+call  =8200;
+}  read  =  5000;
+ print variable ;
+ then  =  print  -read ;
+ call = 9200 ;
+ }  read while ;
+ }  else {
+  assign=2100 +  assign;
+procedure=  7100 + then  ;
+ } while  ((  print  <  29 )&&  ( 9100  ==procedure) ){
+ if= 4300+  read  ;
+  constant =procedure  + 900;
+ else = 900  +else ;
+}print =1400 + 5300;
+call procedure;
+ call constant;
+ call else;
+variable=  6600  -variable ;
+  read else;
+read =  9300 - 1600;
+  read if ;
+if(procedure<=11)  then{
+constant=600  ;
+  }else  {
+constant =  100  ;
+  while (  !  (5600<=55)){
+  else=  7900 +9000;
+ } print else ;
+print = 7600;
+if (11<  constant)then {
+then  = assign- 1400;
+ print=  5100-  5700 ;
+} else  {
+  call call;
+ call constant;
+  } } if ( 91 ==print)  then{
+print then ;
+ constant  = assign- 7000 ;
+call constant;
+ }else {
+print while ;
+ assign=6900 + 2800;
+call print;
+  read  =  3400  +4700;
+}read assign;
+call else;
+call=2100;
+  print if  ;
+print call;
+ read else ;
+ assign  =  400  +  2800  ;
+  call assign;
+ variable =  6100;
+ print print;
+ print call ;
+  variable=  5400 - 3400;
+  call constant;
+  call read;
+ procedure  =  8200  + while ;
+  call if;
+ print else ;
+ print if;
+}
+
+procedure if{
+read if ;
+call else;
+  assign =  1400  + 3300  ;
+  if  =  7900+100 ;
+  read then;
+call then;
+print assign ;
+  while  ( ( 3900== assign )  && ( 15 < 32  )){
+  read  =  5900  - read;
+print assign;
+ else  =2100- if  ;
+  while ( then !=73 ){
+ while ((500 <=  59)  &&  (  call== 63)){
+  call then;
+} else =900;
+ }  constant=500  -  1000;
+  } call then;
+  while (  if>  constant  ) {
+  if (  ( if<= 6200 )|| (  17<=  then )  )  then {
+if =  constant;
+  print assign  ;
+  call variable;
+ }  else  {
+ print read  ;
+print while;
+ read=3100 ;
+  print  = while  ;
+ }  call else;
+  then  = 8300  ;
+ call constant;
+}procedure=9700  -6400 ;
+ procedure =  6600  -  assign ;
+print procedure ;
+  if=  700 +1700;
+if =  1200+  4900 ;
+ call procedure;
+ assign= while ;
+  read else ;
+  read=then  ;
+ if  (  !(  then>= then  )  )then{
+print procedure;
+  call  = 7500  +  print;
+  call procedure;
+else=  print  -if  ;
+then=5400  - 2100;
+} else {
+  print constant  ;
+ variable= procedure;
+ }read assign  ;
+procedure  = 9900+  8200 ;
+print call  ;
+ read = if  ;
+ if=  1100  - read ;
+call call;
+  if  (  (  4 <=  34  ) || ( constant>=5))then  {
+call =  1400 + 8100;
+ else  =assign+8500  ;
+ } else{
+then= 3300 ;
+  }  while ( then  <=  call){
+print variable ;
+ }  variable=  procedure -assign;
+while (! (  while  !=  30  ) ) {
+print procedure;
+read while  ;
+if  = 5700  - 9000;
+variable =constant;
+ } }
+
+procedure then{
+procedure  =  print -  7600;
+ while =  4600 + 5200 ;
+while=1200  ;
+  print read  ;
+  print  = 9200 -  else;
+  while ((print==47)  || (59  <2100 ) ) {
+if  ( while <=4900  )  then  {
+procedure  =else +7700 ;
+read print ;
+if (!(  16!= 9300 )) then{
+variable=  then  ;
+ print while  ;
+ print else;
+ print else ;
+  }  else{
+ while=9400 - 5700 ;
+  }} else  {
+variable = 6100- 2800  ;
+ else =4000+ print ;
+then=9400 -7900  ;
+  if  (  ( 2800  >  8  ) ||  ( 38  <=34)  ) then {
+print print;
+ call call;
+ variable= 6700;
+  print else ;
+ } else{
+ while ((call  != 5700)  && (  then >=call  )) {
+  procedure = read -4200;
+if(!  ( print <46)  )  then  {
+if= 2400+ 1700  ;
+  call read;
+  call assign;
+  print  =900  ;
+ } else  {
+ call else;
+  procedure  =  8700+ procedure  ;
+  }}  constant  = call -  8300;
+ call= 8700 - 1000  ;
+} while  = 6300-  constant  ;
+} read else  ;
+ print constant ;
+  } read= 9500;
+constant  =  2100  -5900  ;
+  while (  51 < 1700 ){
+variable =4700 +  4900;
+call print;
+ while  ((  1100  !=else )  &&  (43 >  26 ) ){
+call read;
+ }print then;
+print else  ;
+}  variable  =then;
+print else;
+call  = 5200  -  assign;
+  if ( (8500  > else )  ||  (  27  >=63 ) )then {
+print assign  ;
+procedure =print -  3200 ;
+ if (! ( 4800 == 4)  )then  {
+while (  (  9300 <=79  )&& (call ==  variable  )  ){
+ assign  =  if ;
+ }print if  ;
+call assign;
+  }else {
+read constant;
+print while;
+while ( (16 <  8100 )  &&  (16 !=then )  ){
+  read else ;
+ print if  ;
+ }  read call ;
+ print constant;
+}}else{
+  call constant;
+constant = 1800  + 4400;
+print constant;
+  }call variable;
+while =  procedure+call;
+if=7700-  4000;
+print constant  ;
+  if( !( if  <assign  )  )  then  {
+if  ( ( 5300<=2600 ) ||  (72 <  while))  then {
+call  =  6900  ;
+  print variable ;
+  read constant  ;
+  } else{
+ call print;
+ while  = 7300 ;
+ constant =  6600 ;
+  }print constant;
+  read constant;
+ }  else {
+ read assign  ;
+  assign = 7200  - else ;
+  else  = 8700  +  print  ;
+}  call =  while -  variable;
+ assign =read  ;
+ call else;
+if((  18>=200 )&& (  89 > assign ) )  then  {
+print read  ;
+  print procedure ;
+} else{
+ assign=  while  - 8900  ;
+  } if  ( (  8<=23)  || (  7800 ==94  ) )  then{
+then  =  7900 ;
+read procedure ;
+ } else {
+  procedure=read  -7400;
+ }  call variable;
+then  =  3300  - then ;
+read=assign  +6400;
+print while  ;
+ while =7700 ;
+ call read;
+ call  = else+  2400  ;
+ }
+
+procedure else  {
+call assign;
+print variable;
+ while  (!(  then==else )  )  {
+  while ( (  700  == 7  )||  (  procedure== 3400  ) )  {
+  while=  constant  +  8600 ;
+  then=5700+ 8100  ;
+  constant=  4900 + then ;
+  call print;
+ }then = 9800;
+ procedure= 3900-2000;
+ if  (  ( 65>  33  ) || ( 9700  <=print  )) then {
+if(  ( constant  <=read) && (  9100  !=  procedure ))then{
+assign=  4100;
+  read variable  ;
+read while;
+ if  ( (  read <28 )  && (32 >  87 )  ) then  {
+call variable;
+assign =4900;
+}else  {
+ if (  (  constant<=  99)  ||  (while< constant  )  )  then {
+if=4200-  if ;
+assign = read +  else;
+ print =  8500  + if ;
+  while(if <=then  )  {
+  variable= 4200 +read  ;
+  call=  2700-2300  ;
+}  read assign  ;
+  } else {
+call read;
+ constant  =  5300  - 1900;
+ then  =constant;
+ read else ;
+ call=  1600  +8600 ;
+}  }read if;
+ }  else  {
+  read while  ;
+read assign ;
+ while( !(37  <=  84))  {
+  read while;
+ print =500+  6800  ;
+  if (  !  ( procedure  ==2100  ) )  then  {
+else=3100-7800;
+ }else {
+ call =  7800 ;
+ print if  ;
+  print procedure ;
+  }  read variable  ;
+} call =  2900-  procedure ;
+ if( (8200<=if )&&  ( read < 7800 ) )then {
+call procedure;
+ print constant;
+ print=  4300  ;
+ }else {
+ then  =1200 +while ;
+  read read ;
+}  }if (  ( 8700 > procedure ) || ( then  >assign )  ) then {
+while  = else  ;
+print if ;
+ print=3400+  1200 ;
+print assign;
+read  = print  +5400 ;
+ }else  {
+procedure=constant ;
+  assign  =if - constant;
+while= 4000;
+ while ((91<= assign)  ||  (6800== read  ))  {
+ read=assign -2600  ;
+if (( 94!= 27  ) ||(  33  ==  94 )  ) then {
+constant=3800  ;
+if (52 == procedure) then  {
+while( !( 11  >  assign) )  {
+ read assign ;
+  then=3300-  7900 ;
+while( procedure <  procedure  ) {
+  read procedure;
+read print ;
+ procedure=1400-  100  ;
+ read variable;
+ } while=  4100+1900 ;
+print  =if -2100;
+  }if  =  variable+ 7300 ;
+call variable;
+ }  else{
+ call constant;
+  variable=  while- 1900  ;
+ }  } else{
+assign =9600 ;
+ procedure  =  2100 ;
+  }print procedure;
+  print read;
+  } read while  ;
+ }  } else {
+ call procedure;
+}} if((90  == 7800) &&  ( 86>= 1400 )) then {
+while = while +  call;
+  print=print ;
+ while (while>=  constant  )  {
+  else  = 4800 ;
+read assign;
+print call ;
+  constant=8900  ;
+ } }else  {
+ while (  (12!= call) &&  (  if  <=else) ){
+read procedure;
+} variable  =8600  -  print ;
+ call call;
+ variable =constant + 600  ;
+} if(  ( 37==7900)  || (else >  61))  then{
+call variable;
+while(  4700 == assign  )  {
+  if=900  ;
+ call call;
+ read= 3700+1900;
+print  =3300+ 4200;
+}  }  else {
+while  (!(  91<3600 )  )  {
+ constant  =6800  -6900;
+}if (  while  == 1900 ) then {
+else=procedure- variable;
+ while ((64!=then  )  || (  assign == 81  )  ){
+ if  =6100 -  7000 ;
+  print else;
+read call;
+}  print assign  ;
+ read then  ;
+  variable= 6800  ;
+  } else {
+ else =3100+ read;
+  constant=assign  -5200 ;
+} if  ((  procedure>75)  || (  procedure <=  7900) )  then  {
+procedure = 1800+  5200 ;
+ print assign  ;
+ read= 5400;
+if=8600  -  8100  ;
+} else {
+else=  2100 + 8500 ;
+  } }procedure =7700  -  6000 ;
+ read  =8200 ;
+print procedure;
+print assign;
+ call variable;
+call constant;
+ read  =  3200  ;
+ print while;
+read procedure  ;
+ read = read  +  1400 ;
+  call call;
+ call variable;
+ print constant;
+  then =3200  ;
+then  = while  -8400;
+if  =  6000+8700 ;
+print  = 5700;
+ else  = 8700 +  7600  ;
+ then  =assign+  1800;
+ while  =print  -assign ;
+  print call  ;
+ read else ;
+  read assign  ;
+ read assign;
+ assign = 1200 ;
+  }
+
+procedure read  {
+print then ;
+assign  =else -  5700;
+  variable = read+ 1600;
+print print;
+ variable  = else +3700 ;
+  call  =  variable;
+then =5100;
+ print then ;
+  print read  ;
+  then=4000- 8400;
+  print while  ;
+  print constant ;
+variable=  6400 +  1600;
+ print assign ;
+call=6600 -  8300;
+while  ( !( 1 <= 85 )){
+  if =4000+5400;
+ print  =  5700 +2900  ;
+  if  (  (  call  <=variable  )  && (60  ==2300  )  ) then  {
+if  (  then!=if )  then  {
+call variable;
+}  else {
+  read read;
+call variable;
+  print print  ;
+while ( 6300  >  6){
+  procedure= if  + print;
+  } }  call  =  800+  3400;
+ constant=2500 ;
+  read call ;
+ }else {
+read read;
+ call print;
+  if  (72== call)then  {
+call = 8000  +6200  ;
+ else= while - constant ;
+  } else {
+  while ( !(while <7800) )  {
+  procedure  = 2100-  5100  ;
+ while ( 100 >=  3600  )  {
+while (1400  < 49  ){
+ constant  =  7100;
+read variable;
+  read print ;
+read=100;
+ print print;
+} }call print;
+  }} call procedure;
+ }  }assign = then;
+  call variable;
+ while (  4600==then  )  {
+  print procedure ;
+  while  (  ( read  >22)  && ( 90<  6300  ) )  {
+ assign= 900+while ;
+  if  (  (else <= 79 )  &&  (  23 >= 5500  ) )then{
+call assign;
+  } else {
+  assign = 5300-  print;
+ }  }  read  = 300  +3600  ;
+ print assign ;
+}  then  =2100 +4600  ;
+  if ( ( 86  <call  )||(  if == 50 ))then  {
+constant=  variable  ;
+read assign;
+  variable =  6000;
+  call assign;
+read= print+ 7200 ;
+  } else {
+  while  =procedure;
+else  =  7500  ;
+  call assign;
+read= 7300  + 6300  ;
+  constant =  assign;
+ }call print;
+while =  7200 - 5200 ;
+ while  ( !  (read  <=1800  )) {
+ assign =  7100  +2000;
+ read call ;
+  procedure=while- 5000 ;
+  if(  (100  ==assign )&&( 34  != 98) )  then  {
+if =  call  -8000;
+ while(  then <  78  )  {
+  call variable;
+while =assign  -  if ;
+  print assign;
+  } } else {
+print then  ;
+  } print while  ;
+ }procedure  =  6800 ;
+print print  ;
+ while(  (  call  >assign )&&  ( 54  >  read ) ){
+read if ;
+constant = 2400;
+print assign  ;
+assign = 5500-variable;
+ }  read read  ;
+print  =  1500+  4500;
+print read;
+ }
+
+procedure print  {
+procedure  =9000  ;
+ then  = call ;
+  procedure = if;
+assign=8200-  5800  ;
+  procedure=  9500  + 6100 ;
+ if ( ! ( if  > 87) )then  {
+assign=  2100  +7100 ;
+print while  ;
+ assign  =  while  - 6000;
+  read assign ;
+} else {
+ call variable;
+ constant  =assign+call ;
+ } read=  if ;
+  variable =then  +3500  ;
+print else ;
+if  ( !  ( 65<20) )then  {
+read if;
+ }else {
+while (  (call  >= variable )  ||  (85>=  76)  ){
+ assign =  8000;
+}}  read print ;
+  call procedure;
+ if=  4000;
+  while(!  (  read> if  ) )  {
+ variable  = 3200 ;
+  call call;
+  read print ;
+  read print;
+}  read assign ;
+assign  =9500  + 7900  ;
+  read =9600-print;
+ if  (  ( then  != assign)&&  (  8800  !=  variable )  )  then  {
+call assign;
+ call=  7800 +900  ;
+ variable =  6700 ;
+  }else {
+ while  ((  variable >= 5400  )  && ( 64 ==else )  )  {
+assign=constant -4100 ;
+  read constant ;
+} read variable ;
+ while ( else == else)  {
+while (( read!=  77 )&&  (  procedure  <2600  ) ){
+ read read;
+  while =  else+ 7300;
+  while (  300  >  variable ) {
+call assign;
+} read constant;
+ print= 3600  ;
+}read call ;
+ print read  ;
+  print variable ;
+  then  = 2900 + 2300 ;
+  }then=1100 -  procedure;
+  }  call constant;
+while  ( (  call< 95)  && (3200== 30  )){
+  then  = 3600  + 9000 ;
+read procedure;
+  }read =  8200  ;
+  then  = 9300  + 4700;
+else=9600  +  6300;
+ print while;
+  while  (procedure>=  while  )  {
+  call= 3800  ;
+while  ( !  ( then  >71)  )  {
+while =2900;
+call assign;
+read else  ;
+ }if= 5800 -  8000 ;
+read  =  8900+  7800;
+  }constant = procedure -4700  ;
+  read variable;
+ read procedure  ;
+print if ;
+ if  =read;
+ }
+
+procedure call {
+constant=2600 + 1400 ;
+ call constant;
+ then = 200-6800;
+ variable  =  7000- call;
+read read  ;
+  if(( then> procedure )  ||  (  constant  ==  assign  ) ) then{
+call variable;
+  }  else {
+if ( ( 9000  !=  9800)||(  32  ==  40  ) )  then  {
+print then  ;
+ print call  ;
+ call variable;
+procedure = 7100  ;
+ call procedure;
+}else  {
+ then  =  call  +  9700;
+print =  2700-3600 ;
+  variable=5000  -  then  ;
+  print procedure ;
+  while=  3400- 5500;
+ }}else=4300;
+ print call ;
+ if  = 9700+  call  ;
+  call  =5800+ 7500  ;
+print then;
+ call variable;
+if ( ( 20  != else ) ||  (  3000  <=  16 ))  then{
+read procedure;
+call assign;
+ }  else  {
+ variable  = 9700 ;
+ while(  (  while  >=  2000) ||(  if > constant  ) ){
+ variable =else  + 400  ;
+}  } read print;
+  call =while  - read;
+procedure  =  1500 +7600 ;
+procedure  =print  - constant  ;
+  then =  7600  ;
+ call procedure;
+  call procedure;
+  constant= 500-read ;
+call =600+  then;
+  variable=8600 -  variable  ;
+if  (  (4300 < 2300  )  &&(else ==  6800  ) ) then  {
+print=  constant  ;
+ } else  {
+ print assign;
+  }print assign ;
+ while  (  read<= if ) {
+  variable  =6200 -8600  ;
+  assign=procedure  +while;
+} call assign;
+while(55!= 5600){
+procedure = then  +  variable;
+else= call  ;
+}  print then  ;
+else  =while-  9600;
+  }
+
+procedure procedure{
+variable= 500;
+ assign =9600 ;
+ call constant;
+ print print;
+ if (  8100!=100)  then{
+print read ;
+print while ;
+  print while  ;
+} else  {
+  call variable;
+print call  ;
+  } procedure = 2900  - 8600 ;
+print read  ;
+ print print;
+  if ( !  (  variable  != 90  ) )then  {
+call=3100 ;
+ }else  {
+  call assign;
+}print procedure  ;
+procedure=8900 + 5300 ;
+ then=3600 + 2300  ;
+while ( then  <=variable  ){
+  call variable;
+read assign  ;
+  constant =7400;
+ read else  ;
+  }  read= call ;
+ read then ;
+ print read  ;
+while( print  <=  22)  {
+constant= call+  2200  ;
+ }  read  = 8300  -  9100;
+procedure= 7200 +5500;
+  while( (variable >  67)&&  (57 == while )){
+  then  = 1800  -9200  ;
+ }call variable;
+then =  7900;
+ constant  = 9700;
+  read while ;
+  read print ;
+  print then  ;
+ read else;
+procedure =  8600 +7500 ;
+if  ( ( print<=while  )&&  (  9700 >  49 )  )  then{
+call assign;
+}else  {
+assign=8100;
+ call variable;
+  variable =while - 8700  ;
+  } call  =  6300;
+}
+
+procedure assign {
+call constant;
+ read call ;
+  else  = call  -1100;
+  read print  ;
+call  =  7500+1900 ;
+  while(  ( procedure<=  else  )  &&( variable<5 )  )  {
+  procedure  =call ;
+  read assign ;
+call =1900-  9900;
+  while  =3200 + 9200;
+  } while =  constant  ;
+ assign=while ;
+ read then  ;
+  print= 9500+  read;
+ if  ( ( 30<= procedure )  &&( 3900<=60)  )  then{
+read  =constant- 5400 ;
+ procedure =5700;
+  print call;
+ }else  {
+  print constant ;
+  call constant;
+  print procedure  ;
+read assign ;
+  } print  = 8700+  6700 ;
+then  =procedure  - variable;
+if ((87  != assign) &&(3  >read)  )  then  {
+print constant  ;
+  print print ;
+ } else {
+ assign  = else  +2800;
+else = 6900 -  procedure  ;
+call constant;
+ call constant;
+ print else;
+} print =print ;
+  if (!  (  800 <  then ))  then  {
+if (  (else >=2700)|| (  if >=  read  )) then  {
+call constant;
+ read while  ;
+  call variable;
+  constant  =6500+ 400 ;
+}else{
+ call constant;
+ read variable;
+ print then  ;
+ call  =9400 ;
+ else=  5000;
+ }  } else {
+  while(  constant==else  ) {
+ read variable;
+ if  (51 !=95)then {
+assign  = 6800+read  ;
+  constant  =  7700 - 3400;
+  print constant  ;
+ }  else  {
+  read= 7500  +4000;
+} }} print then ;
+ read read ;
+ call variable;
+ while= while;
+ call = print- 4000;
+  print call;
+call constant;
+  print variable;
+  read while;
+  print else ;
+  constant  = assign  -print ;
+  read while;
+call variable;
+  variable=4700 + while  ;
+ }
+
+procedure constant{
+print variable;
+if  =1100  ;
+if  ( !(while >  18  ) ) then  {
+if ( (  call  <=  84  ) ||( 93> 44 ) )then {
+call variable;
+ if  (( 70 > if  )  &&( variable  ==  22 ))  then  {
+if (  !(0  <assign  )  ) then {
+call variable;
+  while (8300  ==4000 ){
+print constant  ;
+}if((  5900>=97)  &&(  5900 < read ))  then {
+while = assign  +5300  ;
+  read procedure ;
+  if  (  (12  <=  assign)  &&  (  assign>= 9300 ))  then  {
+read variable;
+  assign =procedure;
+while =7100- 3700 ;
+ read  =6700+ 300;
+ } else  {
+if(  ( 1100 <=56 )||  ( print  <=67  ))then  {
+assign= read-  assign ;
+ if  ( (  5200  <86) || (  assign== read )  ) then  {
+read call;
+print  =7900  -  if ;
+ read assign;
+ } else {
+print assign ;
+print assign;
+  constant =call+  7400;
+  }  else =4500+ 9700;
+call variable;
+ }  else{
+  while = 500 + then;
+call variable;
+ }  }  print if;
+} else  {
+  print else;
+ } }else {
+ procedure  =if;
+read=variable  - 1900;
+read else;
+  print constant;
+} }else  {
+  print call;
+while =100 - 6800  ;
+read while  ;
+}  print then  ;
+ if=7400 ;
+else =9000 ;
+}  else {
+call  = variable ;
+variable = 4100 ;
+  call=  3000 - 5100;
+print constant  ;
+} print  =8400  ;
+ }  else {
+  variable=  3900 + 2900;
+ call  = 5500+ 3800  ;
+  } read  = 3000  + 8900;
+print if;
+  constant = assign  ;
+if  (! ( 24  <5000  ))  then{
+print while  ;
+ }else{
+  print else;
+ }then  =  constant+6700  ;
+  assign = assign -6200  ;
+ if(  ! (  81 < 17  )) then  {
+read variable;
+ }else{
+ print if  ;
+ read =4500  ;
+constant=  8500 -  900 ;
+  read =  print  -  7300;
+ print print ;
+ }  if(  if  <=call) then  {
+while =print  - 8300 ;
+  read else ;
+ }  else {
+ variable =7300  -  9500 ;
+  then=  4500 -  5100;
+read print ;
+ print while;
+ }if  ( (39>7 )&&  (8200== 26  ) ) then  {
+call variable;
+ } else {
+then = print + 1800;
+  if  ((  3400 <  print ) &&  (6<else  )) then  {
+read read;
+ assign =  variable+2600  ;
+  while( 6300 >=read )  {
+ read constant  ;
+ }  read assign ;
+ }else  {
+ print constant  ;
+while = read-if ;
+  while (!  (  4 >procedure) ) {
+ print else ;
+  call =  read  +5100  ;
+print call;
+}  }if  (  9600 <=print)then{
+print read ;
+  print assign ;
+  }else{
+print =  print+8500  ;
+ } read else ;
+ }  if = 3100 -  6800;
+ then =  9800;
+ variable = 4100 + 6600  ;
+  else=4700+5300 ;
+  else= 6100  ;
+ else =3800 +assign;
+  read call ;
+constant  = 9900  ;
+  read procedure;
+ read  =  1500 + 8200;
+  variable =read+  900 ;
+variable =  5100  ;
+ print else ;
+ call variable;
+  print read;
+  if ((93 != then  )||( 5000  >if  ) ) then  {
+call variable;
+  while (  ! ( 400  <= 23)  )  {
+  else=  1200-while;
+} }else{
+call= 6300 - 300 ;
+read constant ;
+ read assign;
+  call variable;
+ } read call  ;
+ read  =print -  2100;
+}
+
+procedure variable  {
+call = 6300  +7200;
+ while (83!=  44 ){
+  constant= call+6300 ;
+ while((constant  ==  while  )&& (call >= 43  ) ) {
+  call=call -  7100  ;
+ else = print - procedure ;
+ variable =3400 +  3000;
+  } } while  ((call < 8200)  && ( if>=  assign )){
+  print=1700  -  if ;
+  }constant =  6100  ;
+  if(70 >= 9300  ) then{
+print variable  ;
+ read constant ;
+constant  =  8500  ;
+  } else  {
+ then = 4100 ;
+constant  =  read  ;
+while( (1 > 600  )  ||  (  while  !=  24 ) ){
+while  ( (constant  > 7800)  ||  (  read <1500  ))  {
+ if=500-  4000  ;
+ print assign ;
+ read read ;
+else  = 500 +  4300  ;
+  while ( 1 <75  ){
+ while ( 8500  == 45)  {
+  while  (56>  9300){
+read variable  ;
+if  (! ( call!=  40  ))then {
+if  ( 88<=  84  )  then{
+print=then+ call;
+ print  =  procedure +  5500  ;
+ procedure  =  procedure ;
+ if  =variable  -8600;
+ }  else{
+ assign =  2100;
+  call  =  6900  -else ;
+ print constant ;
+}read then ;
+  }  else {
+while  =400;
+ read assign;
+read procedure;
+  } } while=5300;
+else  =3500  ;
+ procedure  =print -400  ;
+ }  variable =  9800+ while  ;
+  read constant;
+print=8300+assign  ;
+  }} if(  (  while >=call )&&(71 >= print )) then  {
+read constant;
+ constant =  else;
+ assign  =  8000  ;
+  while  (!(  procedure <=300 )  )  {
+  if(( 63 !=63  ) ||(  9600  <=7000)) then {
+call=  2900;
+  print variable ;
+ read then ;
+}  else {
+ if  ( print==84)  then {
+print variable ;
+  read print  ;
+ assign=  assign;
+if ( ! ( 6  >while )  )  then {
+constant=  2400 +9600  ;
+  read read;
+print while;
+  print call  ;
+ procedure  =  2600 ;
+} else  {
+print= 1800  +  8900 ;
+  if =constant + 2600 ;
+  }then= 700 +300;
+  } else  {
+ print read ;
+ print constant  ;
+ if  ((75 !=  11  ) ||(  1 >=  2100  )) then {
+assign= 9200 +read  ;
+  }  else {
+  read print ;
+ if( ( read  > then  )||  (variable  <  if) )then {
+while=  3800 ;
+  constant  =  1600 ;
+  }  else  {
+ procedure =  while - 9200  ;
+ print constant  ;
+  procedure =3200  +constant;
+then  = 900 -6200  ;
+ } print then  ;
+  read while ;
+print else;
+  }print read;
+ variable  = 4300- 4000;
+ }  variable  = 2900  ;
+  call = procedure  ;
+print while  ;
+ read print  ;
+}  variable=6200 + 2600;
+while=  8900  ;
+ else  =  6700 -7300  ;
+ } } else{
+  read= 8200 ;
+ call= 1000 ;
+ print while;
+ assign  = 4100;
+ read assign  ;
+  }}}  print else;
+then = 2700+ then  ;
+ print else ;
+  constant=1000 + 7000 ;
+ print read ;
+while  (  (32 == 5800  )  &&(  4800<42 )  )  {
+variable= 9200  - call ;
+read variable ;
+variable  =  constant  ;
+ if =  6400  ;
+call= read ;
+}  read call ;
+  print =1900  + variable;
+procedure  =  print;
+  assign=  6900;
+  assign  = while -  9800;
+  if ((  48  <if ) ||(else<=  2100  ))  then{
+read read ;
+ }else {
+call=if ;
+  if=9300;
+ read variable;
+ if  (  (call <procedure )&&  ( 24>= procedure )  )  then  {
+call = 200  ;
+  } else  {
+  print variable ;
+print print ;
+  constant =8100+ if ;
+ else =  assign -  then  ;
+  } } read else ;
+  read read;
+  then =  read  + 3000  ;
+  else  = variable  -  4100;
+print constant;
+print=  else- 7600  ;
+  read print  ;
+  read print;
+  print then;
+  if(  procedure <72) then  {
+variable=  6900+ 4600 ;
+  variable  =  if +  else;
+print constant;
+print assign  ;
+  } else {
+  print assign  ;
+}  call=5000  ;
+print read ;
+ if  (! ( 21>= 4600  ) ) then{
+while= assign+  900  ;
+ print print  ;
+print if ;
+}else {
+ read then ;
+  constant = 600 -  1300  ;
+then  = read  +800 ;
+ }}
+
