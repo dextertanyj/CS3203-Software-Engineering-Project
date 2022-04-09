@@ -198,7 +198,7 @@ ProcRefSet PKB::Storage::getCallerStar(const ProcRef& callee) {
 
 bool PKB::Storage::checkModifies(StmtRef index, const VarRef& name) { return modifies_s_store.check(index, name); }
 
-bool PKB::Storage::checkModifies(const ProcRef& procedure_name, const VarRef& name) { return modifies_p_store.check(procedure_name, name); }
+bool PKB::Storage::checkModifies(const ProcRef& procedure, const VarRef& variable) { return modifies_p_store.check(procedure, variable); }
 
 StmtInfoPtrSet PKB::Storage::getStmtModifiesByVar(const VarRef& name) { return modifies_s_store.getByVar(name); }
 
@@ -210,7 +210,7 @@ VarRefSet PKB::Storage::getModifiesByProc(const ProcRef& name) { return modifies
 
 bool PKB::Storage::checkUses(StmtRef index, const VarRef& name) { return uses_s_store.check(index, name); }
 
-bool PKB::Storage::checkUses(const ProcRef& procedure_name, const VarRef& name) { return uses_p_store.check(procedure_name, name); }
+bool PKB::Storage::checkUses(const ProcRef& procedure, const VarRef& variable) { return uses_p_store.check(procedure, variable); }
 
 StmtInfoPtrSet PKB::Storage::getStmtUsesByVar(const VarRef& name) { return uses_s_store.getByVar(name); }
 
@@ -220,8 +220,8 @@ VarRefSet PKB::Storage::getUsesByStmt(StmtRef index) { return uses_s_store.getBy
 
 VarRefSet PKB::Storage::getUsesByProc(const ProcRef& name) { return uses_p_store.getByProc(name); }
 
-bool PKB::Storage::patternExists(const VarRef& name, const Common::EP::Expression& exp, bool is_exact_match) {
-	return assign_store.patternExists(name, exp, is_exact_match);
+bool PKB::Storage::patternExists(const VarRef& name, const Common::EP::Expression& expression, bool is_exact_match) {
+	return assign_store.patternExists(name, expression, is_exact_match);
 }
 
 StmtInfoPtrSet PKB::Storage::getStmtsWithPattern(const VarRef& name, const Common::EP::Expression& expression, bool is_exact_match) {
@@ -238,25 +238,25 @@ bool PKB::Storage::checkNext(StmtRef first, StmtRef second) { return next_manage
 
 bool PKB::Storage::checkNextStar(StmtRef first, StmtRef second) { return next_manager.checkNextStar(first, second); }
 
-StmtInfoPtrSet PKB::Storage::getNext(StmtRef node_ref) { return next_manager.getNext(node_ref); }
+StmtInfoPtrSet PKB::Storage::getNext(StmtRef index) { return next_manager.getNext(index); }
 
-StmtInfoPtrSet PKB::Storage::getNextStar(StmtRef node_ref) { return next_manager.getNextStar(node_ref); }
+StmtInfoPtrSet PKB::Storage::getNextStar(StmtRef index) { return next_manager.getNextStar(index); }
 
-StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef node_ref) { return next_manager.getPrevious(node_ref); }
+StmtInfoPtrSet PKB::Storage::getPrevious(StmtRef index) { return next_manager.getPrevious(index); }
 
-StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef node_ref) { return next_manager.getPreviousStar(node_ref); }
+StmtInfoPtrSet PKB::Storage::getPreviousStar(StmtRef index) { return next_manager.getPreviousStar(index); }
 
 bool PKB::Storage::checkAffects(StmtRef first, StmtRef second) { return affects_manager.checkAffects(first, second); }
 
 bool PKB::Storage::checkAffectsStar(StmtRef first, StmtRef second) { return affects_manager.checkAffectsStar(first, second); }
 
-StmtInfoPtrSet PKB::Storage::getAffected(StmtRef node_ref) { return affects_manager.getAffected(node_ref); }
+StmtInfoPtrSet PKB::Storage::getAffected(StmtRef index) { return affects_manager.getAffected(index); }
 
-StmtInfoPtrSet PKB::Storage::getAffects(StmtRef node_ref) { return affects_manager.getAffects(node_ref); }
+StmtInfoPtrSet PKB::Storage::getAffects(StmtRef index) { return affects_manager.getAffects(index); }
 
-StmtInfoPtrSet PKB::Storage::getAffectedStar(StmtRef node_ref) { return affects_manager.getAffectedStar(node_ref); }
+StmtInfoPtrSet PKB::Storage::getAffectedStar(StmtRef index) { return affects_manager.getAffectedStar(index); }
 
-StmtInfoPtrSet PKB::Storage::getAffectsStar(StmtRef node_ref) { return affects_manager.getAffectsStar(node_ref); }
+StmtInfoPtrSet PKB::Storage::getAffectsStar(StmtRef index) { return affects_manager.getAffectsStar(index); }
 
 void PKB::Storage::resetCFGCache() {
 	next_manager.resetCache();

@@ -77,7 +77,7 @@ public:
 
 	// Use get methods
 	bool checkUses(StmtRef index, const VarRef& name) override;
-	bool checkUses(const ProcRef& procedure_name, const VarRef& variable_name) override;
+	bool checkUses(const ProcRef& procedure, const VarRef& variable) override;
 	StmtInfoPtrSet getStmtUsesByVar(const VarRef& name) override;
 	ProcRefSet getProcUsesByVar(const VarRef& name) override;
 	VarRefSet getUsesByStmt(StmtRef index) override;
@@ -85,7 +85,7 @@ public:
 
 	// Modify get methods
 	bool checkModifies(StmtRef index, const VarRef& name) override;
-	bool checkModifies(const ProcRef& procedure_name, const VarRef& variable_name) override;
+	bool checkModifies(const ProcRef& procedure, const VarRef& variable) override;
 	StmtInfoPtrSet getStmtModifiesByVar(const VarRef& name) override;
 	ProcRefSet getProcModifiesByVar(const VarRef& name) override;
 	VarRefSet getModifiesByStmt(StmtRef index) override;

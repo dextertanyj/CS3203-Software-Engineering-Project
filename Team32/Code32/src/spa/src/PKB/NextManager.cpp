@@ -34,54 +34,54 @@ bool PKB::NextManager::checkNextStar(StmtRef first, StmtRef second) {
 	return checkNextStarOptimized(first, second);
 }
 
-StmtInfoPtrSet PKB::NextManager::getNext(StmtRef node_ref) {
-	if (!control_flow_graph.contains(node_ref)) {
+StmtInfoPtrSet PKB::NextManager::getNext(StmtRef index) {
+	if (!control_flow_graph.contains(index)) {
 		return {};
 	}
-	return control_flow_graph.getNextNodes(node_ref);
+	return control_flow_graph.getNextNodes(index);
 }
 
-StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
-	if (!control_flow_graph.contains(node_ref)) {
+StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef index) {
+	if (!control_flow_graph.contains(index)) {
 		return {};
 	}
-	if (next_cache.find(node_ref) != next_cache.end()) {
-		return next_cache.find(node_ref)->second;
+	if (next_cache.find(index) != next_cache.end()) {
+		return next_cache.find(index)->second;
 	}
 	TraversalInformation info = {next_cache, &ControlFlowGraph::getNextNodes, &ControlFlowGraph::getLoopExternalNextNodes};
-	auto node = control_flow_graph.getStmtInfo(node_ref);
+	auto node = control_flow_graph.getStmtInfo(index);
 	StmtInfoPQ<LessComparator> queue = constructQueue<LessComparator>(node, info);
 	while (!queue.empty()) {
 		StmtInfoPtr current_node = queue.top();
 		queue.pop();
 		processQueue(current_node, info);
 	}
-	return next_cache.find(node_ref)->second;
+	return next_cache.find(index)->second;
 }
 
-StmtInfoPtrSet PKB::NextManager::getPrevious(StmtRef node_ref) {
-	if (!control_flow_graph.contains(node_ref)) {
+StmtInfoPtrSet PKB::NextManager::getPrevious(StmtRef index) {
+	if (!control_flow_graph.contains(index)) {
 		return {};
 	}
-	return control_flow_graph.getPreviousNodes(node_ref);
+	return control_flow_graph.getPreviousNodes(index);
 }
 
-StmtInfoPtrSet PKB::NextManager::getPreviousStar(StmtRef node_ref) {
-	if (!control_flow_graph.contains(node_ref)) {
+StmtInfoPtrSet PKB::NextManager::getPreviousStar(StmtRef index) {
+	if (!control_flow_graph.contains(index)) {
 		return {};
 	}
-	if (previous_cache.find(node_ref) != previous_cache.end()) {
-		return previous_cache.find(node_ref)->second;
+	if (previous_cache.find(index) != previous_cache.end()) {
+		return previous_cache.find(index)->second;
 	}
 	TraversalInformation info = {previous_cache, &ControlFlowGraph::getPreviousNodes, &ControlFlowGraph::getLoopExternalPreviousNodes};
-	auto node = control_flow_graph.getStmtInfo(node_ref);
+	auto node = control_flow_graph.getStmtInfo(index);
 	StmtInfoPQ<GreaterComparator> queue = constructQueue<GreaterComparator>(node, info);
 	while (!queue.empty()) {
 		StmtInfoPtr current_node = queue.top();
 		queue.pop();
 		processQueue(current_node, info);
 	}
-	return previous_cache.find(node_ref)->second;
+	return previous_cache.find(index)->second;
 }
 
 void PKB::NextManager::resetCache() {
@@ -89,21 +89,21 @@ void PKB::NextManager::resetCache() {
 	previous_cache.clear();
 }
 
-bool PKB::NextManager::checkNextStarOptimized(StmtRef first_node, StmtRef second_node) {
-	assert(control_flow_graph.getGraphIndex(first_node) == control_flow_graph.getGraphIndex(second_node));
+bool PKB::NextManager::checkNextStarOptimized(StmtRef first, StmtRef second) {
+	assert(control_flow_graph.getGraphIndex(first) == control_flow_graph.getGraphIndex(second));
 
 	// Select search direction based on the estimated distance between the start/end of the graph and the target nodes.
-	auto graph_index = control_flow_graph.getGraphIndex(first_node);
+	auto graph_index = control_flow_graph.getGraphIndex(first);
 	auto start = control_flow_graph.getFirstIndex(graph_index);
 	auto end = control_flow_graph.getLastIndex(graph_index);
-	size_t distance_to_end = end - first_node;
-	size_t distance_to_start = start - second_node;
+	size_t distance_to_end = end - first;
+	size_t distance_to_start = start - second;
 	if (distance_to_end < distance_to_start) {
-		StmtInfoPtrSet next_set = getNextStar(first_node);
-		return any_of(next_set.begin(), next_set.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == second_node; });
+		StmtInfoPtrSet next_set = getNextStar(first);
+		return any_of(next_set.begin(), next_set.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == second; });
 	}
-	StmtInfoPtrSet previous_set = getPreviousStar(second_node);
-	return any_of(previous_set.begin(), previous_set.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == first_node; });
+	StmtInfoPtrSet previous_set = getPreviousStar(second);
+	return any_of(previous_set.begin(), previous_set.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == first; });
 }
 
 template <class Comparator>

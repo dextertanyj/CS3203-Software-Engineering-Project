@@ -31,7 +31,7 @@ public:
 
 	// Use get methods
 	virtual bool checkUses(StmtRef index, const VarRef& name) = 0;
-	virtual bool checkUses(const ProcRef& procedure_name, const VarRef& variable_name) = 0;
+	virtual bool checkUses(const ProcRef& procedure, const VarRef& variable) = 0;
 	virtual StmtInfoPtrSet getStmtUsesByVar(const VarRef& name) = 0;
 	virtual ProcRefSet getProcUsesByVar(const VarRef& name) = 0;
 	virtual VarRefSet getUsesByStmt(StmtRef index) = 0;
@@ -39,7 +39,7 @@ public:
 
 	// Modify get methods
 	virtual bool checkModifies(StmtRef index, const VarRef& name) = 0;
-	virtual bool checkModifies(const ProcRef& procedure_name, const VarRef& variable_name) = 0;
+	virtual bool checkModifies(const ProcRef& procedure, const VarRef& variable) = 0;
 	virtual StmtInfoPtrSet getStmtModifiesByVar(const VarRef& name) = 0;
 	virtual ProcRefSet getProcModifiesByVar(const VarRef& name) = 0;
 	virtual VarRefSet getModifiesByStmt(StmtRef index) = 0;

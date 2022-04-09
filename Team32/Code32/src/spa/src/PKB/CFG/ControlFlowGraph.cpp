@@ -25,9 +25,9 @@ void PKB::ControlFlowGraph::createNode(const StmtInfoPtr& stmt_info) {
 	}
 }
 
-void PKB::ControlFlowGraph::setNext(StmtRef previous, StmtRef next) const {
-	assert(previous != next);
-	auto prev_node = getNode(previous);
+void PKB::ControlFlowGraph::setNext(StmtRef prev, StmtRef next) const {
+	assert(prev != next);
+	auto prev_node = getNode(prev);
 	auto next_node = getNode(next);
 	assert(prev_node != nullptr && next_node != nullptr);
 	prev_node->setConnection(next_node);
@@ -65,8 +65,8 @@ void PKB::ControlFlowGraph::setIfExit(StmtRef then_prev, StmtRef else_prev, Stmt
 
 bool PKB::ControlFlowGraph::contains(StmtRef index) const { return statement_node_map.find(index) != statement_node_map.end(); }
 
-StmtType PKB::ControlFlowGraph::getType(StmtRef ref) const {
-	auto node = getNode(ref);
+StmtType PKB::ControlFlowGraph::getType(StmtRef index) const {
+	auto node = getNode(index);
 	assert(node != nullptr);
 	return node->getStmtInfo()->getType();
 }
