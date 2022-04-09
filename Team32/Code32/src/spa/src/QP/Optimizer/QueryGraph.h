@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_QUERYGRAPH_H
-#define SPA_SRC_QP_QUERYGRAPH_H
+#ifndef SPA_SRC_QP_OPTIMIZER_QUERYGRAPH_H
+#define SPA_SRC_QP_OPTIMIZER_QUERYGRAPH_H
 
 #include <memory>
 #include <queue>
@@ -61,4 +61,4 @@ private:
 	                           unsigned long long& cost);
 };
 
-#endif  // SPA_SRC_QP_QUERYGRAPH_H
+#endif  // SPA_SRC_QP_OPTIMIZER_QUERYGRAPH_H

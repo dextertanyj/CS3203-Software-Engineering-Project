@@ -1,5 +1,5 @@
-#ifndef SPA_STATEMENTEXECUTOR_TPP
-#define SPA_STATEMENTEXECUTOR_TPP
+#ifndef SPA_SRC_QP_EXECUTOR_STATEMENTEXECUTOR_TPP
+#define SPA_SRC_QP_EXECUTOR_STATEMENTEXECUTOR_TPP
 
 #include "QP/Executor/StatementExecutor.h"
 
@@ -570,4 +570,4 @@ ExecutorSet executorFactorySynonymSynonymOptimized(const vector<ClauseArgument>&
 
 }
 
-#endif  // SPA_STATEMENTEXECUTOR_TPP
+#endif  // SPA_SRC_QP_EXECUTOR_STATEMENTEXECUTOR_TPP

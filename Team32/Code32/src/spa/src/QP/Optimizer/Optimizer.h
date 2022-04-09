@@ -1,5 +1,5 @@
-#ifndef SPA_OPTIMIZER_H
-#define SPA_OPTIMIZER_H
+#ifndef SPA_SRC_QP_OPTIMIZER_OPTIMIZER_H
+#define SPA_SRC_QP_OPTIMIZER_OPTIMIZER_H
 
 #include "QP/QP.h"
 
@@ -8,4 +8,4 @@ class ClauseGroups;
 class QueryGraph;
 }
 
-#endif  // SPA_OPTIMIZER_H
+#endif  // SPA_SRC_QP_OPTIMIZER_OPTIMIZER_H

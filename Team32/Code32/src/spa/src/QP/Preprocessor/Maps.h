@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_DISPATCHER_DISPATCHMAP_H
-#define SPA_SRC_QP_DISPATCHER_DISPATCHMAP_H
+#ifndef SPA_SRC_QP_PREPROCESSOR_MAPS_H
+#define SPA_SRC_QP_PREPROCESSOR_MAPS_H
 
 #include <string>
 #include <unordered_map>
@@ -20,4 +20,4 @@ extern const std::unordered_map<std::string, AttributeToken> attribute_token_map
 extern const std::unordered_map<std::pair<DesignEntity, AttributeToken>, AttributeType> attribute_map;
 };
 
-#endif  // SPA_SRC_QP_DISPATCHER_DISPATCHMAP_H
+#endif  // SPA_SRC_QP_PREPROCESSOR_MAPS_H

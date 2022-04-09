@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_QUERYFORMATTER_H
-#define SPA_SRC_QP_QUERYFORMATTER_H
+#ifndef SPA_SRC_QP_QUERYPOSTPROCESSOR_H
+#define SPA_SRC_QP_QUERYPOSTPROCESSOR_H
 
 #include <string>
 #include <vector>
@@ -21,4 +21,4 @@ private:
 	[[nodiscard]] static std::vector<std::string> processBooleanResult(const QueryResult& query_result);
 };
 
-#endif  // SPA_SRC_QP_QUERYFORMATTER_H
+#endif  // SPA_SRC_QP_QUERYPOSTPROCESSOR_H

@@ -1,5 +1,5 @@
-#ifndef SPA_HASH_H
-#define SPA_HASH_H
+#ifndef SPA_SRC_PKB_HASH_H
+#define SPA_SRC_PKB_HASH_H
 
 #include "Common/Hash.h"
 #include "PKB/PKB.h"
@@ -17,4 +17,4 @@ struct hash<PKB::AssignRelation> {
 };
 }
 
-#endif  // SPA_HASH_H
+#endif  // SPA_SRC_PKB_HASH_H

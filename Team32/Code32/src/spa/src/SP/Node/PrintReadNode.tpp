@@ -1,3 +1,6 @@
+#ifndef SPA_SRC_SP_NODE_PRINTREADNODE_TPP
+#define SPA_SRC_SP_NODE_PRINTREADNODE_TPP
+
 #include "SP/Node/PrintReadNode.h"
 
 #include <utility>
@@ -47,3 +50,5 @@ unique_ptr<SP::Node::PrintReadNode<T>> SP::Node::PrintReadNode<T>::parse(Lexer& 
 	lex.nextIf(SEMICOLON);
 	return make_unique<PrintReadNode<T>>(statement_count++, move(variable));
 }
+
+#endif  // SPA_SRC_SP_NODE_PRINTREADNODE_TPP

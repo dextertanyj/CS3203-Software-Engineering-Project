@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_PKB_CALLRELATION_H
-#define SPA_SRC_PKB_CALLRELATION_H
+#ifndef SPA_SRC_PKB_CALLSRELATION_H
+#define SPA_SRC_PKB_CALLSRELATION_H
 
 #include <memory>
 #include <unordered_set>
@@ -36,4 +36,4 @@ std::unordered_set<std::shared_ptr<PKB::ProcedureInfo>>
 PKB::TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>::populateTransitive(
 	CallsRelation& current, std::unordered_set<std::shared_ptr<ProcedureInfo>> previous);
 
-#endif  // SPA_SRC_PKB_CALLRELATION_H
+#endif  // SPA_SRC_PKB_CALLSRELATION_H

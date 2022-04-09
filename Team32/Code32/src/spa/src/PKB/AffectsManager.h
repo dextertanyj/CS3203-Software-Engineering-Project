@@ -1,5 +1,5 @@
-#ifndef SPA_AFFECTSMANAGER_H
-#define SPA_AFFECTSMANAGER_H
+#ifndef SPA_SRC_PKB_AFFECTSMANAGER_H
+#define SPA_SRC_PKB_AFFECTSMANAGER_H
 
 #include <memory>
 #include <stack>
@@ -68,4 +68,4 @@ private:
 	void connectRelevantComponents(StmtRef index);
 };
 
-#endif  // SPA_AFFECTSMANAGER_H
+#endif  // SPA_SRC_PKB_AFFECTSMANAGER_H

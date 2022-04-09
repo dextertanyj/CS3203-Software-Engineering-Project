@@ -1,5 +1,5 @@
-#ifndef SPA_NEXTMANAGER_H
-#define SPA_NEXTMANAGER_H
+#ifndef SPA_SRC_PKB_NEXTMANAGER_H
+#define SPA_SRC_PKB_NEXTMANAGER_H
 
 #include <queue>
 #include <unordered_map>
@@ -62,4 +62,4 @@ private:
 	std::unordered_map<StmtRef, StmtInfoPtrSet> previous_cache;
 };
 
-#endif  // SPA_NEXTMANAGER_H
+#endif  // SPA_SRC_PKB_NEXTMANAGER_H

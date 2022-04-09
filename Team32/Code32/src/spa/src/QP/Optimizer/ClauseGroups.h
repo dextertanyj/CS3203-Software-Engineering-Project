@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_CLAUSEGROUPS_H
-#define SPA_SRC_QP_CLAUSEGROUPS_H
+#ifndef SPA_SRC_QP_OPTIMIZER_CLAUSEGROUPS_H
+#define SPA_SRC_QP_OPTIMIZER_CLAUSEGROUPS_H
 
 #include <string>
 #include <utility>
@@ -36,4 +36,4 @@ private:
 	std::vector<GroupInformation> groups;
 };
 
-#endif  // SPA_SRC_QP_CONNECTEDSYNONYMS_H
+#endif  // SPA_SRC_QP_OPTIMIZER_CLAUSEGROUPS_H
