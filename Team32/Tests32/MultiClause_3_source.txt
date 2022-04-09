@@ -1,0 +1,78 @@
+procedure while {
+	if=then-8000;
+	read call;
+	call read;
+	variable= print * (call + read);
+	procedure=2000+5000;
+}
+
+procedure read {
+	call procedure;
+	else=6000-while;
+	then=call;
+	if (if==call) then {
+		read else;
+		procedure = if/4000;
+		print assign;
+	}else{
+		if (!(1000==call)) then {
+			call call;
+			call = then + 1;
+			read else;
+		}else{
+			print procedure;
+			read while;
+		}
+		procedure=7000;
+		else=3000;
+	}
+	print constant;
+}
+
+procedure call{
+	then=9000-7000;
+	print while;
+	print then;
+	read constant;
+	constant=3000+constant;
+}
+
+procedure procedure{
+	read then;
+	if (!(1>else)) then {
+		if ((if>=then)&&(then>if)) then {
+			read assign;
+		}else{
+			assign=3000+variable;
+		}
+		print print;
+		}else{
+			read read;
+	}
+	if(read != read) then {
+		if(else>else) then {
+			while (while == while) {
+				then=2000-8000;
+			}
+			print=8000;
+			print procedure;
+		}else{
+			print=print+8000;
+		}
+		constant=constant+4000;
+		print= (1 + 2) * (constant - 1000);
+	}else{
+		if(!(while>=then))then{
+			while((1000<=2000)||(2000>3000)){
+				if(then == constant) then {
+					assign=7000-read;
+				}else{
+					if=4000+variable;
+				}
+			}
+			else = 1000;
+		}else{
+			else = 0;
+		}
+	}
+}
