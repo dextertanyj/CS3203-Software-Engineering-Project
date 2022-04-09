@@ -62,7 +62,7 @@ TEST_CASE("PKB::CFG::ControlFlowGraph::setIfExit Test") {
 }
 
 TEST_CASE("PKB""ControlFlowGrpah::getNextNodes Test") {
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	shared_ptr<StmtInfo> if_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::If);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(2, StmtType::Print);
 	shared_ptr<StmtInfo> if_stmt_2 = TestUtilities::createStmtInfo(3, StmtType::If);
@@ -90,7 +90,7 @@ TEST_CASE("PKB""ControlFlowGrpah::getNextNodes Test") {
 }
 
 TEST_CASE("PKB""ControlFlowGrpah::getPreviousNodes Test") {
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	shared_ptr<StmtInfo> if_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::If);
 	shared_ptr<StmtInfo> print_stmt = TestUtilities::createStmtInfo(2, StmtType::Print);
 	shared_ptr<StmtInfo> if_stmt_2 = TestUtilities::createStmtInfo(3, StmtType::If);
@@ -135,7 +135,7 @@ TEST_CASE("PKB""ControlFlowGrpah::getLoopNode Test") {
 	 * }
 	 * ...
 	 */
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	shared_ptr<StmtInfo> if_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::If);
 	shared_ptr<StmtInfo> read_stmt_1 = TestUtilities::createStmtInfo(2, StmtType::Read);
 	shared_ptr<StmtInfo> if_stmt_2 = TestUtilities::createStmtInfo(3, StmtType::If);
