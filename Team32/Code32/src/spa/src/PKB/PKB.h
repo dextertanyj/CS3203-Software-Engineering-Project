@@ -75,6 +75,10 @@ struct AssignRelation {
 	friend std::hash<AssignRelation>;
 };
 
+struct DuplicateEntityException : public std::runtime_error {
+	using runtime_error::runtime_error;
+};
+
 struct CallGraphException : public std::runtime_error {
 	using runtime_error::runtime_error;
 };

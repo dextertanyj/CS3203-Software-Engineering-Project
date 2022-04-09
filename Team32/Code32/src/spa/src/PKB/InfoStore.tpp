@@ -3,14 +3,17 @@
 
 #include "PKB/InfoStore.h"
 
-#include <cassert>
+#include "PKB/PKB.h"
 
 template <typename TIdent, typename TContent, class TInfo>
 PKB::InfoStore<TIdent, TContent, TInfo>::InfoStore() = default;
 
 template <typename TIdent, typename TContent, class TInfo>
 void PKB::InfoStore<TIdent, TContent, TInfo>::insert(const TIdent& identifier, TContent content) {
-	assert(store.find(identifier) == store.end());
+	// Not an assertion since procedures have possibly duplicate names.
+	if (store.find(identifier) != store.end()) {
+		throw DuplicateEntityException("Duplicate entity detected.");
+	}
 	std::shared_ptr<TInfo> info = std::shared_ptr<TInfo>(new TInfo(identifier, std::move(content)));
 	store.emplace(identifier, std::move(info));
 }

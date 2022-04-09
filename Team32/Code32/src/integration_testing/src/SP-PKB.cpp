@@ -15,6 +15,15 @@
 
 using namespace std;
 
+TEST_CASE("Duplicate Procedure Test") {
+	PKB::Storage pkb;
+	SP::Parser parser;
+	SP::DesignExtractor extractor = SP::DesignExtractor(pkb);
+	string source = "procedure main { print x; } procedure main { read y; }";
+	auto ast = parser.parse(source);
+	REQUIRE_THROWS_AS(extractor.extract(ast), SP::ExtractionException);
+}
+
 TEST_CASE("SP::Processor::process Basic Test") {
 	PKB::Storage pkb;
 	SP::Processor source_processor = SP::Processor(pkb);

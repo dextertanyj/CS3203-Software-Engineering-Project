@@ -3,6 +3,7 @@
 #include <utility>
 
 #include "Common/Validator.h"
+#include "PKB/PKB.h"
 #include "SP/SP.h"
 
 #define PROCEDURE "procedure"
@@ -14,7 +15,11 @@ SP::Node::ProcedureNode::ProcedureNode(ProcRef name, unique_ptr<StatementListNod
 
 void SP::Node::ProcedureNode::extract(PKB::StorageUpdateInterface& pkb) const {
 	statements->extract(pkb);
-	pkb.setProc(name, start, end);
+	try {
+		pkb.setProc(name, start, end);
+	} catch (const PKB::DuplicateEntityException& e) {
+		throw ExtractionException(e.what());
+	}
 }
 
 bool SP::Node::ProcedureNode::equals(const shared_ptr<ProcedureNode>& object) const {
