@@ -5,8 +5,8 @@
 
 using namespace std;
 
-PKB::AffectsManager::AffectsManager(ControlFlowGraph& control_flow_graph, SVRelationStore<PKB::ModifiesSRelation>& modifies_store,
-                                    SVRelationStore<PKB::UsesSRelation>& uses_store)
+PKB::AffectsManager::AffectsManager(ControlFlowGraph& control_flow_graph, SVRelationStore<ModifiesSRelation>& modifies_store,
+                                    SVRelationStore<UsesSRelation>& uses_store)
 	: control_flow_graph(control_flow_graph), uses_store(uses_store), modifies_store(modifies_store) {}
 
 bool PKB::AffectsManager::checkAffects(StmtRef first, StmtRef second) {
@@ -14,6 +14,14 @@ bool PKB::AffectsManager::checkAffects(StmtRef first, StmtRef second) {
 		return false;
 	}
 	StmtInfoPtrSet affected_nodes = getAffects(first);
+	return any_of(affected_nodes.begin(), affected_nodes.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == second; });
+}
+
+bool PKB::AffectsManager::checkAffectsStar(StmtRef first, StmtRef second) {
+	if (!control_flow_graph.contains(first) || !control_flow_graph.contains(second)) {
+		return false;
+	}
+	StmtInfoPtrSet affected_nodes = getAffectsStar(first);
 	return any_of(affected_nodes.begin(), affected_nodes.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == second; });
 }
 
@@ -43,6 +51,38 @@ StmtInfoPtrSet PKB::AffectsManager::getAffects(StmtRef first) {
 	return info.nodes;
 }
 
+StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
+	if (!control_flow_graph.contains(node_ref)) {
+		return {};
+	}
+
+	if (affects_star_cache.find(node_ref) != affects_star_cache.end()) {
+		return affects_star_cache.at(node_ref);
+	}
+	if (cache_graph_store.find(node_ref) == cache_graph_store.end()) {
+		auto graph_index = control_flow_graph.getGraphIndex(node_ref);
+		buildCacheGraph(graph_index);
+	}
+	if (control_flow_graph.getType(node_ref) != StmtType::Assign) {
+		return {};
+	}
+	assert(cache_graph_store.find(node_ref) != cache_graph_store.end());
+	auto node = cache_graph_store.at(node_ref);
+	StmtInfoPtrSet result_set;
+	if (node->strongly_connected) {
+		result_set.insert(node->statements.begin(), node->statements.end());
+	}
+	for (const auto& graph_nodes : node->affects) {
+		for (const auto& statements : graph_nodes->statements) {
+			result_set.emplace(statements);
+			auto result = getAffectsStar(statements->getIdentifier());
+			result_set.insert(result.begin(), result.end());
+		}
+	}
+	affects_star_cache.emplace(node_ref, result_set);
+	return result_set;
+}
+
 StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
 	if (!control_flow_graph.contains(second)) {
 		return {};
@@ -65,6 +105,46 @@ StmtInfoPtrSet PKB::AffectsManager::getAffected(StmtRef second) {
 
 	affected_cache.emplace(second, affected_set);
 	return affected_set;
+}
+
+StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
+	if (!control_flow_graph.contains(node_ref)) {
+		return {};
+	}
+
+	if (affected_star_cache.find(node_ref) != affected_star_cache.end()) {
+		return affected_star_cache.at(node_ref);
+	}
+	if (cache_graph_store.find(node_ref) == cache_graph_store.end()) {
+		auto graph_index = control_flow_graph.getGraphIndex(node_ref);
+		buildCacheGraph(graph_index);
+	}
+	if (control_flow_graph.getType(node_ref) != StmtType::Assign) {
+		return {};
+	}
+	assert(cache_graph_store.find(node_ref) != cache_graph_store.end());
+	auto node = cache_graph_store.at(node_ref);
+	StmtInfoPtrSet result_set;
+	if (node->strongly_connected) {
+		result_set.insert(node->statements.begin(), node->statements.end());
+	}
+	for (const auto& graph_nodes : node->affected) {
+		for (const auto& statements : graph_nodes->statements) {
+			result_set.emplace(statements);
+			auto result = getAffectedStar(statements->getIdentifier());
+			result_set.insert(result.begin(), result.end());
+		}
+	}
+	affected_star_cache.emplace(node_ref, result_set);
+	return result_set;
+}
+
+void PKB::AffectsManager::resetCache() {
+	cache_graph_store.clear();
+	affects_cache.clear();
+	affected_cache.clear();
+	affects_star_cache.clear();
+	affected_star_cache.clear();
 }
 
 StmtInfoPtrSet PKB::AffectsManager::getAffectedLoop(StmtRef node, VarRef variable) const {
@@ -120,86 +200,6 @@ void PKB::AffectsManager::processNodeAffected(DFSInfo& info, const StmtInfoPtr& 
 			info.node_stack.push(neighbour);
 		}
 	}
-}
-
-bool PKB::AffectsManager::checkAffectsStar(StmtRef first, StmtRef second) {
-	if (!control_flow_graph.contains(first) || !control_flow_graph.contains(second)) {
-		return false;
-	}
-	StmtInfoPtrSet affected_nodes = getAffectsStar(first);
-	return any_of(affected_nodes.begin(), affected_nodes.end(), [&](const StmtInfoPtr& info) { return info->getIdentifier() == second; });
-}
-
-StmtInfoPtrSet PKB::AffectsManager::getAffectsStar(StmtRef node_ref) {
-	if (!control_flow_graph.contains(node_ref)) {
-		return {};
-	}
-
-	if (affects_star_cache.find(node_ref) != affects_star_cache.end()) {
-		return affects_star_cache.at(node_ref);
-	}
-	if (cache_graph_store.find(node_ref) == cache_graph_store.end()) {
-		auto graph_index = control_flow_graph.getGraphIndex(node_ref);
-		buildCacheGraph(graph_index);
-	}
-	if (control_flow_graph.getType(node_ref) != StmtType::Assign) {
-		return {};
-	}
-	assert(cache_graph_store.find(node_ref) != cache_graph_store.end());
-	auto node = cache_graph_store.at(node_ref);
-	StmtInfoPtrSet result_set;
-	if (node->strongly_connected) {
-		result_set.insert(node->statements.begin(), node->statements.end());
-	}
-	for (const auto& graph_nodes : node->affects) {
-		for (const auto& statements : graph_nodes->statements) {
-			result_set.emplace(statements);
-			auto result = getAffectsStar(statements->getIdentifier());
-			result_set.insert(result.begin(), result.end());
-		}
-	}
-	affects_star_cache.emplace(node_ref, result_set);
-	return result_set;
-}
-
-StmtInfoPtrSet PKB::AffectsManager::getAffectedStar(StmtRef node_ref) {
-	if (!control_flow_graph.contains(node_ref)) {
-		return {};
-	}
-
-	if (affected_star_cache.find(node_ref) != affected_star_cache.end()) {
-		return affected_star_cache.at(node_ref);
-	}
-	if (cache_graph_store.find(node_ref) == cache_graph_store.end()) {
-		auto graph_index = control_flow_graph.getGraphIndex(node_ref);
-		buildCacheGraph(graph_index);
-	}
-	if (control_flow_graph.getType(node_ref) != StmtType::Assign) {
-		return {};
-	}
-	assert(cache_graph_store.find(node_ref) != cache_graph_store.end());
-	auto node = cache_graph_store.at(node_ref);
-	StmtInfoPtrSet result_set;
-	if (node->strongly_connected) {
-		result_set.insert(node->statements.begin(), node->statements.end());
-	}
-	for (const auto& graph_nodes : node->affected) {
-		for (const auto& statements : graph_nodes->statements) {
-			result_set.emplace(statements);
-			auto result = getAffectedStar(statements->getIdentifier());
-			result_set.insert(result.begin(), result.end());
-		}
-	}
-	affected_star_cache.emplace(node_ref, result_set);
-	return result_set;
-}
-
-void PKB::AffectsManager::resetCache() {
-	cache_graph_store.clear();
-	affects_cache.clear();
-	affects_star_cache.clear();
-	affected_cache.clear();
-	affected_star_cache.clear();
 }
 
 void PKB::AffectsManager::buildCacheGraph(size_t graph_index) {

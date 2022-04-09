@@ -81,7 +81,7 @@ void PKB::ModifiesSRelation::optimizeConditional(const StmtInfoPtr& statement, T
 }
 
 void PKB::ModifiesSRelation::storeModifiedVars(const StmtInfoPtr& stmt_key, const StmtInfoPtrSet& stmt_list,
-                                               PKB::SVRelationStore<PKB::ModifiesSRelation>& store) {
+                                               SVRelationStore<ModifiesSRelation>& store) {
 	VarRefSet variables;
 	for (const auto& stmt : stmt_list) {
 		auto iter = store.statement_key_map.find(stmt->getIdentifier());

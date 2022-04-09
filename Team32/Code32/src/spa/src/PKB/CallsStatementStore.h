@@ -17,13 +17,13 @@ public:
 	void set(const StmtInfoPtr& statement, ProcRef procedure);
 	[[nodiscard]] ProcRef getProcedure(const StmtInfoPtr& statement) const;
 	[[nodiscard]] ProcRef getProcedure(StmtRef index) const;
-	void populateCallStore(const Types::ProcedureStore& procedures,
-	                       TransitiveRelationStore<ProcRef, ProcedureInfo, CallsRelation>& call_store) const;
+	void populateCallStore(const Types::ProcedureStore& procedures, Types::CallStore& call_store) const;
 
 private:
 	std::unordered_map<StmtRef, ProcRef> map;
-	void populate(const StmtInfoPtr& stmt, const PKB::Types::ProcedureStore& procedures, const std::shared_ptr<ProcedureInfo>& procedure,
-	              TransitiveRelationStore<ProcRef, PKB::ProcedureInfo, PKB::CallsRelation>& store) const;
+
+	void populate(const StmtInfoPtr& stmt, const Types::ProcedureStore& procedures, const std::shared_ptr<ProcedureInfo>& procedure,
+	              Types::CallStore& store) const;
 };
 
 #endif  // SPA_SRC_PKB_CALLSSTATEMENTSTORE_H

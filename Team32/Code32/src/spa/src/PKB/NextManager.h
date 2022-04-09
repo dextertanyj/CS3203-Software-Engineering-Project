@@ -23,7 +23,6 @@ public:
 	void resetCache();
 
 private:
-	// Type definitions
 	struct TraversalInformation {
 		std::unordered_map<StmtRef, StmtInfoPtrSet>& cache;
 		StmtInfoPtrSet (ControlFlowGraph::*gatherer)(StmtRef) const;
@@ -41,8 +40,11 @@ private:
 		TraversalInformation& traversal_information;
 	};
 
-	bool checkNextStarOptimized(StmtRef first_node, StmtRef second_node);
+	ControlFlowGraph& control_flow_graph;
+	std::unordered_map<StmtRef, StmtInfoPtrSet> next_cache;
+	std::unordered_map<StmtRef, StmtInfoPtrSet> previous_cache;
 
+	bool checkNextStarOptimized(StmtRef first_node, StmtRef second_node);
 	template <class Comparator>
 	StmtInfoPQ<Comparator> constructQueue(const StmtInfoPtr& origin, TraversalInformation& info);
 	template <class Comparator>
@@ -55,11 +57,6 @@ private:
 	void processLoopNode(const StmtInfoPtr& node, TraversalInformation& info);
 	StmtInfoPtrSet traverseLoop(const StmtInfoPtr& node);
 	void handleTraverseLoopNode(std::queue<StmtInfoPtr>& queue, StmtInfoPtrSet& set, const StmtInfoPtr& node);
-
-	// Members
-	ControlFlowGraph& control_flow_graph;
-	std::unordered_map<StmtRef, StmtInfoPtrSet> next_cache;
-	std::unordered_map<StmtRef, StmtInfoPtrSet> previous_cache;
 };
 
 #endif  // SPA_NEXTMANAGER_H

@@ -13,9 +13,9 @@ class PKB::TransitiveRelationStore {
 public:
 	TransitiveRelationStore();
 	void set(std::shared_ptr<TInfo> front, std::shared_ptr<TInfo> back);
+
 	[[nodiscard]] bool isRelated(TIdent front, TIdent back) const;
 	[[nodiscard]] bool isTransitivelyRelated(TIdent front, TIdent back) const;
-
 	[[nodiscard]] std::unordered_set<std::shared_ptr<TInfo>> getForward(TIdent ident) const;
 	[[nodiscard]] std::unordered_set<std::shared_ptr<TInfo>> getReverse(TIdent ident) const;
 	[[nodiscard]] std::unordered_set<std::shared_ptr<TInfo>> getForwardTransitive(TIdent ident) const;

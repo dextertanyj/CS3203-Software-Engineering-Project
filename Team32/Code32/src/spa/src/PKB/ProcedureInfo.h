@@ -12,11 +12,12 @@ public:
 	[[nodiscard]] std::vector<StmtInfoPtr> getStatements() const;
 
 private:
-	ProcedureInfo(ProcRef name, std::vector<StmtInfoPtr> statements);
 	ProcRef name;
 	std::vector<StmtInfoPtr> statements;
 
-	friend class PKB::InfoStore<ProcRef, std::vector<StmtInfoPtr>, ProcedureInfo>;
+	ProcedureInfo(ProcRef name, std::vector<StmtInfoPtr> statements);
+
+	friend class InfoStore<ProcRef, std::vector<StmtInfoPtr>, ProcedureInfo>;
 };
 
 #endif  // SPA_SRC_PKB_PROCEDUREINFO_H

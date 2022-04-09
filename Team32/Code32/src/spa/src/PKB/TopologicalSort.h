@@ -23,8 +23,9 @@ private:
 	using TInfoPtr = std::shared_ptr<TInfo>;
 	using edge_set = std::pair<std::unordered_set<TInfoPtr>, std::unordered_set<TInfoPtr>>;
 
-	void executeKahn(std::queue<TInfoPtr>& next, std::unordered_map<TInfoPtr, edge_set>& edges);
 	std::vector<TInfoPtr> order;
+
+	void executeKahn(std::queue<TInfoPtr>& next, std::unordered_map<TInfoPtr, edge_set>& edges);
 };
 
 #endif  // SPA_SRC_PKB_TOPOLOGICALSORT_H
