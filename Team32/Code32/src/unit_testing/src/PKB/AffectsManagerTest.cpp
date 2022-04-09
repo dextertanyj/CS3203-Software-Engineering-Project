@@ -7,7 +7,7 @@
 #include "catch.hpp"
 
 TEST_CASE("PKB::AffectsManager::getAffects Test") {
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	PKB::SVRelationStore<PKB::ModifiesSRelation> modifies_store;
 	PKB::SVRelationStore<PKB::UsesSRelation> uses_store;
@@ -213,7 +213,7 @@ TEST_CASE("PKB::AffectsManager::getAffects Test") {
 }
 
 TEST_CASE("PKB::AffectsManager::getAffected Test") {
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	PKB::SVRelationStore<PKB::ModifiesSRelation> modifies_store;
 	PKB::SVRelationStore<PKB::UsesSRelation> uses_store;
@@ -438,7 +438,7 @@ TEST_CASE("PKB::AffectsManager::getAffected Test") {
 }
 
 TEST_CASE("PKB::AffectsManager::checkAffects Test") {
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	PKB::SVRelationStore<PKB::ModifiesSRelation> modifies_store;
 	PKB::SVRelationStore<PKB::UsesSRelation> uses_store;
@@ -536,7 +536,7 @@ TEST_CASE("PKB::AffectsManager::checkAffects Test") {
 }
 
 TEST_CASE("PKB::AffectsManager::checkAffectsStar Test") {
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	PKB::SVRelationStore<PKB::ModifiesSRelation> modifies_store;
 	PKB::SVRelationStore<PKB::UsesSRelation> uses_store;
@@ -626,7 +626,7 @@ TEST_CASE("PKB::AffectsManager::checkAffectsStar Test") {
 }
 
 TEST_CASE("PKB::AffectsManager::checkAffectsStar While Nested Test") {
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	PKB::SVRelationStore<PKB::ModifiesSRelation> modifies_store;
 	PKB::SVRelationStore<PKB::UsesSRelation> uses_store;
@@ -690,7 +690,7 @@ TEST_CASE("PKB::AffectsManager::checkAffectsStar While Nested Test") {
 }
 
 TEST_CASE("PKB::AffectsManager::getAffectsStar Test") {
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	PKB::SVRelationStore<PKB::ModifiesSRelation> modifies_store;
 	PKB::SVRelationStore<PKB::UsesSRelation> uses_store;
@@ -784,7 +784,7 @@ TEST_CASE("PKB::AffectsManager::getAffectsStar Test") {
 }
 
 TEST_CASE("PKB::AffectsManager::getAffectsStar Nested While Test") {
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	PKB::SVRelationStore<PKB::ModifiesSRelation> modifies_store;
 	PKB::SVRelationStore<PKB::UsesSRelation> uses_store;
@@ -853,7 +853,7 @@ TEST_CASE("PKB::AffectsManager::getAffectsStar Nested While Test") {
 }
 
 TEST_CASE("PKB::AffectsManager::getAffectedStar Test") {
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	PKB::SVRelationStore<PKB::ModifiesSRelation> modifies_store;
 	PKB::SVRelationStore<PKB::UsesSRelation> uses_store;

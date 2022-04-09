@@ -11,9 +11,9 @@ QP::ClauseArgument::ClauseArgument(Declaration synonym) : value(synonym) {}
 
 QP::ClauseArgument::ClauseArgument(Attribute attribute) : value(attribute) {}
 
-QP::ClauseArgument::ClauseArgument(Types::Name name) : value(name) {}
+QP::ClauseArgument::ClauseArgument(Name name) : value(name) {}
 
-QP::ClauseArgument::ClauseArgument(Types::Number number) : value(number) {}
+QP::ClauseArgument::ClauseArgument(Number number) : value(number) {}
 
 QP::ClauseArgument::ClauseArgument(Common::EP::Expression expression, bool exact)
 	: value(pair<Common::EP::Expression, bool>({move(expression), exact})) {}
@@ -79,17 +79,17 @@ AttributeType QP::ClauseArgument::getAttributeType() const {
 }
 
 QP::Types::Name QP::ClauseArgument::getName() const {
-	Types::Name name;
+	Name name;
 	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
-	              [&](Types::Name arg) { name = move(arg); }},
+	              [&](Name arg) { name = move(arg); }},
 	      value);
 	return name;
 }
 
 QP::Types::Number QP::ClauseArgument::getNumber() const {
-	Types::Number index = 0;
+	Number index = 0;
 	visit(Visitor{[](auto) { assert(false); },  // NOLINT(bugprone-lambda-function-name)
-	              [&](Types::Number arg) { index = arg; }},
+	              [&](Number arg) { index = arg; }},
 	      value);
 	return index;
 }

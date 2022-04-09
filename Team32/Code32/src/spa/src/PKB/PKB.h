@@ -43,12 +43,6 @@ class ModifiesPRelation;
 class ParentRelation;
 class UsesSRelation;
 class UsesPRelation;
-class NodeInterface;
-class StatementNode;  // NOLINT(bugprone-forward-declaration-namespace)
-class IfNode;         // NOLINT(bugprone-forward-declaration-namespace)
-class WhileNode;      // NOLINT(bugprone-forward-declaration-namespace)
-class DummyNode;
-class ControlFlowGraph;
 class NextManager;
 class AffectsManager;
 
@@ -89,7 +83,8 @@ struct TopologicalSortException : public std::runtime_error {
 	using std::runtime_error::runtime_error;
 };
 
-namespace Types {};
+namespace CFG {}
+namespace Types {}
 }
 
 #endif  // SPA_SRC_PKB_PKB_H

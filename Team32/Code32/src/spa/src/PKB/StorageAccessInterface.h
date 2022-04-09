@@ -31,7 +31,7 @@ public:
 
 	// Use get methods
 	virtual bool checkUses(StmtRef index, const VarRef& name) = 0;
-	virtual bool checkUses(const ProcRef& procedure_name, const VarRef& variable_name) = 0;
+	virtual bool checkUses(const ProcRef& procedure, const VarRef& variable) = 0;
 	virtual StmtInfoPtrSet getStmtUsesByVar(const VarRef& name) = 0;
 	virtual ProcRefSet getProcUsesByVar(const VarRef& name) = 0;
 	virtual VarRefSet getUsesByStmt(StmtRef index) = 0;
@@ -39,7 +39,7 @@ public:
 
 	// Modify get methods
 	virtual bool checkModifies(StmtRef index, const VarRef& name) = 0;
-	virtual bool checkModifies(const ProcRef& procedure_name, const VarRef& variable_name) = 0;
+	virtual bool checkModifies(const ProcRef& procedure, const VarRef& variable) = 0;
 	virtual StmtInfoPtrSet getStmtModifiesByVar(const VarRef& name) = 0;
 	virtual ProcRefSet getProcModifiesByVar(const VarRef& name) = 0;
 	virtual VarRefSet getModifiesByStmt(StmtRef index) = 0;
@@ -62,18 +62,18 @@ public:
 	// CFG Next Methods
 	virtual bool checkNext(StmtRef first, StmtRef second) = 0;
 	virtual bool checkNextStar(StmtRef first, StmtRef second) = 0;
-	virtual StmtInfoPtrSet getNext(StmtRef first) = 0;
-	virtual StmtInfoPtrSet getNextStar(StmtRef node_ref) = 0;
-	virtual StmtInfoPtrSet getPrevious(StmtRef second) = 0;
-	virtual StmtInfoPtrSet getPreviousStar(StmtRef node_ref) = 0;
+	virtual StmtInfoPtrSet getNext(StmtRef index) = 0;
+	virtual StmtInfoPtrSet getNextStar(StmtRef index) = 0;
+	virtual StmtInfoPtrSet getPrevious(StmtRef index) = 0;
+	virtual StmtInfoPtrSet getPreviousStar(StmtRef index) = 0;
 
 	// CFG Affects Methods
 	virtual bool checkAffects(StmtRef first, StmtRef second) = 0;
 	virtual bool checkAffectsStar(StmtRef first, StmtRef second) = 0;
-	virtual StmtInfoPtrSet getAffects(StmtRef first) = 0;
-	virtual StmtInfoPtrSet getAffectsStar(StmtRef first) = 0;
-	virtual StmtInfoPtrSet getAffected(StmtRef second) = 0;
-	virtual StmtInfoPtrSet getAffectedStar(StmtRef second) = 0;
+	virtual StmtInfoPtrSet getAffects(StmtRef index) = 0;
+	virtual StmtInfoPtrSet getAffectsStar(StmtRef index) = 0;
+	virtual StmtInfoPtrSet getAffected(StmtRef index) = 0;
+	virtual StmtInfoPtrSet getAffectedStar(StmtRef index) = 0;
 
 	// Control Variable get methods
 	virtual bool checkIfControl(StmtRef index, VarRef name) = 0;

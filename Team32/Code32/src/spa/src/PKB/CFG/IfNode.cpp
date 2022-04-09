@@ -6,27 +6,27 @@
 
 using namespace std;
 
-PKB::IfNode::IfNode(const StmtInfoPtr& info)
-	: PKB::StatementNode(Types::NodeType::If, info), dummy_node(make_shared<PKB::DummyNode>(info->getIdentifier())) {
+PKB::CFG::IfNode::IfNode(const StmtInfoPtr& info)
+	: StatementNode(Types::NodeType::If, info), dummy_node(make_shared<DummyNode>(info->getIdentifier())) {
 	assert(info->getType() == StmtType::If);
 }
 
-void PKB::IfNode::setConnection(shared_ptr<PKB::NodeInterface> next) {
+void PKB::CFG::IfNode::setConnection(shared_ptr<NodeInterface> next) {
 	dummy_node->setNext(next);
 	next->setPrevious(dummy_node);
 }
 
-void PKB::IfNode::setNext(const shared_ptr<PKB::NodeInterface>& next) {
+void PKB::CFG::IfNode::setNext(const shared_ptr<NodeInterface>& next) {
 	assert(getNextNodes().size() < 2);
 	insertNext(next);
 }
 
-void PKB::IfNode::setPrevious(const shared_ptr<PKB::NodeInterface>& previous) {
+void PKB::CFG::IfNode::setPrevious(const shared_ptr<NodeInterface>& prev) {
 	assert(getPreviousNodes().empty());
-	insertPrevious(previous);
+	insertPrevious(prev);
 }
 
-void PKB::IfNode::insertIfNext(const shared_ptr<PKB::StatementNode>& first, const shared_ptr<PKB::StatementNode>& second) {
+void PKB::CFG::IfNode::insertIfNext(const shared_ptr<StatementNode>& first, const shared_ptr<StatementNode>& second) {
 	assert(getNextNodes().empty());
 	setNext(first);
 	setNext(second);
@@ -34,7 +34,7 @@ void PKB::IfNode::insertIfNext(const shared_ptr<PKB::StatementNode>& first, cons
 	second->setPrevious(shared_from_this());
 }
 
-void PKB::IfNode::insertIfExit(const shared_ptr<PKB::StatementNode>& first, const shared_ptr<PKB::StatementNode>& second) {
+void PKB::CFG::IfNode::insertIfExit(const shared_ptr<StatementNode>& first, const shared_ptr<StatementNode>& second) {
 	first->setConnection(dummy_node);
 	second->setConnection(dummy_node);
 }

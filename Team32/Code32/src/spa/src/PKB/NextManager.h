@@ -11,22 +11,22 @@
 
 class PKB::NextManager {
 public:
-	explicit NextManager(ControlFlowGraph& control_flow_graph);
+	explicit NextManager(CFG::ControlFlowGraph& control_flow_graph);
 
 	bool checkNext(StmtRef first, StmtRef second);
 	bool checkNextStar(StmtRef first, StmtRef second);
-	StmtInfoPtrSet getNext(StmtRef node_ref);
-	StmtInfoPtrSet getNextStar(StmtRef node_ref);
-	StmtInfoPtrSet getPrevious(StmtRef node_ref);
-	StmtInfoPtrSet getPreviousStar(StmtRef node_ref);
+	StmtInfoPtrSet getNext(StmtRef index);
+	StmtInfoPtrSet getNextStar(StmtRef index);
+	StmtInfoPtrSet getPrevious(StmtRef index);
+	StmtInfoPtrSet getPreviousStar(StmtRef index);
 
 	void resetCache();
 
 private:
 	struct TraversalInformation {
 		std::unordered_map<StmtRef, StmtInfoPtrSet>& cache;
-		StmtInfoPtrSet (ControlFlowGraph::*gatherer)(StmtRef) const;
-		StmtInfoPtrSet (ControlFlowGraph::*loop_continuation_handler)(StmtRef) const;
+		StmtInfoPtrSet (CFG::ControlFlowGraph::*gatherer)(StmtRef) const;
+		StmtInfoPtrSet (CFG::ControlFlowGraph::*loop_continuation_handler)(StmtRef) const;
 	};
 
 	template <class Comparator>
@@ -40,11 +40,11 @@ private:
 		TraversalInformation& traversal_information;
 	};
 
-	ControlFlowGraph& control_flow_graph;
+	CFG::ControlFlowGraph& control_flow_graph;
 	std::unordered_map<StmtRef, StmtInfoPtrSet> next_cache;
 	std::unordered_map<StmtRef, StmtInfoPtrSet> previous_cache;
 
-	bool checkNextStarOptimized(StmtRef first_node, StmtRef second_node);
+	bool checkNextStarOptimized(StmtRef first, StmtRef second);
 	template <class Comparator>
 	StmtInfoPQ<Comparator> constructQueue(const StmtInfoPtr& origin, TraversalInformation& info);
 	template <class Comparator>

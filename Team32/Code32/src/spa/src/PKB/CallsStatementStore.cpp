@@ -35,12 +35,12 @@ void PKB::CallsStatementStore::populateCallStore(const Types::ProcedureStore& pr
 	}
 }
 
-void PKB::CallsStatementStore::populate(const StmtInfoPtr& stmt, const Types::ProcedureStore& procedures,
+void PKB::CallsStatementStore::populate(const StmtInfoPtr& statement, const Types::ProcedureStore& procedures,
                                         const shared_ptr<ProcedureInfo>& procedure, Types::CallStore& store) const {
-	if (stmt->getType() != StmtType::Call) {
+	if (statement->getType() != StmtType::Call) {
 		return;
 	}
-	ProcRef callee_name = getProcedure(stmt);
+	ProcRef callee_name = getProcedure(statement);
 	shared_ptr<ProcedureInfo> callee = procedures.get(callee_name);
 
 	assert(callee != nullptr);

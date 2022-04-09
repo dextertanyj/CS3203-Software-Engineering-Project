@@ -6,18 +6,18 @@
 
 using namespace std;
 
-PKB::NodeInterface::NodeInterface(Types::NodeType type) : node_type(type) {}
+PKB::CFG::NodeInterface::NodeInterface(Types::NodeType type) : node_type(type) {}
 
-void PKB::NodeInterface::setGraphIndex(size_t index) {
+void PKB::CFG::NodeInterface::setGraphIndex(size_t index) {
 	assert(graph_index == 0);
 	graph_index = index;
 }
 
-void PKB::NodeInterface::insertNext(const shared_ptr<NodeInterface>& next) { next_nodes.push_back(next); }
+void PKB::CFG::NodeInterface::insertNext(const shared_ptr<NodeInterface>& next) { next_nodes.push_back(next); }
 
-void PKB::NodeInterface::insertPrevious(const shared_ptr<NodeInterface>& previous) { previous_nodes.push_back(previous); }
+void PKB::CFG::NodeInterface::insertPrevious(const shared_ptr<NodeInterface>& prev) { previous_nodes.push_back(prev); }
 
-unordered_set<shared_ptr<PKB::NodeInterface>> PKB::NodeInterface::getNextNodes() const {
+unordered_set<shared_ptr<PKB::CFG::NodeInterface>> PKB::CFG::NodeInterface::getNextNodes() const {
 	unordered_set<shared_ptr<NodeInterface>> results;
 	for (const auto& ptr : next_nodes) {
 		results.emplace(ptr.lock());
@@ -25,7 +25,7 @@ unordered_set<shared_ptr<PKB::NodeInterface>> PKB::NodeInterface::getNextNodes()
 	return results;
 }
 
-unordered_set<shared_ptr<PKB::NodeInterface>> PKB::NodeInterface::getPreviousNodes() const {
+unordered_set<shared_ptr<PKB::CFG::NodeInterface>> PKB::CFG::NodeInterface::getPreviousNodes() const {
 	unordered_set<shared_ptr<NodeInterface>> results;
 	for (const auto& ptr : previous_nodes) {
 		results.emplace(ptr.lock());
@@ -33,6 +33,6 @@ unordered_set<shared_ptr<PKB::NodeInterface>> PKB::NodeInterface::getPreviousNod
 	return results;
 }
 
-size_t PKB::NodeInterface::getGraphIndex() const { return graph_index; }
+size_t PKB::CFG::NodeInterface::getGraphIndex() const { return graph_index; }
 
-PKB::Types::NodeType PKB::NodeInterface::getNodeType() const { return node_type; }
+PKB::Types::NodeType PKB::CFG::NodeInterface::getNodeType() const { return node_type; }

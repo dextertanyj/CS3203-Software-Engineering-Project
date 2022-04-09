@@ -15,7 +15,7 @@ TEST_CASE("PKB::NextManager::getNext Test") {
 	 *    }
 	 * 5. z = 5;
 	 * */
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
 	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
@@ -53,7 +53,7 @@ TEST_CASE("PKB::NextManager::getPrevious Test") {
 	 *    }
 	 * 5. z = 5;
 	 * */
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
 	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
@@ -91,7 +91,7 @@ TEST_CASE("PKB::NextManager::checkNext Test") {
 	 *    }
 	 * 5. z = 5;
 	 * */
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
 	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
@@ -140,7 +140,7 @@ TEST_CASE("PKB::NextManager Overall Complicated Stress Test") {
 	 * }
 	 * 10. call Monkey;
 	 * */
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 
 	shared_ptr<StmtInfo> if_stmt_1 = TestUtilities::createStmtInfo(1, StmtType::If);
@@ -211,7 +211,7 @@ TEST_CASE("PKB::NextManager::checkNextStar Test") {
 	 * 5. z = 5;
 	 * 6. call Monk;
 	 * */
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
 	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
@@ -255,7 +255,7 @@ TEST_CASE("PKB::NextManager::getPreviousStar Test") {
 	 * 5. z = 5;
 	 * 6. call Monk;
 	 * */
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 	shared_ptr<StmtInfo> if_stmt = TestUtilities::createStmtInfo(1, StmtType::If);
 	shared_ptr<StmtInfo> while_stmt = TestUtilities::createStmtInfo(2, StmtType::While);
@@ -313,7 +313,7 @@ TEST_CASE("PKB::NextManager Nested Container Test") {
 	 *      }
 	 *    }
 	 */
-	PKB::ControlFlowGraph cfg = PKB::ControlFlowGraph();
+	PKB::CFG::ControlFlowGraph cfg = PKB::CFG::ControlFlowGraph();
 	PKB::NextManager next_manager = PKB::NextManager(cfg);
 
 	shared_ptr<StmtInfo> stmt_1 = TestUtilities::createStmtInfo(1, StmtType::If);

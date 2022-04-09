@@ -5,7 +5,7 @@
 #include "Common/ExpressionProcessor/ExpressionProcessor.h"
 
 template <typename T>
-class Common::ExpressionProcessor::TerminalNode : public Common::ExpressionProcessor::AtomicNode {
+class Common::ExpressionProcessor::TerminalNode : public AtomicNode {
 public:
 	explicit TerminalNode(T value);
 };

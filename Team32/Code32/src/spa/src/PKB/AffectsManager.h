@@ -16,14 +16,14 @@
 
 class PKB::AffectsManager {
 public:
-	explicit AffectsManager(ControlFlowGraph& control_flow_graph, SVRelationStore<ModifiesSRelation>& modifies_store,
+	explicit AffectsManager(CFG::ControlFlowGraph& control_flow_graph, SVRelationStore<ModifiesSRelation>& modifies_store,
 	                        SVRelationStore<UsesSRelation>& uses_store);
 	bool checkAffects(StmtRef first, StmtRef second);
 	bool checkAffectsStar(StmtRef first, StmtRef second);
-	StmtInfoPtrSet getAffects(StmtRef first);
-	StmtInfoPtrSet getAffectsStar(StmtRef node_ref);
-	StmtInfoPtrSet getAffected(StmtRef second);
-	StmtInfoPtrSet getAffectedStar(StmtRef node_ref);
+	StmtInfoPtrSet getAffects(StmtRef index);
+	StmtInfoPtrSet getAffectsStar(StmtRef index);
+	StmtInfoPtrSet getAffected(StmtRef index);
+	StmtInfoPtrSet getAffectedStar(StmtRef index);
 	void resetCache();
 
 private:
@@ -44,7 +44,7 @@ private:
 			: statements(move(statements)), strongly_connected(strongly_connected){};
 	};
 
-	ControlFlowGraph& control_flow_graph;
+	CFG::ControlFlowGraph& control_flow_graph;
 	SVRelationStore<UsesSRelation>& uses_store;
 	SVRelationStore<ModifiesSRelation>& modifies_store;
 

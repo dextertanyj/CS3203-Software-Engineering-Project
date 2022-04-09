@@ -40,8 +40,8 @@ StmtInfoPtrSet PKB::AssignStore::getStmtsWithPattern(const VarRef& variable, con
 	return result;
 }
 
-StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& var_name) const {
-	auto iter = var_to_relation_store.find(var_name);
+StmtInfoPtrSet PKB::AssignStore::getStmtsWithPatternLHS(const VarRef& variable) const {
+	auto iter = var_to_relation_store.find(variable);
 	if (iter == var_to_relation_store.end()) {
 		return {};
 	}
