@@ -47,7 +47,7 @@ public:
 	void setIfControl(StmtRef index, VarRef name) override;
 	void setWhileControl(StmtRef index, VarRefSet names) override;
 	void setWhileControl(StmtRef index, VarRef name) override;
-	void setNext(StmtRef previous, StmtRef next) override;
+	void setNext(StmtRef prev, StmtRef next) override;
 	void setIfNext(StmtRef prev, StmtRef then_next, StmtRef else_next) override;
 	void setIfExit(StmtRef then_prev, StmtRef else_prev, StmtRef if_stmt_ref) override;
 
@@ -108,18 +108,18 @@ public:
 	// Next get methods
 	bool checkNext(StmtRef first, StmtRef second) override;
 	bool checkNextStar(StmtRef first, StmtRef second) override;
-	StmtInfoPtrSet getNext(StmtRef node_ref) override;
-	StmtInfoPtrSet getNextStar(StmtRef node_ref) override;
-	StmtInfoPtrSet getPrevious(StmtRef node_ref) override;
-	StmtInfoPtrSet getPreviousStar(StmtRef node_ref) override;
+	StmtInfoPtrSet getNext(StmtRef index) override;
+	StmtInfoPtrSet getNextStar(StmtRef index) override;
+	StmtInfoPtrSet getPrevious(StmtRef index) override;
+	StmtInfoPtrSet getPreviousStar(StmtRef index) override;
 
 	// Affects get methods
 	bool checkAffects(StmtRef first, StmtRef second) override;
 	bool checkAffectsStar(StmtRef first, StmtRef second) override;
-	StmtInfoPtrSet getAffects(StmtRef node_ref) override;
-	StmtInfoPtrSet getAffectsStar(StmtRef node_ref) override;
-	StmtInfoPtrSet getAffected(StmtRef node_ref) override;
-	StmtInfoPtrSet getAffectedStar(StmtRef node_ref) override;
+	StmtInfoPtrSet getAffects(StmtRef index) override;
+	StmtInfoPtrSet getAffectsStar(StmtRef index) override;
+	StmtInfoPtrSet getAffected(StmtRef index) override;
+	StmtInfoPtrSet getAffectedStar(StmtRef index) override;
 
 	// Control Variable get methods
 	bool checkIfControl(StmtRef index, VarRef name) override;

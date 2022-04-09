@@ -14,7 +14,7 @@ public:
 	explicit IfNode(const StmtInfoPtr& info);
 	void setConnection(std::shared_ptr<NodeInterface> next) override;
 	void setNext(const std::shared_ptr<NodeInterface>& next) override;
-	void setPrevious(const std::shared_ptr<NodeInterface>& previous) override;
+	void setPrevious(const std::shared_ptr<NodeInterface>& prev) override;
 
 	void insertIfNext(const std::shared_ptr<StatementNode>& first, const std::shared_ptr<StatementNode>& second);
 	void insertIfExit(const std::shared_ptr<StatementNode>& first, const std::shared_ptr<StatementNode>& second);

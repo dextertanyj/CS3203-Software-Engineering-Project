@@ -71,27 +71,10 @@ StmtType PKB::ControlFlowGraph::getType(StmtRef ref) const {
 	return node->getStmtInfo()->getType();
 }
 
-StmtInfoPtr PKB::ControlFlowGraph::getStatementInfo(StmtRef index) const {
+StmtInfoPtr PKB::ControlFlowGraph::getStmtInfo(StmtRef index) const {
 	auto node = getNode(index);
 	assert(node != nullptr);
 	return node->getStmtInfo();
-}
-
-StmtInfoPtrSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef index) const {
-	auto node = getNode(index);
-	if (node == nullptr) {
-		return {};
-	}
-	StmtInfoPtrSet result_set;
-	for (const auto& previous : node->getPreviousNodes()) {
-		if (previous->getNodeType() == Types::NodeType::Dummy) {
-			handleDummyNodeSearch(result_set, previous, &ControlFlowGraph::collectPreviousOfDummy);
-			continue;
-		}
-		assert(dynamic_pointer_cast<StatementNode>(previous) != nullptr);
-		result_set.emplace(dynamic_pointer_cast<StatementNode>(previous)->getStmtInfo());
-	}
-	return result_set;
 }
 
 StmtInfoPtrSet PKB::ControlFlowGraph::getNextNodes(StmtRef index) const {
@@ -107,6 +90,23 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getNextNodes(StmtRef index) const {
 		}
 		assert(dynamic_pointer_cast<StatementNode>(next) != nullptr);
 		result_set.emplace(dynamic_pointer_cast<StatementNode>(next)->getStmtInfo());
+	}
+	return result_set;
+}
+
+StmtInfoPtrSet PKB::ControlFlowGraph::getPreviousNodes(StmtRef index) const {
+	auto node = getNode(index);
+	if (node == nullptr) {
+		return {};
+	}
+	StmtInfoPtrSet result_set;
+	for (const auto& previous : node->getPreviousNodes()) {
+		if (previous->getNodeType() == Types::NodeType::Dummy) {
+			handleDummyNodeSearch(result_set, previous, &ControlFlowGraph::collectPreviousOfDummy);
+			continue;
+		}
+		assert(dynamic_pointer_cast<StatementNode>(previous) != nullptr);
+		result_set.emplace(dynamic_pointer_cast<StatementNode>(previous)->getStmtInfo());
 	}
 	return result_set;
 }
@@ -137,8 +137,8 @@ StmtInfoPtrSet PKB::ControlFlowGraph::getLoopInternalPreviousNodes(StmtRef index
 	return pair.first;
 }
 
-size_t PKB::ControlFlowGraph::getGraphIndex(StmtRef ref) const {
-	auto node = getNode(ref);
+size_t PKB::ControlFlowGraph::getGraphIndex(StmtRef index) const {
+	auto node = getNode(index);
 	assert(node != nullptr);
 	return node->getGraphIndex();
 }
@@ -207,10 +207,10 @@ StmtInfoPtrSet PKB::ControlFlowGraph::collectPreviousOfDummy(const shared_ptr<PK
 	return collection;
 }
 
-shared_ptr<PKB::StatementNode> PKB::ControlFlowGraph::getNode(StmtRef ref) const {
-	auto iter = statement_node_map.find(ref);
+shared_ptr<PKB::StatementNode> PKB::ControlFlowGraph::getNode(StmtRef index) const {
+	auto iter = statement_node_map.find(index);
 	assert(iter != statement_node_map.end());
-	return statement_node_map.find(ref)->second;
+	return statement_node_map.find(index)->second;
 }
 
 void PKB::ControlFlowGraph::processGraphNode(const shared_ptr<NodeInterface>& node, size_t graph_index, StmtRef& last,

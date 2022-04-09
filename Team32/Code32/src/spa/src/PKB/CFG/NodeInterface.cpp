@@ -15,7 +15,7 @@ void PKB::NodeInterface::setGraphIndex(size_t index) {
 
 void PKB::NodeInterface::insertNext(const shared_ptr<NodeInterface>& next) { next_nodes.push_back(next); }
 
-void PKB::NodeInterface::insertPrevious(const shared_ptr<NodeInterface>& previous) { previous_nodes.push_back(previous); }
+void PKB::NodeInterface::insertPrevious(const shared_ptr<NodeInterface>& prev) { previous_nodes.push_back(prev); }
 
 unordered_set<shared_ptr<PKB::NodeInterface>> PKB::NodeInterface::getNextNodes() const {
 	unordered_set<shared_ptr<NodeInterface>> results;

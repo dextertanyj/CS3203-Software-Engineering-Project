@@ -20,10 +20,10 @@ public:
 	                        SVRelationStore<UsesSRelation>& uses_store);
 	bool checkAffects(StmtRef first, StmtRef second);
 	bool checkAffectsStar(StmtRef first, StmtRef second);
-	StmtInfoPtrSet getAffects(StmtRef first);
-	StmtInfoPtrSet getAffectsStar(StmtRef node_ref);
-	StmtInfoPtrSet getAffected(StmtRef second);
-	StmtInfoPtrSet getAffectedStar(StmtRef node_ref);
+	StmtInfoPtrSet getAffects(StmtRef index);
+	StmtInfoPtrSet getAffectsStar(StmtRef index);
+	StmtInfoPtrSet getAffected(StmtRef index);
+	StmtInfoPtrSet getAffectedStar(StmtRef index);
 	void resetCache();
 
 private:

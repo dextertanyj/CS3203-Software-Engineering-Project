@@ -6,7 +6,7 @@
 
 using namespace std;
 
-PKB::DummyNode::DummyNode(StmtRef ref) : PKB::NodeInterface(Types::NodeType::Dummy), if_control_stmt_ref(ref) {}
+PKB::DummyNode::DummyNode(StmtRef index) : PKB::NodeInterface(Types::NodeType::Dummy), if_control_stmt_ref(index) {}
 
 size_t PKB::DummyNode::getNodeRef() const { return if_control_stmt_ref; }
 

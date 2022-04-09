@@ -13,20 +13,20 @@ public:
 	explicit NodeInterface(Types::NodeType type);
 	void setGraphIndex(size_t index);
 	virtual void setConnection(std::shared_ptr<NodeInterface> next) = 0;
-	virtual void setPrevious(const std::shared_ptr<NodeInterface>& prev) = 0;
 	virtual void setNext(const std::shared_ptr<NodeInterface>& next) = 0;
+	virtual void setPrevious(const std::shared_ptr<NodeInterface>& prev) = 0;
 
 	[[nodiscard]] std::unordered_set<std::shared_ptr<NodeInterface>> getPreviousNodes() const;
 	[[nodiscard]] std::unordered_set<std::shared_ptr<NodeInterface>> getNextNodes() const;
 	[[nodiscard]] size_t getGraphIndex() const;
 	[[nodiscard]] Types::NodeType getNodeType() const;
-	[[nodiscard]] virtual size_t getNodeRef() const = 0;
+	[[nodiscard]] virtual StmtRef getNodeRef() const = 0;
 
 	virtual ~NodeInterface() = default;
 
 protected:
 	void insertNext(const std::shared_ptr<NodeInterface>& next);
-	void insertPrevious(const std::shared_ptr<NodeInterface>& previous);
+	void insertPrevious(const std::shared_ptr<NodeInterface>& prev);
 
 private:
 	size_t graph_index = 0;  // Default to 0 for convenience when populating graph index later.

@@ -242,7 +242,7 @@ void PKB::AffectsManager::transposeAffects(StmtRef start, StmtRef end) {
 		if (iter == affects_cache.end()) {
 			continue;
 		}
-		auto info = control_flow_graph.getStatementInfo(i);
+		auto info = control_flow_graph.getStmtInfo(i);
 		auto affected_set = iter->second;
 		for (const auto& affected : affected_set) {
 			affected_cache[affected->getIdentifier()].emplace(info);
@@ -291,7 +291,7 @@ StmtInfoPtrSet PKB::AffectsManager::buildCacheGraphReverseVisit(StmtRef index, S
 }
 
 void PKB::AffectsManager::processComponent(StmtRef index, StmtInfoPtrSet component) {
-	auto self = control_flow_graph.getStatementInfo(index);
+	auto self = control_flow_graph.getStmtInfo(index);
 	if (component.empty()) {
 		auto node = make_shared<CacheGraphNode>(StmtInfoPtrSet{self}, false);
 		cache_graph_store.emplace(self->getIdentifier(), node);

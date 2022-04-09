@@ -13,8 +13,8 @@ public:
 	explicit StatementNode(const StmtInfoPtr& info);
 	StatementNode(Types::NodeType type, StmtInfoPtr info);
 	void setConnection(std::shared_ptr<NodeInterface> next) override;
-	void setPrevious(const std::shared_ptr<NodeInterface>& prev) override;
 	void setNext(const std::shared_ptr<NodeInterface>& next) override;
+	void setPrevious(const std::shared_ptr<NodeInterface>& prev) override;
 
 	[[nodiscard]] StmtInfoPtr getStmtInfo() const;
 	StmtRef getNodeRef() const override;

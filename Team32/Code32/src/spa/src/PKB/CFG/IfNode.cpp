@@ -21,9 +21,9 @@ void PKB::IfNode::setNext(const shared_ptr<NodeInterface>& next) {
 	insertNext(next);
 }
 
-void PKB::IfNode::setPrevious(const shared_ptr<NodeInterface>& previous) {
+void PKB::IfNode::setPrevious(const shared_ptr<NodeInterface>& prev) {
 	assert(getPreviousNodes().empty());
-	insertPrevious(previous);
+	insertPrevious(prev);
 }
 
 void PKB::IfNode::insertIfNext(const shared_ptr<StatementNode>& first, const shared_ptr<StatementNode>& second) {

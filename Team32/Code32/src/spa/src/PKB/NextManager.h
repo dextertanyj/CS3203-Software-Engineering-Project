@@ -15,10 +15,10 @@ public:
 
 	bool checkNext(StmtRef first, StmtRef second);
 	bool checkNextStar(StmtRef first, StmtRef second);
-	StmtInfoPtrSet getNext(StmtRef node_ref);
-	StmtInfoPtrSet getNextStar(StmtRef node_ref);
-	StmtInfoPtrSet getPrevious(StmtRef node_ref);
-	StmtInfoPtrSet getPreviousStar(StmtRef node_ref);
+	StmtInfoPtrSet getNext(StmtRef index);
+	StmtInfoPtrSet getNextStar(StmtRef index);
+	StmtInfoPtrSet getPrevious(StmtRef index);
+	StmtInfoPtrSet getPreviousStar(StmtRef index);
 
 	void resetCache();
 
@@ -44,7 +44,7 @@ private:
 	std::unordered_map<StmtRef, StmtInfoPtrSet> next_cache;
 	std::unordered_map<StmtRef, StmtInfoPtrSet> previous_cache;
 
-	bool checkNextStarOptimized(StmtRef first_node, StmtRef second_node);
+	bool checkNextStarOptimized(StmtRef first, StmtRef second);
 	template <class Comparator>
 	StmtInfoPQ<Comparator> constructQueue(const StmtInfoPtr& origin, TraversalInformation& info);
 	template <class Comparator>

@@ -49,7 +49,7 @@ StmtInfoPtrSet PKB::NextManager::getNextStar(StmtRef node_ref) {
 		return next_cache.find(node_ref)->second;
 	}
 	TraversalInformation info = {next_cache, &ControlFlowGraph::getNextNodes, &ControlFlowGraph::getLoopExternalNextNodes};
-	auto node = control_flow_graph.getStatementInfo(node_ref);
+	auto node = control_flow_graph.getStmtInfo(node_ref);
 	StmtInfoPQ<LessComparator> queue = constructQueue<LessComparator>(node, info);
 	while (!queue.empty()) {
 		StmtInfoPtr current_node = queue.top();
@@ -74,7 +74,7 @@ StmtInfoPtrSet PKB::NextManager::getPreviousStar(StmtRef node_ref) {
 		return previous_cache.find(node_ref)->second;
 	}
 	TraversalInformation info = {previous_cache, &ControlFlowGraph::getPreviousNodes, &ControlFlowGraph::getLoopExternalPreviousNodes};
-	auto node = control_flow_graph.getStatementInfo(node_ref);
+	auto node = control_flow_graph.getStmtInfo(node_ref);
 	StmtInfoPQ<GreaterComparator> queue = constructQueue<GreaterComparator>(node, info);
 	while (!queue.empty()) {
 		StmtInfoPtr current_node = queue.top();
