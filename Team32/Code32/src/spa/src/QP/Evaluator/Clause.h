@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_RELATIONSHIP_RELATION_H
-#define SPA_SRC_QP_RELATIONSHIP_RELATION_H
+#ifndef SPA_SRC_QP_EVALUATOR_CLAUSE_H
+#define SPA_SRC_QP_EVALUATOR_CLAUSE_H
 
 #include <string>
 #include <vector>
@@ -30,4 +30,4 @@ private:
 	Types::ExecutorSet executor;
 };
 
-#endif  // SPA_SRC_QP_RELATIONSHIP_RELATION_H
+#endif  // SPA_SRC_QP_EVALUATOR_CLAUSE_H

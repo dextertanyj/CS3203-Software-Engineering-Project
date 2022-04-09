@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_QUERYPREPROCESSOR_H
-#define SPA_SRC_QP_QUERYPREPROCESSOR_H
+#ifndef SPA_SRC_QP_PREPROCESSOR_QUERYPREPROCESSOR_H
+#define SPA_SRC_QP_PREPROCESSOR_QUERYPREPROCESSOR_H
 
 #include <optional>
 #include <regex>
@@ -71,4 +71,4 @@ private:
 	static std::regex query_token_regex;
 };
 
-#endif  // SPA_SRC_QP_QUERYPREPROCESSOR_H
+#endif  // SPA_SRC_QP_PREPROCESSOR_QUERYPREPROCESSOR_H

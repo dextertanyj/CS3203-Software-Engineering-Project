@@ -1,5 +1,5 @@
-#ifndef SPA_NEXTMANAGER_H
-#define SPA_NEXTMANAGER_H
+#ifndef SPA_SRC_PKB_NEXTMANAGER_H
+#define SPA_SRC_PKB_NEXTMANAGER_H
 
 #include <queue>
 #include <unordered_map>
@@ -59,4 +59,4 @@ private:
 	void handleTraverseLoopNode(std::queue<StmtInfoPtr>& queue, StmtInfoPtrSet& set, const StmtInfoPtr& node);
 };
 
-#endif  // SPA_NEXTMANAGER_H
+#endif  // SPA_SRC_PKB_NEXTMANAGER_H

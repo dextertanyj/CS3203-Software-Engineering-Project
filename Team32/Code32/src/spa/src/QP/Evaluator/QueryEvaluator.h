@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_QP_QUERYEVALUATOR_H
-#define SPA_SRC_QP_QUERYEVALUATOR_H
+#ifndef SPA_SRC_QP_EVALUATOR_QUERYEVALUATOR_H
+#define SPA_SRC_QP_EVALUATOR_QUERYEVALUATOR_H
 
 #include <string>
 #include <vector>
@@ -34,4 +34,4 @@ private:
 	[[nodiscard]] static Types::ClauseList getClausesWithoutSynonyms(const QueryProperties& query_properties);
 };
 
-#endif  // SPA_SRC_QP_QUERYEVALUATOR_H
+#endif  // SPA_SRC_QP_EVALUATOR_QUERYEVALUATOR_H

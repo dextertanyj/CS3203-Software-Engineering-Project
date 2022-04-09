@@ -1,5 +1,5 @@
-#ifndef SPA_PREPROCESSOR_H
-#define SPA_PREPROCESSOR_H
+#ifndef SPA_SRC_QP_PREPROCESSOR_PREPROCESSOR_H
+#define SPA_SRC_QP_PREPROCESSOR_PREPROCESSOR_H
 
 #include "QP/QP.h"
 
@@ -11,4 +11,4 @@ namespace Maps {}
 namespace SyntaxValidator {}
 }
 
-#endif  // SPA_PREPROCESSOR_H
+#endif  // SPA_SRC_QP_PREPROCESSOR_PREPROCESSOR_H
