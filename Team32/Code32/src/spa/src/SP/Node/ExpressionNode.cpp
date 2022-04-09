@@ -7,18 +7,18 @@
 
 using namespace std;
 
-SP::Node::ExpressionNode::ExpressionNode(Common::ExpressionProcessor::Expression expression) : expression(move(expression)) {}
+SP::Node::ExpressionNode::ExpressionNode(Common::EP::Expression expression) : expression(move(expression)) {}
 
-Common::ExpressionProcessor::Expression SP::Node::ExpressionNode::extract() const { return expression; }
+Common::EP::Expression SP::Node::ExpressionNode::extract() const { return expression; }
 
 bool SP::Node::ExpressionNode::equals(const shared_ptr<ExpressionNode>& object) const { return this->expression == object->expression; }
 
-unique_ptr<SP::Node::ExpressionNode> SP::Node::ExpressionNode::parse(Lexer& lex, Common::ExpressionProcessor::ExpressionType type) {
-	auto parser = Common::ExpressionProcessor::ExpressionParser{lex, type};
+unique_ptr<SP::Node::ExpressionNode> SP::Node::ExpressionNode::parse(Lexer& lex, Common::EP::ExpressionType type) {
+	auto parser = Common::EP::ExpressionParser{lex, type};
 	try {
 		auto expression = parser.parse();
 		return make_unique<ExpressionNode>(expression);
-	} catch (const Common::ExpressionProcessor::ExpressionProcessorException& e) {
+	} catch (const Common::EP::ExpressionProcessorException& e) {
 		throw ParseException(e.what());
 	}
 }

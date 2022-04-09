@@ -41,7 +41,7 @@ private:
 		TraversalInformation& traversal_information;
 	};
 
-	bool checkNextStarOptimized(const StmtRef& first_node, const StmtRef& second_node);
+	bool checkNextStarOptimized(StmtRef first_node, StmtRef second_node);
 
 	template <class Comparator>
 	StmtInfoPQ<Comparator> constructQueue(const StmtInfoPtr& origin, TraversalInformation& info);

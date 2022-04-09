@@ -89,7 +89,7 @@ void PKB::NextManager::resetCache() {
 	previous_cache.clear();
 }
 
-bool PKB::NextManager::checkNextStarOptimized(const StmtRef& first_node, const StmtRef& second_node) {
+bool PKB::NextManager::checkNextStarOptimized(StmtRef first_node, StmtRef second_node) {
 	assert(control_flow_graph.getGraphIndex(first_node) == control_flow_graph.getGraphIndex(second_node));
 
 	// Select search direction based on the estimated distance between the start/end of the graph and the target nodes.

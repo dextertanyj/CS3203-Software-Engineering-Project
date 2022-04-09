@@ -14,7 +14,7 @@ SP::Node::WhileNode::WhileNode(StmtRef stmt_no, unique_ptr<ExpressionNode> cond_
 StmtRef SP::Node::WhileNode::extract(PKB::StorageUpdateInterface& pkb) const {
 	StmtRef stmt_ref = getStmtRef();
 	pkb.setStmtType(stmt_ref, StmtType::While);
-	Common::ExpressionProcessor::Expression expression = cond_expr->extract();
+	Common::EP::Expression expression = cond_expr->extract();
 	pkb.setConstant(expression.getConstants());
 	pkb.setUses(stmt_ref, expression.getVariables());
 	pkb.setWhileControl(stmt_ref, expression.getVariables());
@@ -39,7 +39,7 @@ bool SP::Node::WhileNode::equals(const shared_ptr<StatementNode>& object) const 
 unique_ptr<SP::Node::WhileNode> SP::Node::WhileNode::parse(Lexer& lex, StmtRef& statement_count) {
 	StmtRef statement_index = statement_count++;
 	lex.nextIf(OPEN_PARENTHESES);
-	unique_ptr<ExpressionNode> condition = ExpressionNode::parse(lex, Common::ExpressionProcessor::ExpressionType::Logical);
+	unique_ptr<ExpressionNode> condition = ExpressionNode::parse(lex, Common::EP::ExpressionType::Logical);
 	lex.nextIf(CLOSE_PARENTHESES);
 	lex.nextIf(OPEN_BRACES);
 	unique_ptr<StatementListNode> statements = StatementListNode::parse(lex, statement_count);
