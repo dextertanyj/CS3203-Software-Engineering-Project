@@ -8,7 +8,7 @@
 
 class Common::ExpressionProcessor::ParenthesesWrapper {
 public:
-	explicit ParenthesesWrapper(ParenthesizedExpression expression);
+	explicit ParenthesesWrapper(const ParenthesizedExpression& expression);
 	[[nodiscard]] std::shared_ptr<ExpressionNode> getExpression() const;
 
 private:
