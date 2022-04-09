@@ -1,6 +1,6 @@
 #include "PKB/CallsStatementStore.h"
 
-#include <stdexcept>
+#include <cassert>
 #include <utility>
 
 using namespace std;
