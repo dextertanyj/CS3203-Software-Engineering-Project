@@ -31,9 +31,6 @@ void PKB::PVRelationStore<T>::set(const ProcRef& proc, const VarRefSet& variable
 
 template <class T>
 bool PKB::PVRelationStore<T>::check(const ProcRef& proc, const VarRef& variable) {
-	assert(variable.length() != 0);
-	assert(proc.length() != 0);
-
 	auto iter = variable_key_map.find(variable);
 	if (iter == variable_key_map.end()) {
 		return false;
@@ -44,8 +41,6 @@ bool PKB::PVRelationStore<T>::check(const ProcRef& proc, const VarRef& variable)
 
 template <class T>
 VarRefSet PKB::PVRelationStore<T>::getByProc(const ProcRef& proc) {
-	assert(proc.length() != 0);
-
 	auto iter = proc_key_map.find(proc);
 	if (iter == proc_key_map.end()) {
 		return {};
@@ -55,8 +50,6 @@ VarRefSet PKB::PVRelationStore<T>::getByProc(const ProcRef& proc) {
 
 template <class T>
 ProcRefSet PKB::PVRelationStore<T>::getByVar(const VarRef& variable) {
-	assert(variable.length() != 0);
-
 	auto iter = variable_key_map.find(variable);
 	if (iter == variable_key_map.end()) {
 		return {};

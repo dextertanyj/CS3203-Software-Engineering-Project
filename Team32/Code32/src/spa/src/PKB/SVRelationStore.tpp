@@ -35,9 +35,6 @@ void PKB::SVRelationStore<T>::set(StmtInfoPtr statement, VarRefSet variables) {
 
 template <class T>
 bool PKB::SVRelationStore<T>::check(StmtRef index, const VarRef& variable) {
-	assert(index > 0);
-	assert(variable.length() != 0);
-
 	auto iter = variable_key_map.find(variable);
 	if (iter == variable_key_map.end()) {
 		return false;
@@ -49,8 +46,6 @@ bool PKB::SVRelationStore<T>::check(StmtRef index, const VarRef& variable) {
 
 template <class T>
 VarRefSet PKB::SVRelationStore<T>::getByStmt(StmtRef index) {
-	assert(index > 0);
-
 	auto iter = statement_key_map.find(index);
 	if (iter == statement_key_map.end()) {
 		return {};
@@ -60,8 +55,6 @@ VarRefSet PKB::SVRelationStore<T>::getByStmt(StmtRef index) {
 
 template <class T>
 StmtInfoPtrSet PKB::SVRelationStore<T>::getByVar(const VarRef& variable) {
-	assert(variable.length() != 0);
-
 	auto iter = variable_key_map.find(variable);
 	if (iter == variable_key_map.end()) {
 		return {};
