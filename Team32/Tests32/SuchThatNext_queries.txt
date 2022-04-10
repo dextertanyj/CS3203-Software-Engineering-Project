@@ -268,3 +268,58 @@ while w; call cl;
 Select p such that Next(w, w) such that Next*(w, cl) and Next*(_, 11)
 
 5000
+55 - Next invalid synonym
+constant c;
+Select c such that Next(c, _)
+
+5000
+56 - Next invalid stmtNo
+stmts s;
+Select s such that Next(0, s)
+
+5000
+57 - Next invalid stmtNo
+stmts s;
+Select s such that Next(s, -1)
+
+5000
+58 - NextT invalid synonym
+constant c; stmt s;
+Select s such that Next*(c, s)
+
+5000
+59 - NextT invalid synonym
+variable v;
+Select c such that Next*(_, v)
+
+5000
+60 - NextT invalid stmtNo
+stmts s;
+Select s such that Next*(0, s)
+
+5000
+61 - NextT invalid stmtNo
+
+Select BOOLEAN such that Next*(_, 0)
+FALSE
+5000
+62 - Next varname invalid
+
+Select BOOLEAN such that Next(_, "var")
+
+5000
+63 - Next varname invalid
+variable v;
+Select BOOLEAN such that Next("var", _)
+
+5000
+64 - NextT varname invalid
+
+Select BOOLEAN such that Next*("var", _)
+
+5000
+65 - NextT varname invalid
+
+Select BOOLEAN such that Next*(_, "var")
+
+5000

@@ -193,13 +193,58 @@ TRUE
 Select BOOLEAN such that Affects*(_, _)
 TRUE
 5000
-40 - affectsT OOB stmtno 1
+40 - affects OOB stmtno 1
+stmt s;
+Select s such that Affects(_, 0)
+
+5000
+41 - affects OOB stmtno 2
+stmt s;
+Select s such that Affects(40, _)
+
+5000
+42 - affectsT OOB stmtno 1
 stmt s;
 Select s such that Affects*(_, 40)
 
 5000
-41 - affectsT OOB stmtno 2
+43 - affectsT OOB stmtno 2
 stmt s;
 Select s such that Affects*(0, _)
+
+5000
+44 - affect invalid synonym (semantic error)
+call c; 
+Select BOOLEAN such that Affects(_, c)
+FALSE
+5000
+45 - affectsT invalid synonym (semantic error)
+read r; 
+Select BOOLEAN such that Affects*(_, r)
+FALSE
+5000
+46 - affectsT invalid synonym (semantic error)
+print p; 
+Select BOOLEAN such that Affects*(p, _)
+FALSE
+5000
+47 - affects varname invalid (syntactic)
+
+Select BOOLEAN such that Affects(_, "var")
+
+5000
+48 - affects varname invalid (syntactic)
+variable v;
+Select BOOLEAN such that Affects("var", _)
+
+5000
+49 - affectsT varname invalid (syntactic)
+
+Select BOOLEAN such that Affects*("var", _)
+
+5000
+50 - affectsT varname invalid (syntactic)
+
+Select BOOLEAN such that Affects*(_, "var")
 
 5000
