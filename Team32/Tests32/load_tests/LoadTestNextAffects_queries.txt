@@ -1,0 +1,5000 @@
+0 - Query 0
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next(8, while)  such that Affects(assign, 12)  such that Affects(stmt, _) 
+TRUE
+5000
+1 - Query 1
+stmt stmt; read read; call call; 
+Select <stmt, read, call>  such that Next(9, call)  such that Next(read, call)  such that Next(stmt, _) 
+TRUE
+5000
+2 - Query 2
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, stmt)  such that Affects(assign, assign)  such that Next*(assign, 7) 
+TRUE
+5000
+3 - Query 3
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects(_, assign)  such that Affects(stmt, assign)  such that Next(if, _) 
+TRUE
+5000
+4 - Query 4
+stmt stmt; print print; 
+Select <stmt, print>  such that Affects*(2, stmt)  such that Next(print, 29)  such that Affects(9, stmt) 
+TRUE
+5000
+5 - Query 5
+if if; stmt stmt; 
+Select <if, stmt>  such that Affects*(stmt, stmt)  such that Affects*(_, stmt)  such that Next*(if, 10) 
+TRUE
+5000
+6 - Query 6
+assign assign; call call; 
+Select <assign, call>  such that Next*(_, call)  such that Affects(_, assign)  such that Affects*(assign, 9) 
+TRUE
+5000
+7 - Query 7
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, 11)  such that Affects*(_, assign)  such that Affects(assign, 27) 
+TRUE
+5000
+8 - Query 8
+stmt stmt; call call; 
+Select <stmt, call>  such that Next*(7, stmt)  such that Next*(_, call)  such that Affects(22, stmt) 
+TRUE
+5000
+9 - Query 9
+while while; assign assign; 
+Select <while, assign>  such that Next(_, while)  such that Affects*(assign, 10)  such that Affects(5, assign) 
+TRUE
+5000
+10 - Query 10
+stmt stmt; while while; call call; 
+Select <stmt, while, call>  such that Next(call, 19)  such that Affects(6, stmt)  such that Next*(while, 3) 
+TRUE
+5000
+11 - Query 11
+if if; print print; assign assign; 
+Select <if, print, assign>  such that Next*(if, print)  such that Next(_, assign)  such that Affects*(assign, 27) 
+TRUE
+5000
+12 - Query 12
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects*(assign, _)  such that Next(read, 3)  such that Affects(16, stmt) 
+TRUE
+5000
+13 - Query 13
+stmt stmt; while while; 
+Select <stmt, while>  such that Next*(while, 14)  such that Affects*(stmt, _)  such that Next(_, stmt) 
+TRUE
+5000
+14 - Query 14
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects(assign, stmt)  such that Affects(stmt, stmt)  such that Next*(17, read) 
+TRUE
+5000
+15 - Query 15
+stmt stmt; print print; 
+Select <stmt, print>  such that Affects*(stmt, stmt)  such that Next(print, stmt)  such that Affects*(stmt, 16) 
+TRUE
+5000
+16 - Query 16
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Affects*(stmt, _)  such that Next*(16, read)  such that Affects*(assign, 3) 
+TRUE
+5000
+17 - Query 17
+stmt stmt; 
+Select <stmt>  such that Affects*(stmt, _)  such that Affects*(stmt, _)  such that Next*(19, stmt) 
+TRUE
+5000
+18 - Query 18
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(5, assign)  such that Affects*(assign, _)  such that Affects(stmt, _) 
+TRUE
+5000
+19 - Query 19
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Affects(_, assign)  such that Next*(2, if)  such that Next(call, call) 
+TRUE
+5000
+20 - Query 20
+assign assign; print print; 
+Select <assign, print>  such that Affects*(assign, _)  such that Next(_, print)  such that Affects(assign, assign) 
+TRUE
+5000
+21 - Query 21
+stmt stmt; if if; 
+Select <stmt, if>  such that Next(10, if)  such that Affects*(_, stmt)  such that Next*(_, stmt) 
+TRUE
+5000
+22 - Query 22
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects*(assign, 23)  such that Next*(26, stmt)  such that Next*(print, 13) 
+TRUE
+5000
+23 - Query 23
+assign assign; call call; 
+Select <assign, call>  such that Next*(call, _)  such that Affects*(18, assign)  such that Next(assign, 25) 
+TRUE
+5000
+24 - Query 24
+call call; assign assign; print print; 
+Select <call, assign, print>  such that Next(assign, 5)  such that Next*(print, _)  such that Next(call, 27) 
+TRUE
+5000
+25 - Query 25
+read read; assign assign; call call; 
+Select <read, assign, call>  such that Next(call, 3)  such that Affects(_, assign)  such that Next*(read, 11) 
+TRUE
+5000
+26 - Query 26
+assign assign; print print; 
+Select <assign, print>  such that Affects(assign, 12)  such that Next(_, assign)  such that Next*(print, _) 
+TRUE
+5000
+27 - Query 27
+if if; stmt stmt; print print; 
+Select <if, stmt, print>  such that Next(_, stmt)  such that Next*(if, print)  such that Next*(print, 27) 
+TRUE
+5000
+28 - Query 28
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, 26)  such that Affects(1, stmt)  such that Next(assign, _) 
+TRUE
+5000
+29 - Query 29
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Next*(assign, _)  such that Next*(call, _)  such that Next*(if, _) 
+TRUE
+5000
+30 - Query 30
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next*(call, _)  such that Affects(18, assign)  such that Affects(_, stmt) 
+TRUE
+5000
+31 - Query 31
+print print; assign assign; 
+Select <print, assign>  such that Next(print, 18)  such that Affects(assign, _)  such that Affects*(assign, _) 
+TRUE
+5000
+32 - Query 32
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(9, stmt)  such that Affects(stmt, 8)  such that Next(while, assign) 
+TRUE
+5000
+33 - Query 33
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, _)  such that Next(assign, 28)  such that Next(_, assign) 
+TRUE
+5000
+34 - Query 34
+read read; print print; assign assign; 
+Select <read, print, assign>  such that Next*(10, print)  such that Next*(assign, _)  such that Next*(19, read) 
+TRUE
+5000
+35 - Query 35
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, assign)  such that Affects*(stmt, stmt)  such that Affects(assign, 24) 
+TRUE
+5000
+36 - Query 36
+read read; assign assign; 
+Select <read, assign>  such that Next*(1, assign)  such that Next*(_, read)  such that Next(read, _) 
+TRUE
+5000
+37 - Query 37
+read read; assign assign; 
+Select <read, assign>  such that Next*(read, _)  such that Next(assign, 29)  such that Next*(_, assign) 
+TRUE
+5000
+38 - Query 38
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, assign)  such that Affects(_, stmt)  such that Affects(_, stmt) 
+TRUE
+5000
+39 - Query 39
+stmt stmt; print print; 
+Select <stmt, print>  such that Next(print, 20)  such that Next(stmt, 13)  such that Affects(4, stmt) 
+TRUE
+5000
+40 - Query 40
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects*(assign, 1)  such that Next*(print, print)  such that Affects*(_, stmt) 
+TRUE
+5000
+41 - Query 41
+assign assign; 
+Select <assign>  such that Affects*(_, assign)  such that Affects*(assign, _)  such that Affects*(assign, 5) 
+TRUE
+5000
+42 - Query 42
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, assign)  such that Affects*(16, stmt)  such that Affects(28, assign) 
+TRUE
+5000
+43 - Query 43
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, stmt)  such that Affects*(_, stmt)  such that Next*(assign, stmt) 
+TRUE
+5000
+44 - Query 44
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, stmt)  such that Affects(_, stmt)  such that Affects*(4, assign) 
+TRUE
+5000
+45 - Query 45
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects(assign, stmt)  such that Next*(_, stmt)  such that Next*(_, print) 
+TRUE
+5000
+46 - Query 46
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects(assign, _)  such that Next*(read, 19)  such that Affects*(stmt, _) 
+TRUE
+5000
+47 - Query 47
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Next*(25, if)  such that Next(call, 26)  such that Affects*(assign, assign) 
+TRUE
+5000
+48 - Query 48
+assign assign; 
+Select <assign>  such that Affects(assign, 25)  such that Affects*(17, assign)  such that Next(_, assign) 
+TRUE
+5000
+49 - Query 49
+if if; while while; print print; 
+Select <if, while, print>  such that Next(while, print)  such that Next*(while, _)  such that Next(if, while) 
+TRUE
+5000
+50 - Query 50
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Affects*(stmt, _)  such that Next(_, print)  such that Affects*(29, assign) 
+TRUE
+5000
+51 - Query 51
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, _)  such that Affects*(13, stmt)  such that Affects(12, stmt) 
+TRUE
+5000
+52 - Query 52
+if if; while while; print print; call call; 
+Select <if, while, print, call>  such that Next*(_, print)  such that Next*(while, call)  such that Next(_, if) 
+TRUE
+5000
+53 - Query 53
+stmt stmt; while while; read read; 
+Select <stmt, while, read>  such that Next(while, _)  such that Next*(read, _)  such that Next(12, stmt) 
+TRUE
+5000
+54 - Query 54
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, _)  such that Next(assign, 1)  such that Affects*(assign, _) 
+TRUE
+5000
+55 - Query 55
+if if; assign assign; 
+Select <if, assign>  such that Affects*(7, assign)  such that Next*(_, if)  such that Affects(assign, _) 
+TRUE
+5000
+56 - Query 56
+if if; stmt stmt; while while; read read; 
+Select <if, stmt, while, read>  such that Next*(22, stmt)  such that Next(if, while)  such that Next(16, read) 
+TRUE
+5000
+57 - Query 57
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next*(_, while)  such that Affects(20, assign)  such that Affects(22, stmt) 
+TRUE
+5000
+58 - Query 58
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(stmt, 8)  such that Affects(stmt, _)  such that Affects(assign, _) 
+TRUE
+5000
+59 - Query 59
+while while; assign assign; call call; 
+Select <while, assign, call>  such that Affects(_, assign)  such that Next(call, _)  such that Next(_, while) 
+TRUE
+5000
+60 - Query 60
+read read; assign assign; call call; 
+Select <read, assign, call>  such that Next(_, assign)  such that Next(call, call)  such that Next*(read, 24) 
+TRUE
+5000
+61 - Query 61
+if if; stmt stmt; print print; 
+Select <if, stmt, print>  such that Affects(stmt, 26)  such that Next(if, _)  such that Next*(print, _) 
+TRUE
+5000
+62 - Query 62
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next*(3, read)  such that Next(_, stmt)  such that Affects(assign, 26) 
+TRUE
+5000
+63 - Query 63
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Next*(if, _)  such that Affects*(assign, stmt)  such that Next*(3, if) 
+TRUE
+5000
+64 - Query 64
+if if; stmt stmt; while while; print print; 
+Select <if, stmt, while, print>  such that Affects(stmt, _)  such that Next*(if, 22)  such that Next(while, print) 
+TRUE
+5000
+65 - Query 65
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(_, assign)  such that Next(stmt, 19)  such that Next*(assign, _) 
+TRUE
+5000
+66 - Query 66
+if if; assign assign; 
+Select <if, assign>  such that Affects*(assign, _)  such that Next*(23, assign)  such that Next(25, if) 
+TRUE
+5000
+67 - Query 67
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(stmt, 7)  such that Next*(call, _)  such that Affects(assign, assign) 
+TRUE
+5000
+68 - Query 68
+if if; read read; assign assign; 
+Select <if, read, assign>  such that Next*(_, read)  such that Affects*(29, assign)  such that Next(if, 22) 
+TRUE
+5000
+69 - Query 69
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(29, stmt)  such that Affects(8, assign)  such that Affects*(stmt, 19) 
+TRUE
+5000
+70 - Query 70
+call call; stmt stmt; assign assign; print print; 
+Select <call, stmt, assign, print>  such that Affects(assign, stmt)  such that Next*(print, 5)  such that Next*(call, _) 
+TRUE
+5000
+71 - Query 71
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Next(_, assign)  such that Next*(if, 6)  such that Next*(_, call) 
+TRUE
+5000
+72 - Query 72
+stmt stmt; read read; 
+Select <stmt, read>  such that Next(22, stmt)  such that Affects*(stmt, _)  such that Next(read, 4) 
+TRUE
+5000
+73 - Query 73
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, 24)  such that Affects(assign, _)  such that Affects(5, stmt) 
+TRUE
+5000
+74 - Query 74
+stmt stmt; read read; 
+Select <stmt, read>  such that Affects(stmt, _)  such that Next(read, 9)  such that Affects*(15, stmt) 
+TRUE
+5000
+75 - Query 75
+if if; assign assign; 
+Select <if, assign>  such that Next(_, if)  such that Affects*(_, assign)  such that Next(assign, 28) 
+TRUE
+5000
+76 - Query 76
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, stmt)  such that Affects*(8, assign)  such that Affects(8, stmt) 
+TRUE
+5000
+77 - Query 77
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Next*(14, assign)  such that Next(_, if)  such that Affects*(_, stmt) 
+TRUE
+5000
+78 - Query 78
+if if; stmt stmt; call call; 
+Select <if, stmt, call>  such that Affects(stmt, 16)  such that Next(call, 27)  such that Next(if, 23) 
+TRUE
+5000
+79 - Query 79
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, stmt)  such that Affects*(stmt, 21)  such that Affects*(_, assign) 
+TRUE
+5000
+80 - Query 80
+if if; stmt stmt; while while; assign assign; 
+Select <if, stmt, while, assign>  such that Next(stmt, 21)  such that Next(assign, while)  such that Next(_, if) 
+TRUE
+5000
+81 - Query 81
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(stmt, 17)  such that Affects*(assign, assign)  such that Next(while, _) 
+TRUE
+5000
+82 - Query 82
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects(assign, 15)  such that Next*(read, _)  such that Affects(stmt, _) 
+TRUE
+5000
+83 - Query 83
+print print; 
+Select <print>  such that Next*(print, 29)  such that Next(_, print)  such that Next*(_, print) 
+TRUE
+5000
+84 - Query 84
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects(27, assign)  such that Next(_, call)  such that Affects*(stmt, 14) 
+TRUE
+5000
+85 - Query 85
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, stmt)  such that Affects(stmt, 27)  such that Affects(assign, _) 
+TRUE
+5000
+86 - Query 86
+if if; while while; print print; 
+Select <if, while, print>  such that Next(if, _)  such that Next*(print, _)  such that Next(27, while) 
+TRUE
+5000
+87 - Query 87
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next*(read, 29)  such that Affects*(29, stmt)  such that Affects*(stmt, assign) 
+TRUE
+5000
+88 - Query 88
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, assign)  such that Affects*(24, stmt)  such that Affects(22, assign) 
+TRUE
+5000
+89 - Query 89
+while while; assign assign; call call; 
+Select <while, assign, call>  such that Affects(7, assign)  such that Next(2, call)  such that Next(while, _) 
+TRUE
+5000
+90 - Query 90
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(assign, 13)  such that Next*(assign, stmt)  such that Affects(assign, assign) 
+TRUE
+5000
+91 - Query 91
+assign assign; print print; 
+Select <assign, print>  such that Next*(assign, _)  such that Next(15, print)  such that Affects*(assign, assign) 
+TRUE
+5000
+92 - Query 92
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Affects*(_, assign)  such that Next(if, assign)  such that Next(19, call) 
+TRUE
+5000
+93 - Query 93
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Next(assign, stmt)  such that Affects*(assign, 9)  such that Next*(17, read) 
+TRUE
+5000
+94 - Query 94
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, 22)  such that Affects(stmt, assign)  such that Affects(10, assign) 
+TRUE
+5000
+95 - Query 95
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects(_, stmt)  such that Next*(_, if)  such that Affects(18, assign) 
+TRUE
+5000
+96 - Query 96
+stmt stmt; while while; 
+Select <stmt, while>  such that Next(22, while)  such that Next*(stmt, _)  such that Affects*(stmt, _) 
+TRUE
+5000
+97 - Query 97
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects(_, stmt)  such that Affects*(stmt, 24)  such that Next*(while, assign) 
+TRUE
+5000
+98 - Query 98
+while while; print print; assign assign; call call; 
+Select <while, print, assign, call>  such that Next*(call, _)  such that Next(print, while)  such that Next*(assign, _) 
+TRUE
+5000
+99 - Query 99
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, 25)  such that Affects*(27, assign)  such that Affects*(13, stmt) 
+TRUE
+5000
+100 - Query 100
+stmt stmt; while while; if if; call call; 
+Select <stmt, while, if, call>  such that Next*(while, call)  such that Affects(20, stmt)  such that Next(if, _) 
+TRUE
+5000
+101 - Query 101
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, assign)  such that Next(stmt, 23)  such that Affects*(assign, _) 
+TRUE
+5000
+102 - Query 102
+while while; assign assign; print print; stmt stmt; read read; 
+Select <while, assign, print, stmt, read>  such that Next(while, 21)  such that Affects(assign, stmt)  such that Next(read, print) 
+TRUE
+5000
+103 - Query 103
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, _)  such that Affects(4, assign)  such that Affects(stmt, 19) 
+TRUE
+5000
+104 - Query 104
+if if; stmt stmt; call call; 
+Select <if, stmt, call>  such that Affects*(11, stmt)  such that Next(if, 27)  such that Next(8, call) 
+TRUE
+5000
+105 - Query 105
+assign assign; print print; 
+Select <assign, print>  such that Affects(_, assign)  such that Next*(_, print)  such that Affects*(_, assign) 
+TRUE
+5000
+106 - Query 106
+if if; stmt stmt; assign assign; call call; 
+Select <if, stmt, assign, call>  such that Next(call, 22)  such that Affects(12, stmt)  such that Next(assign, if) 
+TRUE
+5000
+107 - Query 107
+stmt stmt; if if; assign assign; call call; 
+Select <stmt, if, assign, call>  such that Affects(28, assign)  such that Next*(if, call)  such that Affects(stmt, _) 
+TRUE
+5000
+108 - Query 108
+assign assign; 
+Select <assign>  such that Affects(assign, _)  such that Affects*(assign, assign)  such that Affects*(assign, 6) 
+TRUE
+5000
+109 - Query 109
+stmt stmt; if if; read read; print print; 
+Select <stmt, if, read, print>  such that Next(if, read)  such that Affects*(stmt, stmt)  such that Next(print, 23) 
+TRUE
+5000
+110 - Query 110
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, _)  such that Affects*(27, assign)  such that Affects(_, stmt) 
+TRUE
+5000
+111 - Query 111
+stmt stmt; 
+Select <stmt>  such that Affects(_, stmt)  such that Affects(stmt, 27)  such that Affects*(_, stmt) 
+TRUE
+5000
+112 - Query 112
+stmt stmt; while while; 
+Select <stmt, while>  such that Next*(18, while)  such that Next(while, 17)  such that Affects*(19, stmt) 
+TRUE
+5000
+113 - Query 113
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(_, stmt)  such that Affects(_, assign)  such that Affects*(stmt, _) 
+TRUE
+5000
+114 - Query 114
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next*(while, _)  such that Affects*(29, stmt)  such that Next*(29, assign) 
+TRUE
+5000
+115 - Query 115
+stmt stmt; read read; if if; print print; 
+Select <stmt, read, if, print>  such that Next*(if, print)  such that Affects(stmt, _)  such that Next(_, read) 
+TRUE
+5000
+116 - Query 116
+if if; assign assign; 
+Select <if, assign>  such that Next*(assign, if)  such that Next(if, 13)  such that Affects*(14, assign) 
+TRUE
+5000
+117 - Query 117
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, _)  such that Next(assign, 16)  such that Affects*(stmt, assign) 
+TRUE
+5000
+118 - Query 118
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next*(while, assign)  such that Affects*(stmt, 5)  such that Affects(assign, _) 
+TRUE
+5000
+119 - Query 119
+if if; stmt stmt; assign assign; call call; 
+Select <if, stmt, assign, call>  such that Affects(20, stmt)  such that Next*(call, if)  such that Affects(assign, _) 
+TRUE
+5000
+120 - Query 120
+print print; assign assign; call call; 
+Select <print, assign, call>  such that Affects*(1, assign)  such that Next(call, 21)  such that Next*(print, 25) 
+TRUE
+5000
+121 - Query 121
+read read; assign assign; 
+Select <read, assign>  such that Next(_, read)  such that Next(assign, 14)  such that Affects*(_, assign) 
+TRUE
+5000
+122 - Query 122
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, assign)  such that Affects(_, stmt)  such that Affects(stmt, _) 
+TRUE
+5000
+123 - Query 123
+stmt stmt; read read; call call; 
+Select <stmt, read, call>  such that Next(call, read)  such that Affects*(7, stmt)  such that Affects(_, stmt) 
+TRUE
+5000
+124 - Query 124
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(assign, _)  such that Affects(stmt, assign)  such that Affects(_, assign) 
+TRUE
+5000
+125 - Query 125
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Next*(_, call)  such that Next*(26, if)  such that Affects*(assign, assign) 
+TRUE
+5000
+126 - Query 126
+stmt stmt; while while; call call; 
+Select <stmt, while, call>  such that Next*(call, _)  such that Affects(_, stmt)  such that Next(_, while) 
+TRUE
+5000
+127 - Query 127
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next(_, read)  such that Affects*(stmt, _)  such that Next*(29, assign) 
+TRUE
+5000
+128 - Query 128
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(assign, 2)  such that Affects(24, assign)  such that Affects*(stmt, stmt) 
+TRUE
+5000
+129 - Query 129
+call call; if if; assign assign; print print; 
+Select <call, if, assign, print>  such that Next*(if, 1)  such that Affects(assign, _)  such that Next(call, print) 
+TRUE
+5000
+130 - Query 130
+if if; read read; 
+Select <if, read>  such that Next*(18, if)  such that Next*(if, 26)  such that Next*(read, 27) 
+TRUE
+5000
+131 - Query 131
+stmt stmt; while while; assign assign; print print; 
+Select <stmt, while, assign, print>  such that Next(29, stmt)  such that Next(assign, _)  such that Next(print, while) 
+TRUE
+5000
+132 - Query 132
+read read; while while; assign assign; 
+Select <read, while, assign>  such that Affects(assign, 1)  such that Next(while, read)  such that Affects*(assign, _) 
+TRUE
+5000
+133 - Query 133
+stmt stmt; while while; read read; assign assign; 
+Select <stmt, while, read, assign>  such that Next(read, while)  such that Affects(assign, _)  such that Next*(stmt, 20) 
+TRUE
+5000
+134 - Query 134
+read read; assign assign; 
+Select <read, assign>  such that Next*(4, assign)  such that Affects(assign, _)  such that Next(_, read) 
+TRUE
+5000
+135 - Query 135
+read read; assign assign; 
+Select <read, assign>  such that Affects*(_, assign)  such that Next*(read, 11)  such that Affects*(assign, 23) 
+TRUE
+5000
+136 - Query 136
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Affects*(stmt, stmt)  such that Next(_, print)  such that Affects(assign, assign) 
+TRUE
+5000
+137 - Query 137
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(stmt, 14)  such that Next(stmt, 3)  such that Affects*(assign, assign) 
+TRUE
+5000
+138 - Query 138
+while while; assign assign; 
+Select <while, assign>  such that Affects(15, assign)  such that Next(while, _)  such that Next(while, 11) 
+TRUE
+5000
+139 - Query 139
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects(stmt, assign)  such that Affects*(assign, stmt)  such that Next*(call, _) 
+TRUE
+5000
+140 - Query 140
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Next(_, stmt)  such that Affects(assign, _)  such that Next(_, if) 
+TRUE
+5000
+141 - Query 141
+stmt stmt; read read; print print; 
+Select <stmt, read, print>  such that Next*(stmt, _)  such that Next*(read, 1)  such that Next*(print, 25) 
+TRUE
+5000
+142 - Query 142
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, _)  such that Affects*(assign, assign)  such that Affects(assign, assign) 
+TRUE
+5000
+143 - Query 143
+stmt stmt; if if; while while; 
+Select <stmt, if, while>  such that Next(2, if)  such that Affects*(stmt, _)  such that Next*(_, while) 
+TRUE
+5000
+144 - Query 144
+print print; stmt stmt; assign assign; call call; 
+Select <print, stmt, assign, call>  such that Next(assign, call)  such that Affects(stmt, stmt)  such that Next(print, 14) 
+TRUE
+5000
+145 - Query 145
+stmt stmt; read read; 
+Select <stmt, read>  such that Next(stmt, stmt)  such that Next*(read, 8)  such that Next*(22, read) 
+TRUE
+5000
+146 - Query 146
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects*(26, assign)  such that Next*(9, stmt)  such that Next*(stmt, if) 
+TRUE
+5000
+147 - Query 147
+stmt stmt; 
+Select <stmt>  such that Affects*(_, stmt)  such that Affects*(stmt, stmt)  such that Affects(stmt, _) 
+TRUE
+5000
+148 - Query 148
+read read; stmt stmt; assign assign; call call; 
+Select <read, stmt, assign, call>  such that Next(call, 7)  such that Affects(_, assign)  such that Next*(read, stmt) 
+TRUE
+5000
+149 - Query 149
+stmt stmt; while while; read read; 
+Select <stmt, while, read>  such that Affects*(_, stmt)  such that Next(read, while)  such that Affects(_, stmt) 
+TRUE
+5000
+150 - Query 150
+stmt stmt; read read; 
+Select <stmt, read>  such that Affects*(stmt, _)  such that Next*(stmt, _)  such that Next*(read, _) 
+TRUE
+5000
+151 - Query 151
+read read; print print; assign assign; 
+Select <read, print, assign>  such that Next*(print, _)  such that Next*(18, assign)  such that Next*(2, read) 
+TRUE
+5000
+152 - Query 152
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects*(stmt, _)  such that Affects*(assign, assign)  such that Next(read, 4) 
+TRUE
+5000
+153 - Query 153
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(_, stmt)  such that Affects(_, stmt)  such that Affects*(assign, _) 
+TRUE
+5000
+154 - Query 154
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, _)  such that Affects(assign, _)  such that Affects*(3, stmt) 
+TRUE
+5000
+155 - Query 155
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects*(assign, stmt)  such that Affects*(stmt, _)  such that Next(if, _) 
+TRUE
+5000
+156 - Query 156
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Next(stmt, 12)  such that Affects*(_, assign)  such that Next*(_, print) 
+TRUE
+5000
+157 - Query 157
+if if; assign assign; 
+Select <if, assign>  such that Next(_, if)  such that Next*(if, _)  such that Affects(assign, _) 
+TRUE
+5000
+158 - Query 158
+if if; stmt stmt; while while; assign assign; 
+Select <if, stmt, while, assign>  such that Affects(stmt, _)  such that Next*(while, if)  such that Affects*(assign, assign) 
+TRUE
+5000
+159 - Query 159
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, stmt)  such that Next(_, assign)  such that Affects*(assign, stmt) 
+TRUE
+5000
+160 - Query 160
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, stmt)  such that Affects*(assign, stmt)  such that Affects*(stmt, _) 
+TRUE
+5000
+161 - Query 161
+if if; stmt stmt; 
+Select <if, stmt>  such that Affects(stmt, stmt)  such that Next*(_, stmt)  such that Next(if, 16) 
+TRUE
+5000
+162 - Query 162
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects(assign, stmt)  such that Affects(assign, 5)  such that Next*(16, if) 
+TRUE
+5000
+163 - Query 163
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(assign, _)  such that Affects*(assign, _)  such that Affects(stmt, 3) 
+TRUE
+5000
+164 - Query 164
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(assign, _)  such that Next(while, _)  such that Affects(stmt, _) 
+TRUE
+5000
+165 - Query 165
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next*(call, 20)  such that Affects(assign, _)  such that Affects*(stmt, 4) 
+TRUE
+5000
+166 - Query 166
+if if; while while; assign assign; 
+Select <if, while, assign>  such that Next*(27, if)  such that Next*(assign, 1)  such that Next(27, while) 
+TRUE
+5000
+167 - Query 167
+assign assign; print print; 
+Select <assign, print>  such that Affects*(_, assign)  such that Next*(print, assign)  such that Affects(assign, _) 
+TRUE
+5000
+168 - Query 168
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Affects(_, stmt)  such that Next(read, _)  such that Affects(stmt, assign) 
+TRUE
+5000
+169 - Query 169
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects(4, stmt)  such that Next(25, while)  such that Affects(25, assign) 
+TRUE
+5000
+170 - Query 170
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, 5)  such that Affects*(stmt, assign)  such that Affects*(_, assign) 
+TRUE
+5000
+171 - Query 171
+while while; assign assign; print print; 
+Select <while, assign, print>  such that Affects*(28, assign)  such that Next*(print, while)  such that Affects(_, assign) 
+TRUE
+5000
+172 - Query 172
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects(assign, stmt)  such that Affects*(_, assign)  such that Next*(17, print) 
+TRUE
+5000
+173 - Query 173
+call call; while while; assign assign; print print; 
+Select <call, while, assign, print>  such that Affects(assign, assign)  such that Next*(print, 25)  such that Next(while, call) 
+TRUE
+5000
+174 - Query 174
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, 12)  such that Affects(stmt, 10)  such that Affects*(stmt, assign) 
+TRUE
+5000
+175 - Query 175
+stmt stmt; read read; assign assign; call call; 
+Select <stmt, read, assign, call>  such that Next(_, call)  such that Next(read, _)  such that Affects(assign, stmt) 
+TRUE
+5000
+176 - Query 176
+if if; print print; assign assign; 
+Select <if, print, assign>  such that Next*(print, 17)  such that Next(22, assign)  such that Next*(if, 5) 
+TRUE
+5000
+177 - Query 177
+stmt stmt; if if; 
+Select <stmt, if>  such that Next(2, if)  such that Affects*(22, stmt)  such that Affects(_, stmt) 
+TRUE
+5000
+178 - Query 178
+read read; assign assign; call call; 
+Select <read, assign, call>  such that Next(12, call)  such that Next*(read, _)  such that Affects*(_, assign) 
+TRUE
+5000
+179 - Query 179
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next*(print, print)  such that Affects*(2, assign)  such that Affects(stmt, _) 
+TRUE
+5000
+180 - Query 180
+print print; assign assign; 
+Select <print, assign>  such that Next(print, 8)  such that Next(_, print)  such that Affects(assign, 5) 
+TRUE
+5000
+181 - Query 181
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects(assign, 23)  such that Affects*(stmt, stmt)  such that Next(if, 25) 
+TRUE
+5000
+182 - Query 182
+read read; assign assign; print print; 
+Select <read, assign, print>  such that Next(_, read)  such that Next*(13, assign)  such that Next*(_, print) 
+TRUE
+5000
+183 - Query 183
+assign assign; 
+Select <assign>  such that Affects*(assign, assign)  such that Affects*(assign, _)  such that Affects*(assign, _) 
+TRUE
+5000
+184 - Query 184
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects(_, stmt)  such that Next(_, assign)  such that Next*(print, _) 
+TRUE
+5000
+185 - Query 185
+read read; while while; assign assign; print print; 
+Select <read, while, assign, print>  such that Affects*(_, assign)  such that Next*(print, while)  such that Next(2, read) 
+TRUE
+5000
+186 - Query 186
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Next*(if, _)  such that Next*(call, _)  such that Next(_, assign) 
+TRUE
+5000
+187 - Query 187
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(stmt, assign)  such that Next*(while, 27)  such that Affects*(stmt, 8) 
+TRUE
+5000
+188 - Query 188
+if if; while while; assign assign; 
+Select <if, while, assign>  such that Next(22, while)  such that Next(24, if)  such that Affects*(assign, 4) 
+TRUE
+5000
+189 - Query 189
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(26, stmt)  such that Affects*(stmt, 27)  such that Affects*(assign, _) 
+TRUE
+5000
+190 - Query 190
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next*(print, 27)  such that Affects*(stmt, _)  such that Affects*(assign, 28) 
+TRUE
+5000
+191 - Query 191
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, assign)  such that Next*(assign, assign)  such that Affects(stmt, _) 
+TRUE
+5000
+192 - Query 192
+if if; read read; stmt stmt; assign assign; 
+Select <if, read, stmt, assign>  such that Next(stmt, assign)  such that Next(if, 20)  such that Next*(read, _) 
+TRUE
+5000
+193 - Query 193
+stmt stmt; 
+Select <stmt>  such that Affects(11, stmt)  such that Affects*(stmt, 1)  such that Affects*(stmt, _) 
+TRUE
+5000
+194 - Query 194
+stmt stmt; 
+Select <stmt>  such that Affects*(stmt, stmt)  such that Affects(stmt, _)  such that Next(stmt, _) 
+TRUE
+5000
+195 - Query 195
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Next*(10, stmt)  such that Next(_, if)  such that Affects*(assign, 22) 
+TRUE
+5000
+196 - Query 196
+stmt stmt; if if; read read; 
+Select <stmt, if, read>  such that Next(13, if)  such that Next*(stmt, read)  such that Affects(stmt, 19) 
+TRUE
+5000
+197 - Query 197
+if if; print print; assign assign; 
+Select <if, print, assign>  such that Next*(print, 5)  such that Next*(assign, assign)  such that Next(if, 3) 
+TRUE
+5000
+198 - Query 198
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next(call, _)  such that Affects*(20, stmt)  such that Affects*(assign, 20) 
+TRUE
+5000
+199 - Query 199
+print print; assign assign; 
+Select <print, assign>  such that Next(print, assign)  such that Affects(27, assign)  such that Affects*(_, assign) 
+TRUE
+5000
+200 - Query 200
+while while; assign assign; 
+Select <while, assign>  such that Affects(2, assign)  such that Next*(19, while)  such that Affects*(assign, 8) 
+TRUE
+5000
+201 - Query 201
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, assign)  such that Affects*(stmt, 25)  such that Affects(_, stmt) 
+TRUE
+5000
+202 - Query 202
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next(print, assign)  such that Next(_, print)  such that Next*(stmt, 8) 
+TRUE
+5000
+203 - Query 203
+stmt stmt; read read; 
+Select <stmt, read>  such that Next(_, read)  such that Affects(_, stmt)  such that Affects*(13, stmt) 
+TRUE
+5000
+204 - Query 204
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(_, stmt)  such that Affects*(assign, _)  such that Next(assign, _) 
+TRUE
+5000
+205 - Query 205
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next(_, print)  such that Next*(assign, _)  such that Affects(assign, stmt) 
+TRUE
+5000
+206 - Query 206
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next*(_, while)  such that Affects(stmt, stmt)  such that Affects(assign, 25) 
+TRUE
+5000
+207 - Query 207
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, assign)  such that Affects(assign, _)  such that Affects(17, stmt) 
+TRUE
+5000
+208 - Query 208
+if if; assign assign; 
+Select <if, assign>  such that Affects(assign, _)  such that Next*(26, if)  such that Affects(assign, assign) 
+TRUE
+5000
+209 - Query 209
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, assign)  such that Affects(assign, _)  such that Affects(1, stmt) 
+TRUE
+5000
+210 - Query 210
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, stmt)  such that Affects(assign, stmt)  such that Affects(stmt, assign) 
+TRUE
+5000
+211 - Query 211
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects*(_, stmt)  such that Affects*(_, assign)  such that Next(if, 13) 
+TRUE
+5000
+212 - Query 212
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects(_, stmt)  such that Affects(assign, _)  such that Next*(print, 15) 
+TRUE
+5000
+213 - Query 213
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(assign, 28)  such that Next*(stmt, stmt)  such that Affects(stmt, assign) 
+TRUE
+5000
+214 - Query 214
+if if; stmt stmt; 
+Select <if, stmt>  such that Affects*(_, stmt)  such that Affects*(stmt, 28)  such that Next*(13, if) 
+TRUE
+5000
+215 - Query 215
+print print; assign assign; call call; 
+Select <print, assign, call>  such that Next*(_, print)  such that Next*(_, call)  such that Affects(13, assign) 
+TRUE
+5000
+216 - Query 216
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(28, stmt)  such that Affects*(assign, stmt)  such that Next*(_, call) 
+TRUE
+5000
+217 - Query 217
+stmt stmt; while while; read read; if if; 
+Select <stmt, while, read, if>  such that Next(while, while)  such that Next(_, stmt)  such that Next(read, if) 
+TRUE
+5000
+218 - Query 218
+stmt stmt; if if; while while; call call; 
+Select <stmt, if, while, call>  such that Next(call, if)  such that Next*(_, while)  such that Affects*(stmt, _) 
+TRUE
+5000
+219 - Query 219
+print print; assign assign; 
+Select <print, assign>  such that Next(_, print)  such that Affects*(16, assign)  such that Next(_, print) 
+TRUE
+5000
+220 - Query 220
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Affects(29, assign)  such that Next*(if, call)  such that Next(_, assign) 
+TRUE
+5000
+221 - Query 221
+stmt stmt; read read; 
+Select <stmt, read>  such that Next*(19, stmt)  such that Next*(_, read)  such that Affects*(25, stmt) 
+TRUE
+5000
+222 - Query 222
+print print; 
+Select <print>  such that Next*(print, _)  such that Next*(print, _)  such that Next*(print, print) 
+TRUE
+5000
+223 - Query 223
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next*(call, 5)  such that Affects(stmt, assign)  such that Affects(stmt, stmt) 
+TRUE
+5000
+224 - Query 224
+stmt stmt; print print; 
+Select <stmt, print>  such that Next*(26, print)  such that Affects(stmt, stmt)  such that Next*(print, _) 
+TRUE
+5000
+225 - Query 225
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next(_, assign)  such that Affects*(_, stmt)  such that Next(3, while) 
+TRUE
+5000
+226 - Query 226
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, _)  such that Affects(_, assign)  such that Affects*(assign, stmt) 
+TRUE
+5000
+227 - Query 227
+stmt stmt; print print; 
+Select <stmt, print>  such that Next*(stmt, _)  such that Next(print, 28)  such that Affects(stmt, _) 
+TRUE
+5000
+228 - Query 228
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, _)  such that Next(stmt, 11)  such that Affects(2, assign) 
+TRUE
+5000
+229 - Query 229
+stmt stmt; read read; call call; 
+Select <stmt, read, call>  such that Affects*(stmt, 13)  such that Next(call, 14)  such that Next(read, _) 
+TRUE
+5000
+230 - Query 230
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, assign)  such that Affects*(stmt, _)  such that Affects*(stmt, 6) 
+TRUE
+5000
+231 - Query 231
+stmt stmt; 
+Select <stmt>  such that Affects*(2, stmt)  such that Affects(stmt, _)  such that Affects*(_, stmt) 
+TRUE
+5000
+232 - Query 232
+read read; assign assign; print print; 
+Select <read, assign, print>  such that Next(_, read)  such that Next*(assign, _)  such that Next*(print, _) 
+TRUE
+5000
+233 - Query 233
+read read; stmt stmt; assign assign; if if; 
+Select <read, stmt, assign, if>  such that Affects(assign, stmt)  such that Next(_, read)  such that Next(14, if) 
+TRUE
+5000
+234 - Query 234
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Affects*(stmt, 13)  such that Next(_, read)  such that Next*(_, assign) 
+TRUE
+5000
+235 - Query 235
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects(assign, 13)  such that Next(1, read)  such that Affects(stmt, 10) 
+TRUE
+5000
+236 - Query 236
+while while; assign assign; call call; 
+Select <while, assign, call>  such that Next*(call, while)  such that Affects*(_, assign)  such that Affects*(assign, assign) 
+TRUE
+5000
+237 - Query 237
+stmt stmt; if if; read read; assign assign; 
+Select <stmt, if, read, assign>  such that Next(if, read)  such that Affects(assign, 23)  such that Affects*(1, stmt) 
+TRUE
+5000
+238 - Query 238
+stmt stmt; while while; call call; 
+Select <stmt, while, call>  such that Next*(call, 2)  such that Next*(while, 3)  such that Next(stmt, 20) 
+TRUE
+5000
+239 - Query 239
+if if; stmt stmt; print print; assign assign; 
+Select <if, stmt, print, assign>  such that Affects*(stmt, _)  such that Next(if, print)  such that Affects*(24, assign) 
+TRUE
+5000
+240 - Query 240
+read read; stmt stmt; print print; 
+Select <read, stmt, print>  such that Affects*(21, stmt)  such that Next(print, _)  such that Next*(stmt, read) 
+TRUE
+5000
+241 - Query 241
+stmt stmt; while while; print print; 
+Select <stmt, while, print>  such that Affects(stmt, _)  such that Affects*(_, stmt)  such that Next(print, while) 
+TRUE
+5000
+242 - Query 242
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, _)  such that Next(assign, 10)  such that Affects*(19, stmt) 
+TRUE
+5000
+243 - Query 243
+stmt stmt; read read; print print; 
+Select <stmt, read, print>  such that Next*(read, _)  such that Next*(_, print)  such that Affects*(_, stmt) 
+TRUE
+5000
+244 - Query 244
+read read; stmt stmt; assign assign; call call; 
+Select <read, stmt, assign, call>  such that Affects(stmt, assign)  such that Next*(_, read)  such that Next(call, _) 
+TRUE
+5000
+245 - Query 245
+if if; assign assign; 
+Select <if, assign>  such that Affects*(assign, 2)  such that Next*(_, if)  such that Affects*(assign, 23) 
+TRUE
+5000
+246 - Query 246
+stmt stmt; while while; 
+Select <stmt, while>  such that Affects*(stmt, _)  such that Next*(16, while)  such that Affects*(_, stmt) 
+TRUE
+5000
+247 - Query 247
+stmt stmt; call call; 
+Select <stmt, call>  such that Next*(19, call)  such that Affects(12, stmt)  such that Affects*(stmt, stmt) 
+TRUE
+5000
+248 - Query 248
+stmt stmt; read read; call call; 
+Select <stmt, read, call>  such that Next(12, call)  such that Affects(stmt, 17)  such that Next(call, read) 
+TRUE
+5000
+249 - Query 249
+read read; assign assign; 
+Select <read, assign>  such that Next(assign, read)  such that Affects*(_, assign)  such that Affects(assign, assign) 
+TRUE
+5000
+250 - Query 250
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Next(23, assign)  such that Next*(27, print)  such that Affects(stmt, assign) 
+TRUE
+5000
+251 - Query 251
+stmt stmt; if if; 
+Select <stmt, if>  such that Next*(9, if)  such that Affects*(_, stmt)  such that Next*(if, 15) 
+TRUE
+5000
+252 - Query 252
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Affects*(4, assign)  such that Next*(_, if)  such that Affects(assign, stmt) 
+TRUE
+5000
+253 - Query 253
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Next*(_, if)  such that Affects*(_, assign)  such that Affects*(stmt, _) 
+TRUE
+5000
+254 - Query 254
+if if; stmt stmt; while while; call call; 
+Select <if, stmt, while, call>  such that Next*(call, call)  such that Next(_, stmt)  such that Next*(if, while) 
+TRUE
+5000
+255 - Query 255
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Next(26, if)  such that Affects*(assign, _)  such that Affects*(assign, stmt) 
+TRUE
+5000
+256 - Query 256
+stmt stmt; print print; call call; 
+Select <stmt, print, call>  such that Affects*(stmt, _)  such that Next*(call, _)  such that Next*(15, print) 
+TRUE
+5000
+257 - Query 257
+stmt stmt; if if; assign assign; call call; 
+Select <stmt, if, assign, call>  such that Next(if, call)  such that Affects*(stmt, 17)  such that Next(11, assign) 
+TRUE
+5000
+258 - Query 258
+stmt stmt; if if; print print; 
+Select <stmt, if, print>  such that Next(_, if)  such that Next*(21, print)  such that Affects(stmt, _) 
+TRUE
+5000
+259 - Query 259
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, _)  such that Next*(stmt, stmt)  such that Affects(assign, _) 
+TRUE
+5000
+260 - Query 260
+stmt stmt; 
+Select <stmt>  such that Next*(_, stmt)  such that Next*(stmt, 12)  such that Next*(stmt, _) 
+TRUE
+5000
+261 - Query 261
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects(stmt, assign)  such that Affects*(stmt, 2)  such that Next(if, _) 
+TRUE
+5000
+262 - Query 262
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(21, assign)  such that Next*(stmt, assign)  such that Affects(stmt, assign) 
+TRUE
+5000
+263 - Query 263
+stmt stmt; if if; print print; 
+Select <stmt, if, print>  such that Next*(if, 8)  such that Next(print, print)  such that Affects*(_, stmt) 
+TRUE
+5000
+264 - Query 264
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, _)  such that Next(stmt, _)  such that Affects*(_, assign) 
+TRUE
+5000
+265 - Query 265
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, assign)  such that Affects*(8, stmt)  such that Affects*(assign, assign) 
+TRUE
+5000
+266 - Query 266
+stmt stmt; while while; print print; assign assign; 
+Select <stmt, while, print, assign>  such that Next*(_, print)  such that Next*(while, assign)  such that Next(stmt, _) 
+TRUE
+5000
+267 - Query 267
+stmt stmt; while while; print print; assign assign; 
+Select <stmt, while, print, assign>  such that Next*(print, print)  such that Affects(stmt, 6)  such that Next*(assign, while) 
+TRUE
+5000
+268 - Query 268
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, _)  such that Next(stmt, _)  such that Next(29, assign) 
+TRUE
+5000
+269 - Query 269
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next*(_, assign)  such that Affects*(_, stmt)  such that Next(call, 20) 
+TRUE
+5000
+270 - Query 270
+read read; assign assign; call call; 
+Select <read, assign, call>  such that Next*(1, assign)  such that Affects(2, assign)  such that Next*(call, read) 
+TRUE
+5000
+271 - Query 271
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects*(27, assign)  such that Next(_, print)  such that Affects*(_, stmt) 
+TRUE
+5000
+272 - Query 272
+stmt stmt; read read; 
+Select <stmt, read>  such that Affects(_, stmt)  such that Next(2, read)  such that Affects(1, stmt) 
+TRUE
+5000
+273 - Query 273
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, assign)  such that Affects*(_, assign)  such that Affects*(_, assign) 
+TRUE
+5000
+274 - Query 274
+stmt stmt; print print; assign assign; call call; 
+Select <stmt, print, assign, call>  such that Next(print, 21)  such that Next*(call, 3)  such that Affects*(assign, stmt) 
+TRUE
+5000
+275 - Query 275
+if if; while while; print print; 
+Select <if, while, print>  such that Next*(while, _)  such that Next(print, 9)  such that Next(_, if) 
+TRUE
+5000
+276 - Query 276
+read read; assign assign; 
+Select <read, assign>  such that Next(assign, _)  such that Next(_, read)  such that Affects(assign, assign) 
+TRUE
+5000
+277 - Query 277
+stmt stmt; 
+Select <stmt>  such that Affects(_, stmt)  such that Affects(7, stmt)  such that Affects(stmt, _) 
+TRUE
+5000
+278 - Query 278
+assign assign; call call; 
+Select <assign, call>  such that Next(assign, _)  such that Affects*(_, assign)  such that Next*(call, 13) 
+TRUE
+5000
+279 - Query 279
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(_, assign)  such that Affects*(assign, stmt)  such that Affects(26, stmt) 
+TRUE
+5000
+280 - Query 280
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Next*(if, _)  such that Affects*(assign, assign)  such that Next*(assign, call) 
+TRUE
+5000
+281 - Query 281
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next(22, call)  such that Affects(27, assign)  such that Affects(stmt, stmt) 
+TRUE
+5000
+282 - Query 282
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects(17, assign)  such that Next(call, 3)  such that Next(stmt, 21) 
+TRUE
+5000
+283 - Query 283
+print print; assign assign; call call; stmt stmt; read read; 
+Select <print, assign, call, stmt, read>  such that Next(print, read)  such that Affects(stmt, assign)  such that Next(call, 10) 
+TRUE
+5000
+284 - Query 284
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(stmt, assign)  such that Next(4, call)  such that Affects*(18, assign) 
+TRUE
+5000
+285 - Query 285
+stmt stmt; 
+Select <stmt>  such that Next*(_, stmt)  such that Affects(_, stmt)  such that Affects(stmt, stmt) 
+TRUE
+5000
+286 - Query 286
+while while; print print; 
+Select <while, print>  such that Next(print, 13)  such that Next(25, print)  such that Next*(_, while) 
+TRUE
+5000
+287 - Query 287
+read read; while while; assign assign; 
+Select <read, while, assign>  such that Affects*(assign, 29)  such that Next*(while, read)  such that Affects(assign, assign) 
+TRUE
+5000
+288 - Query 288
+stmt stmt; read read; 
+Select <stmt, read>  such that Next*(28, stmt)  such that Next(read, _)  such that Next*(stmt, _) 
+TRUE
+5000
+289 - Query 289
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(_, stmt)  such that Affects(assign, 22)  such that Next(6, call) 
+TRUE
+5000
+290 - Query 290
+assign assign; call call; 
+Select <assign, call>  such that Affects*(assign, assign)  such that Affects*(_, assign)  such that Next*(call, 21) 
+TRUE
+5000
+291 - Query 291
+stmt stmt; if if; print print; assign assign; 
+Select <stmt, if, print, assign>  such that Next*(if, print)  such that Affects*(11, stmt)  such that Affects*(assign, _) 
+TRUE
+5000
+292 - Query 292
+stmt stmt; call call; 
+Select <stmt, call>  such that Affects(stmt, _)  such that Next*(_, call)  such that Affects(stmt, 14) 
+TRUE
+5000
+293 - Query 293
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, _)  such that Affects(stmt, 5)  such that Affects*(stmt, 20) 
+TRUE
+5000
+294 - Query 294
+if if; while while; print print; 
+Select <if, while, print>  such that Next(_, print)  such that Next(28, if)  such that Next*(_, while) 
+TRUE
+5000
+295 - Query 295
+assign assign; print print; 
+Select <assign, print>  such that Next*(_, assign)  such that Next*(_, print)  such that Affects(assign, 1) 
+TRUE
+5000
+296 - Query 296
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects(stmt, _)  such that Affects(stmt, assign)  such that Next(if, 10) 
+TRUE
+5000
+297 - Query 297
+while while; print print; call call; 
+Select <while, print, call>  such that Next(23, call)  such that Next(6, while)  such that Next(_, print) 
+TRUE
+5000
+298 - Query 298
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects(assign, stmt)  such that Affects*(stmt, _)  such that Next(read, 2) 
+TRUE
+5000
+299 - Query 299
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, 7)  such that Affects(assign, _)  such that Next(_, stmt) 
+TRUE
+5000
+300 - Query 300
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next(call, 5)  such that Affects(assign, stmt)  such that Affects*(stmt, _) 
+TRUE
+5000
+301 - Query 301
+stmt stmt; while while; call call; 
+Select <stmt, while, call>  such that Affects(_, stmt)  such that Next*(call, while)  such that Affects(4, stmt) 
+TRUE
+5000
+302 - Query 302
+assign assign; call call; 
+Select <assign, call>  such that Next*(call, _)  such that Affects(assign, _)  such that Next*(24, call) 
+TRUE
+5000
+303 - Query 303
+stmt stmt; while while; 
+Select <stmt, while>  such that Affects*(stmt, _)  such that Next(_, while)  such that Affects(27, stmt) 
+TRUE
+5000
+304 - Query 304
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(assign, 7)  such that Next*(stmt, 27)  such that Affects*(stmt, _) 
+TRUE
+5000
+305 - Query 305
+stmt stmt; 
+Select <stmt>  such that Affects(_, stmt)  such that Affects(stmt, _)  such that Affects(21, stmt) 
+TRUE
+5000
+306 - Query 306
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(6, stmt)  such that Next*(assign, 27)  such that Affects*(_, assign) 
+TRUE
+5000
+307 - Query 307
+read read; assign assign; 
+Select <read, assign>  such that Affects*(assign, _)  such that Next(read, 26)  such that Affects*(_, assign) 
+TRUE
+5000
+308 - Query 308
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects*(stmt, _)  such that Affects*(assign, 14)  such that Next(if, if) 
+TRUE
+5000
+309 - Query 309
+while while; read read; assign assign; 
+Select <while, read, assign>  such that Next*(21, read)  such that Next*(while, 16)  such that Affects(_, assign) 
+TRUE
+5000
+310 - Query 310
+stmt stmt; 
+Select <stmt>  such that Affects*(23, stmt)  such that Affects(11, stmt)  such that Affects*(26, stmt) 
+TRUE
+5000
+311 - Query 311
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, 2)  such that Affects(assign, 2)  such that Affects*(assign, _) 
+TRUE
+5000
+312 - Query 312
+stmt stmt; while while; read read; 
+Select <stmt, while, read>  such that Next*(6, read)  such that Next*(while, _)  such that Affects*(stmt, stmt) 
+TRUE
+5000
+313 - Query 313
+stmt stmt; if if; call call; 
+Select <stmt, if, call>  such that Next(if, stmt)  such that Next*(call, 26)  such that Next*(_, call) 
+TRUE
+5000
+314 - Query 314
+assign assign; call call; 
+Select <assign, call>  such that Next*(_, call)  such that Next(call, 28)  such that Next(assign, _) 
+TRUE
+5000
+315 - Query 315
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects*(assign, _)  such that Affects(_, stmt)  such that Next(if, 13) 
+TRUE
+5000
+316 - Query 316
+assign assign; 
+Select <assign>  such that Affects(10, assign)  such that Next*(_, assign)  such that Affects(15, assign) 
+TRUE
+5000
+317 - Query 317
+stmt stmt; while while; read read; 
+Select <stmt, while, read>  such that Next*(stmt, 4)  such that Next*(while, _)  such that Next(26, read) 
+TRUE
+5000
+318 - Query 318
+if if; read read; assign assign; 
+Select <if, read, assign>  such that Next*(read, if)  such that Affects(_, assign)  such that Affects*(assign, 5) 
+TRUE
+5000
+319 - Query 319
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Next(if, _)  such that Affects*(assign, _)  such that Next*(call, 20) 
+TRUE
+5000
+320 - Query 320
+while while; print print; call call; 
+Select <while, print, call>  such that Next(_, print)  such that Next(_, while)  such that Next(_, call) 
+TRUE
+5000
+321 - Query 321
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, stmt)  such that Affects(_, assign)  such that Affects(_, stmt) 
+TRUE
+5000
+322 - Query 322
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, 27)  such that Affects(stmt, stmt)  such that Affects(stmt, _) 
+TRUE
+5000
+323 - Query 323
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next*(call, call)  such that Affects(assign, _)  such that Affects*(_, stmt) 
+TRUE
+5000
+324 - Query 324
+while while; assign assign; 
+Select <while, assign>  such that Affects*(12, assign)  such that Next*(while, 25)  such that Affects(_, assign) 
+TRUE
+5000
+325 - Query 325
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(_, stmt)  such that Affects*(assign, 8)  such that Next(while, 18) 
+TRUE
+5000
+326 - Query 326
+while while; print print; assign assign; 
+Select <while, print, assign>  such that Next*(while, _)  such that Next*(24, print)  such that Affects(assign, 1) 
+TRUE
+5000
+327 - Query 327
+stmt stmt; print print; 
+Select <stmt, print>  such that Next*(_, stmt)  such that Next(stmt, 22)  such that Next*(print, _) 
+TRUE
+5000
+328 - Query 328
+read read; assign assign; 
+Select <read, assign>  such that Next*(21, read)  such that Next(assign, _)  such that Next*(assign, 29) 
+TRUE
+5000
+329 - Query 329
+read read; if if; assign assign; 
+Select <read, if, assign>  such that Affects*(assign, assign)  such that Affects(assign, _)  such that Next*(if, read) 
+TRUE
+5000
+330 - Query 330
+stmt stmt; if if; print print; 
+Select <stmt, if, print>  such that Next*(if, print)  such that Next*(15, if)  such that Affects(stmt, stmt) 
+TRUE
+5000
+331 - Query 331
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(17, stmt)  such that Affects(assign, 24)  such that Next(15, call) 
+TRUE
+5000
+332 - Query 332
+read read; stmt stmt; assign assign; print print; 
+Select <read, stmt, assign, print>  such that Affects*(assign, _)  such that Next*(15, read)  such that Next(stmt, print) 
+TRUE
+5000
+333 - Query 333
+stmt stmt; read read; print print; 
+Select <stmt, read, print>  such that Next(_, stmt)  such that Next*(26, read)  such that Next(_, print) 
+TRUE
+5000
+334 - Query 334
+if if; read read; assign assign; 
+Select <if, read, assign>  such that Next*(_, read)  such that Affects(assign, 18)  such that Next(if, 18) 
+TRUE
+5000
+335 - Query 335
+stmt stmt; if if; 
+Select <stmt, if>  such that Next*(_, if)  such that Affects(_, stmt)  such that Affects(_, stmt) 
+TRUE
+5000
+336 - Query 336
+stmt stmt; 
+Select <stmt>  such that Affects*(stmt, 8)  such that Affects*(stmt, 27)  such that Affects(_, stmt) 
+TRUE
+5000
+337 - Query 337
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, stmt)  such that Next(assign, _)  such that Affects(stmt, _) 
+TRUE
+5000
+338 - Query 338
+if if; read read; assign assign; print print; 
+Select <if, read, assign, print>  such that Next(if, _)  such that Next*(read, print)  such that Affects(_, assign) 
+TRUE
+5000
+339 - Query 339
+stmt stmt; print print; call call; 
+Select <stmt, print, call>  such that Next(call, 1)  such that Next(_, print)  such that Affects(_, stmt) 
+TRUE
+5000
+340 - Query 340
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(_, assign)  such that Next*(_, while)  such that Next(assign, stmt) 
+TRUE
+5000
+341 - Query 341
+if if; print print; call call; 
+Select <if, print, call>  such that Next*(3, call)  such that Next(_, if)  such that Next(print, 25) 
+TRUE
+5000
+342 - Query 342
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects*(19, assign)  such that Affects*(stmt, _)  such that Next*(_, read) 
+TRUE
+5000
+343 - Query 343
+stmt stmt; if if; assign assign; print print; 
+Select <stmt, if, assign, print>  such that Next(if, _)  such that Next(assign, _)  such that Next(stmt, print) 
+TRUE
+5000
+344 - Query 344
+stmt stmt; call call; 
+Select <stmt, call>  such that Affects*(stmt, 8)  such that Next(call, _)  such that Affects(8, stmt) 
+TRUE
+5000
+345 - Query 345
+read read; assign assign; 
+Select <read, assign>  such that Affects(15, assign)  such that Next(_, read)  such that Affects*(5, assign) 
+TRUE
+5000
+346 - Query 346
+stmt stmt; while while; read read; call call; 
+Select <stmt, while, read, call>  such that Next(1, read)  such that Affects(_, stmt)  such that Next(while, call) 
+TRUE
+5000
+347 - Query 347
+stmt stmt; while while; read read; call call; 
+Select <stmt, while, read, call>  such that Next(call, _)  such that Next*(read, while)  such that Next*(stmt, _) 
+TRUE
+5000
+348 - Query 348
+print print; assign assign; call call; 
+Select <print, assign, call>  such that Next*(_, print)  such that Affects*(assign, 29)  such that Next(_, call) 
+TRUE
+5000
+349 - Query 349
+stmt stmt; print print; 
+Select <stmt, print>  such that Next*(print, 8)  such that Next*(stmt, 13)  such that Next(19, stmt) 
+TRUE
+5000
+350 - Query 350
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Affects*(stmt, _)  such that Next*(print, _)  such that Affects(assign, assign) 
+TRUE
+5000
+351 - Query 351
+if if; stmt stmt; while while; 
+Select <if, stmt, while>  such that Affects(stmt, 28)  such that Next(while, if)  such that Affects(stmt, _) 
+TRUE
+5000
+352 - Query 352
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Next(if, _)  such that Affects*(stmt, stmt)  such that Affects(assign, 4) 
+TRUE
+5000
+353 - Query 353
+assign assign; call call; 
+Select <assign, call>  such that Next(18, assign)  such that Affects(_, assign)  such that Next(call, _) 
+TRUE
+5000
+354 - Query 354
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(assign, assign)  such that Affects(_, stmt)  such that Affects(_, stmt) 
+TRUE
+5000
+355 - Query 355
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, stmt)  such that Affects*(assign, _)  such that Affects*(stmt, 17) 
+TRUE
+5000
+356 - Query 356
+read read; stmt stmt; print print; assign assign; 
+Select <read, stmt, print, assign>  such that Next(print, assign)  such that Next*(5, read)  such that Affects*(stmt, stmt) 
+TRUE
+5000
+357 - Query 357
+if if; print print; assign assign; stmt stmt; read read; 
+Select <if, print, assign, stmt, read>  such that Next(read, print)  such that Affects*(stmt, 2)  such that Next*(assign, if) 
+TRUE
+5000
+358 - Query 358
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects(_, assign)  such that Next*(read, _)  such that Affects(stmt, 11) 
+TRUE
+5000
+359 - Query 359
+print print; assign assign; call call; 
+Select <print, assign, call>  such that Next(assign, assign)  such that Next(24, call)  such that Next*(print, _) 
+TRUE
+5000
+360 - Query 360
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next*(_, while)  such that Affects*(stmt, assign)  such that Next(_, stmt) 
+TRUE
+5000
+361 - Query 361
+stmt stmt; read read; 
+Select <stmt, read>  such that Affects*(_, stmt)  such that Next(_, read)  such that Affects(stmt, _) 
+TRUE
+5000
+362 - Query 362
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(2, stmt)  such that Next(while, 2)  such that Affects*(assign, _) 
+TRUE
+5000
+363 - Query 363
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(assign, _)  such that Next*(assign, 15)  such that Next(stmt, call) 
+TRUE
+5000
+364 - Query 364
+stmt stmt; print print; 
+Select <stmt, print>  such that Next*(print, 2)  such that Affects(stmt, 3)  such that Affects(stmt, _) 
+TRUE
+5000
+365 - Query 365
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(stmt, assign)  such that Affects(_, assign)  such that Next(call, _) 
+TRUE
+5000
+366 - Query 366
+while while; assign assign; print print; 
+Select <while, assign, print>  such that Affects*(assign, assign)  such that Next*(print, 3)  such that Next*(while, 18) 
+TRUE
+5000
+367 - Query 367
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(22, stmt)  such that Affects(21, assign)  such that Affects(assign, 8) 
+TRUE
+5000
+368 - Query 368
+assign assign; print print; 
+Select <assign, print>  such that Affects(assign, _)  such that Next(assign, assign)  such that Next*(6, print) 
+TRUE
+5000
+369 - Query 369
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, 11)  such that Affects(_, assign)  such that Affects*(_, stmt) 
+TRUE
+5000
+370 - Query 370
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, 29)  such that Affects(28, stmt)  such that Affects*(6, stmt) 
+TRUE
+5000
+371 - Query 371
+while while; read read; assign assign; 
+Select <while, read, assign>  such that Next(_, while)  such that Next*(read, _)  such that Affects*(_, assign) 
+TRUE
+5000
+372 - Query 372
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects*(6, assign)  such that Next*(read, 29)  such that Affects*(_, stmt) 
+TRUE
+5000
+373 - Query 373
+read read; stmt stmt; while while; assign assign; 
+Select <read, stmt, while, assign>  such that Next*(while, assign)  such that Next(assign, read)  such that Affects*(_, stmt) 
+TRUE
+5000
+374 - Query 374
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Next*(23, call)  such that Next(25, if)  such that Affects*(13, assign) 
+TRUE
+5000
+375 - Query 375
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, 15)  such that Affects(assign, stmt)  such that Affects*(stmt, 10) 
+TRUE
+5000
+376 - Query 376
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, assign)  such that Affects(_, stmt)  such that Affects*(assign, _) 
+TRUE
+5000
+377 - Query 377
+if if; read read; print print; 
+Select <if, read, print>  such that Next(5, read)  such that Next(if, 10)  such that Next*(13, print) 
+TRUE
+5000
+378 - Query 378
+print print; stmt stmt; read read; call call; 
+Select <print, stmt, read, call>  such that Next*(25, call)  such that Affects*(stmt, stmt)  such that Next(print, read) 
+TRUE
+5000
+379 - Query 379
+while while; assign assign; 
+Select <while, assign>  such that Next(11, assign)  such that Affects(assign, _)  such that Next*(while, _) 
+TRUE
+5000
+380 - Query 380
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(13, stmt)  such that Affects*(_, stmt)  such that Affects(_, assign) 
+TRUE
+5000
+381 - Query 381
+while while; assign assign; print print; call call; stmt stmt; 
+Select <while, assign, print, call, stmt>  such that Affects(stmt, assign)  such that Next*(print, call)  such that Next*(while, _) 
+TRUE
+5000
+382 - Query 382
+while while; if if; assign assign; stmt stmt; 
+Select <while, if, assign, stmt>  such that Affects*(stmt, assign)  such that Next*(1, while)  such that Next(assign, if) 
+TRUE
+5000
+383 - Query 383
+if if; assign assign; 
+Select <if, assign>  such that Affects*(assign, 24)  such that Affects(assign, _)  such that Next(if, _) 
+TRUE
+5000
+384 - Query 384
+stmt stmt; if if; call call; 
+Select <stmt, if, call>  such that Next(call, _)  such that Next*(_, if)  such that Next*(_, stmt) 
+TRUE
+5000
+385 - Query 385
+stmt stmt; print print; call call; 
+Select <stmt, print, call>  such that Affects(_, stmt)  such that Next(12, call)  such that Next*(print, 25) 
+TRUE
+5000
+386 - Query 386
+if if; assign assign; 
+Select <if, assign>  such that Affects(assign, _)  such that Next(_, if)  such that Next*(if, _) 
+TRUE
+5000
+387 - Query 387
+read read; while while; assign assign; 
+Select <read, while, assign>  such that Affects*(28, assign)  such that Next(while, _)  such that Next*(read, _) 
+TRUE
+5000
+388 - Query 388
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(stmt, _)  such that Affects(stmt, _)  such that Affects*(assign, _) 
+TRUE
+5000
+389 - Query 389
+stmt stmt; while while; call call; 
+Select <stmt, while, call>  such that Affects*(_, stmt)  such that Next(call, call)  such that Next*(while, 24) 
+TRUE
+5000
+390 - Query 390
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects*(stmt, _)  such that Next*(if, stmt)  such that Affects(assign, assign) 
+TRUE
+5000
+391 - Query 391
+stmt stmt; 
+Select <stmt>  such that Affects(7, stmt)  such that Affects*(_, stmt)  such that Affects*(stmt, _) 
+TRUE
+5000
+392 - Query 392
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects(assign, stmt)  such that Affects*(assign, _)  such that Next(_, read) 
+TRUE
+5000
+393 - Query 393
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, _)  such that Affects(assign, 27)  such that Affects(_, assign) 
+TRUE
+5000
+394 - Query 394
+assign assign; 
+Select <assign>  such that Affects(assign, _)  such that Affects(assign, 1)  such that Affects*(assign, 23) 
+TRUE
+5000
+395 - Query 395
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Next*(_, assign)  such that Next(stmt, stmt)  such that Next(if, _) 
+TRUE
+5000
+396 - Query 396
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Next*(assign, print)  such that Next*(print, _)  such that Affects*(stmt, stmt) 
+TRUE
+5000
+397 - Query 397
+read read; assign assign; 
+Select <read, assign>  such that Next*(read, _)  such that Next*(read, _)  such that Affects*(assign, _) 
+TRUE
+5000
+398 - Query 398
+stmt stmt; if if; read read; assign assign; 
+Select <stmt, if, read, assign>  such that Next*(if, read)  such that Next*(4, assign)  such that Affects*(15, stmt) 
+TRUE
+5000
+399 - Query 399
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(_, assign)  such that Affects(stmt, 8)  such that Next(22, assign) 
+TRUE
+5000
+400 - Query 400
+while while; assign assign; 
+Select <while, assign>  such that Affects(4, assign)  such that Next*(while, 13)  such that Affects(assign, 9) 
+TRUE
+5000
+401 - Query 401
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, 6)  such that Affects(_, assign)  such that Next(16, stmt) 
+TRUE
+5000
+402 - Query 402
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects(stmt, stmt)  such that Next*(4, assign)  such that Next*(if, _) 
+TRUE
+5000
+403 - Query 403
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(assign, assign)  such that Next*(stmt, _)  such that Next*(19, assign) 
+TRUE
+5000
+404 - Query 404
+assign assign; call call; 
+Select <assign, call>  such that Next(assign, 17)  such that Next*(call, call)  such that Affects(assign, 5) 
+TRUE
+5000
+405 - Query 405
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, _)  such that Affects(stmt, 1)  such that Next*(stmt, assign) 
+TRUE
+5000
+406 - Query 406
+stmt stmt; call call; 
+Select <stmt, call>  such that Next(10, stmt)  such that Next(call, _)  such that Affects*(16, stmt) 
+TRUE
+5000
+407 - Query 407
+stmt stmt; call call; 
+Select <stmt, call>  such that Next(_, stmt)  such that Next*(call, 6)  such that Affects(_, stmt) 
+TRUE
+5000
+408 - Query 408
+if if; stmt stmt; while while; 
+Select <if, stmt, while>  such that Affects(19, stmt)  such that Next*(_, if)  such that Next*(23, while) 
+TRUE
+5000
+409 - Query 409
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(8, assign)  such that Affects*(stmt, assign)  such that Affects(stmt, 26) 
+TRUE
+5000
+410 - Query 410
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, _)  such that Next*(_, assign)  such that Next(_, assign) 
+TRUE
+5000
+411 - Query 411
+read read; stmt stmt; assign assign; if if; 
+Select <read, stmt, assign, if>  such that Affects(assign, stmt)  such that Next(read, 27)  such that Next*(if, 15) 
+TRUE
+5000
+412 - Query 412
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Affects(_, assign)  such that Next*(if, _)  such that Affects*(stmt, stmt) 
+TRUE
+5000
+413 - Query 413
+stmt stmt; read read; 
+Select <stmt, read>  such that Affects*(stmt, 28)  such that Next(stmt, 1)  such that Next(_, read) 
+TRUE
+5000
+414 - Query 414
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects*(stmt, _)  such that Next(_, if)  such that Next(22, assign) 
+TRUE
+5000
+415 - Query 415
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(_, assign)  such that Affects*(stmt, stmt)  such that Affects(7, stmt) 
+TRUE
+5000
+416 - Query 416
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, assign)  such that Affects(stmt, _)  such that Affects*(stmt, assign) 
+TRUE
+5000
+417 - Query 417
+stmt stmt; 
+Select <stmt>  such that Next(stmt, 21)  such that Affects(stmt, stmt)  such that Affects(stmt, 13) 
+TRUE
+5000
+418 - Query 418
+stmt stmt; call call; 
+Select <stmt, call>  such that Next*(stmt, _)  such that Affects*(_, stmt)  such that Next(12, call) 
+TRUE
+5000
+419 - Query 419
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(5, stmt)  such that Next*(_, assign)  such that Affects*(assign, 7) 
+TRUE
+5000
+420 - Query 420
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects(stmt, assign)  such that Affects*(_, stmt)  such that Next(print, print) 
+TRUE
+5000
+421 - Query 421
+stmt stmt; call call; 
+Select <stmt, call>  such that Affects*(stmt, _)  such that Affects*(_, stmt)  such that Next*(stmt, call) 
+TRUE
+5000
+422 - Query 422
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(25, assign)  such that Affects*(stmt, stmt)  such that Next(stmt, 5) 
+TRUE
+5000
+423 - Query 423
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Affects*(2, assign)  such that Next*(call, 4)  such that Next*(29, if) 
+TRUE
+5000
+424 - Query 424
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next(while, 25)  such that Next*(_, assign)  such that Affects*(_, stmt) 
+TRUE
+5000
+425 - Query 425
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects*(_, stmt)  such that Next*(if, stmt)  such that Next(assign, 10) 
+TRUE
+5000
+426 - Query 426
+if if; stmt stmt; while while; assign assign; 
+Select <if, stmt, while, assign>  such that Affects(assign, stmt)  such that Next*(17, while)  such that Next*(12, if) 
+TRUE
+5000
+427 - Query 427
+if if; stmt stmt; read read; 
+Select <if, stmt, read>  such that Affects*(26, stmt)  such that Next(if, read)  such that Next*(read, read) 
+TRUE
+5000
+428 - Query 428
+read read; assign assign; 
+Select <read, assign>  such that Affects*(assign, 20)  such that Next*(assign, _)  such that Next*(read, 21) 
+TRUE
+5000
+429 - Query 429
+read read; assign assign; call call; 
+Select <read, assign, call>  such that Next(16, call)  such that Next*(read, _)  such that Affects*(25, assign) 
+TRUE
+5000
+430 - Query 430
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(25, assign)  such that Affects(_, assign)  such that Affects*(_, stmt) 
+TRUE
+5000
+431 - Query 431
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next(read, 11)  such that Affects*(_, assign)  such that Affects*(_, stmt) 
+TRUE
+5000
+432 - Query 432
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(stmt, stmt)  such that Affects*(stmt, _)  such that Affects(assign, 14) 
+TRUE
+5000
+433 - Query 433
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, stmt)  such that Affects*(stmt, stmt)  such that Affects(_, assign) 
+TRUE
+5000
+434 - Query 434
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(stmt, 27)  such that Affects(stmt, stmt)  such that Affects*(24, assign) 
+TRUE
+5000
+435 - Query 435
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next(1, call)  such that Affects*(_, stmt)  such that Affects(assign, stmt) 
+TRUE
+5000
+436 - Query 436
+stmt stmt; while while; read read; 
+Select <stmt, while, read>  such that Next*(_, read)  such that Next*(while, 24)  such that Affects(stmt, 27) 
+TRUE
+5000
+437 - Query 437
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next*(_, call)  such that Affects*(stmt, stmt)  such that Affects*(17, assign) 
+TRUE
+5000
+438 - Query 438
+read read; print print; 
+Select <read, print>  such that Next(8, read)  such that Next*(print, _)  such that Next(read, _) 
+TRUE
+5000
+439 - Query 439
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next(1, print)  such that Affects*(29, stmt)  such that Next(3, assign) 
+TRUE
+5000
+440 - Query 440
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(assign, 20)  such that Next(while, _)  such that Affects(stmt, 8) 
+TRUE
+5000
+441 - Query 441
+assign assign; call call; 
+Select <assign, call>  such that Affects(_, assign)  such that Next(1, call)  such that Affects*(assign, assign) 
+TRUE
+5000
+442 - Query 442
+read read; if if; assign assign; 
+Select <read, if, assign>  such that Affects(assign, 14)  such that Next*(if, read)  such that Affects*(assign, _) 
+TRUE
+5000
+443 - Query 443
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, _)  such that Next(stmt, _)  such that Affects*(assign, _) 
+TRUE
+5000
+444 - Query 444
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, stmt)  such that Affects(assign, assign)  such that Affects*(stmt, assign) 
+TRUE
+5000
+445 - Query 445
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects(assign, assign)  such that Next*(_, read)  such that Affects(assign, stmt) 
+TRUE
+5000
+446 - Query 446
+stmt stmt; if if; 
+Select <stmt, if>  such that Next*(_, if)  such that Next*(8, if)  such that Next*(stmt, _) 
+TRUE
+5000
+447 - Query 447
+call call; while while; assign assign; print print; 
+Select <call, while, assign, print>  such that Next(assign, _)  such that Next*(call, print)  such that Next(while, _) 
+TRUE
+5000
+448 - Query 448
+print print; assign assign; call call; 
+Select <print, assign, call>  such that Next*(_, print)  such that Next*(_, call)  such that Affects*(assign, _) 
+TRUE
+5000
+449 - Query 449
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(3, assign)  such that Next(_, while)  such that Affects(4, stmt) 
+TRUE
+5000
+450 - Query 450
+assign assign; call call; 
+Select <assign, call>  such that Next*(19, call)  such that Next*(15, assign)  such that Next(8, assign) 
+TRUE
+5000
+451 - Query 451
+print print; call call; 
+Select <print, call>  such that Next(call, _)  such that Next(print, 3)  such that Next(10, print) 
+TRUE
+5000
+452 - Query 452
+print print; assign assign; call call; 
+Select <print, assign, call>  such that Next(print, call)  such that Next*(assign, _)  such that Affects(_, assign) 
+TRUE
+5000
+453 - Query 453
+if if; stmt stmt; 
+Select <if, stmt>  such that Affects(1, stmt)  such that Next*(_, stmt)  such that Next*(if, _) 
+TRUE
+5000
+454 - Query 454
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next*(while, 6)  such that Affects*(stmt, 12)  such that Affects(3, assign) 
+TRUE
+5000
+455 - Query 455
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, 4)  such that Next*(stmt, 3)  such that Affects(assign, 25) 
+TRUE
+5000
+456 - Query 456
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, assign)  such that Affects*(assign, _)  such that Affects(_, stmt) 
+TRUE
+5000
+457 - Query 457
+stmt stmt; read read; call call; 
+Select <stmt, read, call>  such that Next(call, _)  such that Affects(1, stmt)  such that Next*(read, 16) 
+TRUE
+5000
+458 - Query 458
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Affects*(stmt, 2)  such that Next*(read, assign)  such that Affects(assign, _) 
+TRUE
+5000
+459 - Query 459
+if if; while while; assign assign; 
+Select <if, while, assign>  such that Next*(25, if)  such that Next*(assign, 15)  such that Next*(6, while) 
+TRUE
+5000
+460 - Query 460
+while while; assign assign; print print; stmt stmt; read read; 
+Select <while, assign, print, stmt, read>  such that Affects(assign, stmt)  such that Next*(_, print)  such that Next(read, while) 
+TRUE
+5000
+461 - Query 461
+read read; stmt stmt; while while; assign assign; 
+Select <read, stmt, while, assign>  such that Affects(_, assign)  such that Next*(read, while)  such that Affects(stmt, stmt) 
+TRUE
+5000
+462 - Query 462
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, _)  such that Affects*(stmt, 27)  such that Affects*(_, assign) 
+TRUE
+5000
+463 - Query 463
+stmt stmt; print print; 
+Select <stmt, print>  such that Affects*(_, stmt)  such that Affects*(_, stmt)  such that Next(print, 4) 
+TRUE
+5000
+464 - Query 464
+stmt stmt; 
+Select <stmt>  such that Affects(5, stmt)  such that Affects(stmt, stmt)  such that Affects(stmt, 12) 
+TRUE
+5000
+465 - Query 465
+read read; assign assign; call call; 
+Select <read, assign, call>  such that Affects(17, assign)  such that Next(read, _)  such that Next*(call, 10) 
+TRUE
+5000
+466 - Query 466
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, stmt)  such that Affects(14, assign)  such that Next(assign, stmt) 
+TRUE
+5000
+467 - Query 467
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, assign)  such that Affects*(13, stmt)  such that Next(assign, _) 
+TRUE
+5000
+468 - Query 468
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, stmt)  such that Affects*(8, stmt)  such that Affects(_, assign) 
+TRUE
+5000
+469 - Query 469
+if if; print print; assign assign; 
+Select <if, print, assign>  such that Next*(print, _)  such that Affects*(13, assign)  such that Next(if, _) 
+TRUE
+5000
+470 - Query 470
+stmt stmt; while while; call call; 
+Select <stmt, while, call>  such that Next(call, _)  such that Next*(while, _)  such that Affects*(26, stmt) 
+TRUE
+5000
+471 - Query 471
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(4, stmt)  such that Affects(stmt, 6)  such that Affects*(_, assign) 
+TRUE
+5000
+472 - Query 472
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(stmt, assign)  such that Affects(assign, stmt)  such that Next(_, while) 
+TRUE
+5000
+473 - Query 473
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, stmt)  such that Next(_, stmt)  such that Affects*(assign, _) 
+TRUE
+5000
+474 - Query 474
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects(_, stmt)  such that Next*(_, call)  such that Affects*(assign, _) 
+TRUE
+5000
+475 - Query 475
+stmt stmt; while while; print print; 
+Select <stmt, while, print>  such that Next(while, _)  such that Affects(stmt, _)  such that Next(_, print) 
+TRUE
+5000
+476 - Query 476
+stmt stmt; while while; 
+Select <stmt, while>  such that Affects(_, stmt)  such that Affects(stmt, _)  such that Next(_, while) 
+TRUE
+5000
+477 - Query 477
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next*(read, 9)  such that Affects*(stmt, _)  such that Affects*(assign, _) 
+TRUE
+5000
+478 - Query 478
+read read; while while; assign assign; 
+Select <read, while, assign>  such that Affects(_, assign)  such that Next(12, while)  such that Next(_, read) 
+TRUE
+5000
+479 - Query 479
+assign assign; 
+Select <assign>  such that Affects*(assign, 10)  such that Affects*(7, assign)  such that Affects(assign, _) 
+TRUE
+5000
+480 - Query 480
+stmt stmt; if if; read read; 
+Select <stmt, if, read>  such that Next(read, if)  such that Affects(stmt, _)  such that Next*(_, read) 
+TRUE
+5000
+481 - Query 481
+while while; read read; assign assign; call call; 
+Select <while, read, assign, call>  such that Next*(read, 17)  such that Next*(call, 28)  such that Next(while, assign) 
+TRUE
+5000
+482 - Query 482
+assign assign; call call; 
+Select <assign, call>  such that Next*(2, assign)  such that Next(call, assign)  such that Affects*(assign, 27) 
+TRUE
+5000
+483 - Query 483
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next(_, print)  such that Affects*(8, stmt)  such that Affects*(assign, assign) 
+TRUE
+5000
+484 - Query 484
+if if; assign assign; 
+Select <if, assign>  such that Next*(if, _)  such that Affects*(_, assign)  such that Affects(assign, 15) 
+TRUE
+5000
+485 - Query 485
+if if; assign assign; print print; 
+Select <if, assign, print>  such that Affects*(_, assign)  such that Next*(28, if)  such that Next*(print, _) 
+TRUE
+5000
+486 - Query 486
+while while; assign assign; 
+Select <while, assign>  such that Affects*(assign, 4)  such that Affects*(assign, assign)  such that Next*(_, while) 
+TRUE
+5000
+487 - Query 487
+assign assign; call call; 
+Select <assign, call>  such that Next(28, call)  such that Next(assign, _)  such that Affects(assign, 28) 
+TRUE
+5000
+488 - Query 488
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next(21, assign)  such that Affects(stmt, _)  such that Next(assign, while) 
+TRUE
+5000
+489 - Query 489
+if if; assign assign; 
+Select <if, assign>  such that Next*(if, assign)  such that Affects*(assign, _)  such that Affects*(_, assign) 
+TRUE
+5000
+490 - Query 490
+assign assign; print print; 
+Select <assign, print>  such that Affects*(_, assign)  such that Next*(assign, 8)  such that Next*(print, 12) 
+TRUE
+5000
+491 - Query 491
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, stmt)  such that Affects(stmt, 28)  such that Affects*(11, assign) 
+TRUE
+5000
+492 - Query 492
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next(print, 26)  such that Affects(assign, _)  such that Affects*(_, stmt) 
+TRUE
+5000
+493 - Query 493
+while while; assign assign; print print; 
+Select <while, assign, print>  such that Next*(assign, 8)  such that Next(while, _)  such that Next(print, _) 
+TRUE
+5000
+494 - Query 494
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next(_, read)  such that Affects*(stmt, _)  such that Affects*(_, assign) 
+TRUE
+5000
+495 - Query 495
+stmt stmt; call call; 
+Select <stmt, call>  such that Affects(18, stmt)  such that Next*(_, call)  such that Affects(22, stmt) 
+TRUE
+5000
+496 - Query 496
+assign assign; call call; 
+Select <assign, call>  such that Next*(assign, _)  such that Affects*(assign, 23)  such that Next*(_, call) 
+TRUE
+5000
+497 - Query 497
+stmt stmt; read read; 
+Select <stmt, read>  such that Next(read, 11)  such that Affects(_, stmt)  such that Affects(16, stmt) 
+TRUE
+5000
+498 - Query 498
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, stmt)  such that Affects(assign, 14)  such that Affects(28, stmt) 
+TRUE
+5000
+499 - Query 499
+stmt stmt; if if; print print; 
+Select <stmt, if, print>  such that Next(if, if)  such that Affects(stmt, stmt)  such that Next(print, if) 
+TRUE
+5000
+500 - Query 500
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, assign)  such that Next*(15, stmt)  such that Affects*(28, stmt) 
+TRUE
+5000
+501 - Query 501
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(4, assign)  such that Affects(stmt, 7)  such that Affects(_, assign) 
+TRUE
+5000
+502 - Query 502
+print print; assign assign; call call; 
+Select <print, assign, call>  such that Next*(call, _)  such that Affects(_, assign)  such that Next(print, assign) 
+TRUE
+5000
+503 - Query 503
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, 22)  such that Affects(21, assign)  such that Affects(stmt, _) 
+TRUE
+5000
+504 - Query 504
+stmt stmt; while while; assign assign; print print; 
+Select <stmt, while, assign, print>  such that Affects(assign, 1)  such that Next*(while, print)  such that Affects*(stmt, 18) 
+TRUE
+5000
+505 - Query 505
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, assign)  such that Affects(stmt, _)  such that Affects*(assign, _) 
+TRUE
+5000
+506 - Query 506
+stmt stmt; while while; read read; 
+Select <stmt, while, read>  such that Next(14, read)  such that Next(while, stmt)  such that Affects(_, stmt) 
+TRUE
+5000
+507 - Query 507
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next(while, _)  such that Affects(_, assign)  such that Affects*(_, stmt) 
+TRUE
+5000
+508 - Query 508
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next(read, 27)  such that Next(19, assign)  such that Affects*(_, stmt) 
+TRUE
+5000
+509 - Query 509
+stmt stmt; 
+Select <stmt>  such that Affects*(_, stmt)  such that Affects*(stmt, _)  such that Next*(stmt, 18) 
+TRUE
+5000
+510 - Query 510
+stmt stmt; read read; call call; 
+Select <stmt, read, call>  such that Affects*(_, stmt)  such that Next(_, read)  such that Next(_, call) 
+TRUE
+5000
+511 - Query 511
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(27, assign)  such that Next*(assign, _)  such that Next*(stmt, 14) 
+TRUE
+5000
+512 - Query 512
+read read; print print; call call; 
+Select <read, print, call>  such that Next*(_, print)  such that Next*(_, call)  such that Next(_, read) 
+TRUE
+5000
+513 - Query 513
+while while; print print; call call; 
+Select <while, print, call>  such that Next(while, print)  such that Next(call, _)  such that Next*(while, 7) 
+TRUE
+5000
+514 - Query 514
+if if; while while; print print; assign assign; stmt stmt; 
+Select <if, while, print, assign, stmt>  such that Next*(if, print)  such that Next(while, _)  such that Affects(assign, stmt) 
+TRUE
+5000
+515 - Query 515
+if if; stmt stmt; while while; print print; 
+Select <if, stmt, while, print>  such that Next*(_, stmt)  such that Next*(while, stmt)  such that Next*(print, if) 
+TRUE
+5000
+516 - Query 516
+assign assign; 
+Select <assign>  such that Next*(assign, _)  such that Next(_, assign)  such that Affects(_, assign) 
+TRUE
+5000
+517 - Query 517
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next(read, _)  such that Affects*(_, stmt)  such that Affects(assign, assign) 
+TRUE
+5000
+518 - Query 518
+while while; print print; assign assign; 
+Select <while, print, assign>  such that Next(while, _)  such that Next(print, _)  such that Affects*(_, assign) 
+TRUE
+5000
+519 - Query 519
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next(call, 16)  such that Next(stmt, stmt)  such that Affects(assign, 8) 
+TRUE
+5000
+520 - Query 520
+read read; assign assign; 
+Select <read, assign>  such that Affects*(28, assign)  such that Affects(21, assign)  such that Next*(_, read) 
+TRUE
+5000
+521 - Query 521
+while while; print print; 
+Select <while, print>  such that Next(while, 9)  such that Next*(15, print)  such that Next*(print, 26) 
+TRUE
+5000
+522 - Query 522
+if if; stmt stmt; print print; 
+Select <if, stmt, print>  such that Next*(print, 15)  such that Affects(stmt, 20)  such that Next(if, _) 
+TRUE
+5000
+523 - Query 523
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects(stmt, assign)  such that Next(27, while)  such that Affects*(assign, _) 
+TRUE
+5000
+524 - Query 524
+stmt stmt; call call; 
+Select <stmt, call>  such that Affects(stmt, _)  such that Affects*(stmt, stmt)  such that Next(_, call) 
+TRUE
+5000
+525 - Query 525
+stmt stmt; if if; call call; 
+Select <stmt, if, call>  such that Next(14, if)  such that Next*(if, call)  such that Affects*(_, stmt) 
+TRUE
+5000
+526 - Query 526
+while while; assign assign; call call; stmt stmt; 
+Select <while, assign, call, stmt>  such that Next(call, while)  such that Affects*(stmt, assign)  such that Next*(_, while) 
+TRUE
+5000
+527 - Query 527
+while while; print print; 
+Select <while, print>  such that Next(_, print)  such that Next*(_, while)  such that Next(4, while) 
+TRUE
+5000
+528 - Query 528
+if if; while while; call call; 
+Select <if, while, call>  such that Next(while, _)  such that Next(call, _)  such that Next(if, call) 
+TRUE
+5000
+529 - Query 529
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(22, assign)  such that Affects(stmt, _)  such that Affects(_, assign) 
+TRUE
+5000
+530 - Query 530
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next*(print, _)  such that Next*(_, assign)  such that Affects(stmt, 18) 
+TRUE
+5000
+531 - Query 531
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Next*(assign, print)  such that Affects*(assign, 2)  such that Affects*(stmt, _) 
+TRUE
+5000
+532 - Query 532
+stmt stmt; while while; 
+Select <stmt, while>  such that Affects*(stmt, _)  such that Next*(_, while)  such that Next*(13, stmt) 
+TRUE
+5000
+533 - Query 533
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(stmt, 24)  such that Affects(_, assign)  such that Next(_, while) 
+TRUE
+5000
+534 - Query 534
+print print; read read; call call; 
+Select <print, read, call>  such that Next(27, call)  such that Next*(19, read)  such that Next(16, print) 
+TRUE
+5000
+535 - Query 535
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, stmt)  such that Affects(assign, _)  such that Affects(stmt, 11) 
+TRUE
+5000
+536 - Query 536
+if if; assign assign; 
+Select <if, assign>  such that Next(if, _)  such that Affects*(assign, 21)  such that Affects*(9, assign) 
+TRUE
+5000
+537 - Query 537
+stmt stmt; while while; read read; 
+Select <stmt, while, read>  such that Next(18, read)  such that Next(while, _)  such that Affects(stmt, 22) 
+TRUE
+5000
+538 - Query 538
+assign assign; call call; 
+Select <assign, call>  such that Affects(12, assign)  such that Next(call, 5)  such that Next(assign, _) 
+TRUE
+5000
+539 - Query 539
+read read; stmt stmt; print print; 
+Select <read, stmt, print>  such that Next(_, print)  such that Next*(read, 26)  such that Next*(stmt, print) 
+TRUE
+5000
+540 - Query 540
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next(print, 10)  such that Affects(assign, 18)  such that Next*(_, stmt) 
+TRUE
+5000
+541 - Query 541
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, stmt)  such that Affects(stmt, 13)  such that Affects(assign, stmt) 
+TRUE
+5000
+542 - Query 542
+if if; while while; assign assign; 
+Select <if, while, assign>  such that Next(if, _)  such that Affects(15, assign)  such that Next(24, while) 
+TRUE
+5000
+543 - Query 543
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next(_, call)  such that Affects*(assign, 24)  such that Affects*(_, stmt) 
+TRUE
+5000
+544 - Query 544
+stmt stmt; 
+Select <stmt>  such that Affects*(stmt, 17)  such that Affects*(17, stmt)  such that Affects(_, stmt) 
+TRUE
+5000
+545 - Query 545
+assign assign; 
+Select <assign>  such that Affects*(assign, assign)  such that Affects(_, assign)  such that Affects(assign, _) 
+TRUE
+5000
+546 - Query 546
+stmt stmt; while while; read read; 
+Select <stmt, while, read>  such that Next*(_, while)  such that Next(11, read)  such that Affects*(1, stmt) 
+TRUE
+5000
+547 - Query 547
+stmt stmt; read read; 
+Select <stmt, read>  such that Affects(stmt, _)  such that Next(_, read)  such that Next*(read, 1) 
+TRUE
+5000
+548 - Query 548
+stmt stmt; 
+Select <stmt>  such that Affects(11, stmt)  such that Affects(15, stmt)  such that Affects(stmt, _) 
+TRUE
+5000
+549 - Query 549
+assign assign; call call; stmt stmt; 
+Select <assign, call, stmt>  such that Next(12, call)  such that Affects(stmt, assign)  such that Affects(stmt, assign) 
+TRUE
+5000
+550 - Query 550
+if if; stmt stmt; print print; 
+Select <if, stmt, print>  such that Affects*(3, stmt)  such that Next(print, if)  such that Affects*(stmt, 12) 
+TRUE
+5000
+551 - Query 551
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(_, stmt)  such that Next*(call, assign)  such that Affects(_, stmt) 
+TRUE
+5000
+552 - Query 552
+call call; assign assign; print print; 
+Select <call, assign, print>  such that Affects(assign, assign)  such that Next*(assign, print)  such that Next(18, call) 
+TRUE
+5000
+553 - Query 553
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, 2)  such that Affects*(26, stmt)  such that Affects*(stmt, assign) 
+TRUE
+5000
+554 - Query 554
+read read; assign assign; print print; 
+Select <read, assign, print>  such that Affects*(assign, 6)  such that Affects(10, assign)  such that Next*(print, read) 
+TRUE
+5000
+555 - Query 555
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(5, assign)  such that Next(call, 17)  such that Affects*(23, stmt) 
+TRUE
+5000
+556 - Query 556
+read read; stmt stmt; print print; 
+Select <read, stmt, print>  such that Next*(print, _)  such that Affects(_, stmt)  such that Next(read, 15) 
+TRUE
+5000
+557 - Query 557
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Affects*(stmt, _)  such that Next*(_, print)  such that Affects(assign, _) 
+TRUE
+5000
+558 - Query 558
+if if; stmt stmt; while while; 
+Select <if, stmt, while>  such that Next*(15, stmt)  such that Next(_, if)  such that Next*(while, 20) 
+TRUE
+5000
+559 - Query 559
+stmt stmt; while while; 
+Select <stmt, while>  such that Next(_, stmt)  such that Next*(21, while)  such that Affects(26, stmt) 
+TRUE
+5000
+560 - Query 560
+read read; while while; assign assign; 
+Select <read, while, assign>  such that Affects(assign, 1)  such that Next*(while, 29)  such that Next(read, while) 
+TRUE
+5000
+561 - Query 561
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Next(call, _)  such that Next(if, 25)  such that Affects*(_, assign) 
+TRUE
+5000
+562 - Query 562
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next(while, _)  such that Affects(assign, stmt)  such that Next*(assign, _) 
+TRUE
+5000
+563 - Query 563
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, _)  such that Affects(stmt, _)  such that Affects*(stmt, _) 
+TRUE
+5000
+564 - Query 564
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next*(read, 27)  such that Affects(assign, stmt)  such that Next*(stmt, _) 
+TRUE
+5000
+565 - Query 565
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects*(11, assign)  such that Affects(stmt, _)  such that Next*(print, 10) 
+TRUE
+5000
+566 - Query 566
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next(2, assign)  such that Next*(21, call)  such that Affects*(_, stmt) 
+TRUE
+5000
+567 - Query 567
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, stmt)  such that Affects(19, stmt)  such that Affects(assign, assign) 
+TRUE
+5000
+568 - Query 568
+stmt stmt; print print; call call; 
+Select <stmt, print, call>  such that Next(print, stmt)  such that Affects*(stmt, _)  such that Next(call, 13) 
+TRUE
+5000
+569 - Query 569
+print print; assign assign; 
+Select <print, assign>  such that Next(16, print)  such that Affects*(assign, 25)  such that Affects*(assign, _) 
+TRUE
+5000
+570 - Query 570
+stmt stmt; if if; while while; 
+Select <stmt, if, while>  such that Next*(if, 25)  such that Affects*(stmt, 14)  such that Next*(while, while) 
+TRUE
+5000
+571 - Query 571
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next*(27, read)  such that Next*(read, read)  such that Affects*(stmt, assign) 
+TRUE
+5000
+572 - Query 572
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Affects(stmt, _)  such that Next(_, print)  such that Affects(assign, stmt) 
+TRUE
+5000
+573 - Query 573
+stmt stmt; if if; print print; assign assign; 
+Select <stmt, if, print, assign>  such that Next(print, if)  such that Next(stmt, print)  such that Affects*(assign, 23) 
+TRUE
+5000
+574 - Query 574
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next*(23, print)  such that Next(stmt, _)  such that Affects(_, assign) 
+TRUE
+5000
+575 - Query 575
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Affects*(7, stmt)  such that Next(18, read)  such that Affects*(26, assign) 
+TRUE
+5000
+576 - Query 576
+stmt stmt; call call; 
+Select <stmt, call>  such that Affects*(_, stmt)  such that Affects(stmt, 10)  such that Next*(call, _) 
+TRUE
+5000
+577 - Query 577
+stmt stmt; while while; call call; 
+Select <stmt, while, call>  such that Affects(stmt, 21)  such that Next*(15, call)  such that Next*(_, while) 
+TRUE
+5000
+578 - Query 578
+if if; while while; assign assign; 
+Select <if, while, assign>  such that Affects(assign, 24)  such that Next(_, while)  such that Next*(10, if) 
+TRUE
+5000
+579 - Query 579
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, 14)  such that Affects*(assign, 11)  such that Affects*(1, assign) 
+TRUE
+5000
+580 - Query 580
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next(assign, stmt)  such that Next(12, while)  such that Affects(_, assign) 
+TRUE
+5000
+581 - Query 581
+while while; assign assign; call call; 
+Select <while, assign, call>  such that Next*(assign, _)  such that Next(while, _)  such that Next*(call, 22) 
+TRUE
+5000
+582 - Query 582
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(11, assign)  such that Affects*(3, assign)  such that Affects(4, stmt) 
+TRUE
+5000
+583 - Query 583
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, _)  such that Affects(5, stmt)  such that Affects(29, assign) 
+TRUE
+5000
+584 - Query 584
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(26, stmt)  such that Affects(22, assign)  such that Affects*(assign, _) 
+TRUE
+5000
+585 - Query 585
+stmt stmt; while while; assign assign; print print; 
+Select <stmt, while, assign, print>  such that Affects(stmt, assign)  such that Next(15, while)  such that Next*(4, print) 
+TRUE
+5000
+586 - Query 586
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, assign)  such that Affects*(stmt, _)  such that Affects*(_, assign) 
+TRUE
+5000
+587 - Query 587
+if if; assign assign; 
+Select <if, assign>  such that Affects*(assign, 28)  such that Affects(assign, _)  such that Next*(4, if) 
+TRUE
+5000
+588 - Query 588
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects(stmt, 12)  such that Next(16, call)  such that Affects(stmt, assign) 
+TRUE
+5000
+589 - Query 589
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Next*(if, stmt)  such that Next(stmt, 9)  such that Next(assign, assign) 
+TRUE
+5000
+590 - Query 590
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Affects(5, stmt)  such that Next*(assign, read)  such that Affects(_, stmt) 
+TRUE
+5000
+591 - Query 591
+read read; stmt stmt; print print; 
+Select <read, stmt, print>  such that Next(17, print)  such that Affects(stmt, 7)  such that Next*(13, read) 
+TRUE
+5000
+592 - Query 592
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, _)  such that Affects*(stmt, assign)  such that Affects(assign, _) 
+TRUE
+5000
+593 - Query 593
+stmt stmt; while while; print print; 
+Select <stmt, while, print>  such that Next(24, stmt)  such that Next*(print, while)  such that Affects*(stmt, stmt) 
+TRUE
+5000
+594 - Query 594
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, 15)  such that Affects*(10, stmt)  such that Affects*(stmt, _) 
+TRUE
+5000
+595 - Query 595
+stmt stmt; while while; assign assign; if if; 
+Select <stmt, while, assign, if>  such that Affects(_, assign)  such that Next*(while, _)  such that Next(if, stmt) 
+TRUE
+5000
+596 - Query 596
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next(call, _)  such that Affects(stmt, _)  such that Affects(assign, _) 
+TRUE
+5000
+597 - Query 597
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next(_, read)  such that Affects*(16, stmt)  such that Affects(17, assign) 
+TRUE
+5000
+598 - Query 598
+assign assign; call call; 
+Select <assign, call>  such that Affects*(assign, 16)  such that Next*(call, assign)  such that Next*(call, _) 
+TRUE
+5000
+599 - Query 599
+read read; stmt stmt; print print; 
+Select <read, stmt, print>  such that Next(print, stmt)  such that Next*(10, read)  such that Next*(4, print) 
+TRUE
+5000
+600 - Query 600
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects(stmt, 6)  such that Affects*(1, assign)  such that Next(if, _) 
+TRUE
+5000
+601 - Query 601
+stmt stmt; while while; 
+Select <stmt, while>  such that Affects*(stmt, 24)  such that Next(while, 23)  such that Affects(stmt, _) 
+TRUE
+5000
+602 - Query 602
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next*(call, _)  such that Affects*(_, stmt)  such that Affects(assign, stmt) 
+TRUE
+5000
+603 - Query 603
+assign assign; print print; stmt stmt; read read; 
+Select <assign, print, stmt, read>  such that Affects(assign, stmt)  such that Next(read, _)  such that Next*(print, stmt) 
+TRUE
+5000
+604 - Query 604
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next(read, 7)  such that Next*(read, stmt)  such that Affects(assign, stmt) 
+TRUE
+5000
+605 - Query 605
+stmt stmt; 
+Select <stmt>  such that Affects(10, stmt)  such that Affects*(22, stmt)  such that Affects*(16, stmt) 
+TRUE
+5000
+606 - Query 606
+assign assign; 
+Select <assign>  such that Affects(_, assign)  such that Next*(assign, 24)  such that Affects*(assign, _) 
+TRUE
+5000
+607 - Query 607
+stmt stmt; read read; 
+Select <stmt, read>  such that Next(read, _)  such that Affects*(stmt, stmt)  such that Affects(14, stmt) 
+TRUE
+5000
+608 - Query 608
+read read; assign assign; call call; 
+Select <read, assign, call>  such that Next*(call, read)  such that Affects(25, assign)  such that Next(call, _) 
+TRUE
+5000
+609 - Query 609
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(12, assign)  such that Next*(_, assign)  such that Next*(_, stmt) 
+TRUE
+5000
+610 - Query 610
+while while; assign assign; print print; 
+Select <while, assign, print>  such that Next(while, 1)  such that Affects(assign, 7)  such that Next(13, print) 
+TRUE
+5000
+611 - Query 611
+assign assign; print print; 
+Select <assign, print>  such that Affects*(assign, _)  such that Next*(_, assign)  such that Next*(print, 12) 
+TRUE
+5000
+612 - Query 612
+stmt stmt; while while; 
+Select <stmt, while>  such that Next(_, while)  such that Affects*(_, stmt)  such that Next*(while, stmt) 
+TRUE
+5000
+613 - Query 613
+stmt stmt; call call; 
+Select <stmt, call>  such that Affects*(stmt, 18)  such that Next(call, 24)  such that Affects(18, stmt) 
+TRUE
+5000
+614 - Query 614
+read read; assign assign; call call; 
+Select <read, assign, call>  such that Affects*(assign, _)  such that Next*(call, _)  such that Next*(call, read) 
+TRUE
+5000
+615 - Query 615
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, _)  such that Affects(stmt, stmt)  such that Affects*(assign, 23) 
+TRUE
+5000
+616 - Query 616
+stmt stmt; call call; 
+Select <stmt, call>  such that Affects*(_, stmt)  such that Next(call, _)  such that Next*(stmt, stmt) 
+TRUE
+5000
+617 - Query 617
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, _)  such that Affects(_, stmt)  such that Affects*(_, assign) 
+TRUE
+5000
+618 - Query 618
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next(21, read)  such that Affects*(_, stmt)  such that Affects(assign, assign) 
+TRUE
+5000
+619 - Query 619
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, 19)  such that Affects*(_, stmt)  such that Affects(17, stmt) 
+TRUE
+5000
+620 - Query 620
+while while; assign assign; call call; stmt stmt; 
+Select <while, assign, call, stmt>  such that Next*(while, 2)  such that Affects*(assign, stmt)  such that Next*(stmt, call) 
+TRUE
+5000
+621 - Query 621
+stmt stmt; read read; 
+Select <stmt, read>  such that Affects*(_, stmt)  such that Next(read, _)  such that Next(_, read) 
+TRUE
+5000
+622 - Query 622
+print print; assign assign; call call; stmt stmt; 
+Select <print, assign, call, stmt>  such that Next*(call, print)  such that Affects*(_, stmt)  such that Affects*(assign, stmt) 
+TRUE
+5000
+623 - Query 623
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, assign)  such that Affects(stmt, assign)  such that Affects(assign, stmt) 
+TRUE
+5000
+624 - Query 624
+while while; print print; assign assign; 
+Select <while, print, assign>  such that Next*(print, _)  such that Affects(assign, _)  such that Next(_, while) 
+TRUE
+5000
+625 - Query 625
+if if; assign assign; 
+Select <if, assign>  such that Next*(if, _)  such that Affects(assign, _)  such that Affects(_, assign) 
+TRUE
+5000
+626 - Query 626
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(stmt, 12)  such that Next(assign, while)  such that Next*(_, while) 
+TRUE
+5000
+627 - Query 627
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, stmt)  such that Affects(stmt, stmt)  such that Next*(assign, 27) 
+TRUE
+5000
+628 - Query 628
+if if; assign assign; 
+Select <if, assign>  such that Next*(if, 20)  such that Affects(5, assign)  such that Next(_, assign) 
+TRUE
+5000
+629 - Query 629
+if if; assign assign; print print; 
+Select <if, assign, print>  such that Affects(assign, _)  such that Next*(14, print)  such that Next(5, if) 
+TRUE
+5000
+630 - Query 630
+assign assign; call call; 
+Select <assign, call>  such that Affects(assign, assign)  such that Next*(12, call)  such that Next*(12, call) 
+TRUE
+5000
+631 - Query 631
+if if; stmt stmt; 
+Select <if, stmt>  such that Affects(_, stmt)  such that Affects*(stmt, _)  such that Next(if, _) 
+TRUE
+5000
+632 - Query 632
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, _)  such that Affects(stmt, 6)  such that Affects(11, assign) 
+TRUE
+5000
+633 - Query 633
+stmt stmt; while while; print print; 
+Select <stmt, while, print>  such that Next*(print, while)  such that Next(stmt, _)  such that Next*(stmt, _) 
+TRUE
+5000
+634 - Query 634
+assign assign; print print; 
+Select <assign, print>  such that Affects(_, assign)  such that Next*(print, assign)  such that Affects*(_, assign) 
+TRUE
+5000
+635 - Query 635
+while while; assign assign; call call; 
+Select <while, assign, call>  such that Next(_, while)  such that Affects*(9, assign)  such that Next*(13, call) 
+TRUE
+5000
+636 - Query 636
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(15, assign)  such that Affects*(stmt, assign)  such that Next(assign, stmt) 
+TRUE
+5000
+637 - Query 637
+stmt stmt; print print; 
+Select <stmt, print>  such that Affects(stmt, _)  such that Next*(print, _)  such that Affects*(stmt, 17) 
+TRUE
+5000
+638 - Query 638
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next(6, while)  such that Affects(14, stmt)  such that Affects*(assign, 29) 
+TRUE
+5000
+639 - Query 639
+read read; assign assign; print print; 
+Select <read, assign, print>  such that Affects(assign, _)  such that Next(print, _)  such that Next*(4, read) 
+TRUE
+5000
+640 - Query 640
+call call; assign assign; print print; 
+Select <call, assign, print>  such that Affects*(assign, 17)  such that Next*(print, _)  such that Next(19, call) 
+TRUE
+5000
+641 - Query 641
+stmt stmt; print print; 
+Select <stmt, print>  such that Affects*(16, stmt)  such that Next*(21, print)  such that Affects*(stmt, _) 
+TRUE
+5000
+642 - Query 642
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects(stmt, _)  such that Next(3, assign)  such that Next(while, _) 
+TRUE
+5000
+643 - Query 643
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Next*(if, 3)  such that Affects(stmt, 20)  such that Next(_, assign) 
+TRUE
+5000
+644 - Query 644
+stmt stmt; if if; 
+Select <stmt, if>  such that Next(21, if)  such that Affects(_, stmt)  such that Affects(stmt, 12) 
+TRUE
+5000
+645 - Query 645
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, 10)  such that Next(stmt, 20)  such that Affects*(assign, 28) 
+TRUE
+5000
+646 - Query 646
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Next(if, _)  such that Affects(stmt, assign)  such that Affects(21, assign) 
+TRUE
+5000
+647 - Query 647
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Next(if, if)  such that Affects*(9, stmt)  such that Affects(assign, 18) 
+TRUE
+5000
+648 - Query 648
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, 13)  such that Affects(stmt, 25)  such that Affects*(_, assign) 
+TRUE
+5000
+649 - Query 649
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(20, stmt)  such that Affects*(assign, _)  such that Affects*(assign, _) 
+TRUE
+5000
+650 - Query 650
+assign assign; 
+Select <assign>  such that Affects*(assign, _)  such that Affects(_, assign)  such that Affects(assign, assign) 
+TRUE
+5000
+651 - Query 651
+if if; assign assign; 
+Select <if, assign>  such that Next(if, _)  such that Next*(_, if)  such that Next(16, assign) 
+TRUE
+5000
+652 - Query 652
+read read; while while; assign assign; print print; 
+Select <read, while, assign, print>  such that Affects*(assign, _)  such that Next(read, print)  such that Next*(while, _) 
+TRUE
+5000
+653 - Query 653
+read read; assign assign; print print; 
+Select <read, assign, print>  such that Next*(_, read)  such that Affects(assign, _)  such that Next(print, print) 
+TRUE
+5000
+654 - Query 654
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, 8)  such that Affects*(assign, 16)  such that Affects*(20, assign) 
+TRUE
+5000
+655 - Query 655
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next(read, 18)  such that Affects(assign, _)  such that Affects*(20, stmt) 
+TRUE
+5000
+656 - Query 656
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, stmt)  such that Affects(stmt, _)  such that Affects*(_, assign) 
+TRUE
+5000
+657 - Query 657
+stmt stmt; while while; read read; 
+Select <stmt, while, read>  such that Next(8, read)  such that Next*(10, while)  such that Affects*(stmt, _) 
+TRUE
+5000
+658 - Query 658
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Next*(if, if)  such that Affects*(assign, 18)  such that Affects(_, stmt) 
+TRUE
+5000
+659 - Query 659
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, stmt)  such that Next(_, stmt)  such that Affects(stmt, 19) 
+TRUE
+5000
+660 - Query 660
+assign assign; 
+Select <assign>  such that Affects(assign, _)  such that Affects(assign, _)  such that Next(_, assign) 
+TRUE
+5000
+661 - Query 661
+stmt stmt; if if; print print; 
+Select <stmt, if, print>  such that Next(20, if)  such that Next(print, 27)  such that Affects*(stmt, 4) 
+TRUE
+5000
+662 - Query 662
+stmt stmt; print print; 
+Select <stmt, print>  such that Next*(print, _)  such that Affects*(stmt, _)  such that Next(stmt, stmt) 
+TRUE
+5000
+663 - Query 663
+if if; stmt stmt; while while; assign assign; 
+Select <if, stmt, while, assign>  such that Affects*(assign, stmt)  such that Next*(if, 25)  such that Next*(while, 6) 
+TRUE
+5000
+664 - Query 664
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Affects(assign, _)  such that Next*(assign, 11)  such that Next*(call, if) 
+TRUE
+5000
+665 - Query 665
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next*(print, 25)  such that Next*(assign, stmt)  such that Affects(5, assign) 
+TRUE
+5000
+666 - Query 666
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next*(15, read)  such that Affects(assign, 24)  such that Affects*(_, stmt) 
+TRUE
+5000
+667 - Query 667
+read read; stmt stmt; assign assign; call call; 
+Select <read, stmt, assign, call>  such that Next(stmt, _)  such that Next(call, assign)  such that Next*(read, _) 
+TRUE
+5000
+668 - Query 668
+if if; print print; call call; 
+Select <if, print, call>  such that Next(_, print)  such that Next*(if, _)  such that Next*(call, _) 
+TRUE
+5000
+669 - Query 669
+assign assign; 
+Select <assign>  such that Affects(23, assign)  such that Affects*(28, assign)  such that Affects*(assign, _) 
+TRUE
+5000
+670 - Query 670
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(assign, assign)  such that Next(while, while)  such that Affects(stmt, _) 
+TRUE
+5000
+671 - Query 671
+stmt stmt; if if; call call; 
+Select <stmt, if, call>  such that Next(21, if)  such that Affects*(stmt, 4)  such that Next(call, stmt) 
+TRUE
+5000
+672 - Query 672
+while while; print print; call call; 
+Select <while, print, call>  such that Next*(21, print)  such that Next(13, while)  such that Next*(_, call) 
+TRUE
+5000
+673 - Query 673
+while while; read read; assign assign; 
+Select <while, read, assign>  such that Next*(read, 6)  such that Next(14, while)  such that Affects*(assign, 16) 
+TRUE
+5000
+674 - Query 674
+print print; assign assign; call call; 
+Select <print, assign, call>  such that Next(call, 21)  such that Next(_, print)  such that Affects*(assign, _) 
+TRUE
+5000
+675 - Query 675
+stmt stmt; print print; call call; 
+Select <stmt, print, call>  such that Affects*(_, stmt)  such that Next(27, print)  such that Next*(call, call) 
+TRUE
+5000
+676 - Query 676
+stmt stmt; if if; print print; 
+Select <stmt, if, print>  such that Next(_, if)  such that Next*(16, stmt)  such that Next*(print, _) 
+TRUE
+5000
+677 - Query 677
+assign assign; 
+Select <assign>  such that Affects*(_, assign)  such that Next(_, assign)  such that Next*(assign, _) 
+TRUE
+5000
+678 - Query 678
+stmt stmt; while while; read read; 
+Select <stmt, while, read>  such that Next*(_, while)  such that Next*(read, 17)  such that Affects(_, stmt) 
+TRUE
+5000
+679 - Query 679
+assign assign; call call; 
+Select <assign, call>  such that Affects(assign, 5)  such that Affects*(assign, _)  such that Next(call, _) 
+TRUE
+5000
+680 - Query 680
+stmt stmt; if if; print print; 
+Select <stmt, if, print>  such that Next(_, if)  such that Next*(print, print)  such that Affects(_, stmt) 
+TRUE
+5000
+681 - Query 681
+stmt stmt; 
+Select <stmt>  such that Affects*(stmt, _)  such that Affects(5, stmt)  such that Affects*(24, stmt) 
+TRUE
+5000
+682 - Query 682
+stmt stmt; if if; 
+Select <stmt, if>  such that Next*(20, if)  such that Next(stmt, 12)  such that Affects(stmt, 16) 
+TRUE
+5000
+683 - Query 683
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects(stmt, assign)  such that Next*(5, while)  such that Affects(stmt, stmt) 
+TRUE
+5000
+684 - Query 684
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Next(stmt, if)  such that Affects*(stmt, assign)  such that Affects(assign, assign) 
+TRUE
+5000
+685 - Query 685
+stmt stmt; call call; 
+Select <stmt, call>  such that Next(call, _)  such that Affects*(_, stmt)  such that Next*(7, stmt) 
+TRUE
+5000
+686 - Query 686
+assign assign; call call; stmt stmt; 
+Select <assign, call, stmt>  such that Next*(_, call)  such that Affects(stmt, assign)  such that Affects*(assign, stmt) 
+TRUE
+5000
+687 - Query 687
+stmt stmt; print print; call call; 
+Select <stmt, print, call>  such that Next(stmt, _)  such that Next*(stmt, 29)  such that Next*(call, print) 
+TRUE
+5000
+688 - Query 688
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, stmt)  such that Next*(_, assign)  such that Affects(assign, 19) 
+TRUE
+5000
+689 - Query 689
+if if; stmt stmt; while while; 
+Select <if, stmt, while>  such that Next(while, 3)  such that Next*(12, if)  such that Next(stmt, 3) 
+TRUE
+5000
+690 - Query 690
+stmt stmt; while while; call call; 
+Select <stmt, while, call>  such that Next*(call, _)  such that Next*(while, 9)  such that Affects*(stmt, 17) 
+TRUE
+5000
+691 - Query 691
+assign assign; call call; 
+Select <assign, call>  such that Affects(8, assign)  such that Next(call, 13)  such that Next*(assign, 7) 
+TRUE
+5000
+692 - Query 692
+read read; assign assign; 
+Select <read, assign>  such that Next(_, assign)  such that Next*(read, 7)  such that Affects*(assign, _) 
+TRUE
+5000
+693 - Query 693
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(_, stmt)  such that Affects(assign, 7)  such that Next*(assign, _) 
+TRUE
+5000
+694 - Query 694
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next(_, call)  such that Affects(assign, 18)  such that Affects(stmt, 16) 
+TRUE
+5000
+695 - Query 695
+print print; assign assign; call call; 
+Select <print, assign, call>  such that Affects(assign, assign)  such that Next*(assign, call)  such that Next(_, print) 
+TRUE
+5000
+696 - Query 696
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(assign, 2)  such that Next(stmt, 9)  such that Affects*(assign, assign) 
+TRUE
+5000
+697 - Query 697
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, _)  such that Affects*(stmt, _)  such that Next*(assign, 12) 
+TRUE
+5000
+698 - Query 698
+while while; assign assign; print print; 
+Select <while, assign, print>  such that Affects*(assign, _)  such that Next*(_, while)  such that Next(print, 11) 
+TRUE
+5000
+699 - Query 699
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next(print, _)  such that Affects*(_, stmt)  such that Affects(_, assign) 
+TRUE
+5000
+700 - Query 700
+stmt stmt; read read; 
+Select <stmt, read>  such that Next*(read, 10)  such that Next*(28, stmt)  such that Affects*(stmt, 14) 
+TRUE
+5000
+701 - Query 701
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, 10)  such that Affects*(assign, 9)  such that Affects*(stmt, _) 
+TRUE
+5000
+702 - Query 702
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, stmt)  such that Affects*(assign, _)  such that Affects(stmt, 23) 
+TRUE
+5000
+703 - Query 703
+assign assign; call call; 
+Select <assign, call>  such that Next(_, assign)  such that Next(20, call)  such that Affects(_, assign) 
+TRUE
+5000
+704 - Query 704
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Next*(assign, 12)  such that Next(23, stmt)  such that Next(if, 18) 
+TRUE
+5000
+705 - Query 705
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(8, assign)  such that Affects(stmt, stmt)  such that Affects(27, assign) 
+TRUE
+5000
+706 - Query 706
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects(assign, _)  such that Next*(stmt, 13)  such that Next*(while, _) 
+TRUE
+5000
+707 - Query 707
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next(assign, stmt)  such that Affects*(_, assign)  such that Next*(8, while) 
+TRUE
+5000
+708 - Query 708
+if if; stmt stmt; 
+Select <if, stmt>  such that Next*(_, stmt)  such that Next(1, if)  such that Next(_, stmt) 
+TRUE
+5000
+709 - Query 709
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, assign)  such that Affects*(_, stmt)  such that Affects(_, stmt) 
+TRUE
+5000
+710 - Query 710
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Next*(if, _)  such that Affects*(assign, 17)  such that Affects*(stmt, _) 
+TRUE
+5000
+711 - Query 711
+stmt stmt; if if; print print; 
+Select <stmt, if, print>  such that Next(19, print)  such that Next*(_, if)  such that Next(_, stmt) 
+TRUE
+5000
+712 - Query 712
+stmt stmt; if if; print print; call call; 
+Select <stmt, if, print, call>  such that Next*(if, 25)  such that Next(print, call)  such that Affects*(stmt, 20) 
+TRUE
+5000
+713 - Query 713
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(stmt, assign)  such that Next(10, stmt)  such that Next(while, 25) 
+TRUE
+5000
+714 - Query 714
+read read; print print; assign assign; 
+Select <read, print, assign>  such that Next(print, read)  such that Affects(assign, assign)  such that Next(print, 22) 
+TRUE
+5000
+715 - Query 715
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, stmt)  such that Affects*(_, assign)  such that Affects*(12, stmt) 
+TRUE
+5000
+716 - Query 716
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(stmt, 6)  such that Next(call, assign)  such that Affects*(_, assign) 
+TRUE
+5000
+717 - Query 717
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(23, assign)  such that Next(stmt, _)  such that Next*(_, assign) 
+TRUE
+5000
+718 - Query 718
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next(while, 1)  such that Affects*(assign, _)  such that Affects*(16, stmt) 
+TRUE
+5000
+719 - Query 719
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, stmt)  such that Affects*(assign, _)  such that Next*(26, stmt) 
+TRUE
+5000
+720 - Query 720
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, assign)  such that Affects(_, assign)  such that Affects(stmt, _) 
+TRUE
+5000
+721 - Query 721
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Next(assign, assign)  such that Next(assign, print)  such that Affects*(25, stmt) 
+TRUE
+5000
+722 - Query 722
+read read; stmt stmt; print print; call call; 
+Select <read, stmt, print, call>  such that Next*(9, print)  such that Next(call, 25)  such that Next*(stmt, read) 
+TRUE
+5000
+723 - Query 723
+while while; assign assign; print print; 
+Select <while, assign, print>  such that Next(while, 24)  such that Affects(_, assign)  such that Next*(6, print) 
+TRUE
+5000
+724 - Query 724
+stmt stmt; call call; 
+Select <stmt, call>  such that Affects(8, stmt)  such that Next(call, 12)  such that Affects(stmt, stmt) 
+TRUE
+5000
+725 - Query 725
+while while; assign assign; call call; 
+Select <while, assign, call>  such that Next(while, 17)  such that Affects*(8, assign)  such that Next(call, 5) 
+TRUE
+5000
+726 - Query 726
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(_, assign)  such that Affects(_, stmt)  such that Affects(assign, _) 
+TRUE
+5000
+727 - Query 727
+stmt stmt; print print; 
+Select <stmt, print>  such that Affects*(stmt, _)  such that Affects*(stmt, 13)  such that Next(print, _) 
+TRUE
+5000
+728 - Query 728
+while while; read read; assign assign; print print; 
+Select <while, read, assign, print>  such that Next(while, 9)  such that Next(read, print)  such that Next(26, assign) 
+TRUE
+5000
+729 - Query 729
+while while; assign assign; call call; stmt stmt; 
+Select <while, assign, call, stmt>  such that Affects(assign, stmt)  such that Next*(while, call)  such that Affects(assign, 6) 
+TRUE
+5000
+730 - Query 730
+read read; while while; assign assign; 
+Select <read, while, assign>  such that Affects*(assign, _)  such that Next*(1, assign)  such that Next*(while, read) 
+TRUE
+5000
+731 - Query 731
+assign assign; print print; 
+Select <assign, print>  such that Affects(assign, _)  such that Affects*(_, assign)  such that Next(10, print) 
+TRUE
+5000
+732 - Query 732
+if if; stmt stmt; 
+Select <if, stmt>  such that Affects*(stmt, _)  such that Next*(if, 10)  such that Affects*(_, stmt) 
+TRUE
+5000
+733 - Query 733
+stmt stmt; 
+Select <stmt>  such that Affects*(_, stmt)  such that Affects(stmt, _)  such that Affects(28, stmt) 
+TRUE
+5000
+734 - Query 734
+read read; while while; assign assign; call call; 
+Select <read, while, assign, call>  such that Next(assign, 3)  such that Next*(8, read)  such that Next(while, call) 
+TRUE
+5000
+735 - Query 735
+stmt stmt; while while; call call; 
+Select <stmt, while, call>  such that Next*(1, while)  such that Next*(call, 21)  such that Next*(stmt, _) 
+TRUE
+5000
+736 - Query 736
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next*(_, while)  such that Affects*(stmt, assign)  such that Next*(while, _) 
+TRUE
+5000
+737 - Query 737
+if if; stmt stmt; print print; call call; 
+Select <if, stmt, print, call>  such that Next*(stmt, call)  such that Next*(print, 15)  such that Next*(if, _) 
+TRUE
+5000
+738 - Query 738
+stmt stmt; read read; 
+Select <stmt, read>  such that Next*(27, read)  such that Affects*(stmt, 4)  such that Affects*(stmt, _) 
+TRUE
+5000
+739 - Query 739
+stmt stmt; if if; 
+Select <stmt, if>  such that Next*(21, if)  such that Affects(_, stmt)  such that Affects*(stmt, _) 
+TRUE
+5000
+740 - Query 740
+read read; assign assign; 
+Select <read, assign>  such that Next*(assign, 14)  such that Next*(6, read)  such that Affects(_, assign) 
+TRUE
+5000
+741 - Query 741
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, assign)  such that Affects(5, assign)  such that Affects*(assign, _) 
+TRUE
+5000
+742 - Query 742
+if if; assign assign; 
+Select <if, assign>  such that Next(assign, 27)  such that Next(24, if)  such that Next(if, 29) 
+TRUE
+5000
+743 - Query 743
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Next(_, assign)  such that Affects(stmt, stmt)  such that Next*(stmt, if) 
+TRUE
+5000
+744 - Query 744
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(stmt, assign)  such that Affects*(_, assign)  such that Next(while, 8) 
+TRUE
+5000
+745 - Query 745
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects(stmt, assign)  such that Next*(stmt, _)  such that Next*(if, _) 
+TRUE
+5000
+746 - Query 746
+stmt stmt; while while; 
+Select <stmt, while>  such that Affects*(stmt, 20)  such that Affects*(2, stmt)  such that Next*(4, while) 
+TRUE
+5000
+747 - Query 747
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects(assign, stmt)  such that Next(_, if)  such that Next*(_, stmt) 
+TRUE
+5000
+748 - Query 748
+stmt stmt; call call; 
+Select <stmt, call>  such that Affects(23, stmt)  such that Affects*(_, stmt)  such that Next(stmt, call) 
+TRUE
+5000
+749 - Query 749
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects(assign, 9)  such that Affects*(_, stmt)  such that Next*(_, if) 
+TRUE
+5000
+750 - Query 750
+if if; assign assign; 
+Select <if, assign>  such that Next*(if, assign)  such that Next(assign, 27)  such that Affects*(assign, 4) 
+TRUE
+5000
+751 - Query 751
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, stmt)  such that Affects(26, stmt)  such that Next*(_, stmt) 
+TRUE
+5000
+752 - Query 752
+if if; while while; assign assign; 
+Select <if, while, assign>  such that Next*(23, assign)  such that Next*(if, assign)  such that Next*(while, _) 
+TRUE
+5000
+753 - Query 753
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects(stmt, assign)  such that Next(6, stmt)  such that Next(while, _) 
+TRUE
+5000
+754 - Query 754
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(stmt, stmt)  such that Affects*(_, assign)  such that Affects*(assign, _) 
+TRUE
+5000
+755 - Query 755
+stmt stmt; while while; call call; 
+Select <stmt, while, call>  such that Next*(29, stmt)  such that Next*(_, call)  such that Next*(while, _) 
+TRUE
+5000
+756 - Query 756
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next(stmt, print)  such that Affects*(stmt, 27)  such that Affects*(24, assign) 
+TRUE
+5000
+757 - Query 757
+print print; stmt stmt; assign assign; call call; 
+Select <print, stmt, assign, call>  such that Next*(stmt, 3)  such that Next(stmt, call)  such that Next*(assign, print) 
+TRUE
+5000
+758 - Query 758
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(stmt, stmt)  such that Next*(28, call)  such that Affects*(assign, _) 
+TRUE
+5000
+759 - Query 759
+while while; assign assign; 
+Select <while, assign>  such that Next(while, 27)  such that Affects(assign, 8)  such that Affects(_, assign) 
+TRUE
+5000
+760 - Query 760
+read read; if if; assign assign; 
+Select <read, if, assign>  such that Next(4, if)  such that Affects*(assign, assign)  such that Next(20, read) 
+TRUE
+5000
+761 - Query 761
+if if; assign assign; 
+Select <if, assign>  such that Next(_, if)  such that Next(assign, _)  such that Affects*(assign, assign) 
+TRUE
+5000
+762 - Query 762
+read read; assign assign; print print; 
+Select <read, assign, print>  such that Affects*(assign, assign)  such that Next(read, print)  such that Next*(read, _) 
+TRUE
+5000
+763 - Query 763
+stmt stmt; if if; print print; 
+Select <stmt, if, print>  such that Next(_, print)  such that Next(if, _)  such that Next(11, stmt) 
+TRUE
+5000
+764 - Query 764
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next(_, call)  such that Affects*(_, stmt)  such that Next(assign, call) 
+TRUE
+5000
+765 - Query 765
+stmt stmt; if if; 
+Select <stmt, if>  such that Next(if, _)  such that Affects*(6, stmt)  such that Affects*(stmt, 10) 
+TRUE
+5000
+766 - Query 766
+read read; assign assign; 
+Select <read, assign>  such that Next(_, read)  such that Affects*(22, assign)  such that Affects*(_, assign) 
+TRUE
+5000
+767 - Query 767
+stmt stmt; while while; assign assign; call call; 
+Select <stmt, while, assign, call>  such that Next*(assign, while)  such that Next*(call, 14)  such that Affects(_, stmt) 
+TRUE
+5000
+768 - Query 768
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(21, stmt)  such that Affects(stmt, stmt)  such that Affects(assign, stmt) 
+TRUE
+5000
+769 - Query 769
+stmt stmt; while while; print print; call call; 
+Select <stmt, while, print, call>  such that Next(while, _)  such that Next*(print, call)  such that Affects(stmt, _) 
+TRUE
+5000
+770 - Query 770
+if if; stmt stmt; print print; 
+Select <if, stmt, print>  such that Affects(_, stmt)  such that Next*(_, stmt)  such that Next(print, if) 
+TRUE
+5000
+771 - Query 771
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, 23)  such that Affects*(assign, assign)  such that Affects(assign, stmt) 
+TRUE
+5000
+772 - Query 772
+stmt stmt; while while; 
+Select <stmt, while>  such that Affects(_, stmt)  such that Next*(_, stmt)  such that Next(while, 15) 
+TRUE
+5000
+773 - Query 773
+stmt stmt; while while; read read; assign assign; 
+Select <stmt, while, read, assign>  such that Affects*(_, stmt)  such that Next(read, while)  such that Affects(22, assign) 
+TRUE
+5000
+774 - Query 774
+stmt stmt; 
+Select <stmt>  such that Affects*(16, stmt)  such that Next*(3, stmt)  such that Affects*(stmt, stmt) 
+TRUE
+5000
+775 - Query 775
+read read; assign assign; call call; 
+Select <read, assign, call>  such that Next*(read, 20)  such that Next(assign, _)  such that Next*(call, _) 
+TRUE
+5000
+776 - Query 776
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, assign)  such that Affects*(stmt, assign)  such that Next(18, assign) 
+TRUE
+5000
+777 - Query 777
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next*(read, 16)  such that Affects(assign, 20)  such that Affects(stmt, 9) 
+TRUE
+5000
+778 - Query 778
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects(assign, 16)  such that Next*(17, print)  such that Affects(_, stmt) 
+TRUE
+5000
+779 - Query 779
+if if; assign assign; call call; 
+Select <if, assign, call>  such that Next*(call, _)  such that Affects(assign, 9)  such that Next*(if, assign) 
+TRUE
+5000
+780 - Query 780
+read read; assign assign; call call; 
+Select <read, assign, call>  such that Next*(_, call)  such that Affects*(assign, assign)  such that Next*(13, read) 
+TRUE
+5000
+781 - Query 781
+while while; print print; assign assign; call call; 
+Select <while, print, assign, call>  such that Next(print, 10)  such that Next(while, call)  such that Next(assign, 21) 
+TRUE
+5000
+782 - Query 782
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(assign, 16)  such that Affects(stmt, stmt)  such that Affects*(stmt, assign) 
+TRUE
+5000
+783 - Query 783
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next(_, while)  such that Affects*(10, stmt)  such that Affects*(stmt, assign) 
+TRUE
+5000
+784 - Query 784
+stmt stmt; if if; 
+Select <stmt, if>  such that Next(if, _)  such that Affects(stmt, _)  such that Affects*(stmt, stmt) 
+TRUE
+5000
+785 - Query 785
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Affects(25, stmt)  such that Next(read, 18)  such that Affects(_, assign) 
+TRUE
+5000
+786 - Query 786
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, 2)  such that Affects(_, assign)  such that Affects(assign, _) 
+TRUE
+5000
+787 - Query 787
+if if; while while; assign assign; 
+Select <if, while, assign>  such that Affects(14, assign)  such that Next(if, while)  such that Affects*(assign, assign) 
+TRUE
+5000
+788 - Query 788
+stmt stmt; while while; read read; call call; 
+Select <stmt, while, read, call>  such that Next*(_, read)  such that Affects*(4, stmt)  such that Next(while, call) 
+TRUE
+5000
+789 - Query 789
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next*(while, _)  such that Affects(_, assign)  such that Affects(stmt, _) 
+TRUE
+5000
+790 - Query 790
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, _)  such that Affects(assign, assign)  such that Affects(assign, _) 
+TRUE
+5000
+791 - Query 791
+stmt stmt; 
+Select <stmt>  such that Affects*(stmt, 15)  such that Affects(stmt, stmt)  such that Affects(_, stmt) 
+TRUE
+5000
+792 - Query 792
+if if; stmt stmt; 
+Select <if, stmt>  such that Affects*(stmt, 23)  such that Affects(stmt, _)  such that Next*(if, 3) 
+TRUE
+5000
+793 - Query 793
+stmt stmt; while while; 
+Select <stmt, while>  such that Next*(while, 10)  such that Affects*(2, stmt)  such that Next(stmt, stmt) 
+TRUE
+5000
+794 - Query 794
+if if; assign assign; 
+Select <if, assign>  such that Affects(assign, _)  such that Next*(if, if)  such that Affects*(20, assign) 
+TRUE
+5000
+795 - Query 795
+assign assign; print print; 
+Select <assign, print>  such that Next*(29, assign)  such that Next*(print, print)  such that Affects*(_, assign) 
+TRUE
+5000
+796 - Query 796
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(stmt, 9)  such that Affects*(stmt, stmt)  such that Affects(assign, _) 
+TRUE
+5000
+797 - Query 797
+if if; assign assign; 
+Select <if, assign>  such that Next(_, if)  such that Affects(assign, _)  such that Next*(28, assign) 
+TRUE
+5000
+798 - Query 798
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(5, stmt)  such that Affects(25, assign)  such that Affects(23, assign) 
+TRUE
+5000
+799 - Query 799
+if if; print print; assign assign; call call; 
+Select <if, print, assign, call>  such that Next*(print, call)  such that Next(if, 29)  such that Affects(assign, _) 
+TRUE
+5000
+800 - Query 800
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects(assign, 10)  such that Next(print, assign)  such that Affects*(stmt, stmt) 
+TRUE
+5000
+801 - Query 801
+while while; print print; assign assign; 
+Select <while, print, assign>  such that Next*(while, 21)  such that Next*(print, 21)  such that Next(assign, _) 
+TRUE
+5000
+802 - Query 802
+print print; assign assign; 
+Select <print, assign>  such that Next(print, 26)  such that Affects*(assign, _)  such that Affects(23, assign) 
+TRUE
+5000
+803 - Query 803
+stmt stmt; while while; 
+Select <stmt, while>  such that Affects*(stmt, _)  such that Affects*(stmt, 13)  such that Next(15, while) 
+TRUE
+5000
+804 - Query 804
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Affects(stmt, _)  such that Next*(stmt, 20)  such that Next*(assign, read) 
+TRUE
+5000
+805 - Query 805
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(25, stmt)  such that Affects(_, stmt)  such that Affects(assign, assign) 
+TRUE
+5000
+806 - Query 806
+if if; stmt stmt; assign assign; print print; 
+Select <if, stmt, assign, print>  such that Affects(stmt, 10)  such that Affects(assign, 22)  such that Next*(print, if) 
+TRUE
+5000
+807 - Query 807
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(5, assign)  such that Next(while, while)  such that Affects(8, stmt) 
+TRUE
+5000
+808 - Query 808
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(3, assign)  such that Affects(_, stmt)  such that Affects(_, assign) 
+TRUE
+5000
+809 - Query 809
+print print; call call; 
+Select <print, call>  such that Next(_, call)  such that Next(print, 24)  such that Next*(_, call) 
+TRUE
+5000
+810 - Query 810
+if if; assign assign; print print; 
+Select <if, assign, print>  such that Affects*(assign, 3)  such that Next*(17, print)  such that Next*(28, if) 
+TRUE
+5000
+811 - Query 811
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(_, assign)  such that Affects(stmt, _)  such that Affects(28, assign) 
+TRUE
+5000
+812 - Query 812
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next*(stmt, 18)  such that Next(while, _)  such that Affects*(_, assign) 
+TRUE
+5000
+813 - Query 813
+if if; assign assign; stmt stmt; 
+Select <if, assign, stmt>  such that Affects(assign, stmt)  such that Next*(if, _)  such that Affects*(assign, stmt) 
+TRUE
+5000
+814 - Query 814
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next(_, read)  such that Next(read, stmt)  such that Next(26, assign) 
+TRUE
+5000
+815 - Query 815
+stmt stmt; print print; call call; 
+Select <stmt, print, call>  such that Next(print, 6)  such that Affects*(_, stmt)  such that Next*(stmt, call) 
+TRUE
+5000
+816 - Query 816
+read read; while while; assign assign; 
+Select <read, while, assign>  such that Affects(assign, 29)  such that Next(read, _)  such that Next*(_, while) 
+TRUE
+5000
+817 - Query 817
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(stmt, 18)  such that Affects*(5, stmt)  such that Affects(assign, stmt) 
+TRUE
+5000
+818 - Query 818
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects(_, stmt)  such that Next(17, if)  such that Affects*(assign, _) 
+TRUE
+5000
+819 - Query 819
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects(assign, assign)  such that Next(stmt, while)  such that Affects(stmt, stmt) 
+TRUE
+5000
+820 - Query 820
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next(_, stmt)  such that Affects(assign, _)  such that Affects*(assign, stmt) 
+TRUE
+5000
+821 - Query 821
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, stmt)  such that Affects(assign, 3)  such that Affects(_, stmt) 
+TRUE
+5000
+822 - Query 822
+assign assign; 
+Select <assign>  such that Affects*(_, assign)  such that Affects(25, assign)  such that Affects(assign, 19) 
+TRUE
+5000
+823 - Query 823
+while while; assign assign; print print; 
+Select <while, assign, print>  such that Affects*(assign, _)  such that Next(print, _)  such that Next(while, _) 
+TRUE
+5000
+824 - Query 824
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects*(stmt, assign)  such that Next(4, if)  such that Affects(_, stmt) 
+TRUE
+5000
+825 - Query 825
+read read; assign assign; call call; 
+Select <read, assign, call>  such that Next*(7, read)  such that Affects(assign, _)  such that Next*(_, call) 
+TRUE
+5000
+826 - Query 826
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, stmt)  such that Next*(18, assign)  such that Affects*(assign, _) 
+TRUE
+5000
+827 - Query 827
+stmt stmt; 
+Select <stmt>  such that Affects*(stmt, _)  such that Affects(stmt, 27)  such that Affects*(stmt, 2) 
+TRUE
+5000
+828 - Query 828
+read read; while while; print print; 
+Select <read, while, print>  such that Next*(16, print)  such that Next*(while, 19)  such that Next(_, read) 
+TRUE
+5000
+829 - Query 829
+stmt stmt; while while; 
+Select <stmt, while>  such that Affects(stmt, 20)  such that Next*(while, _)  such that Affects*(stmt, _) 
+TRUE
+5000
+830 - Query 830
+stmt stmt; print print; call call; 
+Select <stmt, print, call>  such that Next(stmt, _)  such that Next(call, _)  such that Next*(_, print) 
+TRUE
+5000
+831 - Query 831
+print print; assign assign; call call; 
+Select <print, assign, call>  such that Next(call, 6)  such that Next*(_, print)  such that Affects*(assign, assign) 
+TRUE
+5000
+832 - Query 832
+if if; read read; assign assign; 
+Select <if, read, assign>  such that Next(5, if)  such that Next(11, read)  such that Affects*(_, assign) 
+TRUE
+5000
+833 - Query 833
+assign assign; 
+Select <assign>  such that Affects*(6, assign)  such that Affects*(assign, 3)  such that Affects(18, assign) 
+TRUE
+5000
+834 - Query 834
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(9, stmt)  such that Affects(assign, _)  such that Next(stmt, 7) 
+TRUE
+5000
+835 - Query 835
+print print; assign assign; 
+Select <print, assign>  such that Next*(print, 26)  such that Affects*(_, assign)  such that Affects(assign, _) 
+TRUE
+5000
+836 - Query 836
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(_, stmt)  such that Next(call, assign)  such that Next*(call, _) 
+TRUE
+5000
+837 - Query 837
+if if; while while; read read; assign assign; 
+Select <if, while, read, assign>  such that Next(if, read)  such that Affects*(assign, _)  such that Next*(while, _) 
+TRUE
+5000
+838 - Query 838
+if if; while while; assign assign; 
+Select <if, while, assign>  such that Affects(assign, _)  such that Next*(while, 8)  such that Next(_, if) 
+TRUE
+5000
+839 - Query 839
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(_, stmt)  such that Affects(assign, assign)  such that Next*(stmt, call) 
+TRUE
+5000
+840 - Query 840
+stmt stmt; if if; assign assign; call call; 
+Select <stmt, if, assign, call>  such that Next*(if, 16)  such that Affects*(stmt, assign)  such that Next(_, call) 
+TRUE
+5000
+841 - Query 841
+stmt stmt; read read; 
+Select <stmt, read>  such that Affects*(stmt, stmt)  such that Next*(read, _)  such that Next*(24, read) 
+TRUE
+5000
+842 - Query 842
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, stmt)  such that Affects(_, stmt)  such that Affects(assign, 14) 
+TRUE
+5000
+843 - Query 843
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, stmt)  such that Affects(assign, 9)  such that Affects*(assign, _) 
+TRUE
+5000
+844 - Query 844
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next(stmt, _)  such that Next(_, read)  such that Affects*(_, assign) 
+TRUE
+5000
+845 - Query 845
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(10, stmt)  such that Affects*(assign, _)  such that Affects*(assign, _) 
+TRUE
+5000
+846 - Query 846
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, 29)  such that Affects*(_, assign)  such that Affects*(stmt, 2) 
+TRUE
+5000
+847 - Query 847
+stmt stmt; call call; 
+Select <stmt, call>  such that Next*(22, call)  such that Affects*(21, stmt)  such that Affects(stmt, 24) 
+TRUE
+5000
+848 - Query 848
+while while; print print; assign assign; 
+Select <while, print, assign>  such that Next*(while, 22)  such that Next*(22, print)  such that Affects*(assign, 25) 
+TRUE
+5000
+849 - Query 849
+read read; assign assign; call call; 
+Select <read, assign, call>  such that Next*(20, read)  such that Next(call, 4)  such that Next(15, assign) 
+TRUE
+5000
+850 - Query 850
+if if; while while; print print; call call; read read; 
+Select <if, while, print, call, read>  such that Next(print, read)  such that Next(if, call)  such that Next*(while, call) 
+TRUE
+5000
+851 - Query 851
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, assign)  such that Affects(stmt, 26)  such that Next(stmt, 22) 
+TRUE
+5000
+852 - Query 852
+read read; assign assign; call call; 
+Select <read, assign, call>  such that Next(read, _)  such that Affects(assign, 10)  such that Next(call, read) 
+TRUE
+5000
+853 - Query 853
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next*(read, _)  such that Next(assign, 18)  such that Affects*(_, stmt) 
+TRUE
+5000
+854 - Query 854
+if if; assign assign; 
+Select <if, assign>  such that Affects(assign, assign)  such that Affects*(28, assign)  such that Next(_, if) 
+TRUE
+5000
+855 - Query 855
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects(10, stmt)  such that Affects*(11, assign)  such that Next*(stmt, while) 
+TRUE
+5000
+856 - Query 856
+while while; print print; assign assign; 
+Select <while, print, assign>  such that Next*(print, 14)  such that Affects*(assign, _)  such that Next*(4, while) 
+TRUE
+5000
+857 - Query 857
+stmt stmt; if if; 
+Select <stmt, if>  such that Next*(_, if)  such that Affects*(stmt, _)  such that Affects(stmt, 24) 
+TRUE
+5000
+858 - Query 858
+stmt stmt; if if; read read; 
+Select <stmt, if, read>  such that Next(if, _)  such that Next*(_, read)  such that Affects*(stmt, stmt) 
+TRUE
+5000
+859 - Query 859
+stmt stmt; call call; 
+Select <stmt, call>  such that Affects(28, stmt)  such that Affects*(_, stmt)  such that Next*(16, call) 
+TRUE
+5000
+860 - Query 860
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(_, assign)  such that Next*(_, while)  such that Affects*(5, stmt) 
+TRUE
+5000
+861 - Query 861
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects(stmt, 29)  such that Next*(27, assign)  such that Next(while, _) 
+TRUE
+5000
+862 - Query 862
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects(_, stmt)  such that Affects(assign, 20)  such that Next(print, print) 
+TRUE
+5000
+863 - Query 863
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(25, assign)  such that Affects(2, assign)  such that Affects(_, stmt) 
+TRUE
+5000
+864 - Query 864
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects(assign, 22)  such that Next(_, print)  such that Next*(stmt, _) 
+TRUE
+5000
+865 - Query 865
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects*(assign, _)  such that Next(print, _)  such that Affects*(stmt, 28) 
+TRUE
+5000
+866 - Query 866
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Next(assign, 13)  such that Next*(read, 21)  such that Affects(stmt, stmt) 
+TRUE
+5000
+867 - Query 867
+stmt stmt; read read; 
+Select <stmt, read>  such that Next*(7, read)  such that Affects(_, stmt)  such that Next*(read, 6) 
+TRUE
+5000
+868 - Query 868
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next(stmt, 26)  such that Next(stmt, call)  such that Affects(assign, _) 
+TRUE
+5000
+869 - Query 869
+stmt stmt; read read; call call; 
+Select <stmt, read, call>  such that Next*(call, read)  such that Next*(read, 26)  such that Affects*(21, stmt) 
+TRUE
+5000
+870 - Query 870
+if if; stmt stmt; while while; 
+Select <if, stmt, while>  such that Affects(2, stmt)  such that Affects*(_, stmt)  such that Next(while, if) 
+TRUE
+5000
+871 - Query 871
+stmt stmt; print print; 
+Select <stmt, print>  such that Next*(_, print)  such that Next*(_, stmt)  such that Next(print, 1) 
+TRUE
+5000
+872 - Query 872
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next(while, 14)  such that Affects*(stmt, _)  such that Affects*(assign, stmt) 
+TRUE
+5000
+873 - Query 873
+assign assign; print print; 
+Select <assign, print>  such that Affects*(_, assign)  such that Next*(print, _)  such that Next(_, assign) 
+TRUE
+5000
+874 - Query 874
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next(14, while)  such that Next*(stmt, assign)  such that Next(_, while) 
+TRUE
+5000
+875 - Query 875
+read read; while while; assign assign; call call; 
+Select <read, while, assign, call>  such that Affects(_, assign)  such that Next*(_, while)  such that Next*(call, read) 
+TRUE
+5000
+876 - Query 876
+print print; assign assign; 
+Select <print, assign>  such that Next*(print, _)  such that Affects(assign, _)  such that Next*(print, _) 
+TRUE
+5000
+877 - Query 877
+assign assign; stmt stmt; read read; 
+Select <assign, stmt, read>  such that Affects(assign, stmt)  such that Next(_, read)  such that Next*(stmt, read) 
+TRUE
+5000
+878 - Query 878
+stmt stmt; read read; 
+Select <stmt, read>  such that Next(read, _)  such that Affects*(stmt, _)  such that Affects*(stmt, 7) 
+TRUE
+5000
+879 - Query 879
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(_, assign)  such that Affects*(stmt, 6)  such that Next(assign, 29) 
+TRUE
+5000
+880 - Query 880
+while while; read read; call call; 
+Select <while, read, call>  such that Next(call, while)  such that Next(call, _)  such that Next*(_, read) 
+TRUE
+5000
+881 - Query 881
+stmt stmt; print print; assign assign; call call; 
+Select <stmt, print, assign, call>  such that Next(11, print)  such that Next*(assign, call)  such that Next*(_, stmt) 
+TRUE
+5000
+882 - Query 882
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(assign, _)  such that Affects*(2, stmt)  such that Affects*(assign, assign) 
+TRUE
+5000
+883 - Query 883
+stmt stmt; if if; print print; assign assign; 
+Select <stmt, if, print, assign>  such that Next*(_, if)  such that Next*(4, print)  such that Affects*(stmt, assign) 
+TRUE
+5000
+884 - Query 884
+stmt stmt; while while; read read; assign assign; 
+Select <stmt, while, read, assign>  such that Next(read, stmt)  such that Next*(27, while)  such that Affects(21, assign) 
+TRUE
+5000
+885 - Query 885
+stmt stmt; 
+Select <stmt>  such that Next*(_, stmt)  such that Affects(_, stmt)  such that Affects(25, stmt) 
+TRUE
+5000
+886 - Query 886
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next*(call, _)  such that Affects(assign, assign)  such that Next*(stmt, _) 
+TRUE
+5000
+887 - Query 887
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Affects*(assign, 20)  such that Next*(if, 24)  such that Affects(2, stmt) 
+TRUE
+5000
+888 - Query 888
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(assign, _)  such that Affects(stmt, _)  such that Next*(call, _) 
+TRUE
+5000
+889 - Query 889
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, 15)  such that Affects(28, assign)  such that Affects(assign, 25) 
+TRUE
+5000
+890 - Query 890
+if if; while while; assign assign; 
+Select <if, while, assign>  such that Next(if, _)  such that Affects*(_, assign)  such that Next(5, while) 
+TRUE
+5000
+891 - Query 891
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next*(read, _)  such that Next(_, stmt)  such that Affects(_, assign) 
+TRUE
+5000
+892 - Query 892
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Next*(stmt, _)  such that Affects*(19, assign)  such that Next(_, print) 
+TRUE
+5000
+893 - Query 893
+stmt stmt; while while; read read; 
+Select <stmt, while, read>  such that Affects*(stmt, _)  such that Next(stmt, while)  such that Next(read, read) 
+TRUE
+5000
+894 - Query 894
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next(call, _)  such that Affects(assign, _)  such that Affects(stmt, 4) 
+TRUE
+5000
+895 - Query 895
+stmt stmt; call call; 
+Select <stmt, call>  such that Next(call, stmt)  such that Next(_, call)  such that Affects*(_, stmt) 
+TRUE
+5000
+896 - Query 896
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Next(21, if)  such that Affects(assign, assign)  such that Next*(_, stmt) 
+TRUE
+5000
+897 - Query 897
+assign assign; call call; stmt stmt; 
+Select <assign, call, stmt>  such that Affects*(_, stmt)  such that Next(call, assign)  such that Affects(assign, stmt) 
+TRUE
+5000
+898 - Query 898
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, assign)  such that Affects*(_, assign)  such that Affects*(_, stmt) 
+TRUE
+5000
+899 - Query 899
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, assign)  such that Affects*(assign, 27)  such that Next*(26, assign) 
+TRUE
+5000
+900 - Query 900
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Next(call, stmt)  such that Affects*(stmt, stmt)  such that Affects*(_, assign) 
+TRUE
+5000
+901 - Query 901
+if if; while while; 
+Select <if, while>  such that Next*(8, if)  such that Next(7, while)  such that Next*(22, while) 
+TRUE
+5000
+902 - Query 902
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects(24, stmt)  such that Next(assign, _)  such that Next*(if, assign) 
+TRUE
+5000
+903 - Query 903
+assign assign; 
+Select <assign>  such that Affects(assign, 28)  such that Affects*(19, assign)  such that Affects*(assign, 9) 
+TRUE
+5000
+904 - Query 904
+stmt stmt; 
+Select <stmt>  such that Next*(stmt, _)  such that Next(_, stmt)  such that Affects(stmt, 5) 
+TRUE
+5000
+905 - Query 905
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Affects(_, stmt)  such that Next(print, _)  such that Affects*(assign, _) 
+TRUE
+5000
+906 - Query 906
+assign assign; call call; 
+Select <assign, call>  such that Next(call, 12)  such that Next*(call, _)  such that Affects(assign, assign) 
+TRUE
+5000
+907 - Query 907
+stmt stmt; read read; call call; 
+Select <stmt, read, call>  such that Next(_, read)  such that Next(call, _)  such that Affects(stmt, 10) 
+TRUE
+5000
+908 - Query 908
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next*(print, _)  such that Next*(_, assign)  such that Next*(stmt, _) 
+TRUE
+5000
+909 - Query 909
+assign assign; print print; 
+Select <assign, print>  such that Next(_, assign)  such that Affects*(assign, 14)  such that Next*(print, 4) 
+TRUE
+5000
+910 - Query 910
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Affects(stmt, stmt)  such that Next*(read, 25)  such that Affects(assign, _) 
+TRUE
+5000
+911 - Query 911
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next(print, 8)  such that Affects*(_, assign)  such that Affects(stmt, _) 
+TRUE
+5000
+912 - Query 912
+if if; while while; call call; 
+Select <if, while, call>  such that Next(while, _)  such that Next*(if, _)  such that Next*(14, call) 
+TRUE
+5000
+913 - Query 913
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects(assign, _)  such that Affects*(stmt, 8)  such that Next(read, 27) 
+TRUE
+5000
+914 - Query 914
+stmt stmt; read read; 
+Select <stmt, read>  such that Affects(_, stmt)  such that Next(9, read)  such that Affects*(stmt, _) 
+TRUE
+5000
+915 - Query 915
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, assign)  such that Affects*(assign, stmt)  such that Next(25, assign) 
+TRUE
+5000
+916 - Query 916
+stmt stmt; 
+Select <stmt>  such that Affects(_, stmt)  such that Affects(stmt, 3)  such that Next*(stmt, _) 
+TRUE
+5000
+917 - Query 917
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(stmt, _)  such that Affects*(29, assign)  such that Affects*(_, assign) 
+TRUE
+5000
+918 - Query 918
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects(stmt, stmt)  such that Affects(_, assign)  such that Next(10, print) 
+TRUE
+5000
+919 - Query 919
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(_, assign)  such that Affects(stmt, stmt)  such that Next*(_, call) 
+TRUE
+5000
+920 - Query 920
+stmt stmt; read read; assign assign; print print; 
+Select <stmt, read, assign, print>  such that Next(read, print)  such that Affects(stmt, stmt)  such that Affects(assign, assign) 
+TRUE
+5000
+921 - Query 921
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects(21, stmt)  such that Affects*(_, assign)  such that Next*(20, print) 
+TRUE
+5000
+922 - Query 922
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects*(stmt, assign)  such that Next*(read, _)  such that Affects(2, stmt) 
+TRUE
+5000
+923 - Query 923
+assign assign; 
+Select <assign>  such that Affects(assign, _)  such that Next*(15, assign)  such that Affects*(assign, _) 
+TRUE
+5000
+924 - Query 924
+assign assign; 
+Select <assign>  such that Affects*(assign, 14)  such that Affects(_, assign)  such that Affects*(19, assign) 
+TRUE
+5000
+925 - Query 925
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next*(_, read)  such that Affects*(_, stmt)  such that Affects(_, assign) 
+TRUE
+5000
+926 - Query 926
+assign assign; 
+Select <assign>  such that Affects(_, assign)  such that Affects(assign, 6)  such that Affects(assign, _) 
+TRUE
+5000
+927 - Query 927
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects(_, stmt)  such that Affects*(11, assign)  such that Next(23, print) 
+TRUE
+5000
+928 - Query 928
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, assign)  such that Affects*(assign, assign)  such that Affects*(_, stmt) 
+TRUE
+5000
+929 - Query 929
+if if; assign assign; print print; 
+Select <if, assign, print>  such that Next(if, 12)  such that Next*(assign, _)  such that Next*(6, print) 
+TRUE
+5000
+930 - Query 930
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next(print, _)  such that Next*(_, print)  such that Affects*(assign, stmt) 
+TRUE
+5000
+931 - Query 931
+stmt stmt; 
+Select <stmt>  such that Affects(stmt, _)  such that Affects(stmt, _)  such that Affects(stmt, 22) 
+TRUE
+5000
+932 - Query 932
+assign assign; 
+Select <assign>  such that Next(5, assign)  such that Affects(assign, assign)  such that Affects*(assign, 9) 
+TRUE
+5000
+933 - Query 933
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, _)  such that Next*(_, stmt)  such that Affects*(_, assign) 
+TRUE
+5000
+934 - Query 934
+stmt stmt; read read; call call; 
+Select <stmt, read, call>  such that Next*(call, stmt)  such that Next(17, read)  such that Affects*(_, stmt) 
+TRUE
+5000
+935 - Query 935
+while while; assign assign; 
+Select <while, assign>  such that Next*(17, while)  such that Affects*(assign, _)  such that Affects(assign, 8) 
+TRUE
+5000
+936 - Query 936
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(assign, 12)  such that Affects(stmt, assign)  such that Affects*(assign, _) 
+TRUE
+5000
+937 - Query 937
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects*(9, stmt)  such that Next*(stmt, assign)  such that Next*(while, 24) 
+TRUE
+5000
+938 - Query 938
+stmt stmt; read read; assign assign; 
+Select <stmt, read, assign>  such that Next*(read, 29)  such that Affects*(_, stmt)  such that Next*(17, assign) 
+TRUE
+5000
+939 - Query 939
+while while; assign assign; 
+Select <while, assign>  such that Next*(13, while)  such that Next(while, 11)  such that Next*(assign, _) 
+TRUE
+5000
+940 - Query 940
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects(assign, stmt)  such that Affects*(assign, 29)  such that Next(print, _) 
+TRUE
+5000
+941 - Query 941
+stmt stmt; while while; call call; 
+Select <stmt, while, call>  such that Affects(stmt, 2)  such that Affects*(_, stmt)  such that Next(while, call) 
+TRUE
+5000
+942 - Query 942
+assign assign; call call; 
+Select <assign, call>  such that Next(call, _)  such that Next*(call, 16)  such that Affects(_, assign) 
+TRUE
+5000
+943 - Query 943
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next(_, stmt)  such that Next(23, print)  such that Affects*(assign, _) 
+TRUE
+5000
+944 - Query 944
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects*(assign, _)  such that Next*(_, read)  such that Next*(2, stmt) 
+TRUE
+5000
+945 - Query 945
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, 27)  such that Affects(assign, _)  such that Affects(_, stmt) 
+TRUE
+5000
+946 - Query 946
+read read; if if; assign assign; 
+Select <read, if, assign>  such that Affects(assign, _)  such that Next*(9, read)  such that Next*(read, if) 
+TRUE
+5000
+947 - Query 947
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(14, assign)  such that Affects(stmt, _)  such that Affects*(_, stmt) 
+TRUE
+5000
+948 - Query 948
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Next*(if, 22)  such that Affects(assign, 17)  such that Next(_, stmt) 
+TRUE
+5000
+949 - Query 949
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(stmt, stmt)  such that Affects(assign, stmt)  such that Affects(_, stmt) 
+TRUE
+5000
+950 - Query 950
+if if; while while; assign assign; 
+Select <if, while, assign>  such that Next(assign, if)  such that Affects(12, assign)  such that Next(_, while) 
+TRUE
+5000
+951 - Query 951
+stmt stmt; while while; read read; print print; 
+Select <stmt, while, read, print>  such that Next*(read, 16)  such that Next*(17, print)  such that Next(stmt, while) 
+TRUE
+5000
+952 - Query 952
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects(_, stmt)  such that Affects*(assign, 26)  such that Next(read, _) 
+TRUE
+5000
+953 - Query 953
+stmt stmt; call call; 
+Select <stmt, call>  such that Next(24, call)  such that Affects(stmt, 4)  such that Affects(stmt, 29) 
+TRUE
+5000
+954 - Query 954
+stmt stmt; call call; 
+Select <stmt, call>  such that Next(call, _)  such that Next(stmt, 3)  such that Next*(stmt, 6) 
+TRUE
+5000
+955 - Query 955
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next*(_, assign)  such that Next*(while, 10)  such that Affects*(22, stmt) 
+TRUE
+5000
+956 - Query 956
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next*(while, _)  such that Affects(stmt, _)  such that Affects(assign, assign) 
+TRUE
+5000
+957 - Query 957
+while while; read read; assign assign; 
+Select <while, read, assign>  such that Next*(5, read)  such that Affects(22, assign)  such that Next(11, while) 
+TRUE
+5000
+958 - Query 958
+while while; read read; assign assign; print print; 
+Select <while, read, assign, print>  such that Next(_, while)  such that Next(read, print)  such that Affects*(assign, _) 
+TRUE
+5000
+959 - Query 959
+read read; assign assign; print print; 
+Select <read, assign, print>  such that Affects*(_, assign)  such that Next(6, print)  such that Next(read, 9) 
+TRUE
+5000
+960 - Query 960
+stmt stmt; while while; 
+Select <stmt, while>  such that Next*(while, _)  such that Affects(stmt, 27)  such that Next(stmt, while) 
+TRUE
+5000
+961 - Query 961
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Next*(assign, 26)  such that Affects(25, stmt)  such that Next(1, print) 
+TRUE
+5000
+962 - Query 962
+stmt stmt; if if; call call; 
+Select <stmt, if, call>  such that Next*(_, if)  such that Next*(if, call)  such that Affects(stmt, _) 
+TRUE
+5000
+963 - Query 963
+stmt stmt; while while; assign assign; call call; 
+Select <stmt, while, assign, call>  such that Affects(assign, assign)  such that Next*(while, call)  such that Affects*(stmt, _) 
+TRUE
+5000
+964 - Query 964
+stmt stmt; if if; read read; 
+Select <stmt, if, read>  such that Next(_, if)  such that Affects*(stmt, _)  such that Next(read, read) 
+TRUE
+5000
+965 - Query 965
+call call; stmt stmt; read read; print print; 
+Select <call, stmt, read, print>  such that Affects*(18, stmt)  such that Next(read, print)  such that Next*(21, call) 
+TRUE
+5000
+966 - Query 966
+stmt stmt; print print; 
+Select <stmt, print>  such that Next(print, _)  such that Next(print, 28)  such that Affects*(stmt, _) 
+TRUE
+5000
+967 - Query 967
+if if; stmt stmt; while while; 
+Select <if, stmt, while>  such that Affects(16, stmt)  such that Next*(if, _)  such that Next*(while, _) 
+TRUE
+5000
+968 - Query 968
+read read; stmt stmt; assign assign; 
+Select <read, stmt, assign>  such that Affects*(assign, assign)  such that Affects*(stmt, 28)  such that Next(read, _) 
+TRUE
+5000
+969 - Query 969
+while while; assign assign; 
+Select <while, assign>  such that Next(29, while)  such that Affects(assign, 20)  such that Next*(assign, assign) 
+TRUE
+5000
+970 - Query 970
+assign assign; print print; 
+Select <assign, print>  such that Next(assign, 22)  such that Affects(assign, assign)  such that Next*(print, _) 
+TRUE
+5000
+971 - Query 971
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Next*(assign, stmt)  such that Next(6, print)  such that Next*(6, stmt) 
+TRUE
+5000
+972 - Query 972
+print print; assign assign; call call; 
+Select <print, assign, call>  such that Next(print, 8)  such that Affects*(26, assign)  such that Next(call, call) 
+TRUE
+5000
+973 - Query 973
+assign assign; print print; 
+Select <assign, print>  such that Affects(_, assign)  such that Next(print, 6)  such that Affects(assign, assign) 
+TRUE
+5000
+974 - Query 974
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, stmt)  such that Affects(27, assign)  such that Affects*(_, stmt) 
+TRUE
+5000
+975 - Query 975
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Next*(while, stmt)  such that Affects*(stmt, _)  such that Next*(assign, 3) 
+TRUE
+5000
+976 - Query 976
+while while; read read; print print; 
+Select <while, read, print>  such that Next*(read, _)  such that Next*(_, print)  such that Next*(_, while) 
+TRUE
+5000
+977 - Query 977
+if if; stmt stmt; read read; 
+Select <if, stmt, read>  such that Affects*(stmt, 27)  such that Next*(if, read)  such that Affects(_, stmt) 
+TRUE
+5000
+978 - Query 978
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next(print, _)  such that Next*(stmt, _)  such that Next*(assign, 25) 
+TRUE
+5000
+979 - Query 979
+stmt stmt; assign assign; call call; 
+Select <stmt, assign, call>  such that Affects*(_, stmt)  such that Next(call, _)  such that Affects*(_, assign) 
+TRUE
+5000
+980 - Query 980
+if if; stmt stmt; while while; 
+Select <if, stmt, while>  such that Affects*(stmt, _)  such that Next(9, if)  such that Next*(_, while) 
+TRUE
+5000
+981 - Query 981
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Next*(assign, _)  such that Affects(stmt, stmt)  such that Affects*(assign, 8) 
+TRUE
+5000
+982 - Query 982
+stmt stmt; while while; assign assign; 
+Select <stmt, while, assign>  such that Affects(assign, 24)  such that Affects*(27, stmt)  such that Next(while, assign) 
+TRUE
+5000
+983 - Query 983
+while while; read read; assign assign; 
+Select <while, read, assign>  such that Next*(read, 18)  such that Affects*(_, assign)  such that Next*(while, 25) 
+TRUE
+5000
+984 - Query 984
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(_, stmt)  such that Next(26, stmt)  such that Affects*(assign, _) 
+TRUE
+5000
+985 - Query 985
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects*(assign, _)  such that Next*(_, assign)  such that Affects*(stmt, 26) 
+TRUE
+5000
+986 - Query 986
+stmt stmt; assign assign; print print; 
+Select <stmt, assign, print>  such that Affects*(stmt, 1)  such that Affects*(assign, _)  such that Next(12, print) 
+TRUE
+5000
+987 - Query 987
+if if; stmt stmt; assign assign; 
+Select <if, stmt, assign>  such that Affects*(_, stmt)  such that Next(_, if)  such that Affects(assign, _) 
+TRUE
+5000
+988 - Query 988
+while while; assign assign; call call; 
+Select <while, assign, call>  such that Affects*(_, assign)  such that Next*(_, call)  such that Next*(while, while) 
+TRUE
+5000
+989 - Query 989
+print print; call call; 
+Select <print, call>  such that Next*(9, call)  such that Next(call, 11)  such that Next*(print, 2) 
+TRUE
+5000
+990 - Query 990
+stmt stmt; call call; 
+Select <stmt, call>  such that Next*(_, call)  such that Next*(_, call)  such that Affects(stmt, _) 
+TRUE
+5000
+991 - Query 991
+stmt stmt; if if; assign assign; 
+Select <stmt, if, assign>  such that Next*(_, if)  such that Affects*(stmt, _)  such that Affects(assign, stmt) 
+TRUE
+5000
+992 - Query 992
+stmt stmt; assign assign; 
+Select <stmt, assign>  such that Affects(stmt, _)  such that Affects*(stmt, _)  such that Affects*(stmt, assign) 
+TRUE
+5000
+993 - Query 993
+while while; assign assign; 
+Select <while, assign>  such that Next(20, while)  such that Next*(_, assign)  such that Affects*(_, assign) 
+TRUE
+5000
+994 - Query 994
+stmt stmt; while while; 
+Select <stmt, while>  such that Next*(while, _)  such that Next*(_, while)  such that Affects*(_, stmt) 
+TRUE
+5000
+995 - Query 995
+stmt stmt; print print; assign assign; 
+Select <stmt, print, assign>  such that Next*(print, _)  such that Affects*(stmt, _)  such that Affects*(3, assign) 
+TRUE
+5000
+996 - Query 996
+stmt stmt; read read; call call; 
+Select <stmt, read, call>  such that Affects*(stmt, 15)  such that Next*(read, 8)  such that Next(20, call) 
+TRUE
+5000
+997 - Query 997
+stmt stmt; while while; print print; 
+Select <stmt, while, print>  such that Next(while, 24)  such that Next*(6, print)  such that Affects(stmt, _) 
+TRUE
+5000
+998 - Query 998
+stmt stmt; print print; call call; 
+Select <stmt, print, call>  such that Next*(print, _)  such that Affects*(stmt, 12)  such that Next*(_, call) 
+TRUE
+5000
+999 - Query 999
+print print; assign assign; 
+Select <print, assign>  such that Next*(18, print)  such that Affects*(_, assign)  such that Next(6, print) 
+TRUE
+5000

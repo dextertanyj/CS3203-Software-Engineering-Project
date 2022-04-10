@@ -1,0 +1,330 @@
+procedure while{
+while=else+1;
+if=1+4;
+while=1;
+read else;
+call if;
+else=then-else;
+print then;
+call else;
+then=4-if;
+then=4;
+print else;
+print if;
+call then;
+while=2;
+call if;
+read if;
+if=1-while;
+read while;
+call if;
+while=if+3;
+}
+
+procedure if{
+call else;
+print if;
+print while;
+if=2;
+print if;
+if((else<=2)&&(73==if))then{
+then=1-5;
+}else{
+while((else!=if)&&(13>=61)){
+else=2-2;
+if(while>=86)then{
+else=then+3;
+while=while;
+}else{
+print else;
+}read else;
+while=3;
+then=while-if;
+}print else;
+if(1==else)then{
+while=if;
+}else{
+then=3+while;
+print while;
+if((while<else)||(33!=5))then{
+if((then!=while)&&(then<2))then{
+print if;
+}else{
+call else;
+if((4<=if)||(43>3))then{
+read then;
+if(!(then<=while))then{
+while=1-if;
+call then;
+print while;
+call else;
+}else{
+while=else;
+while=4-4;
+while=5;
+print else;
+print else;
+}else=3-while;
+if(if>else)then{
+read then;
+print while;
+else=if;
+}else{
+call then;
+call then;
+read if;
+print then;
+}if((else<=else)&&(else>=if))then{
+read while;
+call else;
+print else;
+while=else-while;
+}else{
+while=2+if;
+while(2>=else){
+while((then>=2)||(if>4)){
+if=4;
+while=3-else;
+read then;
+}print if;
+}read then;
+}}else{
+while=1;
+}then=1+4;
+}print if;
+then=1+5;
+read then;
+read while;
+}else{
+then=5-4;
+else=2-3;
+while=while+while;
+while((else>=then)&&(64>4)){
+call else;
+if((39<else)&&(if==88))then{
+while=4+4;
+if(!(else!=4))then{
+print while;
+call then;
+read then;
+print while;
+while((96!=if)||(62>=4)){
+call then;
+then=else+3;
+read while;
+if=5-then;
+}}else{
+while=if;
+}if((then!=else)||(then>=2))then{
+call then;
+print then;
+print then;
+call else;
+}else{
+read if;
+print else;
+read while;
+}if=2-2;
+then=4-if;
+}else{
+print if;
+call then;
+}while((2>=4)&&(1<=else)){
+if=2+if;
+while=if+if;
+}}while=then+3;
+}print else;
+}}if=else-else;
+while=5-4;
+while=4-while;
+call else;
+print if;
+print then;
+read else;
+read while;
+while((else>=then)&&(1==3)){
+call then;
+}call else;
+print then;
+print if;
+while((5<=then)&&(2==7)){
+if((76>=90)||(83<56))then{
+else=else;
+print then;
+while=4-1;
+read else;
+if(while!=then)then{
+while=3+4;
+else=then-5;
+}else{
+if((while<=if)&&(2>=99))then{
+read while;
+while((if>else)||(4!=else)){
+while=3;
+read then;
+}call else;
+while=5+4;
+}else{
+while(!(while<=then)){
+then=3+3;
+}else=2-1;
+call then;
+while(!(else>95)){
+if(!(49<2))then{
+else=then+3;
+print while;
+then=if+if;
+call else;
+call then;
+}else{
+print then;
+read else;
+read else;
+if=if;
+if(!(else>=else))then{
+print then;
+print then;
+call else;
+call else;
+then=4;
+}else{
+while(!(55<=then)){
+then=3-else;
+}read else;
+else=5+5;
+print else;
+read then;
+}}if=if+2;
+if(!(while>=13))then{
+print else;
+}else{
+while=then-if;
+if=2-else;
+print then;
+print else;
+}call else;
+print while;
+}call then;
+}}}else{
+then=then+3;
+call else;
+else=2-if;
+while(!(34<then)){
+if=1;
+if=5+1;
+while=3-4;
+print while;
+if=5+3;
+}read if;
+}read else;
+}if=else-while;
+}
+
+procedure then{
+call else;
+read if;
+call else;
+else=4;
+if(while==41)then{
+call else;
+while((99<if)||(else<21)){
+print else;
+then=if+1;
+read if;
+print if;
+while=4;
+}while((3<=5)||(while>=5)){
+if(!(while>=3))then{
+call else;
+read while;
+}else{
+read while;
+call else;
+read while;
+}call else;
+print then;
+}read then;
+if=5;
+}else{
+if((else==then)&&(4!=23))then{
+if=else;
+print while;
+}else{
+call else;
+read else;
+if(!(2==3))then{
+read then;
+if=if-2;
+}else{
+while=3+1;
+then=5;
+print then;
+}call else;
+while((4<4)||(75==else)){
+read else;
+call else;
+then=3-3;
+}}print if;
+while=1-2;
+print then;
+}else=else+then;
+call else;
+else=while-4;
+print if;
+read else;
+print if;
+then=5;
+while=4-5;
+if((while>4)&&(2>then))then{
+if=1;
+}else{
+if=1;
+else=1;
+}call else;
+while=5-while;
+print else;
+then=5;
+read while;
+if=5-if;
+}
+
+procedure else{
+read then;
+print then;
+print if;
+print else;
+print if;
+read else;
+then=3;
+if(3>=if)then{
+if(4!=16)then{
+print if;
+read while;
+if=3;
+while((65>=7)&&(while==40)){
+then=while;
+then=2-else;
+read while;
+}print then;
+}else{
+while=then;
+}else=2+while;
+}else{
+read if;
+}then=4-5;
+read if;
+read then;
+else=5;
+print else;
+read if;
+read if;
+else=2-else;
+read while;
+if=3-if;
+if((while>=then)||(while==if))then{
+print else;
+}else{
+while=2;
+}print if;
+}
+
